@@ -631,6 +631,79 @@ class function(_column):
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
+# ---------------------------------------------------------
+# Related fields
+# ---------------------------------------------------------
+
+class related(function):
+
+    def _fnct_search(self, cr, uid, ids, obj=None, name=None, context=None):
+        print "_fnct_search >>>",ids,obj,name
+        return self._fnct_search(obj, cr, uid, obj, name, args)
+
+    def _fnct_read(self,obj,cr, uid, ids, field_name, args, context=None):
+        relation=obj._name
+        res={}
+        for data in obj.browse(cr,uid,ids):
+            t_data=data
+            relation=obj._name
+            for i in range(0,len(args)-1):
+                field_detail=self._field_get(cr,uid,relation,args[i])
+                relation=field_detail[0]
+                if field_detail[1]=='one2many':
+                    if t_data[args[i]]:
+                        t_data=t_data[args[i]][0]
+                    else:
+                        t_data=False
+                        break
+                elif field_detail[1]=='many2one':
+                    if t_data[args[i]]:
+                        t_data=t_data[args[i]]
+                    else:
+                        t_data=False
+                        break
+            if t_data:
+                res[data.id]=t_data[args[len(args)-1]]
+            else:
+                res[data.id]=t_data
+        return res
+
+#    def _fnct_write(self,obj, cr, uid, ids, name, value, args, context=None):
+#        print "_fnct_write>>>",ids,name,value,args
+#        if type(ids)!=type([]):
+#            ids=[ids]
+#        for data in obj.browse(cr,uid,ids):
+#            t_data=data
+#            relation=obj._name
+#            for i in range(0,len(args)-1):
+#                field_detail=self._field_get(cr,uid,relation,args[i])
+#                relation=field_detail[0]
+#                if field_detail[1]=='one2many':
+#                    if t_data[args[i]]:
+#                        t_data=t_data[args[i]][0]
+#                    else:
+#                        t_data=False
+#                        break
+#                elif field_detail[1]=='many2one':
+#                    if t_data[args[i]]:
+#                        t_data=t_data[args[i]]
+#                    else:
+#                        t_data=False
+#                        break
+#            if t_data:
+#                query="UPDATE",relation.replace('.','_'),"set",args[len(args)-1],"=",value," where id=",t_data.id
+#                print query
+#                cr.execute(query)
+##                return obj.write(cr,uid,data.id,{args[len(args)-1]:value})
+#        return True
+
+    def __init__(self,*arg,**args):
+        function.__init__(self,self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
+
+    def _field_get(self, cr, uid, model_name, prop):
+        cr.execute('SELECT relation,ttype FROM ir_model_fields WHERE name=%s AND model=%s', (prop, model_name))
+        res = cr.fetchone()
+        return res
 
 # ---------------------------------------------------------
 # Serialized fields

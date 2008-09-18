@@ -2,9 +2,9 @@
 <openerp>
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Partners" sequence="0"/>
-        
+
         <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="1"/>
-        
+
         <!--
     ================================
     Function
@@ -39,7 +39,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config"/>
-        
+
         <!--
     =====================
     Partner Address
@@ -66,7 +66,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_partner_address_tree"/>
         </record>
-        
+
         <record id="view_partner_address_form1" model="ir.ui.view">
             <field name="name">res.partner.address.form1</field>
             <field name="model">res.partner.address</field>
@@ -116,7 +116,7 @@
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form" parent="base.menu_base_partner"/>
-        
+
         <!--
     =========================================
     the short form used in the partner form
@@ -149,7 +149,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!--
     =======================
     Partner Titles
@@ -174,7 +174,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
-        
+
         <!--
     =======================
     Partner
@@ -188,6 +188,8 @@
             <field name="arch" type="xml">
                 <tree string="Partners">
                     <field name="name"/>
+                    <field name="city"/>
+                    <field name="country"/>
                     <field name="title" string="Type"/>
                     <field name="ref"/>
                     <field name="address" string="# of Contacts"/>
@@ -208,6 +210,8 @@
                         <field domain="[('domain', '=', 'partner')]" name="title"/>
                         <field name="lang" select="2"/>
                         <field name="supplier" select="2"/>
+                        <field name="city" select="2" />
+	                    <field name="country" select="2" />
                     </group>
                     <notebook colspan="4">
                         <page string="General">
@@ -261,7 +265,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Partners</field>
             <field name="type">ir.actions.act_window</field>
@@ -281,9 +285,9 @@
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
         <menuitem
-            action="action_partner_form" 
-            id="menu_partner_form" 
-            parent="base.menu_base_partner" 
+            action="action_partner_form"
+            id="menu_partner_form"
+            parent="base.menu_base_partner"
             sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
@@ -336,7 +340,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_payterm_form"/>
         </record>
-        
+
         <record id="view_partner_bank_type_form" model="ir.ui.view">
             <field name="name">res.partner.bank.type.form</field>
             <field name="model">res.partner.bank.type</field>
@@ -348,7 +352,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_partner_bank_type_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.type.tree</field>
             <field name="model">res.partner.bank.type</field>
@@ -360,8 +364,8 @@
                 </tree>
             </field>
         </record>
-        
-        
+
+
         <record id="view_partner_bank_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
@@ -400,7 +404,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <!--
     ======================
     Company Architecture
@@ -434,7 +438,7 @@
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+
         <!--
     ======================
     Categories
