@@ -1323,81 +1323,52 @@
 
         <!-- configuration wizard view -->
 
-        <record id="view_config_fiscalyear_form" model="ir.ui.view">
-            <field name="name">Configure Fiscal Year</field>
-            <field name="model">account.config.fiscalyear</field>
+        <record id="view_account_config_wizard_form" model="ir.ui.view">
+            <field name="name">Account Configure wizard</field>
+            <field name="model">account.config.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Your Fiscal Year">
-                    <separator col="4" colspan="4" string="Configure Your Fiscal Year"/>
+                <form string="Account Configure">
+                    <separator col="4" colspan="4" string="Create a Fiscal Year"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date1"/>
                     <field name="date2"/>
+					<field name="period" colspan="4"/>
+					<separator col="4" colspan="4" string="Select Chart of Accounts"/>
+					<field name="charts"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
                     <group col="2" colspan="2">
-                        <button icon="gtk-cancel" special="cancel" string="Don't Create" name="action_cancel" type="object"/>
-                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Don't Continue" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Continue" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
 
-        <record id="action_config_fiscalyear_form" model="ir.actions.act_window">
-            <field name="name">Configure Fiscal Year</field>
+        <record id="action_account_config_wizard_form" model="ir.actions.act_window">
+            <field name="name">Account Configure Wizard </field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.config.fiscalyear</field>
+            <field name="res_model">account.config.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>
+        </record>     
+         
+
         
-         <record id="view_config_charts_form" model="ir.ui.view">
-            <field name="name">Select Charts of Account</field>
-            <field name="model">account.config.charts</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Select Charts of Account">
-                	<separator colspan="2" string="Install Charts of Account"/>
-                	<newline/>
-                    <field name="charts"/>
-                    <newline/>
-                    <separator string="" colspan="2"/>
-                    <newline/>
-                    <group col="2" colspan="2">
-                        <button icon="gtk-cancel" special="cancel" string="Skip Step" name="action_cancel" type="object"/>
-                        <button icon="gtk-ok" name="action_create" string="Install" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_config_charts_form" model="ir.actions.act_window">
-            <field name="name">Install Charts of Account</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.config.charts</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
 
 
         <!-- register configuration wizard -->
 
         <record id="config_fiscalyear" model="ir.module.module.configuration.step">
-            <field name="name">Define Fiscal Years</field>
-            <field name="note">Define Fiscal Years</field>
-            <field name="action_id" ref="action_config_fiscalyear_form"/>
+            <field name="name">Account Configure Wizard</field>
+            <field name="note">Define Fiscal Years and Select Charts of Account</field>
+            <field name="action_id" ref="action_account_config_wizard_form"/>
             <field name="state">open</field>
-        </record>
+        </record>        
         
-        <record id="config_charts" model="ir.module.module.configuration.step">
-            <field name="name">Select Charts of Account</field>
-            <field name="note">There are much more charts of accounts available on the OpenERP website.If you don't select one now, you'll be able to install another one through the Administration menu.</field>
-            <field name="action_id" ref="action_config_charts_form"/>
-            <field name="state">open</field>
-        </record>
 
 
         <!-- Account Templates -->

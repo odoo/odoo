@@ -1476,55 +1476,8 @@ class account_subscription_line(osv.osv):
 account_subscription_line()
 
 
-class account_config_fiscalyear(osv.osv_memory):
-    _name = 'account.config.fiscalyear'
-    _columns = {
-        'name':fields.char('Name', required=True,size=64),
-        'code':fields.char('Code', required=True,size=64),
-        'date1': fields.date('Starting Date', required=True),
-        'date2': fields.date('Ending Date', required=True),
-    }
-    _defaults = {
-        'code': lambda *a: time.strftime('%Y'),
-        'date1': lambda *a: time.strftime('%Y-01-01'),
-        'date2': lambda *a: time.strftime('%Y-12-31'),
-    }
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-    def action_create(self, cr, uid,ids, context=None):
-        res=self.read(cr,uid,ids)[0]
-        if 'date1' in res and 'date2' in res:
-            res_obj = self.pool.get('account.fiscalyear')
-            start_date=res['date1']
-            end_date=res['date2']
-            name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
-            vals={
-                'name':name,
-                'code':name,
-                'date_start':start_date,
-                'date_stop':end_date,
-            }
-            new_id=res_obj.create(cr, uid, vals, context=context)
-            res_obj.create_period(cr,uid,[new_id])
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-account_config_fiscalyear()
-
-class account_config_charts(osv.osv_memory):
-    _name = 'account.config.charts'
-    
+class account_config_wizard(osv.osv_memory):
+    _name = 'account.config.wizard'
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
@@ -1532,11 +1485,20 @@ class account_config_charts(osv.osv_memory):
         res.append((-1, 'None'))
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
-    
     _columns = {
-                'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
-                }
-    
+        'name':fields.char('Name', required=True,size=64),
+        'code':fields.char('Code', required=True,size=64),
+        'date1': fields.date('Starting Date', required=True),
+        'date2': fields.date('Ending Date', required=True),
+        'period':fields.selection([('month','Month'),('3months','3 Months')], 'Periods', required=True),
+        'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
+    }
+    _defaults = {
+        'code': lambda *a: time.strftime('%Y'),
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-12-31'),
+        'period':lambda *a:'month'
+    }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
@@ -1545,28 +1507,48 @@ class account_config_charts(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
-        
-    def action_create(self, cr, uid,ids, context=None):
-        res=self.read(cr,uid,ids)[0]
-        id = res['charts']
-        def install(id):
-            mod_obj = self.pool.get('ir.module.module')
-            mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
-            mod_obj.download(cr, uid, [id], context=context)
-            cr.commit()
-            cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
-            ret = cr.fetchall()
-            if len(ret):
-                for r in ret:
-                    install(r[0])
-            else:
+
+    def install_account_chart(self, cr, uid,ids, context=None):
+        for res in self.read(cr,uid,ids):            
+            id = res['charts']
+            def install(id):
+                mod_obj = self.pool.get('ir.module.module')
                 mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
                 mod_obj.download(cr, uid, [id], context=context)
                 cr.commit()
-        install(id)
+                cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
+                ret = cr.fetchall()
+                if len(ret):
+                    for r in ret:
+                        install(r[0])
+                else:
+                    mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
+                    mod_obj.download(cr, uid, [id], context=context)
+                    cr.commit()
+            if id>0:
+                install(id)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-        
+
+    def action_create(self, cr, uid,ids, context=None):
+        for res in self.read(cr,uid,ids):
+            if 'date1' in res and 'date2' in res:
+                res_obj = self.pool.get('account.fiscalyear')
+                start_date=res['date1']
+                end_date=res['date2']
+                name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
+                vals={
+                    'name':name,
+                    'code':name,
+                    'date_start':start_date,
+                    'date_stop':end_date,
+                }
+                new_id=res_obj.create(cr, uid, vals, context=context)
+                if res['period']=='month':
+                    res_obj.create_period(cr,uid,[new_id])
+                elif res['period']=='3months':
+                    res_obj.create_period3(cr,uid,[new_id])
+        self.install_account_chart(cr,uid,ids)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -1575,7 +1557,10 @@ class account_config_charts(osv.osv_memory):
                 'target':'new',
         }
 
-account_config_charts()
+    
+
+account_config_wizard()
+
 
 #  ---------------------------------------------------------------
 #   Account Templates : Account, Tax, Tax Code and chart. + Wizard
