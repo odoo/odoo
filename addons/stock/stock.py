@@ -36,7 +36,7 @@ import ir
 from tools import config
 from tools.translate import _
 import tools
-
+from xml.dom import minidom
 
 #----------------------------------------------------------
 # Incoterms
@@ -1332,4 +1332,38 @@ class stock_picking_move_wizard(osv.osv_memory):
             
 stock_picking_move_wizard()        
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+        res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+        if ('location' in context) and context['location']:
+            location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
+            
+            if location_info.usage == 'supplier':
+                res['fields']['virtual_available']['string'] = 'Futur Receptions'
+                res['fields']['qty_available']['string'] = 'Received Qty'
+                
+            if location_info.usage == 'internal':
+                res['fields']['virtual_available']['string'] = 'Futur Stock'
+                
+            if location_info.usage == 'customer':
+                res['fields']['virtual_available']['string'] = 'Futur Deliveries'
+                res['fields']['qty_available']['string'] = 'Delivered Qty'
+                
+            if location_info.usage == 'inventory':
+                res['fields']['virtual_available']['string'] = 'Futur P&L'
+                res['fields']['qty_available']['string'] = 'P&L Qty'
+                
+            if location_info.usage == 'procurement':
+                res['fields']['virtual_available']['string'] = 'Futur Qty'
+                res['fields']['qty_available']['string'] = 'Unplanned Qty'
+            
+            if location_info.usage == 'production':
+                res['fields']['virtual_available']['string'] = 'Futur Productions'
+                res['fields']['qty_available']['string'] = 'Produced Qty'
+                
+        return res
+
+product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
