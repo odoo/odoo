@@ -101,7 +101,6 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
-
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1" select="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>

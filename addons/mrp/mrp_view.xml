@@ -677,7 +677,7 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"/>
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
         
         <record id="mrp_procurement_action2" model="ir.actions.act_window">
             <field name="name">Draft procurements</field>
@@ -706,7 +706,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="mrp.menu_mrp_procurement_action"/>
+        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="stock.menu_stock_root"/>
         
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Exceptions procurements to fix</field>
@@ -735,7 +735,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="mrp_procurement_new" id="menu_mrp_procurement_new" parent="mrp.menu_mrp_procurement_action5"/>
+        <menuitem action="mrp_procurement_new" id="menu_mrp_procurement_new" parent="mrp.menu_mrp_procurement_action"/>
         
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">

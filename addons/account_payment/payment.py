@@ -438,7 +438,7 @@ class payment_line(osv.osv):
         if move_line_id:
             line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
             data['amount_currency']=line.amount_to_pay
-            res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency, company_currency, 
+            #res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency, company_currency, 
             if res:
                 data['amount'] = res['value']['amount']
             data['partner_id']=line.partner_id.id
