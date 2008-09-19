@@ -301,7 +301,7 @@ class sale_order(osv.osv):
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines):
+    def _make_invoice(self, cr, uid, order, lines,context={}):
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -896,8 +896,7 @@ class sale_order_line(osv.osv):
                         "You have to change either the product, the quantity or the pricelist."
                     }                
             else:
-                result.update({'price_unit': price})
-
+                result.update({'price_unit': price})		
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

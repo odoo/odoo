@@ -151,6 +151,6 @@ class product_pricelist(report_sxw.rml_parse):
                                 newnode=False
         return super(product_pricelist,self).repeatIn(lst, name, nodes_parent=False)
 #end
-report_sxw.report_sxw('report.product.pricelist','product.product','addons/product_pricelist_print/report/product_pricelist.rml',parser=product_pricelist)
+report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -279,7 +279,7 @@
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_attendance_form"/>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
                     <field name="sheet_id" select="2"/>
@@ -290,7 +290,7 @@
             <field name="name">hr.attendance.tree</field>
             <field name="model">hr.attendance</field>
             <field name="type">tree</field>
-            <field name="inherit_id" ref="hr.view_attendance_tree"/>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
                     <field name="sheet_id"/>

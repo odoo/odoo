@@ -48,19 +48,7 @@ view_form_profit = """<?xml version="1.0"?>
     </group>
 </form>"""
 
-#view_form_charts = """<?xml version="1.0"?>
-#<form string="Setup">
-#    <image name="gtk-dialog-info" colspan="2"/>
-#    <group>
-#        <separator string="Select a Chart of Accounts" colspan="2"/>
-#        <newline/>
-#        <field name="charts" align="0.0"/>
-#        <newline/>
-#        <label string="There are much more charts of accounts available on the OpenERP website." colspan="2" align="0.0"/>
-#        <newline/>
-#        <label string="If you don't select one now, you'll be able to install another one through the Administration menu." colspan="2" align="0.0"/>
-#    </group>
-#</form>"""
+
 
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
@@ -94,9 +82,7 @@ view_form_update = """<?xml version="1.0"?>
         <separator string="Summary" colspan="2"/>
         <newline/>
         <field name="profile" align="0.0" readonly="1"/>
-        <newline/>
-        <field name="charts" align="0.0" readonly="1"/>
-        <newline/>
+        <newline/>        
         <field name="name" align="0.0" readonly="1"/>
     </group>
 </form>
@@ -124,14 +110,7 @@ class wizard_base_setup(wizard.interface):
         res.sort()
         return res
 
-    def _get_charts(self, cr, uid, context):
-        module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'),
-            ('state', '<>', 'uninstallable')])
-        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
-        res.append((-1, 'None'))
-        res.sort(lambda x,y: cmp(x[1],y[1]))
-        return res
+    
 
     def _get_company(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
@@ -188,9 +167,7 @@ class wizard_base_setup(wizard.interface):
         if 'profile' in data['form'] and data['form']['profile'] > 0:
             module_obj=pool.get('ir.module.module')
             module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
-        if 'charts' in data['form'] and data['form']['charts'] > 0:
-            module_obj=pool.get('ir.module.module')
-            module_obj.state_update(cr, uid, [data['form']['charts']], 'to install', ['uninstalled'], context)
+        
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
@@ -300,13 +277,7 @@ class wizard_base_setup(wizard.interface):
             'default': -1,
             'required': True,
         },
-        'charts':{
-            'string':'Chart of accounts',
-            'type':'selection',
-            'selection':_get_charts,
-            'default': -1,
-            'required': True,
-        },
+        
         'name':{
             'string': 'Company Name',
             'type': 'char',

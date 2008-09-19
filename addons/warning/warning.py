@@ -52,13 +52,17 @@ class sale_order(osv.osv):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
         warning = {}
+        title=False
+        message=False
         partner = self.pool.get('res.partner').browse(cr, uid, part)
         if partner.sale_warn:
-            warning={
-                'title': "Message",
-                'message': partner.sale_warn_msg
-                }
+            title= "Message",
+            message=partner.sale_warn_msg
+             
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)['value']
+        if result.get('warning',False):
+            warning['title']=title and title+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message']=message and message +' '+result['warning']['message'] or result['warning']['message']
         return {'value': result, 'warning':warning}
 sale_order()
 
@@ -146,15 +150,18 @@ class sale_order_line(osv.osv):
                    'product_uos': []}}
         product_obj = self.pool.get('product.product') 
         product_info = product_obj.browse(cr, uid, product)
+        title=False
+        message=False
         if product_info.sale_line_warn:
-            warning={
-                    'title': "Message",
-                    'message': product_info.sale_line_warn_msg
-                    }
-            
+            title= "Message",
+            message= product_info.sale_line_warn_msg
+                    
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False)['value']
+            lang=False, update_tax=True, date_order=False, packaging=False)['value']        
+        if result.get('warning',False):
+            warning['title']=title and title+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message']=message and message +' '+result['warning']['message'] or result['warning']['message']
         return {'value': result, 'warning':warning}
     
 sale_order_line()

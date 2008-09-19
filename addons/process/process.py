@@ -31,6 +31,25 @@ import pooler, tools
 
 from osv import fields, osv
 
+class Env(dict):
+    
+    def __init__(self, obj, user):
+        self.__obj = obj
+        self.__usr = user
+        
+    def __getitem__(self, name):
+        
+        if name in ('__obj', '__user'):
+            return super(ExprContext, self).__getitem__(name)
+        
+        if name == 'user':
+            return self.__user
+        
+        if name == 'object':
+            return self.__obj
+        
+        return self.__obj[name]
+
 class process_process(osv.osv):
     _name = "process.process"
     _description = "Process"
@@ -46,33 +65,46 @@ class process_process(osv.osv):
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
         pool = pooler.get_pool(cr.dbname)
+        
         process = pool.get('process.process').browse(cr, uid, [id])[0]
-        current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
+        current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
+        current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
+        
+        expr_context = Env(current_object, current_user)
+        
         nodes = {}
         start = []
         transitions = {}
+
         for node in process.node_ids:
-
             data = {}
-
             data['name'] = node.name
-            data['menu'] = (node.menu_id or None) and node.menu_id.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
+            data['notes'] = node.note
             data['active'] = 0
+            data['gray'] = 0
 
+            if node.menu_id:
+                data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
+            
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
-                states = node.model_states
-                states = (states or []) and states.split(',')
-                data['active'] = (states and current_object.state in states) or not states
-
-            elif node.kind == "router":
-                #TODO:
-                pass
-
-            elif node.kind == "subflow":
-                #TODO: subflow
-                pass
+                try:
+                    if eval(node.model_states, expr_context):
+                        data['active'] = current_object.name_get(context)[0][1]
+                except Exception, e:
+                    # waring: invalid state expression
+                    pass
+                
+            if not data['active']:
+                try:
+                    gray = False
+                    for cond in node.condition_ids:
+                        if cond.model_id and cond.model_id.model == res_model:
+                            gray = gray or eval(cond.model_states, expr_context)
+                    data['gray'] = gray
+                except:
+                    pass
 
             nodes[node.id] = data
             if node.flow_start:
@@ -83,10 +115,13 @@ class process_process(osv.osv):
                 data['name'] = tr.name
                 data['source'] = tr.source_node_id.id
                 data['target'] = tr.target_node_id.id
+                data['notes'] = tr.note
                 data['buttons'] = buttons = []
                 for b in tr.action_ids:
                     button = {}
                     button['name'] = b.name
+                    button['state'] = b.state
+                    button['action'] = b.action
                     buttons.append(button)
                 data['roles'] = roles = []
                 for r in tr.transition_ids:
@@ -125,7 +160,7 @@ class process_node(osv.osv):
     _columns = {
         'name': fields.char('Name', size=30,required=True),
         'process_id': fields.many2one('process.process', 'Process', required=True),
-        'kind': fields.selection([('state','State'),('router','Router'),('subflow','Subflow')],'Kind of Node', required=True),
+        'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes'),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
@@ -133,6 +168,7 @@ class process_node(osv.osv):
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('process.transition', 'target_node_id', 'Starting Transitions'),
         'transition_out': fields.one2many('process.transition', 'source_node_id', 'Ending Transitions'),
+        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions')
     }
     _defaults = {
         'kind': lambda *args: 'state',
@@ -140,6 +176,17 @@ class process_node(osv.osv):
         'flow_start': lambda *args: False,
     }
 process_node()
+
+class process_node_condition(osv.osv):
+    _name = 'process.condition'
+    _description = 'Condition'
+    _columns = {
+        'name': fields.char('Name', size=30, required=True),
+        'node_id': fields.many2one('process.node', 'Node', required=True),
+        'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
+        'model_states': fields.char('Expression', required=True, size=128)
+    }
+process_node_condition()
 
 class process_transition(osv.osv):
     _name = 'process.transition'
@@ -160,12 +207,12 @@ class process_transition_action(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'state': fields.selection([('dummy','Dummy'),
-                                   ('method','Object Method'),
+                                   ('object','Object Method'),
                                    ('workflow','Workflow Trigger'),
                                    ('action','Action')], 'Type', required=True),
         'action': fields.char('Action ID', size=64, states={
             'dummy':[('readonly',1)],
-            'method':[('required',1)],
+            'object':[('required',1)],
             'workflow':[('required',1)],
             'action':[('required',1)],
         },),

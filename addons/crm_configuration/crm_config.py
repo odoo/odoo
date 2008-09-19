@@ -50,18 +50,21 @@ class crm_cases(osv.osv):
 crm_cases()
 
 class crm_menu_config_wizard(osv.osv_memory):
-    
     _name='crm.menu.config_wizard'
     _columns = {
         'name':fields.char('Name', size=64),
-        'meeting' : fields.boolean('Calendar of Meetings'),
-        'lead' : fields.boolean('Leads'),
-        'opportunity' : fields.boolean('Business Opportunities'),
-        'jobs' : fields.boolean('Jobs Hiring Process'),
-        'bugs' : fields.boolean('Bug Tracking'),
-        'fund' : fields.boolean('Fund Raising Operations'),
+        'meeting' : fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
+        'lead' : fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests, the very first contact with a customer request."),
+        'opportunity' : fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
+        'jobs' : fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
+        'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
+        'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
     }
-    
+    _defaults = {
+        'meeting': lambda *args: True,
+        'jobs': lambda *args: True,
+        'opportunity': lambda *args: True,
+    }
     def action_create(self, cr, uid, ids, *args):
         for res in self.read(cr,uid,ids):
             res.__delitem__('id')
