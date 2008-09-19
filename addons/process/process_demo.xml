@@ -94,7 +94,7 @@
             <field name="name">Invoice on delivery</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
             <field name="model_states">object.order_policy == 'postpaid'</field>
-            <field name="node_id" ref="node_invoice_on_sale"/>
+            <field name="node_id" ref="node_invoice_on_delivery"/>
         </record>
 
         <!-- Transitions -->
@@ -136,6 +136,21 @@
         </record>
 
         <!-- TODO: Transition actions (Buttons) -->
+
+        <record id="action_confirm_quotation" model="process.transition.action">
+            <field name="name">Confirm</field>
+            <field name="state">workflow</field>
+            <field name="action">order_confirm</field>
+            <field name="transition_id" ref="transition_confirm_quotation"/>
+        </record>
+
+        <record id="action_cancel_quotation" model="process.transition.action">
+            <field name="name">Cancel</field>
+            <field name="state">workflow</field>
+            <field name="action">cancel</field>
+            <field name="transition_id" ref="transition_confirm_quotation"/>
+        </record>
+
         <!-- TODO: Transition roles (workflow transition ids) -->
 
     </data>
