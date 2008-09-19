@@ -159,7 +159,7 @@ class process_node(osv.osv):
     _description ='Process Nodes'
     _columns = {
         'name': fields.char('Name', size=30,required=True),
-        'process_id': fields.many2one('process.process', 'Process', required=True),
+        'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
         'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes'),
@@ -182,7 +182,7 @@ class process_node_condition(osv.osv):
     _description = 'Condition'
     _columns = {
         'name': fields.char('Name', size=30, required=True),
-        'node_id': fields.many2one('process.node', 'Node', required=True),
+        'node_id': fields.many2one('process.node', 'Node', required=True, ondelete='cascade'),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('Expression', required=True, size=128)
     }
