@@ -154,7 +154,7 @@ class res_partner(osv.osv):
         'customer': fields.boolean('Customer'),
         'supplier': fields.boolean('Supplier'),
         'city':fields.related('address','city',type='char', string='City'),
-        'country':fields.related('address','country_id','name',type='char', string='Country'),
+        'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
     }
     _defaults = {
         'active': lambda *a: 1,
