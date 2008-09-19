@@ -1,325 +1,98 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-	<record model="crm.case.section" id="section_support3">
-		<field name="name">Opportunities</field>
-		<field name="code">oppor</field>
-	</record>
+	<!-- 
+		((((((((((( Demo Cases ))))))))))) 
+	-->
 
-<!--		CASE CATEGORY(categ_id)		-->	
-	<record model="crm.case.categ" id="categ_oppor1">
-		<field name="name">Existing Customer</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.categ" id="categ_oppor2">
-		<field name="name">Self Generated</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_oppor3">
-		<field name="name">Employee</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.categ" id="categ_oppor4">
-		<field name="name">Partner</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.categ" id="categ_oppor5">
-		<field name="name">Campaign</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_oppor6">
-		<field name="name">Website</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_oppor7">
-		<field name="name">Word of mouth</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_oppor8">
-		<field name="name">Other</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
+	<!--For Opportunity-->
 
-<!--		CASE STATUS(stage_id)		-->
-	<record model="crm.case.stage" id="stage_oppor1">
-		<field name="name">Prospecting</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor2">
-		<field name="name">Needs Analysis</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor3">
-		<field name="name">Value Proposition</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor4">
-		<field name="name">Proposal/Price Quote</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor5">
-		<field name="name">Negotiation/Review</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor6">
-		<field name="name">Closed Won</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-	<record model="crm.case.stage" id="stage_oppor7">
-		<field name="name">Closed Lost</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-
-<!--		CASE CATEGORY2(category2_id)		-->
-	<record model="crm.case.category2" id="category_oppor1">
-		<field name="name">Existing Business</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>	
-	<record model="crm.case.category2" id="category_oppor2">
-		<field name="name">New Business</field>
-		<field name="section_id" ref="section_support3"/>
-	</record>
-
-<menuitem name="Opportunities" id="menu_crm_case_opp" parent="crm.menu_crm"/>
-
-
-<!--		MENU		-->
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
-		<field name="name">All Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,form,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor11">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
-	</record>
-	<menuitem parent="menu_crm_case_opp" id="menu_crm_case_categ0_act_oppor11" action="crm_case_category_act_oppor11"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor">
-		<field name="name">Opportunity</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor"/>
-	</record>
-	<menuitem name="New Opportunity" parent="menu_crm_case_categ0_act_oppor11" id="menu_crm_case_categ0_act_oppor" action="crm_case_category_act_oppor"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor1">
-		<field name="name">All Open Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor1"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_oppor11" id="menu_crm_case_categ0_act_oppor1" action="crm_case_category_act_oppor1"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor_all2">
-		<field name="name">All Pending Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor_all2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor_all2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor_all2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_all2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_oppor11" id="menu_crm_case_categ0_act_oppor_all2" action="crm_case_category_act_oppor_all2"/>
-
-
-<!-- ======================================================== -->
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor22">
-		<field name="name">My Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor22">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor22">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor22">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
-	</record>
-	<menuitem parent="menu_crm_case_opp" id="menu_crm_case_categ0_act_oppor22" action="crm_case_category_act_oppor22"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor2">
-		<field name="name">My Open Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'state\',\'=\',\'open\'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_oppor22" id="menu_crm_case_categ0_act_oppor2" action="crm_case_category_act_oppor2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_oppor_my2">
-		<field name="name">My Pending Opportunities</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'state\',\'=\',\'pending\'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor_my2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor_my2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor_my2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_oppor"/>
-		<field name="act_window_id" ref="crm_case_category_act_oppor_my2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_oppor22" id="menu_crm_case_categ0_act_oppor_my2" action="crm_case_category_act_oppor_my2"/>
-
-<!--		REPORTS			-->
-	<record model="ir.actions.act_window" id="action_report_crm_case_oppor_user">
-		<field name="res_model">report.crm.case.user</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	  <menuitem name="Opportunity" 	parent="report_crm.next_id_64" id="menu_action_report_crm_case_oppor"/>
-	<menuitem name="Cases by Opportunities and User" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_user" id="menu_action_report_crm_case_oppor_user"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_oppor_categ">
-		<field name="res_model">report.crm.case.section.categ2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<menuitem name="Cases by Opportunities and Category2"  parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ" id="menu_action_report_crm_case_oppor_categ"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_oppor_stage">
-		<field name="res_model">report.crm.case.section.stage</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<menuitem name="Cases by Opportunities and Stage" parent="menu_action_report_crm_case_oppor"  action="action_report_crm_case_oppor_stage" id="menu_action_report_crm_case_oppor_stage"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_oppor_categ_stage">
-		<field name="res_model">report.crm.case.section.categ.stage</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<menuitem name="Cases by Section, Category and Stage" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_stage" id="menu_action_report_crm_case_oppor_categ_stage"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_oppor_categ_categ2">
-		<field name="res_model">report.crm.case.section.categ.categ2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
-	</record>
-	<menuitem name="Cases by Section, Category and Category2" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_categ2" id="menu_action_report_crm_case_oppor_categ_categ2"/>
-	<!-- short cut -->
-	<record id="ir_ui_view_sc_openopportunities0" model="ir.ui.view_sc">
-			<field ref="crm_configuration.menu_crm_case_categ0_act_oppor1" name="res_id"/>
-			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
-			<field eval="&quot;Open Opportunities&quot;" name="name"/>
+		<record id="crm_case_construstazunits0" model="crm.case">
+			<field eval="0.6" name="probability"/>
+			<field name="partner_address_id" ref="base.res_partner_address_zen"/>
+			<field eval="1" name="active"/>
+			<field eval="17.0" name="duration"/>
+			<field name="category2_id" ref="crm_configuration.category_oppor1"/>
+			<field name="partner_id" ref="base.res_partner_3"/>
+			<field eval="&quot;3&quot;" name="priority"/>
 			<field name="user_id" ref="base.user_root"/>
-	</record>
-
-</data>
+			<field eval="&quot;open&quot;" name="state"/>
+			<field eval="75000.0" name="planned_cost"/>
+			<field name="section_id" ref="crm_configuration.section_support3"/>
+			<field eval="time.strftime('%Y-%m-07 10:05:15')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_oppor1"/>
+			<field name="stage_id" ref="crm_configuration.stage_oppor3"/>
+			<field eval="&quot;CONS TRUST (AZ) 529701 - 1000 units&quot;" name="name"/>
+		</record>
+		<record id="crm_case_rdroundfundingunits0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_15"/>
+			<field eval="1" name="active"/>
+			<field name="category2_id" ref="crm_configuration.category_oppor2"/>
+			<field name="partner_id" ref="base.res_partner_11"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;draft&quot;" name="state"/>
+			<field eval="30000.0" name="planned_cost"/>
+			<field eval="0.5" name="probability"/>
+			<field eval="8.0" name="duration"/>
+			<field name="section_id" ref="crm_configuration.section_support3"/>
+			<field eval="time.strftime('%Y-%m-05 12:25:15')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_oppor5"/>
+			<field name="stage_id" ref="crm_configuration.stage_oppor1"/>
+			<field eval="&quot;3rd Round Funding - 1000 units &quot;" name="name"/>
+		</record>
+		<record id="crm_case_mediapoleunits0" model="crm.case">
+			<field eval="0.1" name="probability"/>
+			<field name="partner_address_id" ref="base.res_partner_address_3"/>
+			<field eval="1" name="active"/>
+			<field name="category2_id" ref="crm_configuration.category_oppor1"/>
+			<field name="partner_id" ref="base.res_partner_8"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;pending&quot;" name="state"/>
+			<field eval="50000.0" name="planned_cost"/>
+			<field eval="0.75" name="probability"/>
+			<field eval="10.0" name="duration"/>
+			<field name="section_id" ref="crm_configuration.section_support3"/>
+			<field eval="time.strftime('%Y-%m-14 13:55:10')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_oppor7"/>
+			<field name="stage_id" ref="crm_configuration.stage_oppor5"/>
+			<field eval="&quot;Mediapole - 5000 units&quot;" name="name"/>
+			<field eval="&quot;info@mediapole.net&quot;" name="email_from"/>
+		</record>
+		<record id="crm_case_abcfuelcounits0" model="crm.case">
+			<field eval="0.4" name="probability"/>
+			<field name="partner_address_id" ref="base.res_partner_address_1"/>
+			<field eval="1" name="active"/>
+			<field name="category2_id" ref="crm_configuration.category_oppor1"/>
+			<field name="partner_id" ref="base.res_partner_9"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_demo"/>
+			<field eval="&quot;open&quot;" name="state"/>
+			<field eval="50000.0" name="planned_cost"/>
+			<field eval="24.0" name="duration"/>
+			<field name="section_id" ref="crm_configuration.section_support3"/>
+			<field eval="time.strftime('%Y-%m-23 16:32:23')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_oppor5"/>
+			<field name="stage_id" ref="crm_configuration.stage_oppor4"/>
+			<field eval="&quot;ABC FUEL CO 829264 - 1000 units &quot;" name="name"/>
+			<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+		</record>
+		<record id="crm_case_dirtminingltdunits0" model="crm.case">
+			<field eval="0.8" name="probability"/>
+			<field name="partner_address_id" ref="base.res_partner_address_wong"/>
+			<field eval="1" name="active"/>
+			<field eval="2.25" name="duration"/>
+			<field name="partner_id" ref="base.res_partner_maxtor"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;done&quot;" name="state"/>
+			<field eval="25000.0" name="planned_cost"/>
+			<field name="section_id" ref="crm_configuration.section_support3"/>
+			<field eval="time.strftime('%Y-%m-25 16:05:15')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_oppor2"/>
+			<field name="stage_id" ref="crm_configuration.stage_oppor6"/>
+			<field eval="&quot;Dirt Mining Ltd 271742 - 1000 units&quot;" name="name"/>
+		</record>
+	</data>
 </openerp>
