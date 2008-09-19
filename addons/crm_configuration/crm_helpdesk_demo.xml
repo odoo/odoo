@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+	
+          <record id="case2" model="crm.case">
+            <field name="name">Hdd Crashed unexpectedly</field>
+            <field name="priority">3</field>
+            <field name="description">HDD Crashed
+                Linux turned it readonly.
+                The CPU Cooler is down.
+            </field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ1" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_sednacom"/>
+            <field name="som" ref="base.som_unhappy"/>
+            <field eval="time.strftime('%Y-%m-03')" name="date"/>
+            <field eval="time.strftime('%Y-%m-10')" name="date_deadline"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+        </record>
+        
+        
+        <record id="case5" model="crm.case">
+            <field name="name">Bug in program</field>
+            <field name="priority">3</field>
+            <field name="description">There is a bug in the program</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ4" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_asus"/>
+            <field name="som" ref="base.som_normal"/>
+            <field eval="8000" name="planned_revenue"/>
+            <field eval="0.30" name="probability"/>
+            <field eval="time.strftime('%Y-%m-08')" name="date"/>
+            <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case5')]" model="crm.case"/>
+        </function>
+        
+          <record id="case6" model="crm.case">
+            <field name="name">Server is down</field>
+            <field name="priority">3</field>
+            <field name="description">The web server is down</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ4" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="som" ref="base.som_normal"/>
+            <field eval="4200" name="planned_revenue"/>
+            <field eval="0.90" name="probability"/>
+            <field eval="time.strftime('%Y-%m-03')" name="date"/>
+            <field eval="time.strftime('%Y-%m-25')" name="date_deadline"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
+        </record>
+        
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case6')]" model="crm.case"/>
+        </function>
+        <function model="crm.case" name="case_log">
+            <value eval="[ref('case6')]" model="crm.case"/>
+        </function>
+        <record id="case6" model="crm.case">
+            <field name="description">Have been rebooted</field>
+        </record>
+        <function model="crm.case" name="case_pending">
+            <value eval="[ref('case6')]" model="crm.case"/>
+        </function>
+        
+         <record id="case8" model="crm.case">
+            <field name="name">Missing hardware</field>
+            <field name="priority">3</field>
+            <field name="description">Missing some hardwares in the packing</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ4" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_seagate"/>
+            <field name="som" ref="base.som_normal"/>
+            <field eval="2230" name="planned_revenue"/>
+            <field eval="0.80" name="probability"/>
+            <field eval="time.strftime('%Y-%m-02')" name="date"/>
+            <field eval="time.strftime('%Y-%m-14')" name="date_deadline"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
+        </record>
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case8')]" model="crm.case"/>
+        </function>
+        <function model="crm.case" name="case_log">
+            <value eval="[ref('case8')]" model="crm.case"/>
+        </function>
+        
+         <record id="case13" model="crm.case">
+            <field name="name">Need quotation</field>
+            <field name="priority">3</field>
+            <field name="description">Need quotation for new development</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ4" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_tinyatwork"/>
+            <field name="som" ref="base.som_happy"/>
+            <field eval="300" name="planned_revenue"/>
+            <field eval="0.10" name="probability"/>
+            <field eval="time.strftime('%Y-%m-26')" name="date"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case13')]" model="crm.case"/>
+        </function>
+        <function model="crm.case" name="case_log">
+            <value eval="[ref('case13')]" model="crm.case"/>
+        </function>
+        <record id="case13" model="crm.case">
+            <field name="description">Not interested</field>
+        </record>
+        <function model="crm.case" name="case_close">
+            <value eval="[ref('case13')]" model="crm.case"/>
+        </function>
+        
+         <record id="case16" model="crm.case">
+            <field name="name">Need new specific reports</field>
+            <field name="priority">3</field>
+            <field name="description">Need some specific reports</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ5" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_thymbra"/>
+            <field name="som" ref="base.som_normal"/>
+            <field eval="1300" name="planned_revenue"/>
+            <field eval="79" name="planned_cost"/>
+            <field eval="0.95" name="probability"/>
+            <field eval="time.strftime('%Y-%m-13')" name="date"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
+        </record>
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case16')]" model="crm.case"/>
+        </function>
+        <function model="crm.case" name="case_log">
+            <value eval="[ref('case16')]" model="crm.case"/>
+        </function>
+        
+         <record id="case16" model="crm.case">
+            <field name="name">Need new specific reports</field>
+            <field name="priority">3</field>
+            <field name="description">Need some specific reports</field>
+            <field name="section_id" ref="section_support"/>
+            <field eval="categ5" name="categ_id"/>
+            <field name="partner_id" ref="base.res_partner_thymbra"/>
+            <field name="som" ref="base.som_normal"/>
+            <field eval="1300" name="planned_revenue"/>
+            <field eval="79" name="planned_cost"/>
+            <field eval="0.95" name="probability"/>
+            <field eval="time.strftime('%Y-%m-13')" name="date"/>
+            <field model="res.partner.canal" name="canal_id" search="[]"/>
+            <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
+        </record>
+        <function model="crm.case" name="case_open">
+            <value eval="[ref('case16')]" model="crm.case"/>
+        </function>
+        <function model="crm.case" name="case_log">
+            <value eval="[ref('case16')]" model="crm.case"/>
+        </function>
+        
+</data>
+</openerp>
+        

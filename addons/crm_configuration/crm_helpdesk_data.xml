@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+	<record id="section_support" model="crm.case.section">
+            <field name="name">Helpdesk and Support</field>
+            <field name="code">support</field>
+    </record>
+    
+     <!--
+	Case Categories
+	-->
+
+        <record id="categ1" model="crm.case.categ">
+            <field name="name">Computer Crashed</field>
+            <field name="section_id" ref="section_support"/>
+        </record>
+        <record id="categ2" model="crm.case.categ">
+            <field name="name">Unknown</field>
+            <field name="section_id" ref="section_support"/>
+        </record>
+        <record id="categ3" model="crm.case.categ">
+            <field name="name">Bad Program Utilisation</field>
+            <field name="section_id" ref="section_support"/>
+        </record>
+        
+	</data>
+</openerp>
