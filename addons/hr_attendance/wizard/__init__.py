@@ -28,6 +28,6 @@
 #
 ##############################################################################
 import sign_in_out
-import print_attendance_error
+#import print_attendance_error
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
