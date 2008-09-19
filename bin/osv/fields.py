@@ -637,8 +637,16 @@ class function(_column):
 
 class related(function):
 
-    def _fnct_search(self, cr, uid, ids, obj=None, name=None, context=None):
+    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, context=None):
         raise 'Not Implemented Yet'
+#        field_detail=self._field_get(cr,uid,obj,obj._name,name)
+#        print field_detail
+#        if field_detail[1] in ('many2one'):
+#            ids=obj.pool.get(field_detail[0] or obj._name).search(cr,uid,[('name','ilike',context[0][2])])
+#            print ids
+#            return [('id','in',[5,6,7])]
+#        return True
+
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, args, context=None):
         raise 'Not Implemented Yet'
@@ -652,7 +660,7 @@ class related(function):
             t_data=data
             relation=obj._name
             for i in range(len(self.arg)):
-                field_detail=self._field_get(cr,uid,relation,self.arg[i])
+                field_detail=self._field_get(cr,uid,obj,relation,self.arg[i])
                 relation=field_detail[0]
                 if not t_data[self.arg[i]]:
                     t_data = False
@@ -670,13 +678,15 @@ class related(function):
     def __init__(self,*arg,**args):
         print arg
         self.arg = arg
-        super(related, self).__init__(self._fnct_read, arg, fnct_inf=self._fnct_write, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
+        super(related, self).__init__(self._fnct_read, arg, fnct_inv=self._fnct_write, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
 
     # TODO: call field_get on the object, not in the DB
-    def _field_get(self, cr, uid, model_name, prop):
-        cr.execute('SELECT relation,ttype FROM ir_model_fields WHERE name=%s AND model=%s', (prop, model_name))
-        res = cr.fetchone()
-        return res
+    def _field_get(self, cr, uid, obj, model_name, prop):
+        fields=obj.pool.get(model_name).fields_get(cr,uid,[prop])
+        if fields.get(prop,False):
+            return(fields[prop].get('relation',False),fields[prop].get('type',False))
+        else:
+            raise 'Fields %s not exist in %s'%(prop,model_name)
 
 # ---------------------------------------------------------
 # Serialized fields
