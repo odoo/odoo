@@ -98,11 +98,11 @@ class process_process(osv.osv):
                 
             if not data['active']:
                 try:
-                    gray = False
+                    gray = True
                     for cond in node.condition_ids:
                         if cond.model_id and cond.model_id.model == res_model:
-                            gray = gray or eval(cond.model_states, expr_context)
-                    data['gray'] = gray
+                            gray = gray and eval(cond.model_states, expr_context)
+                    data['gray'] = not gray
                 except:
                     pass
 
