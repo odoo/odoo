@@ -27,7 +27,38 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import sign_in_out
-import print_attendance_error
+
+import wizard
+import time
+
+_date_form = '''<?xml version="1.0"?>
+<form string="Select a time span">
+    <separator string="Analysis Information" colspan="4"/>
+    <field name="init_date"/>
+    <field name="end_date"/>
+    <field name="max_delay"/>
+    <label string="Bellow this delay, the error is considered as volunteer" colspan="2"/>
+</form>'''
+
+_date_fields = {
+    'init_date': {'string':'Starting Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
+    'end_date': {'string':'Ending Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
+    'max_delay': {'string':'Max. Delay (Min)', 'type':'integer', 'default':lambda *a: 120, 'required':True},
+}
+
+class wiz_attendance(wizard.interface):
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Attendance Report'),('end','Cancel') ]}
+        },
+        'print': {
+            'actions': [],
+            'result': {'type': 'print', 'report': 'hr.timesheet.attendance.error', 'state':'end'}
+        }
+    }
+wiz_attendance('hr.timesheet.attendance.report')
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
