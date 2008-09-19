@@ -54,9 +54,9 @@ class process_process(osv.osv):
     _name = "process.process"
     _description = "Process"
     _columns = {
-        'name': fields.char('Name', size=30,required=True),
+        'name': fields.char('Name', size=30,required=True, translate=True),
         'active': fields.boolean('Active'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')
     }
     _defaults = {
@@ -158,11 +158,11 @@ class process_node(osv.osv):
     _name = 'process.node'
     _description ='Process Nodes'
     _columns = {
-        'name': fields.char('Name', size=30,required=True),
+        'name': fields.char('Name', size=30,required=True, translate=True),
         'process_id': fields.many2one('process.process', 'Process', required=True),
         'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
         'flow_start': fields.boolean('Starting Flow'),
@@ -192,12 +192,12 @@ class process_transition(osv.osv):
     _name = 'process.transition'
     _description ='Process Transitions'
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True, translate=True),
         'source_node_id': fields.many2one('process.node', 'Source Node', required=True, ondelete='cascade'),
-        'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),        
+        'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
-        'note': fields.text('Description'),
+        'note': fields.text('Description', translate=True),
     }
 process_transition()
 
@@ -205,7 +205,7 @@ class process_transition_action(osv.osv):
     _name = 'process.transition.action'
     _description ='Process Transitions Actions'
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True, translate=True),
         'state': fields.selection([('dummy','Dummy'),
                                    ('object','Object Method'),
                                    ('workflow','Workflow Trigger'),
