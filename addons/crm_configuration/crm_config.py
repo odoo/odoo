@@ -88,6 +88,7 @@ class crm_menu_config_wizard(osv.osv_memory):
         'jobs' : fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
         'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
         'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
+        'helpdesk' : fields.boolean('Help Desk Operations', help="This may help your Help Desk."),
     }
     _defaults = {
         'meeting': lambda *args: True,

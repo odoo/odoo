@@ -26,7 +26,7 @@
                     "crm_jobs_demo.xml",
                     "crm_meeting_demo.xml",
                     "crm_lead_demo.xml",
-                    "crm_opportunity_demo.xml"
+                    "crm_opportunity_demo.xml",                    
                   ],
     "update_xml" : [
                     "crm_bugs_data.xml",  
@@ -34,7 +34,7 @@
                     "crm_jobs_data.xml",
                     "crm_meeting_data.xml",
                     "crm_lead_data.xml",
-                    "crm_opportunity_data.xml",
+                    "crm_opportunity_data.xml",                    
                     
                     ],
     "active": False,
