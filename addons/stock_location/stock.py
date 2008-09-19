@@ -73,5 +73,5 @@ class stock_location(osv.osv):
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:
                     return path.location_dest_id, path.auto, path.delay
-        return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, contex)
+        return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()

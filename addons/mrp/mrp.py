@@ -304,6 +304,33 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
     _date_name  = 'date_planned'
+    
+    def _get_sale_order(self,cr,uid,ids,field_name=False):
+        move_obj=self.pool.get('stock.move')
+        def get_parent_move(move_id):
+            move = move_obj.browse(cr,uid,move_id)
+            if move.move_dest_id:
+                return get_parent_move(move.move_dest_id.id)
+            return move_id
+        productions=self.read(cr,uid,ids,['id','move_prod_id'])
+        res={}
+        for production in productions:
+            if production.get('move_prod_id',False):
+                parent_move_line=get_parent_move(production['move_prod_id'][0])
+                if parent_move_line:
+                    move = move_obj.browse(cr,uid,parent_move_line)
+                    if field_name=='name':
+                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
+                    if field_name=='client_order_ref':
+                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
+        return res
+    
+    def _sale_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        return self._get_sale_order(cr,uid,ids,field_name='name')
+    
+    def _sale_ref_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        return self._get_sale_order(cr,uid,ids,field_name='client_order_ref')
+    
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Origin', size=64),
@@ -332,7 +359,9 @@ class mrp_production(osv.osv):
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'Status', readonly=True)
+        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'Status', readonly=True),
+        'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
+        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
     }
     _defaults = {
         'priority': lambda *a: '1',
