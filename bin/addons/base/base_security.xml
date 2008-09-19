@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+	<!--<data noupdate="0">-->
+	<data>
 
 <!--
  Users Groups
@@ -40,121 +41,6 @@
         <field name="menu_id" ref="action_menu_admin"/>
     </record>
 
-<!--
- Access
--->
-
-<!--Don't remove after-->
-    <record model="ir.model.access" id="access_ir_actions_employee">
-        <field name="name">ir.actions.actions Employee</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.actions')]"/>
-        <field name="group_id" ref="group_user"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    
-    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
-        <field name="name">ir.actions.act_window Employee</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window')]"/>
-        <field name="group_id" ref="group_user"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    
-    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
-        <field name="name">ir.actions.act_window_close System</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window_close')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    
-    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
-        <field name="name">ir.actions.act_window_close System</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.xml')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    
-    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
-        <field name="name">ir.actions.act_window_close System</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.wizard')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    
-    <record model="ir.model.access" id="access_workflow_group_system">
-        <field name="name">workflow group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_workflow_activity_group_system">
-        <field name="name">workflow_activity group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.activity')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_workflow_instance_group_system">
-        <field name="name">workflow_instance group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.instance')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_workflow_transition_group_system">
-        <field name="name">workflow_transition group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.transition')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_workflow_triggers_group_system">
-        <field name="name">workflow_triggers group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.triggers')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_workflow_workitem_group_system">
-        <field name="name">workflow_workitem group_system</field>
-        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.workitem')]"/>
-        <field name="group_id" ref="group_system"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-<!--Don't remove before-->
-
 </data>
 </openerp>
+
