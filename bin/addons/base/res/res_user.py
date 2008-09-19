@@ -262,9 +262,9 @@ class res_config_view(osv.osv_memory):
         users_obj = self.pool.get('res.users')
         group_obj=self.pool.get('res.groups')
         if 'view' in res and res['view'] and res['view']=='extended':
-            group_ids=group_obj.search(cr,uid,[('name','=','Extended View')])
+            group_ids=group_obj.search(cr,uid,[('name','ilike','Extended')])
             if group_ids and len(group_ids):
-                users_obj.write(cr, uid, [3],{
+                users_obj.write(cr, uid, [uid],{
                                 'groups_id':[(4,group_ids[0])]
                             }, context=context)
         return {
