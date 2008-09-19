@@ -792,8 +792,8 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id in ('''+','.join(map(str, locations))+''' and
-                prodlot_id in  ('''+','.join(map(str, ids))+'''
+                location_id in ('''+','.join(map(str, locations))+''')  and
+                prodlot_id in  ('''+','.join(map(str, ids))+''')
             group by
                 prodlot_id
         ''')
