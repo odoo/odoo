@@ -37,7 +37,7 @@ from tools.translate import _
 delivery_form = """<?xml version="1.0"?>
 <form string="Create deliveries">
     <separator colspan="4" string="Delivery Method" />
-    <field name="carrier_id" context="{'order_id':active_id}"/>
+    <field name="carrier_id"/>
 </form>
 """
 

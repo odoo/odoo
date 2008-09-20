@@ -34,13 +34,7 @@ from tools.translate import _
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
-    _description = "Carrier and delivery grids"
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):        
-        res = super(delivery_carrier,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)        
-        if not context.get('order_id',False)  and view_type=='tree':
-            res['fields']['price'].update({'invisible':"True"})            
-        return res
+    _description = "Carrier and delivery grids"    
 
     def get_price(self, cr, uid, ids, field_name, arg=None, context={}):       
         res={}

@@ -12,7 +12,7 @@
                 <tree string="Carrier">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="price"/>
+                    <field name="price" invisible="'order_id' not in context"/>
                 </tree>
             </field>
         </record>
