@@ -68,10 +68,17 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="Lots" colspan="2"/>
+                                <separator string="UOM" colspan="2"/>                                
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                                 <field name="uom_po_id"/>
-                                <field name="tracking"/>
+                            </group> 
+							<group colspan="4" col="4" name="lot">
+								<separator string="Lots" colspan="4"/>                                
+                                <field name="track_production" />  								
+								<field name="track_incoming" />                                
+                                <field name="track_outgoing" />                              
+                                
+                                
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
