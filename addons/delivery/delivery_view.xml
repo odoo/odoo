@@ -12,6 +12,7 @@
                 <tree string="Carrier">
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="price" invisible="'order_id' not in context"/>
                 </tree>
             </field>
         </record>
@@ -125,7 +126,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <separator string="Notes" position="before">
-                    <field name="carrier_id"/>
+                    <field name="carrier_id" context="{'order_id':active_id}"/>
                 </separator>
             </field>
         </record>
@@ -176,7 +177,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form</field>			
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree"/>
