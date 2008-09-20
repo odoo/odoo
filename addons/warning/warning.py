@@ -34,15 +34,15 @@ from osv import fields,osv
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-                 'sale_warn' : fields.boolean('Sale Order'),
-                 'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
-                 'purchase_warn' : fields.boolean('Purchase Order'),
-                 'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
-                 'picking_warn' : fields.boolean('Stock Picking'),
-                 'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
-                 'invoice_warn' : fields.boolean('Invoice'),
-                 'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
-                 }
+        'sale_warn' : fields.boolean('Sale Order'),
+        'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
+        'purchase_warn' : fields.boolean('Purchase Order'),
+        'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
+        'picking_warn' : fields.boolean('Stock Picking'),
+        'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
+        'invoice_warn' : fields.boolean('Invoice'),
+        'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
+    }
 res_partner()
 
 
@@ -155,14 +155,16 @@ class sale_order_line(osv.osv):
         if product_info.sale_line_warn:
             title= "Message",
             message= product_info.sale_line_warn_msg
-                    
-        result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False)['value']        
+        result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
+            uom, qty_uos, uos, name, partner_id,
+            lang, update_tax, date_order, packaging)
+        if title and message:
+             warning['title']=title[0]
+             warning['message']=message
         if result.get('warning',False):
-            warning['title']=title and title+' & '+result['warning']['title'] or result['warning']['title']
-            warning['message']=message and message +' '+result['warning']['message'] or result['warning']['message']
-        return {'value': result, 'warning':warning}
+            warning['title']= title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message']=message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        return {'value': result['value'], 'warning':warning}
     
 sale_order_line()
 
@@ -175,15 +177,21 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         product_obj = self.pool.get('product.product') 
         product_info = product_obj.browse(cr, uid, product)
+        title=False
+        message=False
         if product_info.purchase_line_warn:
-            warning={
-                    'title': "Message",
-                    'message': product_info.purchase_line_warn_msg
-                    }
+            title =  "Message"
+            message =  product_info.purchase_line_warn_msg
             
         result =  super(purchase_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False)['value']
-        return {'value': result, 'warning':warning}
+            partner_id, date_order)
+        if title and message:
+             warning['title']=title[0]
+             warning['message']=message
+        if result.get('warning',False):
+            warning['title']= title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message']=message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        return {'value': result['value'], 'warning':warning}
     
 purchase_order_line()
 

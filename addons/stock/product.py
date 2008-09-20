@@ -81,6 +81,9 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
         'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
+        'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
+        'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
+        'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
     }
 product_product()
 

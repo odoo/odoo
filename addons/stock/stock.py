@@ -373,7 +373,6 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
-        print 'max', ids, name, value, arg, context
         if not value: return False
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
@@ -381,11 +380,9 @@ class stock_picking(osv.osv):
                 where
                     picking_id=%d and 
                     (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
-        print 'Ok'
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
-        print 'min', ids, name, value, arg, context
         if not value: return False
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
@@ -393,7 +390,6 @@ class stock_picking(osv.osv):
                 where
                     picking_id=%d and 
                     (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
-        print 'Ok'
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -415,7 +411,6 @@ class stock_picking(osv.osv):
         for pick, dt1,dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
-        print res, ids
         return res
 
     _columns = {
@@ -788,6 +783,7 @@ class stock_production_lot(osv.osv):
                 name=name+'/'+record['ref']
             res.append((record['id'], name))
         return res
+    
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
@@ -796,7 +792,7 @@ class stock_production_lot(osv.osv):
         if 'location_id' not in context:
             locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')], context=context)
         else:
-            locations = self.pool.get('stock.location').search(cr, uid, [('location_id','child_of', [context['location_id']])], context=context)
+            locations = [context['location_id']]
         res = {}.fromkeys(ids, 0.0)
         cr.execute('''select
                 prodlot_id,
@@ -804,8 +800,8 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id in ('''+','.join(map(str, locations))+''' and
-                prodlot_id in  ('''+','.join(map(str, ids))+'''
+                location_id in ('''+','.join(map(str, locations))+''')  and
+                prodlot_id in  ('''+','.join(map(str, ids))+''')
             group by
                 prodlot_id
         ''')
@@ -816,7 +812,7 @@ class stock_production_lot(osv.osv):
         'name': fields.char('Serial', size=64, required=True),
         'ref': fields.char('Internal Ref.', size=64),
         'product_id': fields.many2one('product.product','Product',required=True),
-        'date': fields.datetime('Date create', required=True),
+        'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision','lot_id','Revisions'),
     }
@@ -864,7 +860,26 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
+    
+    def _check_tracking(self, cr, uid, ids):
+         for move in self.browse(cr, uid, ids):             
+             if not move.prodlot_id and \
+                (move.state == 'done' and \
+                ( \
+                    (move.product_id.track_production and move.location_id.usage=='production') or \
+                    (move.product_id.track_production and move.location_dest_id.usage=='production') or \
+                    (move.product_id.track_incoming and move.location_id.usage=='supplier') or \
+                    (move.product_id.track_outgoing and move.location_dest_id.usage=='customer') \
+                )):
+                    return False
+         return True
 
+    def _check_product_lot(self, cr, uid, ids):
+         for move in self.browse(cr, uid, ids):
+             if move.prodlot_id and (move.prodlot_id.product_id.id != move.product_id.id):
+                return False                          
+         return True
+         
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
@@ -901,6 +916,15 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
+    
+    _constraints = [
+        (_check_tracking,
+            'You must assign a production lot for this product',
+            ['prodlot_id']),
+        (_check_product_lot,
+            'You try to assign a lot which is not from the same product',
+            ['prodlot_id'])]
+    
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
             return context['move_line'][0][2]['location_dest_id']
@@ -938,6 +962,20 @@ class stock_move(osv.osv):
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
 
+    def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
+        print uid, prodlot_id, product_qty, loc_id
+        if not prodlot_id or not loc_id:
+            return {}
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
+        location=self.pool.get('stock.location').browse(cr,uid,loc_id)
+        warning={}
+        if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
+            print 'Warning'
+            warning={
+                'title':'Bad Lot Assignation !',
+                'message':'You are moving %.2f products but only %.2f available in this lot.' % (product_qty,prodlot.stock_available or 0.0)
+            }
+        return {'warning':warning}
 
     def onchange_product_id(self, cr, uid, context, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
@@ -956,7 +994,14 @@ class stock_move(osv.osv):
     def _chain_compute(self, cr, uid, moves, context={}):
         result = {}
         for m in moves:
-            dest = self.pool.get('stock.location').chained_location_get(cr, uid, m.location_dest_id, m.picking_id and m.picking_id.address_id and m.picking_id.address_id.partner_id, m.product_id, context)
+            dest = self.pool.get('stock.location').chained_location_get(
+                cr, 
+                uid, 
+                m.location_dest_id, 
+                m.picking_id and m.picking_id.address_id and m.picking_id.address_id.partner_id, 
+                m.product_id, 
+                context
+            )
             if dest:
                 if dest[1]=='transparent':
                     self.write(cr, uid, [m.id], {
@@ -1176,17 +1221,12 @@ class stock_move(osv.osv):
                                 'ref': ref,
                             })
             
-                
-            if (move.product_id.tracking and not move.prodlot_id):
-                raise osv.except_osv('Warning ! ','You should put a production lot for : '+move.product_id.name)
-            
         self.write(cr, uid, ids, {'state':'done'})
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
-
 
     def unlink(self, cr, uid, ids, context=None):
         for move in self.browse(cr, uid, ids, context=context):
