@@ -37,7 +37,7 @@ import wizard_split_lot_line
 import wizard_track_line
 import wizard_ups
 import wizard_invoice_onshipping
-import wizard_move_by_location
+import wizard_location_product
 import wizard_inventory
 import inventory_merge_zero
 import inventory_merge

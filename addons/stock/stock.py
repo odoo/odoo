@@ -202,6 +202,7 @@ class stock_location(osv.osv):
         return result
 
     def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):
+        
         product_obj = self.pool.get('product.product')
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
         if not product_ids:
@@ -218,27 +219,38 @@ class stock_location(osv.osv):
         location_ids_str = ','.join(map(str, ids))
         results = []
         results2 = []
+        
+        from_date=context.get('from_date',False)
+        to_date=context.get('to_date',False)        
+        date_str=False
+        if from_date and to_date:
+           date_str="date>='%s' and date<=%s"%(from_date,to_date)
+        elif from_date:
+           date_str="date>='%s'"%(from_date)
+        elif to_date:
+           date_str="date<='%s'"%(to_date) 
+            
         if 'in' in what:
-            # all moves from a location out of the set to a location in the set
+            # all moves from a location out of the set to a location in the set            
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
                 'where location_id not in ('+location_ids_str+') '\
                 'and location_dest_id in ('+location_ids_str+') '\
                 'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '\
+                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
                 'group by product_id,product_uom'
             )
             results = cr.fetchall()
         if 'out' in what:
-            # all moves from a location in the set to a location out of the set
+            # all moves from a location in the set to a location out of the set            
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
                 'where location_id in ('+location_ids_str+') '\
                 'and location_dest_id not in ('+location_ids_str+') '\
                 'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '\
+                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
                 'group by product_id,product_uom'
             )
             results2 = cr.fetchall()
