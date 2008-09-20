@@ -1486,8 +1486,8 @@ class account_config_wizard(osv.osv_memory):
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
     _columns = {
-        'name':fields.char('Name', required=True,size=64),
-        'code':fields.char('Code', required=True,size=64),
+        'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
+        'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
         'date1': fields.date('Starting Date', required=True),
         'date2': fields.date('Ending Date', required=True),
         'period':fields.selection([('month','Month'),('3months','3 Months')], 'Periods', required=True),
@@ -1495,6 +1495,7 @@ class account_config_wizard(osv.osv_memory):
     }
     _defaults = {
         'code': lambda *a: time.strftime('%Y'),
+        'name': lambda *a: time.strftime('%Y'),
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month'

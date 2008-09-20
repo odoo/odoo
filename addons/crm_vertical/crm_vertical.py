@@ -28,18 +28,27 @@
 #
 ##############################################################################
 
-import stock_traceability
-import wizard_partial_picking
-import wizard_picking_make
-import wizard_replacement
-import wizard_return
-import wizard_split_lot_line
-import wizard_track_line
-import wizard_ups
-import wizard_invoice_onshipping
-import wizard_location_product
-import wizard_inventory
-import inventory_merge_zero
-import inventory_merge
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import time
+import tools
+from osv import fields,osv,orm
+import os
+import mx.DateTime
+import base64
 
+# here need to implement inheritance on osv_memory object. after that, it will work well.
+class crm_menu_config_wizard(osv.osv_memory):
+    _inherit='crm.menu.config_wizard'
+    def action_create(self, cr, uid, ids, *args):
+        res=super(crm_menu_config_wizard, self).action_create(cr, uid, ids, *args)
+        for res in self.read(cr,uid,ids):
+            res.__delitem__('id')
+            for section in res :
+                if res[section]:
+                    file_name = 'crm_'+section+'_vertical_view.xml'
+                    try:
+                        tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_vertical',file_name )),  {}, 'init', *args)
+                    except Exception, e:
+                        raise osv.except_osv('Error !', e)
+        return res
+
+crm_menu_config_wizard()
