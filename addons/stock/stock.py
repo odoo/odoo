@@ -361,7 +361,6 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
-        print 'max', ids, name, value, arg, context
         if not value: return False
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
@@ -369,11 +368,9 @@ class stock_picking(osv.osv):
                 where
                     picking_id=%d and 
                     (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
-        print 'Ok'
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
-        print 'min', ids, name, value, arg, context
         if not value: return False
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
@@ -381,7 +378,6 @@ class stock_picking(osv.osv):
                 where
                     picking_id=%d and 
                     (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
-        print 'Ok'
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -403,7 +399,6 @@ class stock_picking(osv.osv):
         for pick, dt1,dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
-        print res, ids
         return res
 
     _columns = {
@@ -852,7 +847,20 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
-
+    
+    def _check_product_tracking(self, cr, uid, ids):
+         for move in self.browse(cr, uid, ids):
+             if move.state == 'done' and not move.prodlot_id:
+                 if move.product_id.track_production and ((move.location_id.usage=='production') or (move.location_dest_id.usage=='production')):
+                     return False
+                 if move.product_id.track_incoming and ((move.location_id.usage=='supplier') or (move.location_dest_id.usage=='supplier')):
+                     return False
+                 if move.product_id.track_outgoing and ((move.location_id.usage=='track_outgoing') or (move.location_dest_id.usage=='track_outgoing')):
+                     return False
+                 if move.product_id.track_other:
+                     return False
+         return True
+         
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
@@ -889,6 +897,12 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
+    
+    _constraints = [
+        (_check_product_tracking,
+            'You must have to set Production Lot',
+            ['prodlot_id'])]
+    
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
             return context['move_line'][0][2]['location_dest_id']
@@ -957,8 +971,11 @@ class stock_move(osv.osv):
         return result
 
     def action_confirm(self, cr, uid, moves, context={}):
-        ids = map(lambda m: m.id, moves)
+        ids = moves
+        if not type(moves) == type([]):
+            ids = map(lambda m: m.id, moves)
         self.write(cr, uid, ids, {'state':'confirmed'})
+        moves= self.pool.get('stock.move').browse(cr, uid, moves)
         for picking, todo in self._chain_compute(cr, uid, moves, context).items():
             ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             pickid = self.pool.get('stock.picking').create(cr, uid, {
