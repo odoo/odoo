@@ -27,7 +27,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
+import time
 import netsvc
 from osv import fields,osv,orm
 from tools.translate import _
@@ -35,11 +35,32 @@ from tools.translate import _
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
     _description = "Carrier and delivery grids"
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):        
+        res = super(delivery_carrier,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)        
+        if not context.get('order_id',False)  and view_type=='tree':
+            res['fields']['price'].update({'invisible':"True"})            
+        return res
+
+    def get_price(self, cr, uid, ids, field_name, arg=None, context={}):       
+        res={}
+        sale_obj=self.pool.get('sale.order')
+        grid_obj=self.pool.get('delivery.grid')
+        for carrier in self.browse(cr,uid,ids,context):
+            order_id=context.get('order_id',False)
+            price=False
+            if order_id:              
+              order = sale_obj.browse(cr, uid, [order_id])[0]
+              carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
+              price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)             
+            res[carrier.id]=price           
+        return res
     _columns = {
         'name': fields.char('Carrier', size=64, required=True),
         'partner_id': fields.many2one('res.partner', 'Carrier Partner', required=True),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
+        'price' : fields.function(get_price, method=True,string='Price'),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -89,9 +110,8 @@ class delivery_grid(osv.osv):
 
         total = 0
         weight = 0
-        volume = 0
-
-        for line in order.order_line:
+        volume = 0        
+        for line in order.order_line:            
             if not line.product_id:
                 continue
             total += line.price_subtotal or 0.0
@@ -149,7 +169,6 @@ class delivery_grid_line(osv.osv):
 
 
 delivery_grid_line()
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
