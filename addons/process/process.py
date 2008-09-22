@@ -79,9 +79,12 @@ class process_process(osv.osv):
             ret = False
 
             for name, field in fields.items():
-                if node.model_id and field.get('relation', False) == node.model_id.model:
-                    #TODO: get resource info
-                    pass
+                if node.model_id and field.get('relation', False) == node.model_id.model and current_object[name]:
+                    rel = current_object[name][0]
+                    ret = {}
+                    ret['name'] = rel.name_get(context)[0][1]
+                    ret['model'] = field['relation']
+                    ret['id'] = rel.id
 
             return ret
         
