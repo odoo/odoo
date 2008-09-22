@@ -81,6 +81,7 @@ class process_process(osv.osv):
             data['name'] = node.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
+            data['subflow'] = (node.subflow_id or None) and node.subflow_id.id
             data['notes'] = node.note
             data['active'] = 0
             data['gray'] = 0
@@ -165,6 +166,7 @@ class process_node(osv.osv):
         'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
+        'subflow_id': fields.many2one('process.process', 'Subflow', ondelete='set null'),
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('process.transition', 'target_node_id', 'Starting Transitions'),
         'transition_out': fields.one2many('process.transition', 'source_node_id', 'Ending Transitions'),
