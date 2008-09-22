@@ -908,6 +908,7 @@ class stock_move(osv.osv):
         'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
+        'partner_id':fields.related('picking_id','address_id',type='many2one',relation='res.partner.address', string='Partner'),
     }
     
     _constraints = [

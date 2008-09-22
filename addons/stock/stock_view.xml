@@ -448,7 +448,7 @@
                 <form string="Move Lines">
                     <field name="address_id" invisible="True" context="{'context_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
-                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned'])]" name="move_ids" select="1"/><newline/>
+                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('partner_id','=',address_id)]" name="move_ids" select="1"/><newline/>
                     <group colspan="4">
                         <button special="cancel" string="Cancel"/>
                         <button name="action_move" string="Add" type="object"/>
@@ -1298,10 +1298,11 @@
             <field name="view_mode">tree</field>
             <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
         </record>
+         <menuitem
+            id="next_id_61"
+            name="Reporting"
+            parent="stock.menu_stock_root"/>
+        <menuitem action="action_report_stock_latest_form" id="menu_report_stock_latest" parent="next_id_61"/>
         
-        <menuitem action="action_report_stock_latest_form" id="menu_report_stock_latest" parent="next_id_62"/>
-        
-		
-
     </data>
 </openerp>
