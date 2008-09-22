@@ -63,6 +63,9 @@
                                                         </field>
                                                     </page>
                                                     <page string="Roles Required">
+                                                        <field name="role_ids" colspan="4" nolabel="1"/>
+                                                    </page>
+                                                    <page string="Roles from Workflow">
                                                         <field name="transition_ids" colspan="4" nolabel="1"/>
                                                     </page>
                                                     <page string="Extra Information">
@@ -189,6 +192,9 @@
                                         </field>
                                     </page>
                                     <page string="Roles Required">
+                                        <field name="role_ids" colspan="4" nolabel="1"/>
+                                    </page>
+                                    <page string="Roles from Workflow">
                                         <field name="transition_ids" colspan="4" nolabel="1"/>
                                     </page>
                                     <page string="Extra Information">
@@ -276,9 +282,13 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Roles">
-                        <field name="transition_ids" nolabel="1" colspan="4"/>
-                    </page><page string="Notes">
+                    <page string="Roles Required">
+                        <field name="role_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Roles from Workflow">
+                        <field name="transition_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Notes">
                         <field name="note" nolabel="1" colspan="4"/>
                     </page>
                 </notebook>

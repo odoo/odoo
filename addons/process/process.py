@@ -169,6 +169,10 @@ class process_process(osv.osv):
                         role = {}
                         role['name'] = r.role_id.name
                         roles.append(role)
+                for r in tr.role_ids:
+                    role = {}
+                    role['name'] = r.name
+                    roles.append(role)
                 transitions[tr.id] = data
 
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
@@ -238,6 +242,7 @@ class process_transition(osv.osv):
         'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
+        'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'tid', 'rid', 'Roles'),
         'note': fields.text('Description', translate=True),
     }
 process_transition()
