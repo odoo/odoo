@@ -64,6 +64,7 @@ class process_process(osv.osv):
     }
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
+        
         pool = pooler.get_pool(cr.dbname)
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
@@ -71,6 +72,17 @@ class process_process(osv.osv):
         current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
         
         expr_context = Env(current_object, current_user)
+
+        fields = pool.get(res_model).fields_get(cr, uid, context=context)
+
+        def get_resource_info(node):
+            ret = False
+
+            for name, field in fields.items():
+                if node.model_id and field.get('relation', False) == node.model_id.model:
+                    #TODO: get resource info
+
+            return ret
         
         nodes = {}
         start = []
@@ -83,20 +95,26 @@ class process_process(osv.osv):
             data['kind'] = node.kind
             data['subflow'] = (node.subflow_id or None) and node.subflow_id.id
             data['notes'] = node.note
-            data['active'] = 0
-            data['gray'] = 0
+            data['active'] = False
+            data['gray'] = False
+            data['res'] = get_resource_info(node)
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
-            if node.kind == "state" and node.model_id and node.model_id.model == res_model:
+            if node.model_id and node.model_id.model == res_model:
+
+                data['res'] = resource = {}
+                resource['name'] = current_object.name_get(context)[0][1]
+                resource['model'] = res_model
+                resource['id'] = res_id
+
                 try:
-                    if eval(node.model_states, expr_context):
-                        data['active'] = current_object.name_get(context)[0][1]
+                    data['active'] = eval(node.model_states, expr_context)
                 except Exception, e:
                     # waring: invalid state expression
                     pass
-                
+
             if not data['active']:
                 try:
                     gray = True
