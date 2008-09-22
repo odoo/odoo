@@ -81,6 +81,7 @@ class process_process(osv.osv):
             for name, field in fields.items():
                 if node.model_id and field.get('relation', False) == node.model_id.model:
                     #TODO: get resource info
+                    pass
 
             return ret
         
