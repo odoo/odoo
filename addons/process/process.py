@@ -103,11 +103,14 @@ class process_process(osv.osv):
                         ret['id'] = rel.id
 
             return ret
-        
+            
         notes = process.note
         nodes = {}
         start = []
         transitions = {}
+
+        states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
+        title = "%s - Resource: %s, State: %s" % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
 
         for node in process.node_ids:
             data = {}
@@ -180,8 +183,8 @@ class process_process(osv.osv):
         #g.scale(100, 100, 180, 120)
         g.scale(*scale)
         graph = g.result_get()
-        miny = -1
 
+        miny = -1
         for k,v in nodes.items():
             x = graph[k]['y']
             y = graph[k]['x']
@@ -194,7 +197,8 @@ class process_process(osv.osv):
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-        return dict(notes=notes, nodes=nodes, transitions=transitions)
+
+        return dict(title=title, notes=notes, nodes=nodes, transitions=transitions)
 
 process_process()
 
