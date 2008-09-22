@@ -151,8 +151,8 @@ class res_partner(osv.osv):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer'),
-        'supplier': fields.boolean('Supplier'),
+        'customer': fields.boolean('Customer', help="Check this box if the partner if a customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box if the partner if a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'city':fields.related('address','city',type='char', string='City'),
         'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
     }
@@ -279,7 +279,7 @@ class res_partner_address(osv.osv):
     _order = 'id'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=True),
-        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type'),
+        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.many2one('res.partner.function', 'Function'),
         'title': fields.selection(_contact_title_get, 'Title', size=32),
         'name': fields.char('Contact Name', size=64),
@@ -294,7 +294,7 @@ class res_partner_address(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
     }
     _defaults = {
         'active': lambda *a: 1,
