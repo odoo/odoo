@@ -148,7 +148,7 @@ class account_invoice(osv.osv):
     _order = "number"
     _columns = {
         'name': fields.char('Description', size=64, select=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this invoice."),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -156,8 +156,8 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True),
 
-        'number': fields.char('Invoice Number', size=32, readonly=True),
-        'reference': fields.char('Invoice Reference', size=64),
+        'number': fields.char('Invoice Number', size=32, readonly=True, help="Uniq number of the invoice, computed automatically when the invoice is created."),
+        'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
         'comment': fields.text('Additionnal Information'),
@@ -181,11 +181,11 @@ class account_invoice(osv.osv):
 
         'period_id': fields.many2one('account.period', 'Force Period', help="Keep empty to use the period of the validation date."),
 
-        'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated account moves."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed', store=True),
         'amount_tax': fields.function(_amount_tax, method=True, digits=(16,2), string='Tax', store=True),
         'amount_total': fields.function(_amount_total, method=True, digits=(16,2), string='Total', store=True),
@@ -193,11 +193,11 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean'),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
-        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True),
+        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True, help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
     }
     _defaults = {
@@ -815,9 +815,9 @@ class account_invoice_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
-        'uos_id': fields.many2one('product.uom', 'Unit', ondelete='set null'),
+        'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
-        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
+        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',store=True),
         'quantity': fields.float('Quantity', required=True),
@@ -983,9 +983,9 @@ class account_invoice_tax(osv.osv):
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence'),
 
-        'base_code_id': fields.many2one('account.tax.code', 'Base Code'),
+        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The case of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,2)),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code'),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The case of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
     }
     def base_change(self, cr, uid, ids, base):

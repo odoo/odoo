@@ -87,7 +87,8 @@ class product_uom(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'category_id': fields.many2one('product.uom.categ', 'UOM Category', required=True, ondelete='cascade'),
+        'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
+            help="Unit of Measure of the same category can be converted between each others."),
         'factor': fields.float('Rate', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
                     '1 (base unit) = coef (this unit)'),
@@ -96,7 +97,8 @@ class product_uom(osv.osv):
             help='The coefficient for the formula:\n' \
                     'coef (base unit) = 1 (this unit)'),
         'factor_inv_data': fields.float('Factor', digits=(12, 6)),
-        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True),
+        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
+            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be splitted."),
         'active': fields.boolean('Active'),
     }
 
