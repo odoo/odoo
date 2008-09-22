@@ -73,18 +73,34 @@ class process_process(osv.osv):
         
         expr_context = Env(current_object, current_user)
 
-        fields = pool.get(res_model).fields_get(cr, uid, context=context)
-
         def get_resource_info(node):
             ret = False
 
+            src_model = res_model
+            src_id = res_id
+            
+            if node.transition_in:
+                tr = node.transition_in[0]
+                src = nodes.get(tr.source_node_id.id)
+                if src['res']:
+                    src_model = src['res']['model']
+                    src_id = src['res']['id']
+                else:
+                    return False
+
+            fields = pool.get(src_model).fields_get(cr, uid, context=context)
+
             for name, field in fields.items():
-                if node.model_id and field.get('relation', False) == node.model_id.model and current_object[name]:
-                    rel = current_object[name][0]
-                    ret = {}
-                    ret['name'] = rel.name_get(context)[0][1]
-                    ret['model'] = field['relation']
-                    ret['id'] = rel.id
+                if node.model_id and field.get('relation', False) == node.model_id.model:
+                    src_obj = pool.get(src_model).browse(cr, uid, [src_id], context)[0]
+                    rel = src_obj[name]
+                    if rel:
+                        if isinstance(rel, (list, tuple)):
+                            rel = rel[0]
+                        ret = {}
+                        ret['name'] = rel.name_get(context)[0][1]
+                        ret['model'] = field['relation']
+                        ret['id'] = rel.id
 
             return ret
         
