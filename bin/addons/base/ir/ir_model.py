@@ -268,13 +268,13 @@ class ir_model_access(osv.osv):
         'perm_create': fields.boolean('Create Access'),
         'perm_unlink': fields.boolean('Delete Permission'),
     }
-    
+
     def check_groups(self, cr, uid, group):
         res = False
         grouparr  = group.split('.')
         if grouparr:
             cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module=%s and name=%s)", (grouparr[0], grouparr[1],))
-            r = cr.fetchall()   
+            r = cr.fetchall()
             if not r:
                 res = False
             else:
@@ -282,30 +282,30 @@ class ir_model_access(osv.osv):
         else:
             res = False
         return res
-    
+
     def check_groups_by_id(self, cr, uid, group_id):
         cr.execute("select * from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
-        r = cr.fetchall()    
+        r = cr.fetchall()
         if not r:
             res = False
         else:
             res = True
         return res
-    
+
     def check(self, cr, uid, model_name, mode='read',raise_exception=True):
         # Users root have all access (Todo: exclude xml-rpc requests)
         if uid==1:
             return True
-        
+
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
-        
+
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
             'from ir_model_access a join ir_model m on (m.id=a.model_id) '
                 'join res_groups_users_rel gu on (gu.gid = a.group_id) '
             'where m.model=%s and gu.uid=%s', (model_name, uid,))
         r = cr.fetchall()
-        
+
         if not r[0][0]:
             if raise_exception:
                 msgs = {
@@ -382,7 +382,7 @@ class ir_model_data(osv.osv):
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
         warning = True
         model_obj = self.pool.get(model)
-        context = {}    
+        context = {}
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _('"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id') % (xml_id)
             warning = False
@@ -544,7 +544,7 @@ class ir_model_config(osv.osv):
             'type': 'ir.actions.act_window',
             'target':'new',
         }
-    
+
     def action_update_pw(self, cr, uid, ids, context={}):
         res = self.read(cr,uid,ids)[0]
         root = self.pool.get('res.users').browse(cr, uid, [1])[0]

@@ -324,7 +324,9 @@ class orm_template(object):
                 'relate': (f.relate and 1) or 0,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
-                'select_level': str(f.select or 0)
+                'select_level': str(f.select or 0),
+                'readonly':(f.readonly and 1) or 0,
+                'required':(f.required and 1) or 0,
             }
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
@@ -334,7 +336,7 @@ class orm_template(object):
                     id, model_id, model, name, field_description, ttype,
                     relate,relation,view_load,state,select_level
                 ) VALUES (
-                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s
+                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                     bool(vals['relate']), vals['relation'], bool(vals['view_load']), 'base',
@@ -351,12 +353,12 @@ class orm_template(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
-                            view_load=%s, select_level=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'], bool(vals['relate']),
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
                             ))
                         continue
         cr.commit()
