@@ -56,10 +56,10 @@ class price_type(osv.osv):
     _name = "product.price.type"
     _description = "Price type"
     _columns = {
-        "name" : fields.char("Price Name", size=32, required=True, translate=True) ,
+        "name" : fields.char("Price Name", size=32, required=True, translate=True, help="Name of this kinf of price."),
         "active" : fields.boolean("Active"),
-        "field" : fields.selection(_price_field_get, "Product Field", required=True),
-        "currency_id" : fields.many2one('res.currency', "Currency", required=True),
+        "field" : fields.selection(_price_field_get, "Product Field", required=True, help="Associated field in the product form."),
+        "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="Associated currency."),
     }
     _defaults = {
         "active": lambda *args: True,
@@ -76,7 +76,7 @@ class product_pricelist_type(osv.osv):
     _description = "Pricelist Type"
     _columns = {
         'name': fields.char('Name',size=64, required=True),
-        'key': fields.char('Key', size=64, required=True),
+        'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
 product_pricelist_type()
 
@@ -88,7 +88,7 @@ class product_pricelist(osv.osv):
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {
-        'name': fields.char('Name',size=64, required=True, translate=True),
+        'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
@@ -247,8 +247,8 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active'),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True),
-        'date_start': fields.date('Start Date'),
-        'date_end': fields.date('End Date'),
+        'date_start': fields.date('Start Date', help="Starting date for validity of this pricelist version."),
+        'date_end': fields.date('End Date', help="Ending date for validity of this pricelist version."),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -320,22 +320,26 @@ class product_pricelist_item(osv.osv):
         'price_discount': lambda *a: 0,
     }
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade'),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
-        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade'),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Set a template if this rule only apply to a template of product. Keep empty for all products"),
+        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
+        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
 
-        'min_quantity': fields.integer('Min. Quantity', required=True),
+        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only apply if the partner buys/sells more than this quantity."),
         'sequence': fields.integer('Sequence', required=True),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1),
+        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode of computation of the price for this rule."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
             digits=(16, int(config['price_accuracy']))),
         'price_discount': fields.float('Price Discount', digits=(16,4)),
         'price_round': fields.float('Price Rounding',
-            digits=(16, int(config['price_accuracy']))),
+            digits=(16, int(config['price_accuracy'])),
+            help="Sets the price so that it is a multiple of this value.\n" \
+              "Rounding is applied after the discount and before the surcharge.\n" \
+              "To have prices that ends by 9.99, set rounding 10, surcharge -0.01" \
+            ),
         'price_min_margin': fields.float('Price Min. Margin',
             digits=(16, int(config['price_accuracy']))),
         'price_max_margin': fields.float('Price Max. Margin',

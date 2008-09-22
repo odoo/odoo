@@ -77,10 +77,10 @@ class product_product(osv.osv):
     _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
     _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
     _columns = {
-        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
-        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
-        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
-        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
+        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected."),
+        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."),
+        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."),
+        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected."),
         'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
         'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
         'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
