@@ -104,6 +104,7 @@ class process_process(osv.osv):
 
             return ret
         
+        notes = process.note
         nodes = {}
         start = []
         transitions = {}
@@ -113,7 +114,7 @@ class process_process(osv.osv):
             data['name'] = node.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
-            data['subflow'] = (node.subflow_id or None) and node.subflow_id.id
+            data['subflow'] = (node.subflow_id or False) and [node.subflow_id.id, node.subflow_id.name]
             data['notes'] = node.note
             data['active'] = False
             data['gray'] = False
@@ -189,7 +190,7 @@ class process_process(osv.osv):
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-        return dict(nodes=nodes, transitions=transitions)
+        return dict(notes=notes, nodes=nodes, transitions=transitions)
 
 process_process()
 
