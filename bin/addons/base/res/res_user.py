@@ -249,7 +249,6 @@ class res_config_view(osv.osv_memory):
     }
 
     def action_cancel(self,cr,uid,ids,conect=None):
-        print ' Cancel  action'
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
