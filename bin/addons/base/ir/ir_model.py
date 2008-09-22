@@ -272,27 +272,17 @@ class ir_model_access(osv.osv):
     def check_groups(self, cr, uid, group):
         res = False
         grouparr  = group.split('.')
-        if grouparr:
-            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module=%s and name=%s)", (grouparr[0], grouparr[1],))
-            r = cr.fetchall()
-            if not r:
-                res = False
-            else:
-                res = True
-        else:
-            res = False
-        return res
+        if not grouparr:
+            return False
+
+        cr.execute("select 1 from res_groups_users_rel where uid=%d and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
+        return bool(cr.fetchone())
 
     def check_groups_by_id(self, cr, uid, group_id):
-        cr.execute("select * from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
-        r = cr.fetchall()
-        if not r:
-            res = False
-        else:
-            res = True
-        return res
+        cr.execute("select 1 from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
+        return bool(cr.fetchone())
 
-    def check(self, cr, uid, model_name, mode='read',raise_exception=True):
+    def check(self, cr, uid, model_name, mode='read', raise_exception=True):
         # Users root have all access (Todo: exclude xml-rpc requests)
         if uid==1:
             return True
@@ -300,22 +290,36 @@ class ir_model_access(osv.osv):
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
         # We check if a specific rule exists
-        cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
-            'from ir_model_access a join ir_model m on (m.id=a.model_id) '
-                'join res_groups_users_rel gu on (gu.gid = a.group_id) '
-            'where m.model=%s and gu.uid=%s', (model_name, uid,))
-        r = cr.fetchall()
+        cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
+                   '  FROM ir_model_access a '
+                   '  JOIN ir_model m ON (m.id = a.model_id) '
+                   '  JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
+                   ' WHERE m.model = %s '
+                   '   AND gu.uid = %s '
+                   , (model_name, uid,)
+                   )
+        r = cr.fetchone()[0]
 
-        if not r[0][0]:
-            if raise_exception:
-                msgs = {
-                        'read':   _('You can not read this document! (%s)'),
-                        'write':  _('You can not write in this document! (%s)'),
-                        'create': _('You can not create this kind of document! (%s)'),
-                        'unlink': _('You can not delete this document! (%s)'),
-                        }
-                raise except_orm(_('AccessError'), msgs[mode] % model_name )
-        return r[0][0]
+        if r is None:
+            # there is no specific rule. We check the generic rule
+            cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
+                       '  FROM ir_model_access a '
+                       '  JOIN ir_model m ON (m.id = a.model_id) '
+                       ' WHERE a.group_id IS NULL '
+                       '   AND m.model = %s '
+                       , (model_name,)
+                       )
+            r = cr.fetchone()[0]
+
+        if not r and raise_exception:
+            msgs = {
+                'read':   _('You can not read this document! (%s)'),
+                'write':  _('You can not write in this document! (%s)'),
+                'create': _('You can not create this kind of document! (%s)'),
+                'unlink': _('You can not delete this document! (%s)'),
+            }
+            raise except_orm(_('AccessError'), msgs[mode] % model_name )
+        return r
 
     check = tools.cache()(check)
 

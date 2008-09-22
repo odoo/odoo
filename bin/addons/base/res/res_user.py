@@ -189,7 +189,7 @@ class users(osv.osv):
         default.update({'login': login+' (copy)'})
         return super(users, self).copy(cr, uid, id, default, context)
 
-    def context_get(self, cr, uid, context={}):
+    def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
         result = {}
         for k in self._columns.keys():
@@ -276,3 +276,6 @@ class res_config_view(osv.osv_memory):
             }
 
 res_config_view()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
