@@ -39,8 +39,8 @@ class payment_type(osv.osv):
     _name= 'payment.type'
     _description= 'Payment type'
     _columns= {
-        'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('Code', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True,help='Payment Type'),
+        'code': fields.char('Code', size=64, required=True,help='Specify the Code for Payment Type'),
         'suitable_bank_types': fields.many2many('res.partner.bank.type',
             'bank_type_payment_type_rel',
             'pay_type_id','bank_type_id',
@@ -54,12 +54,12 @@ class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment mode'
     _columns= {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True,help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
-            required=True),
+            required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
-            domain=[('type', '=', 'cash')]),
-        'type': fields.many2one('payment.type','Payment type',required=True),
+            domain=[('type', '=', 'cash')],help='Cash Journal for the Payment Mode'),
+        'type': fields.many2one('payment.type','Payment type',required=True,help='Select the Payment Type for the Payment Mode.'),
     }
 
     def suitable_bank_types(self,cr,uid,payment_code=None,context={}):
@@ -102,9 +102,9 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_planned': fields.date('Scheduled date if fixed'),
+        'date_planned': fields.date('Scheduled date if fixed',help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference',size=128,required=1),
-        'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1),
+        'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1,help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('open','Confirmed'),
@@ -118,7 +118,7 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Prefered date", change_default=True, required=True),
+            ], "Prefered date", change_default=True, required=True,help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
     }
@@ -381,9 +381,9 @@ class payment_line(osv.osv):
 
     _columns = {
         'name': fields.char('Your Reference', size=64, required=True),
-        'communication': fields.char('Communication', size=64, required=True),
-        'communication2': fields.char('Communication 2', size=64),
-        'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')]),
+        'communication': fields.char('Communication', size=64, required=True,help="Used as the message between ordering customer and current company.Depicts 'What do you want to say to the receipent about this oder?'"),
+        'communication2': fields.char('Communication 2', size=64,help='The successor message of Communication.'),
+        'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')],help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16,2),
             required=True, help='Payment amount in the partner currency'),
 #       'to_pay_currency': fields.function(_to_pay_currency, string='To Pay',
@@ -396,7 +396,7 @@ class payment_line(osv.osv):
         'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
-        'partner_id': fields.many2one('res.partner', string="Partner",required=True),
+        'partner_id': fields.many2one('res.partner', string="Partner",required=True,help='The Ordering Customer'),
         'amount': fields.function(_amount, string='Amount in Company Currency',
             method=True, type='float',
             help='Payment amount in the company currency'),
@@ -410,8 +410,8 @@ class payment_line(osv.osv):
 #           type='char'),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='char', string='Maturity Date'),
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref'),
-        'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
-        'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
+        'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text",help='Address of the Main Partner'),
+        'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text",help='Address of the Ordering Customer.'),
 #        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 #       'value_date': fields.function(_value_date, string='Value Date',
 #           method=True, type='date'),
