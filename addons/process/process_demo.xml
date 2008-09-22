@@ -86,14 +86,14 @@
         <record id="node_condition_invoice_on_order" model="process.condition">
             <field name="name">Invoice on order</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
-            <field name="model_states">object.order_policy != 'postpaid'</field>
+            <field name="model_states">object.order_policy != 'picking'</field>
             <field name="node_id" ref="node_invoice_on_sale"/>
         </record>
 
         <record id="node_condition_invoice_on_delivery" model="process.condition">
             <field name="name">Invoice on delivery</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'Sale Order')]"></field>
-            <field name="model_states">object.order_policy == 'postpaid'</field>
+            <field name="model_states">object.order_policy == 'picking'</field>
             <field name="node_id" ref="node_invoice_on_delivery"/>
         </record>
 
