@@ -28,11 +28,11 @@
 import pooler
 import time
 import re
-
+import rml_parse
 import datetime
 from report import report_sxw
 
-class third_party_ledger(report_sxw.rml_parse):
+class third_party_ledger(rml_parse.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		self.date_lst = []
 		self.date_lst_string = ''
@@ -135,6 +135,7 @@ class third_party_ledger(report_sxw.rml_parse):
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
+		
 		if data['form']['soldeinit'] :
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
@@ -384,5 +385,5 @@ class third_party_ledger(report_sxw.rml_parse):
 	
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
 		'addons/account/third_party_ledger.rml',parser=third_party_ledger,
-		header=2)
+		header=False)
 
