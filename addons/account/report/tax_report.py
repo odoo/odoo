@@ -27,13 +27,13 @@
 
 import time
 import pooler
-
+import rml_parse
 import copy
 from report import report_sxw
 import pdb
 import re
 
-class tax_report(report_sxw.rml_parse):
+class tax_report(rml_parse.rml_parse):
 	_name = 'report.account.vat.declaration'
 	def __init__(self, cr, uid, name, context):
 		super(tax_report, self).__init__(cr, uid, name, context)
@@ -228,5 +228,5 @@ class tax_report(report_sxw.rml_parse):
 	
 
 report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
-	'addons/account/report/tax_report.rml', parser=tax_report, header=2)
+	'addons/account/report/tax_report.rml', parser=tax_report, header=False)
 
