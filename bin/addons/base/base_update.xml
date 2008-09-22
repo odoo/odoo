@@ -76,7 +76,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="password"/>
+                    <field name="password" password="True"/>
                     <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
                     <field name="context_lang"/>
                     <field name="context_tz"/>
@@ -95,7 +95,7 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="login" select="1"/>
-                    <field name="password"/>
+                    <field name="password" password="True"/>
                     <notebook colspan="4">
                         <page string="User">
                             <field name="address_id"/>
@@ -187,7 +187,7 @@
                     <newline/>
                     <field name="login" select="1"/>
                     <newline/>
-                    <field name="password" required="1"/>
+                    <field name="password" required="1" password="True" />
                     <field colspan="4" name="signature"/>
                     <separator string="Assign Groups to Define Access Rights" colspan="4"/>
                     <field colspan="4" name="groups_id" nolabel="1"/>
