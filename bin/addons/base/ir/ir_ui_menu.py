@@ -153,7 +153,7 @@ class ir_ui_menu(osv.osv):
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
                 }, context=ctx)
-    
+
     def _get_icon_pict(self, cr, uid, ids, name, args, context):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):

@@ -63,10 +63,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module">
-                    <notebook>
+                    <field name="name" select="1"/>
+                    <field colspan="4" name="shortdesc" select="2"/>
+                    <notebook colspan="4">
                         <page string="Module">
-                            <field name="name" select="1"/>
-                            <field colspan="4" name="shortdesc" select="2"/>
                             <field colspan="4" name="description" select="2"/>
                             <field name="installed_version"/>
                             <field name="latest_version"/>

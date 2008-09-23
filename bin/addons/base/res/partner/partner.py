@@ -125,7 +125,7 @@ def _lang_get(self, cr, uid, context={}):
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res]
-    
+
 
 class res_partner(osv.osv):
     _description='Partner'
@@ -153,6 +153,8 @@ class res_partner(osv.osv):
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer'),
         'supplier': fields.boolean('Supplier'),
+        'city':fields.related('address','city',type='char', string='City'),
+        'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -166,7 +168,7 @@ class res_partner(osv.osv):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+' (copy)'})
         return super(res_partner, self).copy(cr, uid, id, default, context)
-    
+
     def _check_ean_key(self, cr, uid, ids):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
@@ -192,10 +194,10 @@ class res_partner(osv.osv):
             rec_name = 'ref'
         else:
             rec_name = 'name'
-            
+
         res = [(r['id'], r[rec_name]) for r in self.read(cr, uid, ids, [rec_name], context)]
         return res
-        
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args=[]
@@ -229,12 +231,12 @@ class res_partner(osv.osv):
             })
             ids = ids[16:]
         return True
-        
+
     def address_get(self, cr, uid, ids, adr_pref=['default']):
         cr.execute('select type,id from res_partner_address where partner_id in ('+','.join(map(str,ids))+')')
         res = cr.fetchall()
         adr = dict(res)
-        # get the id of the (first) default address if there is one, 
+        # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
         if res:
             default_address = adr.get('default', res[0][1])
@@ -244,11 +246,11 @@ class res_partner(osv.osv):
         for a in adr_pref:
             result[a] = adr.get(a, default_address)
         return result
-    
+
     def gen_next_ref(self, cr, uid, ids):
         if len(ids) != 1:
             return True
-            
+
         # compute the next number ref
         cr.execute("select ref from res_partner where ref is not null order by char_length(ref) desc, ref desc limit 1")
         res = cr.dictfetchall()
@@ -322,7 +324,7 @@ class res_partner_address(osv.osv):
             ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit, context=context)
-            if not ids: 
+            if not ids:
                 ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit, context=context)
             if name:
                 ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)

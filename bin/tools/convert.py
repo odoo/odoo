@@ -230,7 +230,7 @@ class xml_import(object):
             assert '.' not in id, """The ID reference "%s" must contains
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
-            if module != self.module: 
+            if module != self.module:
                 modcnt = self.pool.get('ir.module.module').search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert modcnt == 1, """The ID "%s" refer to an uninstalled module""" % (xml_id,)
 
@@ -269,6 +269,20 @@ form: module.record_id""" % (xml_id,)
         res['multi'] = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
         xml_id = rec.getAttribute('id').encode('utf8')
         self._test_xml_id(xml_id)
+
+        if rec.hasAttribute('groups'):
+            g_names = rec.getAttribute('groups').split(',')
+            groups_value = []
+            groups_obj = self.pool.get('res.groups')
+            for group in g_names:
+                if group.startswith('-'):
+                    group_id = self.id_get(cr, 'res.groups', group[1:])
+                    groups_value.append((3, group_id))
+                else:
+                    group_id = self.id_get(cr, 'res.groups', group)
+                    groups_value.append((4, group_id))
+            res['groups_id'] = groups_value
+
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
         self.idref[xml_id] = int(id)
         if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
@@ -295,6 +309,19 @@ form: module.record_id""" % (xml_id,)
         self._test_xml_id(xml_id)
         multi = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
         res = {'name': string, 'wiz_name': name, 'multi':multi}
+
+        if rec.hasAttribute('groups'):
+            g_names = rec.getAttribute('groups').split(',')
+            groups_value = []
+            groups_obj = self.pool.get('res.groups')
+            for group in g_names:
+                if group.startswith('-'):
+                    group_id = self.id_get(cr, 'res.groups', group[1:])
+                    groups_value.append((3, group_id))
+                else:
+                    group_id = self.id_get(cr, 'res.groups', group)
+                    groups_value.append((4, group_id))
+            res['groups_id'] = groups_value
 
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, mode=self.mode)
         self.idref[xml_id] = int(id)
@@ -347,6 +374,7 @@ form: module.record_id""" % (xml_id,)
         limit = rec.hasAttribute('limit') and rec.getAttribute('limit').encode('utf-8')
         auto_refresh = rec.hasAttribute('auto_refresh') \
                 and rec.getAttribute('auto_refresh').encode('utf-8')
+#        groups_id = rec.hasAttribute('groups') and rec.getAttribute('groups').encode('utf-8')
 
         res = {
             'name': name,
@@ -361,7 +389,22 @@ form: module.record_id""" % (xml_id,)
             'usage': usage,
             'limit': limit,
             'auto_refresh': auto_refresh,
+#            'groups_id':groups_id,
         }
+
+        if rec.hasAttribute('groups'):
+            g_names = rec.getAttribute('groups').split(',')
+            groups_value = []
+            groups_obj = self.pool.get('res.groups')
+            for group in g_names:
+                if group.startswith('-'):
+                    group_id = self.id_get(cr, 'res.groups', group[1:])
+                    groups_value.append((3, group_id))
+                else:
+                    group_id = self.id_get(cr, 'res.groups', group)
+                    groups_value.append((4, group_id))
+            res['groups_id'] = groups_value
+
         if rec.hasAttribute('target'):
             res['target'] = rec.getAttribute('target')
         id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
@@ -493,6 +536,7 @@ form: module.record_id""" % (xml_id,)
             values['sequence'] = int(rec.getAttribute('sequence'))
         if rec.hasAttribute('icon'):
             values['icon'] = str(rec.getAttribute('icon'))
+
         if rec.hasAttribute('groups'):
             g_names = rec.getAttribute('groups').split(',')
             groups_value = []

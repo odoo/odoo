@@ -148,6 +148,26 @@ class act_window(osv.osv):
     _table = 'ir_act_window'
     _sequence = 'ir_actions_id_seq'
 
+#    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
+#            context=None, count=False):
+#        if context is None:
+#            context = {}
+#        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
+#                context=context)
+#        if uid==1:
+#            return ids
+#        user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
+#        result = []
+#        for act in self.browse(cr, uid, ids):
+#            if not len(act.groups_id):
+#                result.append(act.id)
+#                continue
+#            for g in act.groups_id:
+#                if g.id in user_groups:
+#                    result.append(act.id)
+#                    break
+#        return result
+
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
         for act in self.browse(cr, uid, ids):
@@ -186,6 +206,8 @@ class act_window(osv.osv):
         'limit': fields.integer('Limit', help='Default limit for the list view'),
         'auto_refresh': fields.integer('Auto-Refresh',
             help='Add an auto-refresh on the view'),
+        'groups_id': fields.many2many('res.groups', 'ir_act_window_group_rel',
+            'act_id', 'gid', 'Groups'),
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
@@ -261,7 +283,7 @@ def model_get(self, cr, uid, context={}):
     wkf_pool = self.pool.get('workflow')
     ids = wkf_pool.search(cr, uid, [])
     osvs = wkf_pool.read(cr, uid, ids, ['osv'])
-    
+
     res = []
     mpool = self.pool.get('ir.model')
     for osv in osvs:
@@ -269,7 +291,7 @@ def model_get(self, cr, uid, context={}):
         id = mpool.search(cr, uid, [('model','=',model)])
         name = mpool.read(cr, uid, id)[0]['name']
         res.append((model, name))
-        
+
     return res
 
 class ir_model_fields(osv.osv):
@@ -285,26 +307,26 @@ class ir_model_fields(osv.osv):
             result = []
             mobj = self.pool.get('ir.model')
             id = mobj.search(cr, uid, [('model','=',rel)])
-            
+
             obj = self.pool.get('ir.model.fields')
             ids = obj.search(cr, uid, [('model_id','in',id)])
             records = obj.read(cr, uid, ids)
             for record in records:
                 id = record['id']
                 fld = field + '/' + record['name']
-                
+
                 result.append((id, fld))
             return result
-        
+
         if not args:
             args=[]
         if not context:
             context={}
             return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-        
+
         if context.get('key') != 'server_action':
             return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-        
+
         result = []
         obj = self.pool.get('ir.model.fields')
         ids = obj.search(cr, uid, args)
@@ -312,7 +334,7 @@ class ir_model_fields(osv.osv):
         for record in records:
             id = record['id']
             field = record['name']
-            
+
             if record['ttype'] == 'many2one':
                 rel = record['relation']
                 res = get_fields(cr, uid, field, record['relation'])
@@ -320,16 +342,16 @@ class ir_model_fields(osv.osv):
                     result.append(rs)
 
             result.append((id, field))
-        
+
         for rs in result:
             obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
-        
+
         iids = []
         for rs in result:
             iids.append(rs[0])
-            
+
         result = super(ir_model_fields, self).name_search(cr, uid, name, [('complete_name','ilike',name), ('id','in',iids)], operator, context, limit)
-        
+
         return result
 
 ir_model_fields()
@@ -404,35 +426,35 @@ class actions_server(osv.osv):
 """,
         'otype': lambda *a: 'copy',
     }
-    
+
     def get_field_value(self, cr, uid, action, context):
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
-        
+
         fields = None
-        
+
         if '/' in action.address.complete_name:
             fields = action.address.complete_name.split('/')
         elif '.' in action.address.complete_name:
             fields = action.address.complete_name.split('.')
-            
+
         for field in fields:
             try:
                 obj = getattr(obj, field)
             except Exception,e :
                 logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
-        
+
         return obj
 
     def merge_message(self, cr, uid, keystr, action, context):
         logger = netsvc.Logger()
         def merge(match):
-            
+
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
-        
+
             field = match.group()
             field = field.replace('[','')
             field = field.replace(']','')
@@ -444,13 +466,13 @@ class actions_server(osv.osv):
                     obj = getattr(obj, field)
                 except Exception,e :
                     logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
-            
+
             return str(obj)
-        
+
         com = re.compile('\[\[(.+?)\]\]')
         message = com.sub(merge, keystr)
         return message
-    
+
     #
     # Context should contains:
     #   ids : original ids
@@ -473,14 +495,14 @@ class actions_server(osv.osv):
                 exec action.code in localdict
                 if 'action' in localdict:
                     return localdict['action']
-                
+
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
-                
+
                 address = self.get_field_value(cr, uid, str(action.message), action, context)
                 body = self.merge_message(cr, uid, action, context)
-                
+
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -492,7 +514,7 @@ class actions_server(osv.osv):
                 model = res[0]
                 id = res[1]
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
-                
+
             if action.state == 'sms':
                 #TODO: set the user and password from the system
                 # for the sms gateway user / password
@@ -513,7 +535,7 @@ class actions_server(osv.osv):
                     'cr': cr,
                     'uid': uid
                 }
-                
+
                 for act in action.child_ids:
                     code = """action = {'model':'%s','type':'%s', %s}""" % (action.model_id.model, act.type, act.usage)
                     exec code in localdict
@@ -531,7 +553,7 @@ class actions_server(osv.osv):
                     res[exp.col1.name] = expr
                 obj_pool = self.pool.get(action.model_id.model)
                 obj_pool.write(cr, uid, [context.get('active_id')], res)
-                
+
             if action.state == 'object_create':
                 res = {}
                 for exp in action.fields_lines:
@@ -542,7 +564,7 @@ class actions_server(osv.osv):
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
-                
+
                 obj_pool = None
                 if action.state == 'object_create' and action.otype == 'new':
                     obj_pool = self.pool.get(action.srcmodel_id.model)
@@ -551,7 +573,7 @@ class actions_server(osv.osv):
                     obj_pool = self.pool.get(action.model_id.model)
                     id = context.get('active_id')
                     obj_pool.copy(cr, uid, id, res)
-                
+
         return False
 actions_server()
 

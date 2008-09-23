@@ -160,7 +160,7 @@ def init_logger():
         logf = config['logfile']
         # test if the directories exist, else create them
         try:
-            handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30) 
+            handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except:
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
             handler = logging.StreamHandler(sys.stdout)
@@ -185,7 +185,7 @@ def init_logger():
         colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', None, 'default']
         foreground = lambda f: 30 + colors.index(f)
         background = lambda f: 40 + colors.index(f)
-        
+
         mapping = {
             'DEBUG': ('blue', 'default'),
             'INFO': ('green', 'default'),

@@ -223,7 +223,7 @@ class binary(_column):
                     val = v[name]
                     break
             res.setdefault(i, val)
-            if context.get('get_binary_size',False):
+            if context.get('get_binary_size', True):
                 res[i] = tools.human_size(val)
 
         return res
@@ -620,7 +620,7 @@ class function(_column):
         else:
             res = self._fnct(cr, obj._table, ids, name, self._arg, context)
 
-        if self._type == 'binary' and context.get('get_binary_size', False):
+        if self._type == 'binary' and context.get('get_binary_size', True):
             # convert the data returned by the function with the size of that data...
             res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
         return res
@@ -631,6 +631,52 @@ class function(_column):
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
+# ---------------------------------------------------------
+# Related fields
+# ---------------------------------------------------------
+
+class related(function):
+
+    def _fnct_search(self, cr, uid, ids, obj=None, name=None, context=None):
+        raise 'Not Implemented Yet'
+
+    def _fnct_write(self,obj,cr, uid, ids, field_name, args, context=None):
+        raise 'Not Implemented Yet'
+
+    def _fnct_read(self,obj,cr, uid, ids, field_name, args, context=None):
+        if not ids: return {}
+        relation=obj._name
+        res={}
+        objlst = obj.browse(cr,uid,ids)
+        for data in objlst:
+            t_data=data
+            relation=obj._name
+            for i in range(len(self.arg)):
+                field_detail=self._field_get(cr,uid,relation,self.arg[i])
+                relation=field_detail[0]
+                if not t_data[self.arg[i]]:
+                    t_data = False
+                    break
+                if field_detail[1] in ('one2many','many2many'):
+                    t_data=t_data[self.arg[i]][0]
+                else:
+                    t_data=t_data[self.arg[i]]
+            if type(t_data) == type(objlst[0]):
+                res[data.id]=t_data.id
+            else:
+                res[data.id]=t_data
+        return res
+
+    def __init__(self,*arg,**args):
+        print arg
+        self.arg = arg
+        super(related, self).__init__(self._fnct_read, arg, fnct_inf=self._fnct_write, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
+
+    # TODO: call field_get on the object, not in the DB
+    def _field_get(self, cr, uid, model_name, prop):
+        cr.execute('SELECT relation,ttype FROM ir_model_fields WHERE name=%s AND model=%s', (prop, model_name))
+        res = cr.fetchone()
+        return res
 
 # ---------------------------------------------------------
 # Serialized fields
