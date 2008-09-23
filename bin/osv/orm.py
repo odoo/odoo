@@ -1127,7 +1127,7 @@ class orm_memory(orm_template):
                 for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
-                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                             r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
@@ -1721,7 +1721,7 @@ class orm(orm_template):
             def convert_field(f):
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f, f)
-                if isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return "length(%s) as %s" % (f,f)
                 return '"%s"' % (f,)
             #fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
