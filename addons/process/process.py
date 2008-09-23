@@ -246,12 +246,8 @@ class process_transition(osv.osv):
         'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
-<<<<<<< TREE
-        'note': fields.text('Description', translate=True),
-=======
         'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'tid', 'rid', 'Roles'),
         'note': fields.text('Description', translate=True),
->>>>>>> MERGE-SOURCE
     }
 process_transition()
 
