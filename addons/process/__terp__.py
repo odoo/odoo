@@ -14,6 +14,7 @@ This module allows you to manage your process for the end-users.
     "update_xml" : [
         "security/ir.model.access.csv",
         'process_view.xml',
+        '../sale/process/sale_process.xml'
     ],
     "active": False,
     "installable": True
