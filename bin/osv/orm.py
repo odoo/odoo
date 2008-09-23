@@ -775,23 +775,15 @@ class orm_template(object):
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
-            groups = None
-            group_str = node.getAttribute('groups')
-            if ',' in group_str:
-                groups = group_str.split(',')
+            if node.getAttribute('groups'):
+                groups = node.getAttribute('groups').split(',')
                 readonly = False
                 access_pool = self.pool.get('ir.model.access')
                 for group in groups:
-                    readonly = readonly and access_pool.check_groups(cr, user, group)
-
-                if readonly:
-                    parent = node.parentNode
-                    parent.removeChild(node)
-
-            else:
-                if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
-                    parent = node.parentNode
-                    parent.removeChild(node)
+                    readonly = readonly or access_pool.check_groups(cr, user, group)
+                if not readonly:
+                    node.setAttribute('invisible', '1')
+            node.removeAttribute('groups')
 
         if node.nodeType == node.ELEMENT_NODE:
             # translate view
@@ -837,7 +829,6 @@ class orm_template(object):
                     button.setAttribute('readonly', '0')
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
-
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             fields[field].update(fields_def[field])
