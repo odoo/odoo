@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-    <template pageSize="(1000.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="20.0" y1="35.0" width="980" height="650"/>
+       <frame id="first" x1="20.0" y1="35.0" width="1080" height="650"/>
 			<pageGraphics>
 				<!--logo-->
 				<!--<fill color="darkblue"/>-->
@@ -16,17 +16,18 @@
 
 				<!--COL 1-->
 				<drawString x="1.5cm" y="25.00cm">[[ company.name ]]</drawString>
-				<drawString x="30.40cm" y="25.00cm">Age Partner Balance - [[ get_currency(data['form']) ]]</drawString>
+				<drawString x="33.90cm" y="25.00cm">Age Partner Balance - [[ get_currency(data['form']) ]]</drawString>
 
 				<!--COL 2-->
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.5cm" y="0.90cm"> [[ time.strftime("%m-%d-%y %H:%M", time.localtime()) ]]</drawString>
-				<drawString x="33.50cm" y="0.90cm">Page <pageNumber/></drawString>
-
+				
+				<drawString x="1.5cm" y="0.90cm"> [[ time.strftime('%Y-%m-%d %H:%M', time.localtime()) ]]</drawString>
+				<drawString x="36.90cm" y="0.90cm">Page <pageNumber/></drawString>
+				
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
 
 			    <lineMode width="0.7"/>
-				<lines>1.5cm 24.70cm 34.50cm 24.70cm</lines>
+				<lines>1.5cm 24.70cm 38.00cm 24.70cm</lines>
 				<setFont name="Helvetica" size="8"/>
 			    </pageGraphics>
     </pageTemplate>
@@ -68,8 +69,8 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2_content" fontName="Helvetica" fontSize="7.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="8.3" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2_content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Total" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Total_right" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Helvetica" fontSize="15.0" leading="20" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -77,8 +78,8 @@
     <paraStyle name="P5" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="content" fontName="Helvetica" fontSize="7.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="8.3" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P10" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -96,13 +97,13 @@
     <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
-    <blockTable colWidths="290.0,90.0,90.0,90.0,90.0,93.0,95.0,95.0" style="Table2" repeatRows="1">
+    <blockTable colWidths="300.0,100.0,100.0,100.0,100.0,105.0,105.0,125.0" style="Table2" repeatRows="1">
       <tr>
         <td>
           <para style="P2">Partners</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]] [[ data['form']['date1'] ]]</para>
+          <para style="P8">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]] [[data['form']['date1'] ]]</para>
         </td>
         <td>
           <para style="P8">[[ data['form']['4']['name'] ]]</para>

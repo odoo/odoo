@@ -20,7 +20,7 @@
 				
 				
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%m-%d-%y %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
 				
@@ -53,10 +53,16 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,0" stop="3,0"/>
+      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,1" stop="1,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,1" stop="2,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,1" stop="3,1"/>
+      
+     
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
-  
     <blockTableStyle id="Tableau1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -97,38 +103,18 @@
     <paraStyle name="Index" fontName="Helvetica"/>
     
     <blockTableStyle id="TrLevelaaaaaaa">
-    <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <blockLeftPadding length="80" start="1,0" stop="1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevelaaaaaa">
-    <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <blockLeftPadding length="60" start="1,0" stop="1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevelaaaaa">
-    	<lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <blockLeftPadding length="40" start="1,0" stop="1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevelaaaa">
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <blockLeftPadding length="20" start="1,0" stop="1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevelaaa">
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <blockLeftPadding length="0" start="1,0" stop="1,0"/>
         
     </blockTableStyle>
@@ -183,35 +169,23 @@
   </stylesheet>
   <story>
   	
-  	
-    <blockTable colWidths="347.0,64.0,59.0,71.0" style="Table2" repeatRows="2">
-      <tr>
-        <td>
-        	<para style="P2">
+  	<para style="P2">
 <font color="white"> </font>
 </para>
+    <blockTable colWidths="347.0,64.0,59.0,71.0" style="Table2" repeatRows="1">
+      <tr>
+        <td>
            <para style="P12">Code</para>
         </td>
         <td>
-        <para style="P2">
-<font color="white"> </font>
-</para>
            <para style="P12a">Débit</para>
         </td>
         <td>
-        <para style="P2">
-<font color="white"> </font>
-</para>
            <para style="P12a">Crédit</para>
         </td>
         <td>
-        <para style="P2">
-<font color="white"> </font>
-</para>
            <para style="P12a">Solde</para>
         </td>
-      </tr>
-      <tr>
       </tr>
     
      
@@ -242,4 +216,3 @@
   
   </story>
 </document>
-
