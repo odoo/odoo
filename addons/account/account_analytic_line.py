@@ -89,6 +89,14 @@ class account_analytic_line(osv.osv):
                 }}
         return {}
 
+    def view_header_get(self, cr, user, view_id, view_type, context):
+        if context.get('account_id', False):
+            cr.execute('select name from account_analytic_account where id=%d', (context['account_id'],))
+            res = cr.fetchone()
+            res = _('Entries: ')+ (res[0] or '')
+            return res
+        return False
+
 account_analytic_line()
 
 
