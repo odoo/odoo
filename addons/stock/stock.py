@@ -1225,17 +1225,12 @@ class stock_move(osv.osv):
                                 'ref': ref,
                             })
             
-                
-            if (move.product_id.tracking and not move.prodlot_id):
-                raise osv.except_osv('Warning ! ','You should put a production lot for : '+move.product_id.name)
-            
         self.write(cr, uid, ids, {'state':'done'})
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
-
 
     def unlink(self, cr, uid, ids, context=None):
         for move in self.browse(cr, uid, ids, context=context):

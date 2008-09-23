@@ -49,26 +49,28 @@ class mrp_workcenter(osv.osv):
     _name = 'mrp.workcenter'
     _description = 'Workcenter'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Workcenter Name', size=64, required=True),
         'active': fields.boolean('Active'),
         'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
-        'code': fields.char('Code', size=8),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Timesheet'),
-        'note': fields.text('Description'),
+        'code': fields.char('Code', size=16),
+        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="The normal working time of the workcenter."),
+        'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
 
-        'capacity_per_cycle': fields.float('Capacity per Cycle'),
+        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operation this workcenter can do in parallel. If this workcenter represent a team of 5 workers, the capacity per cycle is 5."),
 
-        'time_cycle': fields.float('Time for 1 cycle (hour)'),
-        'time_start': fields.float('Time before prod.'),
-        'time_stop': fields.float('Time after prod.'),
-        'time_efficiency': fields.float('Time Efficiency'),
+        'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
+        'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
+        'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
+        'time_efficiency': fields.float('Time Efficiency', help="Factor that multiplies all times expressed in the workcenter."),
 
         'costs_hour': fields.float('Cost per hour'),
-        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','=','expense')]),
+        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
+            help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_cycle': fields.float('Cost per cycle'),
-        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','=','expense')]),
+        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
+            help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
-        'costs_general_account_id': fields.many2one('account.account', 'General Account'),
+        'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -93,7 +95,7 @@ class mrp_property(osv.osv):
     _description = 'Property'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True),
+        'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True, help="Not used in computations, for information purpose only."),
         'group_id': fields.many2one('mrp.property.group', 'Property Group', required=True),
         'description': fields.text('Description'),
     }
@@ -113,7 +115,11 @@ class mrp_routing(osv.osv):
         'note': fields.text('Description'),
         'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Workcenters'),
 
-        'location_id': fields.many2one('stock.location', 'Production Location'),
+        'location_id': fields.many2one('stock.location', 'Production Location', 
+            help="Keep empty if you produce at the location where the finnished products are needed." \
+                "Put a location if you produce at a fixed location. This can be a partner location " \
+                "if you subcontract the manufacturing operations."
+        ),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -127,8 +133,8 @@ class mrp_routing_workcenter(osv.osv):
         'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence'),
-        'cycle_nbr': fields.float('Number of cycle', required=True),
-        'hour_nbr': fields.float('Number of hours', required=True),
+        'cycle_nbr': fields.float('Number of Cycle', required=True),
+        'hour_nbr': fields.float('Number of Hours', required=True),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
         'note': fields.text('Description')
     }
@@ -145,11 +151,11 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active'),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without habing two production orders."),
-        'date_start': fields.date('Valid from'),
-        'date_stop': fields.date('Valid until'),
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without having two production orders."),
+        'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
+        'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence'),
-        'position': fields.char('Internal Ref.', size=64),
+        'position': fields.char('Internal Ref.', size=64, help="Reference to a position in an external plan."),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
@@ -304,7 +310,7 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
     _date_name  = 'date_planned'
-    
+
     def _get_sale_order(self,cr,uid,ids,field_name=False):
         move_obj=self.pool.get('stock.move')
         def get_parent_move(move_id):
@@ -324,13 +330,13 @@ class mrp_production(osv.osv):
                     if field_name=='client_order_ref':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
         return res
-    
+
     def _sale_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         return self._get_sale_order(cr,uid,ids,field_name='name')
-    
+
     def _sale_ref_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         return self._get_sale_order(cr,uid,ids,field_name='client_order_ref')
-    
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Origin', size=64),
@@ -640,11 +646,9 @@ mrp_production()
 class stock_move(osv.osv):
     _name = 'stock.move'
     _inherit = 'stock.move'
-
     _columns = {
-            'production_id': fields.many2one('mrp.production', 'Production', select=True),
-            }
-
+        'production_id': fields.many2one('mrp.production', 'Production', select=True),
+    }
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):

@@ -34,15 +34,15 @@ from osv import fields,osv
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-                 'sale_warn' : fields.boolean('Sale Order'),
-                 'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
-                 'purchase_warn' : fields.boolean('Purchase Order'),
-                 'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
-                 'picking_warn' : fields.boolean('Stock Picking'),
-                 'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
-                 'invoice_warn' : fields.boolean('Invoice'),
-                 'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
-                 }
+        'sale_warn' : fields.boolean('Sale Order'),
+        'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
+        'purchase_warn' : fields.boolean('Purchase Order'),
+        'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
+        'picking_warn' : fields.boolean('Stock Picking'),
+        'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
+        'invoice_warn' : fields.boolean('Invoice'),
+        'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
+    }
 res_partner()
 
 

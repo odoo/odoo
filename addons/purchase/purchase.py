@@ -154,14 +154,19 @@ class purchase_order(osv.osv):
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64, 
+            help="Reference of the document that generated this purchase order request."
+        ),
         'partner_ref': fields.char('Partner Ref.', size=64),
         'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
-        'date_approve':fields.date('Date Approved'),
+        'date_approve':fields.date('Date Approved', readonly=1),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True, states={'posted':[('readonly',True)]}),
 
-        'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
+        'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]},
+            help="Put an address if you want to deliver directly from the supplier to the customer." \
+                "In this case, it will remove the warehouse link and set the customer location."
+        ),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Destination', required=True),
 
@@ -177,7 +182,12 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
+        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
+            help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
+                "will just have to validate this invoice for control.\n" \
+                "From Picking: a draft invoice will be pre-genearted based on validated receptions.\n" \
+                "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
+        ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
