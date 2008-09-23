@@ -151,21 +151,26 @@ class project(osv.osv):
     # toggle activity of projects, their sub projects and their tasks
     def set_template(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids, value=False, context=context) 
-        return res   
-       
+        return res
+
     def reset_project(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids,value=True, context=context)
         return res
-    
+
+    def copy(self, cr, uid, id, default={},context={}):
+        default = default or {}
+        default['tasks'] = []
+        default['child_id'] = []
+        return super(project, self).copy(cr, uid, id, default, context)
+
     def duplicate_template(self, cr, uid, ids,context={}):
-        for proj in self.browse(cr, uid, ids):    
-            parent_id=context.get('parent_id',False)        
-            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+'(copy)','state':'template','parent_id':parent_id})
+        for proj in self.browse(cr, uid, ids):
+            parent_id=context.get('parent_id',False)
+            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
             cr.execute('select id from project_task where project_id=%d', (proj.id,))
             res = cr.fetchall()
-            tasks_ids = [x[0] for x in res]
-            for tasks_id in tasks_ids:            
-                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':False}, context=context)
+            for (tasks_id,) in res:
+                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
             cr.execute('select id from project_project where parent_id=%d', (proj.id,))
             res = cr.fetchall()
             project_ids = [x[0] for x in res]
