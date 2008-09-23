@@ -66,16 +66,25 @@ class ir_ui_menu(osv.osv):
                 context=context)
         if uid==1:
             return ids
-        user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
+        user_groups = set(self.pool.get('res.users').read(cr, uid, uid)['groups_id'])
         result = []
         for menu in self.browse(cr, uid, ids):
-            if not len(menu.groups_id):
-                result.append(menu.id)
+            restrict_to_groups = menu.groups_id
+            if not restrict_to_groups:
+                if menu.action:
+                    # if the menu itself has no restrictions, we get the groups of 
+                    # the action of the menu
+                    try:
+                        m, oid = menu.action.split(',', 1)
+                        data = self.pool.get(m).read(cr, uid, int(oid), context=context)
+                        if data and 'groups_id' in data:
+                            restrict_to_groups = data['groups_id']
+                    except:
+                        pass
+
+            if restrict_to_groups and not user_groups.intersection(restrict_to_groups):
                 continue
-            for g in menu.groups_id:
-                if g.id in user_groups:
-                    result.append(menu.id)
-                    break
+            result.append(menu.id)
         return result
 
     def _get_full_name(self, cr, uid, ids, name, args, context):
@@ -122,8 +131,7 @@ class ir_ui_menu(osv.osv):
             ('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
             context=context)
         values_action = {}
-        for value in values_obj.browse(cursor, user, value_ids,
-                context=context):
+        for value in values_obj.browse(cursor, user, value_ids, context=context):
             values_action[value.res_id] = value.value
         for menu_id in ids:
             res[menu_id] = values_action.get(menu_id, False)

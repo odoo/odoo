@@ -118,12 +118,18 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        def override_password(o):
+            if 'password' in o:
+                o['password'] = '********'
+            return o
+
         result = super(users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         if not canwrite:
-            for r in result:
-                if 'password' in r:
-                    r['password'] = '********'
+            if isinstance(ids, (int, float)):
+                result = override_password(result)
+            else:
+                result = map(override_password, result)
         return result
 
     _sql_constraints = [
