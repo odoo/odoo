@@ -331,8 +331,6 @@ class product_product(osv.osv):
         res = super(product_product, self).view_header_get(cr, uid, view_id, view_type, context)
         if (context.get('categ_id', False)):
             return _('Products: ')+self.pool.get('product.category').browse(cr, uid, context['categ_id'], context).name
-        if (context.get('location', False)):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, uid, context['location'], context).name
         return res
 
     def _product_price(self, cr, uid, ids, name, arg, context={}):

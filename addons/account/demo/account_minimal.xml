@@ -21,15 +21,20 @@
             <field name="code">liability</field>
             <field name="close_method">balance</field>
         </record>
+        <record id="account_type_cash_equity" model="account.account.type">
+            <field name="name">Equity</field> 
+            <field name="code">equity</field>
+            <field name="close_method">balance</field>
+        </record>
         <record id="account_type_income" model="account.account.type">
             <field name="name">Income</field> 
             <field name="code">income</field>
-            <field name="close_method">none</field>
+            <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_expense" model="account.account.type">
             <field name="name">Expense</field> 
             <field name="code">expense</field>
-            <field name="close_method">none</field>
+            <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_cash_moves" model="account.account.type">
             <field name="name">Cash</field> 
