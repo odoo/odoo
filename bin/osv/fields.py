@@ -648,8 +648,8 @@ class related(function):
 #        return True
 
 
-    def _fnct_write(self,obj,cr, uid, ids, field_name, args, context=None):
-        raise 'Not Implemented Yet'
+#    def _fnct_write(self,obj,cr, uid, ids,values, field_name, args, context=None):
+#        raise 'Not Implemented Yet'
 
     def _fnct_read(self,obj,cr, uid, ids, field_name, args, context=None):
         if not ids: return {}
@@ -678,7 +678,7 @@ class related(function):
     def __init__(self,*arg,**args):
         print arg
         self.arg = arg
-        super(related, self).__init__(self._fnct_read, arg, fnct_inv=self._fnct_write, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
+        super(related, self).__init__(self._fnct_read, arg, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
 
     # TODO: call field_get on the object, not in the DB
     def _field_get(self, cr, uid, obj, model_name, prop):
