@@ -3,7 +3,7 @@
     <data>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" sequence="4"/>
-        
+
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
@@ -12,6 +12,7 @@
                 <tree string="Carrier">
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="price" invisible="'order_id' not in context"/>
                 </tree>
             </field>
         </record>
@@ -36,7 +37,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery"/>
-        
+
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
             <field name="name">delivery.grid.tree</field>
@@ -50,7 +51,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_delivery_grid_form" model="ir.ui.view">
             <field name="name">delivery.grid.form</field>
             <field name="model">delivery.grid</field>
@@ -84,7 +85,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
-        
+
         <record id="view_delivery_grid_line_form" model="ir.ui.view">
             <field name="name">delivery.grid.line.form</field>
             <field name="model">delivery.grid.line</field>
@@ -117,7 +118,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_order_withcarrier_form" model="ir.ui.view">
             <field name="name">delivery.sale.order_withcarrier.form.view</field>
             <field name="type">form</field>
@@ -125,24 +126,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <separator string="Notes" position="before">
-                    <field name="carrier_id"/>
+                    <field name="carrier_id" context="{'order_id':active_id}"/>
                 </separator>
             </field>
         </record>
-        
-        <record id="view_picking_withcarrier_form" model="ir.ui.view">
-            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
-            <field name="arch" type="xml">
-                <field name="address_id" position="after">
-                    <field name="volume"/>
-                    <field name="weight"/>
-                    <field name="carrier_id"/>
-                </field>
-            </field>
-        </record>
+
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.out.form.view</field>
             <field name="type">form</field>
@@ -150,13 +138,12 @@
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="address_id" position="after">
-                    <field name="volume"/>
                     <field name="weight"/>
                     <field name="carrier_id"/>
                 </field>
             </field>
         </record>
-        
+
         <record id="view_picking_withcarrier_delivery_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.delivery.form.view</field>
             <field name="type">form</field>
@@ -164,24 +151,22 @@
             <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
             <field name="arch" type="xml">
                 <field name="address_id" position="after">
-                    <field name="volume"/>
                     <field name="weight"/>
                     <field name="carrier_id"/>
                 </field>
             </field>
         </record>
-        
+
         <record id="action_picking_tree4" model="ir.actions.act_window">
             <field name="name">Packings to be invoiced</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form</field>			
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree"/>
-        
-        
+
         <record id="action_picking_tree5" model="ir.actions.act_window">
             <field name="name">Generate Draft Invoices On Receptions</field>
             <field name="res_model">stock.picking</field>
@@ -191,7 +176,6 @@
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','in')]</field>
         </record>
         <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="stock.menu_action_picking_tree4"/>
-        
-        
+
     </data>
 </openerp>

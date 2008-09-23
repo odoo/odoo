@@ -10,7 +10,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure CRM Sections">
-                    <separator col="4" colspan="4" string="Configure CRM Menu for Selected Sections"/>
+                    <separator col="4" colspan="4" string="Install Pre-Configured Features"/>
+                    <label colspan="4" align="0.0" string="The CRM module of OpenERP is able to manage any kind of relationship. But, as to help you to start quickly on the system, we configured a few of them for you."/>
                     <newline/>
                     <field name="meeting"/>
                     <field name="lead"/>
@@ -18,6 +19,7 @@
                     <field name="jobs"/>
                     <field name="bugs"/>
                     <field name="fund"/>
+                    <field name="helpdesk"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
                         <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>

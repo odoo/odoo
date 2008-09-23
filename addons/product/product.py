@@ -87,7 +87,8 @@ class product_uom(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'category_id': fields.many2one('product.uom.categ', 'UOM Category', required=True, ondelete='cascade'),
+        'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
+            help="Unit of Measure of the same category can be converted between each others."),
         'factor': fields.float('Rate', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
                     '1 (base unit) = coef (this unit)'),
@@ -96,7 +97,8 @@ class product_uom(osv.osv):
             help='The coefficient for the formula:\n' \
                     'coef (base unit) = 1 (this unit)'),
         'factor_inv_data': fields.float('Factor', digits=(12, 6)),
-        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True),
+        'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
+            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be splitted."),
         'active': fields.boolean('Active'),
     }
 
@@ -228,7 +230,6 @@ product_category()
 class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
-
     def _calc_seller_delay(self, cr, uid, ids, name, arg, context={}):
         result = {}
         for product in self.browse(cr, uid, ids, context):
@@ -251,25 +252,25 @@ class product_template(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Rentable product'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
-        'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy']))),
-        'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
+        'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
+        'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="The cost of the product for accounting stock valorisation. It can serves as a base price for supplier price."),
         'volume': fields.float('Volume', help="The weight in Kg."),
         'weight': fields.float('Gross weight'),
         'weight_net': fields.float('Net weight'),
-        'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True),
+        'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
+            help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="This is the default Unit of Measure used for all stock operation."),
-        'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True),
+        'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
+        'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
-            help='Keep empty to use the default UOM'),
+            help='Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
             help='Coefficient to convert UOM to UOS\n'
             ' uom = uos * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'tracking': fields.boolean('Track Lots', help="Force to use a Production Lot number during stock operations for traceability."),
         'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
@@ -414,7 +415,7 @@ class product_product(osv.osv):
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'ean13': fields.char('EAN13', size=13),
-        'packaging' : fields.one2many('product.packaging', 'product_id', 'Palettization', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
+        'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
     }
@@ -424,7 +425,6 @@ class product_product(osv.osv):
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]
             uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
-            print uom.category_id.id , uom_po.category_id.id
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
@@ -529,28 +529,28 @@ product_product()
 
 class product_packaging(osv.osv):
     _name = "product.packaging"
-    _description = "Conditionnement"
+    _description = "Packaging"
     _rec_name = 'ean'
     _columns = {
         'name' : fields.char('Description', size=64),
-        'qty' : fields.float('Quantity by UL',
-            help="The total number of products you can put by UL."),
-        'ul' : fields.many2one('product.ul', 'Type of UL', required=True),
-        'ul_qty' : fields.integer('UL by layer'),
-        'rows' : fields.integer('Number of layer', required=True,
-            help='The number of layer on palette'),
+        'qty' : fields.float('Quantity by Package',
+            help="The total number of products you can put by palet or box."),
+        'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
+        'ul_qty' : fields.integer('Package by layer'),
+        'rows' : fields.integer('Number of Layer', required=True,
+            help='The number of layer on a palet or box'),
         'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
         'ean' : fields.char('EAN', size=14,
-            help="The EAN code of the transport unit."),
+            help="The EAN code of the package unit."),
         'code' : fields.char('Code', size=14,
             help="The code of the transport unit."),
-        'weight': fields.float('Palette Weight',
-            help='The weight of the empty palette'),
-        'weight_ul': fields.float('UL Weight',
+        'weight': fields.float('Total Package Weight',
+            help='The weight of a full of products palet or box.'),
+        'weight_ul': fields.float('Empty Package Weight',
             help='The weight of the empty UL'),
-        'height': fields.float('Height', help='The height of the palette'),
-        'width': fields.float('Width', help='The width of the palette'),
-        'length': fields.float('Length', help='The length of the palette'),
+        'height': fields.float('Height', help='The height of the package'),
+        'width': fields.float('Width', help='The width of the package'),
+        'length': fields.float('Length', help='The length of the package'),
     }
 
     def _get_1st_ul(self, cr, uid, context={}):
@@ -578,13 +578,13 @@ class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product supplier"
     _columns = {
-        'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade'),
-        'product_name': fields.char('Partner product name', size=128),
-        'product_code': fields.char('Partner product reference', size=64),
+        'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', help="Supplier of this product"),
+        'product_name': fields.char('Partner Product Name', size=128, help="Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
+        'product_code': fields.char('Partner Product Code', size=64, help="Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Priority'),
-        'qty' : fields.float('Minimal quantity', required=True),
+        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase for this supplier, expressed in the default unit of measure."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
-        'delay' : fields.integer('Delivery delay', required=True),
+        'delay' : fields.integer('Delivery Delay', required=True, help="Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
     }
     _defaults = {

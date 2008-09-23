@@ -63,12 +63,10 @@ class mrp_production_workcenter_line(osv.osv):
 
     _columns = {
         'state': fields.selection([('draft','Draft'),('confirm', 'Confirm'),('cancel','Canceled'),('done','Done')],'Status', readonly=True),
-       'date_start': fields.datetime('Start Date'),
-       'date_finnished': fields.datetime('End Date'),
-       'delay': fields.function(_calc_delay, method=True, string='Delay', help="This is delay between operation start and stop in this workcenter"),
+        'date_start': fields.datetime('Start Date'),
+        'date_finnished': fields.datetime('End Date'),
+        'delay': fields.function(_calc_delay, method=True, string='Delay', help="This is delay between operation start and stop in this workcenter"),
         'delay': fields.float('delay', required=True),
-
-
     }
     _defaults = {
         'state': lambda *a: 'draft',

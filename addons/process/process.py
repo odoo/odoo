@@ -31,13 +31,32 @@ import pooler, tools
 
 from osv import fields, osv
 
+class Env(dict):
+    
+    def __init__(self, obj, user):
+        self.__obj = obj
+        self.__usr = user
+        
+    def __getitem__(self, name):
+        
+        if name in ('__obj', '__user'):
+            return super(ExprContext, self).__getitem__(name)
+        
+        if name == 'user':
+            return self.__user
+        
+        if name == 'object':
+            return self.__obj
+        
+        return self.__obj[name]
+
 class process_process(osv.osv):
     _name = "process.process"
     _description = "Process"
     _columns = {
-        'name': fields.char('Name', size=30,required=True),
+        'name': fields.char('Name', size=30,required=True, translate=True),
         'active': fields.boolean('Active'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')
     }
     _defaults = {
@@ -45,34 +64,90 @@ class process_process(osv.osv):
     }
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
+        
         pool = pooler.get_pool(cr.dbname)
+        
         process = pool.get('process.process').browse(cr, uid, [id])[0]
-        current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
+        current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
+        current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
+        
+        expr_context = Env(current_object, current_user)
+
+        def get_resource_info(node):
+            ret = False
+
+            src_model = res_model
+            src_id = res_id
+            
+            if node.transition_in:
+                tr = node.transition_in[0]
+                src = nodes.get(tr.source_node_id.id)
+                if src['res']:
+                    src_model = src['res']['model']
+                    src_id = src['res']['id']
+                else:
+                    return False
+
+            fields = pool.get(src_model).fields_get(cr, uid, context=context)
+
+            for name, field in fields.items():
+                if node.model_id and field.get('relation', False) == node.model_id.model:
+                    src_obj = pool.get(src_model).browse(cr, uid, [src_id], context)[0]
+                    rel = src_obj[name]
+                    if rel:
+                        if isinstance(rel, (list, tuple)):
+                            rel = rel[0]
+                        ret = {}
+                        ret['name'] = rel.name_get(context)[0][1]
+                        ret['model'] = field['relation']
+                        ret['id'] = rel.id
+
+            return ret
+            
+        notes = process.note
         nodes = {}
         start = []
         transitions = {}
+
+        states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
+        title = "%s - Resource: %s, State: %s" % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
+
         for node in process.node_ids:
-
             data = {}
-
             data['name'] = node.name
-            data['menu'] = (node.menu_id or None) and node.menu_id.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
-            data['active'] = 0
+            data['subflow'] = (node.subflow_id or False) and [node.subflow_id.id, node.subflow_id.name]
+            data['notes'] = node.note
+            data['active'] = False
+            data['gray'] = False
+            data['res'] = get_resource_info(node)
 
-            if node.kind == "state" and node.model_id and node.model_id.model == res_model:
-                states = node.model_states
-                states = (states or []) and states.split(',')
-                data['active'] = (states and current_object.state in states) or not states
+            if node.menu_id:
+                data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
+            
+            if node.model_id and node.model_id.model == res_model:
 
-            elif node.kind == "router":
-                #TODO:
-                pass
+                data['res'] = resource = {}
+                resource['name'] = current_object.name_get(context)[0][1]
+                resource['model'] = res_model
+                resource['id'] = res_id
 
-            elif node.kind == "subflow":
-                #TODO: subflow
-                pass
+                try:
+                    data['active'] = eval(node.model_states, expr_context)
+                except Exception, e:
+                    # waring: invalid state expression
+                    pass
+
+            if not data['active']:
+                try:
+                    gray = True
+                    for cond in node.condition_ids:
+                        if cond.model_id and cond.model_id.model == res_model:
+                            gray = gray and eval(cond.model_states, expr_context)
+                    data['gray'] = not gray
+                except:
+                    pass
 
             nodes[node.id] = data
             if node.flow_start:
@@ -83,10 +158,13 @@ class process_process(osv.osv):
                 data['name'] = tr.name
                 data['source'] = tr.source_node_id.id
                 data['target'] = tr.target_node_id.id
+                data['notes'] = tr.note
                 data['buttons'] = buttons = []
                 for b in tr.action_ids:
                     button = {}
                     button['name'] = b.name
+                    button['state'] = b.state
+                    button['action'] = b.action
                     buttons.append(button)
                 data['roles'] = roles = []
                 for r in tr.transition_ids:
@@ -94,6 +172,10 @@ class process_process(osv.osv):
                         role = {}
                         role['name'] = r.role_id.name
                         roles.append(role)
+                for r in tr.role_ids:
+                    role = {}
+                    role['name'] = r.name
+                    roles.append(role)
                 transitions[tr.id] = data
 
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
@@ -101,8 +183,8 @@ class process_process(osv.osv):
         #g.scale(100, 100, 180, 120)
         g.scale(*scale)
         graph = g.result_get()
-        miny = -1
 
+        miny = -1
         for k,v in nodes.items():
             x = graph[k]['y']
             y = graph[k]['x']
@@ -115,7 +197,8 @@ class process_process(osv.osv):
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-        return dict(nodes=nodes, transitions=transitions)
+
+        return dict(title=title, notes=notes, nodes=nodes, transitions=transitions)
 
 process_process()
 
@@ -123,16 +206,18 @@ class process_node(osv.osv):
     _name = 'process.node'
     _description ='Process Nodes'
     _columns = {
-        'name': fields.char('Name', size=30,required=True),
-        'process_id': fields.many2one('process.process', 'Process', required=True),
-        'kind': fields.selection([('state','State'),('router','Router'),('subflow','Subflow')],'Kind of Node', required=True),
+        'name': fields.char('Name', size=30,required=True, translate=True),
+        'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
+        'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
+        'subflow_id': fields.many2one('process.process', 'Subflow', ondelete='set null'),
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('process.transition', 'target_node_id', 'Starting Transitions'),
         'transition_out': fields.one2many('process.transition', 'source_node_id', 'Ending Transitions'),
+        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions')
     }
     _defaults = {
         'kind': lambda *args: 'state',
@@ -141,16 +226,28 @@ class process_node(osv.osv):
     }
 process_node()
 
+class process_node_condition(osv.osv):
+    _name = 'process.condition'
+    _description = 'Condition'
+    _columns = {
+        'name': fields.char('Name', size=30, required=True),
+        'node_id': fields.many2one('process.node', 'Node', required=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
+        'model_states': fields.char('Expression', required=True, size=128)
+    }
+process_node_condition()
+
 class process_transition(osv.osv):
     _name = 'process.transition'
     _description ='Process Transitions'
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True, translate=True),
         'source_node_id': fields.many2one('process.node', 'Source Node', required=True, ondelete='cascade'),
-        'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),        
+        'target_node_id': fields.many2one('process.node', 'Target Node', required=True, ondelete='cascade'),
         'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons'),
         'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'ptr_id', 'wtr_id', 'Workflow Transitions'),
-        'note': fields.text('Description'),
+        'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'tid', 'rid', 'Roles'),
+        'note': fields.text('Description', translate=True),
     }
 process_transition()
 
@@ -158,14 +255,14 @@ class process_transition_action(osv.osv):
     _name = 'process.transition.action'
     _description ='Process Transitions Actions'
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True, translate=True),
         'state': fields.selection([('dummy','Dummy'),
-                                   ('method','Object Method'),
+                                   ('object','Object Method'),
                                    ('workflow','Workflow Trigger'),
                                    ('action','Action')], 'Type', required=True),
         'action': fields.char('Action ID', size=64, states={
             'dummy':[('readonly',1)],
-            'method':[('required',1)],
+            'object':[('required',1)],
             'workflow':[('required',1)],
             'action':[('required',1)],
         },),

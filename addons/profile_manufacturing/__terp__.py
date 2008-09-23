@@ -31,7 +31,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
-    "depends":["mrp", "crm", "sale", "delivery","board_manufacturing"],
+    "depends":["mrp", "sale", "delivery","board_manufacturing"],
     "demo_xml":[],
     "update_xml":[
         "security/ir.model.access.csv",

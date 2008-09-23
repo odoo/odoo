@@ -214,7 +214,7 @@ class sale_order(osv.osv):
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
-        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')], 'Packing Policy', required=True),
         'order_policy': fields.selection([
             ('prepaid','Payment before delivery'),
             ('manual','Shipping & Manual Invoice'),
@@ -241,7 +241,7 @@ class sale_order(osv.osv):
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks."),
+        'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
     }
     _defaults = {
@@ -301,7 +301,7 @@ class sale_order(osv.osv):
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines, context={}):
+    def _make_invoice(self, cr, uid, order, lines,context={}):
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -479,7 +479,7 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id=False
                 date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
-                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d')
+                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -770,10 +770,10 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False):
+        warning={}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context = {'lang': lang, 'partner_id': partner_id}
@@ -781,7 +781,7 @@ class sale_order_line(osv.osv):
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                    'product_uos': []}}
+                   'product_uos': []}}
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
@@ -792,9 +792,19 @@ class sale_order_line(osv.osv):
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-            qty = qty - qty % q + q
+#            qty = qty - qty % q + q
+            if not (qty % q) == 0 :
+                ean = pack.ean
+                qty_pack = pack.qty
+                type_ul = pack.ul
+                warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
+                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantiny: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warning={
+                    'title':'Packing Information !',
+                    'message': warn_msg
+                    }
             result['product_uom_qty'] = qty
-
+            
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id <> uom2.category_id.id:
@@ -864,7 +874,7 @@ class sale_order_line(osv.osv):
         # Round the quantity up
 
         # get unit price
-        warning={}
+        
         if not pricelist:
             warning={
                 'title':'No Pricelist !',
@@ -884,11 +894,9 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }
+                    }                
             else:
-                result.update({'price_unit': price})
-
-
+                result.update({'price_unit': price})		
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

@@ -37,7 +37,7 @@ from tools.translate import _
 delivery_form = """<?xml version="1.0"?>
 <form string="Create deliveries">
     <separator colspan="4" string="Delivery Method" />
-    <field name="carrier_id" />
+    <field name="carrier_id"/>
 </form>
 """
 
@@ -48,9 +48,11 @@ delivery_fields = {
 def _delivery_default(self, cr, uid, data, context):
     order_obj = pooler.get_pool(cr.dbname).get('sale.order')
     order = order_obj.browse(cr, uid, data['ids'])[0]
+    
     if not order.state in ('draft'):
         raise wizard.except_wizard(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
 
+    
     carrier_id = order.partner_id.property_delivery_carrier.id
     return {'carrier_id': carrier_id}
 
