@@ -379,7 +379,7 @@ class stock_picking(osv.osv):
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Planned Date', select=1),
-        'date':fields.datetime('Date create'),
+        'date':fields.datetime('Date Order'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),

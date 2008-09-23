@@ -492,12 +492,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
-                    <field name="address_id" select="1"/>
-                    <field name="invoice_state"/>
                     <field name="origin"/>
+                    <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -587,8 +587,9 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
-                    <field name="address_id" select="1"/>
                     <field name="origin"/>
+                    <field name="address_id" select="1"/>
+                    <field name="backorder_id"/>
                     <field name="date" select="1"/>
                     <field name="min_date" select="1"/>
                     <field name="state" select="1"/>
@@ -771,11 +772,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
+                    <field name="origin"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
-                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -942,12 +944,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
-                    <field name="address_id"/>
-                    <field name="invoice_state"/>
                     <field name="origin"/>
+                    <field name="address_id"/>
                     <field name="backorder_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
