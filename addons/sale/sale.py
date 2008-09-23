@@ -214,7 +214,8 @@ class sale_order(osv.osv):
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
-        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')], 'Packing Policy', required=True),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')],
+            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."""),
         'order_policy': fields.selection([
             ('prepaid','Payment before delivery'),
             ('manual','Shipping & Manual Invoice'),
@@ -928,15 +929,27 @@ class sale_config_picking_policy(osv.osv_memory):
     _name='sale.config.picking_policy'
     _columns = {
         'name':fields.char('Name', size=64),
-        'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([
+            ('direct','Direct Delivery'),
+            ('one','All at once')
+        ], 'Packing Policy', required=True ),
+        'order_policy': fields.selection([
+            ('manual','Invoice based on Sales Orders'),
+            ('picking','Invoice based on Deliveries'),
+        ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
+        'order_policy': lambda *a: 'picking'
     }
     def set_default(self, cr, uid, ids, context=None):
-        if 'name' in context:
+        print context
+        for o in self.browse(cr, uid, ids, context=context):
+            print o.picking_policy, o.order_policy
             ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],context['picking_policy'])
+            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
+            ir_values_obj = self.pool.get('ir.values')
+            ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

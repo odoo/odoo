@@ -773,6 +773,7 @@
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="state"/>
@@ -940,8 +941,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
-                    <field colspan="4" name="name"/>
-                    <field name="address_id" select="1"/>
+                    <field name="name"/>
+                    <field name="address_id"/>
                     <field name="invoice_state"/>
                     <field name="origin"/>
                     <field name="backorder_id"/>
