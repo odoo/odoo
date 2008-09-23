@@ -1,38 +1,38 @@
 #!/bin/bash
-# tinyerp-server        This shell script takes care of starting and stopping
-#                       TinyERP server
+# openerp-server        This shell script takes care of starting and stopping
+#                       OpenERP server
 #
 # chkconfig: 345 95 05
-# description: TinyERP server
+# description: OpenERP server
 #
-# pidfile: /var/run/tinyerp-server.pid
-# config: /etc/tinyerp-server.conf
+# pidfile: /var/run/openerp-server.pid
+# config: /etc/openerp-server.conf
 
 ### BEGIN INIT INFO
-# Provides: tinyerp-server
+# Provides: openerp-server
 # Required-Start: postgresql
 # Required-Stop: postgresql
 # Should-Start: $network harddrake
 # Default-Start: 345
-# Short-Description: Launches the TinyERP server.
-# Description: This startup script launches the TinyERP server.
+# Short-Description: Launches the OpenERP server.
+# Description: This startup script launches the OpenERP server.
 ### END INIT INFO
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-PIDFILE=/var/run/tinyerp/tinyerp-server.pid
-LOCKFILE=/var/lock/subsys/tinyerp-server
-LOGFILE=/var/log/tinyerp/tinyerp-server.log
+PIDFILE=/var/run/tinyerp/openerp-server.pid
+LOCKFILE=/var/lock/subsys/openerp-server
+LOGFILE=/var/log/tinyerp/openerp-server.log
 
 OPTS="--pidfile=$PIDFILE --logfile=$LOGFILE"
 
-prog="tinyerp-server"
-desc="TinyERP Server Daemon"
+prog="openerp-server"
+desc="OpenERP Server Daemon"
 
-# check if the tinyerp-server conf file is present, then use it
-if [ -f /etc/tinyerp-server.conf ]; then
-    OPTS="$OPTS -c /etc/tinyerp-server.conf"
+# check if the openerp-server conf file is present, then use it
+if [ -f /etc/openerp-server.conf ]; then
+    OPTS="$OPTS -c /etc/openerp-server.conf"
 fi
 
 # Source function library
@@ -44,16 +44,16 @@ else
  exit 0
 fi
 
-# check the existence of the tinyerp-server script
-[ -z "/usr/bin/tinyerp-server" ] && exit 0
+# check the existence of the openerp-server script
+[ -z "/usr/bin/openerp-server" ] && exit 0
 
 RETVAL=0
 
 start() {
     echo -n $"Starting $desc ($prog): "
-    daemon --user tinyerp --check tinyerp-server \
-    "/usr/bin/setsid /usr/bin/tinyerp-server \
-    -c /etc/tinyerp-server.conf \
+    daemon --user tinyerp --check openerp-server \
+    "/usr/bin/setsid /usr/bin/openerp-server \
+    -c /etc/openerp-server.conf \
     --pidfile=$PIDFILE \
     --logfile=$LOGFILE &"
 
