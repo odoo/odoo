@@ -43,6 +43,8 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
         'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         'scrum':fields.boolean('Scrum Methodology', help="Scrum is an 'agile development methodology', mainly used in IT projects. It helps you to manage teams, long term roadmaps, sprints, and so on."),
         'base_contact':fields.boolean('Contacts Management', help="Allows you to manage partners (enterprises), addresses of partners and contacts of these partners (employee/people). Install this if you plan to manage your relationships with partners and contacts."),
+        'portal': fields.boolean('Portal',
+            help="This module allows you to manage a Portal system.")
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
@@ -61,7 +63,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
                     ids = mod_obj.search(cr, uid, [('name', '=', r)])   
                     mod_obj.action_install(cr,uid,ids,context=context)                       
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        db, pool = pooler.restart_pool(cr.dbname,force_demo=True, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
