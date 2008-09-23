@@ -17,6 +17,8 @@
                     <field name="sale_margin"/>
                     <separator string="Relationship Management" colspan="4"/> 
                     <field name="crm_configuration"/>
+					<separator string="Portal Management" colspan="4"/> 
+                    <field name="portal"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
                     <group col="4" colspan="2">
@@ -39,7 +41,7 @@
       <record model="ir.module.module.configuration.step"
             id="config_install_module">
             <field name="name">Manufacturing Profile : Install Extra modules</field>
-            <field name="note">Install more modules. A few modules are proposed according to the service profile you selected. You will be able to install them based on our requirements.</field>
+            <field name="note">Install more modules. A few modules are proposed according to the manufacturing profile you selected. You will be able to install them based on our requirements.</field>
             <field name="action_id" ref="action_config_install_module"/>
             <field name="state">open</field>
         </record>
