@@ -1113,6 +1113,8 @@ class orm_memory(orm_template):
             fields_to_read = self._columns.keys()
         result = []
         if self.datas:
+            if isinstance(ids, (int, long)):
+                ids = [ids]
             for id in ids:
                 r = {'id': id}
                 for f in fields_to_read:
@@ -1128,6 +1130,8 @@ class orm_memory(orm_template):
                 res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
                 for record in result:
                     record[f] = res2[record['id']]
+            if isinstance(ids, (int, long)):
+                return result[0]
         return result
 
     def write(self, cr, user, ids, vals, context=None):
