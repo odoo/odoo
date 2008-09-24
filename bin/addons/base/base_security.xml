@@ -41,6 +41,9 @@
         <field name="menu_id" ref="action_menu_admin"/>
     </record>
 
+	<record model="ir.ui.menu" id="base.menu_administration">
+		<field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+	</record>
 </data>
 </openerp>
 
