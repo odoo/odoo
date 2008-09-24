@@ -212,7 +212,7 @@ class followup_all_print(wizard.interface):
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         cr.execute(
-            "SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
+            "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
                 "LEFT JOIN account_account AS a "\
                 "ON (l.account_id=a.id) "\
