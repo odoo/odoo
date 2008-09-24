@@ -681,8 +681,8 @@ class module_configuration(osv.osv_memory):
                   'target':item.action_id.target,
             }
         user_action=self.pool.get('res.users').browse(cr,uid,uid)
-        act_obj=self.pool.get(user_action.action_id.type)
-        action_ids=act_obj.search(cr,uid,[('name','=',user_action.action_id.name)])
+        act_obj=self.pool.get(user_action.menu_id.type)
+        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
         action_open=act_obj.browse(cr,uid,action_ids)[0]
         if context.get('menu',False):
             return{
