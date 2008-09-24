@@ -167,8 +167,8 @@ class account_bank_statement(osv.osv):
 
             if not (abs(st.balance_end - st.balance_end_real) < 0.0001):
                 raise osv.except_osv(_('Error !'),
-                        _('The statement balance is incorrect !\n'
-                        'Check that the ending balance equals the computed one.'))
+                        _('The statement balance is incorrect !\n') +
+                        _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configration Error !'),
@@ -177,7 +177,7 @@ class account_bank_statement(osv.osv):
             for line in st.move_line_ids:
                 if line.state <> 'valid':
                     raise osv.except_osv(_('Error !'),
-                            _('The account entries lines are not valid.'))
+                            _('The account entries lines are not in valid state.'))
 
             for move in st.line_ids:
                 move_id = account_move_obj.create(cr, uid, {

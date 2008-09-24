@@ -260,7 +260,7 @@ class task(osv.osv):
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
         'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
-        'date_start': fields.datetime('Date'),
+        'date_start': fields.datetime('Date Opened'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
@@ -289,7 +289,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-    _order = "state, sequence, priority, date_deadline, id"
+    _order = "sequence, priority, date_deadline, id"
 
     #
     # Override view according to the company definition

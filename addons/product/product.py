@@ -588,6 +588,7 @@ class product_supplierinfo(osv.osv):
     }
     _defaults = {
         'qty': lambda *a: 0.0,
+        'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
     }
     _order = 'sequence'
