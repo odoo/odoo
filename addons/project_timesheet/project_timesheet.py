@@ -65,5 +65,16 @@ class project_work(osv.osv):
 
 
 project_work()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class project_project(osv.osv):
+    _inherit = "project.project"
+    def name_get(self, cr, user, ids, context=None):
+        result = []
+        for project in self.browse(cr, user, ids, context):
+            if project.category_id:
+                result.append((project.id, '['+(project.category_id.code or '')+'] '+project.name))
+            else:
+                result.append((project.id, '[?] '+project.name))
+        return result
+project_project()
 

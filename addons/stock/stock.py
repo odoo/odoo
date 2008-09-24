@@ -380,6 +380,7 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Planned Date', select=1),
         'date':fields.datetime('Date Order'),
+        'date_done':fields.datetime('Date Done'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -514,7 +515,7 @@ class stock_picking(osv.osv):
     # TODO: change and create a move if not parents
     #
     def action_done(self, cr, uid, ids, context=None):
-        self.write(cr,uid, ids, {'state':'done'})
+        self.write(cr,uid, ids, {'state':'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_move(self, cr, uid, ids, context={}):
