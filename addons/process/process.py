@@ -81,6 +81,8 @@ class process_process(osv.osv):
         states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
         title = "%s - Resource: %s, State: %s" % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
 
+        perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
+
         for node in process.node_ids:
             data = {}
             data['name'] = node.name
@@ -160,6 +162,7 @@ class process_process(osv.osv):
             fields = pool.get(ref_model).fields_get(cr, uid, context=context)
 
             resource['name'] = refobj.name_get(context)[0][1]
+            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
 
             for r in relatives:
                 node = nodes[r]
@@ -202,7 +205,7 @@ class process_process(osv.osv):
             y = v['y']
             v['y'] = min(y - miny + 10, y)
 
-        return dict(title=title, notes=notes, nodes=nodes, transitions=transitions)
+        return dict(title=title, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
 
 process_process()
 
