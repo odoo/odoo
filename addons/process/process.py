@@ -72,38 +72,7 @@ class process_process(osv.osv):
         current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
         
         expr_context = Env(current_object, current_user)
-
-        def get_resource_info(node):
-            ret = False
-
-            src_model = res_model
-            src_id = res_id
-            
-            if node.transition_in:
-                tr = node.transition_in[0]
-                src = nodes.get(tr.source_node_id.id)
-                if src['res']:
-                    src_model = src['res']['model']
-                    src_id = src['res']['id']
-                else:
-                    return False
-
-            fields = pool.get(src_model).fields_get(cr, uid, context=context)
-
-            for name, field in fields.items():
-                if node.model_id and field.get('relation', False) == node.model_id.model:
-                    src_obj = pool.get(src_model).browse(cr, uid, [src_id], context)[0]
-                    rel = src_obj[name]
-                    if rel:
-                        if isinstance(rel, (list, tuple)):
-                            rel = rel[0]
-                        ret = {}
-                        ret['name'] = rel.name_get(context)[0][1]
-                        ret['model'] = field['relation']
-                        ret['id'] = rel.id
-
-            return ret
-            
+        
         notes = process.note
         nodes = {}
         start = []
@@ -121,18 +90,11 @@ class process_process(osv.osv):
             data['notes'] = node.note
             data['active'] = False
             data['gray'] = False
-            data['res'] = get_resource_info(node)
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
             if node.model_id and node.model_id.model == res_model:
-
-                data['res'] = resource = {}
-                resource['name'] = current_object.name_get(context)[0][1]
-                resource['model'] = res_model
-                resource['id'] = res_id
-
                 try:
                     data['active'] = eval(node.model_states, expr_context)
                 except Exception, e:
@@ -178,12 +140,54 @@ class process_process(osv.osv):
                     roles.append(role)
                 transitions[tr.id] = data
 
+        # now populate resource information
+        def update_relatives(nid, ref_id, ref_model):
+            relatives = []
+
+            for tid, tr in transitions.items():
+                if tr['source'] == nid:
+                    relatives.append(tr['target'])
+                if tr['target'] == nid:
+                    relatives.append(tr['source'])
+
+            if not ref_id:
+                nodes[nid]['res'] = False
+                return
+
+            nodes[nid]['res'] = resource = {'id': ref_id, 'model': ref_model}
+
+            refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context)[0]
+            fields = pool.get(ref_model).fields_get(cr, uid, context=context)
+
+            resource['name'] = refobj.name_get(context)[0][1]
+
+            for r in relatives:
+                node = nodes[r]
+                if 'res' not in node:
+                    for n, f in fields.items():
+                        if node['model'] == ref_model:
+                            update_relatives(r, ref_id, ref_model)
+
+                        elif f.get('relation') == node['model']:
+                            rel = refobj[n]
+                            if rel and isinstance(rel, list) :
+                                rel = rel[0]
+                            _id = (rel or False) and rel.id
+                            _model = node['model']
+                            update_relatives(r, _id, _model)
+
+        for nid, node in nodes.items():
+            if node['active'] or node['model'] == res_model:
+                update_relatives(nid, res_id, res_model)
+                break
+
+        # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
-        g.process(start)
-        #g.scale(100, 100, 180, 120)
-        g.scale(*scale)
+        g.process(start)        
+        g.scale(*scale) #g.scale(100, 100, 180, 120)
         graph = g.result_get()
 
+        # fix the height problem
         miny = -1
         for k,v in nodes.items():
             x = graph[k]['y']
