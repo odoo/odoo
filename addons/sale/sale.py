@@ -954,9 +954,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'order_policy': lambda *a: 'picking'
     }
     def set_default(self, cr, uid, ids, context=None):
-        print context
         for o in self.browse(cr, uid, ids, context=context):
-            print o.picking_policy, o.order_policy
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
             ir_values_obj = self.pool.get('ir.values')

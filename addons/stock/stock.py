@@ -329,9 +329,7 @@ class stock_picking(osv.osv):
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
-        print  self.browse(cr, uid, [ids], context)
         for pick in self.browse(cr, uid,[ids], context):
-            print value,type(value),pick.min_date
             cr.execute("""update stock_move set
                     date_planned=%s 
                 where
@@ -911,7 +909,6 @@ class stock_move(osv.osv):
             cursor.commit()
 
     def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
-        print uid, prodlot_id, product_qty, loc_id
         if not prodlot_id or not loc_id:
             return {}
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
