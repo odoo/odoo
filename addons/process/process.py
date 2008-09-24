@@ -63,6 +63,29 @@ class process_process(osv.osv):
         'active' : lambda *a: True,
     }
 
+    def search_by_model(self, cr, uid, res_model, context):
+        pool = pooler.get_pool(cr.dbname)
+
+        model_ids = pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
+        if not model_ids:
+            return []
+
+        nodes = pool.get('process.node').search(cr, uid, [('model_id', 'in', model_ids)])
+        if not nodes:
+            return []
+
+        nodes = pool.get('process.node').browse(cr, uid, nodes, context)
+
+        unique = []
+        result = []
+        
+        for node in nodes:
+            if node.process_id.id not in unique:
+                result.append((node.process_id.id, node.process_id.name))
+                unique.append(node.process_id.id)
+
+        return result
+
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
         
         pool = pooler.get_pool(cr.dbname)
