@@ -92,6 +92,7 @@ class process_process(osv.osv):
             data['notes'] = node.note
             data['active'] = False
             data['gray'] = False
+            data['url'] = node.help_url
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
@@ -224,7 +225,8 @@ class process_node(osv.osv):
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('process.transition', 'target_node_id', 'Starting Transitions'),
         'transition_out': fields.one2many('process.transition', 'source_node_id', 'Ending Transitions'),
-        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions')
+        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions'),
+        'help_url': fields.char('Help URL', size=255)
     }
     _defaults = {
         'kind': lambda *args: 'state',
