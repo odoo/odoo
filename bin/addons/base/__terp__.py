@@ -38,7 +38,7 @@
     "init_xml" : [
         "base_data.xml",
         "base_menu.xml",
-        "base_security.xml",
+        "security/base_security.xml",
         "res/res_security.xml",
     ],
     "demo_xml" : [
@@ -66,8 +66,8 @@
         "res/partner/crm_view.xml",
         "res/partner/partner_data.xml",
         "res/ir_property_view.xml",
-        "base_security.xml",
-        "ir.model.access.csv",
+        "security/base_security.xml",
+        "security/ir.model.access.csv",
     ],
     "active": True,
     "installable": True,
