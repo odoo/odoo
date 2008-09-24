@@ -82,7 +82,7 @@ view_form_update = """<?xml version="1.0"?>
         <separator string="Summary" colspan="2"/>
         <newline/>
         <field name="profile" align="0.0" readonly="1"/>
-        <newline/>        
+        <newline/>
         <field name="name" align="0.0" readonly="1"/>
     </group>
 </form>
@@ -110,7 +110,7 @@ class wizard_base_setup(wizard.interface):
         res.sort()
         return res
 
-    
+
 
     def _get_company(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
@@ -167,7 +167,7 @@ class wizard_base_setup(wizard.interface):
         if 'profile' in data['form'] and data['form']['profile'] > 0:
             module_obj=pool.get('ir.module.module')
             module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
-        
+
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
@@ -266,6 +266,7 @@ class wizard_base_setup(wizard.interface):
                 "view_mode": 'form',
                 'res_model': 'ir.module.module.configuration.wizard',
                 'type': 'ir.actions.act_window',
+                'context':{'menu':True},
                 'target':'new',
          }
 
@@ -277,7 +278,7 @@ class wizard_base_setup(wizard.interface):
             'default': -1,
             'required': True,
         },
-        
+
         'name':{
             'string': 'Company Name',
             'type': 'char',

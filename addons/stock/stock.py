@@ -201,69 +201,14 @@ class stock_location(osv.osv):
                     })
         return result
 
-    def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):
-        
-        product_obj = self.pool.get('product.product')
-        states_str = ','.join(map(lambda s: "'%s'" % s, states))
-        if not product_ids:
-            product_ids = product_obj.search(cr, uid, [])
-        res = {}.fromkeys(product_ids, 0.0)
-        if not ids:
-            return res
-
-        product2uom = {}
-        for product in product_obj.browse(cr, uid, product_ids, context=context):
-            product2uom[product.id] = product.uom_id.id
-
-        prod_ids_str = ','.join(map(str, product_ids))
-        location_ids_str = ','.join(map(str, ids))
-        results = []
-        results2 = []
-        
-        from_date=context.get('from_date',False)
-        to_date=context.get('to_date',False)        
-        date_str=False
-        if from_date and to_date:
-           date_str="date>='%s' and date<=%s"%(from_date,to_date)
-        elif from_date:
-           date_str="date>='%s'"%(from_date)
-        elif to_date:
-           date_str="date<='%s'"%(to_date) 
-            
-        if 'in' in what:
-            # all moves from a location out of the set to a location in the set            
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id not in ('+location_ids_str+') '\
-                'and location_dest_id in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom'
-            )
-            results = cr.fetchall()
-        if 'out' in what:
-            # all moves from a location in the set to a location out of the set            
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id in ('+location_ids_str+') '\
-                'and location_dest_id not in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom'
-            )
-            results2 = cr.fetchall()
-        uom_obj = self.pool.get('product.uom')
-        for amount, prod_id, prod_uom in results:
-            amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-                    context.get('uom', False) or product2uom[prod_id])
-            res[prod_id] += amount
-        for amount, prod_id, prod_uom in results2:
-            amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-                    context.get('uom', False) or product2uom[prod_id])
-            res[prod_id] -= amount
-        return res
+    def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):                
+        product_obj = self.pool.get('product.product')        
+        context.update({
+            'states':states,
+            'what':what,
+            'location':ids
+        })                
+        return product_obj.get_product_available(cr,uid,product_ids,context=context)
 
     def _product_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
         ids = id and [id] or []
@@ -374,22 +319,24 @@ class stock_picking(osv.osv):
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
-        for pick in self.browse(cr, uid, ids, context):
+        for pick in self.browse(cr, uid, [ids], context):
             cr.execute("""update stock_move set
                     date_planned=%s 
                 where
                     picking_id=%d and 
-                    (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
+                    (date_planned>%s)""", (value,pick.id,value))
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
-        for pick in self.browse(cr, uid, ids, context):
+        print  self.browse(cr, uid, [ids], context)
+        for pick in self.browse(cr, uid,[ids], context):
+            print value,type(value),pick.min_date
             cr.execute("""update stock_move set
                     date_planned=%s 
                 where
                     picking_id=%d and 
-                    (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
+                    (date_planned<%s)""", (value,pick.id,value))
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -434,7 +381,7 @@ class stock_picking(osv.osv):
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Planned Date', select=1),
-        'date':fields.datetime('Date create'),
+        'date':fields.datetime('Date Order'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -1015,11 +962,8 @@ class stock_move(osv.osv):
         return result
 
     def action_confirm(self, cr, uid, moves, context={}):
-        ids = moves
-        if not type(moves) == type([]):
-            ids = map(lambda m: m.id, moves)
+        ids = map(lambda m: m.id, moves)
         self.write(cr, uid, ids, {'state':'confirmed'})
-        moves= self.pool.get('stock.move').browse(cr, uid, moves)
         for picking, todo in self._chain_compute(cr, uid, moves, context).items():
             ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             pickid = self.pool.get('stock.picking').create(cr, uid, {
@@ -1387,71 +1331,4 @@ class stock_picking_move_wizard(osv.osv_memory):
         return {'type':'ir.actions.act_window_close' }
             
 stock_picking_move_wizard()        
-
-class product_product(osv.osv):
-    _inherit = 'product.product'
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
-        res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if ('location' in context) and context['location']:
-            location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
-            
-            if location_info.usage == 'supplier':
-                res['fields']['virtual_available']['string'] = 'Futur Receptions'
-                res['fields']['qty_available']['string'] = 'Received Qty'
-                
-            if location_info.usage == 'internal':
-                res['fields']['virtual_available']['string'] = 'Futur Stock'
-                
-            if location_info.usage == 'customer':
-                res['fields']['virtual_available']['string'] = 'Futur Deliveries'
-                res['fields']['qty_available']['string'] = 'Delivered Qty'
-                
-            if location_info.usage == 'inventory':
-                res['fields']['virtual_available']['string'] = 'Futur P&L'
-                res['fields']['qty_available']['string'] = 'P&L Qty'
-                
-            if location_info.usage == 'procurement':
-                res['fields']['virtual_available']['string'] = 'Futur Qty'
-                res['fields']['qty_available']['string'] = 'Unplanned Qty'
-            
-            if location_info.usage == 'production':
-                res['fields']['virtual_available']['string'] = 'Futur Productions'
-                res['fields']['qty_available']['string'] = 'Produced Qty'
-                
-        return res
-
-product_product()
-
-
-class report_inventory_latest(osv.osv):
-    _name = "report.inventory.latest"
-    _description = "Latest inventories by product."
-    _auto = False
-    _columns = {
-            'name':  fields.datetime('Latest Date',readonly=True),
-            'product': fields.many2one('product.product', 'Product', readonly=True, select=True),
-            'inventory': fields.many2one('stock.inventory', 'Inventory Name', readonly=True, select=True),
-            'qty': fields.float('Quantity', readonly=True, select=True),
-            'uom' : fields.many2one('product.uom', 'UoM', readonly=True),
-#            'date' : fields.datetime('Latest Date',readonly=True),
-    }
-    _order = 'name desc'
-    def init(self, cr):
-        cr.execute("""
-            create or replace view report_inventory_latest as (
-            select  max(l.id) as id,
-            l.product_id as product, 
-            l.product_qty as qty, 
-            l.product_uom as uom ,
-            min(l.inventory_id) as inventory, 
-            i.date as name 
-            from stock_inventory_line l 
-                join stock_inventory i on (l.inventory_id=i.id)
-            group by l.product_uom,l.product_qty,l.product_id,i.date
-            
-            )""")
-report_inventory_latest()
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

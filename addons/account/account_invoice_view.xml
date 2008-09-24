@@ -178,15 +178,14 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <label colspan="2"/>
-                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_reset_taxes" states="draft" string="Reset taxes" type="object"/>
-                                <field name="amount_tax"/>
+                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
-                                <field name="amount_total"/>
+                                <field name="amount_tax"/>
                                 <field name="reconciled"/>
-                                <field name="residual"/>
+                                <field name="amount_total"/>
                                 <field name="state" select="2"/>
+                                <field name="residual"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_open" states="draft,proforma" string="Validate"/>
                                     <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
@@ -261,15 +260,14 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <label colspan="2"/>
-                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_reset_taxes" states="draft" string="Reset taxes" type="object"/>
-                                <field name="amount_tax"/>
+                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
-                                <field name="amount_total"/>
+                                <field name="amount_tax"/>
                                 <field name="reconciled"/>
-                                <field name="residual"/>
+                                <field name="amount_total"/>
                                 <field name="state" select="2"/>
+                                <field name="residual"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
                                     <button name="invoice_open" states="draft,proforma" string="Create"/>

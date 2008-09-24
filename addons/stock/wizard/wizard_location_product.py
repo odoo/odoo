@@ -34,24 +34,27 @@ import time
 
 def _action_open_window(self, cr, uid, data, context):      
     return {
-                'view_type': 'form',
-                "view_mode": 'tree,form',
-                'res_model': 'product.product',
-                'type': 'ir.actions.act_window',
-                'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
-                'domain':[('type','<>','service')]
-     }
+        'name': False,
+        'view_type': 'form',
+        "view_mode": 'tree,form',
+        'res_model': 'product.product',
+        'type': 'ir.actions.act_window',
+        'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
+        'domain':[('type','<>','service')]
+    }
 
 
 class product_by_location(wizard.interface):
-    
     form1 = '''<?xml version="1.0"?>
     <form string="View Stock of Products">
+        <separator string="Stock Location Analysis" colspan="4"/>
         <field name="from_date"/>
         <newline/>
         <field name="to_date"/>
+        <newline/>
+        <label string=""/>
+        <label string="(Keep empty to open the current situation)" align="0.0" colspan="3"/>
     </form>'''
-    
     form1_fields = {
              'from_date': {
                 'string': 'From',
@@ -66,13 +69,11 @@ class product_by_location(wizard.interface):
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [ ('open', 'Open Products'),('end', 'Cancel')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Products','gtk-ok')]}
         },
     'open': {
             'actions': [],
             'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
         }
     }
-    
 product_by_location('stock.location.products')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

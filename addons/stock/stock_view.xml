@@ -448,7 +448,7 @@
                 <form string="Move Lines">
                     <field name="address_id" invisible="True" context="{'context_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
-                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('partner_id','=',address_id)]" name="move_ids" select="1"/><newline/>
+                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned'])]" name="move_ids" select="1"/><newline/>
                     <group colspan="4">
                         <button special="cancel" string="Cancel"/>
                         <button name="action_move" string="Add" type="object"/>
@@ -492,12 +492,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
-                    <field name="address_id" select="1"/>
-                    <field name="invoice_state"/>
                     <field name="origin"/>
+                    <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -587,8 +587,9 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
-                    <field name="address_id" select="1"/>
                     <field name="origin"/>
+                    <field name="address_id" select="1"/>
+                    <field name="backorder_id"/>
                     <field name="date" select="1"/>
                     <field name="min_date" select="1"/>
                     <field name="state" select="1"/>
@@ -771,10 +772,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field name="name"/>
+                    <field name="origin"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -940,13 +943,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
-                    <field colspan="4" name="name"/>
-                    <field name="address_id" select="1"/>
-                    <field name="invoice_state"/>
+                    <field name="name"/>
                     <field name="origin"/>
+                    <field name="address_id"/>
                     <field name="backorder_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="invoice_state"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1342,11 +1345,10 @@
             <field name="view_mode">tree</field>
             <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
         </record>
-         <menuitem
-            id="next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root"/>
-        <menuitem action="action_report_stock_latest_form" id="menu_report_stock_latest" parent="next_id_61"/>
         
+        <menuitem action="action_report_stock_latest_form" id="menu_report_stock_latest" parent="next_id_62"/>
+        
+		
+
     </data>
 </openerp>

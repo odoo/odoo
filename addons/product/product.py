@@ -333,10 +333,9 @@ product_template()
 class product_product(osv.osv):
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(product_product, self).view_header_get(cr, uid, view_id, view_type, context)
-        if res: return res
-        if (not context.get('categ_id', False)):
-            return False
-        return _('Products: ')+self.pool.get('product.category').browse(cr, uid, context['categ_id'], context).name
+        if (context.get('categ_id', False)):
+            return _('Products: ')+self.pool.get('product.category').browse(cr, uid, context['categ_id'], context).name
+        return res
 
     def _product_price(self, cr, uid, ids, name, arg, context={}):
         res = {}
