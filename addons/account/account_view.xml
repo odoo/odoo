@@ -116,19 +116,19 @@
                     <field name="type" select="1"/>
                     <field name="company_id" select="2"/>
                     <field name="parent_id"/>
-                    <field name="active"/>
+                    <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <newline/>
-                            <field name="user_type" select="1"/>
                             <field name="currency_id" select="2"/>
+                            <field name="active" select="2"/>
                             <field name="reconcile"/>
                             <field name="check_history"/>
                             <newline/>
                             <newline/>
-                            <field name="child_consol_ids" colspan="4"/>
                             <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
+                            <field name="child_consol_ids" colspan="4" attrs="{'readonly':[('type','!=','consolidation')]}"/>/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
