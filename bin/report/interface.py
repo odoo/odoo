@@ -100,9 +100,13 @@ class report_rml(report_int):
 #       file('/tmp/terp.rml','wb+').write(rml)
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
-        report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
-        [('report_name', '=', self.name[7:])], context=context)
-        self.title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
+        try:
+            report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
+                [('report_name', '=', self.name[7:])], context=context)
+            self.title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
+        except:
+            print 'Report not Found !'
+            self.title = 'Unknown'
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)

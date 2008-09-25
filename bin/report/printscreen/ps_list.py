@@ -128,7 +128,6 @@ class report_printscreen_list(report_int):
                 t += fields[f].get('size', 80) / 28 + 1
 
             l.append(s)
-
         for pos in range(len(l)):
             if not l[pos]:
                 s = fields[fields_order[pos]].get('size', 80) / 28 + 1
@@ -152,7 +151,6 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
         for line in results:
             node_line = new_doc.createElement("row")
 
@@ -163,6 +161,8 @@ class report_printscreen_list(report_int):
                     line[f] = line[f][1]
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
+                if fields[f]['type'] in ('float','integer'):
+                    line[f]=round(line[f],2)
                 col = new_doc.createElement("col")
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
