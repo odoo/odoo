@@ -138,7 +138,7 @@ crossovered_budget()
 
 class crossovered_budget_lines(osv.osv):
 
-    def _pra_amt(self, cr, uid, ids,name,args,context):
+    def _prac_amt(self, cr, uid, ids,context={}):
         res = {}
         for line in self.browse(cr, uid, ids):
             acc_ids = ','.join([str(x.id) for x in line.general_budget_id.account_ids])
@@ -157,7 +157,14 @@ class crossovered_budget_lines(osv.osv):
             res[line.id]=result
         return res
 
-    def _theo_amt(self, cr, uid, ids,name,args,context):
+    def _prac(self, cr, uid, ids,name,args,context):
+        res={}
+        for line in self.browse(cr, uid, ids):
+            res[line.id]=self._prac_amt(cr,uid,[line.id],context=context)[line.id]
+
+        return res
+
+    def _theo_amt(self, cr, uid, ids,context={}):
         res = {}
         for line in self.browse(cr, uid, ids):
             today=datetime.datetime.today()
@@ -184,6 +191,13 @@ class crossovered_budget_lines(osv.osv):
             res[line.id]=theo_amt
         return res
 
+    def _theo(self, cr, uid, ids,name,args,context):
+        res={}
+        for line in self.browse(cr, uid, ids):
+            res[line.id]=self._theo_amt(cr,uid,[line.id],context=context)[line.id]
+
+        return res
+
     def _perc(self, cr, uid, ids,name,args,context):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -201,9 +215,9 @@ class crossovered_budget_lines(osv.osv):
         'date_from': fields.date('Start Date',required=True),
         'date_to': fields.date('End Date',required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount',required=True),
-        'practical_amount':fields.function(_pra_amt,method=True, string='Practical Amount',type='float'),
-        'theoritical_amount':fields.function(_theo_amt,method=True, string='Theoritical Amount',type='float'),
+        'planned_amount':fields.float('Planned Amount',required=True,digits=(16,2)),
+        'practical_amount':fields.function(_prac,method=True, string='Practical Amount',type='float',digits=(16,2)),
+        'theoritical_amount':fields.function(_theo,method=True, string='Theoritical Amount',type='float',digits=(16,2)),
         'percentage':fields.function(_perc,method=True, string='Percentage',type='float'),
     }
 crossovered_budget_lines()

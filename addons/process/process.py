@@ -356,5 +356,16 @@ class process_transition_action(osv.osv):
     _defaults = {
         'state': lambda *args: 'dummy',
     }
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        if not default:
+            default = {}
+
+        state = self.pool.get('process.transition.action').browse(cr, uid, [id], context)[0].state
+        if state:
+            default['state'] = state
+
+        return super(process_transition_action, self).copy(cr, uid, id, default, context)
+
 process_transition_action()
 

@@ -110,7 +110,7 @@ def _data_save(self, cr, uid, data, context):
                 offset = 0
                 limit = 100
                 while True:
-                    cr.execute('SELECT name, quantity, debit, credit, account_id, ref, ' \
+                    cr.execute('SELECT id, name, quantity, debit, credit, account_id, ref, ' \
                                 'amount_currency, currency_id, blocked, partner_id, ' \
                                 'date_maturity, date_created ' \
                             'FROM account_move_line ' \
@@ -123,10 +123,13 @@ def _data_save(self, cr, uid, data, context):
                     if not result:
                         break
                     for move in result:
+                        parent_id = move['id']
+                        move.pop('id')
                         move.update({
                             'date': period.date_start,
                             'journal_id': new_journal.id,
                             'period_id': period.id,
+                            'parent_move_lines':[(6,0,[parent_id])]
                         })
                         pool.get('account.move.line').create(cr, uid, move, {
                             'journal_id': new_journal.id,
@@ -137,7 +140,7 @@ def _data_save(self, cr, uid, data, context):
                 offset = 0
                 limit = 100
                 while True:
-                    cr.execute('SELECT name, quantity, debit, credit, account_id, ref, ' \
+                    cr.execute('SELECT id, name, quantity, debit, credit, account_id, ref, ' \
                                 'amount_currency, currency_id, blocked, partner_id, ' \
                                 'date_maturity, date_created ' \
                             'FROM account_move_line ' \
@@ -149,10 +152,13 @@ def _data_save(self, cr, uid, data, context):
                     if not result:
                         break
                     for move in result:
+                        parent_id = move['id']
+                        move.pop('id')
                         move.update({
                             'date': period.date_start,
                             'journal_id': new_journal.id,
                             'period_id': period.id,
+                            'parent_move_lines':[(6,0,[parent_id])]
                         })
                         pool.get('account.move.line').create(cr, uid, move)
                     offset += limit
