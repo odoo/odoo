@@ -117,7 +117,7 @@ class account_balance(report_sxw.rml_parse):
                         'debit': account.debit,
                         'credit': account.credit,
                         'balance': account.balance,
-                        'leef': not bool(account.child_id)
+                        'leef': not bool(account.child_id),
                     }
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
@@ -145,6 +145,8 @@ class account_balance(report_sxw.rml_parse):
                 if res1:
                     for r in res1:
                         result_acc.append(r)
+                if account.code=='0':
+                    result_acc.pop(-1)
                 if account.child_id:
                     ids2 = [(x.code,x.id) for x in account.child_id]
                     ids2.sort()
@@ -155,7 +157,7 @@ class account_balance(report_sxw.rml_parse):
             res={}
             self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
             self.cr.execute(
-                    "SELECT l.id as lid,l.date,j.name as jname, l.ref, l.name as lname, l.debit as debit1, l.credit as credit1 " \
+                    "SELECT l.id as lid,l.date,j.code as jname, l.ref, l.name as lname, l.debit as debit1, l.credit as credit1 " \
                     "FROM account_move_line l " \
                     "LEFT JOIN account_journal j " \
                         "ON (l.journal_id = j.id) " \
