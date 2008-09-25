@@ -231,6 +231,44 @@ class process_process(osv.osv):
 
         return dict(title=title, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
 
+    def copy(self, cr, uid, id, default=None, context={}):
+        """ Deep copy the entire process.
+        """
+
+        if not default:
+            default = {}
+
+        pool = pooler.get_pool(cr.dbname)
+        process = pool.get('process.process').browse(cr, uid, [id], context)[0]
+
+        nodes = {}
+        transitions = {}
+
+        # first copy all nodes and and map the new nodes with original for later use in transitions
+        for node in process.node_ids:
+            for t in node.transition_in:
+                tr = transitions.setdefault(t.id, {})
+                tr['target'] = node.id
+            for t in node.transition_out:
+                tr = transitions.setdefault(t.id, {})
+                tr['source'] = node.id
+            nodes[node.id] = pool.get('process.node').copy(cr, uid, node.id, context=context)
+
+        # then copy transitions with new nodes
+        for tid, tr in transitions.items():
+            vals = {
+                'source_node_id': nodes[tr['source']],
+                'target_node_id': nodes[tr['target']]
+            }
+            tr = pool.get('process.transition').copy(cr, uid, tid, default=vals, context=context)
+
+        # and finally copy the process itself with new nodes
+        default.update({
+            'active': True,
+            'node_ids': [(6, 0, nodes.values())]
+        })
+        return super(process_process, self).copy(cr, uid, id, default, context)
+
 process_process()
 
 class process_node(osv.osv):
@@ -256,6 +294,16 @@ class process_node(osv.osv):
         'model_states': lambda *args: False,
         'flow_start': lambda *args: False,
     }
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        if not default:
+            default = {}
+        default.update({
+            'transition_in': [],
+            'transition_out': []
+        })
+        return super(process_node, self).copy(cr, uid, id, default, context)
+
 process_node()
 
 class process_node_condition(osv.osv):
