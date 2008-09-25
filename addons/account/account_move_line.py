@@ -481,7 +481,7 @@ class account_move_line(osv.osv):
                 self_debit = -writeoff
 
             # If comment exist in context, take it
-            if context['comment']:
+            if 'comment' in context and context['comment']:
                 libelle=context['comment']
             else:
                 libelle='Write-Off'
