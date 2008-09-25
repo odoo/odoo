@@ -676,7 +676,6 @@ class related(function):
         return res
 
     def __init__(self,*arg,**args):
-        print arg
         self.arg = arg
         super(related, self).__init__(self._fnct_read, arg, fnct_inv_arg=arg,method=True, fnct_search=self._fnct_search,**args)
 

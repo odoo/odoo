@@ -358,12 +358,12 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
         if debug:
             s.debuglevel = 5
+        s.connect(config['smtp_server'], config['smtp_port'])
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
 
-        s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
         s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
@@ -423,12 +423,12 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 
         if debug:
             s.debuglevel = 5
+        s.connect(config['smtp_server'], config['smtp_port'])
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
 
-        s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
         s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
