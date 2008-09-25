@@ -647,7 +647,7 @@ class orm_template(object):
             if not fun(self, cr, uid, ids):
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
-                        _("Error occur when validation the fields %s: %s") % (','.join(fields), translated_msg)
+                        _("Error occured while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
         if error_msgs:
             cr.rollback()
@@ -775,23 +775,15 @@ class orm_template(object):
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
-            groups = None
-            group_str = node.getAttribute('groups')
-            if ',' in group_str:
-                groups = group_str.split(',')
+            if node.getAttribute('groups'):
+                groups = node.getAttribute('groups').split(',')
                 readonly = False
                 access_pool = self.pool.get('ir.model.access')
                 for group in groups:
-                    readonly = readonly and access_pool.check_groups(cr, user, group)
-
-                if readonly:
-                    parent = node.parentNode
-                    parent.removeChild(node)
-
-            else:
-                if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
-                    parent = node.parentNode
-                    parent.removeChild(node)
+                    readonly = readonly or access_pool.check_groups(cr, user, group)
+                if not readonly:
+                    node.setAttribute('invisible', '1')
+            node.removeAttribute('groups')
 
         if node.nodeType == node.ELEMENT_NODE:
             # translate view
@@ -837,7 +829,6 @@ class orm_template(object):
                     button.setAttribute('readonly', '0')
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
-
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             fields[field].update(fields_def[field])
@@ -1122,12 +1113,14 @@ class orm_memory(orm_template):
             fields_to_read = self._columns.keys()
         result = []
         if self.datas:
+            if isinstance(ids, (int, long)):
+                ids = [ids]
             for id in ids:
                 r = {'id': id}
                 for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
-                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                             r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
@@ -1137,6 +1130,8 @@ class orm_memory(orm_template):
                 res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
                 for record in result:
                     record[f] = res2[record['id']]
+            if isinstance(ids, (int, long)):
+                return result[0]
         return result
 
     def write(self, cr, user, ids, vals, context=None):
@@ -1721,7 +1716,7 @@ class orm(orm_template):
             def convert_field(f):
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f, f)
-                if isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return "length(%s) as %s" % (f,f)
                 return '"%s"' % (f,)
             #fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)

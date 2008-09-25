@@ -566,7 +566,6 @@ class report_sxw(report_rml):
         if not context:
             context={}
         context = context.copy()
-        context['get_binary_size'] = False
 
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')

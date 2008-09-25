@@ -268,7 +268,7 @@ class module(osv.osv):
                 raise orm.except_orm(_('Error'),
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
-    
+
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
@@ -471,14 +471,14 @@ class module(osv.osv):
             match = re.search('-([a-zA-Z0-9\._-]+)(\.zip)', mod.url, re.I)
             version = '0'
             if match:
-                version = match.group(1)            
+                version = match.group(1)
             if vercmp(mod.installed_version or '0', version) >= 0:
                 continue
             res.append(mod.url)
             if not download:
                 continue
             zipfile = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(mod.name+'.zip')            
+            fname = addons.get_module_path(mod.name+'.zip')
             try:
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
@@ -528,12 +528,12 @@ class module(osv.osv):
         self.write(cr, uid, [id], {'category_id': p_id})
 
     def action_install(self,cr,uid,ids,context=None):
-        self.write(cr , uid, ids ,{'state' : 'to install'})        
+        self.write(cr , uid, ids ,{'state' : 'to install'})
         self.download(cr, uid, ids, context=context)
         for id in ids:
             cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
             dep_ids = map(lambda x:x[0],cr.fetchall())
-            if len(dep_ids):                    
+            if len(dep_ids):
                 self.action_install(cr,uid,dep_ids,context=context)
 
     def update_translations(self, cr, uid, ids, filter_lang=None):
@@ -550,7 +550,7 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids):
             if mod.state != 'installed':
                 continue
-            
+
             for lang in filter_lang:
                 f = os.path.join(tools.config['addons_path'], mod.name, 'i18n', lang + '.po')
                 if os.path.exists(f):
@@ -680,6 +680,18 @@ class module_configuration(osv.osv_memory):
                   'type': item.action_id.type,
                   'target':item.action_id.target,
             }
+        user_action=self.pool.get('res.users').browse(cr,uid,uid)
+        act_obj=self.pool.get(user_action.menu_id.type)
+        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
+        action_open=act_obj.browse(cr,uid,action_ids)[0]
+        if context.get('menu',False):
+            return{
+              'view_type': action_open.view_type,
+              'view_id':action_open.view_id and [action_open.view_id.id] or False,
+              'res_model': action_open.res_model,
+              'type': action_open.type,
+              'domain':action_open.domain
+               }
         return {'type':'ir.actions.act_window_close' }
 module_configuration()
 

@@ -60,7 +60,7 @@ from reportlab import platypus
 import utils
 import color
 import os
-ftitle=""
+
 #
 # Change this to UTF-8 if you plan tu use Reportlab's UTF-8 support
 #
@@ -180,11 +180,12 @@ class _rml_styles(object):
         return style
 
 class _rml_doc(object):
-    def __init__(self, data, images={}, path='.'):
+    def __init__(self, data, images={}, path='.', title=None):
         self.dom = xml.dom.minidom.parseString(data)
         self.filename = self.dom.documentElement.getAttribute('filename')
         self.images = images
         self.path = path
+        self.title = title
 
     def docinit(self, els):
         from reportlab.lib.fonts import addMapping
@@ -229,28 +230,28 @@ class _rml_doc(object):
 
         el = self.dom.documentElement.getElementsByTagName('template')
         if len(el):
-            pt_obj = _rml_template(out, el[0], self, images=self.images, path=self.path)
+            pt_obj = _rml_template(out, el[0], self, images=self.images, path=self.path, title=self.title)
             pt_obj.render(self.dom.documentElement.getElementsByTagName('story'))
         else:
             self.canvas = canvas.Canvas(out)
             pd = self.dom.documentElement.getElementsByTagName('pageDrawing')[0]
-            pd_obj = _rml_canvas(self.canvas, None, self, self.images, path=self.path)
+            pd_obj = _rml_canvas(self.canvas, None, self, self.images, path=self.path, title=self.title)
             pd_obj.render(pd)
 
             self.canvas.showPage()
             self.canvas.save()
 
 class _rml_canvas(object):
-    def __init__(self, canvas, doc_tmpl=None, doc=None, images={}, path='.'):
+    def __init__(self, canvas, doc_tmpl=None, doc=None, images={}, path='.', title=None):
         self.canvas = canvas
         self.styles = doc.styles
         self.doc_tmpl = doc_tmpl
         self.doc = doc
         self.images = images
         self.path = path
-        global ftitle
-        if  ftitle:
-            self.canvas.setTitle(ftitle)
+        self.title = title
+        if self.title:
+            self.canvas.setTitle(self.title)
 
     def _textual(self, node, x=0, y=0):
         rc = ''
@@ -324,7 +325,7 @@ class _rml_canvas(object):
         self.canvas.circle(x_cen=utils.unit_get(node.getAttribute('x')), y_cen=utils.unit_get(node.getAttribute('y')), r=utils.unit_get(node.getAttribute('radius')), **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def _place(self, node):
-        flows = _rml_flowable(self.doc, images=self.images, path=self.path).render(node)
+        flows = _rml_flowable(self.doc, images=self.images, path=self.path, title=self.title).render(node)
         infos = utils.attr_get(node, ['x','y','width','height'])
 
         infos['y']+=infos['height']
@@ -450,25 +451,27 @@ class _rml_canvas(object):
                         break
 
 class _rml_draw(object):
-    def __init__(self, node, styles, images={}, path='.'):
+    def __init__(self, node, styles, images={}, path='.', title=None):
         self.node = node
         self.styles = styles
         self.canvas = None
         self.images = images
         self.path = path
+        self.canvas_title = title
 
     def render(self, canvas, doc):
         canvas.saveState()
-        cnv = _rml_canvas(canvas, doc, self.styles, images=self.images, path=self.path)
+        cnv = _rml_canvas(canvas, doc, self.styles, images=self.images, path=self.path, title=self.canvas_title)
         cnv.render(self.node)
         canvas.restoreState()
 
 class _rml_flowable(object):
-    def __init__(self, doc, images={}, path='.'):
+    def __init__(self, doc, images={}, path='.', title=None):
         self.doc = doc
         self.styles = doc.styles
         self.images = images
         self.path = path
+        self.title = title
 
     def _textual(self, node):
         rc = ''
@@ -569,7 +572,7 @@ class _rml_flowable(object):
                 return (self.width, self.height)
             def draw(self):
                 canvas = self.canv
-                drw = _rml_draw(self.node, self.styles, images=self.self2.images, path=self.self2.path)
+                drw = _rml_draw(self.node, self.styles, images=self.self2.images, path=self.self2.path, title=self.self2.title)
                 drw.render(self.canv, None)
         return Illustration(node, self.styles, self)
 
@@ -741,9 +744,10 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
             self.canv._pageNumber = 0
 
 class _rml_template(object):
-    def __init__(self, out, node, doc, images={}, path='.'):
+    def __init__(self, out, node, doc, images={}, path='.', title=None):
         self.images= images
         self.path = path
+        self.title = title
         if not node.hasAttribute('pageSize'):
             pageSize = (utils.unit_get('21cm'), utils.unit_get('29.7cm'))
         else:
@@ -764,7 +768,7 @@ class _rml_template(object):
                 frames.append( frame )
             gr = pt.getElementsByTagName('pageGraphics')
             if len(gr):
-                drw = _rml_draw(gr[0], self.doc, images=images, path=self.path)
+                drw = _rml_draw(gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
                 self.page_templates.append( platypus.PageTemplate(frames=frames, **utils.attr_get(pt, [], {'id':'str'}) ))
@@ -772,7 +776,7 @@ class _rml_template(object):
 
     def render(self, node_stories):
         fis = []
-        r = _rml_flowable(self.doc,images=self.images, path=self.path)
+        r = _rml_flowable(self.doc,images=self.images, path=self.path, title=self.title)
         for node_story in node_stories:
             fis += r.render(node_story)
             if node_story==node_stories[-1]:
@@ -784,9 +788,7 @@ class _rml_template(object):
         self.doc_tmpl.build(fis)
 
 def parseString(data, fout=None, images={}, path='.',title=None):
-    r = _rml_doc(data, images, path)
-    global ftitle
-    ftitle=title
+    r = _rml_doc(data, images, path, title=title)
     if fout:
         fp = file(fout,'wb')
         r.render(fp)
