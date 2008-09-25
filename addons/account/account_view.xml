@@ -705,6 +705,10 @@
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
+                        <page string="Move Lines">
+	                        <field colspan="4" name="reconcile_implicit"/>
+                            <field colspan="4" name="parent_move_lines" nolabel="0"/>
+                       	</page>
                     </notebook>
                 </form>
             </field>
@@ -1354,10 +1358,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>     
-         
+        </record>
 
-        
+
+
 
 
         <!-- register configuration wizard -->
@@ -1367,8 +1371,8 @@
             <field name="note">Define Fiscal Years and Select Charts of Account</field>
             <field name="action_id" ref="action_account_config_wizard_form"/>
             <field name="state">open</field>
-        </record>        
-        
+        </record>
+
 
 
         <!-- Account Templates -->
