@@ -199,9 +199,14 @@ class process_process(osv.osv):
                             rel = refobj[n]
                             if rel and isinstance(rel, list) :
                                 rel = rel[0]
-                            _id = (rel or False) and rel.id
-                            _model = node['model']
-                            update_relatives(r, _id, _model)
+                            if isinstance(rel, basestring):
+                                print "XXX: ", rel
+                            try: # XXXXXXXXXXXXXXXXXXX
+                                _id = (rel or False) and rel.id
+                                _model = node['model']
+                                update_relatives(r, _id, _model)
+                            except:
+                                pass
 
         for nid, node in nodes.items():
             if not node['gray'] and (node['active'] or node['model'] == res_model):
