@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <record id="note_project_manager_type" model="board.note.type">
@@ -54,23 +54,15 @@
             <field name="arch" type="xml">
                 <form string="My Board">
                     <hpaned>
-                        
                         <child1>
-                            
                             <action colspan="4" height="220" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            
                             <action colspan="4" height="150" name="%(action_view_task_tree_deadline)d" string="My Deadlines"/>
-                            
                             <action colspan="4" height="150" name="%(action_view_board_note_tree)d" string="Public Notes"/>
-                            
                         </child1>
-                        
-                        <!--<child2>-->
-                        <!--    <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_my_form)d" string="My Planning"/>-->
-                        <!--    -->
-                        <!--    <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_my)d" string="My Timesheet"/>-->
-                        <!--    -->
-                        <!--</child2>-->
+                        <child2>
+                            <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_my_form)d" string="My Planning"/>
+                            <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_my)d" string="My Timesheet"/>
+                        </child2>
                     </hpaned>
                 </form>
             </field>
@@ -88,4 +80,4 @@
         <menuitem id="next_id_86" name="Project" parent="board.dashboard_menu"/><menuitem action="open_board_project" icon="terp-graph" id="menu_board_project" parent="next_id_86" sequence="1"/>
         
     </data>
-</terp>
+</openerp>

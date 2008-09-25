@@ -98,12 +98,57 @@ class account_invoice(osv.osv):
     def _get_reference_type(self, cursor, user, context=None):
         return [('none', 'Free Reference')]
 
+    def _amount_residual(self, cr, uid, ids, name, args, context={}):
+        res = {}
+        data_inv = self.browse(cr, uid, ids)
+        for inv in data_inv:
+            paid_amt = 0.0
+            to_pay = inv.amount_total
+            for lines in inv.move_lines:
+                paid_amt = paid_amt + lines.credit
+            res[inv.id] = to_pay - paid_amt
+        return res
+
+    def _get_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for id in ids:
+            move_lines = self.move_line_id_payment_get(cr,uid,[id])
+            if not move_lines:
+                res[id] = []
+                continue
+            data_lines = self.pool.get('account.move.line').browse(cr,uid,move_lines)
+            for line in data_lines:
+                ids_line = []
+                if line.reconcile_id:
+                    ids_line = line.reconcile_id.line_id
+                elif line.reconcile_partial_id:
+                    ids_line = line.reconcile_partial_id.line_partial_ids
+                l = map(lambda x: x.id, ids_line)
+                res[id]=[x for x in l if x <> line.id]
+        return res
+
+    def _compute_lines(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        for invoice in self.browse(cr, uid, ids, context):
+            moves = self.move_line_id_payment_get(cr, uid, [invoice.id])
+            src = []
+            lines = []
+            for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
+                if m.reconcile_id:
+                    lines += map(lambda x: x.id, m.reconcile_id.line_id)
+                elif m.reconcile_partial_id:
+                    lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                src.append(m.id)
+            lines = filter(lambda x: x not in src, lines)
+            result[invoice.id] = lines
+        return result
+
     _name = "account.invoice"
     _description = 'Invoice'
     _order = "number"
     _columns = {
         'name': fields.char('Description', size=64, select=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this invoice."),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -111,8 +156,8 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True),
 
-        'number': fields.char('Invoice Number', size=32, readonly=True),
-        'reference': fields.char('Invoice Reference', size=64),
+        'number': fields.char('Invoice Number', size=32, readonly=True, help="Uniq number of the invoice, computed automatically when the invoice is created."),
+        'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
         'comment': fields.text('Additionnal Information'),
@@ -136,11 +181,11 @@ class account_invoice(osv.osv):
 
         'period_id': fields.many2one('account.period', 'Force Period', help="Keep empty to use the period of the validation date."),
 
-        'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated account moves."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed', store=True),
         'amount_tax': fields.function(_amount_tax, method=True, digits=(16,2), string='Tax', store=True),
         'amount_total': fields.function(_amount_total, method=True, digits=(16,2), string='Total', store=True),
@@ -148,9 +193,12 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean'),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
+        'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
+        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True, help="Remaining amount due."),
+        'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
     }
     _defaults = {
         'type': _get_type,
@@ -767,9 +815,9 @@ class account_invoice_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
-        'uos_id': fields.many2one('product.uom', 'Unit', ondelete='set null'),
+        'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
-        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
+        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',store=True),
         'quantity': fields.float('Quantity', required=True),
@@ -804,11 +852,10 @@ class account_invoice_line(osv.osv):
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
-        if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
+        lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -817,7 +864,7 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:
@@ -936,9 +983,9 @@ class account_invoice_tax(osv.osv):
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence'),
 
-        'base_code_id': fields.many2one('account.tax.code', 'Base Code'),
+        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The case of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,2)),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code'),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The case of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
     }
     def base_change(self, cr, uid, ids, base):

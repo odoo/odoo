@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Refund invoice"/>
 
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice"/>
-
-        <wizard id="wizard_budget_spread" menu="False" model="account.budget.post" name="account.budget.spread" string="Spread amount"/>
 
         <!-- close year, period, journal -->
         <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Close a Fiscal Year"/>
@@ -22,8 +20,13 @@
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/><menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
 
         <!-- Import entry in statement -->
-        <wizard string="Import invoices" model="account.bank.statement" name="populate_payment_from_inv" menu="False" id="wizard_populate_payment_from_inv"/>
 
+        <wizard
+            string="Import invoices"
+            model="account.bank.statement"
+            name="populate_statement_from_inv"
+            menu="False"
+            id="wizard_populate_statement_from_inv"/>
 
         <!-- manual reconcile -->
         <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
@@ -46,24 +49,22 @@
 
         <!-- Aged partner balance -->
         <wizard id="wizard_aged_trial_balance" menu="False" model="res.partner" name="account.aged.trial.balance" string="Aged partner balance"/>
-        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_reporting"/><menuitem action="wizard_aged_trial_balance" id="menu_aged_trial_balance" parent="next_id_22" type="wizard"/>
+        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_reporting"/>
+        <menuitem icon="STOCK_PRINT" action="wizard_aged_trial_balance" id="menu_aged_trial_balance" parent="next_id_22" type="wizard"/>
 
         <!-- report-related wizards -->
         <wizard id="wizard_partner_balance_report" menu="False" model="res.partner" name="account.partner.balance.report" string="Partner balance"/>
-        <menuitem action="wizard_partner_balance_report" id="menu_partner_balance" parent="account.next_id_22" type="wizard"/>
+        <menuitem icon="STOCK_PRINT" action="wizard_partner_balance_report" id="menu_partner_balance" parent="account.next_id_22" type="wizard"/>
 
         <wizard id="wizard_third_party_ledger" menu="False" model="res.partner" name="account.third_party_ledger.report" string="Partner ledger"/>
-        <menuitem action="wizard_third_party_ledger" id="menu_third_party_ledger" parent="account.next_id_22" type="wizard"/>
+        <menuitem icon="STOCK_PRINT" action="wizard_third_party_ledger" id="menu_third_party_ledger" parent="account.next_id_22" type="wizard"/>
 
-        <wizard id="wizard_budget_report" keyword="client_print_multi" model="account.budget.post" name="account.budget.report" string="Budget"/>
         <wizard id="wizard_balance_report" keyword="client_print_multi" model="account.account" name="account.account.balance.report" string="Account balance"/>
         <wizard id="wizard_general_ledger_report" keyword="client_print_multi" model="account.account" name="account.general.ledger.report" string="General ledger"/>
 
         <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices"/>
         <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices"/>
 
-
-        <wizard id="wizard_account_duplicate" keyword="tree_but_action" model="account.account" name="account.wizard.account.duplicate" string="Duplicate"/>
 
         <!-- account.move validate -->
         <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Account Moves"/>
@@ -78,4 +79,4 @@
 		<!-- account.invoice -->
 	    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open"/>
     </data>
-</terp>
+</openerp>

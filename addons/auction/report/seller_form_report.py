@@ -57,8 +57,6 @@ class seller_form_report(report_sxw.rml_parse):
 
     def sum_taxes(self, lot):
         taxes=[]
-        print lot.auction_id and lot.auction_id.seller_costs[0].amount or False
-
         amount=0.0
         if lot.bord_vnd_id.tax_id:
             taxes.append(lot.bord_vnd_id.tax_id)
@@ -70,31 +68,21 @@ class seller_form_report(report_sxw.rml_parse):
         return amount
     def seller_info(self):
         objects = [object for object in self.localcontext.get('objects')]
-        print "OBJECTS",objects
         ret_dict = {}
         ret_list = []
         for object in objects:
-            print "Object :",object
-#           print ret_dict
 
             partner = ret_dict.get(object.bord_vnd_id.partner_id.id,False)
-            print "seller :",partner
             if not partner:
                 ret_dict[object.bord_vnd_id.partner_id.id] = {'partner' : object.bord_vnd_id.partner_id or False,'lots':[object]}
             else:
                 lots = partner.get('lots')
-                print "Lots :",lots
                 lots.append(object)
-#       print 'ret dict :',ret_dict
 #       buyer_ids=self.pool.get(auction.lots).read(cr,uid,lot)
-        print "Return ret_dict.values() :",ret_dict.values()
         return ret_dict.values()
     def grand_seller_total(self,o):
         grand_total = 0
         for oo in o:
-            print "the value of grand totoal",grand_total
-            print "the value of self.sum_taxes(oo)",self.sum_taxes(oo)
-            print "the value of oo['obj_price']",oo['obj_price']
             grand_total =grand_total + oo['obj_price']+ self.sum_taxes(oo)
         return grand_total
 

@@ -62,7 +62,6 @@ fields_ask = {
 #
 ##TODO: pr bien faire, faudrait leur poser la question: continue anyway?
 #   if len(ids)<len(datas['ids']):
-##      print ids, datas['ids']
 #       raise wizard.except_wizard('UserError', ('Some object(s) are not paid !', 'init'))
 #
 #   return {'objects':len(ids), 'amount_total':price, 'amount_paid':price_paid}

@@ -19,7 +19,7 @@
                 Events \ Reporting
 """,
     "depends" : [
-        "project","crm","base_contact",
+        "project","crm","base_contact","account_budget",
     ],
     "demo_xml" : ["event_demo.xml"],
     "init_xml" : ["event_data.xml"],

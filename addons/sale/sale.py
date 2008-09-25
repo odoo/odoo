@@ -129,11 +129,17 @@ class sale_order(osv.osv):
                 res[r] = 0.0
             else:
                 res[r] = 100.0 * res[r][0] / res[r][1]
+        for order in self.browse(cr, uid, ids, context):
+            if order.shipped:
+                res[order.id] = 100.0
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
+            if sale.invoiced:
+                res[sale.id] = 100.0
+                continue
             tot = 0.0
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
@@ -159,7 +165,6 @@ class sale_order(osv.osv):
     def _invoiced_search(self, cursor, user, obj, name, args):
         if not len(args):
             return []
-
         clause = ''
         no_invoiced = False
         for arg in args:
@@ -169,7 +174,6 @@ class sale_order(osv.osv):
                 else:
                     clause += 'AND inv.state <> \'paid\''
                     no_invoiced = True
-
         cursor.execute('SELECT rel.order_id ' \
                 'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
                 'WHERE rel.invoice_id = inv.id ' + clause)
@@ -210,7 +214,8 @@ class sale_order(osv.osv):
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
-        'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')],
+            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."""),
         'order_policy': fields.selection([
             ('prepaid','Payment before delivery'),
             ('manual','Shipping & Manual Invoice'),
@@ -237,7 +242,7 @@ class sale_order(osv.osv):
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks."),
+        'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
     }
     _defaults = {
@@ -297,7 +302,7 @@ class sale_order(osv.osv):
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines):
+    def _make_invoice(self, cr, uid, order, lines,context={}):
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -322,9 +327,13 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
         }
-        inv.update(self._inv_get(cr, uid, order))
         inv_obj = self.pool.get('account.invoice')
+        inv.update(self._inv_get(cr, uid, order))
         inv_id = inv_obj.create(cr, uid, inv)
+        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id],
+            pay_term,time.strftime('%Y-%m-%d'))
+        if data.get('value',False):
+            inv_obj.write(cr, uid, [inv_id], inv.update(data['value']), context=context)
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
@@ -464,12 +473,14 @@ class sale_order(osv.osv):
 
     def action_ship_create(self, cr, uid, ids, *args):
         picking_id=False
+        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
                 proc_id=False
-                date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
+                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -620,13 +631,6 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
-    def _get_1st_packaging(self, cr, uid, context={}):
-        cr.execute('select id from product_packaging order by id asc limit 1')
-        res = cr.fetchone()
-        if not res:
-            return False
-        return res[0]
-
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
@@ -645,11 +649,11 @@ class sale_order_line(osv.osv):
         'type': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')],'Procure Method', required=True),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties'),
         'address_allotment_id' : fields.many2one('res.partner.address', 'Allotment Partner'),
-        'product_uom_qty': fields.float('Quantity (UOM)', digits=(16,2), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
         'product_uos_qty': fields.float('Quantity (UOS)'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
-        'product_packaging': fields.many2one('product.packaging', 'Packaging used'),
+        'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16,2)),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number packages'),
@@ -667,7 +671,7 @@ class sale_order_line(osv.osv):
         'invoiced': lambda *a: 0,
         'state': lambda *a: 'draft',
         'type': lambda *a: 'make_to_stock',
-        'product_packaging': _get_1st_packaging,
+        'product_packaging': lambda *a: False
     }
     def invoice_line_create(self, cr, uid, ids, context={}):
         def _get_line_qty(line):
@@ -766,66 +770,69 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
+            lang=False, update_tax=True, date_order=False, packaging=False):
+        warning={}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
-            return {'value': {'th_weight' : 0,
+            return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                    'product_uos': []}}
-
-        if not pricelist:
-            raise osv.except_osv(_('No Pricelist !'),
-                    _('You have to select a pricelist in the sale form !\n'
-                    'Please set one before choosing a product.'))
+                   'product_uos': []}}
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                product, qty or 1.0, partner_id, {
-                    'uom': uom,
-                    'date': date_order,
-                    })[pricelist]
-        if price is False:
-            raise osv.except_osv(_('No valid pricelist line found !'),
-                    _("Couldn't find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist."))
 
-        product = product_obj.browse(cr, uid, product, context=context)
-
+        result = {}
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        if packaging:
+            default_uom = product_obj.uom_id and product_obj.uom_id.id
+            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
+            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
+#            qty = qty - qty % q + q
+            if not (qty % q) == 0 :
+                ean = pack.ean
+                qty_pack = pack.qty
+                type_ul = pack.ul
+                warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
+                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantiny: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warning={
+                    'title':'Packing Information !',
+                    'message': warn_msg
+                    }
+            result['product_uom_qty'] = qty
+            
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product.uom_id.category_id.id <> uom2.category_id.id:
+            if product_obj.uom_id.category_id.id <> uom2.category_id.id:
                 uom = False
 
         if uos:
-            if product.uos_id:
+            if product_obj.uos_id:
                 uos2 = product_uom_obj.browse(cr, uid, uos)
-                if product.uos_id.category_id.id <> uos2.category_id.id:
+                if product_obj.uos_id.category_id.id <> uos2.category_id.id:
                     uos = False
             else:
                 uos = False
 
-        result = {'price_unit': price, 'type': product.procure_method}
-        if product.description_sale:
-            result['notes'] = product.description_sale
+        result .update({'type': product_obj.procure_method})
+        if product_obj.description_sale:
+            result['notes'] = product_obj.description_sale
 
         if update_tax: #The quantity only have changed
-            result['delay'] = (product.sale_delay or 0.0)
+            result['delay'] = (product_obj.sale_delay or 0.0)
             taxes = self.pool.get('account.tax').browse(cr, uid,
-                    [x.id for x in product.taxes_id])
+                    [x.id for x in product_obj.taxes_id])
             taxep = None
             if partner_id:
                 taxep = self.pool.get('res.partner').browse(cr, uid,
                         partner_id).property_account_tax
             if not taxep or not taxep.id:
-                result['tax_id'] = [x.id for x in product.taxes_id]
+                result['tax_id'] = [x.id for x in product_obj.taxes_id]
             else:
                 res5 = [taxep.id]
                 for t in taxes:
@@ -833,39 +840,65 @@ class sale_order_line(osv.osv):
                         res5.append(t.id)
                 result['tax_id'] = res5
 
-        result['name'] = product.partner_ref
+        result['name'] = product_obj.partner_ref
 
         domain = {}
         if not uom and not uos:
-            result['product_uom'] = product.uom_id.id
-            if product.uos_id:
-                result['product_uos'] = product.uos_id.id
-                result['product_uos_qty'] = qty * product.uos_coeff
-                uos_category_id = product.uos_id.category_id.id
+            result['product_uom'] = product_obj.uom_id.id
+            if product_obj.uos_id:
+                result['product_uos'] = product_obj.uos_id.id
+                result['product_uos_qty'] = qty * product_obj.uos_coeff
+                uos_category_id = product_obj.uos_id.category_id.id
             else:
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
                 uos_category_id = False
-            result['th_weight'] = qty * product.weight
+            result['th_weight'] = qty * product_obj.weight
             domain = {'product_uom':
-                        [('category_id', '=', product.uom_id.category_id.id)],
+                        [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
         elif uom: # whether uos is set or not
-            default_uom = product.uom_id and product.uom_id.id
+            default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
-            if product.uos_id:
-                result['product_uos'] = product.uos_id.id
-                result['product_uos_qty'] = q * product.uos_coeff
+            if product_obj.uos_id:
+                result['product_uos'] = product_obj.uos_id.id
+                result['product_uos_qty'] = q * product_obj.uos_coeff
             else:
                 result['product_uos'] = False
                 result['product_uos_qty'] = q
-            result['th_weight'] = q * product.weight
+            result['th_weight'] = q * product_obj.weight
         elif uos: # only happens if uom is False
-            result['product_uom'] = product.uom_id and product.uom_id.id
-            result['product_uom_qty'] = qty_uos / product.uos_coeff
-            result['th_weight'] = result['product_uom_qty'] * product.weight
-        return {'value': result, 'domain': domain}
+            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
+            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
+            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
+        # Round the quantity up
+
+        # get unit price
+        
+        if not pricelist:
+            warning={
+                'title':'No Pricelist !',
+                'message':
+                    'You have to select a pricelist in the sale form !\n'
+                    'Please set one before choosing a product.'
+                }
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                    product, qty or 1.0, partner_id, {
+                        'uom': uom,
+                        'date': date_order,
+                        })[pricelist]
+            if price is False:
+                 warning={
+                    'title':'No valid pricelist line found !',
+                    'message':
+                        "Couldn't find a pricelist line matching this product and quantity.\n"
+                        "You have to change either the product, the quantity or the pricelist."
+                    }                
+            else:
+                result.update({'price_unit': price})		
+        return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -896,15 +929,27 @@ class sale_config_picking_policy(osv.osv_memory):
     _name='sale.config.picking_policy'
     _columns = {
         'name':fields.char('Name', size=64),
-        'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([
+            ('direct','Direct Delivery'),
+            ('one','All at once')
+        ], 'Packing Policy', required=True ),
+        'order_policy': fields.selection([
+            ('manual','Invoice based on Sales Orders'),
+            ('picking','Invoice based on Deliveries'),
+        ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
+        'order_policy': lambda *a: 'picking'
     }
     def set_default(self, cr, uid, ids, context=None):
-        if 'name' in context:
+        print context
+        for o in self.browse(cr, uid, ids, context=context):
+            print o.picking_policy, o.order_policy
             ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],context['picking_policy'])
+            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
+            ir_values_obj = self.pool.get('ir.values')
+            ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -922,5 +967,4 @@ class sale_config_picking_policy(osv.osv_memory):
          }
 sale_config_picking_policy()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

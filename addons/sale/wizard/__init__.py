@@ -31,6 +31,6 @@
 from make_invoice import make_invoice
 
 import wizard_sale_line_invoice
-
+import make_invoice_advance
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
 
@@ -14,6 +14,17 @@
                     <field name="amount_total"/>
                     <field name="partner_id"/>
                 </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">purchase.order.graph</field>
+            <field name="model">purchase.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Order" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
             </field>
         </record>
 
@@ -87,7 +98,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -97,7 +108,7 @@
             <field name="res_model">purchase.order</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action"/>
 
@@ -106,7 +117,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action"/>
@@ -116,7 +127,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
         </record>
         <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action"/>
@@ -158,9 +169,9 @@
                 <form string="Purchase Order Line">
                     <notebook>
                         <page string="Order Line">
+                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
                             <field name="product_qty"/>
                             <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
-                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned"/>
                             <field name="price_unit"/>
@@ -195,4 +206,4 @@
 
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_purchase_order" name="Purchase orders" res_model="purchase.order" src_model="res.partner"/>
     </data>
-</terp>
+</openerp>

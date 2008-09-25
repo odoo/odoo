@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 	<data>
-	<wizard	string="Formatted Inv. + Message"
+	<wizard	string="Invoice + Message"
 			model="account.invoice"
 			name="wizard.notify_message"
 			id="wizard_notify_message"
@@ -9,10 +9,10 @@
 			/>
 
 	<report id="account_invoices_1"
-			string="Formatted Inv."
+			string="Invoice"
 			model="account.invoice"
 			name="account.invoice.layout"
 			rml="account_invoice_layout/report/report_account_invoice_layout.rml"
 			auto="False"/>
 	</data>
-</terp>
+</openerp>

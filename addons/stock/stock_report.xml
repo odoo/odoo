@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <report auto="False" id="report_product_history" model="product.product" name="stock.product.history" string="Future stock forecast"/>
@@ -13,9 +13,7 @@
         
         <report auto="False" id="report_lot_location" model="stock.location" name="lot.location" rml="stock/report/lot_location.rml" string="Lots by location"/>
         
-        <report auto="False" id="report_product_location" model="product.product" name="stock.product.location" string="Products Localisations"/>
-        
         <report id="report_location_overview_all" model="stock.location" name="stock.location.overview.all" string="Location Content (With childs)" xml="stock/report/lot_overview_all.xml" xsl="stock/report/lot_overview_all.xsl"/>
     
     </data>
-</terp>
+</openerp>

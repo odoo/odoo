@@ -94,7 +94,7 @@ class stock_picking(osv.osv):
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
         sale_line_obj = self.pool.get('sale.order.line')
         if move_line.sale_line_id:
-            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], {
+            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], {'invoiced':True,
                 'invoice_lines': [(6, 0, [invoice_line_id])],
                 })
         return super(stock_picking, self)._invoice_line_hook(cursor, user,

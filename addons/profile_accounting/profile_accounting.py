@@ -29,8 +29,8 @@
 from osv import fields, osv
 import pooler
 
-class config_install_extra_modules(osv.osv_memory):
-    _name='config.install_extra_modules'
+class profile_accounting_config_install_modules_wizard(osv.osv_memory):
+    _name='profile.accounting.config.install_modules_wizard'
     _columns = {
         'name':fields.char('Name', size=64),
         'account_analytic_analysis':fields.boolean('Analytic Accounting'),
@@ -59,7 +59,7 @@ class config_install_extra_modules(osv.osv_memory):
                     ids += mod_obj.search(cr, uid, [('name', '=', r)])
                     mod_obj.action_install(cr, uid, ids, context=context)           
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        db, pool = pooler.restart_pool(cr.dbname,force_demo=True, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -69,7 +69,7 @@ class config_install_extra_modules(osv.osv_memory):
             }
     
     
-config_install_extra_modules()
+profile_accounting_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

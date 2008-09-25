@@ -55,13 +55,12 @@ class res_partner(osv.osv):
             'credit': 'receivable',
             'debit': 'payable'
         }
-        maps = {}
-        for i in range(len(field_names)):
-            maps[{'credit': 'receivable', 'debit': 'payable' }[field_names[i]]] = i
-        res = {}.fromkeys(ids, map(lambda x: 0.0, field_names))
+        maps = {'receivable':'credit', 'payable':'debit' }
+        res = {}
+        for id in ids:
+            res[id] = {}.fromkeys(field_names, 0)
         for pid,type,val in cr.fetchall():
-            if type in maps:
-                res[pid][maps[type]] = val
+            res[pid][maps[type]] = val
         return res
 
     def _credit_search(self, cr, uid, obj, name, args):
@@ -87,8 +86,8 @@ class res_partner(osv.osv):
         return [('id','in',map(lambda x:x[0], res))]
 
     _columns = {
-        'credit': fields.function(_credit_debit_get, fnct_search=_credit_search, method=True, string='Total Receivable', multi='dc'),
-        'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, method=True, string='Total Payable', multi='dc'),
+        'credit': fields.function(_credit_debit_get, fnct_search=_credit_search, method=True, string='Total Receivable', multi='dc', help="Total amount this customer owns you."),
+        'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, method=True, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
         'property_account_payable': fields.property(
             'account.account',

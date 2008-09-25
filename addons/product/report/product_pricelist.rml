@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" />
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="9.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="8.0" leading="10"/>
+    <paraStyle name="P6" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" fontName="Times-Roman" alignment="LEFT"/>
+    <paraStyle name="P8" fontName="Times-Roman" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P10" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P11" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Times-Roman" fontSize="12"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="cat" fontName="Times-Bold" textColor="blue" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+  </stylesheet>
+  <story>
+    <para style="P5">
+                  <font color="white"> </font>
+                </para>
+    <blockTable colWidths="530.0" repeatRows="1" style="Table1">
+      <tr>
+        <td>
+          <para style="P8">Products Price List</para>
+        </td>
+      </tr>
+
+    </blockTable>
+    <para style="P5">
+                  <font color="white"> </font>
+                </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">Price List Name : [[ get_pricelist (data['form']['price_list']) ]]</para>
+    <para style="Standard">Currency : [[ get_currency ( data['form']['price_list']) ]]</para>
+    <para style="Standard">Printing Date: [[ formatLang(time.strftime('%Y-%m-%d'), date=True) ]]</para>
+    <para style="P7">
+      <font color="white"> </font>
+    </para>
+    <section>
+    <para style="P6">[[repeatIn([],'qty_header',width=59,value=qty_header(data['form']),type='label') ]]</para>
+    <blockTable colWidths="227.0" style="Table6">
+        <tr>
+          <td>
+            <para style="P6">Description</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+    <section>
+    <para style="Standard">[[ repeatIn(get_categories(objects), 'c',width=59,value=get_quantity(data['form']),type='title') ]]</para>
+    <blockTable colWidths="227.0" style="Table3">
+		    <tr>
+			    <td>
+			    	<para style="cat">[[ c['name'] ]]</para>
+			    </td>
+		    </tr>
+	    </blockTable>
+
+    <section>
+    <para style="Standard">[[repeatIn(c['products'], 'p',width=59,value=get_quantity(data['form']),type='string') ]]</para>
+	    <blockTable colWidths="227.0" style="Table3">
+		    <tr>
+			    <td>
+			    	<para style="P1">[[ p['code'] and '[' + p['code'] + '] ' or '' ]] [[ p['name'] ]]</para>
+			    </td>
+		    </tr>
+	    </blockTable>
+    </section>
+    </section>
+    <para style="P5"/>
+    <para style="P3">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>
+

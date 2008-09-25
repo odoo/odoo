@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
@@ -68,13 +68,12 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="Lots" colspan="2"/>
+                                <separator string="UOM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                                 <field name="uom_po_id"/>
-                                <field name="tracking"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
                                 <separator string="Second UoM" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
@@ -166,13 +165,24 @@
                 </form>
             </field>
         </record>
+        <record id="product_category_list_view" model="ir.ui.view">
+            <field name="name">product.category.list</field>
+            <field name="model">product.category</field>
+            <field name="type">tree</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Product Categories">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
         <record id="product_category_tree_view" model="ir.ui.view">
             <field name="name">product.category.tree</field>
             <field name="model">product.category</field>
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Products Categories">
+                <tree string="Product Categories">
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -481,4 +491,4 @@
         
         
     </data>
-</terp>
+</openerp>

@@ -28,6 +28,7 @@
 ###############################################################################
 import price
 import workcenter_load
+import order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -33,6 +33,9 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
+import mx.DateTime
+from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+
 class account_move_line(osv.osv):
     _name = "account.move.line"
     _description = "Entry lines"
@@ -66,6 +69,33 @@ class account_move_line(osv.osv):
     def _default_get(self, cr, uid, fields, context={}):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
+
+        # Starts: Manual entry from account.move form
+        if context.get('lines',[]):
+
+            total_new=0.00
+            for i in context['lines']:
+                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                for item in i[2]:
+                        data[item]=i[2][item]
+            if context['journal']:
+                journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
+                if journal_obj.type == 'purchase':
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                else:
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                data['account_id'] = account.id
+            s = -total_new
+            data['debit'] = s>0  and s or 0.0
+            data['credit'] = s<0  and -s or 0.0
+            return data
+        # Ends: Manual entry from account.move form
 
         if not 'move_id' in fields: #we are not in manual entry
             return data
@@ -336,20 +366,32 @@ class account_move_line(osv.osv):
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
 
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, journal=False):
-        if (not partner_id) or account_id:
-            return {}
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        id1 = part.property_account_payable.id
-        id2 =  part.property_account_receivable.id
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
-        if journal:
-            jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-            if jt=='sale':
-                val['account_id'] =  id2
-            elif jt=='purchase':
-                val['account_id'] =  id1
-        # Compute Maturity Date in val !
+        val['date_maturity'] = False
+
+        if not partner_id:
+            return {'value':val}
+        if not date:
+            date = now().strftime('%Y-%m-%d')
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+
+        if part.property_payment_term and part.property_payment_term.line_ids:# Compute Maturity Date in val !
+                line = part.property_payment_term.line_ids[0]
+                next_date = mx.DateTime.strptime(date, '%Y-%m-%d') + RelativeDateTime(days=line.days)
+                if line.condition == 'end of month':
+                    next_date += RelativeDateTime(day=-1)
+                next_date = next_date.strftime('%Y-%m-%d')
+                val['date_maturity'] = next_date
+        if not account_id:
+            id1 = part.property_account_payable.id
+            id2 =  part.property_account_receivable.id
+            if journal:
+                jt = self.pool.get('account.journal').browse(cr, uid, journal).type
+                if jt=='sale':
+                    val['account_id'] =  id2
+                elif jt=='purchase':
+                    val['account_id'] =  id1
         return {'value':val}
 
     #
@@ -634,7 +676,6 @@ class account_move_line(osv.osv):
     def create(self, cr, uid, vals, context=None, check=True):
         if not context:
             context={}
-
         account_obj = self.pool.get('account.account')
         tax_obj=self.pool.get('account.tax')
 
@@ -682,7 +723,7 @@ class account_move_line(osv.osv):
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'])
             if journal.type_control_ids:
-                type = account.type
+                type = account.user_type
                 for t in journal.type_control_ids:
                     if type==t.code:
                         ok = True

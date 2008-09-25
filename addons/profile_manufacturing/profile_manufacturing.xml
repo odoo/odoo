@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Install extra modules</field>
-            <field name="model">config.install_extra_modules</field>
+            <field name="name">Manufacturing Profile : Install extra modules</field>
+            <field name="model">profile.manufacturing.config.install_modules_wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Install Extra Module">
-					<separator string="Manufacturing Management" colspan="4"/>
+                <form string="Manufacturing Profile : Install Extra Module">
+                    <separator string="Stock &amp; Manufacturing" colspan="4"/>
+                    <field name="stock_location"/>
                     <field name="mrp_jit"/>
-                    <separator string="Sale Management" colspan="4"/> 
-                    <field name="sale_margin"/>
+                    <field name="mrp_operation"/>
+                    <separator string="Sales Management" colspan="4"/> 
+                    <field name="point_of_sale"/>
                     <field name="sale_journal"/>
+                    <field name="sale_margin"/>
                     <separator string="Relationship Management" colspan="4"/> 
-                    <field name="crm_configuration"/>                    
-                    <separator string="Project Management" colspan="4"/>
-                    <field name="project"/>
-					<separator string="" colspan="4"/>
-					<label string="" colspan="2"/>
+                    <field name="crm_configuration"/>
+					<separator string="Portal Management" colspan="4"/> 
+                    <field name="portal"/>
+                    <separator string="" colspan="4"/>
+                    <label string="" colspan="2"/>
                     <group col="4" colspan="2">
                         <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
                         <button name="action_install" string="Install" icon='gtk-ok' type="object"/>
@@ -27,9 +30,9 @@
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Install Extra Modules</field>
+            <field name="name">Manufacturing Profile : Install Extra Modules</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">config.install_extra_modules</field>
+            <field name="res_model">profile.manufacturing.config.install_modules_wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -37,10 +40,10 @@
 
       <record model="ir.module.module.configuration.step"
             id="config_install_module">
-            <field name="name">Install Extra modules</field>
-            <field name="note">Install more modules. A few modules are proposed according to the service profile you selected. You will be able to install them based on our requirements.</field>
+            <field name="name">Manufacturing Profile : Install Extra modules</field>
+            <field name="note">Install more modules. A few modules are proposed according to the manufacturing profile you selected. You will be able to install them based on our requirements.</field>
             <field name="action_id" ref="action_config_install_module"/>
             <field name="state">open</field>
         </record>
     </data>
-</terp>
+</openerp>

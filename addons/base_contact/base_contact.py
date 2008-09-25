@@ -102,6 +102,15 @@ class res_partner_job(osv.osv):
             res[id.id] = id.address_id.partner_id.id
         return res
 
+    def search(self, cr, user, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        for arg in args:
+            if arg[0]=='address_id':
+                self._order = 'sequence_partner'
+            if arg[0]=='contact_id':
+                self._order = 'sequence_contact'
+        return super(res_partner_job,self).search(cr, user, args, offset, limit, order, context, count)
+
     _name = 'res.partner.job'
     _description ='Contact Function'
     _order = 'sequence_contact'
@@ -111,6 +120,7 @@ class res_partner_job(osv.osv):
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
         'function_id': fields.many2one('res.partner.function','Function', required=True),
         'sequence_contact':fields.integer('Sequence (Contact)',help='order of importance of this address in the list of addresses of the linked contact'),
+        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this function in the list of functions of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
     }

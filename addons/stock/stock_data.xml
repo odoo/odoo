@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         <!--
 	Request link
@@ -15,14 +15,17 @@
         <record id="stock_location_locations" model="stock.location">
             <field name="name">Physical Locations</field>
             <field name="usage">view</field>
+            <field name="icon">terp-stock</field>
         </record>
         <record id="stock_location_locations_partner" model="stock.location">
             <field name="name">Partner Locations</field>
             <field name="usage">view</field>
+            <field name="icon">terp-partner</field>
         </record>
         <record id="stock_location_locations_virtual" model="stock.location">
             <field name="name">Virtual Locations</field>
             <field name="usage">view</field>
+            <field name="icon">terp-mrp</field>
         </record>
         
         <record id="location_inventory" model="stock.location">
@@ -106,4 +109,4 @@
             <field name="lot_output_id" ref="stock_location_output"/>
         </record>
     </data>
-</terp>
+</openerp>

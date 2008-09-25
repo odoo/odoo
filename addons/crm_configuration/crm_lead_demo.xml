@@ -1,555 +1,143 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 <data noupdate="1">
-<!--		CASE SECTION		-->
-	<record model="crm.case.section" id="section_support2">
-		<field name="name">Leads</field>
-		<field name="code">leads</field>
-	</record>
+	<!-- 
+		((((((((((( Demo Cases ))))))))))) 
+	-->
 
-<!--		CASE CATEGORY(categ_id)		-->	
-	<record model="crm.case.categ" id="categ_lead1">
-		<field name="name">Existing Customer</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.categ" id="categ_lead2">
-		<field name="name">Self Generated</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_lead3">
-		<field name="name">Employee</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.categ" id="categ_lead4">
-		<field name="name">Partner</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.categ" id="categ_lead5">
-		<field name="name">Campaign</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_lead6">
-		<field name="name">Website</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_lead7">
-		<field name="name">Word of mouth</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>	
-	<record model="crm.case.categ" id="categ_lead8">
-		<field name="name">Other</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>	
-
-<!--		CASE STATUS(stage_id)		-->
-	<record model="crm.case.stage" id="stage_lead1">
-		<field name="name">New</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.stage" id="stage_lead2">
-		<field name="name">Assigned</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.stage" id="stage_lead3">
-		<field name="name">In Process</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.stage" id="stage_lead4">
-		<field name="name">Converted</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.stage" id="stage_lead5">
-		<field name="name">Recycled</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.stage" id="stage_lead6">
-		<field name="name">Dead</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-
-<!--		CASE CATEGORY2(category2_id)		-->	
-	<record model="crm.case.category2" id="category_lead1">
-		<field name="name">Telesales</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>		
-	<record model="crm.case.category2" id="category_lead2">
-		<field name="name">Mail</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.category2" id="category_lead3">
-		<field name="name">Email</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.category2" id="category_lead4">
-		<field name="name">Print</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>		
-	<record model="crm.case.category2" id="category_lead5">
-		<field name="name">Web</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.category2" id="category_lead6">
-		<field name="name">Radio</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.category2" id="category_lead7">
-		<field name="name">Television</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	<record model="crm.case.category2" id="category_lead8">
-		<field name="name">Newsletter</field>
-		<field name="section_id" ref="section_support2"/>
-	</record>
-	
-	
-<!--		MENU		-->
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads">
-		<field name="name">Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads"/>
-	</record>
-	<menuitem parent="crm.menu_crm" id="menu_crm_case_categ0_act_leads" action="crm_case_category_act_leads"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all">
-		<field name="name">All Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_all" action="crm_case_category_act_leads_all"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all1">
-		<field name="name">All Unclosed Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'state\',\'&lt;&gt;\',\'done\'),(\'state\',\'&lt;&gt;\',\'cancel\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all1"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all" id="menu_crm_case_categ0_act_leads_all1" action="crm_case_category_act_leads_all1"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all2">
-		<field name="name">All Draft Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'state\',\'=\',\'draft\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all2" action="crm_case_category_act_leads_all2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all3">
-		<field name="name">All Open Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all3"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all3" action="crm_case_category_act_leads_all3"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all4">
-		<field name="name">All Pending Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all4">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all4">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all4">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all4"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all4" action="crm_case_category_act_leads_all4"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all5">
-		<field name="name">All Cancelled Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'state\',\'=\',\'cancel\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all5">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all5">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all5">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all5"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all" id="menu_crm_case_categ0_act_leads_all5" action="crm_case_category_act_leads_all5"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_all6">
-		<field name="name">Calendar Of All Leads Meetings</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="domain" eval="[('section_id','=',section_support2),('date','>=',time.strftime('%Y-%m-%d'))]"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_all6">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all6">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all6">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_all6"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_all" id="menu_crm_case_categ0_act_leads_all6" action="crm_case_category_act_leads_all6"/>
-
-<!-- =================================================================== -->
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my">
-		<field name="name">My Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_my" action="crm_case_category_act_leads_my"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my1">
-		<field name="name">My Unclosed Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid),(\'state\',\'&lt;&gt;\',\'done\'),(\'state\',\'&lt;&gt;\',\'cancel\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my1"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my" id="menu_crm_case_categ0_act_leads_my1" action="crm_case_category_act_leads_my1"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my2">
-		<field name="name">My Draft Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my2" action="crm_case_category_act_leads_my2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my3">
-		<field name="name">My Open Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my3"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my3" action="crm_case_category_act_leads_my3"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my4">
-		<field name="name">My Pending Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my4">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my4">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my4">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my4"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my4" action="crm_case_category_act_leads_my4"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my5">
-		<field name="name">My Cancelled Leads</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'cancel\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my5">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my5">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my5">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my5"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my" id="menu_crm_case_categ0_act_leads_my5" action="crm_case_category_act_leads_my5"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_leads_my6">
-		<field name="name">Calendar Of My Leads Meetings</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="domain" eval="[('section_id','=',section_support2),('user_id','=','admin'),('date','>=',time.strftime('%Y-%m-%d'))]"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_leads_my6">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_my6">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_my6">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view_leads"/>
-		<field name="act_window_id" ref="crm_case_category_act_leads_my6"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_leads_my" id="menu_crm_case_category_act_leads_my6" action="crm_case_category_act_leads_my6"/>
-
-
-
-<!--		REPORTS		-->
-	<menuitem name="Leads"  id="menu_action_report_crm_case_lead" parent="report_crm.next_id_64"/>	
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_lead_user">
-		<field name="res_model">report.crm.case.user</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<menuitem name="Cases by Leads and User" parent="menu_action_report_crm_case_lead" action="action_report_crm_case_lead_user" id="menu_action_report_crm_case_lead_user"/>
-
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_lead_categ">
-		<field name="res_model">report.crm.case.section.categ2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<menuitem parent="menu_action_report_crm_case_lead" name="Cases by Leads and Category2" action="action_report_crm_case_lead_categ" id="menu_action_report_crm_case_lead_categ"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_lead_stage">
-		<field name="res_model">report.crm.case.section.stage</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<menuitem name="Cases by Leads and Stage" parent="menu_action_report_crm_case_lead" action="action_report_crm_case_lead_stage" id="menu_action_report_crm_case_lead_stage"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_lead_categ_stage">
-		<field name="res_model">report.crm.case.section.categ.stage</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<menuitem name="Cases by Section, Category and Stage" parent="menu_action_report_crm_case_lead"  action="action_report_crm_case_lead_categ_stage" id="menu_action_report_crm_case_lead_categ_stage"/>
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_lead_categ_categ2">
-		<field name="res_model">report.crm.case.section.categ.categ2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
-	</record>
-	<menuitem name="Cases by Section, Category and Category2" parent="menu_action_report_crm_case_lead" action="action_report_crm_case_lead_categ_categ2" id="menu_action_report_crm_case_lead_categ_categ2"/>
-
-</data>
-</terp>
+	<!--For Leads-->
+		<record id="crm_case_itisatelesalescampaign0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_15"/>
+			<field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
+			<field name="category2_id" ref="crm_configuration.category_lead1"/>
+			<field name="partner_id" ref="base.res_partner_11"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;Faustino Speegle&quot;" name="name"/>
+			<field eval="&quot;open&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;info.hr.phone@example.com&quot;" name="partner_name2"/>
+			<field eval="&quot;(726) 782-0636&quot;" name="partner_mobile"/>
+			<field eval="1" name="active"/>
+			<field eval="16.1" name="duration"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead5"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead1"/>
+			<field eval="&quot;President&quot;" name="partner_name"/>
+			<field eval="&quot;(769) 703-274&quot;" name="partner_phone"/>
+		</record>
+		<record id="crm_case_electonicgoodsdealer0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_6"/>
+			<field eval="time.strftime('%Y-%m-11 11:19:25')" name="date"/>
+			<field name="category2_id" ref="crm_configuration.category_lead7"/>
+			<field name="partner_id" ref="base.res_partner_6"/>
+			<field eval="&quot;4&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="22.25" name="duration"/>
+			<field eval="&quot;Jesse Denning&quot;" name="name"/>
+			<field eval="&quot;open&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;hr70@example.name&quot;" name="partner_name2"/>
+			<field eval="&quot;(392) 895-7917&quot;" name="partner_mobile"/>
+			<field eval="1" name="active"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead2"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead2"/>
+			<field eval="&quot;IT Developer&quot;" name="partner_name"/>
+			<field eval="&quot;(956) 293-2595&quot;" name="partner_phone"/>
+		</record>
+		<record id="crm_case_developingwebapplications0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_2"/>
+			<field eval="time.strftime('%Y-%m-15 17:44:12')" name="date"/>
+			<field name="category2_id" ref="crm_configuration.category_lead5"/>
+			<field name="partner_id" ref="base.res_partner_10"/>
+			<field eval="&quot;2&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_demo"/>
+			<field eval="12.45" name="duration"/>
+			<field eval="&quot;Taylor Mullane&quot;" name="name"/>
+			<field eval="&quot;done&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;qa.phone@example.us&quot;" name="partner_name2"/>
+			<field eval="&quot;(820) 167-3208&quot;" name="partner_mobile"/>
+			<field eval="1" name="active"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead4"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead4"/>
+			<field eval="&quot;VP Operations&quot;" name="partner_name"/>
+			<field eval="&quot;(079) 681-2139&quot;" name="partner_phone"/>
+			<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
+		</record>
+		<record id="crm_case_qrecorp0" model="crm.case">
+			<field eval="time.strftime('%Y-%m-21 14:10:23')" name="date"/>
+			<field name="category2_id" ref="crm_configuration.category_lead8"/>
+			<field name="partner_id" ref="base.res_partner_tinyatwork"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;Diego Barga&quot;" name="name"/>
+			<field eval="&quot;draft&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;kid.support.the@example.it&quot;" name="partner_name2"/>
+			<field eval="&quot;(077) 582-4035&quot;" name="partner_mobile"/>
+			<field eval="1" name="active"/>
+			<field eval="8.00" name="duration"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead1"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead1"/>
+			<field eval="&quot;Director Sales&quot;" name="partner_name"/>
+			<field eval="&quot;(514) 698-4118&quot;" name="partner_phone"/>
+		</record>
+		<record id="crm_case_itdeveloper0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_10"/>
+			<field eval="time.strftime('%Y-%m-28 16:20:43')" name="date"/>
+			<field name="category2_id" ref="crm_configuration.category_lead4"/>
+			<field name="partner_id" ref="base.res_partner_5"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;Carrie Helle&quot;" name="name"/>
+			<field eval="&quot;pending&quot;" name="state"/>
+			<field eval="8" name="duration"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;info.qa.info@example.co.uk&quot;" name="partner_name2"/>
+			<field eval="&quot;(333) 715-1450&quot;" name="partner_mobile"/>
+			<field eval="1" name="active"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead6"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead3"/>
+			<field eval="&quot;IT Developer&quot;" name="partner_name"/>
+			<field eval="&quot;(855) 924-4364&quot;" name="partner_phone"/>
+		</record>
+		<record id="crm_case_mgroperations0" model="crm.case">
+			<field name="partner_address_id" ref="base.res_partner_address_1"/>
+			<field eval="1" name="active"/>
+			<field name="category2_id" ref="crm_configuration.category_lead3"/>
+			<field eval="3.15" name="duration"/>
+			<field name="partner_id" ref="base.res_partner_9"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;Tina Pinero&quot;" name="name"/>
+			<field eval="&quot;cancel&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;beans.beans@example.com &quot;" name="partner_name2"/>
+			<field eval="&quot;(468) 017-2684&quot;" name="partner_mobile"/>
+			<field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead8"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead6"/>
+			<field eval="&quot;Mgr Operations&quot;" name="partner_name"/>
+			<field eval="&quot;(373) 907-1009&quot;" name="partner_phone"/>
+			<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+		</record>
+		<record id="crm_case_vpoperations0" model="crm.case">
+			<field eval="1" name="active"/>
+			<field name="category2_id" ref="crm_configuration.category_lead8"/>
+			<field name="partner_id" ref="base.res_partner_seagate"/>
+			<field eval="&quot;3&quot;" name="priority"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field eval="&quot;Wendi Baltz&quot;" name="name"/>
+			<field eval="&quot;done&quot;" name="state"/>
+			<field name="section_id" ref="crm_configuration.section_support2"/>
+			<field eval="&quot;beans69@example.biz&quot;" name="partner_name2"/>
+			<field eval="&quot;	(463) 014-1208&quot;" name="partner_mobile"/>
+			<field eval="time.strftime('%Y-%m-19 13:01:05')" name="date"/>
+			<field name="categ_id" ref="crm_configuration.categ_lead4"/>
+			<field name="stage_id" ref="crm_configuration.stage_lead4"/>
+			<field eval="&quot;VP Operations&quot;" name="partner_name"/>
+			<field eval="7.15" name="duration"/>
+			<field eval="&quot;(282) 603-7489&quot;" name="partner_phone"/>
+		</record>
+	</data>
+</openerp>

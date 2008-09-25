@@ -1,4 +1,4 @@
-<terp>
+<openerp>
 <data>
 
 	<record model="ir.ui.view" id="view_picking_journal_form">
@@ -56,8 +56,8 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	
-	<menuitem name="Configuration" id="menu_definition_journal_configuration"/>
-	<menuitem name="Packings Journals" id="menu_definition_journal_picking" parent="menu_definition_journal_configuration" action="action_definition_picking_journal"/>
+	
+	<menuitem name="Packings Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree">
 		<field name="name">Packings by journal</field>
@@ -67,8 +67,8 @@
 		<field name="domain">[]</field>
 	</record>
 	
-	<menuitem name="Packing Lists" id="menu_definition_journal_packing_lists"/>
-	<menuitem name="Packings by Journal" id="menu_definition_journal_picking_byjournal" parent="menu_definition_journal_packing_lists" action="action_definition_picking_journal_tree"/>
+	
+	<menuitem name="Packings by Journal" id="menu_definition_journal_picking_byjournal" parent="stock.menu_stock_root" action="action_definition_picking_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_my">
 		<field name="name">My open packing journals</field>
@@ -98,8 +98,8 @@
 		<field name="view_type">tree</field>
 	</record>
 	
-	<menuitem name="Sending Goods" id="menu_definition_journal_picking_sending_goods" parent="menu_definition_journal_packing_lists"/>
-	<menuitem name="Packings to Invoice" id="menu_definition_journal_picking_invoice" parent="menu_definition_journal_picking_sending_goods"/>
+	
+	<menuitem name="Packings to Invoice" id="menu_definition_journal_picking_invoice" parent="stock.menu_action_picking_tree"/>
 	<menuitem name="Packings by Invoice Method" id="menu_definition_journal_picking_invoice_method" parent="menu_definition_journal_picking_invoice" action="action_invoice_type_tree"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_open">
@@ -119,4 +119,4 @@
 	</record>
 
 </data>
-</terp>
+</openerp>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 <data>
 	# -----------------------------------------------------------
 	# Activities
@@ -20,15 +20,27 @@
 		</record>
 		<record model="workflow.activity" id="prod_act_wc_start">
 			<field name="wkf_id" ref="wkf_prod_workcenter"/>
-			<field name="name">confirm</field>
+			<field name="name">startworking</field>
 			<field name="kind">function</field>
-			<field name="action">action_confirm()</field>
+			<field name="action">action_start_working()</field>
 		</record>
 		<record model="workflow.activity" id="prod_act_wc_cancel">
 			<field name="wkf_id" ref="wkf_prod_workcenter"/>
 			<field name="name">cancel</field>
 			<field name="kind">function</field>
 			<field name="action">action_cancel()</field>
+		</record>
+		<record model="workflow.activity" id="prod_act_wc_pause">
+			<field name="wkf_id" ref="wkf_prod_workcenter"/>
+			<field name="name">pause</field>
+			<field name="kind">function</field>
+			<field name="action">action_pause()</field>
+		</record>
+		<record model="workflow.activity" id="prod_act_wc_resume">
+			<field name="wkf_id" ref="wkf_prod_workcenter"/>
+			<field name="name">resume</field>
+			<field name="kind">function</field>
+			<field name="action">action_resume()</field>
 		</record>
 		<record model="workflow.activity" id="prod_act_wc_done">
 			<field name="wkf_id" ref="wkf_prod_workcenter"/>
@@ -37,6 +49,7 @@
 			<field name="flow_stop">True</field>
 			<field name="action">action_done()</field>
 		</record>
+		
 	# -----------------------------------------------------------
 	# Transition
 	# -----------------------------------------------------------
@@ -44,7 +57,7 @@
 		<record model="workflow.transition" id="prod_trans_wc_draft_start">
 			<field name="act_from" ref="prod_act_wc_draft"/>
 			<field name="act_to" ref="prod_act_wc_start"/>
-			<field name="signal">button_confirm</field>
+			<field name="signal">button_start_working</field>
 		</record>
 		<record model="workflow.transition" id="prod_trans_wc_start_done">
 			<field name="act_from" ref="prod_act_wc_start"/>
@@ -66,5 +79,16 @@
 			<field name="act_to" ref="prod_act_wc_cancel"/>
 			<field name="signal">button_cancel</field>
 		</record>
+		<record model="workflow.transition" id="prod_trans_wc_start_pause">
+			<field name="act_from" ref="prod_act_wc_start"/>
+			<field name="act_to" ref="prod_act_wc_pause"/>
+			<field name="signal">button_pause</field>
+		</record>
+		
+		<record model="workflow.transition" id="prod_trans_wc_pause_resume">
+			<field name="act_from" ref="prod_act_wc_pause"/>
+			<field name="act_to" ref="prod_act_wc_resume"/>
+			<field name="signal">button_resume</field>
+		</record>
 </data>
-</terp>
+</openerp>

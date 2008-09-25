@@ -39,11 +39,9 @@ import wizard_pay_invoice
 import wizard_journal
 import wizard_journal_select
 import wizard_bank_reconcile
-import wizard_budget_spread
 import wizard_subscription_generate
 
 import wizard_aged_trial_balance
-import wizard_budget_report
 import wizard_general_ledger_report
 import wizard_third_party_ledger
 import wizard_account_balance_report

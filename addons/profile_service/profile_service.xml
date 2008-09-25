@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Install extra modules</field>
-            <field name="model">config.install_extra_modules</field>
+            <field name="name">Service Profile : Install extra modules</field>
+            <field name="model">profile.service.config.install_modules_wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Install Extra Module">
                     <separator string="Services Management" colspan="4"/>
-                    <field name="hr_timesheet"/>
+                    <field name="project_timesheet"/>
                     <field name="hr_timesheet_invoice"/>
                     <field name="project_gtd"/>
                     <field name="scrum"/>
@@ -21,7 +21,8 @@
                     <separator string="Relationship Management" colspan="4"/>
                     <field name="crm_configuration"/>
                     <field name="base_contact"/>
-
+					<separator string="Portal Management" colspan="4"/> 
+                    <field name="portal"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
                     <group col="4" colspan="2">
@@ -33,9 +34,9 @@
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Install Extra Modules</field>
+            <field name="name">Service Profile : Install Extra Modules</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">config.install_extra_modules</field>
+            <field name="res_model">profile.service.config.install_modules_wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -43,7 +44,7 @@
 
       <record model="ir.module.module.configuration.step"
             id="config_install_module">
-            <field name="name">Install Extra modules</field>
+            <field name="name">Service Profile : Install Extra modules</field>
             <field name="note">A few modules are proposed according to the 'service profile' you selected. You will be able to install them or more modules later through the Administration menu.</field>
             <field name="action_id" ref="action_config_install_module"/>
             <field name="state">open</field>
@@ -51,4 +52,4 @@
 
 
     </data>
-</terp>
+</openerp>

@@ -1,694 +1,276 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 <data noupdate="1">
-
-	<!--
-	Case Sections
-	-->
-	<record model="crm.case.section" id="section_support">
-		<field name="name">Bug Tracking</field>
-		<field name="code">BugSup</field>
-	</record>
-
-	<!--
-	Case Categories
-	-->
-         <!--	For Bugs	-->
-         
-	<record model="crm.case.categ" id="categ1">
-		<field name="name">Bugs</field>
-		<field name="section_id" ref="section_support"/>
-	</record>
-	<record model="crm.case.categ" id="categ2">
-		<field name="name">Patches</field>
-		<field name="section_id" ref="section_support"/>
-	</record>
-	<record model="crm.case.categ" id="categ3">
-		<field name="name">Feature Requests</field>
-		<field name="section_id" ref="section_support"/>
-	</record>
-
-	<!--
-	Case Category2
-	-->
-         <!--	For Bugs	-->
-	<record model="crm.case.category2" id="category1">
-		<field name="name">Version 4.2</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.category2" id="category2">
-		<field name="name">Version 4.4</field>
-		<field name="section_id" ref="section_support"/>
-	</record>
-
-	<!--
-	Case Stage
-	-->
-         <!--	For Bugs	-->
-         
-	<record model="crm.case.stage" id="stage1">
-		<field name="name">Accepted as Bug</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage2">
-		<field name="name">Fixed</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage3">
-		<field name="name">Won't fix</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage4">
-		<field name="name">Invalid</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage5">
-		<field name="name">Awaiting Response</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage6">
-		<field name="name">Works For Me</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	<record model="crm.case.stage" id="stage7">
-		<field name="name">Future</field>
-		<field name="section_id" ref="section_support"/>
-	</record>	
-	
-	######################## BUG TRACKING (menu) ###########################
 	<!-- 
-		ALL BUGS
+		((((((((((( Demo Cases ))))))))))) 
 	-->
-	<record model="ir.actions.act_window" id="crm_case_categ_act0">
-		<field name="name">All Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
+<!--For Bug Tracking-->
+	<record id="crm_case_buginaccountsmodule0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_8"/>
+		<field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;5&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field eval="&quot;open&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage1"/>
+		<field eval="15.0" name="duration"/>
+		<field eval="&quot;Bug in Accounts module&quot;" name="name"/>
+		<field eval="&quot;agr@agrolait.com&quot;" name="email_from"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view0">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act0"/>
-	</record>	
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view0">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act0"/>
+	<record id="crm_case_log_takecorrectiveactions0" model="crm.case.log">
+		<field eval="time.strftime('%Y-%m-08')" name="date"/>
+		<field name="case_id" ref="crm_case_buginaccountsmodule0"/>
+		<field name="som" ref="base.som_normal"/>
+		<field eval="&quot;Take corrective actions&quot;" name="name"/>
+		<field model="res.partner.canal" name="canal_id" search="[('name','=','website')]"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view0">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act0"/>
-	</record>
-	<menuitem name="Bug Tracking" id="menu_crm_case_bug_track"  parent="crm.menu_crm"/>
-	<menuitem  id="menu_crm_case_categ_act0" action="crm_case_categ_act0" parent="menu_crm_case_bug_track"/>
 
-	<record model="ir.actions.act_window" id="crm_case_categ_act_new">
-		<field name="name">New Bug</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
+	<record id="crm_case_programnotgivingproperoutput0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_tang"/>
+		<field eval="time.strftime('%Y-%m-15  12:50:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category2"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field eval="&quot;done&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="3.5" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage2"/>
+		<field eval="&quot;Program not giving proper output&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view1_new">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act_new"/>
+
+	<record id="crm_case_outputincorrect0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_9"/>
+		<field eval="time.strftime('%Y-%m-18 14:30:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;4&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_demo"/>
+		<field name="partner_id" ref="base.res_partner_2"/>
+		<field eval="&quot;cancel&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="2.3" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage3"/>
+		<field eval="&quot;Output incorrect&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view1_new">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act_new"/>
-	</record>	
-	<menuitem  id="menu_crm_case_categ_act_new" action="crm_case_categ_act_new" parent="menu_crm_case_categ_act0"/>
+
+	<record id="crm_case_problemloadingpage0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_13"/>
+		<field eval="time.strftime('%Y-%m-20  15:25:05')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_14"/>
+		<field eval="&quot;cancel&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="4.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage4"/>
+		<field eval="&quot;Problem loading page&quot;" name="name"/>
+	</record>
+
+	<record id="crm_case_pagenotfound0" model="crm.case">
+		<field eval="time.strftime('%Y-%m-22  18:15:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
+		<field eval="&quot;draft&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="1.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Page not Found&quot;" name="name"/>
+	</record>
+
+	<record id="crm_case_programmingerror0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_10"/>
+		<field eval="time.strftime('%Y-%m-24  09:45:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category2"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_5"/>
+		<field eval="&quot;pending&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="4.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage6"/>
+		<field eval="&quot;Programming Error&quot;" name="name"/>
+	</record>
+
+	<record id="crm_case_logicalerrorinprogram0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_6"/>
+		<field eval="time.strftime('%Y-%m-26  11:10:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;2&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_6"/>
+		<field eval="&quot;pending&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="2.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage7"/>
+		<field eval="&quot;Logical Error in Program&quot;" name="name"/>
+	</record>
+
+	<record id="crm_case_constrainterror0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_6"/>
+		<field eval="time.strftime('%Y-%m-25  13:35:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;2&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_6"/>
+		<field eval="&quot;pending&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="7.3" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ1"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Constraint Error&quot;" name="name"/>
+	</record>
 	
-	<record model="ir.actions.act_window" id="crm_case_category_act_all1">
-		<field name="name">Bugs Waiting Approval</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'state\',\'=\',\'draft\')]'"/>
+	<record id="crm_case_errorinprogram0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_10"/>
+		<field eval="time.strftime('%Y-%m-28  15:40:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category2"/>
+		<field eval="&quot;2&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_demo"/>
+		<field name="partner_id" ref="base.res_partner_5"/>
+		<field eval="&quot;open&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="1.3" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ2"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Error in Program&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all1"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all1" action="crm_case_category_act_all1" parent="menu_crm_case_categ_act0"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all2">
-		<field name="name">Open Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'stage_id\',\'&lt;&gt;\','+str(stage7)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all2"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all2" action="crm_case_category_act_all2" parent="menu_crm_case_categ_act0"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all3">
-		<field name="name">Bugs With Patches Waiting Approval</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'categ_id\',\'=\','+str(categ2)+'), (\'stage_id\',\'=\','+str(stage5)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all3"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all3" action="crm_case_category_act_all3" parent="menu_crm_case_categ0_act_all2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all4">
-		<field name="name">Bugs Not Fixed</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'), (\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'categ_id\',\'=\','+str(categ1)+'), (\'stage_id\',\'&lt;&gt;\','+str(stage2)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all4">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all4">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all4">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all4"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all4" action="crm_case_category_act_all4" parent="menu_crm_case_categ0_act_all2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all5">
-		<field name="name">Pending Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all5">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all5">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all5">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all5"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all5" action="crm_case_category_act_all5" parent="menu_crm_case_categ_act0"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all6">
-		<field name="name">Planned For Future Release</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'stage_id\',\'=\','+str(stage7)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all6">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all6">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all6">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all6"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all6" action="crm_case_category_act_all6" parent="menu_crm_case_categ0_act_all5"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all7">
-		<field name="name">Waiting For Reporter Response</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'stage_id\',\'=\','+str(stage5)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all7">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all7"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all7">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all7"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all7">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all7"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all7" action="crm_case_category_act_all7" parent="menu_crm_case_categ0_act_all5"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_all8">
-		<field name="name">Old Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'&lt;&gt;\','+str(categ3)+'),(\'state\',\'&lt;&gt;\',\'draft\'),(\'state\',\'&lt;&gt;\',\'open\'),(\'state\',\'&lt;&gt;\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_all8">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all8"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_all8">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all8"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_all8">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_all8"/>
-	</record>
-	<menuitem  id="menu_crm_case_categ0_act_all8" action="crm_case_category_act_all8" parent="menu_crm_case_categ_act0"/>	<!-- 
-		MY BUGS
-	-->
-	<record model="ir.actions.act_window" id="crm_case_category_act_my0">
-		<field name="name">My Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_my0">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_my0">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_my0">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my0"/>
-	</record>
-	<menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_categ0_act_my0" action="crm_case_category_act_my0"/>
 	
-	<record model="ir.actions.act_window" id="crm_case_category_act_my1">
-		<field name="name">My Open Bugs</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
+	<record id="crm_case_patcheserrorinprogram0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_9"/>
+		<field eval="time.strftime('%Y-%m-30  16:30:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category2"/>
+		<field eval="&quot;2&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_2"/>
+		<field eval="&quot;open&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="13.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ2"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Patches Error in Program&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_my1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_my1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_my1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my1"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_my0" id="menu_crm_case_categ0_act_my1" action="crm_case_category_act_my1"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_my2">
-		<field name="name">My Bugs With Patches</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'user_id\',\'=\',uid),(\'categ_id\',\'=\','+str(categ2)+'), (\'stage_id\',\'=\','+str(stage5)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_my2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_my2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_my2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my2"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my2" action="crm_case_category_act_my2"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_my3">
-		<field name="name">My Bugs Not Fixed</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'user_id\',\'=\',uid),(\'categ_id\',\'=\','+str(categ1)+'), (\'stage_id\',\'&lt;&gt;\','+str(stage2)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_my3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_my3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_my3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_my3"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my3" action="crm_case_category_act_my3"/>
-
-	<!-- 
-		ALL FEATURE REQUESTS 
-	-->
-	<record model="ir.actions.act_window" id="crm_case_category_act_f0">
-		<field name="name">All Feature Request</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f0">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f0">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f0">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f0"/>
-	</record>
-	<menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_category_act_f0" action="crm_case_category_act_f0"/>
 	
-	<record model="ir.actions.act_window" id="crm_case_category_act_f1">
-		<field name="name">New Feature Request</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+')]'"/>
+	<record id="crm_case_newfeaturestobeadded0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_wong"/>
+		<field eval="time.strftime('%Y-%m-01 12:15:10')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;4&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_maxtor"/>
+		<field eval="&quot;open&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="3.2" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage1"/>
+		<field eval="&quot;New Features To Be Added&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f1"/>
+	
+	<record id="crm_case_addmenustothemodule0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_1"/>
+		<field eval="time.strftime('%Y-%m-05 18:00:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category2"/>
+		<field eval="&quot;1&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_demo"/>
+		<field name="partner_id" ref="base.res_partner_9"/>
+		<field eval="&quot;done&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="3.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage2"/>
+		<field eval="&quot;Add menus to the module&quot;" name="name"/>
+		<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f1"/>
+	
+	<record id="crm_case_includeattendancesheetinproject0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_2"/>
+		<field eval="time.strftime('%Y-%m-10 17:05:30')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_10"/>
+		<field eval="&quot;cancel&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="2.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage3"/>
+		<field eval="&quot;Include Attendance sheet in Project&quot;" name="name"/>
+		<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
 	</record>
-	<menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_category_act_f1" action="crm_case_category_act_f1"/>
-
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_f2">
-		<field name="name">Feature Requests Waiting Approval</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'), (\'categ_id\',\'=\','+str(categ3)+'), (\'state\',\'=\',\'draft\')]'"/>
+	
+	<record id="crm_case_createnewobject0" model="crm.case">
+		<field model="res.partner.canal" name="canal_id" search="[('name','=','phone')]"/>
+		<field name="partner_address_id" ref="base.res_partner_address_6"/>
+		<field name="som" ref="base.som_happy"/>
+		<field eval="time.strftime('%Y-%m-15 10:35:15')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;3&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_6"/>
+		<field eval="&quot;draft&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="2.45" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Create new object&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f2"/>
+	
+	<record id="crm_case_improvereportsinhrms0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_15"/>
+		<field eval="time.strftime('%Y-%m-19 12:15:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;4&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_root"/>
+		<field name="partner_id" ref="base.res_partner_11"/>
+		<field eval="&quot;pending&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="15.0" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage7"/>
+		<field eval="&quot;Improve Reports in HRMS&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f2"/>
+	
+	<record id="crm_case_improvereportsinpms0" model="crm.case">
+		<field name="partner_address_id" ref="base.res_partner_address_15"/>
+		<field eval="time.strftime('%Y-%m-21 14:30:00')" name="date"/>
+		<field name="category2_id" ref="crm_configuration.category1"/>
+		<field eval="&quot;2&quot;" name="priority"/>
+		<field name="user_id" ref="base.user_demo"/>
+		<field name="partner_id" ref="base.res_partner_11"/>
+		<field eval="&quot;pending&quot;" name="state"/>
+		<field name="section_id" ref="crm_configuration.section_support"/>
+		<field eval="1" name="active"/>
+		<field eval="06.15" name="duration"/>
+		<field name="categ_id" ref="crm_configuration.categ3"/>
+		<field name="stage_id" ref="crm_configuration.stage5"/>
+		<field eval="&quot;Improve Reports in PMS&quot;" name="name"/>
 	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f2"/>
-	</record>
-	<menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f2" action="crm_case_category_act_f2"/>
-	<record model="ir.actions.act_window" id="crm_case_category_act_f3">
-		<field name="name">Open Feature Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+'),(\'stage_id\',\'&lt;&gt;\','+str(stage7)+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f3"/>
-	</record>
-	<menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f3" action="crm_case_category_act_f3"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_f4">
-		<field name="name">Pending Feature Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f4">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f4">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f4"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f4">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f4"/>
-	</record>
-	<menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f4" action="crm_case_category_act_f4"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_f5">
-		<field name="name">Planned For Future Release</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+'),(\'state\',\'=\',\'pending\'),(\'stage_id\',\'=\','+str(stage7)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f5">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f5">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f5"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f5">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f5"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f5" action="crm_case_category_act_f5"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_f6">
-		<field name="name">Waiting For Reporter Response</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+'),(\'state\',\'=\',\'pending\'),(\'stage_id\',\'=\','+str(stage5)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f6">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f6">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f6"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f6">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f6"/>
-	</record>
-	<menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f6" action="crm_case_category_act_f6"/>
-
-	<record model="ir.actions.act_window" id="crm_case_category_act_f7">
-		<field name="name">Old Feature Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+'),(\'categ_id\',\'=\','+str(categ3)+'),(\'state\',\'&lt;&gt;\',\'draft\'),(\'state\',\'&lt;&gt;\',\'open\'),(\'state\',\'&lt;&gt;\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_f7">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f7"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_f7">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f7"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_f7">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_category_act_f7"/>
-	</record>
-	<menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f7" action="crm_case_category_act_f7"/>
 	
 </data>
-</terp>
+</openerp>

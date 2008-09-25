@@ -42,6 +42,7 @@ class general_ledger(report_sxw.rml_parse):
             'sum_credit_account': self._sum_credit_account,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
+            'check_lines': self.check_lines,
 
         })
         self.context = context
@@ -101,8 +102,17 @@ class general_ledger(report_sxw.rml_parse):
 
         return ret_data
 
+    def check_lines(self, account, form):
+        result = self.lines(account, form, history=True)
+        res = [{'code':account.code,'name':account.name}]
+        if not result:
+            res = []
+        return res
 
-    def lines(self, account, form):
+    def lines(self, account, form, history=False):
+        self.ids +=[account.id]
+        if not account.check_history and not history:
+            return []
 
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
@@ -120,7 +130,6 @@ class general_ledger(report_sxw.rml_parse):
         for l in res:
             sum += l['debit'] - l ['credit']
             l['progress'] = sum
-        self.ids +=[account.id]
         return res
 
     def _sum_debit_account(self, account, form):

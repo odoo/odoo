@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="True">
+
+
+        <!--
+        Account Type
+        -->
+        <record id="account_type_root" model="account.account.type">
+            <field name="name">View</field>
+            <field name="code">view</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_type_asset" model="account.account.type">
+            <field name="name">Asset</field>
+            <field name="code">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_liability" model="account.account.type">
+            <field name="name">Liability</field> 
+            <field name="code">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_cash_equity" model="account.account.type">
+            <field name="name">Equity</field> 
+            <field name="code">equity</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_income" model="account.account.type">
+            <field name="name">Income</field> 
+            <field name="code">income</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_expense" model="account.account.type">
+            <field name="name">Expense</field> 
+            <field name="code">expense</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_cash_moves" model="account.account.type">
+            <field name="name">Cash</field> 
+            <field name="code">cash</field>
+            <field name="close_method">balance</field>
+        </record>
+
+        <!--
+        Chart of Account
+        -->
+        <record id="minimal_0" model="account.account">
+            <field name="code">x 0</field>
+            <field name="name">Chart For Automated Tests</field>
+            <field eval="False" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own accounts.
+            </field>
+            <field name="user_type" ref="account_type_root"/>
+        </record>
+        <record id="a_recv" model="account.account">
+            <field name="name">Main Receivable</field>
+            <field name="code">x 40000</field>
+            <field name="type">receivable</field>
+            <field name="user_type" ref="account.account_type_asset"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type" ref="account_type_income"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+        <record id="a_pay" model="account.account">
+            <field name="name">Main Payable</field>
+            <field name="code">x 440000</field>
+            <field name="type">payable</field>
+            <field name="user_type" ref="account.account_type_liability"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type" ref="account_type_expense"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+        <record id="cash" model="account.account">
+            <field name="name">Petty Cash</field>
+            <field name="code">x 570000</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.account_type_cash_moves"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_type" ref="account_type_cash_moves"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+        <record id="a_expense" model="account.account">
+            <field name="name">Products Purchase</field>
+            <field name="code">x 600000</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.account_type_expense"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_type" ref="account_type_expense"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+        <record id="a_sale" model="account.account">
+            <field name="name">Products Sales</field>
+            <field name="code">x 701000</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.account_type_income"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="user_type" ref="account_type_income"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+
+        <!-- Properties -->
+        <record forcecreate="True" id="property_account_receivable" model="ir.property">
+            <field name="name">property_account_receivable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
+            <field eval="'account.account,'+str(a_recv)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_account_payable" model="ir.property">
+            <field name="name">property_account_payable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
+            <field eval="'account.account,'+str(a_pay)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_account_supplier_tax" model="ir.property">
+            <field name="name">property_account_supplier_tax</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_supplier_tax')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_account_tax" model="ir.property">
+            <field name="name">property_account_tax</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_tax')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+        <!--
+		Account Journal
+		-->
+
+        <record id="sales_journal" model="account.journal">
+            <field name="name">Sales Journal</field>
+            <field name="code">SAJ</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account_journal_view"/>
+            <field name="sequence_id" ref="sequence_journal"/>
+            <field model="account.account" name="default_credit_account_id" search="[('type','=','receivable')]"/>
+            <field model="account.account" name="default_debit_account_id" search="[('type','=','receivable')]"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="expenses_journal" model="account.journal">
+            <field name="name">Expenses Journal</field>
+            <field name="code">EXJ</field>
+            <field name="type">purchase</field>
+            <field name="view_id" ref="account_journal_view"/>
+            <field name="sequence_id" ref="sequence_journal"/>
+            <field model="account.account" name="default_debit_account_id" search="[('type','=','payable')]"/>
+            <field model="account.account" name="default_credit_account_id" search="[('type','=','payable')]"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="bank_journal" model="account.journal">
+            <field name="name">Bank Journal</field>
+            <field name="code">BNK</field>
+            <field name="type">cash</field>
+            <field name="view_id" ref="account_journal_bank_view"/>
+            <field name="sequence_id" ref="sequence_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="cash"/>
+            <field model="account.account" name="default_credit_account_id" ref="cash"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record forcecreate="1" id="stock_journal" model="account.journal">
+            <field name="name">Stock Journal</field>
+            <field name="code">STJ</field>
+            <field name="type">general</field>
+            <field name="view_id" ref="account_journal_view"/>
+            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!--
+		Product income and expense accounts, default parameters
+	-->
+        
+        <record id="property_account_expense_prd" model="ir.property">
+            <field name="name">property_account_expense</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_expense')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="property_account_income_prd" model="ir.property">
+            <field name="name">property_account_income</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_income')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="property_account_expense_categ" model="ir.property">
+            <field name="name">property_account_expense_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>
+            <field eval="'account.account,'+str(ref('account.a_expense'))" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="property_account_income_categ" model="ir.property">
+            <field name="name">property_account_income_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_income_categ')]"/>
+            <field eval="'account.account,'+str(ref('account.a_sale'))" model="account.account" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</openerp>

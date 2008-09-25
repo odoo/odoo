@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
 
         <!--
 	Case Sections
 	-->
 
-        <record id="section_support" model="crm.case.section">
+        <record id="section_support_help" model="crm.case.section">
             <field name="name">Helpdesk and Support</field>
             <field name="code">support</field>
         </record>
@@ -25,15 +25,15 @@
 
         <record id="categ1" model="crm.case.categ">
             <field name="name">Computer Crashed</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
         </record>
         <record id="categ2" model="crm.case.categ">
             <field name="name">Unknown</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
         </record>
         <record id="categ3" model="crm.case.categ">
             <field name="name">Bad Program Utilisation</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
         </record>
         <record id="categ4" model="crm.case.categ">
             <field name="name">Website Opportunity</field>
@@ -56,7 +56,7 @@
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_case-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
+		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support_help)+')]'"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Helpdesk/Helpdesk Cases" id="menu_crm_case_categ2-act" action="crm_case_categ2-act"/>
 	-->
@@ -111,7 +111,7 @@
                 Linux turned it readonly.
                 The CPU Cooler is down.
             </field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ1" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_sednacom"/>
             <field name="som" ref="base.som_unhappy"/>
@@ -172,7 +172,7 @@
             <field name="name">Bug in program</field>
             <field name="priority">3</field>
             <field name="description">There is a bug in the program</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ4" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
             <field name="som" ref="base.som_normal"/>
@@ -191,7 +191,7 @@
             <field name="name">Server is down</field>
             <field name="priority">3</field>
             <field name="description">The web server is down</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ4" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="som" ref="base.som_normal"/>
@@ -241,7 +241,7 @@
             <field name="name">Missing hardware</field>
             <field name="priority">3</field>
             <field name="description">Missing some hardwares in the packing</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ4" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_seagate"/>
             <field name="som" ref="base.som_normal"/>
@@ -359,7 +359,7 @@
             <field name="name">Need quotation</field>
             <field name="priority">3</field>
             <field name="description">Need quotation for new development</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ4" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_tinyatwork"/>
             <field name="som" ref="base.som_happy"/>
@@ -434,7 +434,7 @@
             <field name="name">Need new specific reports</field>
             <field name="priority">3</field>
             <field name="description">Need some specific reports</field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ5" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_thymbra"/>
             <field name="som" ref="base.som_normal"/>
@@ -462,7 +462,7 @@
 
                 (btw : this is only demo data. no stress dear sysadmin :))
             </field>
-            <field name="section_id" ref="section_support"/>
+            <field name="section_id" ref="section_support_help"/>
             <field eval="categ1" name="categ_id"/>
             <field name="partner_id" ref="base.res_partner_9"/>
             <field name="som" ref="base.som_normal"/>
@@ -481,4 +481,4 @@
         </function>
 
     </data>
-</terp>
+</openerp>
