@@ -204,7 +204,7 @@ class process_process(osv.osv):
                             update_relatives(r, _id, _model)
 
         for nid, node in nodes.items():
-            if node['active'] or node['model'] == res_model:
+            if not node['gray'] and (node['active'] or node['model'] == res_model):
                 update_relatives(nid, res_id, res_model)
                 break
 
