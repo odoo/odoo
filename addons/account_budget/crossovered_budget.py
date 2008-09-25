@@ -215,9 +215,9 @@ class crossovered_budget_lines(osv.osv):
         'date_from': fields.date('Start Date',required=True),
         'date_to': fields.date('End Date',required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount',required=True),
-        'practical_amount':fields.function(_prac,method=True, string='Practical Amount',type='float'),
-        'theoritical_amount':fields.function(_theo,method=True, string='Theoritical Amount',type='float'),
+        'planned_amount':fields.float('Planned Amount',required=True,digits=(16,2)),
+        'practical_amount':fields.function(_prac,method=True, string='Practical Amount',type='float',digits=(16,2)),
+        'theoritical_amount':fields.function(_theo,method=True, string='Theoritical Amount',type='float',digits=(16,2)),
         'percentage':fields.function(_perc,method=True, string='Percentage',type='float'),
     }
 crossovered_budget_lines()

@@ -654,6 +654,7 @@
                     <field name="state"/>
                     <field name="reconcile_id"/>
                     <field name="reconcile_partial_id"/>
+                    <field colspan="4" name="reconcile_implicit"/>
                 </tree>
             </field>
         </record>
@@ -748,7 +749,7 @@
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
-
+							<field colspan="4" name="reconcile_implicit"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -1289,6 +1290,7 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id"/>
+                    <field colspan="4" name="reconcile_implicit"/>
                     <field name="state"/>
                 </tree>
             </field>
