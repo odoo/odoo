@@ -327,7 +327,7 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False, ssl=False, debug=False):
     """Send an email."""
     if not email_cc:
         email_cc=[]
