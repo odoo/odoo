@@ -924,15 +924,21 @@ class account_move_reconcile(osv.osv):
                 {'reconcile_id': rec.id }
             )
         return True
+
     def name_get(self, cr, uid, ids, context=None):
-        result = {}
+        if not len(ids):
+            return []
+        result = []
         for r in self.browse(cr, uid, ids, context):
             total = reduce(lambda y,t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
             if total:
-                result[r.id] = '%s (%.2f)' % (r.name, total)
+                name = '%s (%.2f)' % (r.name, total)
+                result.append((r.id,name))
             else:
-                result[r.id] = r.name
+                result.append((r.id,r.name))
         return result
+
+
 account_move_reconcile()
 
 #----------------------------------------------------------
@@ -1510,7 +1516,7 @@ class account_config_wizard(osv.osv_memory):
         }
 
     def install_account_chart(self, cr, uid,ids, context=None):
-        for res in self.read(cr,uid,ids):            
+        for res in self.read(cr,uid,ids):
             id = res['charts']
             def install(id):
                 mod_obj = self.pool.get('ir.module.module')
@@ -1558,7 +1564,7 @@ class account_config_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    
+
 
 account_config_wizard()
 
@@ -2036,8 +2042,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'res_model': 'ir.module.module.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
-        }    
-        
+        }
+
 
 wizard_multi_charts_accounts()
 
