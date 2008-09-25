@@ -481,7 +481,7 @@ class account_move_line(osv.osv):
                 self_debit = -writeoff
 
             # If comment exist in context, take it
-            if context['comment']:
+            if 'comment' in context and context['comment']:
                 libelle=context['comment']
             else:
                 libelle='Write-Off'
@@ -629,7 +629,7 @@ class account_move_line(osv.osv):
 
         if raise_ex:
             raise osv.except_osv(_('Wrong Accounting Entry!'), _('Both Credit and Debit cannot be zero!'))
-
+        account_obj = self.pool.get('account.account')
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if update_check:
