@@ -96,7 +96,7 @@
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="14.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_centre_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -147,7 +147,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="49.0,195.0,41.0,86.0,51.0,101.0" style="Table_hr_expense_line_header">
+    <blockTable colWidths="49.0,204.0,45.0,80.0,53.0,91.0" style="Table_hr_expense_line_header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -174,7 +174,7 @@
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.line_ids,'line') ]]</para>
-      <blockTable colWidths="49.0,195.0,40.0,62.0,25.0,52.0,80.0,21.0" style="Table_expense_line">
+      <blockTable colWidths="49.0,204.0,46.0,58.0,23.0,52.0,71.0,21.0" style="Table_expense_line">
         <tr>
           <td>
             <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime(line.date_value, '%Y-%m-%d')) or '' ]]</para>
