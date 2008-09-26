@@ -104,7 +104,7 @@
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_5cm_Above_Space" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="14.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_5cm_Above_Space" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -187,7 +187,7 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="58.0,268.0,50.0,82.0,56.0" repeatRows="1" style="Move_Line_Header">
+    <blockTable colWidths="58.0,261.0,49.0,89.0,56.0" repeatRows="1" style="Move_Line_Header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -207,8 +207,8 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_8">[[ repeatIn(picking.move_lines,'move_lines') ]]</para>
-      <blockTable colWidths="59.0,268.0,56.0,51.0,25.0,54.0" style="Move_Line_Contect">
+      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'assigned' )],'move_lines') ]]</para>
+      <blockTable colWidths="59.0,261.0,49.0,64.0,25.0,54.0" style="Move_Line_Contect">
         <tr>
           <td>
             <para style="terp_default_9">[[ move_lines.product_id.default_code ]]</para>
