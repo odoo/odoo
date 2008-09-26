@@ -71,7 +71,10 @@ class res_currency(osv.osv):
     _order = "code"
 
     def round(self, cr, uid, currency, amount):
-        return round(amount / currency.rounding) * currency.rounding
+        if currency.rounding == 0:
+            return 0.0
+        else:
+            return round(amount / currency.rounding) * currency.rounding
 
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding

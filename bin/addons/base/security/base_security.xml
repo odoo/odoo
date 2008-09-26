@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<openerp>
+	<!--<data noupdate="0">-->
+	<data>
+
+<!--
+ Users Groups
+-->
+    <record model="res.groups" id="group_system">
+        <field name="name">Administrator / Configuration</field>
+    </record>
+    
+    <record model="res.groups" id="group_erp_manager">
+        <field name="name">Administrator / Access Rights</field>
+    </record>
+    
+    <record model="res.groups" id="group_user">
+        <field name="name">Employee</field>
+    </record>
+
+    <record model="res.groups" id="group_account_manager">
+        <field name="name">Account Manager</field>
+    </record>
+
+    <record model="res.groups" id="group_extended">
+        <field name="name">Useability / Extended View</field>
+    </record>
+    
+    <record model="res.groups" id="group_no_one">
+        <field name="name">Useability / No One</field>
+    </record>
+
+<!--
+ Users
+-->
+    <record model="res.users" id="base.user_root">
+        <field name="signature">Administrator</field>
+        <field name="address_id" ref="main_address"/>
+        <field name="company_id" ref="main_company"/>
+        <field name="action_id" ref="action_menu_admin"/>
+        <field name="menu_id" ref="action_menu_admin"/>
+    </record>
+
+	<record model="ir.ui.menu" id="base.menu_administration">
+		<field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+	</record>
+</data>
+</openerp>
+

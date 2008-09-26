@@ -79,28 +79,28 @@ class view(osv.osv):
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
-    
+
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
 
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
 
         result = super(view, self).read(cr, uid, ids, fields, context, load)
-        
+
         for rs in result:
             if rs.get('model') == 'board.board':
                 cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%d and ref_id=%d", (uid, rs['id']))
                 oview = cr.dictfetchall()
                 if oview:
                     rs['arch'] = oview[0]['arch']
-        
-        
+
+
         return result
-    
+
     def write(self, cr, uid, ids, vals, context={}):
 
         if not isinstance(ids, (list, tuple)):
-            ids = [ids]   
+            ids = [ids]
 
         exist = self.pool.get('ir.ui.view').browse(cr, uid, ids[0])
         if exist.model == 'board.board' and 'arch' in vals:

@@ -39,7 +39,7 @@ import libxml2
 import libxslt
 
 import time, os
-ftitle=""
+
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
@@ -63,7 +63,6 @@ class report_printscreen_list(report_int):
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
-        global ftitle
         if not context:
             context={}
         datas['ids'] = ids
@@ -71,10 +70,10 @@ class report_printscreen_list(report_int):
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
         if model_id:
             model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).name
-            ftitle=model_desc
+            self.title = model_desc
         else:
             model_desc = model._description
-            ftitle=model_desc
+            self.title = model_desc
 
         model = pool.get(datas['model'])
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
@@ -142,6 +141,8 @@ class report_printscreen_list(report_int):
                     line[f] = line[f][1]
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
+                if fields[f]['type'] in ('float','integer'):
+                    line[f]=round(line[f],2)
                 col = new_doc.createElement("col")
                 col.setAttribute('tree','no')
                 if line[f] != None:
@@ -158,8 +159,7 @@ class report_printscreen_list(report_int):
         doc = libxml2.parseDoc(new_doc.toxml())
         rml_obj = style.applyStylesheet(doc, None)
         rml = style.saveResultToString(rml_obj)
-        global ftitle
-        self.obj = render.rml(rml,ftitle)
+        self.obj = render.rml(rml, self.title)
         self.obj.render()
         return True
 report_printscreen_list('report.printscreen.form')

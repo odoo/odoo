@@ -39,7 +39,7 @@ import libxml2
 import libxslt
 
 import time, os
-ftitle=""
+
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
@@ -63,7 +63,6 @@ class report_printscreen_list(report_int):
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
-        global ftitle
         if not context:
             context={}
         pool = pooler.get_pool(cr.dbname)
@@ -71,10 +70,10 @@ class report_printscreen_list(report_int):
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
         if model_id:
             model_desc = pool.get('ir.model').browse(cr, uid, model_id[0], context).name
-            ftitle=model_desc
+            self.title = model_desc
         else:
             model_desc = model._description
-            ftitle=model_desc
+            self.title = model_desc
 
         datas['ids'] = ids
         model = pooler.get_pool(cr.dbname).get(datas['model'])
@@ -129,7 +128,6 @@ class report_printscreen_list(report_int):
                 t += fields[f].get('size', 80) / 28 + 1
 
             l.append(s)
-
         for pos in range(len(l)):
             if not l[pos]:
                 s = fields[fields_order[pos]].get('size', 80) / 28 + 1
@@ -153,7 +151,6 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
         for line in results:
             node_line = new_doc.createElement("row")
 
@@ -164,6 +161,8 @@ class report_printscreen_list(report_int):
                     line[f] = line[f][1]
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
+                if fields[f]['type'] in ('float','integer'):
+                    line[f]=round(line[f],2)
                 col = new_doc.createElement("col")
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
@@ -202,8 +201,7 @@ class report_printscreen_list(report_int):
         doc = libxml2.parseDoc(new_doc.toxml())
         rml_obj = style.applyStylesheet(doc, None)
         rml = style.saveResultToString(rml_obj)
-        global ftitle
-        self.obj = render.rml(rml,title=ftitle)
+        self.obj = render.rml(rml, title=self.title)
         self.obj.render()
         return True
 report_printscreen_list('report.printscreen.list')

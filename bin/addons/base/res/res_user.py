@@ -118,12 +118,18 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        def override_password(o):
+            if 'password' in o:
+                o['password'] = '********'
+            return o
+
         result = super(users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         if not canwrite:
-            for r in result:
-                if 'password' in r:
-                    r['password'] = '********'
+            if isinstance(ids, (int, float)):
+                result = override_password(result)
+            else:
+                result = map(override_password, result)
         return result
 
     _sql_constraints = [
@@ -189,7 +195,7 @@ class users(osv.osv):
         default.update({'login': login+' (copy)'})
         return super(users, self).copy(cr, uid, id, default, context)
 
-    def context_get(self, cr, uid, context={}):
+    def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
         result = {}
         for k in self._columns.keys():
@@ -249,7 +255,6 @@ class res_config_view(osv.osv_memory):
     }
 
     def action_cancel(self,cr,uid,ids,conect=None):
-        print ' Cancel  action'
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -276,3 +281,6 @@ class res_config_view(osv.osv_memory):
             }
 
 res_config_view()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
