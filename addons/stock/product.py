@@ -89,7 +89,7 @@ class product_product(osv.osv):
         to_date=context.get('to_date',False)
         date_str=False
         if from_date and to_date:
-            date_str="date>='%s' and date<=%s"%(from_date,to_date)
+            date_str="date>='%s' and date<='%s'"%(from_date,to_date)
         elif from_date:
             date_str="date>='%s'"%(from_date)
         elif to_date:
