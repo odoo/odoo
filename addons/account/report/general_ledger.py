@@ -126,7 +126,7 @@ class general_ledger(rml_parse.rml_parse):
 		
 		#
 		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-		for child_id in account.search(self.cr, self.uid,
+		for child_id in self.pool.get('account.account').search(self.cr, self.uid,
 		[('parent_id', 'child_of', [account.id])]):
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
 			sold_account = self._sum_solde_account(child_account,form)
@@ -355,8 +355,8 @@ class general_ledger(rml_parse.rml_parse):
 			self.tot_currency = 0.0
 			return return_field
 		else:
-			self.tot_currency = 0.0
-			return ' '
+			currency_total = self.tot_currency = 0.0
+			return currency_total
 	
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
