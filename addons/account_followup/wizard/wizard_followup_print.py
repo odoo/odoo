@@ -212,7 +212,7 @@ class followup_all_print(wizard.interface):
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         cr.execute(
-            "SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
+            "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
                 "LEFT JOIN account_account AS a "\
                 "ON (l.account_id=a.id) "\
@@ -251,14 +251,17 @@ class followup_all_print(wizard.interface):
 
         partner_list = []
         to_update = {}
-        for partner_id, followup_line_id, date, id in move_lines:
+        for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             if not partner_id:
                 continue
             if partner_id in partner_list:
                 to_update[str(id)] = fups[followup_line_id][1]
             if followup_line_id not in fups:
                 continue
-            if date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
+            if date_maturity and date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
+                partner_list.append(partner_id)
+                to_update[str(id)] = fups[followup_line_id][1]
+            elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
         return {'partner_ids': partner_list, 'to_update': to_update}

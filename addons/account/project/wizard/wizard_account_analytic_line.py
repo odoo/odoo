@@ -32,22 +32,29 @@ import wizard
 import pooler
 import time
 
-def _action_open_window(self, cr, uid, data, context):      
+def _action_open_window(self, cr, uid, data, context): 
+    domain=[]
+    from_date= data['form']['from_date']
+    to_date=data['form']['to_date']
+    if from_date and to_date:
+        domain=[('date','>=',from_date),('date','<=',to_date)]
+    elif from_date:
+        domain=[('date','>=',from_date)]
+    elif to_date:
+        domain=[('date','<=',to_date)]
     return {
-        'name': False,
+        'name': 'Analytic Entries',
         'view_type': 'form',
         "view_mode": 'tree,form',
-        'res_model': 'product.product',
+        'res_model': 'account.analytic.line',
         'type': 'ir.actions.act_window',
-        'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
-        'domain':[('type','<>','service')]
-    }
+        'domain': domain}
 
 
-class product_by_location(wizard.interface):
+class account_analytic_line(wizard.interface):
     form1 = '''<?xml version="1.0"?>
-    <form string="View Stock of Products">
-        <separator string="Stock Location Analysis" colspan="4"/>
+    <form string="View Account Analytic Lines">
+        <separator string="Account Analytic Lines Analysis" colspan="4"/>
         <field name="from_date"/>
         <newline/>
         <field name="to_date"/>
@@ -69,11 +76,11 @@ class product_by_location(wizard.interface):
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Products','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Entries','gtk-ok')]}
         },
     'open': {
             'actions': [],
             'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
         }
     }
-product_by_location('stock.location.products')
+account_analytic_line('account.analytic.line')

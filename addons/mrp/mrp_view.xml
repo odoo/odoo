@@ -383,17 +383,17 @@
             </field>
         </record>
 
-		<record model="ir.ui.view" id="view_production_graph">
-			<field name="name">mrp.production.graph</field>
-			<field name="model">mrp.production</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Production orders" type="bar">
-					<field name="product_id"/>
-					<field name="product_qty" operator="+"/>
-				</graph>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_production_graph">
+            <field name="name">mrp.production.graph</field>
+            <field name="model">mrp.production</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Production orders" type="bar">
+                    <field name="product_id"/>
+                    <field name="product_qty" operator="+"/>
+                </graph>
+            </field>
+        </record>
         
         
         <record id="mrp_production_form_view" model="ir.ui.view">
@@ -439,7 +439,7 @@
                         <page string="Finnished Products">
                             <field colspan="4" name="move_created_ids" nolabel="1"/>
                         </page>
-                        <page string="Operations">
+                        <page string="Work Orders">
                             <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
@@ -448,7 +448,7 @@
                             <field name="picking_id"/>
                             <field name="move_prod_id"/>
                             <field name="sale_name"/>
-                        	<field name="sale_ref"/>
+                            <field name="sale_ref"/>
                         </page>
                     </notebook>
                 </form>
@@ -623,20 +623,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Procurement">
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="References"/>
+                        <field name="name" select="1" string="Procurement Reason"/>
+                        <field name="origin" select="2"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Planification"/>
+                        <field name="date_planned" select="1"/>
+                        <field name="procure_method" select="2"/>
+                        <field name="priority"/>
+                    </group>
                     <notebook>
                     <page string="Procurement Details">
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="References"/>
-                            <field name="name" select="1" string="Procurement Reason"/>
-                            <field name="origin" select="2"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Planification"/>
-                            <field name="date_planned" select="1"/>
-                            <field name="procure_method" select="2"/>
-                            <field name="priority"/>
-                        </group>
-
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1"/>
                         <field name="location_id" select="2"/>

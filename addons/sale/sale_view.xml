@@ -39,6 +39,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.shop</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
         <menuitem id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
@@ -93,7 +94,7 @@
                 <form string="Sales order">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="client_order_ref"/>
+                        <field name="client_order_ref" select="2"/>
                         <field name="shipped" select="2"/>
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
                         <field name="date_order" select="1"/>
@@ -221,6 +222,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
 
@@ -453,10 +455,12 @@
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Picking Policy for Sale Order">
-                    <separator col="4" colspan="4" string="Configure Picking Policy for Sale Order"/>
+                <form string="Sales Configuration">
+                    <separator colspan="4" string="Configure Sale Order Logistic"/>
                     <newline/>
                     <field name="picking_policy"/>
+                    <newline/>
+                    <field name="order_policy"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>
