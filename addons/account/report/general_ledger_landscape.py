@@ -262,7 +262,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			#
 			if l['amount_currency'] != None:
 				self.tot_currency = self.tot_currency + l['amount_currency']	
-				print"====self.tot_currency====",self.tot_currency		
+				
 		return res
 
 	def _sum_debit_account(self, account, form):
@@ -350,16 +350,15 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		
 		
 	def _sum_currency_amount_account(self, account, form):
-		print"====form====",form
-		print"===account===",account.id
+		
 		self._set_get_account_currency_code(account.id)
+		self.cr.execute("select sum(aml.amount_currency) from account_move_line as aml "\
+						"LEFT JOIN account_account aa on aml.account_id=%d "\
+						"AND  aml.currency_id = aa.currency_id"%account.id)
+		total = self.cr.fetchone()
 		
 		if self.account_currency:
-			print"======Inside function====",self.tot_currency
-			return_field = str(self.tot_currency) + self.account_currency
-			
-			print"===return_field===",return_field
-			
+			return_field = str(total[0]) + self.account_currency
 			return return_field
 		else:
 			currency_total = self.tot_currency = 0.0
