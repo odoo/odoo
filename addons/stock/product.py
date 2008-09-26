@@ -41,8 +41,7 @@ class product_product(osv.osv):
 
     def get_product_available(self,cr,uid,ids,context=None):
         if not context:
-            context = {}
-        print 'CONTEXT', context
+            context = {}        
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
