@@ -106,7 +106,12 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                         all_timezones=[]
                     pytz=pytzclass()
                 idref['pytz'] = pytz
-                return eval(a_eval, idref)
+		try:
+			return eval(a_eval, idref)
+		except:
+			logger = netsvc.Logger()
+			logger.notifyChannel("init", netsvc.LOG_WARNING, 'could eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.getAttribute('name'),context))
+			return ""
             if t == 'xml':
                 def _process(s, idref):
                     m = re.findall('[^%]%\((.*?)\)[ds]', s)
