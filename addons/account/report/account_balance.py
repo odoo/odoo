@@ -71,7 +71,7 @@ class account_balance(report_sxw.rml_parse):
                 self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
                 res=self.cr.fetchall()
                 for r in res:
-                    result+=r[0]+","
+                    result+=r[0]+", "
             return str(result and result[:-1]) or ''
     
         def lines(self, form, ids={}, done=None, level=1):
