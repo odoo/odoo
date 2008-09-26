@@ -141,7 +141,9 @@ class account_account(osv.osv):
         if context is None:
             context = {}
         pos = 0
+       
         while pos<len(args):
+            
             if args[pos][0]=='code' and args[pos][1] in ('like','ilike') and args[pos][2]:
                 args[pos] = ('code', '=like', str(args[pos][2].replace('%',''))+'%')
             if args[pos][0]=='journal_id':
@@ -157,6 +159,7 @@ class account_account(osv.osv):
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id','in',ids1)
             pos+=1
+        
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 

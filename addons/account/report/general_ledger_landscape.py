@@ -148,7 +148,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
-		print"======account.id====",account.id
+#		
 		res = []
 		ctx = self.context.copy()
 		## We will make the test for period or date
@@ -163,9 +163,9 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		##
 		
 		#
-		print"account",account
 		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-		for child_id in account.search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])]):
+		
+		for child_id in self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])]):
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
 			sold_account = self._sum_solde_account(child_account,form)
 			self.sold_accounts[child_account.id] = sold_account
