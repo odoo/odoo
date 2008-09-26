@@ -145,12 +145,13 @@
         <tr>
         		<para>[[ repeatIn(objects, 'a') ]]</para>
      			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
+     			
         	<td>
         	
         		<blockTable colWidths="50.0,35.0,180.0, 90.0,30.0,345.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content" >
       		<tr>
 	        	<td>
-	        		<blockTable colWidths="400.0,374.0,69.0,72.0,64.0" style="Table5">
+	        		<blockTable colWidths="400.0,374.0,69.0,72.0,64.0,59.00" style="Table5">
 			        <tr>
 			          <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 			          <td><para style="Standard"></para></td>
@@ -162,6 +163,10 @@
 			          </td>
 			          <td>
 			            <para style="P9b"><u>[[ sum_solde_account(o, data['form']) or '0.0' ]]</u></para>
+			          </td>
+			          <td>
+			          	
+			            <para style="P9b"><u> [[ sum_currency_amount_account(line, data['form']) or '0.0' ]]</u></para>
 			          </td>
 			        </tr>
 	      			</blockTable>   
