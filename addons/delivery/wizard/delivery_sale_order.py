@@ -65,16 +65,34 @@ def _delivery_set(self, cr, uid, data, context):
         grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
         if not grid_id:
             raise wizard.except_wizard(_('No grid avaible !'), _('No grid matching for this carrier !'))
-        grid = pooler.get_pool(cr.dbname).get('delivery.grid').browse(cr, uid, [grid_id])[0]
+        grid_obj=pooler.get_pool(cr.dbname).get('delivery.grid')
+        grid = grid_obj.browse(cr, uid, [grid_id])[0]
 
+        taxes = pooler.get_pool(cr.dbname).get('account.tax').browse(cr, uid,
+                    [x.id for x in grid.carrier_id.product_id.taxes_id])
+        taxep = None
+        partner_id=order.partner_id and order.partner_id.id or False
+        if partner_id:
+            taxep_id = pooler.get_pool(cr.dbname).get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_tax']).get('property_account_tax',False)
+            if taxep_id:
+				taxep=pooler.get_pool(cr.dbname).get('account.tax').browse(cr, uid,taxep_id)                
+        if not taxep or not taxep.id:
+            taxes_ids = [x.id for x in grid.carrier_id.product_id.taxes_id]
+        else:
+            res5 = [taxep.id]
+            for t in taxes:
+                if not t.tax_group==taxep.tax_group:
+                    res5.append(t.id)
+            taxes_ids = res5
+        
         line_obj.create(cr, uid, {
             'order_id': order.id,
             'name': grid.carrier_id.name,
             'product_uom_qty': 1,
             'product_uom': grid.carrier_id.product_id.uom_id.id,
             'product_id': grid.carrier_id.product_id.id,
-            'price_unit': grid.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context), 
-            'tax_id': [(6,0,[ x.id for x in grid.carrier_id.product_id.taxes_id])],
+            'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context), 
+            'tax_id': [(6,0,taxes_ids)],
             'type': 'make_to_stock'
             })
 

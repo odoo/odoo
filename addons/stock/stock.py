@@ -581,11 +581,11 @@ class stock_picking(osv.osv):
         res = {}
         sale_line_obj = self.pool.get('sale.order.line')
         
-        for picking in self.browse(cursor, user, ids, context=context):
+        for picking in self.browse(cursor, user, ids, context=context):            
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = picking.address_id.partner_id
+            partner = picking.address_id and picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
                 payment_term_id= picking.sale_id.payment_term.id
@@ -712,6 +712,7 @@ class stock_picking(osv.osv):
         self.write(cursor, user, res.keys(), {
             'invoice_state': 'invoiced',
             }, context=context)
+        print res
         return res
 
 stock_picking()

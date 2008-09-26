@@ -132,7 +132,9 @@ class product_product(osv.osv):
         return res
 
     def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, field_names=False, arg=False, context={}):
+        def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+            if not field_names:
+                field_names=[]
             context.update({
                 'states':states,
                 'what':what
