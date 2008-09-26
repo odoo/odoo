@@ -33,9 +33,8 @@ import xml
 import rml_parse
 import pooler
 
-class general_ledger(rml_parse.rml_parse):
-	_name = 'report.account.general.ledger'
-	
+class general_ledger_landscape(rml_parse.rml_parse):
+	_name = 'report.account.general.ledger_landscape'
 	
 	
 	def preprocess(self, objects, data, ids):
@@ -50,10 +49,10 @@ class general_ledger(rml_parse.rml_parse):
 			
 			objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
 			
-		super(general_ledger, self).preprocess(objects, data, new_ids)
+		super(general_ledger_landscape, self).preprocess(objects, data, new_ids)	
 	
 	def __init__(self, cr, uid, name, context):
-		super(general_ledger, self).__init__(cr, uid, name, context)
+		super(general_ledger_landscape, self).__init__(cr, uid, name, context)
 		self.query = ""
 		self.child_ids = ""
 		self.tot_currency = 0.0
@@ -107,77 +106,6 @@ class general_ledger(rml_parse.rml_parse):
 
 		#print str(result)
 		return result
-
-	def get_children_accounts(self, account, form):
-		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
-			[('parent_id', 'child_of', self.ids)])
-		res = []
-		ctx = self.context.copy()
-		## We will make the test for period or date
-		## We will now make the test
-		#
-		if form.has_key('fiscalyear'): 
-			ctx['fiscalyear'] = form['fiscalyear']
-			ctx['periods'] = form['periods'][0][2]
-		else:
-			ctx['date_from'] = form['date_from']
-			ctx['date_to'] = form['date_to']
-		##
-		
-		#
-		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-		for child_id in account.search(self.cr, self.uid,
-		[('parent_id', 'child_of', [account.id])]):
-			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
-			sold_account = self._sum_solde_account(child_account,form)
-			self.sold_accounts[child_account.id] = sold_account
-			if form['display_account'] == 'bal_mouvement':
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
-					context=ctx)) <> 0 :
-					res.append(child_account)
-					#print "Type de vue :" + form['display_account']
-			elif form['display_account'] == 'bal_solde':
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
-					context=ctx)) <> 0 :
-					if ( sold_account <> 0.0):
-						res.append(child_account)
-			else:		
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
-					context=ctx)) <> 0 :
-					res.append(child_account)
-		
-		##
-		if form['soldeinit']:
-			## We will now compute solde initiaux
-			for move in res:
-				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
-				self.cr.execute(SOLDEINIT)
-				resultat = self.cr.dictfetchall()
-				if resultat[0] :
-					if resultat[0]['sum_debit'] == None:
-						sum_debit = 0
-					else:
-						sum_debit = resultat[0]['sum_debit']
-					if resultat[0]['sum_credit'] == None:
-						sum_credit = 0
-					else:
-						sum_credit = resultat[0]['sum_credit']
-						
-					move.init_credit = sum_credit
-					move.init_debit = sum_debit
-					
-				else:
-					move.init_credit = 0
-					move.init_debit = 0
-	
-		##
-		return res
 	
 	def get_min_date(self,form):
 		## Get max born from account_fiscal year
@@ -215,6 +143,79 @@ class general_ledger(rml_parse.rml_parse):
 
 	
 	
+	def get_children_accounts(self, account, form):
+		
+		
+		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
+			[('parent_id', 'child_of', self.ids)])
+#		
+		res = []
+		ctx = self.context.copy()
+		## We will make the test for period or date
+		## We will now make the test
+		#
+		if form.has_key('fiscalyear'): 
+			ctx['fiscalyear'] = form['fiscalyear']
+			ctx['periods'] = form['periods'][0][2]
+		else:
+			ctx['date_from'] = form['date_from']
+			ctx['date_to'] = form['date_to']
+		##
+		
+		#
+		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
+		
+		for child_id in self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])]):
+			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
+			sold_account = self._sum_solde_account(child_account,form)
+			self.sold_accounts[child_account.id] = sold_account
+			if form['display_account'] == 'bal_mouvement':
+				if child_account.type != 'view' \
+				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
+					[('account_id','=',child_account.id)],
+					context=ctx)) <> 0 :
+					res.append(child_account)
+					#print "Type de vue :" + form['display_account']
+			elif form['display_account'] == 'bal_solde':
+				if child_account.type != 'view' \
+				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
+					[('account_id','=',child_account.id)],
+					context=ctx)) <> 0 :
+					if ( sold_account <> 0.0):
+						res.append(child_account)
+			else:		
+				if child_account.type != 'view' \
+				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
+					[('account_id','=',child_account.id)],
+					context=ctx)) <> 0 :
+					res.append(child_account)
+		##
+		if form['soldeinit']:
+			## We will now compute solde initiaux
+			for move in res:
+				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
+				self.cr.execute(SOLDEINIT)
+				resultat = self.cr.dictfetchall()
+				if resultat[0] :
+					if resultat[0]['sum_debit'] == None:
+						sum_debit = 0
+					else:
+						sum_debit = resultat[0]['sum_debit']
+					if resultat[0]['sum_credit'] == None:
+						sum_credit = 0
+					else:
+						sum_credit = resultat[0]['sum_credit']
+						
+					move.init_credit = sum_credit
+					move.init_debit = sum_debit
+					
+				else:
+					move.init_credit = 0
+					move.init_debit = 0
+	
+		##
+		return res
+	
 	def lines(self, account, form):
 		inv_types = {
 				'out_invoice': 'CI: ',
@@ -222,14 +223,13 @@ class general_ledger(rml_parse.rml_parse):
 				'out_refund': 'OR: ',
 				'in_refund': 'SR: ',
 				}
-		### We will now compute solde initaux
-			
+
 		if form['sortbydate'] == 'sort_date':
 			sorttag = 'l.date'
 		else:
 			sorttag = 'j.code'
 		sql = """
-			SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name , l.debit, l.credit, l.period_id 
+			SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name, l.debit, l.credit, l.period_id 
 			FROM account_move_line l LEFT JOIN res_currency c on (l.currency_id=c.id) JOIN account_journal j on (l.journal_id=j.id)
 			AND account_id = %d AND %s 
 			ORDER by %s"""%(account.id,self.query,sorttag)
@@ -261,7 +261,7 @@ class general_ledger(rml_parse.rml_parse):
 					
 			#
 			if l['amount_currency'] != None:
-				self.tot_currency = self.tot_currency + l['amount_currency']
+				self.tot_currency = self.tot_currency + l['amount_currency']			
 		return res
 
 	def _sum_debit_account(self, account, form):
@@ -303,7 +303,6 @@ class general_ledger(rml_parse.rml_parse):
 		
 		return sum_solde
 
-
 	def _sum_debit(self, form):
 		if not self.ids:
 			return 0.0
@@ -312,7 +311,6 @@ class general_ledger(rml_parse.rml_parse):
 				"WHERE l.account_id in ("+','.join(map(str, self.child_ids))+") AND "+self.query)
 		sum_debit = self.cr.fetchone()[0] or 0.0
 		return sum_debit
-
 
 	def _sum_credit(self, form):
 		if not self.ids:
@@ -357,6 +355,5 @@ class general_ledger(rml_parse.rml_parse):
 		else:
 			self.tot_currency = 0.0
 			return ' '
-	
 
-report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
+report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger_landscape, header=False)

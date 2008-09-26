@@ -10,7 +10,11 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau3">
+    <blockTableStyle id="Table_Address_detail">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Title_String">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
@@ -27,12 +31,9 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Content_Order_Reference_Table">
       <blockAlignment value="LEFT"/>
@@ -47,12 +48,9 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Move_Line_Header">
       <blockAlignment value="LEFT"/>
@@ -76,17 +74,14 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="14.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Caption" fontName="Times-Italic" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
-    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -103,93 +98,96 @@
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="Preformatted Text" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_5cm_Above_Space" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="14.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
-    <para style="Standard">[[ repeatIn(objects,'picking') ]]</para>
+    <para style="terp_default_8">[[ repeatIn(objects,'picking') ]]</para>
+    <para style="terp_default_8">[[ setLang((picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.lang)) ]]</para>
     <para style="terp_header_Centre"/>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="269.0,269.0" style="Tableau3">
+    <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
-          <para style="terp_default_8">
+          <para style="terp_default_9">
             <font color="white"> </font>
           </para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Shipping Address:</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
-          <para style="terp_default_8">[[ (picking.sale_id and picking.sale_id_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
-          <para style="terp_default_8">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_Bold_8">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_header">Packing List</para>
-    <para style="terp_default_Bold_8">
+    <para style="terp_default_8">
       <font color="white"> </font>
     </para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="110.0,106.0,107.0,107.0,107.0" style="Header_Order_Reference_Tbl">
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Customer Ref.</para>
+          <para style="terp_header">Packing List: [[ picking.name ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_5cm_Above_Space">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="123.0,134.0,133.0,134.0" style="Header_Order_Reference_Tbl">
+      <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Order(Origin)</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Recipient</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Concerns</para>
+          <para style="terp_tblheader_General_Centre">Expected Shipping Date </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Packing Date</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Shipping Date</para>
+          <para style="terp_tblheader_General_Centre">weight</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="110.0,106.0,107.0,107.0,107.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="123.0,134.0,133.0,134.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
-          <para style="terp_default_Centre_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.id) or '' ]]</para>
+          <para style="terp_default_Centre_8">[[ picking.origin ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">[[ picking.name ]]</para>
-          <para style="P2">
-            <font color="white"> </font>
-          </para>
+          <para style="terp_default_Centre_8">[[ picking.date ]]</para>
         </td>
         <td>
-          <para style="P3">[[time.strftime('%d/%m/%Y', time.strptime(picking.min_date, '%Y-%m-%d')) ]]</para>
-        </td>
-        <td>
-          <para style="P3">[[time.strftime('%d/%m/%Y %H:%M:%S ', time.strptime(picking.date, '%Y-%m-%d %H:%M:%S')) ]]</para>
+          <para style="terp_default_Centre_8">[[ picking.weight or '']] </para>
         </td>
       </tr>
     </blockTable>
-    <para style="Standard">
+    <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="43.0,296.0,53.0,59.0,77.0" repeatRows="1" style="Move_Line_Header">
+    <blockTable colWidths="58.0,268.0,50.0,82.0,56.0" repeatRows="1" style="Move_Line_Header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -198,19 +196,19 @@
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Tracking</para>
+          <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Location</para>
+          <para style="terp_tblheader_Details_Right">Location</para>
         </td>
       </tr>
     </blockTable>
     <section>
-      <para style="P1">[[ repeatIn(picking.move_lines,'move_lines') ]]</para>
-      <blockTable colWidths="43.0,296.0,54.0,38.0,22.0,75.0" style="Move_Line_Contect">
+      <para style="terp_default_8">[[ repeatIn(picking.move_lines,'move_lines') ]]</para>
+      <blockTable colWidths="59.0,268.0,56.0,51.0,25.0,54.0" style="Move_Line_Contect">
         <tr>
           <td>
             <para style="terp_default_9">[[ move_lines.product_id.default_code ]]</para>
@@ -219,7 +217,7 @@
             <para style="terp_default_9">[[ move_lines.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.tracking_id and move_lines.tracking_id.name) or '']]</para>
+            <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ move_lines.product_qty ]] </para>
@@ -228,7 +226,7 @@
             <para style="terp_default_Right_9">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
