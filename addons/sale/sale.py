@@ -515,7 +515,8 @@ class sale_order(osv.osv):
                         'location_dest_id': output_id,
                         'sale_line_id': line.id,
                         'tracking_id': False,
-                        'state': 'waiting',
+                        'state': 'draft',
+                        #'state': 'waiting',
                         'note': line.notes,
                     })
                     proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
