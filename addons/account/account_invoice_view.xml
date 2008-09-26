@@ -336,6 +336,17 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
+        <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
+        <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
         <record id="action_invoice_tree1_new" model="ir.actions.act_window">
             <field name="name">New Customer Invoice</field>

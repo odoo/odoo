@@ -29,14 +29,11 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" rightIndent="0.0" leftIndent="12.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P1" rightIndent="0.0" leftIndent="11.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -68,6 +65,8 @@
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8_italic" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Note" rightIndent="0.0" leftIndent="9.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Space bet user and signature" fontName="Helvetica" fontSize="4.0" leading="5" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -76,6 +75,13 @@
     <blockTable colWidths="250.0,59.0,221.0" style="Table_Address_Detail">
       <tr>
         <td>
+          <para style="terp_default_Bold_9">Expected Delivery address:</para>
+          <para style="terp_default_9">[[( order.warehouse_id and order.warehouse_id.name) or order.partner_address_id.partner_id.name]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.title) or ' ']] [[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.name) or order.partner_address_id.name ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street) or order.partner_address_id.street ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street2) or order.partner_address_id.street2 ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.zip) or order.partner_address_id.zip ]] [[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.city) or order.partner_address_id.city ]]</para>
+          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.state_id and order.warehouse_id.partner_address_id.state_id.name) or order.partner_address_id.state_id.name ]] [[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.country_id and order.warehouse_id.partner_address_id.country_id.name) or order.partner_address_id.country_id.name ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -100,30 +106,20 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_header">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_header">Request for quotation : [[order.name]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    <para style="terp_header">Request for Quotation : [[order.name]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">Please find hereby a request for quotation.</para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="391.0,66.0,73.0" repeatRows="1" style="Table_Product_Header_Title">
+    <blockTable colWidths="387.0,83.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Date</para>
+          <para style="terp_tblheader_Details_Centre">Expected Date</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Qty</para>
@@ -132,13 +128,13 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
-      <blockTable colWidths="402.0,67.0,38.0,23.0" style="Table_Product_Line">
+      <blockTable colWidths="388.0,83.0,39.0,20.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( order_line.date_planned, '%Y-%m-%d')) ]]</para>
+            <para style="terp_default_Centre_9">[[ time.strftime('%d/%m/%Y', time.strptime( order_line.date_planned, '%Y-%m-%d')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ order_line.product_qty or '' ]]</para>
@@ -149,23 +145,7 @@
         </tr>
         <tr>
           <td>
-            <para style="terp_default_2">[[ repeatIn((order_line.notes and order_line.notes.splitlines()) or [], 'l') ]]</para>
-            <para style="P1">[[ l or removeParentNode('table') ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_2">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_2">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_2">
-              <font color="white"> </font>
-            </para>
+            <para style="P1">[[ format(order_line.notes or removeParentNode('tr')) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -173,12 +153,16 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ order.notes or '' ]]</para>
+    <para style="terp_default_9">[[ format(order.notes or '') ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Thanks,</para>
+    <para style="terp_default_9">Regards,</para>
     <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">[[ user.name or '' ]]</para>
+    <para style="Space bet user and signature">
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
