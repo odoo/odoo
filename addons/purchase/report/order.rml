@@ -95,8 +95,8 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" rightIndent="0.0" leftIndent="12.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" rightIndent="0.0" leftIndent="12.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" rightIndent="0.0" leftIndent="15.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" rightIndent="0.0" leftIndent="15.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" rightIndent="0.0" leftIndent="12.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -166,11 +166,7 @@
         </td>
       </tr>
     </blockTable>
-<<<<<<< TREE
     <para style="terp_header">Request for Quotation [[ (o.state=='draft' or removeParentNode('font')) and '' ]] Order [[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and '' ]] N° :[[ o.name ]]</para>
-=======
-    <para style="terp_header">Request for Quotation [[ (o.state=='draft' or removeParentNode('font')) and ''  ]] Order [[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and '' ]] N° [[ o.name ]]</para>
->>>>>>> MERGE-SOURCE
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -212,11 +208,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-<<<<<<< TREE
-    <blockTable colWidths="239.0,53.0,61.0,66.0,58.0,57.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
-=======
-    <blockTable colWidths="232.0,44.0,60.0,69.0,58.0,70.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
->>>>>>> MERGE-SOURCE
+    <blockTable colWidths="253.0,52.0,57.0,44.0,58.0,70.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -240,11 +232,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.order_line,'line') ]]</para>
-<<<<<<< TREE
-      <blockTable colWidths="239.0,53.0,61.0,47.0,20.0,57.0,58.0" style="Table_Order_Pur_line_Content">
-=======
-      <blockTable colWidths="231.0,46.0,59.0,51.0,20.0,57.0,70.0" style="Table_Order_Pur_line_Content">
->>>>>>> MERGE-SOURCE
+      <blockTable colWidths="254.0,52.0,57.0,24.0,20.0,57.0,71.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -270,7 +258,7 @@
         </tr>
         <tr>
           <td>
-            <para style="P2">[[ line.notes or removeParentNode('tr') ]]</para>
+            <para style="P3">[[ line.notes or removeParentNode('tr') ]]</para>
           </td>
           <td>
             <para style="terp_default_9">
@@ -305,7 +293,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="400.0,59.0,56.0,20.0" style="Table_All_Total_Detail">
+    <blockTable colWidths="415.0,57.0,42.0,20.0" style="Table_All_Total_Detail">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -345,7 +333,7 @@
           </para>
         </td>
         <td>
-          <para style="P3">Total :</para>
+          <para style="P2">Total :</para>
         </td>
         <td>
           <para style="terp_default_Bold_9_Right">[[ o.amount_total ]]</para>
