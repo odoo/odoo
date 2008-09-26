@@ -244,7 +244,7 @@ class general_ledger(rml_parse.rml_parse):
 			tmpres = self.cr.dictfetchall()
 			if len(tmpres) > 0 :
 				inv = self.pool.get('account.invoice').browse(self.cr, self.uid, tmpres[0]['id'])
-				l['ref'] = inv_types[inv.type] + ': '+inv.number
+				l['ref'] = inv_types[inv.type] + ': '+str(inv.number)
 			if line.partner_id :
 				l['partner'] = line.partner_id.name
 			else :

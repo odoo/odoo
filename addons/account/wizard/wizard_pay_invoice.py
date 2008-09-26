@@ -124,7 +124,7 @@ def _get_period(self, cr, uid, data, context={}):
         raise wizard.except_wizard(_('Error !'), _('Can not pay draft invoice.'))
     return {
         'period_id': period_id,
-        'amount': invoice.amount_total,
+        'amount': invoice.residual,
         'date': time.strftime('%Y-%m-%d')
     }
 

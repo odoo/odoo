@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-   <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="30">
+   <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20" >
     <pageTemplate id="first">
       <frame id="first" x1="22.0" y1="35.0" width="1080" height="680"/>
 			<pageGraphics>
@@ -34,10 +34,7 @@
     </pageTemplate>
   </template>
    <stylesheet>
-    <blockTableStyle id="Standard_Outline">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-    </blockTableStyle>
+   
     <blockTableStyle id="tbl_header">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
      
@@ -51,30 +48,12 @@
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" />
-      <lineStyle kind="OUTLINE" colorName="#e6e6e6" />
-      
-      
-      <blockBackground colorName="white" start="0,0" stop="-1,0"/>
-    </blockTableStyle>
+    
+   
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <lineStyle kind="LINEBELOW" colorName="#777777" start="0,0" stop="0,0"/>
       <blockValign value="TOP"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table4">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-    </blockTableStyle>
-    <blockTableStyle id="Theader">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="OUTLINE" colorName="#e6e6e6"/>
-      <blockBackground colorName="white" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     
     
@@ -164,10 +143,11 @@
           </td>
         </tr>
         <tr>
-        	<td>
         		<para>[[ repeatIn(objects, 'a') ]]</para>
      			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-        		<blockTable colWidths="50.0,35.0,180.0, 90.0,30.0,345.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+        	<td>
+        	
+        		<blockTable colWidths="50.0,35.0,180.0, 90.0,30.0,345.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content" >
       		<tr>
 	        	<td>
 	        		<blockTable colWidths="400.0,374.0,69.0,72.0,64.0" style="Table5">
@@ -189,11 +169,11 @@
         	</tr>
       		<tr>[[ data['form']['soldeinit'] == True or removeParentNode('tr') ]]
           <td>
-            <para style="P3_content"></para>
+            <para style="P3_content">Balance Initial</para>
           </td>
  
           <td>
-            <para style="P3_content">Balance Initial</para>
+            <para style="P3_content"></para>
           </td>
           <td>
             <para style="P3_content"></para>
@@ -224,8 +204,11 @@
           </td>
    
         </tr>	 
-        <tr>[[ repeatIn(lines(o, data['form']), 'line') ]]
+        
+        <tr>
+        	[[ repeatIn(lines(o, data['form']), 'line') ]]
           <td>
+            
             <para style="P2_content">[[ line['date'] ]]</para>
           </td>
           <td>
@@ -261,9 +244,10 @@
         </tr>
         
       	</blockTable> 
-        	</td>
+        </td>
         </tr>
             
+      
         
      </blockTable>
      

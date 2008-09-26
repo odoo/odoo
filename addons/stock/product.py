@@ -39,7 +39,10 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context={}):
+    def get_product_available(self,cr,uid,ids,context=None):
+        if not context:
+            context = {}
+        print 'CONTEXT', context
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
@@ -61,7 +64,10 @@ class product_product(osv.osv):
                 context['location'] = res2[0]
 
         if context.get('location', False):
-            location_ids = [context['location']]
+            if type(context['location']) == type(1):
+                location_ids = [context['location']]
+            else:
+                location_ids = context['location']
         else:
             cr.execute("select lot_stock_id from stock_warehouse")
             location_ids = [id for (id,) in cr.fetchall()]
