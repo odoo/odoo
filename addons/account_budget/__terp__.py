@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 {
-    "name" : "Crossovered Budget Management",
+    "name" : "Budget Management",
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_crossovered_budget.html",
     "category" : "Generic Modules/Accounting",
     "description": """This module allow accountants to manage analytic and crossovered budgets.
 
-    Once the Master Budgets and the Budgets defined (in Financial Management/Configuration/Budgets/), the Project Managers can set the planned amount on each Analytic Account.
+    Once the Master Budgets and the Budgets defined (in Financial Management/Budgets/), the Project Managers can set the planned amount on each Analytic Account.
 
     The accountant has the possibility to see the total of amount planned for each Budget and Master Budget in order to ensure the total planned is not greater/lower than what he planned for this Budget/Master Budget. Each list of record can also be switched to a graphical view of it.
 
