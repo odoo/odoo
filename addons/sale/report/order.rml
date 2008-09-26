@@ -134,7 +134,8 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_default_8">[[ repeatIn(objects,'o') ]] [[ setLang(o.partner_id.lang) ]]</para>
+    <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <blockTable colWidths="265.0,51.0,225.0" style="AddressTable">
       <tr>
         <td>
@@ -148,7 +149,7 @@
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_Bold_9">Invoice address :[[ o.partner_id.property_payment_term.name ]]</para>
+          <para style="terp_default_Bold_9">Invoice address :[[ o.partner_id.property_payment_term and o.partner_id.property_payment_term.name ]]</para>
           <para style="terp_default_9">[[ o.partner_invoice_id.street ]] [[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
           <para style="terp_default_9">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para>
         </td>
