@@ -220,6 +220,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		return full_account
 
 	def _sum_debit_partner(self, partner,data):
+		
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
@@ -231,7 +232,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-					"AND account_id IN (" + self.account_ids + ") " \
+#					"AND account_id IN (" + self.account_ids + ") " \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
 				(partner.id, self.date_lst[0],))
@@ -246,7 +247,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-					"AND account_id IN (" + self.account_ids + ") " \
+#					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
 				(partner.id,))
