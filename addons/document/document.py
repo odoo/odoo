@@ -194,6 +194,13 @@ class node_class(object):
 			path = self.path[1:]
 		return path
 
+class document_directory_node(osv.osv):
+	_inherit = 'process.node'
+	_columns = {
+		'directory_id':  fields.many2one('document.directory', 'Document directory', ondelete="set null"),
+	}
+document_directory_node()
+
 class document_directory(osv.osv):
 	_name = 'document.directory'
 	_description = 'Document directory'

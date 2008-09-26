@@ -117,6 +117,15 @@ class process_process(osv.osv):
             data['gray'] = False
             data['url'] = node.help_url
 
+            # chech whether directory_id from inherited from document2 is available
+            if hasattr(node, 'directory_id') and node.directory_id:
+                data['directory'] = "ftp://localhost:8021" #TODO: implement document_directory.get_url
+
+            # get assosiated workflow
+            if data['model']:
+                wkf_ids = self.pool.get('workflow').search(cr, uid, [('osv', '=', data['model'])])
+                data['workflow'] = (wkf_ids or False) and wkf_ids[0]
+
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
