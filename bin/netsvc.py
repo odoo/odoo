@@ -35,6 +35,7 @@ import SimpleXMLRPCServer, signal, sys, xmlrpclib
 import SocketServer
 import socket
 import logging
+import logging.handlers
 import os
 
 _service = {}
@@ -177,7 +178,7 @@ def init_logger():
     logging.getLogger().addHandler(handler)
     logging.getLogger().setLevel(logging.INFO)
 
-    if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
+    if (not isinstance(handler, logging.FileHandler)) and os.name != 'nt':
         # change color of level names
         # uses of ANSI color codes
         # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
