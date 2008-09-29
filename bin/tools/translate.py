@@ -95,6 +95,7 @@ class TinyPoFile(object):
         else:
             tmp_tnrs = []
             line = None
+	    fuzzy = False
             while not line:
                 if 0 == len(self.lines):
                     raise StopIteration()
@@ -103,6 +104,8 @@ class TinyPoFile(object):
             while line.startswith('#'):
                 if line.startswith('#:'):
                     tmp_tnrs.append( line[2:].strip().split(':') )
+		elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
+			fuzzy = True
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
                 raise Exception("malformed file")
@@ -129,12 +132,15 @@ class TinyPoFile(object):
                 trad += unquote(line)
                 line = self.lines.pop(0).strip()
             
-            if tmp_tnrs:
+            if tmp_tnrs and not fuzzy:
                 type, name, res_id = tmp_tnrs.pop(0)
                 for t, n, r in tmp_tnrs:
                     self.tnrs.append((t, n, r, source, trad))
 
         self.first = False
+	
+	if name == None:
+		return self.next()
         return type, name, res_id, source, trad
 
     def write_infos(self, modules):
