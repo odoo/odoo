@@ -370,7 +370,7 @@ res_partner_bank_type_fields()
 class res_partner_bank(osv.osv):
     '''Bank Accounts'''
     _name = "res.partner.bank"
-    _rec_name = "state"
+    _rec_name = "acc_number"
     _description = __doc__
     _order = 'sequence'
 
