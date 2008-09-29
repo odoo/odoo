@@ -106,11 +106,11 @@ class crm_menu_config_wizard(osv.osv_memory):
                         tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_configuration',file_name )),  {}, 'init', *args)
                     except Exception, e:
                         raise osv.except_osv('Error !', e)
-                        
+
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
@@ -118,11 +118,11 @@ class crm_menu_config_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
-        
+
 crm_menu_config_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

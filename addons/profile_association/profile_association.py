@@ -43,14 +43,14 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
-        
-    
+
+
     def action_install(self, cr, uid, ids, context=None):
-        result=self.read(cr,uid,ids)        
+        result=self.read(cr,uid,ids)
         mod_obj = self.pool.get('ir.module.module')
         for res in result:
             for r in res:
@@ -62,12 +62,12 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-    
-    
+
+
 profile_association_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

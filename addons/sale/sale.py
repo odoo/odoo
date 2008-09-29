@@ -812,7 +812,7 @@ class sale_order_line(osv.osv):
                     'message': warn_msg
                     }
             result['product_uom_qty'] = qty
-            
+
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id <> uom2.category_id.id:
@@ -839,7 +839,7 @@ class sale_order_line(osv.osv):
 				taxep_id = self.pool.get('res.partner').property_get(cr, uid,
 						partner_id,property_pref=['property_account_tax']).get('property_account_tax',False)
 				if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
+					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
             if not taxep or not taxep.id:
                 result['tax_id'] = [x.id for x in product_obj.taxes_id]
             else:
@@ -884,7 +884,7 @@ class sale_order_line(osv.osv):
         # Round the quantity up
 
         # get unit price
-        
+
         if not pricelist:
             warning={
                 'title':'No Pricelist !',
@@ -904,9 +904,9 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }                
+                    }
             else:
-                result.update({'price_unit': price})		
+                result.update({'price_unit': price})
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
@@ -962,7 +962,7 @@ class sale_config_picking_policy(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
@@ -970,7 +970,7 @@ class sale_config_picking_policy(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
