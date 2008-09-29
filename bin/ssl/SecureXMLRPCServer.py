@@ -42,6 +42,10 @@ import SocketServer
 import os, socket, sys
 import SimpleXMLRPCServer
 from OpenSSL import SSL
+import tools
+import netsvc
+
+logger = netsvc.Logger()
 
 
 class SSLBugFix:
@@ -104,8 +108,14 @@ class SecureTCPServer(SocketServer.TCPServer):
         ctx.set_options(SSL.OP_NO_SSLv2)
 
         dir = os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]))
-        ctx.use_privatekey_file (os.path.join(dir, 'server.pkey'))
-        ctx.use_certificate_file(os.path.join(dir, 'server.cert'))
+	sslkeyname = tools.config.get('sslkey',os.path.join(dir, 'server.pkey'))
+	sslcertname = tools.config.get('sslcert',os.path.join(dir, 'server.cert'))
+	try:
+		ctx.use_privatekey_file (sslkeyname)
+		ctx.use_certificate_file(sslcertname)
+	except:
+		logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL key exception: " + str(sys.exc_info()))
+		raise Exception, "No ssl keys found in %s, %s" % (sslcertname,sslkeyname)
 
         self.socket = SSLBugFix(SSL.Connection(ctx, socket.socket(self.address_family,
                                                                   self.socket_type)))
