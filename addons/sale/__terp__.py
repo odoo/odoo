@@ -31,7 +31,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_sale.html",
-    "depends" : ["product", "stock", "mrp"],
+    "depends" : ["product", "stock", "mrp", "process"],
     "category" : "Generic Modules/Sales & Purchases",
     "init_xml" : [],
     "demo_xml" : ["sale_demo.xml"],
@@ -62,6 +62,7 @@
         "sale_report.xml",
         "sale_wizard.xml",
         "stock_view.xml",
+        "process/sale_process.xml"
     ],
     "active": False,
     "installable": True
