@@ -118,7 +118,7 @@ class process_process(osv.osv):
             data['url'] = node.help_url
 
             # chech whether directory_id from inherited from document2 is available
-            if hasattr(node, 'directory_id') and node.directory_id:
+            if 'directory_id' in node and node.directory_id:
                 data['directory'] = "ftp://localhost:8021" #TODO: implement document_directory.get_url
 
             # get assosiated workflow
