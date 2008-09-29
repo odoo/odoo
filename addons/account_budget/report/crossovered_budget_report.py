@@ -75,19 +75,12 @@ class budget_report(report_sxw.rml_parse):
             for line in budget_id.crossovered_budget_line:
                 budget_ids.append(line.id)
 
-            b_line_ids=','.join([str(x) for x in budget_ids])
-
-            query="select id from crossovered_budget_lines where crossovered_budget_id = '"+ str(budget_id.id) + "'"# AND '"+ str(d_from) +"'<=date_from AND date_from<date_to AND date_to<= '"+ str(d_to) +"'"
-            self.cr.execute(query)
-            budget_line_ids=self.cr.fetchall()
-
-            if not budget_line_ids:
+            if not budget_ids:
                 return []
 
-            budget_lines=[x[0] for x in budget_line_ids]
+            b_line_ids=','.join([str(x) for x in budget_ids])
 
-            bd_ids = ','.join([str(x) for x in budget_lines])
-
+#            bd_ids = ','.join([str(x) for x in budget_lines])
             self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id in (%s)'%(b_line_ids))
             an_ids=self.cr.fetchall()
 
@@ -116,7 +109,7 @@ class budget_report(report_sxw.rml_parse):
                 done_budget=[]
                 for line in line_id:
 
-                    if line.id in budget_lines:
+                    if line.id in budget_ids:
                         theo=pract=0.00
                         theo=c_b_lines_obj._theo_amt(self.cr, self.uid, [line.id],context)[line.id]
                         pract=c_b_lines_obj._prac_amt(self.cr, self.uid, [line.id],context)[line.id]
