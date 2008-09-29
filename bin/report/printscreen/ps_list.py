@@ -153,7 +153,6 @@ class report_printscreen_list(report_int):
             tsum.append(0)
         for line in results:
             node_line = new_doc.createElement("row")
-
             count = -1
             for f in fields_order:
                 count += 1
@@ -161,8 +160,9 @@ class report_printscreen_list(report_int):
                     line[f] = line[f][1]
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
-                if fields[f]['type'] in ('float','integer'):
-                    line[f]=round(line[f],2)
+                if fields[f]['type'] == 'float':
+                    precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
+                    line[f]=round(line[f],precision)
                 col = new_doc.createElement("col")
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')

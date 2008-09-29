@@ -247,6 +247,18 @@ class res_partner(osv.osv):
             result[a] = adr.get(a, default_address)
         return result
 
+    def property_get(self, cr, uid, ids,property_pref=[]):
+        select = ids
+        if isinstance(ids, (int, long)):
+            select = [ids]
+        result=self.read(cr,uid,select,property_pref)
+        for res in result:
+            for prt in property_pref:
+                res[prt] = res[prt] and res[prt][0] or False
+        if isinstance(ids, (int, long)):
+            return result[0]
+        return result
+
     def gen_next_ref(self, cr, uid, ids):
         if len(ids) != 1:
             return True
@@ -358,7 +370,7 @@ res_partner_bank_type_fields()
 class res_partner_bank(osv.osv):
     '''Bank Accounts'''
     _name = "res.partner.bank"
-    _rec_name = "state"
+    _rec_name = "acc_number"
     _description = __doc__
     _order = 'sequence'
 
