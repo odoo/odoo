@@ -20,6 +20,7 @@ This module allows you to manage your process for the end-users.
         '../hr_timesheet/process/hr_timesheet_process.xml',
         '../purchase/process/purchase_process.xml',
         '../product/process/product_process.xml', 
+        '../mrp/process/procurement_process.xml',
     ]
 
     "update_xml" : [
