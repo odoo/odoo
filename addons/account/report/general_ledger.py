@@ -351,9 +351,7 @@ class general_ledger(rml_parse.rml_parse):
 	def _sum_currency_amount_account(self, account, form):
 		
 		self._set_get_account_currency_code(account.id)
-		self.cr.execute("select sum(aml.amount_currency) from account_move_line as aml "\
-						"LEFT JOIN account_account aa on aml.account_id=%d "\
-						"AND  aml.currency_id = aa.currency_id"%account.id)
+		self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %d "%account.id)
 		total = self.cr.fetchone()
 		
 		if self.account_currency:
