@@ -66,7 +66,7 @@
         "project/project_report.xml",
         "product_view.xml",
         "account_assert_test.xml",
-        "process/invoice_process.xml"
+        "process/invoice_process.xml",
         "process/statement_process.xml"
     ],
     "translations" : {

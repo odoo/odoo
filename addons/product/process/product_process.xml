@@ -27,26 +27,6 @@
 			<field eval="1" name="flow_start"/>
 		</record>
 	
-		<record id="process_node_minimumstockrule0" model="process.node">
-			<field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
-			<field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Minimum stock rule&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Create minimum stock rules&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_productworkflow0"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_billofmaterial0" model="process.node">
-			<field name="menu_id" ref="mrp.menu_mrp_bom_form_action"/>
-			<field name="model_id" ref="mrp.model_mrp_bom"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Bill of Material&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Defines Bill of materials&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_productworkflow0"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
 		<record id="process_node_supplier0" model="process.node">
 			<field name="menu_id" ref="product.menu_products"/>
 			<field name="model_id" ref="product.model_product_product"/>
@@ -83,24 +63,6 @@
 		Process Transition	
 	-->
 	
-		<record id="process_transition_producttostockrules0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Product to stock rules&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;you can see the minimum stock rules from product&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Minimum stock rule')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product')]"/>
-		</record>
-	
-		<record id="process_transition_bom0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;BOM&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;You can see its bill of material which are used to make product&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Bill of Material')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product')]"/>
-		</record>
-	
 		<record id="process_transition_supplierofproduct0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -108,15 +70,6 @@
 			<field eval="&quot;&quot;&quot;You can see the list of supplier for that product.&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" search="[('name','=','Supplier')]"/>
 			<field model="process.node" name="source_node_id" search="[('name','=','Product')]"/>
-		</record>
-	
-		<record id="process_transition_bomtook0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Bom to Ok&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Set status of Bill of material to ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Status ok')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Bill of Material')]"/>
 		</record>
 	
 		<record id="process_transition_suppliertook0" model="process.transition">

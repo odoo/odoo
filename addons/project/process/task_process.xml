@@ -16,17 +16,6 @@
 		Process Node
 	-->
 	
-		<record id="process_node_saleordertask0" model="process.node">
-			<field name="menu_id" ref="sale.menu_sale_order"/>
-			<field name="model_id" ref="sale.model_sale_order"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Sale_Order_Task&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;In case you sell services on sale order (task subflow)&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_tasksworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="1" name="flow_start"/>
-		</record>
-	
 		<record id="process_node_taskbydelegate0" model="process.node">
 			<field name="menu_id" ref="project.menu_action_view_task"/>
 			<field name="model_id" ref="project.model_project_task"/>
@@ -35,17 +24,6 @@
 			<field eval="&quot;&quot;&quot;Delegate your task to the other user&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_tasksworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('open', 'pending')&quot;&quot;&quot;" name="model_states"/>
-			<field eval="1" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_productbacklog0" model="process.node">
-			<field name="menu_id" ref="scrum.menu_action_product_backlog_form"/>
-			<field name="model_id" ref="scrum.model_scrum_product_backlog"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Product backlog&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Create task from backlogs&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_tasksworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 	
@@ -94,31 +72,10 @@
 			<field eval="0" name="flow_start"/>
 		</record>
 	
-		<record id="process_node_timesheettask0" model="process.node">
-			<field name="menu_id" ref="hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form"/>
-			<field name="model_id" ref="hr.model_hr_timesheet"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Timesheet_task&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Complete Your Timesheet.&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_tasksworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-		
 	<!--	
 		Process Transition
 	-->
 		
-	
-		<record id="process_transition_createtask0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Create Task&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Product type is service, then its creates the task.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Draft task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Sale_Order_Task')]"/>
-		</record>
-	
 		<record id="process_transition_delegate0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -126,15 +83,6 @@
 			<field eval="&quot;&quot;&quot;Delegates tasks to the other user&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" search="[('name','=','Draft task')]"/>
 			<field model="process.node" name="source_node_id" search="[('name','=','Task by delegate')]"/>
-		</record>
-	
-		<record id="process_transition_backlogtask0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Backlog Task&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;From backlog create task.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Draft task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product backlog')]"/>
 		</record>
 	
 		<record id="process_transition_draftopentask0" model="process.transition">
@@ -163,15 +111,6 @@
 			<field model="process.node" name="target_node_id" search="[('name','=','Trigger Invoice')]"/>
 			<field model="process.node" name="source_node_id" search="[('name','=','Done task')]"/>
 		</record>
-	
-		<record id="process_transition_filltimesheet0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Fill Timesheet&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Task summary is comes into the timesheet line&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Timesheet_task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Open task')]"/>
-		</record>
-
+		
 	</data>
 </openerp>

@@ -47,7 +47,7 @@
         "purchase_report.xml", 
         "purchase_wizard.xml",
         "stock_view.xml",
-        "partner_view.xml"
+        "partner_view.xml",
         "process/purchase_process.xml"
     ],
     "active": False,

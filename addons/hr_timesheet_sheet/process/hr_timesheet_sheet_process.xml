@@ -15,18 +15,63 @@
 		<!-- 
 			Process Node
 		-->
-			
-		<record id="process_node_workontask0" model="process.node">
-			<field name="menu_id" ref="project.menu_action_view_task"/>
-			<field name="model_id" ref="project.model_project_task"/>
+		
+		<record id="process_node_analyticcost0" model="process.node">
+			<field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+			<field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Work on Task&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Defines the work summary of task&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('open', pending', 'done', 'cancelled')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="&quot;&quot;&quot;Analytic cost&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Analytic cost is created&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_review0" model="process.node">
+			<field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+			<field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Review&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Review end of day check day is complete&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_timesheetconfirming0" model="process.node">
+			<field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+			<field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Timesheet Confirming&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Timesheet sheet confirm at the end of the period&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+		
+		<record id="process_node_timesheetline0" model="process.node">
+			<field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+			<field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Timesheet Line&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Encode your timesheet line&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+		
+		<record id="process_node_phonecall0" model="process.node">
+			<field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+			<field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Phone call&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Whatever time u spent for phone call&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 	
+			
 		<record id="process_node_attendance0" model="process.node">
 			<field name="menu_id" ref="hr_attendance.menu_si_so"/>
 			<field name="model_id" ref="hr.model_hr_employee"/>
@@ -96,15 +141,6 @@
 			Process Transition
 		-->
 	
-		<record id="process_transition_tasktimesheet0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Task timesheet&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Moves task entry into the timesheet line&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Timesheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Work on Task')]"/>
-		</record>
-	
 		<record id="process_transition_attendance0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -149,6 +185,42 @@
 			<field model="process.node" name="target_node_id" search="[('name','=','Invoice on Work')]"/>
 			<field model="process.node" name="source_node_id" search="[('name','=','Confirmed Timesheet')]"/>
 		</record>
-
+		
+		<record id="process_transition_phonecallencoding0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Phone call encoding&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Encode how much time u spent on phone call&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Timesheet Line')]" ref="process_node_timesheetline0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Phone call')]"/>
+		</record>
+		
+		<record id="process_transition_createanalyticcose0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Create Analytic cose&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Creates your analytic cose accoording to quantity&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Analytic cost')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Timesheet Line')]"/>
+		</record>
+	
+		<record id="process_transition_reviewofwork0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Review of work&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Review of your work at the end of the day&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Review')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Timesheet Line')]"/>
+		</record>
+	
+		<record id="process_transition_confirmtimesheetsheet0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Confirm timesheet sheet&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Confirm timesheet at the end of the period&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Timesheet Confirming')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Review')]"/>
+		</record>
+		
 	</data>
 </openerp>

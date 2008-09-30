@@ -70,7 +70,7 @@
         "mrp_wizard.xml", 
         "mrp_report.xml",
         "company_view.xml",
-        "process/procurement_process.xml"
+        "process/procurement_process.xml",
     ],
     "active": False,
     "installable": True

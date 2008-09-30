@@ -58,7 +58,7 @@ The validation can be configured in te company:
         "security/ir.model.access.csv",
         "hr_timesheet_sheet_view.xml",
         "hr_timesheet_workflow.xml",
-        "process/hr_timesheet_sheet_process.xml"
+        "process/hr_timesheet_sheet_process.xml",
     ],
     "active": False,
     "installable": True

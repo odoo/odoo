@@ -5,7 +5,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_project.html",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project", 'mrp'],
+    "depends" : ["project", 'mrp', "sale"],
     "description": """
 This module is used to automatically create tasks base on different
 procurements: sales order, manufacturing order, ...
@@ -15,7 +15,9 @@ order on services products.
 """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml": ["project_workflow.xml"],
+    "update_xml": ["project_workflow.xml",
+                   "process/project_mrp_process.xml"
+                   ],
     "active": False,
     "installable": True
 }

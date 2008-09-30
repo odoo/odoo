@@ -58,7 +58,8 @@
         "product_data.xml","product_report.xml",
         "product_view.xml", "pricelist_view.xml",
         "partner_view.xml", "product_wizard.xml",
-        "process/product_process.xml"],
+        "process/product_process.xml"
+        ],
     "active": False,
     "installable": True
 }

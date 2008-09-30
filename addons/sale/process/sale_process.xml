@@ -1,10 +1,41 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
+	
+		<!--		
+			Process
+		-->
+	
 		<record id="process_process_salesworkflow0" model="process.process">
 			<field eval="1" name="active"/>
 			<field eval="&quot;&quot;&quot;Sales flow for services companies.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Sales Workflow&quot;&quot;&quot;" name="name"/>
+		</record>
+		
+		<!--		
+			Process Node
+		-->
+		
+		<record id="process_node_order0" model="process.node">
+			<field name="menu_id" ref="sale.menu_sale_order"/>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;After confirming order, Create the invoice.&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="account.process_process_invoiceworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="1" name="flow_start"/>
+		</record>
+		
+		<record id="process_node_saleorderprocurement0" model="process.node">
+			<field name="menu_id" ref="sale.menu_sale_order"/>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Procurement for each line&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="1" name="flow_start"/>
 		</record>
 	
 		<record id="process_node_quotation0" model="process.node">
@@ -62,24 +93,6 @@
 			<field eval="0" name="flow_start"/>
 		</record>
 
-		<record id="process_node_tasks0" model="process.node">
-			<field name="menu_id" ref="project.menu_action_view_task"/>
-			<field name="model_id" ref="project.model_project_task"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Tasks&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;In case you sell services on sale order (task subflow)&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_salesworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-
-		<record id="process_condition_conditiontask0" model="process.condition">
-			<field name="model_id" ref="product.model_product_template"/>
-			<field name="node_id" ref="process_node_tasks0"/>
-			<field eval="&quot;&quot;&quot;object.type=='service'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="&quot;&quot;&quot;condition_task&quot;&quot;&quot;" name="name"/>
-		</record>
-
 		<record id="process_node_invoiceafterdelivery0" model="process.node">
 			<field name="menu_id" ref="account.menu_invoice_draft"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
@@ -90,6 +103,10 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
+		
+		<!--		
+			Process Condition
+		-->
 
 		<record id="process_condition_conditionafterdelivery0" model="process.condition">
 			<field name="model_id" ref="sale.model_sale_order"/>
@@ -97,6 +114,10 @@
 			<field eval="&quot;&quot;&quot;object.order_policy=='postpaid'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="&quot;&quot;&quot;condition_after_delivery&quot;&quot;&quot;" name="name"/>
 		</record>
+		
+		<!--		
+			Process Transition
+		-->
 	
 		<record id="process_transition_confirmquotation0" model="process.transition">
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -211,12 +232,22 @@
 			<field model="process.node" name="source_node_id" search="[('name','=','Delivery Order')]"/>
 		</record>
 	
-		<record id="process_transition_task0" model="process.transition">
+		<record id="process_transition_saleprocurement0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;When you select any product's type as a 'service' after confiming sale order, it will create a task of product.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Tasks')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Sale Order')]"/>
+			<field eval="&quot;&quot;&quot;Sale Procurement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;In sale order , procuerement for each line and it comes into the procurement order&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Procure Products')]" ref="mrp.process_node_procureproducts0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Sale Order Procurement')]"/>
+		</record>
+		
+		<record id="process_transition_saleinvoice0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Sale Invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Confirm sale order and Create invoice.&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Draft Invoices')]" ref="account.process_node_draftinvoices0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Order')]"/>
 		</record>
 	
 		<record id="res_roles_salesman0" model="res.roles">

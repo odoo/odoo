@@ -62,7 +62,7 @@
         "sale_report.xml",
         "sale_wizard.xml",
         "stock_view.xml",
-        "process/sale_process.xml"
+        "process/sale_process.xml",
     ],
     "active": False,
     "installable": True

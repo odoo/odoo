@@ -16,14 +16,14 @@
 			Process Node
 		-->
 	
-		<record id="process_node_procurements0" model="process.node">
-			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+		<record id="process_node_purchaseorder0" model="process.node">
+			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
+			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Procurements&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_purchaseworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
+			<field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;After confirming purchase order, it is approved by supplier.&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="account.process_process_invoiceworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 	
@@ -96,15 +96,6 @@
 		<!--		
 			Process Transition
 		-->
-		
-		<record id="process_transition_procurementtopurchase0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;procurement to purchase&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;After procurementing order , it comes into the Draft Purchase Order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Draft Purchase Order')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Procurements')]"/>
-		</record>
 	
 		<record id="process_transition_confirmingpurchaseorder0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
@@ -149,6 +140,15 @@
 			<field eval="&quot;&quot;&quot;Creates invoice from packin list&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" search="[('name','=','Invoice after packing')]"/>
 			<field model="process.node" name="source_node_id" search="[('name','=','Packing list')]"/>
+		</record>
+		
+		<record id="process_transition_purchaseinvoice0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Purchase Invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;After Purchase order , Create invoice.&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Draft Invoices')]" ref="account.process_node_draftinvoices0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Purchase Order')]"/>
 		</record>
 
 	</data>
