@@ -54,7 +54,8 @@ class res_partner_bank(osv.osv):
                 order, context=context, count=count)
         if filter(lambda x:x[0]=='acc_number' ,args):
             iban_value = filter(lambda x:x[0]=='acc_number' ,args)[0][2]
-            args1 = [('iban','ilike',iban_value)]
+            args1 =  filter(lambda x:x[0]!='acc_number' ,args)
+            args1 += [('iban','ilike',iban_value)]
             res += super(res_partner_bank,self).search(cr, uid, args1, offset, limit,
                 order, context=context, count=count)
         return res
