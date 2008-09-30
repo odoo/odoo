@@ -79,6 +79,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self.buffer.readlines()
+        self.lines.append('')   # ensure that the file ends with at least an empty line
         self.first = True
         self.tnrs= []
         return self
