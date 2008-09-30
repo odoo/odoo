@@ -194,13 +194,6 @@ class node_class(object):
 			path = self.path[1:]
 		return path
 
-class document_directory_node(osv.osv):
-	_inherit = 'process.node'
-	_columns = {
-		'directory_id':  fields.many2one('document.directory', 'Document directory', ondelete="set null"),
-	}
-document_directory_node()
-
 class document_directory(osv.osv):
 	_name = 'document.directory'
 	_description = 'Document directory'
@@ -233,6 +226,25 @@ class document_directory(osv.osv):
 		('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !')
 	]
 
+	def get_resource_path(self,cr,uid,res_model,res_id):
+		# to be need test
+		path=[]
+		def _parent(dir_id):
+			parent=self.browse(cr,uid,dir_id)
+			if parent.parent_id:
+				_parent(parent.parent_id.id)
+			else:
+				path.append(parent.name)
+				return path			
+		model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
+		directory_ids=self.search(cr,uid,[('ressource_type_id','=',model_ids[0]),('ressource_id','=',res_id)])		
+		if len(directory_ids):
+			path=parent(directory_ids[0])
+			direc=self.browse(cr,uid,directory_ids)[0]			
+			path.append(direc.name)
+			path.append(self.pool.get(direc.ressource_type_id.model).browse(cr,uid,res_id).name)			
+			return "ftp://localhost:8021/"+cr.dbname+'/'.join(path)
+		return False
 	def _check_duplication(self, cr, uid,vals):
 		if 'name' in vals:
 			where=" name='%s'"% (vals['name'])
@@ -350,6 +362,13 @@ class document_directory(osv.osv):
 		return super(document_directory,self).create(cr, uid, vals, context)
 
 document_directory()
+
+class document_directory_node(osv.osv):
+	_inherit = 'process.node'
+	_columns = {
+		'directory_id':  fields.many2one('document.directory', 'Document directory', ondelete="set null"),
+	}
+document_directory_node()
 
 class document_directory_content(osv.osv):
 	_name = 'document.directory.content'
@@ -572,4 +591,4 @@ class document_file(osv.osv):
 				except:
 					pass
 		return super(document_file, self).unlink(cr, uid, ids, context)
-document_file()
+document_file()		
