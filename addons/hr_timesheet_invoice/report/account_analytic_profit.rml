@@ -207,7 +207,7 @@
           <para style="terp_default_Bold_9">Totals:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
+          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
         </td>
         <td>
           <para style="terp_default_Right_9_bold">
@@ -240,10 +240,10 @@
             <para style="terp_default_8">[[ repeatIn(journal_ids(data['form'], e.id), 'j') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold">[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
           </td>
           <td>
             <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
