@@ -207,7 +207,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_8">[[ repeatIn(picking.move_lines,'move_lines') ]]</para>
+      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'assigned' )],'move_lines') ]]</para>
       <blockTable colWidths="59.0,268.0,56.0,51.0,25.0,54.0" style="Move_Line_Contect">
         <tr>
           <td>

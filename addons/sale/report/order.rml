@@ -355,6 +355,23 @@
         </td>
       </tr>
     </blockTable>
-	<para style="terp_default_9">[[ format(o.note or '') ]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="534.0" style="Partner_Note_Table">
+      <tr>
+        <td>
+          <para style="terp_default_9">[[ format(o.note or '') ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_9">[[ format((o.partner_id.property_payment_term and o.partner_id.property_payment_term.note) or '') ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
   </story>
 </document>
