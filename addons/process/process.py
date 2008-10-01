@@ -117,6 +117,11 @@ class process_process(osv.osv):
             data['gray'] = False
             data['url'] = node.help_url
 
+            # get assosiated workflow
+            if data['model']:
+                wkf_ids = self.pool.get('workflow').search(cr, uid, [('osv', '=', data['model'])])
+                data['workflow'] = (wkf_ids or False) and wkf_ids[0]
+
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
@@ -185,6 +190,10 @@ class process_process(osv.osv):
             refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context)[0]
             fields = pool.get(ref_model).fields_get(cr, uid, context=context)
 
+            # chech whether directory_id from inherited from document module
+            if 'directory_id' in refobj and refobj.directory_id:
+                res['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, node.directory_id.id, ref_model, ref_id)
+
             resource['name'] = refobj.name_get(context)[0][1]
             resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
 
@@ -199,9 +208,7 @@ class process_process(osv.osv):
                             rel = refobj[n]
                             if rel and isinstance(rel, list) :
                                 rel = rel[0]
-                            if isinstance(rel, basestring):
-                                print "XXX: ", rel
-                            try: # XXXXXXXXXXXXXXXXXXX
+                            try: # XXX: rel has been reported as string (check it)
                                 _id = (rel or False) and rel.id
                                 _model = node['model']
                                 update_relatives(r, _id, _model)

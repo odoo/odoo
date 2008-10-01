@@ -48,6 +48,18 @@ class res_partner_bank(osv.osv):
         res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context)
         return res
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        res = super(res_partner_bank,self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+        if filter(lambda x:x[0]=='acc_number' ,args):
+            iban_value = filter(lambda x:x[0]=='acc_number' ,args)[0][2]
+            args1 =  filter(lambda x:x[0]!='acc_number' ,args)
+            args1 += [('iban','ilike',iban_value)]
+            res += super(res_partner_bank,self).search(cr, uid, args1, offset, limit,
+                order, context=context, count=count)
+        return res
+
 res_partner_bank()
 
 

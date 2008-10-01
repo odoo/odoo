@@ -141,9 +141,9 @@ class account_account(osv.osv):
         if context is None:
             context = {}
         pos = 0
-       
+
         while pos<len(args):
-            
+
             if args[pos][0]=='code' and args[pos][1] in ('like','ilike') and args[pos][2]:
                 args[pos] = ('code', '=like', str(args[pos][2].replace('%',''))+'%')
             if args[pos][0]=='journal_id':
@@ -159,7 +159,7 @@ class account_account(osv.osv):
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id','in',ids1)
             pos+=1
-        
+
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -1518,13 +1518,15 @@ account_subscription_line()
 
 class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
+
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
+
     _columns = {
         'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
         'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
@@ -1538,13 +1540,14 @@ class account_config_wizard(osv.osv_memory):
         'name': lambda *a: time.strftime('%Y'),
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month'
+        'period':lambda *a:'month',
+        'charts': lambda *a: -1,
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -1593,7 +1596,7 @@ class account_config_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -2065,7 +2068,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -2073,7 +2076,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }

@@ -54,7 +54,10 @@ class budget_report(report_sxw.rml_parse):
             i = interval(d.period_id.date_start, d.period_id.date_stop)
         total_days = reduce(lambda x,d: x+interval(d.period_id.date_start, d.period_id.date_stop), post_obj.dotation_ids, 0)
         achievements = reduce(lambda x,l: x+l['achievements'], self.lines(post_obj, date1, date2), 0.0)
-        return [{'prev': prev, 'prev_period': prev * period_days / total_days, 'achievements': achievements}]
+        prev_1=1.00
+        if total_days<>0.00:
+            prev_1=prev * period_days / total_days
+        return [{'prev': prev, 'prev_period': prev_1, 'achievements': achievements}]
 
     def budget_total(self, post_objs, date1, date2):
         res = {'prev': 0.0, 'prev_period': 0.0, 'achievements': 0.0}

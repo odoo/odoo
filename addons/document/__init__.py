@@ -1,9 +1,7 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,37 +23,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-{
-    "name" : "Human Resources",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://tinyerp.com/module_hr.html",
-    "description": """
-    Module for human resource management. You can manage:
-    * Employees and hierarchies
-    * Work hours sheets
-    * Attendances and sign in/out system
+#
+##############################################################################
 
-    Different reports are also provided, mainly for attendance statistics.
-    """,
-    "depends" : ["base"],
-    "init_xml" : [],
-    "demo_xml" : [
-        "hr_demo.xml", 
-        "hr_department_demo.xml",
-    ],
-    "update_xml" : [
-        "security/hr_security.xml",
-        "security/ir.model.access.csv",
-        "hr_view.xml", 
-        "hr_wizard.xml",
-        "hr_department_view.xml",
-    ],
-    "active": False,
-    "installable": True
-}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import document
+import ftpserver

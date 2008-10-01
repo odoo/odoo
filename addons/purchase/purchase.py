@@ -419,6 +419,7 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False):
+        prod= self.pool.get('product.product').browse(cr, uid,product)
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not product:
