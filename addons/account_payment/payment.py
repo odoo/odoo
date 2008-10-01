@@ -82,7 +82,7 @@ payment_mode()
 class payment_order(osv.osv):
     _name = 'payment.order'
     _description = 'Payment Order'
-    _rec_name = 'date'
+    _rec_name = 'reference'
 
     def get_wizard(self,type):
         logger = netsvc.Logger()
