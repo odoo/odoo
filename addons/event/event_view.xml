@@ -198,7 +198,7 @@
 				<form string="Registration">
 					<notebook>
 					<page string="General">
-						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" colspan="1"/>
+						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" colspan="1" domain="[('state','in',('draft','confirm'))]"/>
 						<field name="nb_register"/>
 						<newline/>
 						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id, email_from)" />
@@ -220,7 +220,7 @@
 						<group col="8" colspan="4">
 							<field name="state" select="1" colspan="2"/>
 							<button name="button_reg_close" string="Registration Invoiced" states="open" type="object"/>
-							<button name="button_reg_open" string="Confirm Registration" states="draft" type="object"/>
+							<button name="%(event_confirm_registration)d" string="Confirm Registration" states="draft" type="action"/>
 							<button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
 						</group>
 					</page>
