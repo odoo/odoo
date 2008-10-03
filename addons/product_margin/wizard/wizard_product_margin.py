@@ -37,7 +37,7 @@ def _action_open_window(self, cr, uid, data, context):
     view_res = cr.fetchone()
     return {
         'name': 'Product Margin',
-         'context':{'from_date':data['form']['from_date'],'to_date':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
+        'context':{'date_start':data['form']['from_date'],'date_stop':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
         'view_type': 'form',
         "view_mode": 'tree,form',
         'res_model':'product.product',

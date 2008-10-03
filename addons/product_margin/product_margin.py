@@ -50,12 +50,12 @@ class product_product(osv.osv):
         return res
 
 
-    def _get_invoice_state(self, cr, uid,context ):
-        state=  context.get('invoice_state', False)
-        print 'rrrrrrrrrrrrr',state
-        if not state:
-            state = 'open'
-        return [(state,state)]
+    def _get_invoice_state(self, cr, uid, ids, field_names, arg, context):
+        res = {}
+        state=  context.get('invoice_state', 'open')
+        for val in self.browse(cr, uid, ids):
+            res[val.id] = state
+        return res
 
     def get_avg_price_margin(self, cr, uid, ids, field_names, arg, context):
         res = {}
@@ -166,8 +166,8 @@ class product_product(osv.osv):
     _columns = {
         'date_start': fields.function(_get_date, method=True, type='date', string='Start Date', multi='date_start'),
         'date_stop': fields.function(_get_date, method=True, type='date', string='Stop Date', multi='date_stop'),
-        'invoice_state': fields.selection(_get_invoice_state, string= 'Invoice State'),# readonly=True),
-#        'invoice_state': fields.selection([('paid','Paid'),('all_open','All Open'),('draft_open','Draft and Open')], 'Invoice State',readonly=True),
+        'invoice_state': fields.function(_get_invoice_state, method=True, type='char', string='Invoice State'),
+#        'invoice_state': fields.selection(_get_invoice_state, string= 'Invoice State'),# readonly=True),
         'sale_avg_price' : fields.function(get_avg_price_margin, method=True, type='float', string='Avg. Unit Price', multi='sale_avg_price'),
         'purchase_avg_price' : fields.function(get_avg_price_margin, method=True, type='float', string='Avg. Unit Price', multi='purchase_avg_price'),
         'sale_num_invoiced' : fields.function(_get_num_invoiced, method=True, type='float', string='# Invoiced', multi='sale_num_invoiced'),
@@ -183,10 +183,6 @@ class product_product(osv.osv):
         'total_margin_rate' : fields.function(_get_total_margin_rate, method=True, type='float', string='Total Margin (%)', multi='total_margin_rate'),
         'expected_margin_rate' : fields.function(_get_total_margin_rate, method=True, type='float', string='Expected Margin (%)', multi='expected_margin_rate'),
     }
-    
-    _defaults = {
-                 'invoice_state' : _get_invoice_state
-                 }
     
 product_product()
 
