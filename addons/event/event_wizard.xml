@@ -1,52 +1,43 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-		<wizard string="Project"
-			model="event.event"
-			name="event.project"
-			id="event_wiz"
-			menu="False"/>
+    <data>
+        <wizard string="Project"
+            model="event.event"
+            name="event.project"
+            id="event_wiz"
+            menu="False"/>
 
-		<wizard
-			string="Tasks"
-			model="event.event"
-			name="wizard_event_tasks"
-			id="wizard_event_task"/>
+        <wizard
+            string="Tasks"
+            model="event.event"
+            name="wizard_event_tasks"
+            id="wizard_event_task"/>
 
-		<wizard
-			string="Registrations"
-			model="event.event"
-			name="wizard_event_registration"
-			id="wizard_event_registration"/>
+        <wizard
+            string="Registrations"
+            model="event.event"
+            name="wizard_event_registration"
+            id="wizard_event_registration"/>
 
-		<!--<wizard
-			string="New child event"
-			model="event.event"
-			name="wizard_event_new"
-			keyword="client_action_multi"
-			menu="False"
-			id="wizard_event_new"/>-->
+        <wizard
+            string="List Register Partners"
+            model="event.event"
+            name="event.event_reg_partners"
+            id="wizard_event_reg_partners"/>
 
-		<wizard
-			string="List Register Partners"
-			model="event.event"
-			name="event.event_reg_partners"
-			id="wizard_event_reg_partners"/>
+        <wizard string="Make Invoice"
+            model="event.registration"
+            name="event.reg_make_invoice"
+            id="event_reg_invoice"
+            menu="True"
+            />
 
-		<wizard string="Make Invoice"
-					model="event.registration"
-					name="event.reg_make_invoice"
-					id="event_reg_invoice"
-					menu="True"
-					/>
-		<!--
-		<record model="ir.values" id="ir_open_new_event">
-			<field name="key2">tree_but_open</field>
-			<field name="model">event.event</field>
-			<field name="name">New child event</field>
-			<field name="value" eval="'ir.actions.wizard,%d'%wizard_event_new"/>
-			<field name="object" eval="True"/>
-		</record>
-		-->
-	</data>
+        <wizard string="Confirm Registration"
+            model="event.registration"
+            name="event.confirm_registration"
+            id="event_confirm_registration"
+            menu="False"
+            />
+
+    </data>
 </openerp>

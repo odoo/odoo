@@ -11,13 +11,13 @@
                     <field name="stock_location"/>
                     <field name="mrp_jit"/>
                     <field name="mrp_operation"/>
-                    <separator string="Sales Management" colspan="4"/> 
+                    <separator string="Sales Management" colspan="4"/>
                     <field name="point_of_sale"/>
                     <field name="sale_journal"/>
                     <field name="sale_margin"/>
-                    <separator string="Relationship Management" colspan="4"/> 
+                    <separator string="Relationship Management" colspan="4"/>
                     <field name="crm_configuration"/>
-					<separator string="Portal Management" colspan="4"/> 
+					<separator string="Portal Management" colspan="4"/>
                     <field name="portal"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
@@ -38,7 +38,7 @@
             <field name="target">new</field>
         </record>
 
-      <record model="ir.module.module.configuration.step"
+      <record model="ir.actions.todo"
             id="config_install_module">
             <field name="name">Manufacturing Profile : Install Extra modules</field>
             <field name="note">Install more modules. A few modules are proposed according to the manufacturing profile you selected. You will be able to install them based on our requirements.</field>

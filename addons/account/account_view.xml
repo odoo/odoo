@@ -116,19 +116,19 @@
                     <field name="type" select="1"/>
                     <field name="company_id" select="2"/>
                     <field name="parent_id"/>
-                    <field name="active"/>
+                    <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <newline/>
-                            <field name="user_type" select="1"/>
                             <field name="currency_id" select="2"/>
+                            <field name="active" select="2"/>
                             <field name="reconcile"/>
                             <field name="check_history"/>
                             <newline/>
                             <newline/>
-                            <field name="child_consol_ids" colspan="4"/>
                             <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
+                            <field name="child_consol_ids" colspan="4" attrs="{'readonly':[('type','!=','consolidation')]}"/>/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -654,6 +654,7 @@
                     <field name="state"/>
                     <field name="reconcile_id"/>
                     <field name="reconcile_partial_id"/>
+                    <field colspan="4" name="reconcile_implicit"/>
                 </tree>
             </field>
         </record>
@@ -705,6 +706,10 @@
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
+                        <page string="Move Lines">
+	                        <field colspan="4" name="reconcile_implicit"/>
+                            <field colspan="4" name="parent_move_lines" nolabel="0"/>
+                       	</page>
                     </notebook>
                 </form>
             </field>
@@ -744,7 +749,7 @@
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
-
+							<field colspan="4" name="reconcile_implicit"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -1285,6 +1290,7 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id"/>
+                    <field colspan="4" name="reconcile_implicit"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1354,21 +1360,21 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>     
-         
+        </record>
 
-        
+
+
 
 
         <!-- register configuration wizard -->
 
-        <record id="config_fiscalyear" model="ir.module.module.configuration.step">
+        <record id="config_fiscalyear" model="ir.actions.todo">
             <field name="name">Account Configure Wizard</field>
             <field name="note">Define Fiscal Years and Select Charts of Account</field>
             <field name="action_id" ref="action_account_config_wizard_form"/>
             <field name="state">open</field>
-        </record>        
-        
+        </record>
+
 
 
         <!-- Account Templates -->

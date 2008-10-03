@@ -568,6 +568,7 @@
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <field name="invoice_state" select="2"/>
+                            <field name="date_done" select="2"/>
                             <newline/>
                             <field name="move_type"/>
                         </page>
@@ -656,8 +657,9 @@
                             <field name="auto_picking"/>
                             <field name="active" select="2"/>
                             <newline/>
-                            <field name="move_type"/>
                             <field name="date" select="1"/>
+                            <field name="date_done" select="2"/>
+                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -792,6 +794,7 @@
                         <field name="address_id" select="2"/>
                         <field name="name" select="1" readonly="1"/>
                         <field name="min_date" select="2"/>
+						<field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                     </group>
                     <notebook colspan="4">
@@ -842,8 +845,9 @@
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>
-                            <field name="move_type"/>
                             <field name="date" select="2"/>
+                            <field name="date_done" select="2"/>
+                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>

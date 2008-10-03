@@ -242,9 +242,9 @@ class product_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
-        'description': fields.text('Description'),
-        'description_purchase': fields.text('Purchase Description'),
-        'description_sale': fields.text('Sale Description'),
+        'description': fields.text('Description',translate=True),
+        'description_purchase': fields.text('Purchase Description',translate=True),
+        'description_sale': fields.text('Sale Description',translate=True),
         'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed, consumable are stockable products with infinite stock, or without a stock management in the system."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
@@ -592,6 +592,7 @@ class product_supplierinfo(osv.osv):
     }
     _defaults = {
         'qty': lambda *a: 0.0,
+        'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
     }
     _order = 'sequence'

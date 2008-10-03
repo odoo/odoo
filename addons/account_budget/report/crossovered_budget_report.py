@@ -63,6 +63,7 @@ class budget_report(report_sxw.rml_parse):
 
         budgets = self.pool.get('crossovered.budget').browse(self.cr, self.uid, [object.id], self.context.copy())
 
+        c_b_lines_obj=self.pool.get('crossovered.budget.lines')
         for budget_id in budgets:
 
             res={}
@@ -74,22 +75,16 @@ class budget_report(report_sxw.rml_parse):
             for line in budget_id.crossovered_budget_line:
                 budget_ids.append(line.id)
 
-            b_line_ids=','.join([str(x) for x in budget_ids])
-
-            query="select id from crossovered_budget_lines where crossovered_budget_id = '"+ str(budget_id.id) + "'"# AND '"+ str(d_from) +"'<=date_from AND date_from<date_to AND date_to<= '"+ str(d_to) +"'"
-            self.cr.execute(query)
-            budget_line_ids=self.cr.fetchall()
-
-            if not budget_line_ids:
+            if not budget_ids:
                 return []
 
-            budget_lines=[x[0] for x in budget_line_ids]
+            b_line_ids=','.join([str(x) for x in budget_ids])
 
-            bd_ids = ','.join([str(x) for x in budget_lines])
-
+#            bd_ids = ','.join([str(x) for x in budget_lines])
             self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id in (%s)'%(b_line_ids))
             an_ids=self.cr.fetchall()
 
+            context={'wizard_date_from':d_from,'wizard_date_to':d_to}
             for i in range(0,len(an_ids)):
 
                 analytic_name=self.pool.get('account.analytic.account').browse(self.cr, self.uid,[an_ids[i][0]])
@@ -106,18 +101,18 @@ class budget_report(report_sxw.rml_parse):
                 }
                 result.append(res)
 
-                line_ids = self.pool.get('crossovered.budget.lines').search(self.cr, self.uid, [('id', 'in', budget_ids),('analytic_account_id','=',an_ids[i][0])])
+                line_ids = c_b_lines_obj.search(self.cr, self.uid, [('id', 'in', budget_ids),('analytic_account_id','=',an_ids[i][0])])
 
-                line_id = self.pool.get('crossovered.budget.lines').browse(self.cr,self.uid,line_ids)
+                line_id = c_b_lines_obj.browse(self.cr,self.uid,line_ids)
                 tot_theo=tot_pln=tot_prac=tot_perc=0.00
 
                 done_budget=[]
                 for line in line_id:
 
-                    if line.id in budget_lines:
+                    if line.id in budget_ids:
                         theo=pract=0.00
-                        theo=line._theo_amt(self.cr, self.uid, [line.id],"theoritical_amount",None,context={'wizard_date_from':d_from,'wizard_date_to':d_to})[line.id]
-                        pract=line._pra_amt(self.cr, self.uid, [line.id],"practical_amount",None,context={'wizard_date_from':d_from,'wizard_date_to':d_to})[line.id]
+                        theo=c_b_lines_obj._theo_amt(self.cr, self.uid, [line.id],context)[line.id]
+                        pract=c_b_lines_obj._prac_amt(self.cr, self.uid, [line.id],context)[line.id]
 
                         if line.general_budget_id.id in done_budget:
 

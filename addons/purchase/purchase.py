@@ -227,7 +227,8 @@ class purchase_order(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist_purchase.id
+        pricelist = self.pool.get('res.partner').property_get(cr, uid,
+					part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
     def wkf_approve_order(self, cr, uid, ids):
@@ -418,16 +419,17 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False):
+        prod= self.pool.get('product.product').browse(cr, uid,product)
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         lang=False
         if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
+            lang=self.pool.get('res.partner').read(cr, uid, partner_id)['lang']
         context={'lang':lang}
 
-        prod = self.pool.get('product.product').read(cr, uid, [product], ['supplier_taxes_id','name','seller_delay','uom_po_id','description_purchase'])[0]
+        prod = self.pool.get('product.product').read(cr, uid, product, ['supplier_taxes_id','name','seller_delay','uom_po_id','description_purchase'],context=context)
         prod_uom_po = prod['uom_po_id'][0]
         if not uom:
             uom = prod_uom_po
@@ -444,21 +446,21 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
 
-        if res['value']['taxes_id']:
-            taxes = self.pool.get('account.tax').browse(cr, uid,
-                    [x.id for x in product.supplier_taxes_id])
-            taxep = None
-            if partner_id:
-                taxep = self.pool.get('res.partner').browse(cr, uid,
-                        partner_id).property_account_supplier_tax
-            if not taxep or not taxep.id:
-                res['value']['taxes_id'] = [x.id for x in product.taxes_id]
-            else:
-                res5 = [taxep.id]
-                for t in taxes:
-                    if not t.tax_group==taxep.tax_group:
-                        res5.append(t.id)
-                res['value']['taxes_id'] = res5
+        
+        taxes = self.pool.get('account.tax').browse(cr, uid,prod['supplier_taxes_id'])
+        taxep = None
+        if partner_id:
+            taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
+            if taxep_id:
+				taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
+        if not taxep or not taxep.id:
+            res['value']['taxes_id'] = [x.id for x in product.taxes_id]
+        else:
+            res5 = [taxep.id]
+            for t in taxes:
+                if not t.tax_group==taxep.tax_group:
+                    res5.append(t.id)
+            res['value']['taxes_id'] = res5
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])

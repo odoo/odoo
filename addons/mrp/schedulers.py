@@ -132,7 +132,7 @@ class mrp_procurement(osv.osv):
             cr.close()
         return {}
 
-    def create_automatic_op(cr, uid, context=None):
+    def create_automatic_op(self,cr, uid, context=None):
         if not context:
             context={}
         product_obj = self.pool.get('product.product')
@@ -192,7 +192,7 @@ class mrp_procurement(osv.osv):
         offset = 0
         ids = [1]
         if automatic:
-            create_automatic_op(cr, uid, context=context)
+            self.create_automatic_op(cr, uid, context=context)
         while ids:
             ids=orderpoint_obj.search(cr,uid,[],offset=offset,limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids):

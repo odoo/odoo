@@ -264,7 +264,7 @@ class wizard_base_setup(wizard.interface):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'context':{'menu':True},
                 'target':'new',

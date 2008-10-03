@@ -32,14 +32,16 @@ from osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = "product.product"
-    def __old_view_header_get(self, cr, user, view_id, view_type, context):
+    def view_header_get(self, cr, user, view_id, view_type, context):
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
         if res: return res
         if (context.get('location', False)):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, uid, context['location'], context).name
+            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context={}):
+    def get_product_available(self,cr,uid,ids,context=None):
+        if not context:
+            context = {}        
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
@@ -61,7 +63,10 @@ class product_product(osv.osv):
                 context['location'] = res2[0]
 
         if context.get('location', False):
-            location_ids = [context['location']]
+            if type(context['location']) == type(1):
+                location_ids = [context['location']]
+            else:
+                location_ids = context['location']
         else:
             cr.execute("select lot_stock_id from stock_warehouse")
             location_ids = [id for (id,) in cr.fetchall()]
@@ -84,7 +89,7 @@ class product_product(osv.osv):
         to_date=context.get('to_date',False)
         date_str=False
         if from_date and to_date:
-            date_str="date>='%s' and date<=%s"%(from_date,to_date)
+            date_str="date>='%s' and date<='%s'"%(from_date,to_date)
         elif from_date:
             date_str="date>='%s'"%(from_date)
         elif to_date:
@@ -126,7 +131,9 @@ class product_product(osv.osv):
         return res
 
     def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, field_names=False, arg=False, context={}):
+        def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+            if not field_names:
+                field_names=[]
             context.update({
                 'states':states,
                 'what':what
@@ -156,7 +163,7 @@ class product_product(osv.osv):
         'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
         'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
     }
-    def __old_fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
         if ('location' in context) and context['location']:
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])

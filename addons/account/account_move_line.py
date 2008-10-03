@@ -305,6 +305,8 @@ class account_move_line(osv.osv):
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,2)),
+        'parent_move_lines':fields.many2many('account.move.line', 'account_move_line_rel', 'child_id', 'parent_id', 'Parent'),
+        'reconcile_implicit':fields.boolean('Implicit Reconciliaiton')
     }
 
     def _get_date(self, cr, uid, context):
@@ -435,7 +437,11 @@ class account_move_line(osv.osv):
         currency = 0.0
         account_id = False
         partner_id = False
+        implicit_lines = []
         for line in unrec_lines:
+            if line.parent_move_lines:
+                for i in line.parent_move_lines:
+                    implicit_lines.append(i.id)
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error'),
                         _('Entry "%s" is not valid !') % line.name)
@@ -481,7 +487,7 @@ class account_move_line(osv.osv):
                 self_debit = -writeoff
 
             # If comment exist in context, take it
-            if context['comment']:
+            if 'comment' in context and context['comment']:
                 libelle=context['comment']
             else:
                 libelle='Write-Off'
@@ -531,9 +537,13 @@ class account_move_line(osv.osv):
             'line_id': map(lambda x: (4,x,False), ids),
             'line_partial_ids': map(lambda x: (3,x,False), ids)
         })
+        wf_service = netsvc.LocalService("workflow")
+        if implicit_lines:
+            self.write(cr, uid, implicit_lines, {'reconcile_implicit':True,'reconcile_id':r_id})
+            for id in implicit_lines:
+                wf_service.trg_trigger(uid, 'account.move.line', id, cr)
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
         return r_id
@@ -629,7 +639,7 @@ class account_move_line(osv.osv):
 
         if raise_ex:
             raise osv.except_osv(_('Wrong Accounting Entry!'), _('Both Credit and Debit cannot be zero!'))
-
+        account_obj = self.pool.get('account.account')
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if update_check:

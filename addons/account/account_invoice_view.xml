@@ -339,6 +339,17 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
+        <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
+        <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
         <record id="action_invoice_tree1_new" model="ir.actions.act_window">
             <field name="name">New Customer Invoice</field>
@@ -421,6 +432,7 @@
             <field name="name">Draft Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -442,6 +454,7 @@
             <field name="name">PRO-FORMA Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','proforma'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -463,6 +476,7 @@
             <field name="name">Unpaid Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -484,6 +498,7 @@
             <field name="name">Draft Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
@@ -505,6 +520,7 @@
             <field name="name">Unpaid Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
@@ -526,6 +542,7 @@
             <field name="name">Draft Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
@@ -547,6 +564,7 @@
             <field name="name">Unpaid Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
@@ -568,6 +586,7 @@
             <field name="name">Draft Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
@@ -589,6 +608,7 @@
             <field name="name">Unpaid Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>

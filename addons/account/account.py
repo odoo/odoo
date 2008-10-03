@@ -141,7 +141,9 @@ class account_account(osv.osv):
         if context is None:
             context = {}
         pos = 0
+
         while pos<len(args):
+
             if args[pos][0]=='code' and args[pos][1] in ('like','ilike') and args[pos][2]:
                 args[pos] = ('code', '=like', str(args[pos][2].replace('%',''))+'%')
             if args[pos][0]=='journal_id':
@@ -157,17 +159,33 @@ class account_account(osv.osv):
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id','in',ids1)
             pos+=1
+
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
+    def _get_children_and_consol(self, cr, uid, ids, context={}):
+        #this function search for all the children and all consolidated children (recursively) of the given account ids
+        res = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        for id in res:
+            this = self.browse(cr, uid, id, context)
+            for child in this.child_consol_ids:
+                if child.id not in res:
+                    res.append(child.id)
+        if len(res) != len(ids):
+            return self._get_children_and_consol(cr, uid, res, context)
+        return res
+
     def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
+        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
         mapping = {
             'balance': "COALESCE(SUM(l.debit) - SUM(l.credit), 0) as balance ",
             'debit': "COALESCE(SUM(l.debit), 0) as debit ",
             'credit': "COALESCE(SUM(l.credit), 0) as credit "
         }
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        #get all the necessary accounts
+        ids2 = self._get_children_and_consol(cr, uid, ids, context)
         acc_set = ",".join(map(str, ids2))
+        #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         if ids2:
             query = self.pool.get('account.move.line')._query_get(cr, uid,
@@ -184,13 +202,29 @@ class account_account(osv.osv):
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
 
+        #for the asked accounts, get from the dictionnary 'accounts' the value of it
         res = {}
         for id in ids:
-            res[id] = {}.fromkeys(field_names, 0.0)
-            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+            res[id] = self._get_account_values(cr, uid, id, accounts, field_names, context)
+        return res
+
+    def _get_account_values(self, cr, uid, id, accounts, field_names, context={}):
+        res = {}.fromkeys(field_names, 0.0)
+        browse_rec = self.browse(cr, uid, id)
+        if browse_rec.type == 'consolidation':
+            ids2 = self.read(cr, uid, [browse_rec.id], ['child_consol_ids'], context)[0]['child_consol_ids']
+            for t in self.search(cr, uid, [('parent_id', 'child_of', [browse_rec.id])]):
+                if t not in ids2 and t != browse_rec.id:
+                    ids2.append(t)
+            for i in ids2:
+                tmp = self._get_account_values(cr, uid, i, accounts, field_names, context)
+                for a in field_names:
+                    res[a] += tmp[a]
+        else:
+            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [browse_rec.id])])
             for i in ids2:
                 for a in field_names:
-                    res[id][a] += accounts.get(i, {}).get(a, 0.0)
+                    res[a] += accounts.get(i, {}).get(a, 0.0)
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -216,7 +250,7 @@ class account_account(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64),
+        'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([
             ('receivable','Receivable'),
             ('payable','Payable'),
@@ -229,7 +263,7 @@ class account_account(osv.osv):
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
-        'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type', '=', 'consolidation')]),
+        'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
         'balance': fields.function(__compute, digits=(16,2), method=True, string='Balance', multi='balance'),
         'credit': fields.function(__compute, digits=(16,2), method=True, string='Credit', multi='balance'),
@@ -245,7 +279,7 @@ class account_account(osv.osv):
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
-        'check_history': fields.boolean('Display History', help="Check this box if you want to print all entries otherwise it will print balance of this account")
+        'check_history': fields.boolean('Display History', help="Check this box if you want to print all entries when printing the General Ledger, otherwise it will only print its balance.")
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -924,15 +958,21 @@ class account_move_reconcile(osv.osv):
                 {'reconcile_id': rec.id }
             )
         return True
+
     def name_get(self, cr, uid, ids, context=None):
-        result = {}
+        if not len(ids):
+            return []
+        result = []
         for r in self.browse(cr, uid, ids, context):
             total = reduce(lambda y,t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
             if total:
-                result[r.id] = '%s (%.2f)' % (r.name, total)
+                name = '%s (%.2f)' % (r.name, total)
+                result.append((r.id,name))
             else:
-                result[r.id] = r.name
+                result.append((r.id,r.name))
         return result
+
+
 account_move_reconcile()
 
 #----------------------------------------------------------
@@ -1478,13 +1518,15 @@ account_subscription_line()
 
 class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
+
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
+
     _columns = {
         'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
         'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
@@ -1498,19 +1540,20 @@ class account_config_wizard(osv.osv_memory):
         'name': lambda *a: time.strftime('%Y'),
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month'
+        'period':lambda *a:'month',
+        'charts': lambda *a: -1,
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
 
     def install_account_chart(self, cr, uid,ids, context=None):
-        for res in self.read(cr,uid,ids):            
+        for res in self.read(cr,uid,ids):
             id = res['charts']
             def install(id):
                 mod_obj = self.pool.get('ir.module.module')
@@ -1553,12 +1596,12 @@ class account_config_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
 
-    
+
 
 account_config_wizard()
 
@@ -2025,7 +2068,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -2033,11 +2076,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
-        }    
-        
+        }
+
 
 wizard_multi_charts_accounts()
 

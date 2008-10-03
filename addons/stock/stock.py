@@ -102,7 +102,8 @@ class stock_location(osv.osv):
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
-        'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
+        'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')],
+            'Chained Location Type', required=True),
         'chained_auto_packing': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')], 
             'Automatic Move', 
@@ -380,6 +381,7 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Planned Date', select=1),
         'date':fields.datetime('Date Order'),
+        'date_done':fields.datetime('Date Done'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -421,7 +423,7 @@ class stock_picking(osv.osv):
                     todo.append(r)
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
-            self.pool.get('stock.move').action_confirm(cr,uid, todo, context)
+            self.pool.get('stock.move').action_confirm(cr, uid, todo, context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
@@ -514,7 +516,7 @@ class stock_picking(osv.osv):
     # TODO: change and create a move if not parents
     #
     def action_done(self, cr, uid, ids, context=None):
-        self.write(cr,uid, ids, {'state':'done'})
+        self.write(cr,uid, ids, {'state':'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_move(self, cr, uid, ids, context={}):
@@ -579,11 +581,11 @@ class stock_picking(osv.osv):
         res = {}
         sale_line_obj = self.pool.get('sale.order.line')
         
-        for picking in self.browse(cursor, user, ids, context=context):
+        for picking in self.browse(cursor, user, ids, context=context):            
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = picking.address_id.partner_id
+            partner = picking.address_id and picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
                 payment_term_id= picking.sale_id.payment_term.id
@@ -710,6 +712,7 @@ class stock_picking(osv.osv):
         self.write(cursor, user, res.keys(), {
             'invoice_state': 'invoiced',
             }, context=context)
+        print res
         return res
 
 stock_picking()
@@ -915,7 +918,6 @@ class stock_move(osv.osv):
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
-            print 'Warning'
             warning={
                 'title':'Bad Lot Assignation !',
                 'message':'You are moving %.2f products but only %.2f available in this lot.' % (product_qty,prodlot.stock_available or 0.0)
