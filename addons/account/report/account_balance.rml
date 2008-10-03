@@ -61,15 +61,14 @@
       <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevel4">
-      <lineStyle kind="LINEBELOW" colorName="#777777" start="1,0" stop="1,0"/>
-      <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
+     <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevel3">
-      <lineStyle kind="LINEBELOW" colorName="#777777" start="1,0" stop="-1,0"/>
-      <blockLeftPadding length="0" start="0,0" stop="1,0"/>
+     <lineStyle kind="LINEBELOW" colorName="#777777" start="1,0" stop="1,0"/>
+      <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevel2">
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#777777" start="1,0" stop="-1,0"/>
       <blockLeftPadding length="0" start="0,0" stop="1,0"/>
     </blockTableStyle>
  	<blockTableStyle id="TrLevel1">
@@ -94,7 +93,7 @@
 		fontSize="8.0" />
     <paraStyle
 		name="Level3" 
-		fontName="Helvetica-Bold" 
+		fontName="Helvetica" 
 		fontSize="8.0" />
     <paraStyle name="Level2"
 		fontSize="8.0"
@@ -150,14 +149,16 @@
 			  		<para style="P14">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]]<font color="white">[[ (a['level']&lt;6 and removeParentNode('font') or '... '*(a['level']-4)) ]]</font>[[ setTag('blockTable','blockTable',{'style':'TrLevel'+str(a['level'])}) ]][[ a['name'] ]]</para>
 		        </td>
 		        <td>
-		          <para style="P3">[[ formatLang(a['debit']) and '%.2f'%a['debit'] or '']]</para>
+		          <para style="P3">[[ (a['level']&lt;4) and setTag('para','para',{'style':'P3'}) ]]<u>[[ (a['leef'] and removeParentNode('para')) or formatLang(a['debit']) and '%.2f'%a['debit'] or '0.00' ]]</u></para>
+				  <para style="P3">[[ ((not a['leef']) and removeParentNode('para')) or formatLang(a['debit']) and '%.2f'%a['debit'] or '0.00' ]]</para>
 		        </td>
 		        <td>
-		          <para style="P3">[[ formatLang(a['credit']) and '%.2f'%a['credit'] or '']]</para>
+		          <para style="P3">[[ (a['level']&lt;4) and setTag('para','para',{'style':'P3'}) ]]<u>[[ (a['leef'] and removeParentNode('para')) or formatLang(a['credit']) and '%.2f'%a['credit'] or '0.00' ]]</u></para>
+				  <para style="P3">[[ ((not a['leef']) and removeParentNode('para')) or formatLang(a['credit']) and '%.2f'%a['credit'] or '0.00' ]]</para>
 		        </td>
 		        <td>
-				<para style="P3">[[ (a['level']&lt;4) and setTag('para','para',{'style':'P3a'}) ]]<u>[[ (a['leef'] and removeParentNode('para')) or formatLang(a['balance']) and '%.2f'%a['balance'] or '' ]]</u></para>
-				<para style="P3">[[ ((not a['leef']) and removeParentNode('para')) or formatLang(a['balance']) and formatLang(a['balance']) or '' ]]</para>
+				<para style="P3">[[ (a['level']&lt;4) and setTag('para','para',{'style':'P3a'}) ]]<u>[[ (a['leef'] and removeParentNode('para')) or formatLang(a['balance']) and '%.2f'%a['balance'] or '0.00' ]]</u></para>
+				<para style="P3">[[ ((not a['leef']) and removeParentNode('para')) or formatLang(a['balance']) and formatLang(a['balance']) or '0.00' ]]</para>
 		        </td>
 		      </tr>
 		      <tr>
@@ -166,13 +167,13 @@
 			  	<para style="P14"><font color="white">[[ '... '*(a['level']-3) ]]</font>[[ a['lname'] ]]</para>
 		       	</td>
 		        <td>
-		          <para style="P3">[[ formatLang(a['debit1']) and '%.2f'%a['debit1'] or '']]</para>
+		          <para style="P3">[[ formatLang(a['debit1']) and '%.2f'%a['debit1'] or '0.00']]</para>
 		        </td>
 		        <td>
-		          <para style="P3">[[ formatLang(a['credit1']) and '%.2f'%a['credit1'] or '']]</para>
+		          <para style="P3">[[ formatLang(a['credit1']) and '%.2f'%a['credit1'] or '0.00']]</para>
 		        </td>
 		        <td>
-				<para style="P3">[[ formatLang(a['balance1']) and '%.2f'%a['balance1'] or '']]</para>
+				<para style="P3">[[ formatLang(a['balance1']) and '%.2f'%a['balance1'] or '0.00' ]]</para>
 		        </td>	        
 		      </tr>
 		 </blockTable>
