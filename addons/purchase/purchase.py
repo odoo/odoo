@@ -419,6 +419,8 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False):
+        if not product:
+            return {'value':{}}
         prod= self.pool.get('product.product').browse(cr, uid,product)
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
@@ -454,7 +456,7 @@ class purchase_order_line(osv.osv):
             if taxep_id:
 				taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
         if not taxep or not taxep.id:
-            res['value']['taxes_id'] = [x.id for x in product.taxes_id]
+            res['value']['taxes_id'] = [x.id for x in taxes]
         else:
             res5 = [taxep.id]
             for t in taxes:
