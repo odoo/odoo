@@ -86,12 +86,17 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
+        
         <menuitem
             action="action_account_analytic_account_tree2"
             id="account_analytic_def_chart"
             parent="account.account_analytic_def_account"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
 
+	<wizard id="analytic_account_menu_action" menu="False" model="account.analytic.account" name="account.analytic.line1" string="Analytic Account Entries"/>
+        
+		<menuitem type="wizard" action="analytic_account_menu_action" id="analytic_account_menu" parent="account.menu_finance_charts" name="Analytic Account lines"/>
+        
 		<record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>

@@ -43,17 +43,32 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Accounts'
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
+        if 'date_start' in context and context['date_start']:
+            date_start = context['date_start']
+        else:
+            date_start = time.strftime('%Y-01-01')
+        if 'date_stop' in context and context['date_stop']:
+            date_stop = context['date_stop']
+        else:
+            date_stop = time.strftime('%Y-%m-%d')
         acc_set = ",".join(map(str, ids))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % acc_set)
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount<0 and a.id IN (%s) AND (l.date BETWEEN %s and %s) GROUP BY a.id" % (acc_set,date_start,date_stop))
         r= dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
         return r
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-
+        if 'date_start' in context and context['date_start']:
+            date_start = context['date_start']
+        else:
+            date_start = time.strftime('%Y-01-01')
+        if 'date_stop' in context and context['date_stop']:
+            date_stop = context['date_stop']
+        else:
+            date_stop = time.strftime('%Y-%m-%d')
         acc_set = ",".join(map(str, ids))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % acc_set)
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount>0 and a.id IN (%s)  AND (l.date BETWEEN %s and %s) GROUP BY a.id" % (acc_set,date_start,date_stop))
         r= dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
@@ -62,9 +77,17 @@ class account_analytic_account(osv.osv):
 
 
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
+        if 'date_start' in context and context['date_start']:
+            date_start = context['date_start']
+        else:
+            date_start = time.strftime('%Y-01-01')
+        if 'date_stop' in context and context['date_stop']:
+            date_stop = context['date_stop']
+        else:
+            date_stop = time.strftime('%Y-%m-%d')
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE a.id IN (%s) GROUP BY a.id" % acc_set)
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE a.id IN (%s)  AND (l.date BETWEEN %s and %s) GROUP BY a.id" % (acc_set,date_start,date_stop))
         res = {}
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
@@ -108,6 +131,7 @@ class account_analytic_account(osv.osv):
                     res.setdefault(id, 0.0)
                     res[id] += res.get(child, 0.0)
         return dict([(i, res[i]) for i in ids])
+
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
