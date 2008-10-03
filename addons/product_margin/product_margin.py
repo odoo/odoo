@@ -36,12 +36,6 @@ import time
 class product_product(osv.osv):
     _inherit = "product.product"
     
-#    def _get_date(self, cr, uid, ids, field_names, arg, context):
-#        res = {}
-#        for val in self.browse(cr, uid, ids):
-#            res[val.id] = {}
-#            res[val.id][field_names[0]] = time.strftime('%Y-%m-%d')
-#        return res
     def _get_date(self, cr, uid, ids, field_names, arg, context):
         res = {}
         mapping = {
@@ -56,13 +50,12 @@ class product_product(osv.osv):
         return res
 
 
-#===============================================================================
     def _get_invoice_state(self, cr, uid,context ):
-#        res = {}
-#        for val in self.browse(cr, uid, ids):
-#            res[val.id] = context.get('invoice_state', 'open')
-        return res
-#===============================================================================
+        state=  context.get('invoice_state', False)
+        print 'rrrrrrrrrrrrr',state
+        if not state:
+            state = 'open'
+        return [(state,state)]
 
     def get_avg_price_margin(self, cr, uid, ids, field_names, arg, context):
         res = {}
@@ -91,7 +84,7 @@ class product_product(osv.osv):
             res[val.id] = {}
             map_val = ' , '.join(map(lambda x: mapping[x], field_names))
             avg=0.0
-            cr.execute("select sum(l.quantity) from account_invoice_line l left join account_invoice i on (l.invoice_id = i.id) where l.product_id = %s AND i.type= %s" , (val.id,map_val,))
+            cr.execute("select sum(l.quantity) from account_invoice_line l left join account_invoice i on (l.invoice_id = i.id) where l.product_id = %s AND i.state not in ('draft','cancel') AND i.type= %s" , (val.id,map_val,))
             avg = cr.fetchall()[0][0]
             res[val.id][field_names[0]] = avg
         return res
@@ -106,6 +99,7 @@ class product_product(osv.osv):
                    'sale_expected' : 'product_uom_qty',
                    'normal_cost' : 'product_qty',
                    }
+        
         for val in self.browse(cr, uid, ids):
             res[val.id] = {}
             map_val = ' , '.join(map(lambda x: mapping1[x], field_names))
@@ -127,7 +121,7 @@ class product_product(osv.osv):
         for val in self.browse(cr, uid, ids):
             res[val.id] = {}
             map_val = ' , '.join(map(lambda x: mapping[x], field_names))
-            cr.execute("select sum(l.quantity * l.price_unit) from account_invoice_line l left join account_invoice i on (l.invoice_id = i.id) where l.product_id = %s AND i.type= %s " , (val.id,map_val))
+            cr.execute("select sum(l.quantity * l.price_unit) from account_invoice_line l left join account_invoice i on (l.invoice_id = i.id) where l.product_id = %s AND i.state not in ('draft','cancel') AND i.type= %s " , (val.id,map_val))
             turnover = cr.fetchall()[0][0]
             res[val.id][field_names[0]]= turnover
         return res
@@ -142,11 +136,38 @@ class product_product(osv.osv):
                 res[val.id][field_names[0]] = val.normal_cost - val.total_cost
         return res
     
+    
+    def _get_total_margin(self, cr, uid, ids, field_names, arg, context):
+        res = {}
+        for val in self.browse(cr, uid, ids):
+            mapping = {
+                   'total_margin' : val.turnover - val.total_cost,
+                   'expected_margin' : val.sale_expected - val.normal_cost,
+                   }
+            res[val.id] = {}
+            res[val.id][field_names[0]] = mapping[field_names[0]]
+        return res
+    
+    def _get_total_margin_rate(self, cr, uid, ids, field_names, arg, context):
+        res = {}
+        for val in self.browse(cr, uid, ids):
+            if not val.turnover:
+                val.turnover = 1
+            if not val.sale_expected: 
+                val.sale_expected=1
+            mapping = {
+                   'total_margin_rate' : (val.total_margin * 100 ) / val.turnover ,
+                   'expected_margin_rate' : (val.expected_margin * 100 ) / val.sale_expected,
+                   }
+            res[val.id] = {}
+            res[val.id][field_names[0]] = mapping[field_names[0]]
+        return res
+    
     _columns = {
         'date_start': fields.function(_get_date, method=True, type='date', string='Start Date', multi='date_start'),
         'date_stop': fields.function(_get_date, method=True, type='date', string='Stop Date', multi='date_stop'),
-#        'invoice_state': fields.selection(_get_invoice_state, string= 'Invoice State'),# readonly=True),
-        'invoice_state': fields.selection([('paid','Paid'),('all_open','All Open'),('draft_open','Draft and Open')], 'Invoice State',readonly=True),
+        'invoice_state': fields.selection(_get_invoice_state, string= 'Invoice State'),# readonly=True),
+#        'invoice_state': fields.selection([('paid','Paid'),('all_open','All Open'),('draft_open','Draft and Open')], 'Invoice State',readonly=True),
         'sale_avg_price' : fields.function(get_avg_price_margin, method=True, type='float', string='Avg. Unit Price', multi='sale_avg_price'),
         'purchase_avg_price' : fields.function(get_avg_price_margin, method=True, type='float', string='Avg. Unit Price', multi='purchase_avg_price'),
         'sale_num_invoiced' : fields.function(_get_num_invoiced, method=True, type='float', string='# Invoiced', multi='sale_num_invoiced'),
@@ -157,12 +178,14 @@ class product_product(osv.osv):
         'total_cost'  : fields.function(_get_turnover, method=True, type='float', string='Total Cost', multi='total_cost'),
         'sale_expected' :  fields.function(_get_expected, method=True, type='float', string='Expected Sale', multi='sale_expected'),
         'normal_cost'  : fields.function(_get_expected, method=True, type='float', string='Normal Cost', multi='normal_cost'),
-        
+        'total_margin' : fields.function(_get_total_margin, method=True, type='float', string='Total Margin', multi='total_margin'),
+        'expected_margin' : fields.function(_get_total_margin, method=True, type='float', string='Expected Margin', multi='expected_margin'),
+        'total_margin_rate' : fields.function(_get_total_margin_rate, method=True, type='float', string='Total Margin (%)', multi='total_margin_rate'),
+        'expected_margin_rate' : fields.function(_get_total_margin_rate, method=True, type='float', string='Expected Margin (%)', multi='expected_margin_rate'),
     }
     
     _defaults = {
-                 
-        'invoice_state': lambda *a: 'all_open',
+                 'invoice_state' : _get_invoice_state
                  }
     
 product_product()

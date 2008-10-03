@@ -32,11 +32,20 @@ import wizard
 import pooler
 import time
 
-def _action_open_window(self, cr, uid, data, context):      
+def _action_open_window(self, cr, uid, data, context):
+    cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.tree', 'tree'))
+    view_res = cr.fetchone()
     return {
-    }
-
-
+        'name': 'Product Margin',
+         'context':{'from_date':data['form']['from_date'],'to_date':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
+        'view_type': 'form',
+        "view_mode": 'tree,form',
+        'res_model':'product.product',
+        'type': 'ir.actions.act_window',
+        'view_id': view_res,
+        }
+    
+    
 class product_margin(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="View Stock of Products">

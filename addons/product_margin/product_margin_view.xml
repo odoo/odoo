@@ -39,12 +39,37 @@
 	                   <field name="total_cost" />
 	                   <field name="normal_cost" />
 	                    
+	                    <separator string="Margins" colspan="4"/>
+	                    <field name="total_margin"/>
+	                    <field name="expected_margin"/>
+	                   <field name="total_margin_rate" widget="progressbar"/>
+	                    <field name="expected_margin_rate" widget="progressbar"/>
+	                   
                 </page>
                 </page>
             </field>
         </record>
-	
-	
+		
+		<record id="view_product_margin_tree" model="ir.ui.view">
+            <field name="name">product.margin.tree</field>
+            <field name="model">product.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Product Margin">
+                    <field name="name" select="1"/>
+                    <field name="default_code" select="1"/>
+                    <field name="sale_avg_price"/>
+                    <field name="sale_num_invoiced"/>
+                    <field name="turnover"/>
+                    <field name="sales_gap"/>
+                    <field name="total_cost"/>
+                    <field name="purchase_num_invoiced" string="#Purchased"/>
+                    <field name="total_margin"/>
+                    <field name="expected_margin"/>
+                    <field name="total_margin_rate"  widget="progressbar"/>
+            </tree>
+            </field>
+        </record>
 	
 </data>
 </openerp>
