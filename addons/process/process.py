@@ -122,6 +122,9 @@ class process_process(osv.osv):
                 wkf_ids = self.pool.get('workflow').search(cr, uid, [('osv', '=', data['model'])])
                 data['workflow'] = (wkf_ids or False) and wkf_ids[0]
 
+            if 'directory_id' in node and node.directory_id:
+                data['directory_id'] = node.directory_id.id
+
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
@@ -190,9 +193,9 @@ class process_process(osv.osv):
             refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context)[0]
             fields = pool.get(ref_model).fields_get(cr, uid, context=context)
 
-            # chech whether directory_id from inherited from document module
-            if 'directory_id' in refobj and refobj.directory_id:
-                res['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, node.directory_id.id, ref_model, ref_id)
+            # chech for directory_id from inherited from document module
+            if nodes[nid].get('directory_id', False):
+                res['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
 
             resource['name'] = refobj.name_get(context)[0][1]
             resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
