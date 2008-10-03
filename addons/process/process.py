@@ -195,7 +195,7 @@ class process_process(osv.osv):
 
             # chech for directory_id from inherited from document module
             if nodes[nid].get('directory_id', False):
-                res['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
+                resource['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
 
             resource['name'] = refobj.name_get(context)[0][1]
             resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]

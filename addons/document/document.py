@@ -226,24 +226,27 @@ class document_directory(osv.osv):
 		('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !')
 	]
 
-	def get_resource_path(self,cr,uid,res_model,res_id):
-		# to be need test
+	def get_resource_path(self,cr,uid,dir_id,res_model,res_id):
+		# this method will be used in process module
+		# to be need test and Improvement if resource dir has parent resource (link resource)
 		path=[]
-		def _parent(dir_id):
+		def _parent(dir_id,path):
 			parent=self.browse(cr,uid,dir_id)
-			if parent.parent_id:
-				_parent(parent.parent_id.id)
-			else:
+			if parent.parent_id and not parent.ressource_parent_type_id:				
+				_parent(parent.parent_id.id,path)
 				path.append(parent.name)
-				return path			
-		model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
-		directory_ids=self.search(cr,uid,[('ressource_type_id','=',model_ids[0]),('ressource_id','=',res_id)])		
-		if len(directory_ids):
-			path=parent(directory_ids[0])
-			direc=self.browse(cr,uid,directory_ids)[0]			
-			path.append(direc.name)
-			path.append(self.pool.get(direc.ressource_type_id.model).browse(cr,uid,res_id).name)			
-			return "ftp://localhost:8021/"+cr.dbname+'/'.join(path)
+			else:		
+				path.append(parent.name)		
+				return path
+
+		directory=self.browse(cr,uid,dir_id)								
+		model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])		
+		if directory:
+			_parent(dir_id,path)			
+			path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
+			user=self.pool.get('res.users').browse(cr,uid,uid)
+			#print "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))		
+			return "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
 		return False
 	def _check_duplication(self, cr, uid,vals):
 		if 'name' in vals:
@@ -343,8 +346,9 @@ class document_directory(osv.osv):
 		return result
 
 	def write(self, cr, uid, ids, vals, context=None):
-		if not self._check_duplication(cr,uid,vals):
-			raise except_orm('ValidateError', 'Directory name must be unique!')
+		# need to make constraints to checking duplicate
+		#if not self._check_duplication(cr,uid,vals):
+		#	raise except_orm('ValidateError', 'Directory name must be unique!')
 		return super(document_directory,self).write(cr,uid,ids,vals,context=context)
 
 	def copy(self, cr, uid, id, default=None, context=None):
