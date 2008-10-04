@@ -378,6 +378,13 @@ class mrp_production(osv.osv):
     }
     _order = 'date_planned asc, priority desc';
 
+    def location_id_change(self, cr, uid, ids, src, dest, context={}):
+        if dest:
+            return {}
+        if src:
+            return {'value': {'location_dest_id': src}}
+        return {}
+
     def product_id_change(self, cr, uid, ids, product):
         if not product:
             return {}

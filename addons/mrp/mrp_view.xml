@@ -308,7 +308,7 @@
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="domain">[('id','=',active_id)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
@@ -416,8 +416,8 @@
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
-                            <field name="location_src_id" select="2"/>
-                            <field name="location_dest_id"/>
+                            <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                             <field name="origin" select="1"/>
                             <newline/>
