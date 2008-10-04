@@ -59,12 +59,11 @@ class budget_report(report_sxw.rml_parse):
             prev_1=prev * period_days / total_days
         return [{'prev': prev, 'prev_period': prev_1, 'achievements': achievements}]
 
-    def budget_total(self, post_objs, date1, date2):
+    def budget_total(self, post_obj, date1, date2):
         res = {'prev': 0.0, 'prev_period': 0.0, 'achievements': 0.0}
-        for post_obj in post_objs:
-            r = self.post_total(post_obj, date1, date2)[0]
-            for k in r:
-                res[k] += r[k]
+        r = self.post_total(post_obj, date1, date2)[0]
+        for k in r:
+            res[k] += r[k]
         return [res]
 
     def lines(self, post_obj, date1, date2):
