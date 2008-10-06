@@ -38,7 +38,7 @@ class res_partner(osv.osv):
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute(("""select
-                l.partner_id, a.type, sum(l.debit-l.credit) 
+                l.partner_id, a.type, sum(l.debit-l.credit)
             from
                 account_move_line l
             left join
@@ -116,6 +116,7 @@ class res_partner(osv.osv):
             string="Default Supplier Tax",
             method=True,
             view_load=True,
+            domain=[('parent_id','=',False)],
             help="This tax will be used, instead of the default one for supplier invoices."),
         'property_account_tax': fields.property(
             'account.tax',
@@ -124,6 +125,7 @@ class res_partner(osv.osv):
             string="Default Tax",
             method=True,
             view_load=True,
+            domain=[('parent_id','=',False)],
             help="This tax will be used, instead of the default one for customers."),
         'property_payment_term': fields.property(
             'account.payment.term',

@@ -134,8 +134,8 @@ class event(osv.osv):
         'date_begin': fields.datetime('Beginning date', required=True),
         'date_end': fields.datetime('Ending date', required=True),
         'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, required=True),
-        'mail_auto_registr':fields.boolean('Mail Auto Register',help='A mail is send when the registration is confirmed'),
-        'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='A mail is send when the event is confimed'),
+        'mail_auto_registr':fields.boolean('Mail Auto Register',help='A mail is sent when the registration is confirmed'),
+        'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='A mail is sent when the event is confimed'),
         'mail_registr':fields.text('Mail Register',help='Template for the mail'),
         'mail_confirm':fields.text('Mail Confirm',help='Template for the mail'),
         'budget_id':fields.many2one('account.budget.post','Budget'),
@@ -161,13 +161,6 @@ class event_registration(osv.osv):
             }
             obj = self.pool.get('crm.case.log')
             obj.create(cr, uid, data, context)
-        return True
-
-    def button_reg_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'open',})
-        cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, 'Open', history=True)
-        self.mail_user(cr,uid,ids)
         return True
 
     def button_reg_close(self, cr, uid, ids, *args):
@@ -223,7 +216,7 @@ class event_registration(osv.osv):
         "badge_name":fields.char('Badge Name',size=128),
         "badge_partner":fields.char('Badge Partner',size=128),
         "invoice_label":fields.char("Label Invoice",size=128,required=True),
-        "tobe_invoiced":fields.boolean("To be Invoice"),
+        "tobe_invoiced":fields.boolean("To be Invoiced"),
         "invoice_id":fields.many2one("account.invoice","Invoice"),
     }
     _defaults = {

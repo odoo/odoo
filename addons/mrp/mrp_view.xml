@@ -214,20 +214,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
+                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                    <newline/>
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="product_uom"/>
+                    <field name="product_qty"/>
+                    <newline/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="routing_id" select="2"/>
+                    <field name="type"/>
                     <notebook>
                         <page string="General Information">
-                            <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
-                            <newline/>
-                            <field name="name" select="1"/>
-                            <field name="code" select="1"/>
-                            <field name="product_uom"/>
-                            <field name="product_qty"/>
-                            <newline/>
-                            <field name="product_uos"/>
-                            <field name="product_uos_qty"/>
-                            <field name="routing_id" select="2"/>
-                            <field name="type"/>
-                            
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Revisions">

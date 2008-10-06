@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,42 +28,7 @@
 ##############################################################################
 
 import wizard
-import pooler
-
-sur_form = '''<?xml version="1.0"?>
-<form string="Credit Note">
-    <label string="Are you sure you want to refund this invoice ?"/>
-</form>'''
-
-sur_fields = {
-}
-
-class wiz_refund(wizard.interface):
-    def _invoice_refund(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('account.invoice').refund(cr, uid, data['ids'])
-        return {
-            'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
-            'name': 'Invoices',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_refund'}",
-            'type': 'ir.actions.act_window'
-        }
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Credit Note')]}
-        },
-        'refund': {
-            'actions': [],
-            'result': {'type':'action', 'action':_invoice_refund, 'state':'end'}
-        }
-    }
-wiz_refund('account.invoice.refund')
-
+import product_margin
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
