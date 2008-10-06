@@ -71,7 +71,10 @@ class account_balance(report_sxw.rml_parse):
                 self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
                 res=self.cr.fetchall()
                 for r in res:
-                    result+=r[0]+", "
+                    if (r == res[res.__len__()-1]):
+                        result+=r[0]+". "
+                    else:
+                        result+=r[0]+", "
             return str(result and result[:-1]) or ''
     
         def lines(self, form, ids={}, done=None, level=1):
@@ -118,6 +121,7 @@ class account_balance(report_sxw.rml_parse):
                         'credit': account.credit,
                         'balance': account.balance,
                         'leef': not bool(account.child_id),
+                        'bal_type':'',
                     }
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
@@ -177,6 +181,10 @@ class account_balance(report_sxw.rml_parse):
                 r['credit']=''
                 r['balance']=''
                 r['leef']=''
+                if sum > 0.0:
+                    r['bal_type']=" Dr."
+                else:
+                    r['bal_type']=" Cr."
             return res or ''
         
         def date_range(self,start,end):
