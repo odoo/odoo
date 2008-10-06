@@ -31,8 +31,9 @@
 import pooler
 import time
 from report import report_sxw
+import rml_parse
 
-class account_analytic_balance(report_sxw.rml_parse):
+class account_analytic_balance(rml_parse.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_analytic_balance, self).__init__(cr, uid, name, context)
         self.localcontext.update( {
