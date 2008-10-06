@@ -727,6 +727,18 @@ class mrp_procurement(osv.osv):
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
+    
+    def unlink(self, cr, uid, ids):
+        procurements = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in procurements:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+        osv.osv.unlink(self, cr, uid, unlink_ids)
+        return True
+    
     def check_product(self, cr, uid, ids):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
