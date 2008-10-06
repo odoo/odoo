@@ -91,11 +91,15 @@
             action="action_account_analytic_account_tree2"
             id="account_analytic_def_chart"
             parent="account.account_analytic_def_account"/>
-        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
-
-	<wizard id="analytic_account_menu_action" menu="False" model="account.analytic.account" name="account.analytic.line1" string="Analytic Account Entries"/>
         
-		<menuitem type="wizard" action="analytic_account_menu_action" id="analytic_account_menu" parent="account.menu_finance_charts" name="Analytic Account lines"/>
+      <!--
+      	OVERRIDDEN BY NEW WIZARD
+        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
+        -->
+
+		<wizard id="action_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.line1" string="Analytic Chart of Accounts"/>
+        
+		<menuitem type="wizard" icon="STOCK_INDENT" action="action_analytic_account_chart" id="account_analytic_chart" parent="account.menu_finance_charts" name="Analytic Account lines"/>
         
 		<record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
