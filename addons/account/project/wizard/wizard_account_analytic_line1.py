@@ -36,14 +36,6 @@ def _action_open_window(self, cr, uid, data, context):
     domain=[]
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('account.analytic.account.tree', 'tree'))
     view_res = cr.fetchone()
-    from_date= data['form']['from_date']
-    to_date=data['form']['to_date']
-    if from_date and to_date:
-        domain=[('date','>=',from_date),('date','<=',to_date)]
-    elif from_date:
-        domain=[('date','>=',from_date)]
-    elif to_date:
-        domain=[('date','<=',to_date)]
     return {
         'name': 'Analytic Entries',
         'view_type': 'tree',
@@ -51,7 +43,7 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model': 'account.analytic.account',
         'type': 'ir.actions.act_window',
         'view_id' : view_res,
-        'domain' :domain+[('parent_id','=',False)],
+        'domain' :[('parent_id','=',False)],
         'context':{'date_start':data['form']['from_date'],'date_stop':data['form']['to_date']},
         }
 
