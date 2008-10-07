@@ -198,6 +198,44 @@
         </field>
     </record>
 
+
+	<record id="view_auto_config_form" model="ir.ui.view">
+            <field name="name">Auto Configure Directory</field>
+            <field name="model">auto.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Auto Configure">
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="Do you want to configure Directory Automatically ?" colspan="2"/>
+                    <newline/>
+                    <newline/>
+                    <group col="4" colspan="2">
+                        <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
+                        <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
+                    </group>
+                    <newline/>
+                    <label string="You Can use ftp://admin:admin@localhost:8021 " colspan="2"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_config_auto_directory" model="ir.actions.act_window">
+            <field name="name">Auto Configure Directory</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">auto.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+      <record model="ir.actions.todo"
+            id="config_auto_directory">
+            <field name="name">Auto Configure Directory</field>
+            <field name="action_id" ref="action_config_auto_directory"/>
+            <field name="state">open</field>
+        </record>
+
 </data>
 </terp>
 
