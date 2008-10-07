@@ -59,8 +59,8 @@ class expression(object):
                 doms = []
                 for o in table.browse(cr, uid, ids, context=context):
                     if doms:
-                        doms.insert(0,'|')
-                    doms += ['&',('parent_left','<',o.parent_right),('parent_left','>=',o.parent_left)]
+                        doms.insert(0, '|')
+                    doms += ['&', ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
                 if prefix:
                     return [(left, 'in', table.search(cr, uid, doms, context=context))]
                 return doms
@@ -69,14 +69,14 @@ class expression(object):
                     if not ids:
                         return []
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
-                    return ids+rg(ids2, table, parent)
+                    return ids + rg(ids2, table, parent)
                 return [(left, 'in', rg(ids, table, parent))]
 
         self.__main_table = table
 
         i = -1
-        while i+1<len(self.__exp):
-            i+=1
+        while i + 1<len(self.__exp):
+            i += 1
             e = self.__exp[i]
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
@@ -114,19 +114,19 @@ class expression(object):
                         self.__exp[i] = self.__DUMMY_LEAF
                     else:
                         subexp = field.search(cr, uid, table, left, [self.__exp[i]])
-                        # we assume that the expression is valid 
+                        # we assume that the expression is valid
                         # we create a dummy leaf for forcing the parsing of the resulting expression
                         self.__exp[i] = '&'
                         self.__exp.insert(i + 1, self.__DUMMY_LEAF)
                         for j, se in enumerate(subexp):
                             self.__exp.insert(i + 2 + j, se)
-                
+
                 # else, the value of the field is store in the database, so we search on it
 
 
             elif field._type == 'one2many':
                 if isinstance(right, basestring):
-                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator,limit=None)]
+                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None)]
                 else:
                     ids2 = list(right)
                 if not ids2:
@@ -138,7 +138,7 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like',limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -146,7 +146,7 @@ class expression(object):
                         if field_obj == table:
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids)
-                    
+
                     dom = _rec_get(ids2, field_obj, working_table._parent_name)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
@@ -159,7 +159,7 @@ class expression(object):
             elif field._type == 'many2one':
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like',limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -171,7 +171,7 @@ class expression(object):
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring):
-                        res_ids = field_obj.name_search(cr, uid, right, [], operator,limit=None)
+                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
             else:
@@ -204,7 +204,7 @@ class expression(object):
 
     def __leaf_to_sql(self, leaf, table):
         if leaf == self.__DUMMY_LEAF:
-            return ('(1=1)',[])
+            return ('(1=1)', [])
         left, operator, right = leaf
 
         if operator == 'inselect':
@@ -288,7 +288,7 @@ class expression(object):
                     q1 = stack.pop()
                     q2 = stack.pop()
                     stack.append('(%s %s %s)' % (q1, ops[e], q2,))
-        
+
         query = ' AND '.join(reversed(stack))
         joins = ' AND '.join(map(lambda j: j[0], self.__joins))
         if joins:
