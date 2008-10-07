@@ -67,8 +67,8 @@ class account_payment_term(osv.osv):
                 amt = round(amount, 2)
             if amt:
                 next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
-                if line.condition == 'end of month':
-                    next_date += RelativeDateTime(day=-1)
+                if line.days2:
+                    next_date += RelativeDateTime(day=line.days2)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
         return result
@@ -83,14 +83,14 @@ class account_payment_term_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
-        'days': fields.integer('Number of Days',required=True),
-        'condition': fields.selection([('net days','Net Days'),('end of month','End of Month')], 'Condition', required=True, help="The payment delay condition id a number of days expressed in 2 ways: net days or end of the month. The 'net days' condition implies that the paiment arrive after 'Number of Days' calendar days. The 'end of the month' condition requires that the paiement arrives before the end of the month that is that is after 'Number of Days' calendar days."),
+        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
+        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the month."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
     _defaults = {
         'value': lambda *a: 'balance',
         'sequence': lambda *a: 5,
-        'condition': lambda *a: 'net days',
+        'days2': lambda *a: 0,
     }
     _order = "sequence"
 account_payment_term_line()
