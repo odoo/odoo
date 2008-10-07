@@ -32,53 +32,46 @@
 from osv import fields, osv
 from tools import config
 
-class product_pricelist(osv.osv):
-    _inherit = "product.pricelist"
-    def _compute_price(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        for id in ids:
-            res[id]=0.0
-        return res
-    _columns = {
-        'price': fields.function(_compute_price, type='float', method=True, string='Price', digits=(16, int(config['price_accuracy']))),
-        }
-product_pricelist()
+
 
 class product_product(osv.osv):
     _name = 'product.product'
     _inherit = 'product.product'
 
-    def _pricelist_sale_ids(self, cr, uid, ids, name, arg, context=None):
+    def _pricelist_calculate(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        if not context:
-            context={}
+        format=""
         pricelist_obj=self.pool.get('product.pricelist')
-        for product in self.browse(cr, uid, ids, context):
-            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','sale')], context=context)
-            result[product.id]=pricelist_ids
-        return result
-
-    def _pricelist_purchase_ids(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        pricelist_obj=self.pool.get('product.pricelist')
-        for product in self.browse(cr, uid, ids, context):
+        if name=='pricelist_purchase':
             pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','purchase')])
-            result[product.id]=pricelist_ids
+        else:
+            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','sale')])
+        pricelist_browse=pricelist_obj.browse(cr,uid,pricelist_ids)
+        for product in self.browse(cr, uid, ids, context):
+            for pricelist in pricelist_browse:
+                for version in pricelist.version_id:
+                    for items in version.items_id:
+                        qty=items.min_quantity
+                        price=pricelist_obj.price_get(cr, uid,[pricelist.id],product.id,qty,partner=None, context=None)
+                        if name=='pricelist_purchase':
+                            format+=pricelist.name + "\t"  +str(qty) +" \t\t" + str(price[pricelist.id]) + "\n"
+                        else:
+                            format+=pricelist.name + "\t\t\t"  +str(qty) +" \t\t\t" + str(price[pricelist.id]) + "\n"
+                    result[product.id]=format
+                    format=""
         return result
 
     _columns = {
         'pricelist_sale':fields.function(
-            _pricelist_sale_ids,
+            _pricelist_calculate,
             method=True,
-            relation='product.pricelist',
             string='Sale Pricelists',
-            type="many2many"),
+            type="text"),
         'pricelist_purchase':fields.function(
-            _pricelist_purchase_ids,
+            _pricelist_calculate,
             method=True,
-            relation='product.pricelist',
             string='Purchase Pricelists',
-            type="many2many"),
+            type="text"),
     }
 
 product_product()
