@@ -67,8 +67,10 @@ class account_payment_term(osv.osv):
                 amt = round(amount, 2)
             if amt:
                 next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
-                if line.days2:
+                if line.days2<0:
                     next_date += RelativeDateTime(day=line.days2)
+                if line.days2>0:
+                    next_date += RelativeDateTime(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
         return result
@@ -84,7 +86,7 @@ class account_payment_term_line(osv.osv):
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
         'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
-        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the month."),
+        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
     _defaults = {
