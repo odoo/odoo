@@ -6,13 +6,13 @@
 		Payment term
 		-->
         <record id="account_payment_term" model="account.payment.term">
-            <field name="name">30 Days Net</field>
+            <field name="name">30 Days End of Month</field>
         </record>
         <record id="account_payment_term_line" model="account.payment.term.line">
-            <field name="name">30 days</field>
+            <field name="name">30 Days End of Month</field>
             <field name="value">balance</field>
             <field eval="30" name="days"/>
-            <field name="condition">net days</field>
+            <field eval="-1" name="days2"/>
             <field eval="account_payment_term" name="payment_id"/>
         </record>
 
