@@ -281,9 +281,7 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        print "contact:", contact
         contact_id = self.pool.get('res.partner.contact').browse(cr, uid, contact)
-        print contact_id
         data['badge_name'] = contact_id.name
         data['badge_title'] = contact_id.title
         if partner:
@@ -325,8 +323,6 @@ class event_registration(osv.osv):
         if addr:
             if addr.has_key('default'):
                 job_ids = self.pool.get('res.partner.job').search(cr, uid, [('address_id','=',addr['default'])])
-                print self.pool.get('res.partner.address').browse(cr, uid, addr['default']).email
-                print job_ids
                 if job_ids:
                     data['contact_id'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).contact_id.id
                     d = self.onchange_contact_id(cr, uid, ids, data['contact_id'],part)
