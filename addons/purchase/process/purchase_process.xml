@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After confirming purchase order, it is approved by supplier.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="account.process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Draft Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Draft Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Proposed by the system or manually&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -42,7 +42,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action3"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The user confirm he wants to purchase&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -53,7 +53,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action4"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Approve Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Approve Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The supplier confirms he can deliver&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='approved'&quot;&quot;&quot;" name="model_states"/>
@@ -64,7 +64,7 @@
 			<field name="menu_id" ref="account.menu_action_invoice_tree8"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Invoice Control&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Invoice Control&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Draft invoices are pre-generated for control.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -75,7 +75,7 @@
 			<field name="menu_id" ref="stock.menu_action_picking_tree4"/>
 			<field name="model_id" ref="stock.model_stock_picking"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Packing list&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Packing list&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Pre-generated in draft for control&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='assigned'&quot;&quot;&quot;" name="model_states"/>
@@ -86,7 +86,7 @@
 			<field name="menu_id" ref="account.menu_finance_invoice"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Invoice after packing&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Invoice after packing&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case you control based on delivery&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -102,8 +102,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Confirming Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Confirm Purchase order from Request for quotation&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Confirm Purchase Order')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Draft Purchase Order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Confirm Purchase Order')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Draft Purchase Order')]"/>
 		</record>
 	
 		<record id="process_transition_approvingpurchaseorder0" model="process.transition">
@@ -111,8 +111,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Approving Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Approve Purchase order after Confirming&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Approve Purchase Order')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Confirm Purchase Order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Approve Purchase Order')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Confirm Purchase Order')]"/>
 		</record>
 	
 		<record id="process_transition_invoicefrompurchase0" model="process.transition">
@@ -120,8 +120,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Invoice from Purchase&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After approved purchase order , it comes into the supplier invoice&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Invoice Control')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Approve Purchase Order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Invoice Control')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Approve Purchase Order')]"/>
 		</record>
 	
 		<record id="process_transition_createpackinglist0" model="process.transition">
@@ -129,8 +129,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Create Packing list&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When purchase order is approved , it creates its packing list.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Packing list')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Approve Purchase Order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Packing list')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Approve Purchase Order')]"/>
 		</record>
 	
 		<record id="process_transition_invoicefrompackinglist0" model="process.transition">
@@ -138,8 +138,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Invoice from Packing list&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Creates invoice from packin list&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Invoice after packing')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Packing list')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Invoice after packing')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Packing list')]"/>
 		</record>
 		
 		<record id="process_transition_purchaseinvoice0" model="process.transition">
@@ -147,8 +147,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Purchase Invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After Purchase order , Create invoice.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Draft Invoices')]" ref="account.process_node_draftinvoices0"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Purchase Order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft Invoices')]" ref="account.process_node_draftinvoices0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Purchase Order')]"/>
 		</record>
 
 	</data>

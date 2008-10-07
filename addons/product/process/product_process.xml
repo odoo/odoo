@@ -15,12 +15,12 @@
 	<!--
 		Process	Node
 	-->
-	
+		
 		<record id="process_node_product0" model="process.node">
 			<field name="menu_id" ref="product.menu_products"/>
 			<field name="model_id" ref="product.model_product_product"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Product&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Product&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Create new Product&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_productworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('', 'sellable', 'draft', 'obsolete', 'end') &quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="product.menu_products"/>
 			<field name="model_id" ref="product.model_product_product"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Supplier&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Supplier&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Defines the list of supplier&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_productworkflow0"/>
 			<field eval="0" name="flow_start"/>
@@ -41,7 +41,7 @@
 			<field name="menu_id" ref="product.menu_products"/>
 			<field name="model_id" ref="product.model_product_product"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Status ok&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Status ok&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Set Status OK&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_productworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='sellable'&quot;&quot;&quot;" name="model_states"/>
@@ -52,7 +52,7 @@
 			<field name="menu_id" ref="product.menu_products"/>
 			<field name="model_id" ref="product.model_product_product"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;End lifecycle&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node End lifecycle&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;End Of lifecycle&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_productworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='end'&quot;&quot;&quot;" name="model_states"/>
@@ -68,8 +68,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Supplier of Product&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;You can see the list of supplier for that product.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Supplier')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Supplier')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Product')]"/>
 		</record>
 	
 		<record id="process_transition_suppliertook0" model="process.transition">
@@ -77,8 +77,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Supplier to ok&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Set the status of list of supplier to ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Status ok')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Supplier')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Status ok')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Supplier')]"/>
 		</record>
 	
 		<record id="process_transition_oktoend0" model="process.transition">
@@ -86,9 +86,9 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Ok to End&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;End of lifecycle after Ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','End lifecycle')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Status ok')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node End lifecycle')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Status ok')]"/>
 		</record>
-
+		
 	</data>
 </openerp>

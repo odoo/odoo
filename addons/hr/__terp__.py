@@ -40,7 +40,7 @@
 
     Different reports are also provided, mainly for attendance statistics.
     """,
-    "depends" : ["base"],
+    "depends" : ["base", "process"],
     "init_xml" : [],
     "demo_xml" : [
         "hr_demo.xml", 
@@ -52,6 +52,7 @@
         "hr_view.xml", 
         "hr_wizard.xml",
         "hr_department_view.xml",
+#        "process/hr_process.xml"
     ],
     "active": False,
     "installable": True

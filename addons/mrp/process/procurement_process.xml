@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
 			<field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Minimum stock rule&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Minimum stock rule&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Create minimum stock rules&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="product.process_process_productworkflow0"/>
 			<field eval="0" name="flow_start"/>
@@ -30,7 +30,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_bom_form_action"/>
 			<field name="model_id" ref="mrp.model_mrp_bom"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Bill of Material&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Bill of Material&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Defines Bill of materials&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="product.process_process_productworkflow0"/>
 			<field eval="0" name="flow_start"/>
@@ -40,7 +40,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Procurements&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Procurements&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="purchase.process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -51,7 +51,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_production_action"/>
 			<field name="model_id" ref="mrp.model_mrp_production"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Production order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Production order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Procurement for raw materials&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'picking_except', 'confirmed', 'ready', 'in_production', 'cancel', 'done')&quot;&quot;&quot;" name="model_states"/>
@@ -62,7 +62,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Procure Products&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Central document to procure products&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -73,7 +73,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Service Product&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Service Product&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Product type is service&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -84,7 +84,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Make to order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Make to order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Procurement is make to order&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -95,7 +95,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Make to stock&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Procurement is make to stock&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -106,7 +106,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Subcontracting&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Subcontracting&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Procure method is purchase&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -117,7 +117,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Stockable product&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Stockable product&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;For stockable and consumable&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -128,7 +128,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Stockable make to stock&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Stockable make to stock&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Wait for available products for reservation&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -139,7 +139,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Stockable make to order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Stockable make to order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Procurement is make to order&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -150,7 +150,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Stockable request&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Stockable request&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If procure method is purchase&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -161,7 +161,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_production_action"/>
 			<field name="model_id" ref="mrp.model_mrp_production"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Stockable production&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Node Stockable production&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If procure method is produce&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -177,8 +177,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Production Procurement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When any procuere products, it comes into the prpcurement orders&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Procure Products')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Production order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Procure Products')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Production order')]"/>
 		</record>
 	
 		<record id="process_transition_procurementservice0" model="process.transition">
@@ -186,8 +186,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Procurement Service&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In procurement order, if product type is service&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Service Product')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Procure Products')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Service Product')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Procure Products')]"/>
 		</record>
 	
 		<record id="process_transition_servicemaketoorder0" model="process.transition">
@@ -195,8 +195,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Service make to order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If product type is service and procure method is Make to order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Make to order')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Service Product')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Make to order')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Service Product')]"/>
 		</record>
 	
 		<record id="process_transition_servicemaketostock0" model="process.transition">
@@ -204,8 +204,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Service make to stock&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Product type is service and procure method is Make to stock&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Make to stock')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Service Product')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Make to stock')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Service Product')]"/>
 		</record>
 	
 		<record id="process_transition_ordersubcontracting0" model="process.transition">
@@ -213,8 +213,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Order Subcontracting&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Subcontracting')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Make to order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Subcontracting')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Make to order')]"/>
 		</record>
 	
 		<record id="process_transition_procurementstockable0" model="process.transition">
@@ -222,8 +222,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Procurement Stockable&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;if Product type is Stockable in procurement order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Stockable product')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Procure Products')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Stockable product')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Procure Products')]"/>
 		</record>
 	
 		<record id="process_transition_stockablemaketostock0" model="process.transition">
@@ -231,8 +231,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable make to stock&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Product type is Stockable and procure method is make to stock&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Stockable make to stock')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Stockable product')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Stockable make to stock')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Stockable product')]"/>
 		</record>
 	
 		<record id="process_transition_stockablemaketoorder0" model="process.transition">
@@ -240,8 +240,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable make to order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Product type is Stockable and procure method is Make to order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Stockable make to order')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Stockable product')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Stockable make to order')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Stockable product')]"/>
 		</record>
 	
 		<record id="process_transition_stockableorderrequest0" model="process.transition">
@@ -249,8 +249,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable Order Request&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Stockable request')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Stockable make to order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Stockable request')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Stockable make to order')]"/>
 		</record>
 	
 		<record id="process_transition_stockableorderproduction0" model="process.transition">
@@ -258,8 +258,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable Order Production&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Stockable production')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Stockable make to order')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Stockable production')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Stockable make to order')]"/>
 		</record>
 		
 		<record id="process_transition_procurementtopurchase0" model="process.transition">
@@ -267,8 +267,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;procurement to purchase&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After procurementing order , it comes into the Draft Purchase Order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Draft Purchase Order')]" ref="purchase.process_node_draftpurchaseorder0"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Procurements')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft Purchase Order')]" ref="purchase.process_node_draftpurchaseorder0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Procurements')]"/>
 		</record>
 		
 		<record id="process_transition_producttostockrules0" model="process.transition">
@@ -276,8 +276,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Product to stock rules&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;you can see the minimum stock rules from product&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Minimum stock rule')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product')]" ref="product.process_node_product0"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Minimum stock rule')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Product')]" ref="product.process_node_product0"/>
 		</record>
 		
 		<record id="process_transition_bom0" model="process.transition">
@@ -285,8 +285,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;BOM&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;You can see its bill of material which are used to make product&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Bill of Material')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Product')]" ref="product.process_node_product0"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Bill of Material')]"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Product')]" ref="product.process_node_product0"/>
 		</record>
 		
 		<record id="process_transition_bomtook0" model="process.transition">
@@ -294,8 +294,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Bom to Ok&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Set status of Bill of material to ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Status ok')]" ref="product.process_node_statusok0"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Bill of Material')]"/>
+			<field model="process.node" name="target_node_id" search="[('name','=','Node Status ok')]" ref="product.process_node_statusok0"/>
+			<field model="process.node" name="source_node_id" search="[('name','=','Node Bill of Material')]"/>
 		</record>
 		
 	</data>
