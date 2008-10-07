@@ -224,5 +224,5 @@ class account_balance(report_sxw.rml_parse):
     
         def _sum_debit(self):
             return self.sum_debit 
-report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=2)
+report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
 
