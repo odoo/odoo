@@ -102,7 +102,8 @@ class stock_location(osv.osv):
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
-        'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
+        'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')],
+            'Chained Location Type', required=True),
         'chained_auto_packing': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')], 
             'Automatic Move', 
@@ -422,7 +423,7 @@ class stock_picking(osv.osv):
                     todo.append(r)
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
-            self.pool.get('stock.move').action_confirm(cr,uid, todo, context)
+            self.pool.get('stock.move').action_confirm(cr, uid, todo, context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
@@ -580,11 +581,11 @@ class stock_picking(osv.osv):
         res = {}
         sale_line_obj = self.pool.get('sale.order.line')
         
-        for picking in self.browse(cursor, user, ids, context=context):
+        for picking in self.browse(cursor, user, ids, context=context):            
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = picking.address_id.partner_id
+            partner = picking.address_id and picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
                 payment_term_id= picking.sale_id.payment_term.id
@@ -711,6 +712,7 @@ class stock_picking(osv.osv):
         self.write(cursor, user, res.keys(), {
             'invoice_state': 'invoiced',
             }, context=context)
+        print res
         return res
 
 stock_picking()
@@ -909,14 +911,12 @@ class stock_move(osv.osv):
             cursor.commit()
 
     def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
-        print uid, prodlot_id, product_qty, loc_id
         if not prodlot_id or not loc_id:
             return {}
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
-            print 'Warning'
             warning={
                 'title':'Bad Lot Assignation !',
                 'message':'You are moving %.2f products but only %.2f available in this lot.' % (product_qty,prodlot.stock_available or 0.0)

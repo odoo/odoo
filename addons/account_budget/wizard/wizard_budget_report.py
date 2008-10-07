@@ -30,6 +30,8 @@
 
 import time
 import wizard
+import datetime
+import pooler
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
@@ -43,9 +45,16 @@ dates_fields = {
 }
 
 class wizard_report(wizard.interface):
+    def _default(self, cr, uid, data, context):
+        pool_obj = pooler.get_pool(cr.dbname)
+        data_model = pool_obj.get(data['model']).browse(cr,uid,data['id'])
+        if not data_model.dotation_ids:
+            raise wizard.except_wizard('Insufficient Data!',"No Dotations or Master Budget Expenses Found on Budget '"+ data_model.name +"'!")
+        return data['form']
+
     states = {
         'init': {
-            'actions': [], 
+            'actions': [_default],
             'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
         },
         'report': {

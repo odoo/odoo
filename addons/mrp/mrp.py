@@ -378,6 +378,13 @@ class mrp_production(osv.osv):
     }
     _order = 'date_planned asc, priority desc';
 
+    def location_id_change(self, cr, uid, ids, src, dest, context={}):
+        if dest:
+            return {}
+        if src:
+            return {'value': {'location_dest_id': src}}
+        return {}
+
     def product_id_change(self, cr, uid, ids, product):
         if not product:
             return {}
@@ -947,16 +954,40 @@ class mrp_procurement(osv.osv):
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
+            context.update({'lang':partner.lang})
+            product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
+            
             line = {
-                'name': procurement.product_id.name,
+                'name': product.name,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-                'taxes_id': [(6, 0, [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])],
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),                
                 'move_dest_id': res_id,
+                'notes':product.description_purchase,
             }
+
+            taxes = self.pool.get('account.tax').browse(cr, uid,
+                    [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])
+            taxep = None
+            if partner_id:
+                taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
+                if taxep_id:
+					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
+            if not taxep or not taxep.id:
+                taxes_ids = [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id]
+            else:
+                res5 = [taxep.id]
+                for t in taxes:
+                    if not t.tax_group==taxep.tax_group:
+                        res5.append(t.id)
+                taxes_ids = res5
+
+            line.update({
+                'taxes_id':[(6,0,taxes_ids)]
+            })
+
 
             purchase_id = self.pool.get('purchase.order').create(cr, uid, {
                 'origin': procurement.origin,

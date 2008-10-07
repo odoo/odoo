@@ -41,8 +41,7 @@ class product_product(osv.osv):
 
     def get_product_available(self,cr,uid,ids,context=None):
         if not context:
-            context = {}
-        print 'CONTEXT', context
+            context = {}        
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
@@ -90,7 +89,7 @@ class product_product(osv.osv):
         to_date=context.get('to_date',False)
         date_str=False
         if from_date and to_date:
-            date_str="date>='%s' and date<=%s"%(from_date,to_date)
+            date_str="date>='%s' and date<='%s'"%(from_date,to_date)
         elif from_date:
             date_str="date>='%s'"%(from_date)
         elif to_date:
@@ -132,7 +131,9 @@ class product_product(osv.osv):
         return res
 
     def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, field_names=False, arg=False, context={}):
+        def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+            if not field_names:
+                field_names=[]
             context.update({
                 'states':states,
                 'what':what
