@@ -68,8 +68,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Supplier of Product&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;You can see the list of supplier for that product.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Supplier')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Product')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_supplier0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_product0"/>
 		</record>
 	
 		<record id="process_transition_suppliertook0" model="process.transition">
@@ -77,8 +77,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Supplier to ok&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Set the status of list of supplier to ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Status ok')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Supplier')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_statusok0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_supplier0"/>
 		</record>
 	
 		<record id="process_transition_oktoend0" model="process.transition">
@@ -86,8 +86,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Ok to End&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;End of lifecycle after Ok&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node End lifecycle')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Status ok')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_endlifecycle0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_statusok0"/>
 		</record>
 		
 	</data>

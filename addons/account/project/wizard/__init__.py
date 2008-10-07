@@ -34,6 +34,7 @@ import wizard_account_analytic_inverted_balance_report
 import wizard_account_analytic_cost_ledger_report
 import wizard_account_analytic_cost_ledger_for_journal_report
 import wizard_account_analytic_analytic_check
+import wizard_account_analytic_line
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

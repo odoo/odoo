@@ -58,13 +58,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Delivery grids">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                    <field name="carrier_id" select="1"/>
+                    <field name="sequence" select="1"/>
                     <notebook>
                         <page string="Grid definition">
-                            <field name="name" select="1"/>
-                            <field name="active" select="1"/>
-                            <field name="carrier_id" select="1"/>
-                            <field name="sequence" select="1"/>
-                            <separator colspan="4" string="Grid Lines"/>
                             <field colspan="4" name="line_ids" nolabel="1" select="1"/>
                         </page>
                         <page string="Destination">

@@ -91,8 +91,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;File statement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Import file from your bank statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft statement')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Electronic File')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_electronicfile0"/>
 		</record>
 	
 		<record id="process_transition_invoiceimport0" model="process.transition">
@@ -100,8 +100,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Invoice import&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Import invoice from statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft statement')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Import invoice')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_importinvoice0"/>
 		</record>
 	
 		<record id="process_transition_confirmstatementfromdraft0" model="process.transition">
@@ -109,8 +109,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Confirm statement from draft&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Confirm statement with/without reconciliation from draft statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Confirmed statement')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Draft statement')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_confirmedstatement0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_draftstatement0"/>
 		</record>
 	
 		<record id="process_transition_confirmaccountingentries0" model="process.transition">
@@ -118,8 +118,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Confirm Accounting entries&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After confirming statement, it creates Entries and its entry lines&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Accounting Statement')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Confirmed statement')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_accountingstatemententries0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_confirmedstatement0"/>
 		</record>
 	
 		<record id="process_transition_accountentryreconcile0" model="process.transition">
@@ -127,8 +127,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Account entry reconcile&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Reconciliation of entries of accounting entries&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Reconciliation of Entries')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Accounting Statement')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_reconciliationofentries0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_accountingstatemententries0"/>
 		</record>
 	
 	</data>

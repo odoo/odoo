@@ -564,11 +564,9 @@ class crm_case(osv.osv):
     def remind_user(self, cr, uid, ids, context={}, attach=False,
             destination=True):
         for case in self.browse(cr, uid, ids):
-            if case.user_id and case.user_id.address_id \
-                    and case.user_id.address_id.email \
-                    and case.email_from:
+            if case.section_id.reply_to and case.email_from:
                 src = case.email_from
-                dest = case.user_id.address_id.email
+                dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:
                     src,dest = dest,src

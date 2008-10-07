@@ -98,4 +98,4 @@ class wizard_vat_declaration(wizard.interface):
         }
     }
 
-wizard_vat_declaration('wizard.account.vat.declaration')
+wizard_vat_declaration('wizard.account.xml.vat.declaration')

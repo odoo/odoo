@@ -81,8 +81,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Delegate&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Delegates tasks to the other user&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Task by delegate')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_drafttask0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_taskbydelegate0"/>
 		</record>
 	
 		<record id="process_transition_draftopentask0" model="process.transition">
@@ -90,8 +90,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Draft Open task&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;From draft state, it will come into the open state.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Open task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Draft task')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_opentask0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_drafttask0"/>
 		</record>
 	
 		<record id="process_transition_opendonetask0" model="process.transition">
@@ -99,8 +99,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Open Done Task&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When task is completed, it will come into the done state.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Done task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Open task')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_donetask0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_opentask0"/>
 		</record>
 	
 		<record id="process_transition_taskinvoice0" model="process.transition">
@@ -108,8 +108,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Task invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After task is completed, Create its invoice.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Trigger Invoice')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Done task')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_triggerinvoice0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_donetask0"/>
 		</record>
 		
 	</data>

@@ -142,10 +142,12 @@ class account_invoice_line(osv.osv):
         'sequence': fields.integer('Sequence Number'),
         'functional_field': fields.function(_fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='char', fnct_search=None, obj=None, method=True, store=False, string="Source Account"),
     }
+
     def _default_account(self, cr, uid, context=None):
-        cr.execute("select id from account_account where code = 0 LIMIT 1")
+        cr.execute("select id from account_account where parent_id IS NULL LIMIT 1")
         res=cr.fetchone()
         return res[0]
+
     _defaults = {
         'state': lambda *a: 'article',
 #       'account_id': _default_account

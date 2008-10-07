@@ -214,7 +214,8 @@ class sale_order(osv.osv):
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
-        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')], 'Packing Policy', required=True),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')],
+            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."""),
         'order_policy': fields.selection([
             ('prepaid','Payment before delivery'),
             ('manual','Shipping & Manual Invoice'),
@@ -287,8 +288,10 @@ class sale_order(osv.osv):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery','invoice','contact'])
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
-        payment_term = self.pool.get('res.partner').browse(cr, uid, part).property_payment_term.id
+        pricelist = self.pool.get('res.partner').property_get(cr, uid,
+						part,property_pref=['property_product_pricelist']).get('property_product_pricelist',False)
+        payment_term = self.pool.get('res.partner').property_get(cr, uid,
+						part,property_pref=['property_payment_term']).get('property_payment_term',False)
         return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term}}
 
     def button_dummy(self, cr, uid, ids, context={}):
@@ -356,18 +359,22 @@ class sale_order(osv.osv):
                 for i in o.invoice_ids:
                     if i.state == 'draft':
                         return i.id
-
+		picking_obj=self.pool.get('stock.picking')
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []))
                 for o,l in val:
                     self.write(cr, uid, [o.id], {'state' : 'progress'})
+                    if o.order_policy=='picking':
+                        picking_obj.write(cr,uid,map(lambda x:x.id,o.picking_ids),{'invoice_state':'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (o.id, res))
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il)
                     invoice_ids.append(res)
                     self.write(cr, uid, [order.id], {'state' : 'progress'})
+                    if order.order_policy=='picking':
+                        picking_obj.write(cr,uid,map(lambda x:x.id,order.picking_ids),{'invoice_state':'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (order.id, res))
         return res
 
@@ -514,7 +521,8 @@ class sale_order(osv.osv):
                         'location_dest_id': output_id,
                         'sale_line_id': line.id,
                         'tracking_id': False,
-                        'state': 'waiting',
+                        'state': 'draft',
+                        #'state': 'waiting',
                         'note': line.notes,
                     })
                     proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
@@ -804,7 +812,7 @@ class sale_order_line(osv.osv):
                     'message': warn_msg
                     }
             result['product_uom_qty'] = qty
-            
+
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id <> uom2.category_id.id:
@@ -828,8 +836,10 @@ class sale_order_line(osv.osv):
                     [x.id for x in product_obj.taxes_id])
             taxep = None
             if partner_id:
-                taxep = self.pool.get('res.partner').browse(cr, uid,
-                        partner_id).property_account_tax
+				taxep_id = self.pool.get('res.partner').property_get(cr, uid,
+						partner_id,property_pref=['property_account_tax']).get('property_account_tax',False)
+				if taxep_id:
+					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
             if not taxep or not taxep.id:
                 result['tax_id'] = [x.id for x in product_obj.taxes_id]
             else:
@@ -874,7 +884,7 @@ class sale_order_line(osv.osv):
         # Round the quantity up
 
         # get unit price
-        
+
         if not pricelist:
             warning={
                 'title':'No Pricelist !',
@@ -894,9 +904,9 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }                
+                    }
             else:
-                result.update({'price_unit': price})		
+                result.update({'price_unit': price})
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
@@ -928,19 +938,31 @@ class sale_config_picking_policy(osv.osv_memory):
     _name='sale.config.picking_policy'
     _columns = {
         'name':fields.char('Name', size=64),
-        'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([
+            ('direct','Direct Delivery'),
+            ('one','All at once')
+        ], 'Packing Policy', required=True ),
+        'order_policy': fields.selection([
+            ('manual','Invoice based on Sales Orders'),
+            ('picking','Invoice based on Deliveries'),
+        ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
+        'order_policy': lambda *a: 'picking'
     }
     def set_default(self, cr, uid, ids, context=None):
-        if 'name' in context:
+        print context
+        for o in self.browse(cr, uid, ids, context=context):
+            print o.picking_policy, o.order_policy
             ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],context['picking_policy'])
+            ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
+            ir_values_obj = self.pool.get('ir.values')
+            ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
@@ -948,7 +970,7 @@ class sale_config_picking_policy(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }

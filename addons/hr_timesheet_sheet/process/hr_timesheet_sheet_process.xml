@@ -146,8 +146,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Attendance&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Attendance entry moves into the timesheet&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft Timesheet sheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Attendance')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_attendance0"/>
 		</record>
 	
 		<record id="process_transition_timesheet0" model="process.transition">
@@ -155,8 +155,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;timesheet entry is into draft state.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Draft Timesheet sheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Timesheet')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_timesheet0"/>
 		</record>
 	
 		<record id="process_transition_confirmtimesheet0" model="process.transition">
@@ -164,8 +164,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Confirm Timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;timesheet is confirmed at the end of the week / month&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Confirmed Timesheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Draft Timesheet sheet')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_confirmedtimesheet0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_drafttimesheetsheet0"/>
 		</record>
 	
 		<record id="process_transition_validatetimesheet0" model="process.transition">
@@ -173,8 +173,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Validate Timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Timesheet is validate by project manager.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Validated Timesheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Confirmed Timesheet')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_validatedtimesheet0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_confirmedtimesheet0"/>
 		</record>
 	
 		<record id="process_transition_invoiceontimesheet0" model="process.transition">
@@ -182,8 +182,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Invoice on timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Creates invoice based on timesheet&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Invoice on Work')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Confirmed Timesheet')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_invoiceonwork0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_confirmedtimesheet0"/>
 		</record>
 		
 		<record id="process_transition_phonecallencoding0" model="process.transition">
@@ -191,8 +191,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Phone call encoding&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Encode how much time u spent on phone call&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Timesheet Line')]" ref="process_node_timesheetline0"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Phone call')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_timesheetline0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_phonecall0"/>
 		</record>
 		
 		<record id="process_transition_createanalyticcose0" model="process.transition">
@@ -200,8 +200,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Create Analytic cost&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Creates your analytic cost accoording to quantity&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Analytic cost')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Timesheet Line')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_analyticcost0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_timesheetline0"/>
 		</record>
 	
 		<record id="process_transition_reviewofwork0" model="process.transition">
@@ -209,8 +209,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Review of work&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Review of your work at the end of the day&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Review')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Timesheet Line')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_review0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_timesheetline0"/>
 		</record>
 	
 		<record id="process_transition_confirmtimesheetsheet0" model="process.transition">
@@ -218,8 +218,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Confirm timesheet sheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Confirm timesheet at the end of the period&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Timesheet Confirming')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Review')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_timesheetconfirming0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_review0"/>
 		</record>
 		
 	</data>

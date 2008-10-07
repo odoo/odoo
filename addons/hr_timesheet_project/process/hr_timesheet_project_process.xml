@@ -48,8 +48,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Fill Timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Task summary is comes into the timesheet line&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Timesheet_task')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Open task')]" ref="project.process_node_opentask0"/>
+			<field model="process.node" name="target_node_id" ref="process_node_timesheettask0"/>
+			<field model="process.node" name="source_node_id" ref="project.process_node_opentask0"/>
 		</record>
 		
 		<record id="process_transition_taskencoding0" model="process.transition">
@@ -57,8 +57,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Task encoding&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Encode how much time u spent on your task&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Timesheet Line')]" ref="hr_timesheet_sheet.process_node_timesheetline0"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Task Work')]" ref="project.process_node_taskwork0"/>
+			<field model="process.node" name="target_node_id" ref="hr_timesheet_sheet.process_node_timesheetline0"/>
+			<field model="process.node" name="source_node_id" ref="project.process_node_taskwork0"/>
 		</record>
 		
 		<record id="process_transition_tasktimesheet0" model="process.transition">
@@ -66,8 +66,8 @@
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Task timesheet&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Moves task entry into the timesheet line&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" search="[('name','=','Node Timesheet')]"/>
-			<field model="process.node" name="source_node_id" search="[('name','=','Node Work on Task')]"/>
+			<field model="process.node" name="target_node_id" ref="process_node_timesheettask0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_workontask0"/>
 		</record>
 		
 	</data>

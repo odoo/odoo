@@ -63,6 +63,29 @@ class process_process(osv.osv):
         'active' : lambda *a: True,
     }
 
+    def search_by_model(self, cr, uid, res_model, context):
+        pool = pooler.get_pool(cr.dbname)
+
+        model_ids = pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
+        if not model_ids:
+            return []
+
+        nodes = pool.get('process.node').search(cr, uid, [('model_id', 'in', model_ids)])
+        if not nodes:
+            return []
+
+        nodes = pool.get('process.node').browse(cr, uid, nodes, context)
+
+        unique = []
+        result = []
+        
+        for node in nodes:
+            if node.process_id.id not in unique:
+                result.append((node.process_id.id, node.process_id.name))
+                unique.append(node.process_id.id)
+
+        return result
+
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
         
         pool = pooler.get_pool(cr.dbname)
@@ -72,38 +95,7 @@ class process_process(osv.osv):
         current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
         
         expr_context = Env(current_object, current_user)
-
-        def get_resource_info(node):
-            ret = False
-
-            src_model = res_model
-            src_id = res_id
-            
-            if node.transition_in:
-                tr = node.transition_in[0]
-                src = nodes.get(tr.source_node_id.id)
-                if src['res']:
-                    src_model = src['res']['model']
-                    src_id = src['res']['id']
-                else:
-                    return False
-
-            fields = pool.get(src_model).fields_get(cr, uid, context=context)
-
-            for name, field in fields.items():
-                if node.model_id and field.get('relation', False) == node.model_id.model:
-                    src_obj = pool.get(src_model).browse(cr, uid, [src_id], context)[0]
-                    rel = src_obj[name]
-                    if rel:
-                        if isinstance(rel, (list, tuple)):
-                            rel = rel[0]
-                        ret = {}
-                        ret['name'] = rel.name_get(context)[0][1]
-                        ret['model'] = field['relation']
-                        ret['id'] = rel.id
-
-            return ret
-            
+        
         notes = process.note
         nodes = {}
         start = []
@@ -111,6 +103,8 @@ class process_process(osv.osv):
 
         states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
         title = "%s - Resource: %s, State: %s" % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
+
+        perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
 
         for node in process.node_ids:
             data = {}
@@ -121,18 +115,20 @@ class process_process(osv.osv):
             data['notes'] = node.note
             data['active'] = False
             data['gray'] = False
-            data['res'] = get_resource_info(node)
+            data['url'] = node.help_url
+
+            # get assosiated workflow
+            if data['model']:
+                wkf_ids = self.pool.get('workflow').search(cr, uid, [('osv', '=', data['model'])])
+                data['workflow'] = (wkf_ids or False) and wkf_ids[0]
+
+            if 'directory_id' in node and node.directory_id:
+                data['directory_id'] = node.directory_id.id
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
             if node.model_id and node.model_id.model == res_model:
-
-                data['res'] = resource = {}
-                resource['name'] = current_object.name_get(context)[0][1]
-                resource['model'] = res_model
-                resource['id'] = res_id
-
                 try:
                     data['active'] = eval(node.model_states, expr_context)
                 except Exception, e:
@@ -178,12 +174,62 @@ class process_process(osv.osv):
                     roles.append(role)
                 transitions[tr.id] = data
 
+        # now populate resource information
+        def update_relatives(nid, ref_id, ref_model):
+            relatives = []
+
+            for tid, tr in transitions.items():
+                if tr['source'] == nid:
+                    relatives.append(tr['target'])
+                if tr['target'] == nid:
+                    relatives.append(tr['source'])
+
+            if not ref_id:
+                nodes[nid]['res'] = False
+                return
+
+            nodes[nid]['res'] = resource = {'id': ref_id, 'model': ref_model}
+
+            refobj = pool.get(ref_model).browse(cr, uid, [ref_id], context)[0]
+            fields = pool.get(ref_model).fields_get(cr, uid, context=context)
+
+            # chech for directory_id from inherited from document module
+            if nodes[nid].get('directory_id', False):
+                resource['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
+
+            resource['name'] = refobj.name_get(context)[0][1]
+            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
+
+            for r in relatives:
+                node = nodes[r]
+                if 'res' not in node:
+                    for n, f in fields.items():
+                        if node['model'] == ref_model:
+                            update_relatives(r, ref_id, ref_model)
+
+                        elif f.get('relation') == node['model']:
+                            rel = refobj[n]
+                            if rel and isinstance(rel, list) :
+                                rel = rel[0]
+                            try: # XXX: rel has been reported as string (check it)
+                                _id = (rel or False) and rel.id
+                                _model = node['model']
+                                update_relatives(r, _id, _model)
+                            except:
+                                pass
+
+        for nid, node in nodes.items():
+            if not node['gray'] and (node['active'] or node['model'] == res_model):
+                update_relatives(nid, res_id, res_model)
+                break
+
+        # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
-        g.process(start)
-        #g.scale(100, 100, 180, 120)
-        g.scale(*scale)
+        g.process(start)        
+        g.scale(*scale) #g.scale(100, 100, 180, 120)
         graph = g.result_get()
 
+        # fix the height problem
         miny = -1
         for k,v in nodes.items():
             x = graph[k]['y']
@@ -198,7 +244,45 @@ class process_process(osv.osv):
             y = v['y']
             v['y'] = min(y - miny + 10, y)
 
-        return dict(title=title, notes=notes, nodes=nodes, transitions=transitions)
+        return dict(title=title, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        """ Deep copy the entire process.
+        """
+
+        if not default:
+            default = {}
+
+        pool = pooler.get_pool(cr.dbname)
+        process = pool.get('process.process').browse(cr, uid, [id], context)[0]
+
+        nodes = {}
+        transitions = {}
+
+        # first copy all nodes and and map the new nodes with original for later use in transitions
+        for node in process.node_ids:
+            for t in node.transition_in:
+                tr = transitions.setdefault(t.id, {})
+                tr['target'] = node.id
+            for t in node.transition_out:
+                tr = transitions.setdefault(t.id, {})
+                tr['source'] = node.id
+            nodes[node.id] = pool.get('process.node').copy(cr, uid, node.id, context=context)
+
+        # then copy transitions with new nodes
+        for tid, tr in transitions.items():
+            vals = {
+                'source_node_id': nodes[tr['source']],
+                'target_node_id': nodes[tr['target']]
+            }
+            tr = pool.get('process.transition').copy(cr, uid, tid, default=vals, context=context)
+
+        # and finally copy the process itself with new nodes
+        default.update({
+            'active': True,
+            'node_ids': [(6, 0, nodes.values())]
+        })
+        return super(process_process, self).copy(cr, uid, id, default, context)
 
 process_process()
 
@@ -217,13 +301,24 @@ class process_node(osv.osv):
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('process.transition', 'target_node_id', 'Starting Transitions'),
         'transition_out': fields.one2many('process.transition', 'source_node_id', 'Ending Transitions'),
-        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions')
+        'condition_ids': fields.one2many('process.condition', 'node_id', 'Conditions'),
+        'help_url': fields.char('Help URL', size=255)
     }
     _defaults = {
         'kind': lambda *args: 'state',
         'model_states': lambda *args: False,
         'flow_start': lambda *args: False,
     }
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        if not default:
+            default = {}
+        default.update({
+            'transition_in': [],
+            'transition_out': []
+        })
+        return super(process_node, self).copy(cr, uid, id, default, context)
+
 process_node()
 
 class process_node_condition(osv.osv):
@@ -271,5 +366,16 @@ class process_transition_action(osv.osv):
     _defaults = {
         'state': lambda *args: 'dummy',
     }
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        if not default:
+            default = {}
+
+        state = self.pool.get('process.transition.action').browse(cr, uid, [id], context)[0].state
+        if state:
+            default['state'] = state
+
+        return super(process_transition_action, self).copy(cr, uid, id, default, context)
+
 process_transition_action()
 

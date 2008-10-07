@@ -175,18 +175,17 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <label colspan="2"/>
-                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_reset_taxes" states="draft" string="Reset taxes" type="object"/>
-                                <field name="amount_tax"/>
+                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
-                                <field name="amount_total"/>
+                                <field name="amount_tax"/>
                                 <field name="reconciled"/>
-                                <field name="residual"/>
+                                <field name="amount_total"/>
                                 <field name="state" select="2"/>
+                                <field name="residual"/>
                                 <group col="3" colspan="4">
-                                    <button name="invoice_open" states="draft,proforma" string="Validate"/>
-                                    <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Validate"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
@@ -258,19 +257,18 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <label colspan="2"/>
-                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_reset_taxes" states="draft" string="Reset taxes" type="object"/>
-                                <field name="amount_tax"/>
+                                <field name="amount_untaxed"/>
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
-                                <field name="amount_total"/>
+                                <field name="amount_tax"/>
                                 <field name="reconciled"/>
-                                <field name="residual"/>
+                                <field name="amount_total"/>
                                 <field name="state" select="2"/>
+                                <field name="residual"/>
                                 <group col="3" colspan="4">
-                                    <button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
-                                    <button name="invoice_open" states="draft,proforma" string="Create"/>
-                                    <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
+                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Create"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
@@ -337,6 +335,17 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
+        </record>
+        <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
+        <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
         <record id="action_invoice_tree1_new" model="ir.actions.act_window">
@@ -420,6 +429,7 @@
             <field name="name">Draft Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -441,7 +451,8 @@
             <field name="name">PRO-FORMA Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','proforma'),('type','=','out_invoice')]</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','=','proforma2'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
         <record id="action_invoice_tree6_view1" model="ir.actions.act_window.view">
@@ -462,6 +473,7 @@
             <field name="name">Unpaid Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -483,6 +495,7 @@
             <field name="name">Draft Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
@@ -504,6 +517,7 @@
             <field name="name">Unpaid Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
@@ -525,6 +539,7 @@
             <field name="name">Draft Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
@@ -546,6 +561,7 @@
             <field name="name">Unpaid Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
@@ -567,6 +583,7 @@
             <field name="name">Draft Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
@@ -588,6 +605,7 @@
             <field name="name">Unpaid Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>

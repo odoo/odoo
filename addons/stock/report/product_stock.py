@@ -79,6 +79,8 @@ class report_stock(report_int):
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
                 dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+            else:
+                dt = dt[:10]
             products.setdefault(prod_id, [])
             products[prod_id].append((dt,-qty))
 
@@ -86,6 +88,8 @@ class report_stock(report_int):
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
                 dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+            else:
+                dt = dt[:10]
             products.setdefault(prod_id, [])
             products[prod_id].append((dt,qty))
 

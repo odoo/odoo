@@ -150,7 +150,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-        <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/><menuitem action="action_account_analytic_line_form" id="account_entries_analytic_entries" parent="next_id_41"/>
+		<wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries Encoding by Line"/>
+        <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>
+		<menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
 
 
         <record id="action_account_tree1" model="ir.actions.act_window">
@@ -238,7 +240,7 @@
         #
 
         <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
-            <field name="name">account.analytic.journal.open.form</field>
+            <field name="name">Entries of Open Analytic Journals</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

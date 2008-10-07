@@ -13,15 +13,16 @@
         *contacts working at several adresses (possibly for different partners), 
         *contacts with possibly different functions for each of its job's addresses
 
-    It also add a new menuitem located in 
+    It also add new menuitems located in 
         Partners \ Contacts
+        Partners \ Functions
 
 
     Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
     """,
     "depends" : ["base"],
     "init_xml" : [],
-    "demo_xml" : [],
+    "demo_xml" : ["base_contact_demo.xml"],
     "update_xml" : [
         "security/ir.model.access.csv",
         'base_contact_view.xml'

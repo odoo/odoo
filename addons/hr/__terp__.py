@@ -47,12 +47,12 @@
         "hr_department_demo.xml",
     ],
     "update_xml" : [
-#        "security/hr_security.xml",
-#        "security/ir.model.access.csv",
+        "security/hr_security.xml",
+        "security/ir.model.access.csv",
         "hr_view.xml", 
         "hr_wizard.xml",
         "hr_department_view.xml",
-#        "process/hr_process.xml"
+        "process/hr_process.xml"
     ],
     "active": False,
     "installable": True

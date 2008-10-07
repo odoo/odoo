@@ -44,31 +44,31 @@ class profile_accounting_config_install_modules_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
-        
-    
+
+
     def action_install(self, cr, uid, ids, context=None):
-        result=self.read(cr,uid,ids)        
+        result=self.read(cr,uid,ids)
         mod_obj = self.pool.get('ir.module.module')
         for res in result:
             for r in res:
                 if r<>'id' and res[r]:
                     ids += mod_obj.search(cr, uid, [('name', '=', r)])
-                    mod_obj.action_install(cr, uid, ids, context=context)           
+                    mod_obj.action_install(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname,force_demo=True, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-    
-    
+
+
 profile_accounting_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
