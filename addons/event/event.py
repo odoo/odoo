@@ -203,18 +203,20 @@ class event_registration(osv.osv):
         return True
 
     def create(self, cr, uid, *args, **argv):
-        args[0]['section_id']= self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None).section_id.id
-        args[0]['date_deadline']= self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None).date_begin
-        args[0]['description']= self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None).mail_confirm
+        event = self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None)
+        args[0]['section_id']= event.section_id.id
+        args[0]['date_deadline']= event.date_begin
+        args[0]['description']= event.mail_confirm
         res = super(event_registration, self).create(cr, uid, *args, **argv)
         self._history(cr, uid,self.browse(cr, uid, [res]), 'Created', history=True)
         return res
 
     def write(self, cr, uid, *args, **argv):
         if 'event_id' in args[1]:
-            args[1]['section_id']= self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None).section_id.id
-            args[1]['date_deadline']= self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None).date_begin
-            args[1]['description']= self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None).mail_confirm
+            event = self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None)
+            args[1]['section_id']= event.section_id.id
+            args[1]['date_deadline']= event.date_begin
+            args[1]['description']= event.mail_confirm
         return super(event_registration, self).write(cr, uid, *args, **argv)
 
     def mail_user_confirm(self,cr,uid,ids):
@@ -242,7 +244,7 @@ class event_registration(osv.osv):
                     if reg_id.event_id.state in ['draft', 'fixed', 'open','confirm','running'] and reg_id.event_id.mail_auto_registr:
                         tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, tinycrm = str(reg_id.case_id.id))
                     if (reg_id.event_id.state in ['confirm','running']) and reg_id.event_id.mail_auto_confirm:
-                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.description, tinycrm = str(reg_id.case_id.id))
+                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
                 if not src:
                     raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
@@ -309,7 +311,7 @@ class event_registration(osv.osv):
         return {'value':{'unit_price' : False,'invoice_label' : False}}
 
 
-    def onchange_partner_id(self, cr, uid, ids, part, event_id):
+    def onchange_partner_id(self, cr, uid, ids, part, event_id, email=False):
         data={}
         data['badge_partner'] = data['contact_id'] = data['partner_invoice_id'] = data['email_from'] = data['badge_title'] = data['badge_name'] = False
         if not part:
