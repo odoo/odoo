@@ -165,6 +165,7 @@ class account_invoice(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('proforma','Pro-forma'),
+            ('proforma2','Pro-forma'),
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Canceled')

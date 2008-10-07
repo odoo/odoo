@@ -1121,8 +1121,8 @@ class account_tax(osv.osv):
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the VAT declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usualy 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
@@ -1781,8 +1781,8 @@ class account_tax_template(osv.osv):
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the VAT declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
