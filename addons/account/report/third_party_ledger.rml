@@ -165,13 +165,13 @@
 	        	<para style="Balance">Balance brought forward</para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_debit(data)) ]]</u></para>
+	        	<para style="P8"><u>[[ (sum_debit(data)) or '0.0' ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_credit(data)) ]]</u></para>
+	        	<para style="P8"><u>[[ (sum_credit(data)) or '0.0' ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_debit(data) - sum_credit(data)) ]]</u></para>
+	        	<para style="P8"><u>[[ (sum_debit(data) - sum_credit(data)) or '0.0' ]]</u></para>
 	        </td>
 	     </tr>
 	    </blockTable>
@@ -192,13 +192,13 @@
 			        <para style="total"></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_debit_partner(p,data)) ]]</u></para>
+		            <para style="P9b"><u>[[ (sum_debit_partner(p,data)) or '0.0' ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_credit_partner(p,data)) ]]</u></para>
+		            <para style="P9b"><u>[[ (sum_credit_partner(p,data)) or '0.0' ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_debit_partner(p,data) - sum_credit_partner(p,data)) ]]</u></para>
+		            <para style="P9b"><u>[[ (sum_debit_partner(p,data) - sum_credit_partner(p,data)) or '0.0' ]]</u></para>
 		        </td>
 		     </tr>
 		    </blockTable>
