@@ -66,7 +66,7 @@ class ir_ui_menu(osv.osv):
                 context=context)
         if uid==1:
             return ids
-        user_groups = set(self.pool.get('res.users').read(cr, uid, uid)['groups_id'])
+        user_groups = set(self.pool.get('res.users').browse(cr, uid, uid)['groups_id'] or [])
         result = []
         for menu in self.browse(cr, uid, ids):
             restrict_to_groups = menu.groups_id
@@ -76,7 +76,7 @@ class ir_ui_menu(osv.osv):
                     # the action of the menu
                     try:
                         m, oid = menu.action.split(',', 1)
-                        data = self.pool.get(m).read(cr, uid, int(oid), context=context)
+                        data = self.pool.get(m).browse(cr, uid, int(oid), context=context)
                         if data and 'groups_id' in data:
                             restrict_to_groups = data['groups_id']
                     except:

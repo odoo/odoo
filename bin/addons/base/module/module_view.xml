@@ -183,72 +183,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem action="open_repository_tree" id="menu_module_repository_tree" parent="base.menu_management"/>
-        
-        <record id="config_wizard_step_view_tree" model="ir.ui.view">
-            <field name="model">ir.module.module.configuration.step</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
-                    <field name="action_id" select="1"/>
-                    <field name="sequence"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="config_wizard_step_view_form" model="ir.ui.view">
-            <field name="model">ir.module.module.configuration.step</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
-                    <field name="action_id" select="1"/>
-                    <field name="sequence"/>
-                    <field name="state"/>
-                    <field colspan="4" name="note"/>
-                </form>
-            </field>
-        </record>
-        <record id="act_config_wizard_step_form" model="ir.actions.act_window">
-            <field name="name">Config Wizard Steps</field>
-            <field name="res_model">ir.module.module.configuration.step</field>
-            <field name="view_id" ref="config_wizard_step_view_tree"/>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_custom"/><menuitem action="act_config_wizard_step_form" id="menu_config_wizard_step_form" parent="next_id_11"/>
-        
-        <record id="view_config_wizard_form" model="ir.ui.view">
-            <field name="name">Main Configuration Wizard</field>
-            <field name="model">ir.module.module.configuration.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Next Configuration Step">
-                    <image name="gtk-dialog-info"/>
-                    <group>
-                        <separator string="Next Configuration Step" colspan="4"/>
-                        <field name="name" nolabel="1" colspan="4" width="500"/>
-                        <field name="progress" widget="progressbar"/>
-                        <separator colspan="4" string=""/>
-                        <label string="" colspan="2"/>
-                        <group colspan="2" col="2">
-                            <button icon="gtk-cancel" special="cancel" string="Skip Step"/>
-                            <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-        
-        <record id="action_config_wizard_form" model="ir.actions.act_window">
-            <field name="name">Configuration Wizard</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.module.module.configuration.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-        <menuitem action="action_config_wizard_form" id="menu_config_module" parent="base.next_id_11"/>
+        <menuitem action="open_repository_tree" id="menu_module_repository_tree" parent="base.menu_management"/>       
 
     </data>
 </openerp>

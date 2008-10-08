@@ -12,7 +12,6 @@
             </field>
             <field name="field_parent">child_id</field>
         </record>
-        
         <record id="action_menu_admin" model="ir.actions.act_window">
             <field name="name">Menu</field>
             <field name="usage">menu</field>
@@ -22,13 +21,13 @@
             <field name="view_type">tree</field>
             <field eval="'[(\'parent_id\',\'=\',False)]'" name="domain"/>
         </record>
-        
+
         <record id="lang_en" model="res.lang">
             <field name="code">en_US</field>
-			<field name="name">English</field>
-			<field name="translatable">True</field>
+            <field name="name">English</field>
+            <field name="translatable">True</field>
         </record>
-        
+
         <record id="ad" model="res.country">
             <field name="name">Andorra, Principality of</field>
             <field name="code">ad</field>

@@ -589,3 +589,122 @@ class act_window_close(osv.osv):
         'type': lambda *a: 'ir.actions.act_window_close',
     }
 act_window_close()
+
+# This model use to register action services.
+# if action type is 'configure', it will be start on configuration wizard.
+# if action type is 'service',
+#                - if start_type= 'at once', it will be start at one time on start date
+#                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
+#                - if start_type="manual", it will start and stop on manually 
+class ir_actions_todo(osv.osv):
+    _name = 'ir.actions.todo'	
+    _columns={
+        'name':fields.char('Name',size=64,required=True, select=True),
+        'note':fields.text('Text'),
+		'start_date': fields.datetime('Start Date'),
+		'end_date': fields.datetime('End Date'),
+        'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
+        'sequence':fields.integer('Sequence'),
+		'active': fields.boolean('Active'),
+		'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
+		'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
+		'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
+		'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
+        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
+    }
+    _defaults={
+        'state': lambda *a: 'open',
+        'sequence': lambda *a: 10,
+		'active':lambda *a:True,
+		'type':lambda *a:'configure'
+    }
+    _order="sequence"
+ir_actions_todo()
+
+# This model to use run all configuration actions
+class ir_actions_configuration_wizard(osv.osv_memory):
+    _name='ir.actions.configuration.wizard'
+    def next_configuration_action(self,cr,uid,context={}):
+        item_obj = self.pool.get('ir.actions.todo')
+        item_ids = item_obj.search(cr, uid, [('type','=','configure'),('state', '=', 'open'),('active','=',True)], limit=1, context=context)
+        if item_ids and len(item_ids):
+            item = item_obj.browse(cr, uid, item_ids[0], context=context)
+            return item
+        return False
+    def _get_action_name(self, cr, uid, context={}):
+        next_action=self.next_configuration_action(cr,uid,context=context)        
+        if next_action:
+            return next_action.note
+        else:
+            return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
+        return False
+
+    def _get_action(self, cr, uid, context={}):
+        next_action=self.next_configuration_action(cr,uid,context=context)
+        if next_action:           
+            return next_action.id
+        return False
+
+    def _progress_get(self,cr,uid, context={}):
+        total = self.pool.get('ir.actions.todo').search_count(cr, uid, [], context)
+        todo = self.pool.get('ir.actions.todo').search_count(cr, uid, [('type','=','configure'),('active','=',True),('state','<>','open')], context)
+        return max(5.0,round(todo*100/total))
+
+    _columns = {
+        'name': fields.text('Next Wizard',readonly=True),
+        'progress': fields.float('Configuration Progress', readonly=True),
+        'item_id':fields.many2one('ir.actions.todo', 'Next Configuration Wizard',invisible=True, readonly=True),
+    }
+    _defaults={
+        'progress': _progress_get,
+        'item_id':_get_action,
+        'name':_get_action_name,
+    }
+    def button_skip(self,cr,uid,ids,context=None):
+        item_obj = self.pool.get('ir.actions.todo')
+        item_id=self.read(cr,uid,ids)[0]['item_id']
+        if item_id:
+            item = item_obj.browse(cr, uid, item_id, context=context)
+            item_obj.write(cr, uid, item.id, {
+                'state': 'skip',
+                }, context=context)
+            return{
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+            }
+        return {'type':'ir.actions.act_window_close'}
+
+    def button_continue(self, cr, uid, ids, context=None):
+        item_obj = self.pool.get('ir.actions.todo')
+        item_id=self.read(cr,uid,ids)[0]['item_id']
+        if item_id:
+            item = item_obj.browse(cr, uid, item_id, context=context)
+            item_obj.write(cr, uid, item.id, {
+                'state': 'done',
+                }, context=context)
+            return{
+                  'view_mode': item.action_id.view_mode,
+                  'view_type': item.action_id.view_type,
+                  'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
+                  'res_model': item.action_id.res_model,
+                  'type': item.action_id.type,
+                  'target':item.action_id.target,
+            }
+        user_action=self.pool.get('res.users').browse(cr,uid,uid)
+        act_obj=self.pool.get(user_action.menu_id.type)
+        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
+        action_open=act_obj.browse(cr,uid,action_ids)[0]
+        if context.get('menu',False):
+            return{
+              'view_type': action_open.view_type,
+              'view_id':action_open.view_id and [action_open.view_id.id] or False,
+              'res_model': action_open.res_model,
+              'type': action_open.type,
+              'domain':action_open.domain
+               }
+        return {'type':'ir.actions.act_window_close' }
+ir_actions_configuration_wizard()
+

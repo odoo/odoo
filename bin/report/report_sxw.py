@@ -292,13 +292,17 @@ class rml_parse(object):
             oldtag = self.tag
         self._node.data = ''
         node = self._find_parent(self._node, [oldtag])
-
-        pp = node.parentNode
-        ns = node.nextSibling
-        pp.removeChild(node)
+        if node:
+            pp = node.parentNode
+            ns = node.nextSibling
+            pp.removeChild(node)
+        else:
+            pp=self._node
         self._node = pp
-        lst = text.split('\n')
-        if not len(lst):
+        lst=''
+        if type(text)==type(''):
+            lst = text.split('\n')
+        if lst  and (not len(lst)):
             return None
         nodes = []
         for i in range(len(lst)):
