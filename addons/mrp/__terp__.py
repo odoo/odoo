@@ -32,7 +32,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_mrp.html",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product"],
+    "depends" : ["stock", "hr", "purchase", "product", "process"],
     "description": """
     This is the base module to manage the manufacturing process in Tiny ERP.
 
@@ -70,6 +70,7 @@
         "mrp_wizard.xml", 
         "mrp_report.xml",
         "company_view.xml",
+        "process/procurement_process.xml",
     ],
     "active": False,
     "installable": True

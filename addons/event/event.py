@@ -137,7 +137,7 @@ class event(osv.osv):
         #change the description of the registration linked to this event
         if 'mail_auto_confirm' in vals:
             if vals['mail_auto_confirm']:
-                if 'mail_confirm' not in vals: 
+                if 'mail_confirm' not in vals:
                     for eve in self.browse(cr, uid, ids):
                         vals['mail_confirm'] = eve.mail_confirm
             else:
@@ -288,8 +288,9 @@ class event_registration(osv.osv):
         data['badge_title'] = contact_id.title
         if partner:
             partner_addresses = self.pool.get('res.partner.address').search(cr, uid, [('partner_id','=',partner)])
-            job_id = self.pool.get('res.partner.job').search(cr, uid, [('contact_id','=',contact),('address_id','in',partner_addresses)])[0]
-            data['email_from'] = self.pool.get('res.partner.job').browse(cr, uid, job_id).email
+            job_ids = self.pool.get('res.partner.job').search(cr, uid, [('contact_id','=',contact),('address_id','in',partner_addresses)])
+            if job_ids:
+                data['email_from'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).email
         d = self.onchange_badge_name(cr, uid, ids,data['badge_name'])
         data.update(d['value'])
 

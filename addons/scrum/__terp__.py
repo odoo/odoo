@@ -30,7 +30,7 @@
     "name" : "Scrum, Agile Development Method",
     "version": "1.0",
     "author" : "Tiny",
-    "depends" : ["project"],
+    "depends" : ["project", "process"],
     "category" : "Enterprise Specific Modules/Information Technology",
     "init_xml" : [],
     "description": """
@@ -61,6 +61,7 @@
         "scrum_view.xml",
         "scrum_report.xml",
         "scrum_wizard.xml",
+        "process/scrum_process.xml",
     ],
     "active": False,
     "installable": True
