@@ -40,25 +40,25 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 class account_report(osv.osv):
     _name = "account.report.report"
     _description = "Account reporting"
-    _color = [
-            ('', ''),
-            ('green','Green'),
-            ('red','Red'),
-            ('pink','Pink'),
-            ('blue','Blue'),
-            ('yellow','Yellow'),
-            ('cyan','Cyan'),
-            ('lightblue','Light Blue'),
-            ('orange','Orange'),
-            ]
-    _style = [
-            ('1','Header 1'),
-            ('2','Header 2'),
-            ('3','Header 3'),
-            ('4','Header 4'),
-            ('5','Normal'),
-            ('6', 'Small'),
-            ]
+#    _color = [
+#            ('', ''),
+#            ('green','Green'),
+#            ('red','Red'),
+#            ('pink','Pink'),
+#            ('blue','Blue'),
+#            ('yellow','Yellow'),
+#            ('cyan','Cyan'),
+#            ('lightblue','Light Blue'),
+#            ('orange','Orange'),
+#            ]
+#    _style = [
+#            ('1','Header 1'),
+#            ('2','Header 2'),
+#            ('3','Header 3'),
+#            ('4','Header 4'),
+#            ('5','Normal'),
+#            ('6', 'Small'),
+#            ]
 
     def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
         def _calc_credit(*code):
@@ -113,8 +113,8 @@ class account_report(osv.osv):
         if parent_id:
             acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
             v['type']=acc.type
-            if int(acc.style) < 6:
-                v['style'] = str(int(acc.style)+1)
+#            if int(acc.style) < 6:
+#                v['style'] = str(int(acc.style)+1)
         return {'value': v}
 
     _columns = {
@@ -125,6 +125,7 @@ class account_report(osv.osv):
         'type': fields.selection([
             ('fiscal', 'Fiscal statement'),
             ('indicator','Indicator'),
+            ('view','View')
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
@@ -144,12 +145,12 @@ class account_report(osv.osv):
                 ('excellent', 'Excellent')
             ],
             string='Status'),
-        'style': fields.selection(_style, 'Style', required=True),
-        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
-        'color_back' : fields.selection(_color, 'Back Color')
+#        'style': fields.selection(_style, 'Style', required=True),
+#        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
+#        'color_back' : fields.selection(_color, 'Back Color')
     }
     _defaults = {
-        'style': lambda *args: '5',
+#        'style': lambda *args: '5',
         'active': lambda *args: True,
         'type': lambda *args: 'indicator',
     }
