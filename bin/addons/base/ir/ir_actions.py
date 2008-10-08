@@ -251,7 +251,8 @@ class act_wizard(osv.osv):
         'type': fields.char('Action type', size=32, required=True),
         'wiz_name': fields.char('Wizard name', size=64, required=True),
         'multi': fields.boolean('Action on multiple doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form views."),
-        'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups')
+        'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups'),
+        'model': fields.char('Object', size=64),
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.wizard',
@@ -707,4 +708,6 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                }
         return {'type':'ir.actions.act_window_close' }
 ir_actions_configuration_wizard()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
