@@ -232,8 +232,8 @@ class process_process(osv.osv):
         # fix the height problem
         miny = -1
         for k,v in nodes.items():
-            x = graph[k]['y']
-            y = graph[k]['x']
+            x = graph[k]['x']
+            y = graph[k]['y']
             if miny == -1:
                 miny = y
             miny = min(y, miny)
