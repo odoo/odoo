@@ -510,17 +510,63 @@ class graph(object):
             self.graph_order()
             
         else:               
-            self.result[self.start]['y'] = 0
+            self.result[self.start]['y'] = 0          
             self.tree_order(self.start, 0)
             min_order = math.fabs(min(map(lambda x: x['y'], self.result.values())))
-            min_order += self.max_order + (self.max_order and 1)
+              
+            index = self.start_nodes.index(self.start)             
+            same = False
+            
+            roots  = []
+            if index>0:                
+                for start in self.start_nodes[:index]:
+                    same = True                                        
+                    for edge in self.tree_list[start][1:]:
+                        if self.tree_list[self.start].__contains__(edge):
+                            continue
+                        else:
+                            same = False
+                            break
+                    if same:
+                        roots.append(start)
+            
+            if roots:        
+                min_order += self.max_order 
+            else:
+                min_order += self.max_order + 1
             
             for level in self.levels:
                 for node in self.levels[level]:
                     self.result[node]['y'] += min_order
-
+            
+            if roots:
+                roots.append(self.start)
+                one_level_el = self.tree_list[self.start][0][1]
+                base = self.result[one_level_el]['y']# * 2 / (index + 2)
+                
+                
+                no = len(roots)
+                first_half = roots[:no/2]
+                
+                if no%2==0:
+                    last_half = roots[no/2:]
+                else:
+                    last_half = roots[no/2+1:]
+                    
+                factor = -math.floor(no/2)
+                for start in first_half:
+                    self.result[start]['y'] = base + factor 
+                    factor += 1
+                    
+                if no%2:
+                    self.result[roots[no/2]]['y'] = base + factor
+                factor +=1
+                
+                for start in last_half:
+                    self.result[start]['y'] = base + factor 
+                    factor += 1
+                    
             self.max_order = max(map(lambda x: x['y'], self.result.values()))
-        
         
     def find_starts(self):    
         """Finds other start nodes of the graph in the case when graph is disconneted
@@ -575,8 +621,8 @@ class graph(object):
         self.links = []
         self.Is_Cyclic = False
         
-        tree = self.make_acyclic(None, self.start, 0, [])
-        self.Is_Cyclic = self.rev_edges(tree)        
+        self.tree_list[self.start] = self.make_acyclic(None, self.start, 0, [])
+        self.Is_Cyclic = self.rev_edges(self.tree_list[self.start])       
         self.process_ranking(self.start)
         self.init_rank()
                 
@@ -635,6 +681,7 @@ class graph(object):
         self.start_nodes = starting_node or []
         self.partial_order = {}  
         self.links = []     
+        self.tree_list = {}    
                                
         if self.nodes:
             if self.start_nodes:
