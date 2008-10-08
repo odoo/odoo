@@ -80,6 +80,16 @@ class view(osv.osv):
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
 
+    def create(self, cr, uid, vals, context={}):
+       if 'inherit_id' in vals:
+           obj=self.browse(cr,uid,vals['inherit_id'])
+           if not obj.model==vals['model']:
+                raise Exception("Inherited view model [%s] and \
+                                 \n\n base view model [%s] do not match \
+                                 \n\n It should be same as base view model " \
+                                 %(vals['model'],obj.model))
+       return super(view,self).create(cr, uid, vals, context={})
+
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
 
         if not isinstance(ids, (list, tuple)):
