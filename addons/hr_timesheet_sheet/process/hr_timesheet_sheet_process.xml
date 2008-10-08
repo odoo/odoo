@@ -222,5 +222,38 @@
             <field model="process.node" name="source_node_id" ref="process_node_review0"/>
         </record>
         
+        <!-- 
+            Process Action
+        -->
+        
+        <record id="process_transition_action_draftconfirmtimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;button_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Button confirm timesheet&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_confirmtimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_validatetimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'done'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Button validate timesheet&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_validatetimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_refusetimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'draft'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Button refuse&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_validatetimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_reviewtimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;button_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Button review timesheet&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_confirmtimesheetsheet0"/>
+        </record>
+        
+        
     </data>
 </openerp>

@@ -231,7 +231,7 @@ class purchase_order(osv.osv):
                     part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
-    def wkf_approve_order(self, cr, uid, ids):
+    def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
         return True
 
