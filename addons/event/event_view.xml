@@ -203,7 +203,10 @@
 					<group col="6" colspan="4">
 						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
 						<field name="nb_register"/>
-						<field name="user_id" select="1"/>
+						<group colspan="2">
+							<field name="user_id" select="1"/>
+							<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+						</group>
 						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id)" />
 						<field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
 						<field name="unit_price" select="2"/>
@@ -213,7 +216,6 @@
 						<field name="contact_id" select="2" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
 						<field name="email_from" select="2"/>
 						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
-						<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
 						<newline/>
 						<separator string="Badge" colspan="4"/>
 						<field name="badge_title" select="2"/>
