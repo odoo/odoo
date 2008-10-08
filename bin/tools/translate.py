@@ -39,6 +39,8 @@ import inspect
 import mx.DateTime as mxdt
 import tempfile
 import tarfile
+import codecs
+
 
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
@@ -75,22 +77,31 @@ _ = GettextAlias()
 class TinyPoFile(object):
     def __init__(self, buffer):
         self.buffer = buffer
-    
+
     def __iter__(self):
         self.buffer.seek(0)
-        self.lines = self.buffer.readlines()
-        self.lines.append('')   # ensure that the file ends with at least an empty line
+        self.lines = self._get_lines()
+
         self.first = True
         self.tnrs= []
         return self
-    
+
+    def _get_lines(self):
+        lines = self.buffer.readlines()
+        # remove the BOM (Byte Order Mark):
+        if len(self.lines):
+            lines[0] = unicode(lines[0], 'utf8').lstrip(unicode( codecs.BOM_UTF8, "utf8"))
+
+        lines.append('') # ensure that the file ends with at least an empty line
+        return lines
+
     def next(self):
         def unquote(str):
             return str[1:-1].replace("\\n", "\n")   \
-                            .replace('\\"', '"')   
+                            .replace('\\"', '"')
 
         type = name = res_id = source = trad = None
-        
+
         if self.tnrs:
             type, name, res_id, source, trad = self.tnrs.pop(0)
         else:
@@ -100,24 +111,24 @@ class TinyPoFile(object):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
-            
+
             while line.startswith('#'):
                 if line.startswith('#:'):
                     tmp_tnrs.append( line[2:].strip().split(':') )
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
-                raise Exception("malformed file")
+                raise Exception("malformed file: bad line: %s" % line)
             source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
-                # if the source is "" and it's the first msgid, it's the special 
-                # msgstr with the informations about the traduction and the 
+                # if the source is "" and it's the first msgid, it's the special
+                # msgstr with the informations about the traduction and the
                 # traductor; we skip it
                 self.tnrs = []
                 while line:
                     line = self.lines.pop(0).strip()
-                return self.next()               
-                
+                return self.next()
+
             while not line.startswith('msgstr'):
                 if not line:
                     raise Exception('malformed file')
@@ -129,7 +140,7 @@ class TinyPoFile(object):
             while line:
                 trad += unquote(line)
                 line = self.lines.pop(0).strip()
-            
+
             if tmp_tnrs:
                 type, name, res_id = tmp_tnrs.pop(0)
                 for t, n, r in tmp_tnrs:
@@ -173,11 +184,11 @@ class TinyPoFile(object):
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
-        
+
         if "code" in map(lambda e: e[0], tnrs):
             # only strings in python code are python formated
             self.buffer.write("#, python-format\n")
-                            
+
 
         for typy, name, res_id in tnrs:
             self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
@@ -225,7 +236,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             for row in rows:
                 module = row[0]
                 rows_by_module.setdefault(module, []).append(row)
-            
+
             tmpdir = tempfile.mkdtemp()
             for mod, modrows in rows_by_module.items():
                 tmpmoddir = join(tmpdir, mod, 'i18n')
@@ -248,7 +259,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     modules = set([t[0] for t in trans[1:]])
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
-    
+
 
 def trans_parse_xsl(de):
     res = []
@@ -290,7 +301,7 @@ def trans_parse_view(de):
 def in_modules(object_name, modules):
     if 'all' in modules:
         return True
-        
+
     module_dict = {
         'ir': 'base',
         'res': 'base',
@@ -320,7 +331,7 @@ def trans_generate(lang, modules, dbname=None):
     if not 'all' in modules:
         query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
     query += ' ORDER BY module, model, name'
-    
+
     query_param = not 'all' in modules and modules or None
     cr.execute(query, query_param)
 
@@ -443,7 +454,7 @@ def trans_generate(lang, modules, dbname=None):
             path = path[len(relative_addons_path)+1:]
             return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
-    
+
     modobj = pool.get('ir.module.module')
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.browse(cr, uid, installed_modids, ['name']))
