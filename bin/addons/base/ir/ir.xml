@@ -714,33 +714,36 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fields">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="4">
                         <field name="name" select="1"/>
-                        <field colspan="4" name="field_description" select="2"/>
                         <field name="model_id" readonly="1"/>
+                        <field colspan="4" name="field_description" select="2"/>
                     </group>
 
-                    <group colspan="2" col="2">
-                        <separator string="Field Type" colspan="2"/>
-                        <field name="ttype" select="2"/>
-                        <field name="relation" select="2"/>
-                        <field name="selection"/>
-                        <field name="size"/>
-                        <field name="state"/>
-                        <field name="domain"/>
-                    </group>
+                    <notebook>
+                        <page string="Properties">
+                            <group colspan="2" col="2">
+                                <field name="ttype" select="2"/>
+                                <field name="relation" select="2"/>
+                                <field name="selection"/>
+                                <field name="size"/>
+                                <field name="state"/>
+                                <field name="domain"/>
+                            </group>
 
-                    <group colspan="2" col="2">
-                        <separator string="Properties" colspan="2"/>
-                        <field name="required" select="2"/>
-                        <field name="readonly" select="2"/>
-                        <field name="select_level"/>
-                        <field name="translate"/>
-                        <field name="relate"/>
-                        <field name="on_delete"/>
-                    </group>
-                    <separator string="Security on Groups" colspan="4"/>
-                    <field name="groups" colspan="4" nolabel="1"/>
+                            <group colspan="2" col="2">
+                                <field name="required" select="2"/>
+                                <field name="readonly" select="2"/>
+                                <field name="select_level"/>
+                                <field name="translate"/>
+                                <field name="relate"/>
+                                <field name="on_delete"/>
+                            </group>
+                        </page>
+                        <page string="Security on Groups" colspan="4">
+                            <field name="groups" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -1096,6 +1099,7 @@
                         <page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
                             <separator colspan="4" string="Python code"/>
                             <field name="code" colspan="4" nolabel="1" />
+                            <button string="Create Action" name="%(wizard_server_action_create)d" type="action"/>
                         </page>
                         
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">

@@ -45,12 +45,14 @@ module_list = []
 module_class_list = {}
 class_pool = {}
 
+
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
         self.name = name
         self.exc_type = exc_type
         self.value = value
-        self.args = (exc_type,name)
+        self.args = (exc_type, name)
+
 
 class osv_pool(netsvc.Service):
 
@@ -71,9 +73,9 @@ class osv_pool(netsvc.Service):
         self.exportMethod(self.execute_cr)
 
     def init_set(self, cr, mode):
-        if mode<>self._init:
+        if mode <> self._init:
             if mode:
-                self._init_parent={}
+                self._init_parent = {}
             if not mode:
                 for o in self._init_parent:
                     self.get(o)._parent_store_compute(cr)
@@ -87,7 +89,7 @@ class osv_pool(netsvc.Service):
             if not object:
                 self.abortResponse(1, 'Object Error', 'warning',
                 'Object %s doesn\'t exist' % str(obj))
-            return getattr(object,method)(cr, uid, *args, **kw)
+            return getattr(object, method)(cr, uid, *args, **kw)
         except orm.except_orm, inst:
             self.abortResponse(1, inst.name, 'warning', inst.value)
         except except_osv, inst:
@@ -147,7 +149,7 @@ class osv_pool(netsvc.Service):
     # adds a new object instance to the object pool.
     # if it already existed, the instance is replaced
     def add(self, name, obj_inst):
-        if self.obj_pool.has_key(name):
+        if name in self.obj_pool:
             del self.obj_pool[name]
         self.obj_pool[name] = obj_inst
 
@@ -171,6 +173,7 @@ class osv_pool(netsvc.Service):
             res.append(klass.createInstance(self, module, cr))
         return res
 
+
 class osv_memory(orm.orm_memory):
     #__metaclass__ = inheritor
     def __new__(cls):
@@ -190,7 +193,7 @@ class osv_memory(orm.orm_memory):
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        name = hasattr(cls,'_name') and cls._name or cls._inherit
+        name = hasattr(cls, '_name') and cls._name or cls._inherit
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
             print 'Inherit not supported in osv_memory object !'
@@ -237,7 +240,7 @@ class osv(orm.orm):
                 else:
                     new.extend(cls.__dict__.get(s, []))
                 nattr[s] = new
-            name = hasattr(cls,'_name') and cls._name or cls._inherit
+            name = hasattr(cls, '_name') and cls._name or cls._inherit
             cls = type(name, (cls, parent_class), nattr)
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
@@ -248,6 +251,7 @@ class osv(orm.orm):
         pool.add(self._name, self)
         self.pool = pool
         orm.orm.__init__(self, cr)
+
 
 class Cacheable(object):
 
@@ -270,12 +274,14 @@ class Cacheable(object):
         self._cache.clear()
         self._items = []
 
+
 def filter_dict(d, fields):
     res = {}
     for f in fields + ['id']:
         if f in d:
             res[f] = d[f]
     return res
+
 
 class cacheable_osv(osv, Cacheable):
 
@@ -286,9 +292,9 @@ class cacheable_osv(osv, Cacheable):
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
-            fields=[]
+            fields = []
         if not context:
-            context={}
+            context = {}
         fields = fields or self._columns.keys()
         ctx = [context.get(x, False) for x in self._relevant]
         result, tofetch = [], []
@@ -330,7 +336,7 @@ class cacheable_osv(osv, Cacheable):
 
     def write(self, cr, user, ids, values, context=None):
         if not context:
-            context={}
+            context = {}
         for id in ids:
             self.invalidate((self._name, id))
         return super(cacheable_osv, self).write(cr, user, ids, values, context)

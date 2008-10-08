@@ -168,12 +168,30 @@
             </field>
         </record>
         <record id="action_partner_title" model="ir.actions.act_window">
-            <field name="name">Partners Titles</field>
+            <field name="name">Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
         </record>
         <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
+
+        <record id="action_partner_title_partner" model="ir.actions.act_window">
+            <field name="name">Partners Titles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.title</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('domain','=','partner')]</field>
+        </record>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="action_partner_title"/>
+
+        <record id="action_partner_title_contact" model="ir.actions.act_window">
+            <field name="name">Contacts Titles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.title</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('domain','=','contact')]</field>
+        </record>
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="action_partner_title"/>
 
         <!--
     =======================
@@ -188,11 +206,10 @@
             <field name="arch" type="xml">
                 <tree string="Partners">
                     <field name="name"/>
+                    <field name="title"/>
+                    <field name="ref"/>
                     <field name="city"/>
                     <field name="country"/>
-                    <field name="title" string="Type"/>
-                    <field name="ref"/>
-                    <field name="address" string="# of Contacts"/>
                     <field name="lang"/>
                 </tree>
             </field>

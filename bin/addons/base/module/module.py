@@ -222,8 +222,8 @@ class module(osv.osv):
     _columns = {
         'name': fields.char("Name", size=128, readonly=True, required=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True),
-        'shortdesc': fields.char('Short description', size=256, readonly=True),
-        'description': fields.text("Description", readonly=True),
+        'shortdesc': fields.char('Short description', size=256, readonly=True, translate=True),
+        'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
         'installed_version': fields.function(_get_installed_version, method=True,
@@ -242,7 +242,7 @@ class module(osv.osv):
             ('to install','To be installed')
         ], string='State', readonly=True),
         'demo': fields.boolean('Demo data'),
-        'license': fields.selection([('GPL-2', 'GPL-2'),
+        'license': fields.selection([('GPL-2', 'GPL-2'),('GPL-3', 'GPL-3'),
             ('Other proprietary', 'Other proprietary')], string='License',
             readonly=True),
     }

@@ -182,21 +182,32 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure User">
-                    <separator col="4" colspan="4" string="Define a New User"/>
+                    <separator string="Define New Users" colspan="4"/>
                     <field name="name" select="1"/>
-                    <newline/>
+                    <field name="active" select="1"/>
                     <field name="login" select="1"/>
-                    <newline/>
-                    <field name="password" required="1" password="True" />
-                    <field colspan="4" name="signature"/>
-                    <separator string="Assign Groups to Define Access Rights" colspan="4"/>
-                    <field colspan="4" name="groups_id" nolabel="1"/>
-                    <separator string="" colspan="4"/>
-                    <label string="" colspan="1"/>
-                    <group col="3" colspan="2">
-                        <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip &amp; Continue'/>
-                        <button name='action_new' icon='gtk-ok' type='object' string='Add New User'/>
-                        <button name='action_continue' icon='gtk-go-forward' type='object' string='Add &amp; Continue'/>
+                    <field name="password" password="True"/>
+                    <notebook colspan="4">
+                        <page string="User">
+                            <field name="address_id"/>
+                            <field name="company_id" required="1"/>
+                            <field name="action_id" required="True"/>
+                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                            <field name="context_lang"/>
+                            <field name="context_tz"/>
+                            <field colspan="4" name="signature"/>
+                        </page>
+                        <page string="Groups">
+                            <field colspan="4" nolabel="1" name="groups_id"/>
+                        </page>
+                        <page string="Roles">
+                            <field colspan="4" nolabel="1" name="roles_id"/>
+                        </page>
+                    </notebook>
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Close'/>
+                        <button name='action_new' icon='gtk-ok' type='object' string='Add User'/>
                     </group>
                 </form>
             </field>
