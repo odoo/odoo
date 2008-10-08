@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Electronic File&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Electronic File&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Import from your bank statements&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Import invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Import invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Import from invoices or payments&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -42,7 +42,7 @@
 			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Draft statement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Draft statement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Set starting and ending balance if bank statement&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -53,7 +53,7 @@
 			<field name="menu_id" ref="account.menu_bank_statement_tree"/>
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Confirmed statement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Confirmed statement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Confirmed with/with out Reconciliation and Real balance=Computed balance&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
@@ -64,7 +64,7 @@
 			<field name="menu_id" ref="account.menu_action_move_line_search"/>
 			<field name="model_id" ref="account.model_account_move_line"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Accounting Statement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Accounting Statement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Accounting entries can be draft or validated&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
@@ -75,7 +75,7 @@
 			<field name="menu_id" ref="account.menu_action_move_line_search"/>
 			<field name="model_id" ref="account.model_account_move_line"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Reconciliation of Entries&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Reconciliation of Entries&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Reconcilation of the entries with invoice.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_statementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>

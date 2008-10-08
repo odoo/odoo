@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After confirming purchase order, it is approved by supplier.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="account.process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Draft Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Draft Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Proposed by the system or manually&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -42,7 +42,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action3"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The user confirm he wants to purchase&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -53,7 +53,7 @@
 			<field name="menu_id" ref="purchase.menu_purchase_form_action4"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Approve Purchase Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Approve Purchase Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The supplier confirms he can deliver&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='approved'&quot;&quot;&quot;" name="model_states"/>
@@ -64,7 +64,7 @@
 			<field name="menu_id" ref="account.menu_action_invoice_tree8"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Invoice Control&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Invoice Control&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Draft invoices are pre-generated for control.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -75,7 +75,7 @@
 			<field name="menu_id" ref="stock.menu_action_picking_tree4"/>
 			<field name="model_id" ref="stock.model_stock_picking"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Packing list&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Packing list&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Pre-generated in draft for control&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='assigned'&quot;&quot;&quot;" name="model_states"/>
@@ -86,7 +86,7 @@
 			<field name="menu_id" ref="account.menu_finance_invoice"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Invoice after packing&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Invoice after packing&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case you control based on delivery&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_purchaseworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>

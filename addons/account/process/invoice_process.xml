@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="account.account_analytic_def_account"/>
 			<field name="model_id" ref="account.model_account_analytic_account"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Analytic&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Analytic&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;From analytic accounts, It creates invoice.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="account.menu_invoice_draft"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Draft Invoices&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Draft Invoices&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Proposed invoice to be checked, validated and printed&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -42,7 +42,7 @@
 			<field name="menu_id" ref="account.menu_finance_invoice"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Invoice_invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Invoice_invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Have a number and entries are generated&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -53,7 +53,7 @@
 			<field name="menu_id" ref="account.menu_action_move_line_form"/>
 			<field name="model_id" ref="account.model_account_move"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Accounting Entries&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Accounting Entries&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Validated accounting entries.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="0" name="flow_start"/>
@@ -63,7 +63,7 @@
 			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Bank Statement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Statement encoding produces payment entries&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -74,7 +74,7 @@
 			<field name="menu_id" ref="account.menu_action_move_line_form"/>
 			<field name="model_id" ref="account.model_account_move_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Payment Entries&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Payment Entries&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Can be draft or validated&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
@@ -85,7 +85,7 @@
 			<field name="menu_id" ref="account.menu_action_move_line_search"/>
 			<field name="model_id" ref="account.model_account_move_reconcile"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Reconciliation&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Reconciliation of entries from end of the payment &quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
@@ -96,7 +96,7 @@
 			<field name="menu_id" ref="account.menu_action_invoice_tree1"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Paid invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Paid invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Paid invoice when reconciled.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>

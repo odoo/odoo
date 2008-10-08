@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="sale.menu_sale_order"/>
 			<field name="model_id" ref="sale.model_sale_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;After confirming order, Create the invoice.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="account.process_process_invoiceworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -31,7 +31,7 @@
 			<field name="menu_id" ref="sale.menu_sale_order"/>
 			<field name="model_id" ref="sale.model_sale_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Sale Order Procurement&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Procurement for each line&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
@@ -42,7 +42,7 @@
 			<field name="menu_id" ref="sale.menu_action_order_tree10"/>
 			<field name="model_id" ref="sale.model_sale_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Quotation&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Quotations are sale order in draft state.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -53,7 +53,7 @@
 			<field name="menu_id" ref="sale.menu_action_order_tree9"/>
 			<field name="model_id" ref="sale.model_sale_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Sale Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Manages the delivery and invoicing progress.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='manual'&quot;&quot;&quot;" name="model_states"/>
@@ -64,7 +64,7 @@
 			<field name="menu_id" ref="stock.menu_picking_waiting"/>
 			<field name="model_id" ref="stock.model_stock_picking"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Packing List&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Packing List&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The worker packs the requested items.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('assigned', 'confirmed')&quot;&quot;&quot;" name="model_states"/>
@@ -75,7 +75,7 @@
 			<field name="menu_id" ref="stock.menu_picking_waiting_delivery"/>
 			<field name="model_id" ref="stock.model_stock_picking"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Delivery Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Delivery Order&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The transporter take the box and deliver it.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('done', 'assigned')&quot;&quot;&quot;" name="model_states"/>
@@ -86,7 +86,7 @@
 			<field name="menu_id" ref="account.menu_invoice_draft"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Invoice&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case you invoice based on sale order.&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -97,7 +97,7 @@
 			<field name="menu_id" ref="account.menu_invoice_draft"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Node Invoice after delivery&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Invoice after delivery&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;In case you invoice based on deliveries (subflow)&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_salesworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
