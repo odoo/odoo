@@ -172,7 +172,7 @@ class base_module_record(osv.osv):
         # Create the minidom document
         self.ids = {}
         doc = minidom.Document()
-        terp = doc.createElement("terp")
+        terp = doc.createElement("openerp")
         doc.appendChild(terp)
         for rec in self.recording_data:
             if rec[0]=='workflow':
@@ -199,8 +199,7 @@ class base_module_record(osv.osv):
                     data.appendChild(res)
             elif rec[0]=='assert':
                 pass
-        res = doc.toprettyxml(indent="\t")
-        return  doc.toprettyxml(indent="\t").encode('utf8')
+        return  doc.toprettyxml(indent="    ").encode('utf8')
 base_module_record()
 
 def fnct_call(fnct):

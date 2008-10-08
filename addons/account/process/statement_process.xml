@@ -1,135 +1,135 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-	
-	<!--
-		Process
-	-->
-	
+    <data>
+    
+    <!--
+        Process
+    -->
+    
         <record id="process_process_statementworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Statement flow for services companies.&quot;&quot;&quot;" name="note"/>
-			<field eval="1" name="active"/>
-			<field eval="&quot;&quot;&quot;Statement workflow&quot;&quot;&quot;" name="name"/>
-		</record>
-		
-	<!--
-		Process Node
-	-->
-	
-		<record id="process_node_electronicfile0" model="process.node">
-			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
-			<field name="model_id" ref="account.model_account_bank_statement"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Electronic File&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Import from your bank statements&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="1" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_importinvoice0" model="process.node">
-			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
-			<field name="model_id" ref="account.model_account_bank_statement"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Import invoice&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Import from invoices or payments&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="1" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_draftstatement0" model="process.node">
-			<field name="menu_id" ref="account.menu_bank_statement_tree2"/>
-			<field name="model_id" ref="account.model_account_bank_statement"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Draft statement&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Set starting and ending balance if bank statement&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_confirmedstatement0" model="process.node">
-			<field name="menu_id" ref="account.menu_bank_statement_tree"/>
-			<field name="model_id" ref="account.model_account_bank_statement"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Confirmed statement&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Confirmed with/with out Reconciliation and Real balance=Computed balance&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_accountingstatemententries0" model="process.node">
-			<field name="menu_id" ref="account.menu_action_move_line_search"/>
-			<field name="model_id" ref="account.model_account_move_line"/>
-			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Accounting Statement&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Accounting entries can be draft or validated&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
-		<record id="process_node_reconciliationofentries0" model="process.node">
-			<field name="menu_id" ref="account.menu_action_move_line_search"/>
-			<field name="model_id" ref="account.model_account_move_line"/>
-			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Reconciliation of Entries&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Reconcilation of the entries with invoice.&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_statementworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-	
-	 <!--
-		Process Transition
-	-->
-	 
-	    <record id="process_transition_filestatement0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;File statement&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Import file from your bank statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_electronicfile0"/>
-		</record>
-	
-		<record id="process_transition_invoiceimport0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Invoice import&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Import invoice from statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_importinvoice0"/>
-		</record>
-	
-		<record id="process_transition_confirmstatementfromdraft0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Confirm statement from draft&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Confirm statement with/without reconciliation from draft statement&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_confirmedstatement0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_draftstatement0"/>
-		</record>
-	
-		<record id="process_transition_confirmaccountingentries0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Confirm Accounting entries&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;After confirming statement, it creates Entries and its entry lines&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_accountingstatemententries0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_confirmedstatement0"/>
-		</record>
-	
-		<record id="process_transition_accountentryreconcile0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Account entry reconcile&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Reconciliation of entries of accounting entries&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_reconciliationofentries0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_accountingstatemententries0"/>
-		</record>
-	
-	</data>
+            <field eval="&quot;&quot;&quot;Statement flow for services companies.&quot;&quot;&quot;" name="note"/>
+            <field eval="1" name="active"/>
+            <field eval="&quot;&quot;&quot;Statement workflow&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+    <!--
+        Process Node
+    -->
+    
+        <record id="process_node_electronicfile0" model="process.node">
+            <field name="menu_id" ref="account.menu_bank_statement_tree2"/>
+            <field name="model_id" ref="account.model_account_bank_statement"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Electronic File&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import from your bank statements&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="1" name="flow_start"/>
+        </record>
+    
+        <record id="process_node_importinvoice0" model="process.node">
+            <field name="menu_id" ref="account.menu_bank_statement_tree2"/>
+            <field name="model_id" ref="account.model_account_bank_statement"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Import invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import from invoices or payments&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="1" name="flow_start"/>
+        </record>
+    
+        <record id="process_node_draftstatement0" model="process.node">
+            <field name="menu_id" ref="account.menu_bank_statement_tree2"/>
+            <field name="model_id" ref="account.model_account_bank_statement"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Draft statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Set starting and ending balance if bank statement&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+    
+        <record id="process_node_confirmedstatement0" model="process.node">
+            <field name="menu_id" ref="account.menu_bank_statement_tree"/>
+            <field name="model_id" ref="account.model_account_bank_statement"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Confirmed statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Confirmed with/with out Reconciliation and Real balance=Computed balance&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+    
+        <record id="process_node_accountingstatemententries0" model="process.node">
+            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Accounting Statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Accounting entries can be draft or validated&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+    
+        <record id="process_node_reconciliationofentries0" model="process.node">
+            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Reconciliation of Entries&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Reconcilation of the entries with invoice.&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+    
+     <!--
+        Process Transition
+    -->
+     
+        <record id="process_transition_filestatement0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;File statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import file from your bank statement&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_electronicfile0"/>
+        </record>
+    
+        <record id="process_transition_invoiceimport0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Invoice import&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import invoice from statement&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_importinvoice0"/>
+        </record>
+    
+        <record id="process_transition_confirmstatementfromdraft0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Confirm statement from draft&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Confirm statement with/without reconciliation from draft statement&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_confirmedstatement0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_draftstatement0"/>
+        </record>
+    
+        <record id="process_transition_confirmaccountingentries0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Confirm Accounting entries&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;After confirming statement, it creates Entries and its entry lines&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_accountingstatemententries0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_confirmedstatement0"/>
+        </record>
+    
+        <record id="process_transition_accountentryreconcile0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Account entry reconcile&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Reconciliation of entries of accounting entries&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_reconciliationofentries0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_accountingstatemententries0"/>
+        </record>
+    
+    </data>
 </openerp>
