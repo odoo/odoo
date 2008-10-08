@@ -31,7 +31,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Inventory Control",
-    "depends" : ["base"],
+    "depends" : ["base", "process"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """
@@ -57,7 +57,9 @@
         "security/ir.model.access.csv",
         "product_data.xml","product_report.xml",
         "product_view.xml", "pricelist_view.xml",
-        "partner_view.xml", "product_wizard.xml"],
+        "partner_view.xml", "product_wizard.xml",
+        "process/product_process.xml"
+        ],
     "active": False,
     "installable": True
 }

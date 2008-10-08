@@ -51,13 +51,14 @@ The validation can be configured in te company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
     """,
-    "depends" : ["hr_timesheet", "hr_timesheet_invoice"],
+    "depends" : ["hr_timesheet", "hr_timesheet_invoice", "process"],
     "init_xml" : [],
     "demo_xml" : ["hr_timesheet_sheet_demo.xml",],
     "update_xml" : [
         "security/ir.model.access.csv",
         "hr_timesheet_sheet_view.xml",
-        "hr_timesheet_workflow.xml"
+        "hr_timesheet_workflow.xml",
+        "process/hr_timesheet_sheet_process.xml",
     ],
     "active": False,
     "installable": True
