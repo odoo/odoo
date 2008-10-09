@@ -39,7 +39,7 @@
                     "crm_jobs_menu.xml", "crm_opportunity_menu.xml",
                     "crm_helpdesk_menu.xml", "crm_lead_menu.xml",
                     "crm_meeting_menu.xml",
-                    "process/crm_configuration_process.xml"                 
+#                    "process/crm_configuration_process.xml",
                     ],
     "active": False,
     "installable": True
