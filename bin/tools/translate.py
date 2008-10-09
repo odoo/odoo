@@ -89,7 +89,7 @@ class TinyPoFile(object):
     def _get_lines(self):
         lines = self.buffer.readlines()
         # remove the BOM (Byte Order Mark):
-        if len(self.lines):
+        if len(lines):
             lines[0] = unicode(lines[0], 'utf8').lstrip(unicode( codecs.BOM_UTF8, "utf8"))
 
         lines.append('') # ensure that the file ends with at least an empty line
