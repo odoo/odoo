@@ -333,6 +333,7 @@ class ir_model_access(osv.osv):
     # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
+        self.pool.get('ir.ui.menu').clear_cache()
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
         self.check()
         return res
@@ -341,6 +342,7 @@ class ir_model_access(osv.osv):
         self.check()
         return res
     def unlink(self, cr, uid, *args, **argv):
+        self.pool.get('ir.ui.menu').clear_cache()
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
         self.check()
         return res
