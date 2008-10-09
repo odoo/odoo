@@ -79,7 +79,11 @@ class base_module_record(osv.osv):
             self.depends[res[0]['module']]=True
         record_list = [record]
         fields = self.pool.get(model).fields_get(cr, uid)
+#        print "before>>>>",fields
+#        fields = self.pool.get(model).fields_view_get(cr, uid, context={})['fields']
+#        print "after>>>>",fields
         for key,val in data.items():
+            print key,val
             if not (val or (fields[key]['type']=='boolean')):
                 continue
             if fields[key]['type'] in ('integer','float'):
@@ -149,6 +153,7 @@ class base_module_record(osv.osv):
         return record_list, noupdate
 
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
+        print "_generate_object_xml>>>",rec,recv,doc
         record_list = []
         noupdate = False
         if rec[4]=='write':
@@ -172,7 +177,7 @@ class base_module_record(osv.osv):
         # Create the minidom document
         self.ids = {}
         doc = minidom.Document()
-        terp = doc.createElement("openerp")
+        terp = doc.createElement("terp")
         doc.appendChild(terp)
         for rec in self.recording_data:
             if rec[0]=='workflow':
@@ -199,16 +204,23 @@ class base_module_record(osv.osv):
                     data.appendChild(res)
             elif rec[0]=='assert':
                 pass
-        return  doc.toprettyxml(indent="    ").encode('utf8')
+        res = doc.toprettyxml(indent="\t")
+        return  doc.toprettyxml(indent="\t").encode('utf8')
 base_module_record()
 
 def fnct_call(fnct):
     def execute(*args, **argv):
+        if len(args) >= 6 and isinstance(args[5], dict):
+            _old_args = args[5].copy()
+        else:
+            _old_args = None
         res = fnct(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
             if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
+                if _old_args is not None:
+                    args[5].update(_old_args)
                 mod.recording_data.append(('query', args, argv,res))
         return res
     return execute
