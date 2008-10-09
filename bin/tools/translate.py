@@ -157,16 +157,16 @@ class TinyPoFile(object):
                           "#\n" \
                           "msgid \"\"\n" \
                           "msgstr \"\"\n" \
-                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' # work in progress \
-                          "\"Report-Msgid-Bugs-To: %(bugmail)s\"\n" \
-                          "\"POT-Creation-Date: %(now)s\"\n"        \
-                          "\"PO-Revision-Date: %(now)s\"\n"         \
-                          "\"Last-Translator: <>\"\n" \
-                          "\"Language-Team: \"\n"   \
-                          "\"MIME-Version: 1.0\"\n" \
-                          "\"Content-Type: text/plain; charset=UTF-8\"\n"   \
-                          "\"Content-Transfer-Encoding: \"\n"       \
-                          "\"Plural-Forms: \"\n"    \
+                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' \
+                          '''"Report-Msgid-Bugs-To: %(bugmail)s\\n"\n''' \
+                          '''"POT-Creation-Date: %(now)s\\n"\n'''        \
+                          '''"PO-Revision-Date: %(now)s\\n"\n'''         \
+                          '''"Last-Translator: <>\\n"\n''' \
+                          '''"Language-Team: \\n"\n'''   \
+                          '''"MIME-Version: 1.0\\n"\n''' \
+                          '''"Content-Type: text/plain; charset=UTF-8\\n"\n'''   \
+                          '''"Content-Transfer-Encoding: \\n"\n'''       \
+                          '''"Plural-Forms: \\n"\n'''    \
                           "\n"
 
                           % { 'project': release.description,
