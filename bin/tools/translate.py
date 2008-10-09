@@ -151,13 +151,40 @@ class TinyPoFile(object):
 
     def write_infos(self, modules):
         import release
+        header_lst = [
+            "# Translation of %(project)s.\n" \
+            "# This file containt the translation of the following modules:\n" \
+            "%(modules)s" \
+            "#\n" \
+            "msgid \"\"\n" \
+            "msgstr \"\"\n" \
+            '''"Project-Id-Version: %(project)s %(version)s\\n"\n'''   \ # work in progress
+            "\"Report-Msgid-Bugs-To: %(bugmail)s\"\n" \
+            "\"POT-Creation-Date: %(now)s\"\n"        \
+            "\"PO-Revision-Date: %(now)s\"\n"         \
+            "\"Last-Translator: <>\"\n" \
+            "\"Language-Team: \"\n"   \
+            "\"MIME-Version: 1.0\"\n" \
+            "\"Content-Type: text/plain; charset=UTF-8\"\n"   \
+            "\"Content-Transfer-Encoding: \"\n"       \
+            "\"Plural-Forms: \"\n"    \
+            "\n"
+        ]
+                          % { 'project': release.description,
+                              'version': release.version,
+                              'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
+                              'bugmail': release.support_email,
+                              'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
+                            }
+
+
         self.buffer.write("# Translation of %(project)s.\n" \
                           "# This file containt the translation of the following modules:\n" \
                           "%(modules)s" \
                           "#\n" \
                           "msgid \"\"\n" \
                           "msgstr \"\"\n" \
-                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n'''   \ # work in progress
+                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' # work in progress \
                           "\"Report-Msgid-Bugs-To: %(bugmail)s\"\n" \
                           "\"POT-Creation-Date: %(now)s\"\n"        \
                           "\"PO-Revision-Date: %(now)s\"\n"         \
