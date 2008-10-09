@@ -125,7 +125,7 @@ class account_report(osv.osv):
         'type': fields.selection([
             ('fiscal', 'Fiscal statement'),
             ('indicator','Indicator'),
-            ('view','View')
+            ('view','View'),
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
