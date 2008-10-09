@@ -90,7 +90,7 @@ back_fields={
 zero_form='''<?xml version="1.0"?>
 <form string="Notification">
 <separator string="You have to select at least 1 Fiscal Year. Try again." colspan="4"/>
-<label string="You may have selected the compare options with more than 1 years with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."/>
+<label string="You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."/>
 </form>'''
 
 zero_fields={
