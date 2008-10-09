@@ -66,7 +66,7 @@ back_fields={
 
 zero_form='''<?xml version="1.0"?>
 <form string="Notification">
-<label string="You have to select atleast 1 Fiscal Year. Try again."/>
+<label string="You have to select at least 1 Fiscal Year. Try again."/>
 </form>'''
 
 zero_fields={
