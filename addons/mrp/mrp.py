@@ -150,10 +150,11 @@ class mrp_bom(osv.osv):
     def _compute_type(self, cr, uid, ids, field_name, arg, context):
         res = dict(map(lambda x: (x,''), ids))
         for line in self.browse(cr, uid, ids):
-            if line.bom_lines or line.type=='phantom':
-                continue
             if line.type=='phantom' and not line.bom_id:
                 res[line.id] = 'set'
+                continue
+            if line.bom_lines or line.type=='phantom':
+                continue
             if line.product_id.supply_method=='produce':
                 if line.product_id.procure_method=='make_to_stock':
                     res[line.id] = 'stock'
