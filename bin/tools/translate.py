@@ -157,7 +157,7 @@ class TinyPoFile(object):
                           "#\n" \
                           "msgid \"\"\n" \
                           "msgstr \"\"\n" \
-                          "\"Project-Id-Version: %(project)s %(version)s\"\n"   \
+                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n'''   \ # work in progress
                           "\"Report-Msgid-Bugs-To: %(bugmail)s\"\n" \
                           "\"POT-Creation-Date: %(now)s\"\n"        \
                           "\"PO-Revision-Date: %(now)s\"\n"         \
@@ -457,7 +457,7 @@ def trans_generate(lang, modules, dbname=None):
 
     modobj = pool.get('ir.module.module')
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
-    installed_modules = map(lambda m: m['name'], modobj.browse(cr, uid, installed_modids, ['name']))
+    installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
     for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
