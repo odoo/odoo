@@ -179,7 +179,8 @@ class report_printscreen_list(report_int):
         node_line = new_doc.createElement("row")
         lines.appendChild(node_line)
         node_line = new_doc.createElement("row")
-        for f in range(0,count+1):
+	count = len(tsum)
+        for f in range(0,count):
             col = new_doc.createElement("col")
             col.setAttribute('para','yes')
             col.setAttribute('tree','no')
