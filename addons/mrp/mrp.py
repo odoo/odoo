@@ -147,11 +147,27 @@ mrp_routing_workcenter()
 class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
+    def _compute_type(self, cr, uid, ids, field_name, arg, context):
+        res = dict(map(lambda x: (x,''), ids))
+        for line in self.browse(cr, uid, ids):
+            if line.bom_lines or line.type=='phantom':
+                continue
+            if line.type=='phantom' and not line.bom_id:
+                res[line.id] = 'set'
+            if line.product_id.supply_method=='produce':
+                if line.product_id.procure_method=='make_to_stock':
+                    res[line.id] = 'stock'
+                else:
+                    res[line.id] = 'order'
+        return res
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active'),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without having two production orders."),
+
+        'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
+
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence'),
