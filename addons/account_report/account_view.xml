@@ -10,18 +10,22 @@
                 <form string="Accounting reporting">
                     <notebook>
                         <page string="General">
-                            <field colspan="3" name="name" select="1"/>
+                            <field colspan="4" name="name" select="1"/>
                             <field name="code" select="1"/>
                             <field name="active" select="1"/>
                             <field name="parent_id" on_change="onchange_parent_id(parent_id)"/>
                             <field name="sequence"/>
                             <field name="type" select="1"/>
+                            <newline/>
                            <!-- <field name="style"/>
                             <field name="color_font"/>
                             <field name="color_back"/>-->
-                            <newline/>
+                            <field name="badness_limit"/>
+                            <field name="goodness_limit"/>
                             <field colspan="4" name="expression"/>
-                            <field colspan="4" name="expression_status"/>
+                            <field name="disp_tree"/>
+                            <field name="disp_graph"/>
+                           <!-- <field colspan="4" name="expression_status"/>-->
                             <separator colspan="4" string="Legend of operators"/>
                             <label align="1.0" string="Account debit:"/>
                             <label align="0.0" string="debit('ACCOUNT_CODE')"/>
@@ -35,17 +39,19 @@
                             <label align="0.0" string="+ - * / ( )"/>
                             <label colspan="4" string="Example: (balance('6','45') - credit('7')) / report('RPT1')"/>
                             <separator colspan="4" string="Return value for status"/>
-                            <group col="2" colspan="1">
-                                <label align="1.0" string="&lt; -1:"/>
+                            <group col="2" colspan="2">
+                                <label align="1.0" string="&lt; Badness Indicator Limit:"/>
                                 <label align="0.0" string="Very bad"/>
-                                <label align="1.0" string="-1:"/>
+                                <label align="1.0" string="= Badness Indicator Limit:"/>
                                 <label align="0.0" string="Bad"/>
-                                <label align="1.0" string="0:"/>
-                                <label align="0.0" string="Normal"/>
-                                <label align="1.0" string="1:"/>
+                                <!--<label align="1.0" string="0:"/>
+                                <label align="0.0" string="Normal"/>-->
+                                <label align="1.0" string="= Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Good"/>
-                                <label align="1.0" string="&gt; 1:"/>
+                                <label align="1.0" string="&gt; Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Very Good"/>
+                            </group>
+                            <group col="2" colspan="2">
                             </group>
                         </page>
                         <page string="Notes">
