@@ -77,7 +77,12 @@ class wizard_model_menu_line(osv.osv_memory):
     _columns = {
         'wizard_id': fields.many2one('wizard.ir.model.menu.create','Wizard'),
         'sequence': fields.integer('Sequence'),
-        'view_type': fields.selection([('tree','Tree'),('form','Form'),('graph','Graph'),('calendar','Calendar')],'View Type',required=True),
+        'view_type': fields.selection([
+            ('tree','Tree'),
+            ('form','Form'),
+            ('graph','Graph'),
+            ('calendar','Calendar'),
+            ('gantt','Gantt')],'View Type',required=True),
         'view_id': fields.many2one('ir.ui.view', 'View'),
     }
     _defaults = {
