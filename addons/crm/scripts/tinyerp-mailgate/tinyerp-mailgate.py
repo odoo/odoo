@@ -60,7 +60,7 @@ priorities = {
 
 class rpc_proxy(object):
     def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
-        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/%s' % (host, port, path))
+        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
         self.user_id = uid
         self.passwd = passwd
         self.dbname = dbname
