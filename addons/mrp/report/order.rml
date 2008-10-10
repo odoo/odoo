@@ -93,7 +93,7 @@
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="16.0" leading="20"/>
 	<paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="9.0" leading="11"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="11"/>
     <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11"/>
     <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
@@ -104,6 +104,7 @@
     <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="CENTER"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
+	<paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER"/>
     <paraStyle name="P14" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER"/>
     <paraStyle name="P15" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
@@ -120,6 +121,7 @@
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+	<paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Table Contents" fontName="Times-Roman"/>
     <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
@@ -142,19 +144,19 @@
     <blockTable colWidths="74.0,88.0,78.0,89.0,199.0" repeatRows="1" style="Table1">
       <tr>
         <td>
-          <para style="P13">Printing date</para>
+          <para style="terp_tblheader_General_Centre">Printing date</para>
         </td>
         <td>
-          <para style="P14">Planned Date </para>
+          <para style="terp_tblheader_General_Centre">Planned Date </para>
         </td>
         <td>
-          <para style="P20">Partner Ref</para>
+          <para style="terp_tblheader_General_Centre">Partner Ref</para>
         </td>
         <td>
-          <para style="P20">SO Number</para>
+          <para style="terp_tblheader_General_Centre">SO Number</para>
         </td>
         <td>
-          <para style="P20">Product Name</para>
+          <para style="terp_tblheader_General_Centre">Product Name</para>
         </td>
       </tr>
     </blockTable>
@@ -162,19 +164,19 @@
       <blockTable colWidths="74.0,88.0,78.0,89.0,199.0" style="Table2">
         <tr>
           <td>
-            <para style="P12">[[ time.strftime('%d/%m/%Y') ]]</para>
+            <para style="terp_default_Centre_8">[[ time.strftime('%d/%m/%Y') ]]</para>
           </td>
           <td>
-            <para style="P15">[[ time.strftime('%d/%m/%Y', time.strptime(o.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
+            <para style="terp_default_Centre_8">[[ time.strftime('%d/%m/%Y', time.strptime(o.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
           </td>
           <td>
-            <para style="P12">[[ o.sale_ref or ' ' ]]</para>
+            <para style="terp_default_Centre_8">[[ o.sale_ref or ' ' ]]</para>
           </td>
           <td>
-            <para style="P12">[[ o.sale_name or '' ]]</para>
+            <para style="terp_default_Centre_8">[[ o.sale_name or '' ]]</para>
           </td>
           <td>
-            <para style="P24">[[ '['+ o.product_id.code +']' ]] [[ o.product_id.name ]]</para>
+            <para style="terp_default_Centre_8">[[ '['+ o.product_id.code +']' ]] [[ o.product_id.name ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -201,7 +203,7 @@
           <para style="P3">[[ '['+line.product_id.code +']' ]][[ line.product_id.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ '%.2f' % line.product_qty ]] [[line.product_uom.name]]</para>
+          <para style="P5">[[ line.product_qty ]] [[line.product_uom.name]]</para>
         </td>
       </tr>
     </blockTable>
