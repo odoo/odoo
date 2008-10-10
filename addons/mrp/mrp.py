@@ -352,6 +352,7 @@ class mrp_production(osv.osv):
         productions=self.read(cr,uid,ids,['id','move_prod_id'])
         res={}
         for production in productions:
+            res[production['id']]=False
             if production.get('move_prod_id',False):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
