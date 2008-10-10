@@ -88,13 +88,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Workcenter">
-                    <notebook>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="active" select="2"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Workcenter">
-                            <separator colspan="4" string="General Information"/>
-                            <field name="name" select="1"/>
-                            <field name="active" select="2"/>
-                            <field name="code" select="1"/>
-                            <newline/>
                             <field name="type"/>
                             <field name="timesheet_id"/>
                             <separator colspan="4" string="Description"/>
@@ -255,12 +255,13 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure">
+                <tree string="BoM Structure" colors="blue:method">
                     <field name="product_id"/>
                     <field name="code"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="method"/>
+                    <field name="routing_id"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </tree>
@@ -630,7 +631,7 @@
                         <field name="procure_method" select="2"/>
                         <field name="priority"/>
                     </group>
-                    <notebook>
+                    <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1"/>
