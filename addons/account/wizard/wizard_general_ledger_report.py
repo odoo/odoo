@@ -61,7 +61,7 @@ account_form = '''<?xml version="1.0"?>
 </form>'''
 
 account_fields = {
-    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True},
+    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
 }
 
 
@@ -110,7 +110,7 @@ def _check_date(self, cr, uid, data, context):
                 raise  wizard.except_wizard('UserError','Date to must be set between ' + res[0]['date_start'] + " and " + res[0]['date_stop'])
         else:
             return 'checkreport'
-    
+
     else:
         raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
 
@@ -119,13 +119,13 @@ class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-        data['form']['sortbydate'] = 'sort_date' 
+        data['form']['sortbydate'] = 'sort_date'
         data['form']['display_account']='bal_all'
         data['form']['landscape']=True
         data['form']['amount_currency'] = True
         return data['form']
     def _get_defaults_fordate(self, cr, uid, data, context):
-        data['form']['sortbydate'] = 'sort_date' 
+        data['form']['sortbydate'] = 'sort_date'
         data['form']['display_account']='bal_all'
         data['form']['landscape']=True
         data['form']['amount_currency'] = True
