@@ -80,5 +80,30 @@
             <field model="process.node" name="source_node_id" ref="mrp.process_node_maketoorder0"/>
         </record>
         
+        <!--    
+        	Process Action
+    	-->
+        
+        <record id="process_transition_action_orderconfirmtask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
+        </record>
+        
+        <record id="process_transition_action_ordercanceltask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
+        </record>
+        
+        <record id="process_transition_action_taskrunprocurement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
+        </record>
+        
     </data>
 </openerp>

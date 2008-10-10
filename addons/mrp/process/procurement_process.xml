@@ -13,7 +13,7 @@
         </record>
         
         <!--
-            Process    Node
+            Process Node
         -->    
         
         <record id="process_node_minimumstockrule0" model="process.node">
@@ -169,7 +169,7 @@
         </record>
     
         <!--
-            Process    Transition    
+            Process Transition    
         -->    
     
         <record id="process_transition_productionprocurement0" model="process.transition">
@@ -298,6 +298,24 @@
             <field model="process.node" name="source_node_id" ref="process_node_billofmaterial0"/>
         </record>
         
+ 		<!--    
+        	Process Condition
+    	-->
+        
+        <record id="process_condition_serviceprocure0" model="process.condition">
+            <field name="model_id" ref="model_mrp_procurement"/>
+            <field name="node_id" ref="process_node_serviceproduct0"/>
+            <field eval="&quot;&quot;&quot;object.product_id.type=='service'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;Condition_service_procure&quot;&quot;&quot;" name="name"/>
+        </record>       
+        
+        <record id="process_condition_stockableprocure0" model="process.condition">
+            <field name="model_id" ref="model_mrp_procurement"/>
+            <field name="node_id" ref="process_node_stockableproduct0"/>
+            <field eval="&quot;&quot;&quot;object.product_id.type=='product'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;Condition_stockable_procure&quot;&quot;&quot;" name="name"/>
+        </record> 
+        
         <!--        
             Process Action
         -->
@@ -305,8 +323,71 @@
         <record id="process_transition_action_procurementpurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_po_assign&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Button purchase&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Purchase&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_procurementtopurchase0"/>
+        </record>
+        
+        <record id="process_transition_action_orderconfirmsubcontracting0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordersubcontracting0"/>
+        </record>
+        
+        <record id="process_transition_action_ordercancelsubcontracting0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordersubcontracting0"/>
+        </record>
+        
+        <record id="process_transition_action_runprocurement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordersubcontracting0"/>
+        </record>
+        
+        <record id="process_transition_action_stockableconfirmrequest0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderrequest0"/>
+        </record>
+        
+        <record id="process_transition_action_stockablecancelrequest0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderrequest0"/>
+        </record>
+        
+        <record id="process_transition_action_requestrunprocurement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderrequest0"/>
+        </record>
+        
+        <record id="process_transition_action_stockableconfirmproduction0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderproduction0"/>
+        </record>
+        
+        <record id="process_transition_action_stockablecancelproduction0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderproduction0"/>
+        </record>
+        
+        <record id="process_transition_action_productionrunprocurement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_stockableorderproduction0"/>
         </record>
         
     </data>

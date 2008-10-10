@@ -158,52 +158,37 @@
         <record id="process_transition_action_confirmpurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;wkf_confirm_order&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_confirmingpurchaseorder0"/>
         </record>
         
         <record id="process_transition_action_cancelpurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;write({'state':'cancel'})&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Cancel Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_confirmingpurchaseorder0"/>
         </record>
         
         <record id="process_transition_action_approvingpurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;wkf_approve_order&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Approved by Supplier&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Approve&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_approvingpurchaseorder0"/>
         </record>
         
         <record id="process_transition_action_approvingcancelpurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;write({'state':'cancel'})&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Cancel Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_approvingpurchaseorder0"/>
         </record>.
         
         <record id="process_transition_action_invoicefrompurchaseorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_invoice_create&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Create invoice from purchase&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Create invoice&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_invoicefrompurchase0"/>
         </record>
         
-        <record id="process_transition_action_packingfrompurchaseorder0" model="process.transition.action">
-            <field eval="&quot;&quot;&quot;action_picking_create&quot;&quot;&quot;" name="action"/>
-            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Packing from purchase&quot;&quot;&quot;" name="name"/>
-            <field name="transition_id" ref="process_transition_createpackinglist0"/>
-        </record>
-        
-        <record id="process_transition_action_packingfrompurchaseorder0" model="process.transition.action">
-            <field eval="&quot;&quot;&quot;action_picking_create&quot;&quot;&quot;" name="action"/>
-            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
-            <field eval="&quot;&quot;&quot;Packing from purchase&quot;&quot;&quot;" name="name"/>
-            <field name="transition_id" ref="process_transition_createpackinglist0"/>
-        </record>
-        
-
     </data>
 </openerp>
