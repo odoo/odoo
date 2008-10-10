@@ -140,7 +140,7 @@ class browse_record(object):
                 col = self._table._columns[name]
             elif name in self._table._inherit_fields:
                 col = self._table._inherit_fields[name][2]
-            elif hasattr(self._table, name):
+            elif hasattr(self._table, str(name)):
                 if isinstance(getattr(self._table, name), (types.MethodType, types.LambdaType, types.FunctionType)):
                     return lambda *args, **argv: getattr(self._table, name)(self._cr, self._uid, [self._id], *args, **argv)
                 else:
