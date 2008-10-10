@@ -254,12 +254,13 @@
             <field name="type">tree</field>
             <field name="field_parent">bom_lines</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure">
+                <tree string="BoM Structure" colors="blue:method">
                     <field name="product_id"/>
                     <field name="code"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="method"/>
+                    <field name="routing_id"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </tree>
