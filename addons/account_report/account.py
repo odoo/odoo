@@ -85,25 +85,26 @@ class account_report(osv.osv):
                 'balance': _calc_balance,
                 'report': _calc_report,
             }
-            if field_name=='status':
-                fld_name = 'expression_status'
-            else:
-                fld_name = 'expression'
+#            if field_name=='status':
+#                fld_name = 'expression_status'
+#            else:
+#                fld_name = 'expression'
             try:
-                val = eval(getattr(rep, fld_name), objdict)
+                val = eval(getattr(rep,'expression'), objdict)
             except:
                 val = 0.0
+
             if field_name=='status':
-                if val<-1:
+                if val<rep.badness_limit:
                     result[rep.id] = 'very bad'
-                elif val<0:
+                elif val==rep.badness_limit:
                     result[rep.id] = 'bad'
-                elif val==0:
+                elif val<rep.goodness_limit:
                     result[rep.id] = 'normal'
-                elif val<1:
+                elif val==rep.goodness_limit:
                     result[rep.id] = 'good'
                 else:
-                    result[rep.id] = 'excellent'
+                    result[rep.id] = 'very good'
             else:
                 result[rep.id] =  val
         return result
@@ -129,7 +130,9 @@ class account_report(osv.osv):
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
-        'expression_status': fields.char('Status expression', size=240, required=True),
+#        'expression_status': fields.char('Status expression', size=240, required=True),
+        'badness_limit' :fields.float('Badness Indicator Limit', digits=(16,2),help='This Value depicts the limit of badness.'),
+        'goodness_limit' :fields.float('Goodness Indicator Limit', digits=(16,2),help='This Value depicts the limit of goodness.'),
         'parent_id': fields.many2one('account.report.report', 'Parent'),
         'child_ids': fields.one2many('account.report.report', 'parent_id', 'Childs'),
         'note': fields.text('Note'),
@@ -140,11 +143,13 @@ class account_report(osv.osv):
             selection=[
                 ('very bad', 'Very Bad'),
                 ('bad', 'Bad'),
-                ('normal', ''),
+                ('normal', 'Normal'),
                 ('good', 'Good'),
-                ('excellent', 'Excellent')
+                ('very good', 'Very Good')
             ],
             string='Status'),
+         'disp_tree':fields.boolean('Display Tree',help='When the indicators will be printed, if one indicator is set with this field to True, then it will display one more graph with all its children in tree'),
+         'disp_graph':fields.boolean('Display as a Graph',help='If the field is set to True,information will be printed as a Graph; as an array otherwise.'),
 #        'style': fields.selection(_style, 'Style', required=True),
 #        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
 #        'color_back' : fields.selection(_color, 'Back Color')
