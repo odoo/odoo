@@ -32,7 +32,7 @@ import wizard
 import pooler
 
 sur_form = '''<?xml version="1.0"?>
-<form string="Refund Invoice">
+<form string="Credit Note">
     <label string="Are you sure you want to refund this invoice ?"/>
 </form>'''
 
@@ -56,7 +56,7 @@ class wiz_refund(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Refund Invoice')]}
+            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Credit Note')]}
         },
         'refund': {
             'actions': [],

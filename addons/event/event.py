@@ -78,15 +78,24 @@ class event(osv.osv):
     _order = 'date_begin'
 
     def copy(self, cr, uid, id, default=None, context=None):
-        return super(event, self).copy(cr, uid,id, default={'code': self.pool.get('ir.sequence').get(cr, uid, 'event.event'),})
+        return super(event, self).copy(cr, uid,id, default={'code': self.pool.get('ir.sequence').get(cr, uid, 'event.event'),'state':'draft'})
 
     def button_draft(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'draft'})
+
     def button_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'})
+
     def button_done(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'done'})
+
     def button_confirm(self, cr, uid, ids, context={}):
+        for eve in self.browse(cr, uid, ids):
+            if eve.mail_auto_confirm:
+                #send reminder that will confirm the event for all the people that were already confirmed
+                reg_ids = self.pool.get('event.registration').search(cr, uid, [('event_id','=',eve.id),('state','not in',['draft','cancel'])])
+                if reg_ids:
+                    self.pool.get('event.registration').mail_user_confirm(cr, uid, reg_ids)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
     def _get_register(self, cr, uid, ids, name, args, context=None):
@@ -116,10 +125,28 @@ class event(osv.osv):
     def write(self, cr, uid, ids,vals, *args, **kwargs):
         res = super(event,self).write(cr, uid, ids,vals, *args, **kwargs)
         if 'date_begin' in vals and vals['date_begin']:
-            data_event = self.browse(cr, uid, ids)
-            for eve in data_event:
+            for eve in self.browse(cr, uid, ids):
+                #change the deadlines of the registration linked to this event
+                reg_ids = self.pool.get('event.registration').search(cr, uid, [('event_id','=',eve.id)])
+                if reg_ids:
+                    self.pool.get('event.registration').write(cr, uid, reg_ids, {'date_deadline':vals['date_begin']})
+                #change the date of the project
                 if eve.project_id:
                     self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin})
+
+        #change the description of the registration linked to this event
+        if 'mail_auto_confirm' in vals:
+            if vals['mail_auto_confirm']:
+                if 'mail_confirm' not in vals:
+                    for eve in self.browse(cr, uid, ids):
+                        vals['mail_confirm'] = eve.mail_confirm
+            else:
+                vals['mail_confirm']=False
+        if 'mail_confirm' in vals:
+            for eve in self.browse(cr, uid, ids):
+                reg_ids = self.pool.get('event.registration').search(cr, uid, [('event_id','=',eve.id)])
+                if reg_ids:
+                    self.pool.get('event.registration').write(cr, uid, reg_ids, {'description':vals['mail_confirm']})
         return res
 
     _columns = {
@@ -134,12 +161,12 @@ class event(osv.osv):
         'date_begin': fields.datetime('Beginning date', required=True),
         'date_end': fields.datetime('Ending date', required=True),
         'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, required=True),
-        'mail_auto_registr':fields.boolean('Mail Auto Register',help='A mail is send when the registration is confirmed'),
-        'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='A mail is send when the event is confimed'),
-        'mail_registr':fields.text('Mail Register',help='Template for the mail'),
-        'mail_confirm':fields.text('Mail Confirm',help='Template for the mail'),
+        'mail_auto_registr':fields.boolean('Mail Auto Register',help='Check this box if you want to use the automatic mailing for new registration'),
+        'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='Check this box if you want ot use the automatic confirmation emailing or the reminder'),
+        'mail_registr':fields.text('Registration Email',help='This email will be sent when someone subscribes to the event.'),
+        'mail_confirm': fields.text('Confirmation Email', help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."),
         'budget_id':fields.many2one('account.budget.post','Budget'),
-        'product_id':fields.many2one('product.product','Product'),
+        'product_id':fields.many2one('product.product','Product', required=True),
     }
     _defaults = {
         'state': lambda *args: 'draft',
@@ -163,13 +190,6 @@ class event_registration(osv.osv):
             obj.create(cr, uid, data, context)
         return True
 
-    def button_reg_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'open',})
-        cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, 'Open', history=True)
-        self.mail_user(cr,uid,ids)
-        return True
-
     def button_reg_close(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'done',})
         cases = self.browse(cr, uid, ids)
@@ -183,30 +203,50 @@ class event_registration(osv.osv):
         return True
 
     def create(self, cr, uid, *args, **argv):
-        args[0]['section_id']= self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None).section_id.id
+        event = self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None)
+        args[0]['section_id']= event.section_id.id
+        args[0]['date_deadline']= event.date_begin
+        args[0]['description']= event.mail_confirm
         res = super(event_registration, self).create(cr, uid, *args, **argv)
         self._history(cr, uid,self.browse(cr, uid, [res]), 'Created', history=True)
         return res
 
     def write(self, cr, uid, *args, **argv):
         if 'event_id' in args[1]:
-            args[1]['section_id']= self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None).section_id.id
+            event = self.pool.get('event.event').browse(cr, uid, args[1]['event_id'], None)
+            args[1]['section_id']= event.section_id.id
+            args[1]['date_deadline']= event.date_begin
+            args[1]['description']= event.mail_confirm
         return super(event_registration, self).write(cr, uid, *args, **argv)
 
-    def mail_user(self,cr,uid,ids):
-        src=tools.config.options['smtp_user']
+    def mail_user_confirm(self,cr,uid,ids):
         reg_ids=self.browse(cr,uid,ids)
         for reg_id in reg_ids:
-            dest=reg_id.email_from
-            if (reg_id.event_id.state in ['confirm','running']) and reg_id.event_id.mail_auto_confirm:
-                if dest:
-                    tools.email_send(src,[dest],'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name,reg_id.event_id.mail_confirm)
-                    return True
-            # Sending another mail
-            if reg_id.event_id.state in ['draft', 'fixed', 'open','confirm','running'] and reg_id.event_id.mail_auto_registr:
-                if dest:
-                    tools.email_send(src,[dest],'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name,reg_id.event_id.mail_registr)
-                    return True
+            src = reg_id.event_id.reply_to or False
+            dest = [reg_id.email_from]
+            if reg_id.email_cc:
+                dest += [reg_id.email_cc]
+            if dest and src:
+                tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+            if not src:
+                raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
+        return False
+
+    def mail_user(self,cr,uid,ids):
+        reg_ids=self.browse(cr,uid,ids)
+        for reg_id in reg_ids:
+            src = reg_id.event_id.reply_to or False
+            dest = [reg_id.email_from]
+            if reg_id.email_cc:
+                dest += [reg_id.email_cc]
+            if reg_id.event_id.mail_auto_confirm or reg_id.event_id.mail_auto_registr:
+                if dest and src:
+                    if reg_id.event_id.state in ['draft', 'fixed', 'open','confirm','running'] and reg_id.event_id.mail_auto_registr:
+                        tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, tinycrm = str(reg_id.case_id.id))
+                    if (reg_id.event_id.state in ['confirm','running']) and reg_id.event_id.mail_auto_confirm:
+                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+                if not src:
+                    raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
 
     _name= 'event.registration'
@@ -215,15 +255,15 @@ class event_registration(osv.osv):
     _columns = {
         'case_id':fields.many2one('crm.case','Case'),
         'nb_register': fields.integer('Number of Registration', readonly=True, states={'draft':[('readonly',False)]}),
-        "partner_order_id":fields.many2one('res.partner','Partner Order'),
         'event_id':fields.many2one('event.event', 'Event Related', required=True),
-        "partner_invoice_id":fields.many2one('res.partner', 'Partner Invoice'),
+        "partner_invoice_id":fields.many2one('res.partner', 'Partner Invoiced'),
+        "contact_id":fields.many2one('res.partner.contact', 'Partner Contact'), #TODO: filter only the contacts that have a function into the selected partner_id
         "unit_price": fields.float('Unit Price'),
         "badge_title":fields.char('Badge Title',size=128),
         "badge_name":fields.char('Badge Name',size=128),
         "badge_partner":fields.char('Badge Partner',size=128),
         "invoice_label":fields.char("Label Invoice",size=128,required=True),
-        "tobe_invoiced":fields.boolean("To be Invoice"),
+        "tobe_invoiced":fields.boolean("To be Invoiced"),
         "invoice_id":fields.many2one("account.invoice","Invoice"),
     }
     _defaults = {
@@ -239,18 +279,20 @@ class event_registration(osv.osv):
         data['name'] = 'Registration: ' + badge_name
         return {'value':data}
 
-    def onchange_contact_id(self, cr, uid, ids, contact_id):
+    def onchange_contact_id(self, cr, uid, ids, contact, partner):
         data ={}
-        if not contact_id:
+        if not contact:
             return data
-        obj_addr=self.pool.get('res.partner.address').browse(cr, uid, contact_id)
-        data['email_from'] = obj_addr.email
-
-        if obj_addr.contact_id:
-            data['badge_name']=obj_addr.contact_id.name
-            data['badge_title']=obj_addr.contact_id.title
-            d=self.onchange_badge_name(cr, uid, ids,data['badge_name'])
-            data.update(d['value'])
+        contact_id = self.pool.get('res.partner.contact').browse(cr, uid, contact)
+        data['badge_name'] = contact_id.name
+        data['badge_title'] = contact_id.title
+        if partner:
+            partner_addresses = self.pool.get('res.partner.address').search(cr, uid, [('partner_id','=',partner)])
+            job_ids = self.pool.get('res.partner.job').search(cr, uid, [('contact_id','=',contact),('address_id','in',partner_addresses)])
+            if job_ids:
+                data['email_from'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).email
+        d = self.onchange_badge_name(cr, uid, ids,data['badge_name'])
+        data.update(d['value'])
 
         return {'value':data}
 
@@ -270,24 +312,26 @@ class event_registration(osv.osv):
         return {'value':{'unit_price' : False,'invoice_label' : False}}
 
 
-    def onchange_partner_id(self, cr, uid, ids, part, event_id, email=False):#override function for partner name.
+    def onchange_partner_id(self, cr, uid, ids, part, event_id, email=False):
         data={}
-        data['badge_partner']=data['partner_address_id']=data['partner_invoice_id']=data['email_from']=data['badge_title']=data['badge_name']=False
+        data['badge_partner'] = data['contact_id'] = data['partner_invoice_id'] = data['email_from'] = data['badge_title'] = data['badge_name'] = False
         if not part:
             return {'value':data}
-
         data['partner_invoice_id']=part
         # this calls onchange_partner_invoice_id
-        d=self.onchange_partner_invoice_id(cr, uid, ids, event_id,part)
+        d = self.onchange_partner_invoice_id(cr, uid, ids, event_id,part)
         # this updates the dictionary
         data.update(d['value'])
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data['partner_address_id']=addr['contact']
-        if addr['contact']:
-            d=self.onchange_contact_id(cr, uid, ids,addr['contact'])
-            data.update(d['value'])
-        partner_data=self.pool.get('res.partner').browse(cr, uid, part)
-        data['badge_partner']=partner_data.name
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part])
+        if addr:
+            if addr.has_key('default'):
+                job_ids = self.pool.get('res.partner.job').search(cr, uid, [('address_id','=',addr['default'])])
+                if job_ids:
+                    data['contact_id'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).contact_id.id
+                    d = self.onchange_contact_id(cr, uid, ids, data['contact_id'],part)
+                    data.update(d['value'])
+        partner_data = self.pool.get('res.partner').browse(cr, uid, part)
+        data['badge_partner'] = partner_data.name
         return {'value':data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):

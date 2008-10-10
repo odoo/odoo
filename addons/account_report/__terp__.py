@@ -40,6 +40,7 @@
         "security/ir.model.access.csv",
         "account_view.xml",
         "account_report.xml",
+        "account_wizard.xml",
     ],
 #   "translations" : {
 #       "fr": "i18n/french_fr.csv"

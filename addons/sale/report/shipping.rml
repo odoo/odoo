@@ -241,10 +241,10 @@
             <para style="terp_default_Right_9">[[ line.product_uom and line.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.sale_line_id.price_unit ]]</para>
+            <para style="terp_default_Right_9">[[ line.sale_line_id and line.sale_line_id.price_unit ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.sale_line_id.price_subtotal ]]</para>
+            <para style="terp_default_Right_9">[[ line.sale_line_id and line.sale_line_id.price_subtotal ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -263,7 +263,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.sale_id.amount_untaxed ]]</para>
+          <para style="terp_default_Right_9">[[ o.sale_id and o.sale_id.amount_untaxed ]]</para>
         </td>
       </tr>
       <tr>
@@ -276,7 +276,7 @@
           <para style="P3">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ o.sale_id.amount_total ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ o.sale_id and o.sale_id.amount_total ]] </para>
         </td>
       </tr>
     </blockTable>

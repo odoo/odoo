@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="view_account_report_form" model="ir.ui.view">
             <field name="name">account.report.report.form</field>
             <field name="model">account.report.report</field>
@@ -10,18 +10,22 @@
                 <form string="Accounting reporting">
                     <notebook>
                         <page string="General">
-                            <field colspan="3" name="name" select="1"/>
+                            <field colspan="4" name="name" select="1"/>
                             <field name="code" select="1"/>
                             <field name="active" select="1"/>
                             <field name="parent_id" on_change="onchange_parent_id(parent_id)"/>
                             <field name="sequence"/>
                             <field name="type" select="1"/>
-                            <field name="style"/>
-                            <field name="color_font"/>
-                            <field name="color_back"/>
                             <newline/>
+                           <!-- <field name="style"/>
+                            <field name="color_font"/>
+                            <field name="color_back"/>-->
+                            <field name="badness_limit"/>
+                            <field name="goodness_limit"/>
                             <field colspan="4" name="expression"/>
-                            <field colspan="4" name="expression_status"/>
+                            <field name="disp_tree"/>
+                            <field name="disp_graph"/>
+                           <!-- <field colspan="4" name="expression_status"/>-->
                             <separator colspan="4" string="Legend of operators"/>
                             <label align="1.0" string="Account debit:"/>
                             <label align="0.0" string="debit('ACCOUNT_CODE')"/>
@@ -33,19 +37,21 @@
                             <label align="0.0" string="report('REPORT_CODE')"/>
                             <label align="1.0" string="Operators:"/>
                             <label align="0.0" string="+ - * / ( )"/>
-                            <label colspan="4" string="Exemple: (balance('6','45') - credit('7')) / report('RPT1')"/>
+                            <label colspan="4" string="Example: (balance('6','45') - credit('7')) / report('RPT1')"/>
                             <separator colspan="4" string="Return value for status"/>
-                            <group col="2" colspan="1">
-                                <label align="1.0" string="&lt; -1:"/>
+                            <group col="2" colspan="2">
+                                <label align="1.0" string="&lt; Badness Indicator Limit:"/>
                                 <label align="0.0" string="Very bad"/>
-                                <label align="1.0" string="-1:"/>
+                                <label align="1.0" string="= Badness Indicator Limit:"/>
                                 <label align="0.0" string="Bad"/>
-                                <label align="1.0" string="0:"/>
-                                <label align="0.0" string="Normal"/>
-                                <label align="1.0" string="1:"/>
+                                <!--<label align="1.0" string="0:"/>
+                                <label align="0.0" string="Normal"/>-->
+                                <label align="1.0" string="= Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Good"/>
-                                <label align="1.0" string="&gt; 1:"/>
+                                <label align="1.0" string="&gt; Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Very Good"/>
+                            </group>
+                            <group col="2" colspan="2">
                             </group>
                         </page>
                         <page string="Notes">
@@ -55,7 +61,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_account_report_tree_simple" model="ir.ui.view">
             <field name="name">account.report.report.tree.simple</field>
             <field name="model">account.report.report</field>
@@ -67,7 +73,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_account_report_tree" model="ir.actions.act_window">
             <field name="name">Custom reporting</field>
             <field name="res_model">account.report.report</field>
@@ -76,8 +82,9 @@
             <field name="domain"/>
             <field name="view_id" ref="view_account_report_tree_simple"/>
         </record>
-        
+
         <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration"/>
+
         <record id="action_account_report_form" model="ir.actions.act_window">
             <field name="name">New Reporting Item Formula</field>
             <field name="res_model">account.report.report</field>
@@ -85,7 +92,7 @@
             <field name="view_mode">form,tree</field>
         </record>
         <menuitem action="action_account_report_form" id="menu_action_account_report_form" parent="account_report.menu_action_account_report_tree_define"/>
-        
+
         <record id="view_account_report_tree" model="ir.ui.view">
             <field name="name">account.report.report.tree</field>
             <field name="model">account.report.report</field>
@@ -101,7 +108,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_account_report_tree_view" model="ir.actions.act_window">
             <field name="name">Custom reporting</field>
             <field name="res_model">account.fiscalyear</field>
@@ -110,8 +117,8 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_reporting"/>
-        
-        
+
+
         <record id="action_account_report_tree_view_fiscal" model="ir.actions.act_window">
             <field name="name">Fiscal Statements reporting</field>
             <field name="res_model">account.fiscalyear</field>
@@ -120,7 +127,7 @@
             <field name="domain">[('type','=','fiscal'),('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_account_report_tree_view_fiscal" id="menu_action_account_report_tree_view_fiscal" parent="account_report.menu_action_account_report_tree_view"/>
-        
+
         <record id="action_account_report_tree_view_indicator" model="ir.actions.act_window">
             <field name="name">Indicators reporting</field>
             <field name="res_model">account.fiscalyear</field>
@@ -129,7 +136,7 @@
             <field name="domain">[('type','=','indicator'),('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_account_report_tree_view_indicator" id="menu_action_account_report_tree_view_indicator" parent="account_report.menu_action_account_report_tree_view"/>
-        
+
         <record id="action_account_report_tree_view_other" model="ir.actions.act_window">
             <field name="name">Others reportings</field>
             <field name="res_model">account.fiscalyear</field>
@@ -138,7 +145,75 @@
             <field name="domain">[('type','=','other'),('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_account_report_tree_view_other" id="menu_action_account_report_tree_view_other" parent="account_report.menu_action_account_report_tree_view"/>
-        
-        
+
+        <record model="ir.ui.view" id="account_report_history_tree">
+			<field name="name">account.report.history1</field>
+			<field name="model">account.report.history</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Account Report History">
+					<field name="period_id"/>
+					<field name="fiscalyear_id"/>
+					<field name="name"/>
+					<field name="val"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_report_history_form">
+			<field name="name">account.report.history2</field>
+			<field name="model">account.report.history</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Account Report History">
+					<field name="period_id" select="2"/>
+					<field name="fiscalyear_id" select="1"/>
+					<field name="name" select="1"/>
+					<field name="val"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_report_history_graph">
+			<field name="name">account.report.history3</field>
+			<field name="model">account.report.history</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Account Report History" type="bar">
+					<field name="period_id"/>
+					<field name="val" operator="+"/>
+					<field name="name" group="True"/>
+
+				</graph>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="account_report_history_record">
+			<field name="res_model">account.report.history</field>
+			<field name="name">All Indicators History</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,tree</field>
+			<field name="view_id" ref="account_report_history_tree"/>
+		</record>
+
+		<menuitem id="menu_account_report_history_record" action="account_report_history_record" parent="account.menu_finance_reporting"/>
+
+		<act_window
+			id="account_report_history_record_structure"
+			name="Indicator history"
+			res_model="account.report.history"
+			src_model="account.report.report"
+			domain="[('name','=', active_id)]"
+			view_type="form"
+			view_mode="graph,tree"/>
+
+		<record model="ir.values" id="ir_open_account_history_view">
+			<field name="key2">tree_but_open</field>
+			<field name="model">account.report.report</field>
+			<field name="name">Open account history</field>
+			<field name="value" eval="'ir.actions.act_window,%d'%account_report_history_record_structure"/>
+			<field name="object" eval="True"/>
+		</record>
+
     </data>
 </openerp>

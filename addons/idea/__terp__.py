@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 {
         "name" : "Idea Manager",
         "version" : "0.1",

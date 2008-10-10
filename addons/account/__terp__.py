@@ -29,7 +29,7 @@
 {
     "name" : "Accounting and financial management",
     "version" : "1.0",
-    "depends" : ["product", "base"],
+    "depends" : ["product", "base", "process"],
     "author" : "Tiny",
     "description": """Financial and accounting module that covers:
     General accounting
@@ -66,6 +66,8 @@
         "project/project_report.xml",
         "product_view.xml",
         "account_assert_test.xml",
+        "process/invoice_process.xml",
+        "process/statement_process.xml"
     ],
     "translations" : {
         "fr": "i18n/french_fr.csv"

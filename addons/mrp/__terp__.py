@@ -32,7 +32,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_mrp.html",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product"],
+    "depends" : ["stock", "hr", "purchase", "product", "process"],
     "description": """
     This is the base module to manage the manufacturing process in Tiny ERP.
 
@@ -47,7 +47,8 @@
     * Cost method by product: standard price, average price
     * Easy analysis of troubles or needs
     * Very flexible
-
+    * Allows to browse Bill of Materials in complete structure
+        that include child and phantom BoMs
     It supports complete integration and planification of stockable goods,
     consumable of services. Services are completly integrated with the rest
     of the software. For instance, you can set up a sub-contracting service
@@ -70,6 +71,7 @@
         "mrp_wizard.xml", 
         "mrp_report.xml",
         "company_view.xml",
+        "process/procurement_process.xml",
     ],
     "active": False,
     "installable": True

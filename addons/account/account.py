@@ -67,8 +67,10 @@ class account_payment_term(osv.osv):
                 amt = round(amount, 2)
             if amt:
                 next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
-                if line.condition == 'end of month':
-                    next_date += RelativeDateTime(day=-1)
+                if line.days2<0:
+                    next_date += RelativeDateTime(day=line.days2)
+                if line.days2>0:
+                    next_date += RelativeDateTime(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
         return result
@@ -83,14 +85,14 @@ class account_payment_term_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
-        'days': fields.integer('Number of Days',required=True),
-        'condition': fields.selection([('net days','Net Days'),('end of month','End of Month')], 'Condition', required=True, help="The payment delay condition id a number of days expressed in 2 ways: net days or end of the month. The 'net days' condition implies that the paiment arrive after 'Number of Days' calendar days. The 'end of the month' condition requires that the paiement arrives before the end of the month that is that is after 'Number of Days' calendar days."),
+        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
+        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
     _defaults = {
         'value': lambda *a: 'balance',
         'sequence': lambda *a: 5,
-        'condition': lambda *a: 'net days',
+        'days2': lambda *a: 0,
     }
     _order = "sequence"
 account_payment_term_line()
@@ -141,9 +143,9 @@ class account_account(osv.osv):
         if context is None:
             context = {}
         pos = 0
-       
+
         while pos<len(args):
-            
+
             if args[pos][0]=='code' and args[pos][1] in ('like','ilike') and args[pos][2]:
                 args[pos] = ('code', '=like', str(args[pos][2].replace('%',''))+'%')
             if args[pos][0]=='journal_id':
@@ -159,7 +161,7 @@ class account_account(osv.osv):
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id','in',ids1)
             pos+=1
-        
+
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -1119,8 +1121,8 @@ class account_tax(osv.osv):
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the VAT declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usualy 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
@@ -1518,13 +1520,15 @@ account_subscription_line()
 
 class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
+
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
+
     _columns = {
         'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
         'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
@@ -1538,13 +1542,14 @@ class account_config_wizard(osv.osv_memory):
         'name': lambda *a: time.strftime('%Y'),
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month'
+        'period':lambda *a:'month',
+        'charts': lambda *a: -1,
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -1593,7 +1598,7 @@ class account_config_wizard(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -1776,8 +1781,8 @@ class account_tax_template(osv.osv):
 
         # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the VAT declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
@@ -2065,7 +2070,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }
@@ -2073,7 +2078,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
+                'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
         }

@@ -73,6 +73,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
@@ -84,6 +85,7 @@
             <field name="res_model">account.analytic.account</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
+             <field name="view_mode">form,graph</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
         <menuitem
@@ -96,7 +98,7 @@
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,graph</field>
             <field eval="view_account_analytic_account_form" name="view_id"/>
         </record>
         <menuitem action="analytic_account_form" id="account_analytic_form" parent="account.account_analytic_def_account"/>
@@ -355,6 +357,18 @@
                 </field>
             </field>
         </record>
+
+	 <record id="analytic_accounts_graph" model="ir.ui.view">
+            <field name="name">analytic.accounts.graph</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Analytic Account Statistics" type="bar">
+                    <field name="complete_name"/>
+                    <field name="balance" operator="+"/>
+                </graph>
+            </field>
+     </record>
 
     </data>
 </openerp>
