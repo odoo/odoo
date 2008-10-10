@@ -225,7 +225,7 @@
                     <field name="product_uos_qty" groups="product.group_uos"/>
                     <field name="routing_id" select="2"/>
                     <field name="type"/>
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list"/>
                         </page>
@@ -259,6 +259,7 @@
                     <field name="code"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
+                    <field name="method"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </tree>

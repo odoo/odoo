@@ -30,7 +30,7 @@
 import time
 import netsvc
 from osv import fields, osv
-
+import pooler
 from tools.misc import currency
 
 import mx.DateTime
@@ -40,25 +40,25 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 class account_report(osv.osv):
     _name = "account.report.report"
     _description = "Account reporting"
-    _color = [
-            ('', ''),
-            ('green','Green'),
-            ('red','Red'),
-            ('pink','Pink'),
-            ('blue','Blue'),
-            ('yellow','Yellow'),
-            ('cyan','Cyan'),
-            ('lightblue','Light Blue'),
-            ('orange','Orange'),
-            ]
-    _style = [
-            ('1','Header 1'),
-            ('2','Header 2'),
-            ('3','Header 3'),
-            ('4','Header 4'),
-            ('5','Normal'),
-            ('6', 'Small'),
-            ]
+#    _color = [
+#            ('', ''),
+#            ('green','Green'),
+#            ('red','Red'),
+#            ('pink','Pink'),
+#            ('blue','Blue'),
+#            ('yellow','Yellow'),
+#            ('cyan','Cyan'),
+#            ('lightblue','Light Blue'),
+#            ('orange','Orange'),
+#            ]
+#    _style = [
+#            ('1','Header 1'),
+#            ('2','Header 2'),
+#            ('3','Header 3'),
+#            ('4','Header 4'),
+#            ('5','Normal'),
+#            ('6', 'Small'),
+#            ]
 
     def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
         def _calc_credit(*code):
@@ -85,25 +85,26 @@ class account_report(osv.osv):
                 'balance': _calc_balance,
                 'report': _calc_report,
             }
-            if field_name=='status':
-                fld_name = 'expression_status'
-            else:
-                fld_name = 'expression'
+#            if field_name=='status':
+#                fld_name = 'expression_status'
+#            else:
+#                fld_name = 'expression'
             try:
-                val = eval(getattr(rep, fld_name), objdict)
+                val = eval(getattr(rep,'expression'), objdict)
             except:
                 val = 0.0
+
             if field_name=='status':
-                if val<-1:
+                if val<rep.badness_limit:
                     result[rep.id] = 'very bad'
-                elif val<0:
+                elif val==rep.badness_limit:
                     result[rep.id] = 'bad'
-                elif val==0:
+                elif val<rep.goodness_limit:
                     result[rep.id] = 'normal'
-                elif val<1:
+                elif val==rep.goodness_limit:
                     result[rep.id] = 'good'
                 else:
-                    result[rep.id] = 'excellent'
+                    result[rep.id] = 'very good'
             else:
                 result[rep.id] =  val
         return result
@@ -113,8 +114,8 @@ class account_report(osv.osv):
         if parent_id:
             acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
             v['type']=acc.type
-            if int(acc.style) < 6:
-                v['style'] = str(int(acc.style)+1)
+#            if int(acc.style) < 6:
+#                v['style'] = str(int(acc.style)+1)
         return {'value': v}
 
     _columns = {
@@ -125,10 +126,13 @@ class account_report(osv.osv):
         'type': fields.selection([
             ('fiscal', 'Fiscal statement'),
             ('indicator','Indicator'),
+            ('view','View'),
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
-        'expression_status': fields.char('Status expression', size=240, required=True),
+#        'expression_status': fields.char('Status expression', size=240, required=True),
+        'badness_limit' :fields.float('Badness Indicator Limit', digits=(16,2),help='This Value depicts the limit of badness.'),
+        'goodness_limit' :fields.float('Goodness Indicator Limit', digits=(16,2),help='This Value depicts the limit of goodness.'),
         'parent_id': fields.many2one('account.report.report', 'Parent'),
         'child_ids': fields.one2many('account.report.report', 'parent_id', 'Childs'),
         'note': fields.text('Note'),
@@ -139,17 +143,19 @@ class account_report(osv.osv):
             selection=[
                 ('very bad', 'Very Bad'),
                 ('bad', 'Bad'),
-                ('normal', ''),
+                ('normal', 'Normal'),
                 ('good', 'Good'),
-                ('excellent', 'Excellent')
+                ('very good', 'Very Good')
             ],
             string='Status'),
-        'style': fields.selection(_style, 'Style', required=True),
-        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
-        'color_back' : fields.selection(_color, 'Back Color')
+         'disp_tree':fields.boolean('Display Tree',help='When the indicators will be printed, if one indicator is set with this field to True, then it will display one more graph with all its children in tree'),
+         'disp_graph':fields.boolean('Display as a Graph',help='If the field is set to True,information will be printed as a Graph; as an array otherwise.'),
+#        'style': fields.selection(_style, 'Style', required=True),
+#        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
+#        'color_back' : fields.selection(_color, 'Back Color')
     }
     _defaults = {
-        'style': lambda *args: '5',
+#        'style': lambda *args: '5',
         'active': lambda *args: True,
         'type': lambda *args: 'indicator',
     }
@@ -176,6 +182,35 @@ class account_report(osv.osv):
     ]
 
 account_report()
+
+class account_report_history(osv.osv):
+
+    def _calc_value(self, cr, uid, ids, name, args, context):
+        acc_report_id=self.read(cr,uid,ids,['tmp','period_id'])
+        tmp_ids={}
+        for a in acc_report_id:
+            period_val=pooler.get_pool(cr.dbname).get('account.period').read(cr,uid,[a['period_id'][0]])[0]
+            period_id=pooler.get_pool(cr.dbname).get('account.period').search(cr,uid,[('date_start','<=',period_val['date_start']),('fiscalyear_id','=',period_val['fiscalyear_id'][0])])
+            tmp_ids[a['id']] = pooler.get_pool(cr.dbname).get('account.report.report').read(cr,uid,[a['tmp']],context={'periods':period_id})[0]['amount']
+        return tmp_ids
+
+    _name = "account.report.history"
+    _description = "Indicator"
+    _table = "account_report"
+    _auto = False
+    _order='name'
+    _columns = {
+        'period_id': fields.many2one('account.period','Period', readonly=True, select=True),
+        'fiscalyear_id': fields.many2one('account.fiscalyear','Fiscal Year', readonly=True, select=True),
+        'name': fields.many2one('account.report.report','Indicator', readonly=True, select=True),
+        'val': fields.function(_calc_value, method=True, string='Value', readonly=True),
+        'tmp' : fields.integer(string='temp',readonly=True)
+    }
+
+    def init(self, cr):
+        cr.execute('''create or replace view account_report as (select ar.id as tmp,((pr.id*100000)+ar.id) as id,ar.id as name,pr.id as period_id,pr.fiscalyear_id as fiscalyear_id from account_report_report as ar cross join account_period as pr group by ar.id,pr.id,pr.fiscalyear_id)''')
+
+account_report_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
