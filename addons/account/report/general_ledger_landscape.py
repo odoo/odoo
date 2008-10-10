@@ -261,7 +261,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					
 			#
 			if l['amount_currency'] != None:
-				self.tot_currency = self.tot_currency + l['amount_currency']			
+				self.tot_currency = self.tot_currency + l['amount_currency']	
+				
 		return res
 
 	def _sum_debit_account(self, account, form):
@@ -336,10 +337,12 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		return sum_solde
 	
 	def _set_get_account_currency_code(self, account_id):
+		print"====account_id=====",account_id
 		self.cr.execute("SELECT c.code as code "\
 				"FROM res_currency c,account_account as ac "\
 				"WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
 		result = self.cr.fetchone()
+		print"====result====",result
 		if result:
 			self.account_currency = result[0]
 		else:
@@ -347,13 +350,16 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		
 		
 	def _sum_currency_amount_account(self, account, form):
+		
 		self._set_get_account_currency_code(account.id)
+		self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %d "%account.id)
+		total = self.cr.fetchone()
+		
 		if self.account_currency:
-			return_field = str(self.tot_currency) + self.account_currency
-			self.tot_currency = 0.0
+			return_field = str(total[0]) + self.account_currency
 			return return_field
 		else:
-			self.tot_currency = 0.0
-			return ' '
+			currency_total = self.tot_currency = 0.0
+			return currency_total
 
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger_landscape, header=False)
