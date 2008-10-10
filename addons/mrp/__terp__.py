@@ -47,7 +47,8 @@
     * Cost method by product: standard price, average price
     * Easy analysis of troubles or needs
     * Very flexible
-
+    * Allows to browse Bill of Materials in complete structure
+        that include child and phantom BoMs
     It supports complete integration and planification of stockable goods,
     consumable of services. Services are completly integrated with the rest
     of the software. For instance, you can set up a sub-contracting service
