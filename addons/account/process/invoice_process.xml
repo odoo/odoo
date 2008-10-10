@@ -106,6 +106,14 @@
         <!--    
             Process Transition
         -->
+        
+        <record id="res_roles_invoice0" model="res.roles">
+            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+        <record id="account.t5" model="workflow.transition">
+            <field name="role_id" ref="res_roles_invoice0"/>
+        </record>
     
         <record id="process_transition_analyticinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
@@ -123,6 +131,7 @@
             <field eval="&quot;&quot;&quot;Number of entries are generated&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoiceinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_draftinvoices0"/>
+            <field eval="[(6,0,[ref('account.t5')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_validentries0" model="process.transition">

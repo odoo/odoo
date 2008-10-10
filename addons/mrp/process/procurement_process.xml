@@ -170,7 +170,15 @@
     
         <!--
             Process Transition    
-        -->    
+        -->   
+        
+        <record id="res_roles_mrp0" model="res.roles">
+            <field eval="&quot;&quot;&quot;Mrp&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+        <record id="mrp.trans_draft_confirm" model="workflow.transition">
+            <field name="role_id" ref="res_roles_mrp0"/>
+        </record> 
     
         <record id="process_transition_productionprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
@@ -215,6 +223,7 @@
             <field eval="&quot;&quot;&quot;If procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_subcontracting0"/>
             <field model="process.node" name="source_node_id" ref="process_node_maketoorder0"/>
+            <field eval="[(6,0,[ref('mrp.trans_draft_confirm')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_procurementstockable0" model="process.transition">
@@ -251,6 +260,7 @@
             <field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_stockablerequest0"/>
             <field model="process.node" name="source_node_id" ref="process_node_stockablemaketoorder0"/>
+            <field eval="[(6,0,[ref('mrp.trans_draft_confirm')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_stockableorderproduction0" model="process.transition">
@@ -260,6 +270,7 @@
             <field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_stockableproduction0"/>
             <field model="process.node" name="source_node_id" ref="process_node_stockablemaketoorder0"/>
+            <field eval="[(6,0,[ref('mrp.trans_draft_confirm')])]" name="transition_ids"/>
         </record>
         
         <record id="process_transition_procurementtopurchase0" model="process.transition">

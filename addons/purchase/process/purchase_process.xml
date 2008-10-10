@@ -96,7 +96,19 @@
         <!--        
             Process Transition
         -->
-    
+    	
+    	<record id="res_roles_purchase0" model="res.roles">
+            <field eval="&quot;&quot;&quot;Purchase&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+        <record id="purchase.trans_draft_confirmed" model="workflow.transition">
+            <field name="role_id" ref="res_roles_purchase0"/>
+        </record>
+        
+        <record id="purchase.trans_router_invoice" model="workflow.transition">
+            <field name="role_id" ref="res_roles_purchase0"/>
+        </record>
+    	
         <record id="process_transition_confirmingpurchaseorder0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
@@ -104,6 +116,7 @@
             <field eval="&quot;&quot;&quot;Confirm Purchase order from Request for quotation&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
             <field model="process.node" name="source_node_id" ref="process_node_draftpurchaseorder0"/>
+            <field eval="[(6,0,[ref('purchase.trans_draft_confirmed')])]" name="transition_ids"/>
         </record>
         
         <record id="process_transition_approvingpurchaseorder0" model="process.transition">
@@ -122,6 +135,7 @@
             <field eval="&quot;&quot;&quot;After approved purchase order , it comes into the supplier invoice&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoicecontrol0"/>
             <field model="process.node" name="source_node_id" ref="process_node_approvepurchaseorder0"/>
+            <field eval="[(6,0,[ref('purchase.trans_router_invoice')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_createpackinglist0" model="process.transition">
