@@ -226,24 +226,27 @@ class document_directory(osv.osv):
 		('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !')
 	]
 
-	def get_resource_path(self,cr,uid,res_model,res_id):
-		# to be need test
+	def get_resource_path(self,cr,uid,dir_id,res_model,res_id):
+		# this method will be used in process module
+		# to be need test and Improvement if resource dir has parent resource (link resource)
 		path=[]
-		def _parent(dir_id):
+		def _parent(dir_id,path):
 			parent=self.browse(cr,uid,dir_id)
-			if parent.parent_id:
-				_parent(parent.parent_id.id)
+			if parent.parent_id and not parent.ressource_parent_type_id:
+				_parent(parent.parent_id.id,path)
+				path.append(parent.name)
 			else:
 				path.append(parent.name)
-				return path			
+				return path
+
+		directory=self.browse(cr,uid,dir_id)
 		model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
-		directory_ids=self.search(cr,uid,[('ressource_type_id','=',model_ids[0]),('ressource_id','=',res_id)])		
-		if len(directory_ids):
-			path=parent(directory_ids[0])
-			direc=self.browse(cr,uid,directory_ids)[0]			
-			path.append(direc.name)
-			path.append(self.pool.get(direc.ressource_type_id.model).browse(cr,uid,res_id).name)			
-			return "ftp://localhost:8021/"+cr.dbname+'/'.join(path)
+		if directory:
+			_parent(dir_id,path)
+			path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
+			user=self.pool.get('res.users').browse(cr,uid,uid)
+			#print "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
+			return "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
 		return False
 	def _check_duplication(self, cr, uid,vals):
 		if 'name' in vals:
@@ -343,8 +346,9 @@ class document_directory(osv.osv):
 		return result
 
 	def write(self, cr, uid, ids, vals, context=None):
-		if not self._check_duplication(cr,uid,vals):
-			raise except_orm('ValidateError', 'Directory name must be unique!')
+		# need to make constraints to checking duplicate
+		#if not self._check_duplication(cr,uid,vals):
+		#	raise except_orm('ValidateError', 'Directory name must be unique!')
 		return super(document_directory,self).write(cr,uid,ids,vals,context=context)
 
 	def copy(self, cr, uid, id, default=None, context=None):
@@ -591,4 +595,96 @@ class document_file(osv.osv):
 				except:
 					pass
 		return super(document_file, self).unlink(cr, uid, ids, context)
-document_file()		
+document_file()
+
+class auto_configuration(osv.osv_memory):
+    _name='auto.configuration'
+    _rec_name = 'Auto Directory configuration'
+    _columns = {
+     			}
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+         }
+
+    def action_config(self, cr, uid, ids, context=None):
+	    obj=self.pool.get('document.directory')
+	    search_ids=obj.search(cr,uid,[])
+	    browse_lst=obj.browse(cr,uid,search_ids)
+	    model_obj=self.pool.get('ir.model')
+
+	    for doc_obj in browse_lst:
+	        if doc_obj.name in ('Partner','Contacts','Personnal Folders','Partner Category','Sales Order','All Sales Order','Sales by Salesman','Projects'):
+	            res={}
+	            id=[]
+	            if doc_obj.name=='Partner':
+	                id=model_obj.search(cr,uid,[('model','=','res.partner')])
+
+	            if doc_obj.name=='Contacts':
+	                id=model_obj.search(cr,uid,[('model','=','res.partner.address')])
+
+	            if doc_obj.name=='Partner Category':
+	                id=model_obj.search(cr,uid,[('model','=','res.partner.category')])
+
+	            if  doc_obj.name=='All Sales Order':
+	                val={}
+	                id=model_obj.search(cr,uid,[('model','=','sale.order')])
+	                if not len(doc_obj.content_ids):
+	                	val['name']='Sale Report'
+	                	val['suffix']='_report'
+	                	val['report_id']=self.pool.get('ir.actions.report.xml').search(cr,uid,[('report_name','=','sale.order')])[0]
+	                	val['extension']='.pdf'
+	                	val['directory_id']=doc_obj.id
+	                	self.pool.get('document.directory.content').create(cr,uid,val)
+
+	            if doc_obj.name=='Sales by Salesman':
+	                id=model_obj.search(cr,uid,[('model','=','res.users')])
+
+	            if doc_obj.name=='Personnal Folders':
+	                id=model_obj.search(cr,uid,[('model','=','res.users')])
+
+	            if doc_obj.name=='Projects':
+	                id=model_obj.search(cr,uid,[('model','=','account.analytic.account')])
+	                res['ressource_tree']=True
+
+	            if id:
+	                res['ressource_type_id']=id[0]
+	                res['type']='ressource'
+	       	        obj.write(cr,uid,doc_obj.id,res)
+	    self.create_folder(cr, uid, ids, context=None)
+	    return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+            }
+
+    def create_folder(self, cr, uid, ids, context=None):
+	    doc_obj=self.pool.get('document.directory')
+	    model_obj=self.pool.get('ir.model')
+	    for name in ('Sales','Quotation','Meetings','Analysis Reports'):
+	        res={}
+	        if name=='Sales':
+	            child_model=model_obj.search(cr,uid,[('model','=','sale.order')])
+	            link_model=model_obj.search(cr,uid,[('model','=','res.users')])
+	            if child_model:
+	                res['type']='ressource'
+	                res['ressource_type_id']=child_model[0]
+	                res['ressource_parent_type_id']=link_model[0]
+	                res['domain']="[('user_id','=',active_id)]"
+	        else:
+	            link_model=model_obj.search(cr,uid,[('model','=','account.analytic.account')])
+	            if link_model:
+	                res['ressource_parent_type_id']=link_model[0]
+	                res['ressource_id']=0
+	        if res:
+	            res['name']=name
+	            doc_obj.create(cr,uid,res)
+	    return True
+
+auto_configuration()

@@ -31,7 +31,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_purchase.html",
-    "depends" : ["base", "account", "stock"],
+    "depends" : ["base", "account", "stock", "process"],
     "category" : "Generic Modules/Sales & Purchases",
     "init_xml" : [],
     "demo_xml" : ["purchase_demo.xml", 
@@ -47,7 +47,8 @@
         "purchase_report.xml", 
         "purchase_wizard.xml",
         "stock_view.xml",
-        "partner_view.xml"
+        "partner_view.xml",
+        "process/purchase_process.xml"
     ],
     "active": False,
     "installable": True

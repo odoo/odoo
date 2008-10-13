@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -638,12 +638,13 @@ class account_analytic_account_summary_month(osv.osv):
         'month': fields.char('Month', size=25, readonly=True),
     }
     def init(self, cr):
-        cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_month AS (' \
+        cr.execute('DROP VIEW IF EXISTS account_analytic_analysis_summary_month')
+        cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
                 'SELECT ' \
                     '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
                     'd.account_id AS account_id, ' \
                     'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
-                    'TO_CHAR(d.month, \'YYYYMM\') AS month_id, ' \
+                    'TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') AS month_id, ' \
                     'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
                 'FROM ' \
                     '(SELECT ' \

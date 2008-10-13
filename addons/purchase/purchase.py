@@ -239,7 +239,7 @@ class purchase_order(osv.osv):
             return {'value':{'partner_address_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
         pricelist = self.pool.get('res.partner').property_get(cr, uid,
-					part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
+                    part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
     def wkf_approve_order(self, cr, uid, ids):
@@ -430,11 +430,11 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False):
-        prod= self.pool.get('product.product').browse(cr, uid,product)
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
+        prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id)['lang']
@@ -463,9 +463,9 @@ class purchase_order_line(osv.osv):
         if partner_id:
             taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
             if taxep_id:
-				taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
+                taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
         if not taxep or not taxep.id:
-            res['value']['taxes_id'] = [x.id for x in product.taxes_id]
+            res['value']['taxes_id'] = [x.id for x in prod['supplier_taxes_id']]
         else:
             res5 = [taxep.id]
             for t in taxes:

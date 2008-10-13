@@ -75,17 +75,6 @@
 
 
     <!-- Views for Partners -->
-    <record model="ir.ui.view" id="view_partner_tree_inherited1">
-        <field name="name">Partner tree inherited</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <field name="address" position="replace">
-                <field name='address' string='# of Addresses'/>
-            </field>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_partner_form_inherit">
         <field name="name">Partner form inherited</field>

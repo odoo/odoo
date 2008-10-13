@@ -43,7 +43,7 @@ Lots of reporting on time and employee tracking are provided.
 It is completly integrated with the cost accounting module. It allows you
 to set up a management by affair.
     """,
-    "depends" : ["account", "hr", "base", "hr_attendance"],
+    "depends" : ["account", "hr", "base", "hr_attendance", "process"],
     "init_xml" : ["hr_timesheet_data.xml"],
     "demo_xml" : ["hr_timesheet_demo.xml",],
     "update_xml" : [
@@ -51,6 +51,7 @@ to set up a management by affair.
         "hr_timesheet_view.xml",
         "hr_timesheet_report.xml",
         "hr_timesheet_wizard.xml",
+        "process/hr_timesheet_process.xml"
     ],
     "active": False,
     "installable": True

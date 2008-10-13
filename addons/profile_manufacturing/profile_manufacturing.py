@@ -69,7 +69,9 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             "our frontend point of sale for a perfect ergonomy with touchscreen "\
             "materials and payment processing hardware."),
         'portal': fields.boolean('Portal',
-            help="This module allows you to manage a Portal system.")
+            help="This module allows you to manage a Portal system."),
+         'mrp_subproduct': fields.boolean('Mrp Sub Product',
+            help="This module allows you to add sub poducts in mrp bom.")
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {

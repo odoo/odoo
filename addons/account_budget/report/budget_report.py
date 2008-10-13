@@ -59,22 +59,21 @@ class budget_report(report_sxw.rml_parse):
             prev_1=prev * period_days / total_days
         return [{'prev': prev, 'prev_period': prev_1, 'achievements': achievements}]
 
-    def budget_total(self, post_objs, date1, date2):
+    def budget_total(self, post_obj, date1, date2):
         res = {'prev': 0.0, 'prev_period': 0.0, 'achievements': 0.0}
-        for post_obj in post_objs:
-            r = self.post_total(post_obj, date1, date2)[0]
-            for k in r:
-                res[k] += r[k]
+        r = self.post_total(post_obj, date1, date2)[0]
+        for k in r:
+            res[k] += r[k]
         return [res]
 
     def lines(self, post_obj, date1, date2):
         res = []
         for a in post_obj.account_ids:
             self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
-            achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
+            achievements = float(self.cr.fetchone()[0])
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
-report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report)
+report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report,header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

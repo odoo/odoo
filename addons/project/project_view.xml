@@ -310,13 +310,28 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
+                <calendar type="gantt" color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
                     <field name="name"/>
                     <field name="project_id"/>
                 </calendar>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_project_task_graph">
+
+        <record id="view_task_gantt" model="ir.ui.view">
+            <field name="name">project.task.gantt</field>
+            <field name="model">project.task</field>
+            <field name="type">gantt</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
+                    <level object="project.project" domain="[]">
+                        <field name="name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
+        <record id="view_project_task_graph" model="ir.ui.view">
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="type">graph</field>
@@ -333,7 +348,7 @@
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_main"/>
@@ -342,7 +357,7 @@
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field name="domain">[('user_id', '=', uid)]</field>
         </record>
         <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_main"/>

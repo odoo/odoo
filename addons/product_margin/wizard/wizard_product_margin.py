@@ -36,17 +36,17 @@ def _action_open_window(self, cr, uid, data, context):
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.tree', 'tree'))
     view_res = cr.fetchone()
     return {
-        'name': 'Product Margin',
-        'context':{'date_start':data['form']['from_date'],'date_stop':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
+        'name': 'Product Margins',
+         'context':{'date_from':data['form']['from_date'],'date_to':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
         'view_type': 'form',
-        "view_mode": 'tree,form',
+        "view_mode": 'tree,form,graph',
         'res_model':'product.product',
         'type': 'ir.actions.act_window',
         'view_id': view_res,
         }
     
     
-class product_margin(wizard.interface):
+class product_margins(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="View Stock of Products">
         <separator string="Select " colspan="4"/>
@@ -58,28 +58,32 @@ class product_margin(wizard.interface):
              'from_date': {
                 'string': 'From',
                 'type': 'date',
+				'default': lambda *a:time.strftime('%Y-01-01'),
+
         },
              'to_date': {
                 'string': 'To',
                 'type': 'date',
+				'default': lambda *a:time.strftime('%Y-12-31'),
+
         },
          'invoice_state': {
                 'string': 'Invoice State',
                 'type': 'selection',
-                'selection': [('paid','Paid'),('all_open','All Open'),('draft_open','Draft and Open')],
+                'selection': [('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid'),],
                 'required': True,
-                'default': lambda *a:"all_open",
+                'default': lambda *a:"open_paid",
         },
     }
 
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Margin','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Margins','gtk-ok')]}
         },
     'open': {
             'actions': [],
             'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
         }
     }
-product_margin('product.margin')
+product_margins('product.margins')

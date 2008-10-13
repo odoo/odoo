@@ -61,8 +61,9 @@ class res_partner_contact(osv.osv):
         if not len(ids):
             return []
         res = []
-        for r in self.read(cr, user, ids, ['name','first_name']):
-            addr = str(r['name'] or '')
+        for r in self.read(cr, user, ids, ['name','first_name','title']):
+            addr = r['title'] and str(r['title'])+" " or ''
+            addr +=str(r['name'] or '')
             if r['name'] and r['first_name']:
                 addr += ' '
             addr += str(r['first_name'] or '')
@@ -88,18 +89,27 @@ class res_partner_address(osv.osv):
 
     _name = 'res.partner.address'
     _inherit='res.partner.address'
-    _description ='Partner Contact'
+    _description ='Partner Address'
     _columns = {
         'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
+        'email': fields.related('job_ids', 'email', type='char', string='Default Email'),
     }
 res_partner_address()
 
 class res_partner_job(osv.osv):
 
-    def _get_partner_name(self, cr, uid, ids, *a):
+    def _get_partner_id(self, cr, uid, ids, *a):
         res={}
         for id in self.browse(cr, uid, ids):
-            res[id.id] = id.address_id.partner_id.id
+            res[id.id] = id.address_id.partner_id and id.address_id.partner_id.id or False
+        return res
+
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        res = []
+        for r in self.browse(cr, uid, ids):
+            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] +", "+ r.function_id.name))
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
@@ -115,7 +125,7 @@ class res_partner_job(osv.osv):
     _description ='Contact Function'
     _order = 'sequence_contact'
     _columns = {
-        'name': fields.function(_get_partner_name, method=True, type='many2one', relation='res.partner', string='Partner'),
+        'name': fields.function(_get_partner_id, method=True, type='many2one', relation='res.partner', string='Partner'),
         'address_id':fields.many2one('res.partner.address','Address', required=True),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
         'function_id': fields.many2one('res.partner.function','Function', required=True),

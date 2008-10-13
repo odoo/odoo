@@ -24,7 +24,7 @@
                 Administration \ Users \ Users
             for example, you maybe will do it for the user 'admin'.
 """,
-    "depends" : ["hr","crm_configuration"],
+    "depends" : ["hr","crm_configuration", "process"],
     "init_xml" : [],
     "update_xml" : [
         "security/ir.model.access.csv",
@@ -32,6 +32,7 @@
         "hr_view.xml",
         "hr_holidays_report.xml",
         "hr_holidays_wizard.xml",
+#        "process/hr_holidays_process.xml"
     ],
 #    "demo_xml" : ["hr_bel_holidays_2008.xml",],
     "demo_xml" : [],

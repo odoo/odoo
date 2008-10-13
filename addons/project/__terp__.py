@@ -32,7 +32,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_project.html",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr"],
+    "depends" : ["product", "account", "hr", "process"],
     "description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
     "init_xml" : [],
     "demo_xml" : ["project_demo.xml"],
@@ -43,6 +43,7 @@
         "project_wizard.xml", 
         "project_view.xml", 
         "project_report.xml", 
+        "process/task_process.xml"
     ],
     "active": False,
     "installable": True

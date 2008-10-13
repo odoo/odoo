@@ -55,20 +55,22 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Events">
-					<notebook>
-					<page string="Information">
-						<separator string="Event description" colspan="4"/>
-						<field name="name" string="Event" select="1" colspan="4"/>
-						<field name="parent_id" domain="[('parent_id','child_of','Event')]" string="Category"/>
-						<field name="type"/>
+					<group col="6" colspan="4">
+						<field name="name" string="Event" select="1"/>
+						<field name="type" select="2"/>
 						<field name="user_id" select="1"/>
-						<field name="active"/>
 						<field name="date_begin" select="1"/>
 						<field name="date_end" select="2"/>
+						<field name="product_id"/>
+					</group>
+					<notebook colspan="4">
+					<page string="General">
+						<separator string="Event description" colspan="4"/>
+						<field name="parent_id" domain="[('parent_id','child_of','Event')]" string="Parent Category"/>
+						<field name="active"/>
 						<field name="register_min" select="2"/>
 						<field name="register_max" select="2"/>
 						<field name="budget_id"/>
-						<field name="product_id" required="1"/>
 						<separator string="Tasks management" colspan="4"/>
 						<field name="project_id"/>
 						<button string="Create Retro-Planning" name="%(event.event_wiz)d" type="action"/>
@@ -82,13 +84,15 @@
 						</group>
 					</page>
 					<page string="Mailing">
+						<field name="reply_to"/>
+						<separator string="Auto Registration Email" colspan="4"/>
 						<field name="mail_auto_registr"/>
-						<newline/><newline/>
-						<field name="mail_registr"/>
 						<newline/>
+						<field name="mail_registr" colspan="4"/>
+						<separator string="Auto Confirmation Email" colspan="4"/>
 						<field name="mail_auto_confirm"/>
-						<newline/><newline/>
-						<field name="mail_confirm"/>
+						<newline/>
+						<field name="mail_confirm" colspan="4"/>
 						<newline/>
 					</page>
 					<page string="Statistics">
@@ -138,7 +142,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
 		</record>
-		<menuitem parent="menu_event_config" id="menu_event_new_event" action="action_new_event_form" />
+		<menuitem parent="menu_event_main" id="menu_event_new_event" action="action_new_event_form" />
 
 
 		<record model="ir.actions.act_window" id="action_event_view">
@@ -196,27 +200,29 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Registration">
-					<notebook>
-					<page string="General">
-						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" colspan="1" domain="[('state','in',('draft','confirm'))]"/>
+					<group col="6" colspan="4">
+						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
 						<field name="nb_register"/>
-						<newline/>
-						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id, email_from)" />
+						<group colspan="2">
+							<field name="user_id" select="1"/>
+							<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+						</group>
+						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id)" />
 						<field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
-						<field name="partner_address_id" select="2" on_change="onchange_contact_id(partner_address_id)" colspan="3"/>
+						<field name="unit_price" select="2"/>
+					</group>
+					<notebook colspan="4">
+					<page string="General">
+						<field name="contact_id" select="2" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
 						<field name="email_from" select="2"/>
 						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
-						<field name="user_id" select="1"/>
-						<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
 						<newline/>
-						<separator colspan="4"/>
-						<field name="unit_price" select="2"/>
 						<separator string="Badge" colspan="4"/>
 						<field name="badge_title" select="2"/>
 						<field name="badge_name" select="2" on_change="onchange_badge_name(badge_name)"/>
 						<field name="badge_partner" select="2"/>
 						<newline/>
-						<separator colspan="4"/>
+						<separator string="Status" colspan="4"/>
 						<group col="8" colspan="4">
 							<field name="state" select="1" colspan="2"/>
 							<button name="button_reg_close" string="Registration Invoiced" states="open" type="object"/>

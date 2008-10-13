@@ -39,7 +39,7 @@ from mx import DateTime
 #----------------------------------------------------------
 # Workcenters
 #----------------------------------------------------------
-# capacity_hour : capacity per hour. default: 1.0. 
+# capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
 # unit_per_cycle : how many units are produced for one cycle
 #
@@ -115,7 +115,7 @@ class mrp_routing(osv.osv):
         'note': fields.text('Description'),
         'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Workcenters'),
 
-        'location_id': fields.many2one('stock.location', 'Production Location', 
+        'location_id': fields.many2one('stock.location', 'Production Location',
             help="Keep empty if you produce at the location where the finnished products are needed." \
                 "Put a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations."
@@ -147,11 +147,39 @@ mrp_routing_workcenter()
 class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
+    def _child_compute(self, cr, uid, ids, name, arg, context={}):
+        result = {}
+        for bom in self.browse(cr, uid, ids, context=context):
+            result[bom.id] = map(lambda x: x.id, bom.bom_lines)
+            ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
+            if bom.type=='phantom' or ok:
+                sids = self.pool.get('mrp.bom').search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
+                if sids:
+                    bom2 = self.pool.get('mrp.bom').browse(cr, uid, sids[0], context=context)
+                    result[bom.id] += map(lambda x: x.id, bom2.bom_lines)
+        return result
+    def _compute_type(self, cr, uid, ids, field_name, arg, context):
+        res = dict(map(lambda x: (x,''), ids))
+        for line in self.browse(cr, uid, ids):
+            if line.type=='phantom' and not line.bom_id:
+                res[line.id] = 'set'
+                continue
+            if line.bom_lines or line.type=='phantom':
+                continue
+            if line.product_id.supply_method=='produce':
+                if line.product_id.procure_method=='make_to_stock':
+                    res[line.id] = 'stock'
+                else:
+                    res[line.id] = 'order'
+        return res
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active'),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without having two production orders."),
+
+        'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
+
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence'),
@@ -168,7 +196,9 @@ class mrp_bom(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
-        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type')
+        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type'),
+        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many'),
+        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many')
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -181,6 +211,7 @@ class mrp_bom(osv.osv):
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)',  'All product quantities must be greater than 0 !'),
     ]
+
     def _check_recursion(self, cr, uid, ids):
         level = 500
         while len(ids):
@@ -194,7 +225,7 @@ class mrp_bom(osv.osv):
         (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id'])
     ]
 
-    
+
     def onchange_product_id(self, cr, uid, ids, product_id, name, context={}):
         if product_id:
             prod=self.pool.get('product.product').browse(cr,uid,[product_id])[0]
@@ -266,7 +297,7 @@ class mrp_bom(osv.osv):
 
     def set_indices(self, cr, uid, ids, context = {}):
         if not ids or (ids and not ids[0]):
-            return True 
+            return True
         res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
         rev_ids = res[0]['revision_ids']
         idx = 1
@@ -293,7 +324,7 @@ class mrp_bom_revision(osv.osv):
         'author_id': fields.many2one('res.users', 'Author'),
         'bom_id': fields.many2one('mrp.bom', 'BoM', select=True),
     }
-    
+
     _defaults = {
         'author_id': lambda x,y,z,c: z,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -321,6 +352,7 @@ class mrp_production(osv.osv):
         productions=self.read(cr,uid,ids,['id','move_prod_id'])
         res={}
         for production in productions:
+            res[production['id']]=False
             if production.get('move_prod_id',False):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
@@ -377,6 +409,13 @@ class mrp_production(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
     }
     _order = 'date_planned asc, priority desc';
+
+    def location_id_change(self, cr, uid, ids, src, dest, context={}):
+        if dest:
+            return {}
+        if src:
+            return {'value': {'location_dest_id': src}}
+        return {}
 
     def product_id_change(self, cr, uid, ids, product):
         if not product:
@@ -579,7 +618,7 @@ class mrp_production(osv.osv):
                 'state': 'waiting'
             }
             res_final_id = self.pool.get('stock.move').create(cr, uid, data)
-            
+
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 'WTF', [res_final_id])]})
             moves = []
             for line in production.product_lines:
@@ -961,14 +1000,14 @@ class mrp_procurement(osv.osv):
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             context.update({'lang':partner.lang})
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
-            
+
             line = {
                 'name': product.name,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),                
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
                 'notes':product.description_purchase,
             }
@@ -979,7 +1018,7 @@ class mrp_procurement(osv.osv):
             if partner_id:
                 taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
                 if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)                
+					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
             if not taxep or not taxep.id:
                 taxes_ids = [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id]
             else:

@@ -9,7 +9,7 @@
                    people to intelligently and efficiently manage tasks, issues,
                    and requests. It manages key tasks such as communication, 
                    identification, prioritization, assignment, resolution and notification.""",
-    "depends" : ["crm","report_crm"],
+    "depends" : ["crm","report_crm", "process"],
     "init_xml" : [
                     "crm_config_view.xml",
                     "crm_bugs_view.xml",
@@ -34,8 +34,12 @@
                     "crm_jobs_data.xml",
                     "crm_meeting_data.xml",
                     "crm_lead_data.xml",
-                    "crm_opportunity_data.xml",                    
-                    
+                    "crm_opportunity_data.xml",
+                    "crm_bugs_menu.xml", "crm_fund_menu.xml",
+                    "crm_jobs_menu.xml", "crm_opportunity_menu.xml",
+                    "crm_helpdesk_menu.xml", "crm_lead_menu.xml",
+                    "crm_meeting_menu.xml",
+#                    "process/crm_configuration_process.xml",
                     ],
     "active": False,
     "installable": True
