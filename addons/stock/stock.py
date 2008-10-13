@@ -320,34 +320,26 @@ class stock_picking(osv.osv):
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
-<<<<<<< TREE
-        for pick in self.browse(cr, uid, [ids], context):
-=======
         if isinstance(ids, (int, long)):
             ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
->>>>>>> MERGE-SOURCE
             cr.execute("""update stock_move set
                     date_planned=%s 
                 where
                     picking_id=%d and 
-                    (date_planned>%s)""", (value,pick.id,value))
+                    (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
-<<<<<<< TREE
-        for pick in self.browse(cr, uid,[ids], context):
-=======
         if isinstance(ids, (int, long)):
             ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
->>>>>>> MERGE-SOURCE
             cr.execute("""update stock_move set
                     date_planned=%s 
                 where
                     picking_id=%d and 
-                    (date_planned<%s)""", (value,pick.id,value))
+                    (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -418,17 +410,7 @@ class stock_picking(osv.osv):
     #def copy(self, cr, uid, id, data=None, context={}):
     #    data = data or {}
     #    return super(stock_picking, self).copy(cr, uid, id, data, context)
-    def unlink(self, cr, uid, ids):
-        pickings = self.read(cr, uid, ids, ['state'])
-        unlink_ids = []
-        for s in pickings:
-            if s['state'] in ['draft','cancel']:
-                unlink_ids.append(s['id'])
-            else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Picking(s) which are in %s State!' % s['state']))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
-        return True
-    
+
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         sid = self.pool.get('res.partner.address').browse(cr, uid, partner_id, context).partner_id.property_stock_supplier.id
         return { }
@@ -890,7 +872,6 @@ class stock_move(osv.osv):
         'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
-        'partner_id':fields.related('picking_id','address_id',type='many2one',relation='res.partner.address', string='Partner'),
     }
     
     _constraints = [
@@ -900,17 +881,6 @@ class stock_move(osv.osv):
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
-    
-#    def unlink(self, cr, uid, ids):
-#        moves = self.read(cr, uid, ids, ['state'])
-#        unlink_ids = []
-#        for s in moves:
-#            if s['state'] in ['draft','cancel']:
-#                unlink_ids.append(s['id'])
-#            else:
-#                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Stock Move(s) which are in %s State!' % s['state']))
-#        osv.osv.unlink(self, cr, uid, unlink_ids)
-#        return True
     
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):

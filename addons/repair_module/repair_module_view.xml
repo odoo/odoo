@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <record id="view_repair_order_form" model="ir.ui.view">
+            <field name="name">mrp.repair.form</field>
+            <field name="model">mrp.repair</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sales order">
+                    <group col="4" colspan="4">
+                        <field name="product_id" select="1" />
+                        <field name="prodlot_id" select="2"/>
+                        <field name="partner_id" select="2"/>
+                        <field name="address_id"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Products">
+                            <field name="location_id"/>
+                            <field name="move_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="limit"/>
+                            <newline/>
+                            <separator colspan="4" string="Operations"/>
+                            <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
+                                <form string="Operations">
+                                     <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty" string="Qty"/>
+                                    <field name="product_uom" string="UoM"/>
+                                    <field name="price_unit"/>
+                                    <field name="prodlot_id"/>
+                                    <field name="location_id"/>
+                                    <field name="invoice"/>
+                                </form>
+                                <tree string="Operations lines">
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty" string="Qty"/>
+                                    <field name="product_uom" string="UoM"/>
+                                    <field name="price_unit"/>
+                                    <field name="prodlot_id"/>
+                                    <field name="location_id"/>
+                                    <field name="invoice"/>
+                                </tree>
+                            </field>
+                            <newline/>
+                            <group col="13" colspan="4">
+                                <field name="state" select="2"/>
+                                <!--<button name="repair_confirm" states="draft" string="Confirm Repair"/>
+                                <button name="cancel" states="confirmed" string="Repair Done"/>
+                                <button name="cancel" states="draft,confirmed,2binvoiced" string="Cancel Repair"/>
+                                <button name="cancel" states="2binvoiced" string="Make Invoice"/> -->
+                            </group>
+                        </page>
+                        <page string="Invoicing">
+                            <field name="pricelist_id"/>
+                            <field name="partner_invoice_id"/>
+                            <field name="invoice_method"/>
+                            <field name="invoice_id"/>
+                            <separator colspan="4" string="Fees"/>
+                            <field colspan="4" name="fees_lines" nolabel="1"/>
+                        </page>
+                        <page string="Quality">
+                            <separator colspan="4" string="Internal Notes"/>
+                            <field colspan="4" name="internal_notes" nolabel="1"/>
+                            <separator colspan="4" string="Quotation Notes"/>
+                            <field colspan="4" name="quotation_notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_repair_order_form" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.repair</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+        
+        <menuitem action="action_repair_order_form" id="menu_repair_order" parent="mrp.menu_mrp_root"/>
+    
+    </data>
+</openerp>
