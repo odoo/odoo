@@ -43,7 +43,7 @@ class product_product(osv.osv):
             res[val.id] = {}
             date_from=context.get('date_from', time.strftime('%Y-01-01'))	
             date_to=context.get('date_to', time.strftime('%Y-12-31'))	
-            invoice_state=context.get('invoice_state', 'open')	
+            invoice_state=context.get('invoice_state', 'open_paid')	
             if 'date_from' in field_names:
             	res[val.id]['date_from']=date_from
             if 'date_to' in field_names:
@@ -54,12 +54,12 @@ class product_product(osv.osv):
             
             invoice_types=[]
             states=[]
-            if invoice_state=='draft_open':
-                states=['draft','open']
-            elif invoice_state=='paid':
+            if invoice_state=='paid':
                 states=['paid']
-            elif invoice_state=='open':
-                states=['open']
+            elif invoice_state=='open_paid':
+                states=['open','paid']
+            elif invoice_state=='draft_open_paid':
+                states=['draft','open','paid']
             
             if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
                 invoice_types=['out_invoice','in_refund']
@@ -71,15 +71,11 @@ class product_product(osv.osv):
                 	avg(l.price_unit) as avg_unit_price,
                 	sum(l.quantity) as num_qty,
                 	sum(l.quantity * l.price_unit) as total,
-                	sum(sale_line.product_uom_qty * sale_line.price_unit) as sale_expected,
-                	sum(purchase_line.product_qty * purchase_line.price_unit) as normal_cost	
+                	sum(l.quantity * product.list_price) as sale_expected,
+                	sum(l.quantity * product.standard_price) as normal_cost	
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
-                left join sale_order_invoice_rel sale_invoice on (i.id=sale_invoice.invoice_id)
-                left join sale_order sale on sale.id=sale_invoice.order_id
-                left join sale_order_line  sale_line on sale.id=sale_line.order_id
-                left join purchase_order purchase on purchase.invoice_id=i.id
-                left join purchase_order_line purchase_line on purchase_line.order_id=purchase.id
+                left join product_template product on (product.id=l.product_id)                
                 where l.product_id = %s and i.state in ('%s') and i.type in ('%s')            
                 """%(val.id,"','".join(states),"','".join(invoice_types))                
                 cr.execute(sql)
@@ -111,24 +107,22 @@ class product_product(osv.osv):
         'date_from': fields.function(_product_margin, method=True, type='date', string='From Date', multi=True),
         'date_to': fields.function(_product_margin, method=True, type='date', string='To Date', multi=True),
         'invoice_state': fields.function(_product_margin, method=True, type='selection', selection=[
-			('paid','Paid'),
-            ('open','All Open'),
-            ('draft_open','Draft and Open')
+			('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid')
 			], string='Invoice State',multi=True, readonly=True),        
-        'sale_avg_price' : fields.function(_product_margin, method=True, type='float', string='Avg. Unit Price', multi='sale'),
-        'purchase_avg_price' : fields.function(_product_margin, method=True, type='float', string='Avg. Unit Price', multi='purchase'),
-        'sale_num_invoiced' : fields.function(_product_margin, method=True, type='float', string='# Invoiced', multi='sale'),
-        'purchase_num_invoiced' : fields.function(_product_margin, method=True, type='float', string='# Invoiced', multi='purchase'),
-        'sales_gap' : fields.function(_product_margin, method=True, type='float', string='Sales Gap', multi='sale'),
-        'purchase_gap' : fields.function(_product_margin, method=True, type='float', string='Purchase Gap', multi='purchase'),
-        'turnover' : fields.function(_product_margin, method=True, type='float', string='Turnover' ,multi='sale'),
-        'total_cost'  : fields.function(_product_margin, method=True, type='float', string='Total Cost', multi='purchase'),
-        'sale_expected' :  fields.function(_product_margin, method=True, type='float', string='Expected Sale', multi='sale'),
-        'normal_cost'  : fields.function(_product_margin, method=True, type='float', string='Normal Cost', multi='purchase'),
-        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total'),
-        'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total'),
-        'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin'),
-        'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin'),
+        'sale_avg_price' : fields.function(_product_margin, method=True, type='float', string='Avg. Unit Price', multi='sale',help="Avg. Price in Customer Invoices)"),
+        'purchase_avg_price' : fields.function(_product_margin, method=True, type='float', string='Avg. Unit Price', multi='purchase',help="Avg. Price in Supplier Invoices "),
+        'sale_num_invoiced' : fields.function(_product_margin, method=True, type='float', string='# Invoiced', multi='sale',help="Sum of Quantity in Customer Invoices"),
+        'purchase_num_invoiced' : fields.function(_product_margin, method=True, type='float', string='# Invoiced', multi='purchase',help="Sum of Quantity in Supplier Invoices"),
+        'sales_gap' : fields.function(_product_margin, method=True, type='float', string='Sales Gap', multi='sale',help="Excepted Sale - Turn Over"),
+        'purchase_gap' : fields.function(_product_margin, method=True, type='float', string='Purchase Gap', multi='purchase',help="Normal Cost - Total Cost"),
+        'turnover' : fields.function(_product_margin, method=True, type='float', string='Turnover' ,multi='sale',help="Sum of Multification of Invoice price and quantity of Customer Invoices"),
+        'total_cost'  : fields.function(_product_margin, method=True, type='float', string='Total Cost', multi='purchase',help="Sum of Multification of Invoice price and quantity of Supplier Invoices "),
+        'sale_expected' :  fields.function(_product_margin, method=True, type='float', string='Expected Sale', multi='sale',help="Sum of Multification of Sale Catalog price and quantity of Customer Invoices"),
+        'normal_cost'  : fields.function(_product_margin, method=True, type='float', string='Normal Cost', multi='purchase',help="Sum of Multification of Cost price and quantity of Supplier Invoices"),
+        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Total Cost"),
+        'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total',help="Excepted Sale - Normal Cost"),
+        'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
+        'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),
     }   
     
     

@@ -27,24 +27,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-    "name" : "Reporting for accounting",
+    "name" : "MRP Sub Product",
     "version" : "1.0",
-    "depends" : ["account"],
     "author" : "Tiny",
-    "description": """Financial and accounting reporting""",
-    "website" : "http://tinyerp.com/module_account.html",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [ ],
-    "demo_xml" : [ ],
+    "website" : "http://tinyerp.com/module_stock.html",
+    "depends" : ["base","mrp"],
+    "category" : "Generic Modules/Production",
+    "init_xml" : [],
+    "demo_xml" : [],
     "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_view.xml",
-        "account_report.xml",
-        "account_wizard.xml",
+        "mrp_subproduct_view.xml",
     ],
-#   "translations" : {
-#       "fr": "i18n/french_fr.csv"
-#   },
     "active": False,
     "installable": True
 }

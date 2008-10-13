@@ -320,6 +320,8 @@ class stock_picking(osv.osv):
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
+        if isinstance(ids, (int, long)):
+            ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
                     date_planned=%s 
@@ -330,6 +332,8 @@ class stock_picking(osv.osv):
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
+        if isinstance(ids, (int, long)):
+            ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
             cr.execute("""update stock_move set
                     date_planned=%s 
@@ -808,7 +812,12 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
-    
+    def name_get(self, cr, uid, ids, context={}):
+        res = []
+        for line in self.browse(cr, uid, ids, context):
+            res.append((line.id, (line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
+        return res
+
     def _check_tracking(self, cr, uid, ids):
          for move in self.browse(cr, uid, ids):             
              if not move.prodlot_id and \

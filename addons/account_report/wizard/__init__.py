@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -25,29 +25,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-{
-    "name" : "Reporting for accounting",
-    "version" : "1.0",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """Financial and accounting reporting""",
-    "website" : "http://tinyerp.com/module_account.html",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [ ],
-    "demo_xml" : [ ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_view.xml",
-        "account_report.xml",
-        "account_wizard.xml",
-    ],
-#   "translations" : {
-#       "fr": "i18n/french_fr.csv"
-#   },
-    "active": False,
-    "installable": True
-}
+#
+##############################################################################
+
+import wizard_print_indicators
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
