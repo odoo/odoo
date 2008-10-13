@@ -23,6 +23,7 @@
             <field eval="&quot;&quot;&quot;Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After confirming order, Create the invoice.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="account.process_process_invoiceworkflow0"/>
+            <field name="subflow_id" ref="process_process_salesworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -34,6 +35,7 @@
             <field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement for each line&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="process_process_salesworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -85,10 +87,11 @@
         <record id="process_node_invoice0" model="process.node">
             <field name="menu_id" ref="account.menu_invoice_draft"/>
             <field name="model_id" ref="account.model_account_invoice"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case you invoice based on sale order.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -96,10 +99,11 @@
         <record id="process_node_invoiceafterdelivery0" model="process.node">
             <field name="menu_id" ref="account.menu_invoice_draft"/>
             <field name="model_id" ref="account.model_account_invoice"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Invoice after delivery&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case you invoice based on deliveries (subflow)&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -123,7 +127,7 @@
             <field eval="&quot;&quot;&quot;Salesman&quot;&quot;&quot;" name="name"/>
         </record>
     
-        <record id="sale.trans_draft_router" model="workflow.transition">
+        <record id="sale.trans_router_wait_ship" model="workflow.transition">
             <field name="role_id" ref="res_roles_salesman0"/>
         </record>
     

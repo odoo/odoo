@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <openerp>
     <data>
     
@@ -43,6 +42,7 @@
             <field eval="&quot;&quot;&quot;Procurements&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="purchase.process_process_purchaseworkflow0"/>
+            <field name="subflow_id" ref="process_process_procurementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -54,6 +54,7 @@
             <field eval="&quot;&quot;&quot;Production order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement for raw materials&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="process_process_procurementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'picking_except', 'confirmed', 'ready', 'in_production', 'cancel', 'done')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -109,6 +110,7 @@
             <field eval="&quot;&quot;&quot;Subcontracting&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procure method is purchase&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="purchase.process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -153,6 +155,7 @@
             <field eval="&quot;&quot;&quot;Stockable request&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procure method is purchase&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="purchase.process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -164,6 +167,7 @@
             <field eval="&quot;&quot;&quot;Stockable production&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procure method is produce&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="process_process_procurementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>

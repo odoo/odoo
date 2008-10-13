@@ -89,6 +89,7 @@
             <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Defines the task work entry into timesheet line&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="subflow_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>

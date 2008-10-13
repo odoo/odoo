@@ -67,7 +67,7 @@
         "product_view.xml",
         "account_assert_test.xml",
         "process/invoice_process.xml",
-        "process/statement_process.xml"
+        "process/statement_process.xml",
     ],
     "translations" : {
         "fr": "i18n/french_fr.csv"

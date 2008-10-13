@@ -23,6 +23,7 @@
             <field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After confirming purchase order, it is approved by supplier.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="account.process_process_invoiceworkflow0"/>
+            <field name="subflow_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -67,6 +68,7 @@
             <field eval="&quot;&quot;&quot;Invoice Control&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Draft invoices are pre-generated for control.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -89,6 +91,7 @@
             <field eval="&quot;&quot;&quot;Invoice after packing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case you control based on delivery&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
