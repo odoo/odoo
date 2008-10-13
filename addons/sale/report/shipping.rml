@@ -62,7 +62,6 @@
       <lineStyle kind="LINEBELOW" colorName="#666666" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#666666" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#666666" start="4,-1" stop="4,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -73,7 +72,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
@@ -196,11 +194,8 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="67.0,212.0,71.0,65.0,59.0,63.0" repeatRows="1" style="Table3">
+    <blockTable colWidths="279.0,71.0,65.0,59.0,63.0" repeatRows="1" style="Table3">
       <tr>
-        <td>
-          <para style="terp_tblheader_Details">Reference</para>
-        </td>
         <td>
           <para style="terp_tblheader_Details">Designation</para>
         </td>
@@ -223,13 +218,10 @@
     </para>
     <section>
       <para style="P2">[[ repeatIn(o.move_lines,'line') ]]</para>
-      <blockTable colWidths="66.0,213.0,70.0,46.0,21.0,58.0,63.0" style="Table4">
+      <blockTable colWidths="279.0,70.0,46.0,21.0,58.0,63.0" style="Table4">
         <tr>
           <td>
-            <para style="terp_default_9">[[line.product_id.code ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_9">[[ line.product_id and line.product_id.name or '']]</para>
+            <para style="terp_default_9">[[line.product_id.code ]] [[ line.product_id and line.product_id.name or '']]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ (line.prodlot_id and line.prodlot_id.name) or ' ' ]]</para>
@@ -244,7 +236,7 @@
             <para style="terp_default_Right_9">[[ '%.2f' %((line.sale_line_id and line.sale_line_id.price_unit) or (line.product_id.lst_price) or '0.00') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ '%.2f' %((line.sale_line_id and line.sale_line_id.price_subtotal) or (line.product_qty*line.product_id.lst_price)  or '0.00') ]]</para>
+            <para style="terp_default_Right_9">[[ '%.2f' %((line.sale_line_id and line.sale_line_id.price_subtotal) or (line.product_qty*line.product_id.lst_price) or '0.00') ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -276,7 +268,7 @@
           <para style="P3">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % (o.sale_id and o.sale_id.amount_total or sum_total(o) or '0.00') ]] </para>
+          <para style="terp_default_Right_9_Bold">[[ '%.2f' % (o.sale_id and o.sale_id.amount_total or sum_total(o) or '0.00') ]]</para>
         </td>
       </tr>
     </blockTable>
