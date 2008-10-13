@@ -531,6 +531,7 @@ class product_packaging(osv.osv):
     _description = "Packaging"
     _rec_name = 'ean'
     _columns = {
+        'sequence': fields.integer('Sequence'),
         'name' : fields.char('Description', size=64),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by palet or box."),
@@ -559,6 +560,7 @@ class product_packaging(osv.osv):
 
     _defaults = {
         'rows' : lambda *a : 3,
+        'sequence' : lambda *a : 1,
         'ul' : _get_1st_ul,
     }
 

@@ -844,7 +844,7 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account'))
+                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.' % (line.account_id.code, line.account_id.name)))
 
             if abs(amount) < 0.0001:
                 if not len(line_draft_ids):
@@ -1859,9 +1859,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
 
-        if obj_multi.code_digits<=5:
-            raise osv.except_osv(_('User Error'), _('Account code should be of more than 5 digits.'))
-
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -1943,7 +1940,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc[:dig],
+                'code': code_acc,
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
