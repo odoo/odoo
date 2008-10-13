@@ -597,8 +597,8 @@ class document_file(osv.osv):
 		return super(document_file, self).unlink(cr, uid, ids, context)
 document_file()
 
-class auto_configuration(osv.osv_memory):
-    _name='auto.configuration'
+class document_configuration_wizard(osv.osv_memory):
+    _name='document.configuration.wizard'
     _rec_name = 'Auto Directory configuration'
     _columns = {
      			}
@@ -687,4 +687,4 @@ class auto_configuration(osv.osv_memory):
 	            doc_obj.create(cr,uid,res)
 	    return True
 
-auto_configuration()
+document_configuration_wizard()
