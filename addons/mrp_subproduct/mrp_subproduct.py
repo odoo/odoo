@@ -63,16 +63,13 @@ mrp_bom()
 class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
-    _inherit= 'mrp.production'
-    _columns={
-              }
+    _inherit= 'mrp.production'   
 
     def action_confirm(self, cr, uid, ids):
          picking_id=super(mrp_production,self).action_confirm(cr, uid, ids)
          for production in self.browse(cr, uid, ids):
              source = production.product_id.product_tmpl_id.property_stock_production.id
-             for sub_product in production.bom_id.sub_products:
-                 print "::::::::",sub_product.product_id.id,sub_product.product_uom.id,sub_product.product_qty,production.id
+             for sub_product in production.bom_id.sub_products:               
 
                  data = {
                     'name':'PROD:'+production.name,

@@ -4,7 +4,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Custom",
-    "depends":["product"],
+    "depends":["base","product","account"],
     "demo_xml":[],
     "update_xml":["product_margin_view.xml"],
     "active": False,
