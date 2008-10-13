@@ -95,9 +95,9 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
         # Log a info message that the server is running
         servicemanager.LogInfoMsg("OpenERP Server up and running")
         # verification if the server is really running, else quit with an error
-            self.terpprocess.wait()
-            if not self.stopping:
-                sys.exit("OpenERP Server check: server not running, check the logfile for more info")
+        self.terpprocess.wait()
+        if not self.stopping:
+            sys.exit("OpenERP Server check: server not running, check the logfile for more info")
 
 
 
