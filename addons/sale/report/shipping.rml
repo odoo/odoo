@@ -60,8 +60,6 @@
       <lineStyle kind="LINEBELOW" colorName="#666666" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#666666" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#666666" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -70,20 +68,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table5">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,1" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,1" stop="0,1"/>
-      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,1" stop="1,1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,1" stop="2,1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -194,7 +178,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="279.0,71.0,65.0,59.0,63.0" repeatRows="1" style="Table3">
+    <blockTable colWidths="370.0,85.0,82.0" repeatRows="1" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Designation</para>
@@ -203,13 +187,7 @@
           <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Quantity</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_Details_Right">Quantity</para>
         </td>
       </tr>
     </blockTable>
@@ -218,13 +196,13 @@
     </para>
     <section>
       <para style="P2">[[ repeatIn(o.move_lines,'line') ]]</para>
-      <blockTable colWidths="279.0,70.0,46.0,21.0,58.0,63.0" style="Table4">
+      <blockTable colWidths="370.0,85.0,59.0,24.0" style="Table4">
         <tr>
           <td>
             <para style="terp_default_9">[[line.product_id.code ]] [[ line.product_id and line.product_id.name or '']]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (line.prodlot_id and line.prodlot_id.name) or ' ' ]]</para>
+            <para style="terp_default_Centre_9">[[ (line.prodlot_id and line.prodlot_id.name) or ' ' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_qty ]]</para>
@@ -232,46 +210,12 @@
           <td>
             <para style="terp_default_Right_9">[[ line.product_uom and line.product_uom.name ]]</para>
           </td>
-          <td>
-            <para style="terp_default_Right_9">[[ '%.2f' %((line.sale_line_id and line.sale_line_id.price_unit) or (line.product_id.lst_price) or '0.00') ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ '%.2f' %((line.sale_line_id and line.sale_line_id.price_subtotal) or (line.product_qty*line.product_id.lst_price) or '0.00') ]]</para>
-          </td>
         </tr>
       </blockTable>
       <para style="terp_default_1">
         <font color="white"> </font>
       </para>
     </section>
-    <blockTable colWidths="416.0,55.0,66.0" style="Table5">
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">Net Total :</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[ '%.2f' %(o.sale_id and o.sale_id.amount_untaxed or sum_total(o) or '0.00') ]]</para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P3">Total :</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % (o.sale_id and o.sale_id.amount_total or sum_total(o) or '0.00') ]]</para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
