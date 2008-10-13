@@ -73,7 +73,7 @@ class wizard_print_indicators(wizard.interface):
         },
         'print': {
             'actions':[],
-            'result' :{'type':'print','report':'report.print.indicators', 'state':'end'}
+            'result' :{'type':'print','report':'print.indicators', 'state':'end'}
         }
     }
 wizard_print_indicators('print.indicators')
