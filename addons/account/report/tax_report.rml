@@ -215,19 +215,19 @@
       	   <para style="Caption">[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</para>
            <td>
            		<para style="P5"><font color="white">[[ o['level'] ]]</font> 
-            					[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica'}))]]<font></font> 
+            					<font>[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica'}))]]</font> 
             					[[ setTag('tr','tr',{'style':'TrLevel'+str(o['level']), 'paraStyle':('Level'+str(o['level']))}) ]]<font></font>
               					[[ o['code'] ]]  [[ o['name'] ]]<font></font>
             	</para>
            </td>
            <td>
-            	<para style="P6">[[o['type']==2 and  (o['debit']) ]]</para>
+            	<para style="P6">[[o['type']==2 and  (o['debit']) or '0.0' ]]</para>
            </td>
            <td>
-            	<para style="P6"> [[o['type']==2 and (o['credit']) ]] </para>
+            	<para style="P6"> [[o['type']==2 and (o['credit']) or '0.0' ]] </para>
            </td>
            <td>
-            	<para style="P6">[[ o['tax_amount'] ]]</para>
+            	<para style="P6">[[ o['tax_amount'] or '0.0' ]]</para>
            </td>
           
       </tr>
