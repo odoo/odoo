@@ -15,6 +15,7 @@ import tools
 from report.render import render 
 from report.interface import report_int
 import os
+import pdf_ext
 
 _tax_form = """<?xml version="1.0"?>
 <form string="VAT Legal Declaration">
@@ -50,17 +51,28 @@ class report_custom(report_int):
     def create(self, cr, uid, ids, datas, context={}):
         print datas, ids, uid
 
-        taxobj = self.pool.get('account.tax.code')
+        pool = pooler.get_pool(cr.dbname)
+
+        taxobj = pool.get('account.tax.code')
         code_ids = taxobj.search(cr, uid, [('parent_id','child_of',[datas['form']['tax_code_id']])])
         result = {}
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
             if t.code:
-                result[t.code] = t.sum_period
-        os.system('pdftk... output /tmp/tax.pdf')
-        self.obj = external_pdf(file('/tmp/tax.pdf').read())
-        self.obj.render()
+                result['case_'+str(t.code)] = '%.2f' % (t.sum_period or 0.0, )
 
-        pdf_string.close()
+        user = pool.get('res.users').browse(cr, uid, uid, context)
+
+        # Not Clean, to be changed
+        partner = user.company_id.partner_id
+        result['info_name'] = user.company_id.name
+        result['info_vatnum'] = partner.vat
+        if partner.address:
+            result['info_address'] = partner.address[0].street
+            result['info_address2'] = str(partner.address[0].zip) + ' ' + str(partner.address[0].city)
+
+        pdf_ext.fill_pdf('addons/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
+        self.obj = external_pdf(file('/tmp/output.pdf').read())
+        self.obj.render()
         return (self.obj.pdf, 'pdf')
 
 report_custom('report.l10n_lu.tax.report.print')
@@ -70,7 +82,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
              'actions': [],
-             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print Balance Sheet')]},
+             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print VAT Declaration')]},
         },
         'pdf': {
             'actions': [],
