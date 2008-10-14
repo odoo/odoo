@@ -65,7 +65,6 @@
 </stylesheet>
 <images/>
 <story>
-<para style="P1"> "Huhhhh"</para>
 <blockTable colWidths="146.0,223.0,158.0" repeatRows="1" style="Table2">
 <tr>
 <td>
@@ -97,8 +96,11 @@
 </td>
 </tr>
 </blockTable>
+<para style="P4">
+<font color="white"> </font>
+</para>
 <para style="P3">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
-<blockTable colWidths="361.0,73.0,93.0" repeatRows="1" style="Table4">
+<blockTable colWidths="362.0,166.0" repeatRows="1" style="Table4">
 <tr>
 <td>
 <para style="P6">Name</para>
@@ -106,30 +108,29 @@
 <td>
 <para style="P6">Code</para>
 </td>
-<td>
-<para style="P6">Amount</para>
-</td>
 </tr>
 </blockTable>
 <para style="P3">
 <font color="white"> </font>
 </para>
 <section>
-<blockTable colWidths="362.0,73.0,93.0" repeatRows="1" style="Table3">
+<para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
+<para>[['-'* 155]]</para>
+<blockTable colWidths="362.0,166.0" style="Table3">
 <tr>
 <td>
-<para style="P11">text</para>
+<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]][[ o['name'] ]]</para>
 </td>
 <td>
-<para style="P11">[[ test() ]]</para>
-</td>
-<td>
-<para style="P12">Jay</para>
+<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]][[ o['code'] ]]</para>
 </td>
 </tr>
 </blockTable>
-<image file="//home/jvo/ws_bazaar/server/bin/example1.png"/>
-<para style="P1">
+<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
+
+<para style="P11"><b>Expression :</b> [[ o['expression'] ]]</para>
+<para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
+<para style="P3">
 <font color="white"> </font>
 </para>
 </section>

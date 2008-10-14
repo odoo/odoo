@@ -1687,8 +1687,11 @@ class account_tax_code_template(osv.osv):
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Sign for parent', required=True),
+    }
+
+    _defaults = {
+        'sign': lambda *args: 1.0,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -1699,17 +1702,6 @@ class account_tax_code_template(osv.osv):
         reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
-
-    def _default_company(self, cr, uid, context={}):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
-    _defaults = {
-        'company_id': _default_company,
-        'sign': lambda *args: 1.0,
-    }
 
     def _check_recursion(self, cr, uid, ids):
         level = 100
@@ -1923,6 +1915,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
+
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
             tax_ids = []
