@@ -35,7 +35,7 @@ from crm.report import report_businessopp
 from report.interface import report_int
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.charts.barcharts import VerticalBarChart
-import reportlab.lib.colors
+import reportlab.lib.colors as colors
 #from reportlab.graphics import renderPM
 import tools
 
@@ -47,35 +47,53 @@ class accounting_report1(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'test': self.test1,
-#            'childs':self.process
+            'lines':self.lines,
         })
+        self.count=0
+
+    def lines(self,data):
+        res={}
+        result=[]
+        obj_ind=self.pool.get('account.report.report').browse(self.cr,self.uid,data['indicator_id'])
+        res = {
+            'name':obj_ind.name,
+            'code':obj_ind.code,
+            'expression':obj_ind.expression,
+            'disp_graph':obj_ind.disp_graph,
+            'note':obj_ind.note,
+            'type':obj_ind.type
+            }
+        result.append(res)
+        return result
 
     def test1(self):
+        self.count +=1
         drawing = Drawing(400, 200)
         data = [
-                 (13, 5, 20, 22, 37, 45, 19, 4),
-                 (15, 13, 4, 22, 30, 25, 29, 6),
+                 (13, 5, 20, 22, 37, 45, 19, 4,11,-5),
                  ]
         bc = VerticalBarChart()
         bc.x = 50
         bc.y = 50
-        bc.height = 125
+        bc.height = 155
         bc.width = 300
         bc.data = data
-        bc.strokeColor = reportlab.lib.colors.black
+        bc.strokeColor = colors.black
         bc.valueAxis.valueMin = 0
         bc.valueAxis.valueMax = 50
         bc.valueAxis.valueStep = 10
+
         bc.categoryAxis.labels.boxAnchor = 'ne'
         bc.categoryAxis.labels.dx = 8
+#        bc.barWidth=5
         bc.categoryAxis.labels.dy = -2
         bc.categoryAxis.labels.angle = 30
         bc.categoryAxis.categoryNames = ['Jan-99','Feb-99','Mar-99',
-               'Apr-99','May-99','Jun-99','Jul-99','Aug-99']
+               'Apr-99','May-99','Jun-99','Jul-99','Aug-99','kkk','fff']
         drawing.add(bc)
-        drawing.save(formats=['png'],fnRoot=tools.config['root_path']+"/Image",title="helo")
-#        renderPM.drawToFile(drawing, 'example1.jpg','jpg')
-        return True
+        drawing.save(formats=['png'],fnRoot=tools.config['root_path']+"/Temp_report/Image"+str(self.count),title="helo")
+#        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
+        return tools.config['root_path']+"/Temp_report/Image"+str(self.count)+'.png'
 
 
 report_sxw.report_sxw('report.print.indicators', 'account.report.history',
