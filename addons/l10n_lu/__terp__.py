@@ -1,5 +1,5 @@
 {
-        "name" : "l10n_lu",
+        "name" : "Luxembourg - Plan Comptable Minimum Normalise",
         "version" : "1.0",
         "author" : "Tiny",
         "website" : "http://openerp.com",
