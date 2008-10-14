@@ -161,7 +161,7 @@
 			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
 		</record>
 		<record id="account_tax_code_template_affectationsdebiens0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;25&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;26&quot;&quot;&quot;" name="code"/>
 			<field eval="&quot;&quot;&quot;Affectations de biens&quot;&quot;&quot;" name="name"/>
 			<field eval="1.0" name="sign"/>
 			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
@@ -545,6 +545,36 @@
 		<record id="account_tax_code_template_totaldelataxepayer0" model="account.tax.code.template">
 			<field eval="&quot;&quot;&quot;98&quot;&quot;&quot;" name="code"/>
 			<field eval="&quot;&quot;&quot;Total de la taxe à payer&quot;&quot;&quot;" name="name"/>
+			<field name="parent_id" ref="vat_code_chart_root_lu"/>
+			<field eval="1.0" name="sign"/>
+		</record>
+		<record id="account_tax_code_template_taxeimportation6" model="account.tax.code.template">
+			<field eval="&quot;&quot;&quot;63&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;Taxe importation (entr.) 6%&quot;&quot;&quot;" name="name"/>
+			<field name="parent_id" ref="vat_code_chart_root_lu"/>
+			<field eval="1.0" name="sign"/>
+		</record>
+		<record id="account_tax_code_template_baseimportation12" model="account.tax.code.template">
+			<field eval="&quot;&quot;&quot;60&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;Base importation (privées.) 12%&quot;&quot;&quot;" name="name"/>
+			<field name="parent_id" ref="vat_code_chart_root_lu"/>
+			<field eval="1.0" name="sign"/>
+		</record>
+		<record id="account_tax_code_template_taxeprestation15" model="account.tax.code.template">
+			<field eval="&quot;&quot;&quot;93&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;Taxe prestation de services (Art.26) 15%&quot;&quot;&quot;" name="name"/>
+			<field name="parent_id" ref="vat_code_chart_root_lu"/>
+			<field eval="1.0" name="sign"/>
+		</record>
+		<record id="account_tax_code_template_code422" model="account.tax.code.template">
+			<field eval="&quot;&quot;&quot;422&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;Base des prestations de services (art.26/1/c et d)&quot;&quot;&quot;" name="name"/>
+			<field name="parent_id" ref="vat_code_chart_root_lu"/>
+			<field eval="1.0" name="sign"/>
+		</record>
+		<record id="account_tax_code_template_code219" model="account.tax.code.template">
+			<field eval="&quot;&quot;&quot;219&quot;&quot;&quot;" name="code"/>
+			<field eval="&quot;&quot;&quot;Taxe des prestations de services (art.26/1/c et d)&quot;&quot;&quot;" name="name"/>
 			<field name="parent_id" ref="vat_code_chart_root_lu"/>
 			<field eval="1.0" name="sign"/>
 		</record>
