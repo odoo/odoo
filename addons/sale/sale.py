@@ -451,7 +451,8 @@ class sale_order(osv.osv):
     def test_state(self, cr, uid, ids, mode, *args):
         assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
         finished = True
-        canceled = False
+        canceled = False 
+        notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
@@ -460,6 +461,8 @@ class sale_order(osv.osv):
                     finished = False
                 if line.procurement_id and line.procurement_id.state == 'cancel':
                     canceled = True
+                if line.procurement_id and line.procurement_id.state <> 'cancel':
+                    notcanceled = True
                 # if a line is finished (ie its procuremnt is done or it has not procuremernt and it
                 # is not already marked as done, mark it as being so...
                 if ((not line.procurement_id) or line.procurement_id.state == 'done') and line.state != 'done':
@@ -475,6 +478,8 @@ class sale_order(osv.osv):
         if mode=='finished':
             return finished
         elif mode=='canceled':
+            if notcanceled:
+                return False
             return canceled
 
     def action_ship_create(self, cr, uid, ids, *args):
