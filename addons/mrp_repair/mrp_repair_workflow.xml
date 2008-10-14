@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wkf_repair" model="workflow">
+            <field name="name">mrp.repair.basic</field>
+            <field name="osv">mrp.repair</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <!-- Activity -->
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="act_confirmed" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">confirmed</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'confirmed'})</field>
+        </record>
+        
+        <record id="act_2binvoiced" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">2binvoiced</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'2binvoiced'})</field>
+        </record>
+        
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'done'})</field>
+        </record>
+        
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'done'})</field>
+        </record>
+        
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">cancel</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'cancel'})</field>
+        </record>
+        
+        <!-- Transistion -->
+        
+        <record id="trans_draft_confirmed" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="signal">repair_confirm</field>
+        </record>
+        
+        <record id="trans_draft_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        
+        <record id="trans_confirmed_done" model="workflow.transition">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">repair_done</field>
+        </record>
+        
+        <record id="trans_confirmed_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        
+         <record id="trans_2binvoiced_done" model="workflow.transition">
+            <field name="act_from" ref="act_2binvoiced"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">make_invoice</field>
+        </record>
+        
+        <record id="trans_2binvoiced_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_2binvoiced"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        
+    </data>
+</openerp>

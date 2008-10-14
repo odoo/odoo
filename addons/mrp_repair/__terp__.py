@@ -52,7 +52,7 @@
     "category":"Custom",
     "depends":["sale","account"],
     "demo_xml":[],
-    "update_xml":["repair_module_view.xml"],
+    "update_xml":["mrp_repair_view.xml", "mrp_repair_workflow.xml", "mrp_repair_report.xml"],
     "active": False,
     "installable": True,
 }
