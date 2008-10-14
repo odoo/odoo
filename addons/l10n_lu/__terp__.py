@@ -10,7 +10,7 @@ This module install:
     *the KLUWER Chart of Accounts,
     *the Tax Code Chart for Luxembourg
     *the main taxes used in Luxembourg""",
-        "depends" : ["account","base"],
+        "depends" : ["account","account_report"],
         "init_xml" : [ ],
         "demo_xml" : [ "account.report.report.csv" ],
         "update_xml" : [
