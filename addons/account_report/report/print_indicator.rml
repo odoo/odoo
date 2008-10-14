@@ -115,6 +115,7 @@
 </para>
 <section>
 <para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
+<para>[['-'* 155]]</para>
 <blockTable colWidths="362.0,166.0" style="Table3">
 <tr>
 <td>
@@ -125,10 +126,13 @@
 </td>
 </tr>
 </blockTable>
-<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'file':test()}) or removeParentNode('para') ]]</para>
+<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
 
 <para style="P11"><b>Expression :</b> [[ o['expression'] ]]</para>
 <para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
+<para style="P3">
+<font color="white"> </font>
+</para>
 </section>
 </story>
 </document>
