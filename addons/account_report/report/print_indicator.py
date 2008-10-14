@@ -36,7 +36,8 @@ from report.interface import report_int
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 import reportlab.lib.colors
-from reportlab.graphics import renderPM
+#from reportlab.graphics import renderPM
+import tools
 
 class accounting_report1(report_sxw.rml_parse):
 
@@ -53,7 +54,7 @@ class accounting_report1(report_sxw.rml_parse):
         drawing = Drawing(400, 200)
         data = [
                  (13, 5, 20, 22, 37, 45, 19, 4),
-                 (11, 3, 10, 22, 30, 25, 29, 6),
+                 (15, 13, 4, 22, 30, 25, 29, 6),
                  ]
         bc = VerticalBarChart()
         bc.x = 50
@@ -72,7 +73,8 @@ class accounting_report1(report_sxw.rml_parse):
         bc.categoryAxis.categoryNames = ['Jan-99','Feb-99','Mar-99',
                'Apr-99','May-99','Jun-99','Jul-99','Aug-99']
         drawing.add(bc)
-        renderPM.drawToFile(drawing, 'example1.jpg','jpg')
+        drawing.save(formats=['png'],fnRoot=tools.config['root_path']+"/Image",title="helo")
+#        renderPM.drawToFile(drawing, 'example1.jpg','jpg')
         return True
 
 
