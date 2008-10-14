@@ -10,21 +10,22 @@ This is the same wizard that runs from Financial Managament/Configuration/Financ
         <field name="state">open</field>
     </record>
 
-        <menuitem 
-            id="legal_lu"
-            parent="account.menu_finance_legal_statement"
-            name="Luxemburg"/>
+    <menuitem
+        id="legal_lu"
+        parent="account.menu_finance_legal_statement"
+        name="Luxemburg"/>
 
-        <wizard
-            id="wizard_print_vat"
-            menu="False"
-            model="account.tax.code"
-            name="l10n_lu.tax.report.wizard" string="Luxemburg VAT Declaration"/>
+    <wizard
+        id="wizard_print_vat"
+        menu="False"
+        model="account.tax.code"
+        name="l10n_lu.tax.report.wizard" string="Luxemburg VAT Declaration"/>
 
-        <menuitem 
-            id="legal_lu_vat"
-            parent="legal_lu"
-            action="wizard_print_vat"/>
+    <menuitem 
+        id="legal_lu_vat"
+        parent="legal_lu"
+        type="wizard"
+        action="wizard_print_vat"/>
 
 
     </data>
