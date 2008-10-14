@@ -3,7 +3,7 @@
         "version" : "1.0",
         "author" : "Tiny",
         "website" : "http://openerp.com",
-        "category" : "Vertical Modules/Parametrization",
+        "category" : "Localisation/Account Charts",
         "description": """ 
 This module install:
 
