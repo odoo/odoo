@@ -36,12 +36,7 @@
 <blockTableStyle id="Table3">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
-<blockBackground colorName="#ffffff" start="0,0" stop="0,0"/>
-<blockBackground colorName="#ffffff" start="1,0" stop="1,0"/>
-<blockBackground colorName="#ffffff" start="2,0" stop="2,0"/>
-<blockBackground colorName="#ffffff" start="0,1" stop="0,1"/>
-<blockBackground colorName="#ffffff" start="1,1" stop="1,1"/>
-<blockBackground colorName="#ffffff" start="2,1" stop="2,1"/>
+<lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
 </blockTableStyle>
 <initialize>
 <paraStyle name="all" alignment="justify"/>
@@ -56,7 +51,7 @@
 <paraStyle name="P8" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P9" fontName="Times-Roman" fontSize="8.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P10" fontName="Times-Roman" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P11" fontName="Times-Roman" fontSize="10.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P13" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P14" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -78,7 +73,7 @@
 </para>
 </td>
 <td>
-<para style="P10">Accounting Test</para>
+<para style="P10">Indicators</para>
 </td>
 <td>
 <para style="P2">
@@ -120,7 +115,6 @@
 </para>
 <section>
 <para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
-<para>[['-'* 155]]</para>
 <blockTable colWidths="362.0,166.0" style="Table3">
 <tr>
 <td>
@@ -131,6 +125,9 @@
 </td>
 </tr>
 </blockTable>
+<para style="P3">
+<font color="white"> </font>
+</para>
 <para style="P1">[[ o['disp_graph'] and setTag('para','image',{'file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
 <section>
       <para style="P13">[[ repeatIn(getarray(data['form'],o),'array',td=len(data['form']['base_selection'][0][2])) ]]</para>
@@ -150,11 +147,37 @@
 <para style="P3">
 <font color="white"> </font>
 </para>
+<blockTable colWidths="528.0" repeatRows="1" style="Table3">
+<tr>
+<td>
 <para style="P11"><b>Expression :</b> [[ o['expression'] ]]</para>
-<para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
+</td>
+</tr>
+</blockTable>
 <para style="P3">
 <font color="white"> </font>
 </para>
+<blockTable colWidths="528.0" repeatRows="1" style="Table3">
+<tr>
+<td>
+<para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
+</td>
+</tr>
+</blockTable>
+<pageBreak>[[ o['last'] and removeParentNode('pageBreak')]]</pageBreak>
+<para style="P3">
+<font color="white"> </font>
+</para>
+<blockTable colWidths="362.0,166.0" repeatRows="1" style="Table4">
+<tr>
+<td>
+<para style="P6">Name[[ o['last'] and removeParentNode('blockTable')]]</para>
+</td>
+<td>
+<para style="P6">Code</para>
+</td>
+</tr>
+</blockTable>
 </section>
 </story>
 </document>

@@ -137,9 +137,11 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'expression':obj_ind.expression,
                 'disp_graph':obj_ind.disp_graph,
                 'note':obj_ind.note,
-                'type':obj_ind.type
+                'type':obj_ind.type,
+                'last':False,
                 }
             result.append(res)
+        result[-1]['last']=True
         return result
 
     def getarray(self,data,object):
