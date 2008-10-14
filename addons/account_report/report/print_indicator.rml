@@ -10,6 +10,11 @@
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
 </blockTableStyle>
+<blockTableStyle id="Table5">
+<blockAlignment value="CENTER"/>
+<lineStyle kind="GRID" colorName="black"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
 <blockTableStyle id="Table2">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
@@ -49,7 +54,7 @@
 <paraStyle name="P6" fontName="Times-Roman" fontSize="13.0" leading="16" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P7" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P8" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P9" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P9" fontName="Times-Roman" fontSize="8.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P10" fontName="Times-Roman" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -127,7 +132,24 @@
 </tr>
 </blockTable>
 <para style="P1">[[ o['disp_graph'] and setTag('para','image',{'file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
-
+<section>
+      <para style="P13">[[ repeatIn(getarray(data['form'],o),'array',td=len(data['form']['base_selection'][0][2])) ]]</para>
+      <blockTable colWidths="0.0" style="Table5">
+      	<tr>
+			<td>
+            <para style="P9"> </para>
+          </td>
+          </tr>
+        <tr>
+          <td>
+            <para style="P9"> </para>
+          </td>
+        </tr>
+      </blockTable>
+</section>
+<para style="P3">
+<font color="white"> </font>
+</para>
 <para style="P11"><b>Expression :</b> [[ o['expression'] ]]</para>
 <para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
 <para style="P3">
