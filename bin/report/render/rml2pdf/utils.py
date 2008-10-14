@@ -57,7 +57,7 @@ def text_get(node):
 
 units = [
     (re.compile('^(-?[0-9\.]+)\s*in$'), reportlab.lib.units.inch),
-    (re.compile('^(-?[0-9\.]+)\s*cm$'), reportlab.lib.units.cm),  
+    (re.compile('^(-?[0-9\.]+)\s*cm$'), reportlab.lib.units.cm),
     (re.compile('^(-?[0-9\.]+)\s*mm$'), reportlab.lib.units.mm),
     (re.compile('^(-?[0-9\.]+)\s*$'), 1)
 ]
@@ -93,7 +93,7 @@ def attr_get(node, attrs, dict={}):
             elif dict[key]=='int':
                 res[key] = int(node.getAttribute(key))
             elif dict[key]=='unit':
-                res[key] = unit_get(node.getAttribute(name))
+                res[key] = unit_get(node.getAttribute(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

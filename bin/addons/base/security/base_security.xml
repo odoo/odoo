@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-	<!--<data noupdate="0">-->
-	<data>
+	<data noupdate="0">
 
 <!--
  Users Groups
@@ -39,9 +38,20 @@
         <field name="menu_id" ref="action_menu_admin"/>
     </record>
 
+
+	<!-- Set access to menu -->
 	<record model="ir.ui.menu" id="base.menu_administration">
 		<field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
 	</record>
+
+	<record id="base.menu_security" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+	</record>
+
+	<record id="base.menu_users" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+	</record>
+
 </data>
 </openerp>
 

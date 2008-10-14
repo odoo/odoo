@@ -313,7 +313,7 @@ form: module.record_id""" % (xml_id,)
         xml_id = rec.getAttribute('id').encode('utf8')
         self._test_xml_id(xml_id)
         multi = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
-        res = {'name': string, 'wiz_name': name, 'multi':multi}
+        res = {'name': string, 'wiz_name': name, 'multi': multi, 'model': model}
 
         if rec.hasAttribute('groups'):
             g_names = rec.getAttribute('groups').split(',')

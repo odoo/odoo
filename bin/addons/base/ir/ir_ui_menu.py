@@ -58,33 +58,74 @@ class many2many_unique(fields.many2many):
 
 class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
+
+    def __init__(self, *args, **kwargs):
+        self._cache = {}
+        return super(ir_ui_menu, self).__init__(*args, **kwargs)
+
+    def clear_cache(self):
+        # radical but this doesn't frequently happen
+        self._cache = {}
+
     def search(self, cr, uid, args, offset=0, limit=2000, order=None,
             context=None, count=False):
         if context is None:
             context = {}
-        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
-                context=context)
+        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
         if uid==1:
             return ids
-        user_groups = set(self.pool.get('res.users').browse(cr, uid, uid)['groups_id'] or [])
+
+        if not ids:
+            if count:
+                return 0
+            return []
+
+        modelaccess = self.pool.get('ir.model.access')
+        user_groups = set(self.pool.get('res.users').read(cr, 1, uid)['groups_id'])
         result = []
         for menu in self.browse(cr, uid, ids):
-            restrict_to_groups = menu.groups_id
-            if not restrict_to_groups:
-                if menu.action:
-                    # if the menu itself has no restrictions, we get the groups of 
-                    # the action of the menu
-                    try:
-                        m, oid = menu.action.split(',', 1)
-                        data = self.pool.get(m).browse(cr, uid, int(oid), context=context)
-                        if data and 'groups_id' in data:
-                            restrict_to_groups = data['groups_id']
-                    except:
-                        pass
-
-            if restrict_to_groups and not user_groups.intersection(restrict_to_groups):
+            # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
+            key = (cr.dbname, menu.id, tuple(user_groups))
+            
+            if key in self._cache:
+                if self._cache[key]:
+                    result.append(menu.id)
                 continue
+
+            self._cache[key] = False
+            if menu.groups_id:
+                restrict_to_groups = [g.id for g in menu.groups_id]
+                if not user_groups.intersection(restrict_to_groups):
+                    continue
+
+            if menu.action:     # FIXME elif ?
+                # we check if the user has access to the action of the menu
+                m, oid = menu.action.split(',', 1)
+                data = self.pool.get(m).browse(cr, 1, int(oid))
+
+                if data:
+                    model_field = { 'ir.actions.act_window':    'res_model',
+                                    'ir.actions.report.custom': 'model',
+                                    'ir.actions.report.xml':    'model', 
+                                    'ir.actions.wizard':        'model',
+                                    'ir.actions.server':        'model_id',
+                                  }
+
+                    field = model_field.get(m)
+                    if field and data[field]:
+                        if not modelaccess.check(cr, uid, data[field], raise_exception=False):
+                            continue
+            else:
+                # if there is no action, it's a 'folder' menu
+                if not menu.child_id:
+                    # not displayed if there is no children 
+                    continue
+
+            self._cache[key] = True
             result.append(menu.id)
+
+        if count:
+            return len(result)
         return result
 
     def _get_full_name(self, cr, uid, ids, name, args, context):
@@ -101,6 +142,14 @@ class ir_ui_menu(osv.osv):
         else:
             parent_path = ''
         return parent_path + menu.name
+
+    def write(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).write(*args, **kwargs)
+
+    def unlink(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).unlink(*args, **kwargs)
 
     def copy(self, cr, uid, id, default=None, context=None):
         ir_values_obj = self.pool.get('ir.values')

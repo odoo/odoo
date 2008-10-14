@@ -31,7 +31,7 @@
 from osv import fields,osv
 import ir, re
 import netsvc
-from osv.orm import except_orm
+from osv.orm import except_orm, browse_record
 
 import time
 import tools
@@ -282,13 +282,19 @@ class ir_model_access(osv.osv):
         cr.execute("select 1 from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
         return bool(cr.fetchone())
 
-    def check(self, cr, uid, model_name, mode='read', raise_exception=True):
+    def check(self, cr, uid, model, mode='read', raise_exception=True):
         # Users root have all access (Todo: exclude xml-rpc requests)
         if uid==1:
             return True
 
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
+        if isinstance(model, browse_record):
+            assert model._table_name == 'ir.model', 'Invalid model object'
+            model_name = model.name
+        else:
+            model_name = model
+        
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
                    '  FROM ir_model_access a '
@@ -327,6 +333,7 @@ class ir_model_access(osv.osv):
     # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
+        self.pool.get('ir.ui.menu').clear_cache()
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
         self.check()
         return res
@@ -335,6 +342,7 @@ class ir_model_access(osv.osv):
         self.check()
         return res
     def unlink(self, cr, uid, *args, **argv):
+        self.pool.get('ir.ui.menu').clear_cache()
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
         self.check()
         return res

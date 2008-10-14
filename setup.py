@@ -154,7 +154,10 @@ f.close()
 options = {"py2exe": {
     "compressed": 0,
     "optimize": 2, 
-    "packages": ["decimal", "xml", "xml.dom", "xml.xpath", "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", "pydot"],
+    "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
+                 "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
+                 "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
+                 "pydot"],
     "excludes" : ["Tkconstants","Tkinter","tcl"],
     }}
 
