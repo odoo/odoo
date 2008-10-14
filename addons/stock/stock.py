@@ -323,11 +323,14 @@ class stock_picking(osv.osv):
         if isinstance(ids, (int, long)):
             ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
-            cr.execute("""update stock_move set
-                    date_planned=%s 
+            sql_str="""update stock_move set
+                    date_planned='%s'
                 where
-                    picking_id=%d and 
-                    (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
+                    picking_id=%d """ % (value,pick.id)
+            
+            if pick.max_date:
+                sql_str += " and (date_planned='"+pick.max_date+"' or date_planned>'"+value+"')"
+            cr.execute(sql_str)
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
@@ -335,11 +338,13 @@ class stock_picking(osv.osv):
         if isinstance(ids, (int, long)):
             ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
-            cr.execute("""update stock_move set
-                    date_planned=%s 
+            sql_str="""update stock_move set
+                    date_planned='%s' 
                 where
-                    picking_id=%d and 
-                    (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
+                    picking_id=%d """ % (value,pick.id)
+            if pick.min_date:
+                sql_str += " and (date_planned='"+pick.min_date+"' or date_planned<'"+value+"')"
+            cr.execute(sql_str)
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
