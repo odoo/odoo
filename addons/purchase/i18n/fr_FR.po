@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2008-09-05 13:26+0000\n"
-"PO-Revision-Date: 2008-10-13 16:39+0000\n"
+"PO-Revision-Date: 2008-10-14 14:21+0000\n"
 "Last-Translator: Olivier Laurent <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-10-13 17:01+0000\n"
+"X-Launchpad-Export-Date: 2008-10-14 15:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -102,7 +102,7 @@ msgstr "Ordres d'achat en cours"
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
 msgid "Minimum Planned Date"
-msgstr ""
+msgstr "Date Plannifiée Minimum"
 
 #. module: purchase
 #: field:purchase.order,amount_tax:0
@@ -133,6 +133,13 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
+"État de la commande d'achat ou du devis. Un devis est une commande d'achat à "
+"l'état 'Brouillon'. La commande doit alors être confirmée par l'utilisateur, "
+"l'état deviendra 'Confirmée'. Le fournisseur devra alors confirmer la "
+"commande pour changer l'état à 'Appouvée'. Lorsque la commande d'achat est "
+"payée et reçue, l'état devient 'Terminé'. Si une action 'Annuler' est "
+"déclenchée dans la facturation ou dans la réception de marchandises, l'état "
+"de la commande se met en exception."
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -263,7 +270,7 @@ msgstr "Date de commande :"
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid "Minimum schedule date of all products."
-msgstr ""
+msgstr "Date prévue minimum pour tous les produits"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
