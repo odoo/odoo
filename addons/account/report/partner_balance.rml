@@ -16,22 +16,22 @@
 
 				<!--COL 1-->
 				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawString x="12.7cm" y="28.1cm">Third Party Balance [[ data['form']['result_selection'] == 'customer' and '/ Débiteur' ]] [[ data['form']['result_selection'] == 'supplier' and '/ Créancier' ]] [[ data['form']['result_selection'] == 'all' and '/ Créancier et Débiteur' ]] - [[ get_currency(data['form']) ]]</drawString>
-				
+				<drawString x="12.7cm" y="28.1cm">Partner Balance [[ data['form']['result_selection'] == 'customer' and '/ Débiteur' ]] [[ data['form']['result_selection'] == 'supplier' and '/ Créancier' ]] [[ data['form']['result_selection'] == 'all' and '/ Créancier et Débiteur' ]] - [[ get_currency(data['form']) ]]</drawString>
+
 				<!-- Header -->
-				
-				
+
+
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%m-%d-%y %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
+
 
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
 				<setFont name="Helvetica" size="8"/>
-			</pageGraphics>                  
+			</pageGraphics>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -55,9 +55,13 @@
       <lineStyle kind="GRID" colorName="black"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
-      
+    	<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,2" stop="-1,-1"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+
+
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
@@ -76,7 +80,7 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" />
       <lineStyle kind="OUTLINE" colorName="#e6e6e6" />
       <blockBackground colorName="white" start="0,0" stop="-1,0"/>
-    </blockTableStyle>    
+    </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
@@ -86,14 +90,15 @@
     <paraStyle name="P4" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P5" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P6" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" fontName="Helvetica-Bold" fontSize="8.5" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9" fontName="Helvetica" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9b" fontName="Helvetica-Bold" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10"/>
-    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="9.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12a" fontName="Helvetica" fontSize="9.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12b" fontName="Helvetica" fontSize="9.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Times-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
@@ -105,56 +110,8 @@
     <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
- 
-	<blockTable colWidths="247.0,60.0,58.0,55.0,54.0,57.0" style="Tableau3">
-      <tr>
-        <td>
-          <para style="P7">Grand total</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(sum_debit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(sum_credit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(sum_sdebit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(sum_scredit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(sum_litige(data)) ]]</para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="P7">Balance</para>
-        </td>
-        <td>
-          <para style="P8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(solde_debit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ comma_me(solde_credit(data)) ]]</para>
-        </td>
-        <td>
-          <para style="P8">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="61.0,196.0,60.0,58.0,109.0,57.0" repeatRows="1" style="Table2">
+
+	 <blockTable colWidths="61.0,240.0,60.0,60.0,60.0,60.0" repeatRows="1" style="Table2">
       <tr>
         <td>
           <para style="P12a">Code</para>
@@ -163,46 +120,73 @@
           <para style="P12a">Partner name</para>
         </td>
         <td>
-          <para style="P12">Débit</para>
+          <para style="P12b">Débit</para>
         </td>
         <td>
-          <para style="P12">Crédit</para>
+          <para style="P12b">Crédit</para>
         </td>
         <td>
-          <para style="P12">Balance</para>
+          <para style="P12b">Balance</para>
         </td>
         <td>
-          <para style="P12">In dispute</para>
+          <para style="P12b">In dispute</para>
         </td>
       </tr>
       <tr>
         <td>
-          <para style="P3">[[ repeatIn(lines(data), 'a') ]]<font face="Helvetica">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['ref'] ]]</font></para>
+          <para style="P7">Grand total</para>
         </td>
         <td>
-          <para style="P3">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['type']==3 and a['code'] ]]  [[ a['name']  ]] </para>
+          <para style="P8"></para>
         </td>
         <td>
-          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]]  [[ comma_me(a['debit']) ]]</para>
+          <para style="P8"><u>[[ sum_debit(data) or '0.0' ]]</u></para>
         </td>
         <td>
-          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ comma_me(a['credit']) ]]</para>
+          <para style="P8"><u>[[ sum_credit(data) or '0.0' ]]</u></para>
         </td>
         <td>
-          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ comma_me(a['balance']) ]]</para>
+          <para style="P8"><u>[[ (sum_scredit(data)-sum_sdebit(data)) or '0.0' ]]</u></para>
         </td>
         <td>
-          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ comma_me(a['enlitige']) ]]</para>
+          <para style="P8"><u>[[ sum_litige(data) or '0.0' ]]</u></para>
+        </td>
+      </tr>
+      <!--<tr>
+        <td>
+          <para style="P7">Balance</para>
+        </td><td>
+        </td> <td>
+        </td><td>
+          <para style="P8">[[ solde_debit(data) or '0.0' ]]</para>
+        </td>
+        <td>
+          <para style="P8">[[ solde_credit(data) or '0.0' ]]</para>
+        </td>
+        <td>
+        </td>
+      </tr> -->
+      <tr>
+        <td>
+          <para style="P3">[[ repeatIn(lines(data), 'a') ]]<font face="Helvetica">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['ref'] ]] [[ a['type']==3 and a['code'] ]]</font></para>
+        </td>
+        <td>
+          <para style="P3">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]]   [[ a['name']  ]] </para>
+        </td>
+        <td>
+          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]]  [[ a['debit'] or '0.0' ]]</para>
+        </td>
+        <td>
+          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['credit'] or '0.0' ]]</para>
+        </td>
+        <td>
+          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['balance'] or '0.0' ]]</para>
+        </td>
+        <td>
+          <para style="P4">[[ a['type']==3 and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) ]] [[ a['enlitige'] or '0.0' ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
-    
-    <para style="P11"/>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
+
   </story>
 </document>

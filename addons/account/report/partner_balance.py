@@ -229,18 +229,19 @@ class partner_balance(report_sxw.rml_parse):
                 new_header['ref'] = ''
                 new_header['name'] = r['account_name']
                 new_header['code'] = r['code']
-                new_header['debit'] = 0
-                new_header['credit'] = 0
-                new_header['scredit'] = 0
-                new_header['sdebit'] = 0
-                new_header['enlitige'] = 0
-                new_header['balance'] = 0
+                new_header['debit'] = tot_debit
+                new_header['credit'] = tot_credit
+                new_header['scredit'] = tot_scredit
+                new_header['sdebit'] = tot_sdebit
+                new_header['enlitige'] = tot_enlitige
+                new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                 new_header['type'] = 3
                 ##
                 completearray.append(new_header)
                 #
                 r['type'] = 1
                 r['balance'] = float(r['sdebit']) - float(r['scredit'])
+                print"====i = 0 :completearray====",completearray,i
                 completearray.append(r)
                 #
                 tot_debit = r['debit']
@@ -252,21 +253,27 @@ class partner_balance(report_sxw.rml_parse):
             else:
                 if cleanarray[i]['account_id'] <> cleanarray[i-1]['account_id']:
                     ##
-                    new_tot = {}
-                    new_tot['ref'] = 'Total'
-                    new_tot['name'] = cleanarray[i-1]['account_name']
-                    new_tot['code'] = cleanarray[i-1]['code']
-                    
-                    new_tot['debit'] = tot_debit
-                    new_tot['credit'] = tot_credit
-                    new_tot['scredit'] = tot_scredit
-                    new_tot['sdebit'] = tot_sdebit
-                    new_tot['enlitige'] = tot_enlitige
-                    new_tot['balance'] = float(tot_sdebit) - float(tot_scredit)
-                    new_tot['type'] = 3
-                    ##
-                    completearray.append(new_tot)
-                    
+#                    new_tot = {}
+#                    new_tot['ref'] = 'Total'
+#                    new_tot['name'] = cleanarray[i-1]['account_name']
+#                    new_tot['code'] = cleanarray[i-1]['code']
+#                    
+#                    new_tot['debit'] = tot_debit
+#                    new_tot['credit'] = tot_credit
+#                    new_tot['scredit'] = tot_scredit
+#                    new_tot['sdebit'] = tot_sdebit
+#                    new_tot['enlitige'] = tot_enlitige
+#                    new_tot['balance'] = float(tot_sdebit) - float(tot_scredit)
+#                    new_tot['type'] = 3
+#                    ##
+#                    completearray.append(new_tot)
+                    new_header['debit'] = tot_debit
+                    new_header['credit'] = tot_credit
+                    new_header['scredit'] = tot_scredit
+                    new_header['sdebit'] = tot_sdebit
+                    new_header['enlitige'] = tot_enlitige
+                    new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
+                    new_header['type'] = 3
                     # we reset the counter 
                     tot_debit = r['debit']
                     tot_credit = r['credit']
@@ -279,12 +286,12 @@ class partner_balance(report_sxw.rml_parse):
                     new_header['ref'] = ''
                     new_header['name'] = r['account_name']
                     new_header['code'] = r['code']
-                    new_header['debit'] = 0
-                    new_header['credit'] = 0
-                    new_header['scredit'] = 0
-                    new_header['sdebit'] = 0
-                    new_header['enlitige'] = 0
-                    new_header['balance'] = 0
+                    new_header['debit'] = tot_debit
+                    new_header['credit'] = tot_credit
+                    new_header['scredit'] = tot_scredit
+                    new_header['sdebit'] = tot_sdebit
+                    new_header['enlitige'] = tot_enlitige
+                    new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                     new_header['type'] = 3
                     ##
                     ##
@@ -296,8 +303,10 @@ class partner_balance(report_sxw.rml_parse):
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
                     #
                     completearray.append(r)
+                    print"====i!=0 completearray====",completearray,i
                 if cleanarray[i]['account_id'] == cleanarray[i-1]['account_id']:
                     # we reset the counter 
+                                       
                     tot_debit = tot_debit + r['debit']
                     tot_credit = tot_credit + r['credit']
                     tot_scredit = tot_scredit + r['scredit']
@@ -308,8 +317,11 @@ class partner_balance(report_sxw.rml_parse):
                     #
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
                     #
+                   
                     completearray.append(r)
+                    
             i = i + 1
+            
         return completearray
 
 
@@ -443,17 +455,21 @@ class partner_balance(report_sxw.rml_parse):
 #                '  account_id IN (' + self.account_ids + ') ' \
                 'l.date IN (' + self.date_lst_string + ') ' \
             'GROUP BY partner_id')
-        
+        a = self.cr.fetchone()[0]
+        print"====self.cr.fetchone()====",a
         if self.cr.fetchone() != None:
-            result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
+            result_tmp = result_tmp + (a or 0.0)
         else:
             result_tmp = 0.0
+        
         return result_tmp        
 
     def _sum_scredit(self,data):
+        
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+                  
         result_tmp = 0.0
         #
         #
@@ -487,10 +503,10 @@ class partner_balance(report_sxw.rml_parse):
 #                ' account_id IN (' + self.account_ids + ') ' \
                 'l.date IN (' + self.date_lst_string + ') ' \
             'GROUP BY partner_id')
-       
+        a = self.cr.fetchone()[0]
         if self.cr.fetchone() != None:
-            result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
-            print"result_tmp",result_tmp
+            result_tmp = result_tmp + (a or 0.0)
+            
         else:
             result_tmp = 0.0
         
