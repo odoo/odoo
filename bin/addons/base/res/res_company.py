@@ -126,7 +126,7 @@ class res_company(osv.osv):
         <setFont name="Helvetica" size="8"/>
         <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
         <drawString x="19.8cm" y="28.3cm"><pageCount/></drawString>
-        <stroke color="#aaaaaa"/>
+        <stroke color="#000000"/>
         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
         </pageGraphics>
         </pageTemplate>
