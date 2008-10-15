@@ -130,7 +130,7 @@
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Stockable make to stock&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Stockable stock&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Wait for available products for reservation&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -141,7 +141,7 @@
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Stockable make to order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Stockable order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If Procurement is make to order&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting') &quot;&quot;&quot;" name="model_states"/>
@@ -164,7 +164,7 @@
             <field name="menu_id" ref="mrp.menu_mrp_production_action"/>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Stockable production&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Stock produce&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procure method is produce&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_procurementworkflow0"/>
             <field name="subflow_id" ref="process_process_procurementworkflow0"/>
