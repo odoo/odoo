@@ -202,7 +202,7 @@ class assertion_report(object):
 class xml_import(object):
 
     def isnoupdate(self, data_node = None):
-        return self.noupdate or (data_node and data_node.getAttribute('noupdate'))
+        return self.noupdate or (data_node and data_node.getAttribute('noupdate').strip() not in ('', '0', 'False'))
 
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (data_node and data_node.getAttribute('context').encode('utf8'))
