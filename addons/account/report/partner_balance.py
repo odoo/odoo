@@ -470,6 +470,7 @@ class partner_balance(report_sxw.rml_parse):
                     'AND l.reconcile_id IS NULL ' \
                 'GROUP BY partner_id',
                 (self.date_lst[0],))
+            
             if self.cr.fetchone() != None:
                 result_tmp = float(self.cr.fetchone()[0])
             else:
@@ -486,9 +487,10 @@ class partner_balance(report_sxw.rml_parse):
 #                ' account_id IN (' + self.account_ids + ') ' \
                 'l.date IN (' + self.date_lst_string + ') ' \
             'GROUP BY partner_id')
-        
+       
         if self.cr.fetchone() != None:
             result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
+            print"result_tmp",result_tmp
         else:
             result_tmp = 0.0
         
