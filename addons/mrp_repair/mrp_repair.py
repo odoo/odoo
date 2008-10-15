@@ -51,11 +51,11 @@ class mrp_repair(osv.osv):
             ], 'State', readonly=True, help="Gives the state of the Repairs Order"),
         'location_id': fields.many2one('stock.location', 'Current Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location'),
-        'move_id': fields.many2one('stock.move', 'Move',required=True,domain="[('product_id','=',product_id),('location_dest_id','=',location_id)]"),#,('prodlot_id','=',prodlot_id)
+        'move_id': fields.many2one('stock.move', 'Move',required=True,domain="[('product_id','=',product_id)]"),#,('location_dest_id','=',location_id),('prodlot_id','=',prodlot_id)
         'guarantee_limit': fields.date('Guarantee limit'),
         'operations' : fields.one2many('repair.operation', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
-        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice to', readonly=True, states={'draft':[('readonly',False)]}),
+        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice to', readonly=True, states={'draft':[('readonly',False)]}, domain="[('partner_id','=',partner_id)]"),
         'invoice_method':fields.selection([
             ("none","No Invoice"),
             ("b4repair","Before Repair"),
@@ -72,24 +72,27 @@ class mrp_repair(osv.osv):
         'state': lambda *a: 'draft',
     }
     
-    def onchange_product_id(self, cr, uid, ids, prod_id=False):
+    def onchange_product_id(self, cr, uid, ids, prod_id=False, move_id=False ):
         if not prod_id:
             return  {'value':{'prodlot_id': False , 'move_id': False, 'location_id' :  False}}
-        product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
-        current_date = time.strftime('%Y-%m-%d')
-        limit = mx.DateTime.strptime(current_date, '%Y-%m-%d') + RelativeDateTime(months=product.warranty, days=-1)
-        result = {
-            'guarantee_limit': limit.strftime('%Y-%m-%d'),
-        }
-        return { 'value' : result }
+        if move_id:
+            move =  self.pool.get('stock.move').browse(cr, uid, move_id)
+            product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+            date = move.date_planned#time.strftime('%Y-%m-%d')
+            limit = mx.DateTime.strptime(date, '%Y-%m-%d %H:%M:%S') + RelativeDateTime(months=product.warranty, days=-1)
+            result = {
+                'guarantee_limit': limit.strftime('%Y-%m-%d'),
+            }
+            return { 'value' : result }
+        return {}
     
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'address_id': False , 'pricelist_id': False }}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part])
+            return {'value':{'address_id': False , 'pricelist_id': False ,'partner_invoice_id' : False }}
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part],  ['delivery','invoice','default'])
         pricelist = self.pool.get('res.partner').property_get(cr, uid,
                         part,property_pref=['property_product_pricelist']).get('property_product_pricelist',False)
-        return {'value':{'address_id': addr['default'],  'pricelist_id': pricelist}}
+        return {'value':{'address_id': addr['delivery'], 'partner_invoice_id' :  addr['invoice'] ,  'pricelist_id': pricelist}}
 
     
     def onchange_lot_id(self, cr, uid, ids, lot ):
@@ -102,43 +105,71 @@ class mrp_repair(osv.osv):
             return {'value':{'location_id': move.location_dest_id.id ,  'move_id': move.id }}
         else:
             return {'value':{'location_id': False , 'move_id' :  False}}
+        
+    def action_cancel_draft(self, cr, uid, ids, *args):
+        if not len(ids):
+            return False
+        self.write(cr, uid, ids, {'state':'draft'})
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            wf_service.trg_create(uid, 'mrp.repair', id, cr)
+        return True
 
 mrp_repair()
 
 
 class repair_operation(osv.osv):
+     _inherit = 'stock.move'
      _name = 'repair.operation'
-     _description = 'Repair Operation'
+     _description = 'Repair Operations'
+     
+     def _get_price(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for val in self.browse(cr, uid, ids):
+            current_date = time.strftime('%Y-%m-%d')
+            if current_date < val.repair_id.guarantee_limit:
+                res[val.id] = 0.0
+            if current_date >= val.repair_id.guarantee_limit:
+                price = 0.0
+                pricelist = val.repair_id.pricelist_id.id
+                if pricelist:
+                    price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], val.product_id.id , 1.0, val.repair_id.partner_id.id)[pricelist]
+                if price is False:
+                     warning={
+                        'title':'No valid pricelist line found !',
+                        'message':
+                            "Couldn't find a pricelist line matching this product and quantity.\n"
+                            "You have to change either the product, the quantity or the pricelist."
+                        }
+                else:
+                    res[val.id] = price
+        return res
+    
+    
      _columns = {
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Ref', required=True, ondelete='cascade', select=True),
-        'name': fields.selection([('add','Add'),('remove','Remove')],'Type'),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)]),
+        'type': fields.selection([('add','Add'),('remove','Remove')],'Type'),
         'invoice': fields.boolean('Invoice'),
-        'price_unit': fields.float('Price'),
-        'product_qty': fields.float('Quantity', digits=(16,2)),
-        'product_uom': fields.many2one('product.uom', 'UoM'),
-         'location_id': fields.many2one('stock.location', 'Source Location', select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', select=True),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Lot Nb.', select=True),
+        'price_unit': fields.function(_get_price,  method=True, store= True, type='float', string='Price'),
     }
      
      
      def product_id_change(self, cr, uid, ids, pricelist, product, uom=False, product_qty = 0,partner_id=False ):
         if not product:
             return {'value': {'product_qty' : 0.0, 'product_uom': False},'domain': {'product_uom': []}}
-
         product_obj =  self.pool.get('product.product').browse(cr, uid, product)
         result = {}
+        warning = {}
         if not uom:
             result['product_uom'] = product_obj.uom_id.id
             domain = {'product_uom':
                         [('category_id', '=', product_obj.uom_id.category_id.id)],}
-            
+        
         if not pricelist:
             warning={
                 'title':'No Pricelist !',
                 'message':
-                    'You have to select a pricelist in the sale form !\n'
+                    'You have to select a pricelist in the Repair form !\n'
                     'Please set one before choosing a product.'
                 }
         else:
@@ -157,6 +188,21 @@ class repair_operation(osv.osv):
                 result.update({'price_unit': price})
                 
         return {'value': result , 'domain' :domain, 'warning':warning}
-    
+     
+     
+     def onchange_operation_type(self, cr, uid, ids, type ):
+        if not type:
+            return {'value':{'location_id': False , 'location_dest_id' :  False}}
+        stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
+        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Default Production')])[0]
+        if type == 'add':
+            return {'value':{'location_id': stock_id , 'location_dest_id' : produc_id}}
+        if type == 'remove':
+            return {'value':{'location_id': produc_id , 'location_dest_id' : stock_id}}
+        
+     _defaults = {
+                 'name' : lambda *a: 'Repair Operation',
+                 }
 repair_operation()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

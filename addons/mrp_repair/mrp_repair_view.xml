@@ -2,6 +2,15 @@
 <openerp>
     <data>
     
+    <wizard 
+            id="action_cancel_repair" 
+            model="mrp.repair" 
+            name="mrp.repair.cancel"
+            string="Cancel Repair"
+            menu = "False"
+            multi = "True"
+            />
+            
     <record id="view_repair_order_form" model="ir.ui.view">
             <field name="name">mrp.repair.form</field>
             <field name="model">mrp.repair</field>
@@ -9,7 +18,7 @@
             <field name="arch" type="xml">
                 <form string="Repairs order">
                     <group col="4" colspan="4">
-                        <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
+                        <field name="product_id" select="1"  on_change="onchange_product_id(product_id, move_id)"/>
                         <field name="prodlot_id" select="2" on_change="onchange_lot_id(prodlot_id)"/>
                         <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id)" />
                         <field name="address_id"/>
@@ -17,14 +26,14 @@
                     <notebook colspan="4">
                         <page string="Products">
                             <field name="location_id"/>
-                            <field name="move_id"/>
+                            <field name="move_id"   on_change="onchange_product_id(product_id, move_id)"/>
                             <field name="location_dest_id"/>
-                            <field name="guarantee_limit"/>
+                            <field name="guarantee_limit" />
                             <newline/>
                             <separator colspan="4" string="Operations"/>
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
                                 <form string="Operations">
-                                     <field name="name"/>
+                                     <field name="type"  on_change="onchange_operation_type(type)"/>
                                     <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_qty, parent.partner_id)"/>
                                     <field name="product_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
@@ -34,8 +43,8 @@
                                     <field name="location_dest_id"/>
                                     <field name="invoice"/>
                                 </form>
-                                <tree string="Operations lines">
-                                    <field name="name"/>
+                                <tree string="Operations lines"> <!-- editable="bottom"> -->
+                                    <field name="type" on_change="onchange_operation_type(type)"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
@@ -51,8 +60,9 @@
                                 <field name="state" select="2"/>
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>
                                 <button name="repair_done" states="confirmed" string="Repair Done"/>
-                                <button name="cancel" states="draft,confirmed,2binvoiced" string="Cancel Repair"/>
+                                <button name="%(action_cancel_repair)d" states="draft,confirmed,2binvoiced" string="Cancel Repair" type="action"/>
                                 <button name="make_invoice" states="2binvoiced" string="Make Invoice"/>
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                             </group>
                         </page>
                         <page string="Invoicing">
