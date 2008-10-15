@@ -206,12 +206,9 @@ class ir_values(osv.osv):
             keys.append(x[1])
             if x[3]:
                 model,id = x[2].split(',')
-                try:
-                    id = int(id)
-                    datas = self.pool.get(model).read(cr, uid, [id], False, context)
-                except:
-                    return False
-                if not len(datas):
+                id = int(id)
+                datas = self.pool.get(model).read(cr, uid, id, False, context)
+                if not datas:
                     #ir_del(cr, uid, x[0])
                     return False
                 def clean(x):
@@ -221,7 +218,7 @@ class ir_values(osv.osv):
                         if key in x:
                             del x[key]
                     return x
-                datas = clean(datas[0])
+                datas = clean(datas)
             else:
                 datas = pickle.loads(x[2])
             if meta:
