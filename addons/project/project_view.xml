@@ -185,7 +185,7 @@
             <field name="name">My projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid)]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid)]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="project.menu_main"/>
@@ -195,7 +195,7 @@
             <field name="name">My unclosed projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project_open_unclosed" id="menu_open_view_my_project_open_unclosed" parent="project.menu_open_view_my_project"/>
@@ -205,7 +205,7 @@
             <field name="name">My open projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid),('state','=','open')]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','=','open')]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project_open" id="menu_open_view_my_project_open" parent="project.menu_open_view_my_project_open_unclosed"/>
