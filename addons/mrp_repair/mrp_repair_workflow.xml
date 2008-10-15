@@ -13,6 +13,13 @@
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
+        <record id="act_router" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_repair"/>
+            <field name="name">router</field>
+            <field name="kind">function</field>
+            <field name="action">action_wait()</field>
+            <field name="split_mode">OR</field>
+        </record>
         <record id="act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="flow_start">True</field>
@@ -23,7 +30,8 @@
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">confirmed</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'confirmed'})</field>
+            <field name="action">action_confirm()
+write({'state':'confirmed'})</field>
         </record>
         
         <record id="act_2binvoiced" model="workflow.activity">
@@ -50,16 +58,29 @@
         <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf_repair"/>
             <field name="name">cancel</field>
-            <field name="kind">function</field>
             <field name="action">write({'state':'cancel'})</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
         </record>
         
         <!-- Transistion -->
         
-        <record id="trans_draft_confirmed" model="workflow.transition">
+        <record id="trans_draft_router" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
-            <field name="act_to" ref="act_confirmed"/>
+            <field name="act_to" ref="act_router"/>
             <field name="signal">repair_confirm</field>
+        </record>
+        
+        <record id="trans_router_confirmed" model="workflow.transition">
+            <field name="act_from" ref="act_router"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="condition">(invoice_method=='none')</field>
+        </record>
+        
+        <record id="trans_router_2binvoiced" model="workflow.transition">
+            <field name="act_from" ref="act_router"/>
+            <field name="act_to" ref="act_2binvoiced"/>
+            <field name="condition">(invoice_method=='b4repair')</field>
         </record>
         
         <record id="trans_draft_cancel" model="workflow.transition">
