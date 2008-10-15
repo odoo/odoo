@@ -59,7 +59,7 @@ class journal_print(report_sxw.rml_parse):
     def _sum_credit(self, period_id, journal_id):
         self.cr.execute('select sum(credit) from account_move_line where period_id=%d and journal_id=%d and state<>\'draft\'', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
-report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print)
+report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print,header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
