@@ -2449,10 +2449,40 @@ class orm(orm_template):
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
+
+        trans_obj = self.pool.get('ir.translation')
+        trans_name=''
+        trans_data=[]
+        for f in fields:
+            trans_flag=True
+            if f in self._columns and self._columns[f].translate:
+                trans_name=self._name+","+f
+            elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
+                trans_name=self._inherit_fields[f][0]+","+f
+            else:
+                trans_flag=False
+
+            if trans_flag:
+                trans_ids = trans_obj.search(cr, uid, [
+                        ('name', '=', trans_name),
+                        ('res_id','=',data['id'])
+                    ])
+
+                trans_data.extend(trans_obj.read(cr,uid,trans_ids,context=context))
+
         del data['id']
+
         for v in self._inherits:
             del data[self._inherits[v]]
-        return self.create(cr, uid, data)
+
+        new_id=self.create(cr, uid, data)
+
+        for record in trans_data:
+            del record['id']
+            record['res_id']=new_id
+            trans_obj.create(cr,uid,record)
+
+        return new_id
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         if not context:
