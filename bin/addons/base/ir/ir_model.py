@@ -329,27 +329,42 @@ class ir_model_access(osv.osv):
 
     check = tools.cache()(check)
 
+    __cache_clearing_methods = []
+
+    def register_cache_clearing_method(self, model, method):
+        self.__cache_clearing_methods.append((model, method))
+
+    def unregister_cache_clearing_method(self, model, method):
+        try:
+            i = self.__cache_clearing_methods.index((model, method))
+            del self.__cache_clearing_methods[i]
+        except ValueError:
+            pass
+
+    def call_cache_clearing_methods(self):
+        for model, method in self.__cache_clearing_methods:
+            getattr(self.pool.get(model), method)()
+
     #
     # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
-        self.pool.get('ir.ui.menu').clear_cache()
+        self.call_cache_clearing_methods()
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
-        self.check()
+        self.check()    # clear the cache of check function
         return res
+    
     def create(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
         self.check()
         return res
+
     def unlink(self, cr, uid, *args, **argv):
-        self.pool.get('ir.ui.menu').clear_cache()
+        self.call_cache_clearing_methods()
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
         self.check()
         return res
-    def read(self, cr, uid, *args, **argv):
-        res = super(ir_model_access, self).read(cr, uid, *args, **argv)
-        self.check()
-        return res
+
 ir_model_access()
 
 class ir_model_data(osv.osv):

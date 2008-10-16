@@ -29,8 +29,72 @@
 ##############################################################################
 
 from osv import fields,osv
+from osv.orm import except_orm
+import tools
 
 class ir_attachment(osv.osv):
+
+    def check(self, cr, uid, ids, mode):
+        if not ids: 
+            return
+        ima = self.pool.get('ir.model.access')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        objs = self.browse(cr, uid, ids) or []
+        for o in objs:
+            if o and o.res_model:
+                ima.check(cr, uid, o.res_model, mode)
+    
+    check = tools.cache()(check)
+        
+    def search(self, cr, uid, *args, **kwargs):
+        ids = super(ir_attachment, self).search(cr, uid, *args, **kwargs)
+        if not ids:
+            return []
+        models = super(ir_attachment,self).read(cr, uid, ids, ['id', 'res_model'])
+        cache = {}
+        ima = self.pool.get('ir.model.access')
+        for m in models:
+            if m['res_model'] in cache:
+                if not cache[m['res_model']]:
+                    ids.remove(m['id'])
+                continue
+            cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read', raise_exception=False)
+        return ids
+
+    def read(self, cr, uid, ids, *args, **kwargs):
+        self.check(cr, uid, ids, 'read')
+        return super(ir_attachment, self).read(cr, uid, ids, *args, **kwargs)
+
+    def write(self, cr, uid, ids, *args, **kwargs):
+        self.check(cr, uid, ids, 'write')
+        return super(ir_attachment, self).write(cr, uid, ids, *args, **kwargs)
+    
+    def copy(self, cr, uid, id, *args, **kwargs):
+        self.check(cr, uid, [id], 'write')
+        return super(ir_attachment, self).copy(cr, uid, id, *args, **kwargs)
+
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        self.check(cr, uid, ids, 'unlink')
+        return super(ir_attachment, self).unlink(cr, uid, ids, *args, **kwargs)
+
+    def create(self, cr, uid, values, *args, **kwargs):
+        if 'res_model' in values and values['res_model'] != '':
+            self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create')
+        return super(ir_attachment, self).create(cr, uid, values, *args, **kwargs)
+
+    def clear_cache(self):
+        self.check()    
+
+    def __init__(self, *args, **kwargs):
+        r = super(ir_attachment, self).__init__(*args, **kwargs)
+        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
+        return r
+
+    def __del__(self):
+        self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
+        return super(ir_attachment, self).__del__()
+
     _name = 'ir.attachment'
     _columns = {
         'name': fields.char('Attachment Name',size=64, required=True),
