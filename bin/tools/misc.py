@@ -655,8 +655,9 @@ def get_languages():
 
 def scan_languages():
     import glob
-    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['addons_path'], 'base', 'i18n', '*.po'))]
+    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
+    r=[(lang, lang_dict.get(lang, lang)) for lang in file_list]
     return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
 
