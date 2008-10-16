@@ -70,6 +70,7 @@ class mrp_repair(osv.osv):
     
     _defaults = {
         'state': lambda *a: 'draft',
+        'invoice_method': lambda *a: 'none',
         'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr,uid,[('type','=','sale')])[0]
     }
     

@@ -83,6 +83,12 @@ write({'state':'confirmed'})</field>
             <field name="condition">(invoice_method=='b4repair')</field>
         </record>
         
+        <record id="trans_confirm_2binvoiced" model="workflow.transition">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_2binvoiced"/>
+            <field name="condition">(invoice_method=='after_repair')</field>
+        </record>
+        
         <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_cancel"/>
