@@ -208,8 +208,8 @@
                     <field name="name"/>
                     <field name="title"/>
                     <field name="ref"/>
-                    <field name="city"/>
-                    <field name="country"/>
+                    <field name="city" select="2"/>
+                    <field name="country" select="2"/>
                     <field name="lang"/>
                 </tree>
             </field>
@@ -227,8 +227,6 @@
                         <field domain="[('domain', '=', 'partner')]" name="title"/>
                         <field name="lang" select="2"/>
                         <field name="supplier" select="2"/>
-                        <field name="city" select="2" invisible="1"/>
-	                    <field name="country" select="2" invisible="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
