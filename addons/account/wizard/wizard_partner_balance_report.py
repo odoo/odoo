@@ -29,78 +29,105 @@ import time
 import wizard
 import pooler
 
-report_type =  '''<?xml version="1.0"?>
-<form string="Select Report Type">
-</form>'''
-
-
-dates_form = '''<?xml version="1.0"?>
-<form string="Select period">
-    <field name="company_id" colspan="4"/>
-    <newline/>
-    <field name="date1"/>
-    <field name="date2"/>
-    <newline/>
-    <field name="result_selection"/>
-    <field name="soldeinit"/>
-</form>'''
-
-dates_fields = {
-    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-    'result_selection':{'string':"Display partner ",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-    'date1': {'string':'Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-}
+#report_type =  '''<?xml version="1.0"?>
+#<form string="Select Report Type">
+#</form>'''
+#
+#
+#dates_form = '''<?xml version="1.0"?>
+#<form string="Select period">
+#    <field name="company_id" colspan="4"/>
+#    <newline/>
+#    <field name="date1"/>
+#    <field name="date2"/>
+#    <newline/>
+#    <field name="result_selection"/>
+#    <field name="soldeinit"/>
+#</form>'''
+#
+#dates_fields = {
+#    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+#    'result_selection':{'string':"Display partner ",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
+#    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+#    'date1': {'string':'Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
+#    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+#}
 
 period_form = '''<?xml version="1.0"?>
-<form string="Select period">
+<form string="Select period" colspan = "4">
     <field name="company_id" colspan="4"/>
+    <field name="state" required="True" colspan = "4"/>
     <newline/>
+    <group attrs="{'invisible':[('state','=','none'),('state','=','byperiod')]}" colspan = "4">
+    <field name="date1"/>
+    <field name="date2"/>
+    </group>
+    <newline/>
+    <group attrs="{'invisible':[('state','=','none'),('state','=','bydate')]}" colspan = "4">
     <field name="fiscalyear" colspan="4"/>
     <field name="periods" colspan="4"/>
-    <newline/>
+    </group>
     <field name="result_selection"/>
     <field name="soldeinit"/>
 </form>'''
 
 period_fields = {
     'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'state':{'string':"Select Report Type",'type':'selection','selection':[('none','None'),('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'none' },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-        'help': 'Keep empty for all open fiscal year'},
-    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
+        'help': 'Keep empty for all open fiscal year','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
+    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
     'result_selection':{'string':"Display partner",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
     'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+    'date1': {'string':'Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
 
 class wizard_report(wizard.interface):
-    def _get_defaults(self, cr, uid, data, context):
-        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-
+    
+    def _get_load(self,cr,uid,data,context):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
-            company_id = user.company_id.id
+           company_id = user.company_id.id
         else:
-            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+           company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+       
+        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
+        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+        data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         data['form']['company_id'] = company_id
         data['form']['soldeinit'] = True
         data['form']['result_selection'] = 'all'
         return data['form']
     
-    def _get_defaults_fordate(self, cr, uid, data, context):
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            company_id = user.company_id.id
-        else:
-            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-        data['form']['company_id'] = company_id
-        data['form']['soldeinit'] = True
-        data['form']['result_selection'] = 'all'
+    def _get_defaults(self, cr, uid, data, context):
+      
+        if data['form']['state'] == 'none':
+           return 'report'
+        else :
+           if data['form']['state'] == 'byperiod':
+              data['form']['fiscalyear'] = True
+           else : 
+              self._check_date(cr, uid, data, context)
+              data['form']['fiscalyear'] = False
+           
         return data['form']
+    
+#    def _get_defaults_fordate(self, cr, uid, data, context):
+#        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+#        if user.company_id:
+#            company_id = user.company_id.id
+#        else:
+#            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+#        data['form']['company_id'] = company_id
+#        data['form']['soldeinit'] = True
+#        data['form']['result_selection'] = 'all'
+#        return data['form']
     
     def _check_date(self, cr, uid, data, context):
+        
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date1'])
         cr.execute(sql)
@@ -117,24 +144,24 @@ class wizard_report(wizard.interface):
 
     states = {
         'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':report_type,'fields':{}, 'state':[('with_period','Use with Period'),('with_date','Use with Date')]}
+            'actions': [_get_load],
+           'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
         },
-        'with_period': {
-            'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
-        },
-        'with_date': {
-            'actions': [_get_defaults_fordate],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
-        },
-        'checkdate': {
-            'actions': [],
-            'result': {'type':'choice','next_state':_check_date}
-        },
+#        'with_period': {
+#            'actions': [_get_defaults],
+#            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
+#        },
+#        'with_date': {
+#            'actions': [_get_defaults_fordate],
+#            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
+#        },
+##        'checkdate': {
+##            'actions': [],
+##            'result': {'type':'choice','next_state':_check_date}
+##        },
         
         'report': {
-            'actions': [],
+            'actions': [_get_defaults],
             'result': {'type':'print', 'report':'account.partner.balance', 'state':'end'}
         }
     }
