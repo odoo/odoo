@@ -580,7 +580,7 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.getAttribute("search").encode('utf8')
         rec_src_count = rec.getAttribute("count")
 
-        severity = rec.getAttribute("severity").encode('ascii') or 'info'
+        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR 
 
         rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
 
@@ -599,7 +599,7 @@ form: module.record_id""" % (xml_id,)
                     self.assert_report.record_assertion(False, severity)
                     self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (search count is incorrect: ' + str(len(ids)) + ')' )
                     sevval = getattr(logging, severity.upper())
-                    if sevval > config['assert_exit_level']:
+                    if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
                     return
@@ -625,7 +625,7 @@ form: module.record_id""" % (xml_id,)
                     self.assert_report.record_assertion(False, severity)
                     self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (tag ' + test.toxml() + ')' )
                     sevval = getattr(logging, severity.upper())
-                    if sevval > config['assert_exit_level']:
+                    if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
                     return
