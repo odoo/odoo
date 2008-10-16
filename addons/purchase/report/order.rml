@@ -235,8 +235,8 @@
           <para style="terp_default_Centre_9">[[ o.partner_ref or '' ]]</para>
         </td>
         <td>
-          <para style="Standard">[[ time.strftime('%d/%m/%Y', time.strptime(line.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
-        </td>
+          <para style="terp_default_Centre_9">[[ time.strftime('%d/%m/%Y', time.strptime(o.date_order, '%Y-%m-%d')) ]]</para>
+         </td>
         <td>
           <para style="terp_default_Centre_9">[[ o.validator and o.validator.name or '' ]]</para>
         </td>
@@ -278,7 +278,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d')) ]]</para>
+            <para style="terp_default_Centre_9">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_qty ]] </para>
@@ -395,3 +395,4 @@
     </para>
   </story>
 </document>
+
