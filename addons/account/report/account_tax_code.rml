@@ -90,8 +90,6 @@
   </stylesheet>
   <images/>
   <story>
-    <section>
-    <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
     <!--blockTable colWidths="162.0,222.0,154.0" repeatRows="1" style="Table_Title_Table">
       <tr>
         <td>
@@ -110,6 +108,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
+    <section>
     <blockTable colWidths="55.0,43.0,57.0,125.0,127.0,65.0,67.0" repeatRows="1" style="Table_Line_Title">
       <tr>
         <td>
@@ -137,6 +136,7 @@
       
       <tr>
       <td>
+      	<para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
       	<para style="terp_default_8">[[ repeatIn(o.line_ids, 'line') ]]</para>
 		  <blockTable colWidths="48.0,43.0,58.0,128.0,127.0,64.0,65.0" style="Table_Line_Content_Detail">
 		    <tr>
@@ -172,3 +172,4 @@
     </para>
   </story>
 </document>
+
