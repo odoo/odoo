@@ -45,6 +45,9 @@ from report.interface import report_int
 from pychart import *
 import StringIO
 theme.use_color = 1
+theme.default_font_family = "Helvetica-Bold"
+theme.default_font_size = 18
+theme.default_line_width = 1.0
 import tools
 
 
@@ -223,20 +226,22 @@ class accounting_report_indicator(report_sxw.rml_parse):
             os.mkdir('./' + dirname + '/')
         pdf_string = StringIO.StringIO()
         can = canvas.init('Image'+str(self.count)+".png")
+#        can.clip(0,0,600,400)
         chart_object.set_defaults(line_plot.T, line_style=None)
         data=zip(self.header_name,self.header_val)
 
-        ar = area.T(size = (400,200),x_coord = category_coord.T(data, 0), y_range = (0, None),
+        ar = area.T(size = (650,450),x_coord = category_coord.T(data, 0), y_range = (None, None),
             x_axis = axis.X(label="Period//Year",format="/a-30{}%s"),
             y_axis = axis.Y(label="Value"))
 
 
-        ar.add_plot(bar_plot.T(data = data, label = "Value",fill_style=fill_style.red))
+        ar.add_plot(bar_plot.T(data = data,width=15, data_label_format="/o/17{}%s",label = "Value",fill_style=fill_style.red))
         ar.draw()
 
         can.close()
         os.system('cp '+'Image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
         os.system('rm '+'Image'+str(self.count)+'.png')
+#        can.endclip()
         return path+str(self.count)+'.png'
 
 report_sxw.report_sxw('report.print.indicators', 'account.report.history',
