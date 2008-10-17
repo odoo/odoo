@@ -108,7 +108,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		# Transformation des date
 		#
 		#
-		if data['form'].has_key('fiscalyear'): 
+		if data['form']['fiscalyear']: 
 			self.transform_period_into_date_array(data)
 		else:
 			self.transform_date_into_date_array(data)
