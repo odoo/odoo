@@ -367,6 +367,14 @@ class orm_template(object):
         self._field_create(cr, context)
 
     def __init__(self, cr):
+        if not self._name and not hasattr(self, '_inherit'):
+            name = type(self).__name__.split('.')[0]
+            msg = "The class %s has to have a _name attribute" % name
+
+            logger = netsvc.Logger()
+            logger.notifyChannel('orm', netsvc.LOG_ERROR, msg )
+            raise except_orm('ValueError', msg )
+
         if not self._description:
             self._description = self._name
         if not self._table:
