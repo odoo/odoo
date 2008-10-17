@@ -55,9 +55,10 @@ import pooler
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select period" colspan = "4">
-
-    <field name="company_id" colspan="4"/>
-    <field name="state" required="True" colspan = "4"/>
+    <group colspan = "4" >
+    <field name="company_id" colspan = "4"/>
+    <field name="state" required="True"/>
+    </group>
     <newline/>
     <group attrs="{'invisible':[('state','=','byperiod')]}" colspan = "4">
     <field name="date1"/>
@@ -65,8 +66,8 @@ period_form = '''<?xml version="1.0"?>
     </group>
     <newline/>
     <group attrs="{'invisible':[('state','=','bydate')]}" colspan = "4">
-    <field name="fiscalyear" colspan="4"/>
-    <field name="periods" colspan="4"/>
+    <field name="fiscalyear" colspan = "4"/>
+    <field name="periods" colspan = "4"/>
     </group>
     <field name="result_selection"/>
     <field name="soldeinit"/>
@@ -74,13 +75,13 @@ period_form = '''<?xml version="1.0"?>
 
 period_fields = {
     'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-    'state':{'string':"Select Report Type",'type':'selection','selection':[('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'byperiod' },
+    'state':{'string':"Report Type",'type':'selection','selection':[('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'byperiod' },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
     'result_selection':{'string':"Display partner",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
     'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-    'date1': {'string':'Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date1': {'string':'  Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
