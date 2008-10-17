@@ -32,16 +32,16 @@
 import pooler
 import time
 from report import report_sxw
-from crm.report import report_businessopp
-from report.interface import report_int
-from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.charts.barcharts import VerticalBarChart
-import reportlab.lib.colors as colors
+
+#from report.interface import report_int
+#from reportlab.graphics.shapes import Drawing
+#from reportlab.graphics.charts.barcharts import VerticalBarChart
+#import reportlab.lib.colors as colors
 #from reportlab.graphics.widgetbase import Widget, TypedPropertyCollection
 #from reportlab.graphics.charts.textlabels import BarChartLabel
 #from reportlab.graphics import renderPM
-from report.render import render
-from report.interface import report_int
+#from report.render import render
+#from report.interface import report_int
 from pychart import *
 import StringIO
 theme.use_color = 1
@@ -159,7 +159,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.header_val=[str(x) for x in self.header_val]
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
-        res['X-Axis']='Value'
+        res['X-Axis']='Y-Axis'
         result.append(res)
         return result
 
@@ -170,17 +170,29 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
         if data['select_base']=='year':
             tuple_search=('fiscalyear_id','in',data['base_selection'][0][2])
+            base='year'
         else:
             tuple_search=('period_id','in',data['base_selection'][0][2])
+            base='period'
 
         history_ids=obj_history.search(self.cr,self.uid,[('name','=',object['id']),tuple_search])
         obj_his=obj_history.browse(self.cr,self.uid,history_ids)
 
         data_val=[]
         data_period=[]
-        for item in obj_his:
-            data_val.append(item.val)
-            data_period.append(item.period_id.name)
+        if base=='period':
+            for item in obj_his:
+                data_val.append(item.val)
+                data_period.append(item.period_id.name)
+        else:
+            for i in data['base_selection'][0][2]:
+                val_temp=[]
+                data_period.append(self.pool.get('account.fiscalyear').browse(self.cr,self.uid,i).name)
+                for item in obj_his:
+                    if item.fiscalyear_id.id==i:
+                        val_temp.append(item.val)
+                data_val.append(sum(val_temp))
+
         self.header_name=data_period
         self.header_val=data_val
 
@@ -224,16 +236,16 @@ class accounting_report_indicator(report_sxw.rml_parse):
         dirname ='Temp_images'
         if not os.path.isdir('./' + dirname + '/'):
             os.mkdir('./' + dirname + '/')
-        pdf_string = StringIO.StringIO()
         can = canvas.init('Image'+str(self.count)+".png")
 #        can.clip(0,0,600,400)
-        chart_object.set_defaults(line_plot.T, line_style=None)
+
         data=zip(self.header_name,self.header_val)
 
-        ar = area.T(size = (650,450),x_coord = category_coord.T(data, 0), y_range = (None, None),
-            x_axis = axis.X(label="Period//Year",format="/a-30{}%s"),
-            y_axis = axis.Y(label="Value"))
+        y_min_range=0
 
+        ar = area.T(size = (650,450),x_coord = category_coord.T(data, 0), y_range = (None, None),
+            x_axis = axis.X(label="Period // Year",format="/a-30{}%s"),
+            y_axis = axis.Y(label="Value"))
 
         ar.add_plot(bar_plot.T(data = data,width=15, data_label_format="/o/17{}%s",label = "Value",fill_style=fill_style.red))
         ar.draw()
