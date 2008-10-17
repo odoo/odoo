@@ -55,15 +55,16 @@ import pooler
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select period" colspan = "4">
+
     <field name="company_id" colspan="4"/>
     <field name="state" required="True" colspan = "4"/>
     <newline/>
-    <group attrs="{'invisible':[('state','=','none'),('state','=','byperiod')]}" colspan = "4">
+    <group attrs="{'invisible':[('state','=','byperiod')]}" colspan = "4">
     <field name="date1"/>
     <field name="date2"/>
     </group>
     <newline/>
-    <group attrs="{'invisible':[('state','=','none'),('state','=','bydate')]}" colspan = "4">
+    <group attrs="{'invisible':[('state','=','bydate')]}" colspan = "4">
     <field name="fiscalyear" colspan="4"/>
     <field name="periods" colspan="4"/>
     </group>
@@ -73,7 +74,7 @@ period_form = '''<?xml version="1.0"?>
 
 period_fields = {
     'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-    'state':{'string':"Select Report Type",'type':'selection','selection':[('none','None'),('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'none' },
+    'state':{'string':"Select Report Type",'type':'selection','selection':[('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'byperiod' },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
@@ -104,14 +105,11 @@ class wizard_report(wizard.interface):
     
     def _get_defaults(self, cr, uid, data, context):
       
-        if data['form']['state'] == 'none':
-           return 'report'
-        else :
-           if data['form']['state'] == 'byperiod':
-              data['form']['fiscalyear'] = True
-           else : 
-              self._check_date(cr, uid, data, context)
-              data['form']['fiscalyear'] = False
+        if data['form']['state'] == 'byperiod':
+           data['form']['fiscalyear'] = True
+        else : 
+           self._check_date(cr, uid, data, context)
+           data['form']['fiscalyear'] = False
            
         return data['form']
     
