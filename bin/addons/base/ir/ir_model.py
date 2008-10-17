@@ -294,6 +294,14 @@ class ir_model_access(osv.osv):
                    " WHERE m.model = %s AND a.group_id = %d", (model_name, group_id)
                    )
         r = cr.fetchone()
+        if r is None:
+            cr.execute("SELECT perm_" + mode + " "
+                       "  FROM ir_model_access a "
+                       "  JOIN ir_model m ON (m.id = a.model_id) "
+                       " WHERE m.model = %s AND a.group_id IS NULL", (model_name, )
+                       )
+            r = cr.fetchone()
+
         return bool(r and r[0])
 
     def check(self, cr, uid, model, mode='read', raise_exception=True):
