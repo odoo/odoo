@@ -85,6 +85,7 @@ class partner_balance(report_sxw.rml_parse):
         
             
     def transform_date_into_date_array(self,data):
+       
         return_array = self.date_range(data['form']['date1'],data['form']['date2'])
         self.date_lst = return_array
         self.date_lst.sort()
@@ -109,9 +110,12 @@ class partner_balance(report_sxw.rml_parse):
         # Transformation des date
         #
         #
-        if data['form'].has_key('fiscalyear'): 
+       
+        if data['form']['fiscalyear']: 
+            print"data['form']['fiscalyear']=True"
             self.transform_period_into_date_array(data)
         else:
+            print"data['form']['fiscalyear']=False"
             self.transform_date_into_date_array(data)
         ##
         self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
@@ -202,7 +206,7 @@ class partner_balance(report_sxw.rml_parse):
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name")
         res = self.cr.dictfetchall()
-        print"=====res=====",res
+        
         for r in res:
             full_account.append(r)
         
@@ -241,7 +245,7 @@ class partner_balance(report_sxw.rml_parse):
                 #
                 r['type'] = 1
                 r['balance'] = float(r['sdebit']) - float(r['scredit'])
-                print"====i = 0 :completearray====",completearray,i
+               
                 completearray.append(r)
                 #
                 tot_debit = r['debit']
@@ -303,7 +307,7 @@ class partner_balance(report_sxw.rml_parse):
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
                     #
                     completearray.append(r)
-                    print"====i!=0 completearray====",completearray,i
+                    
                 if cleanarray[i]['account_id'] == cleanarray[i-1]['account_id']:
                     # we reset the counter 
                                        
@@ -332,6 +336,7 @@ class partner_balance(report_sxw.rml_parse):
         result_tmp = 0.0
         #
         #
+        
         if data['form']['soldeinit'] :
             self.cr.execute(
                     'SELECT sum(debit) ' \

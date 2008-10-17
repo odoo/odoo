@@ -39,4 +39,7 @@ class order(report_sxw.rml_parse):
         })
 
 
-report_sxw.report_sxw('report.mrp.production.order','mrp.production','addons/mrp/report/order.rml',parser=order, header=2)
+
+report_sxw.report_sxw('report.mrp.production.order','mrp.production','addons/mrp/report/order.rml',parser=order,header=1)
+
+

@@ -285,9 +285,9 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <field name="property_product_pricelist" position="after">
+            <page string="Sales &amp; Purchases" position="inside">
                 <field name="property_invoice_type"/>
-            </field>
+            </page>
         </field>
     </record>
 

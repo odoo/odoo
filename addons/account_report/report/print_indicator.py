@@ -40,6 +40,11 @@ import reportlab.lib.colors as colors
 #from reportlab.graphics.widgetbase import Widget, TypedPropertyCollection
 #from reportlab.graphics.charts.textlabels import BarChartLabel
 #from reportlab.graphics import renderPM
+from report.render import render
+from report.interface import report_int
+from pychart import *
+import StringIO
+theme.use_color = 1
 import tools
 
 
@@ -157,7 +162,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
 
     def test1(self,data,object,intercall=False):
-        path=tools.config['root_path']+"/Temp_report/Image"
+        path=tools.config['root_path']+"/Temp_images/Image"
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
@@ -179,41 +184,60 @@ class accounting_report_indicator(report_sxw.rml_parse):
         if intercall:
             return True
         self.count +=1
-        drawing = Drawing(400, 300)
-        data = [
-                 tuple(data_val),
-                 ]
-        value_min=0.0
-        vmin=min(data_val)
-        vmax=max(data_val)
-
-        val_min=((vmin < 0.00 and vmin-2.00)  or 0.00)
-        # calculating maximum
-        val_max=(vmax/(pow(10,len(str(int(vmax)))-2))+1)*pow(10,len(str(int(vmax)))-2)
-        bc = VerticalBarChart()
-        bc.x = 50
-        bc.y = 50
-        bc.height = 245
-        bc.width = 300
-        bc.data = data
-        value_step=(abs(val_max)-abs(val_min))/5
-
-        bc.strokeColor = colors.black
-        bc.valueAxis.valueMin = val_min
-        bc.valueAxis.valueMax = val_max
-        bc.valueAxis.valueStep = value_step
-
-        bc.categoryAxis.labels.boxAnchor = 'ne'
-        bc.categoryAxis.labels.dx = 8
-
-        bc.categoryAxis.labels.dy = -2
-        bc.categoryAxis.labels.angle = 30
-        bc.categoryAxis.categoryNames = data_period
-        drawing.add(bc)
-        drawing.save(formats=['png'],fnRoot=path+str(self.count),title="helo")
+#        drawing = Drawing(400, 300)
+#        data = [
+#                 tuple(data_val),
+#                 ]
+#        value_min=0.0
+#        vmin=min(data_val)
+#        vmax=max(data_val)
+#
+#        val_min=((vmin < 0.00 and vmin-2.00)  or 0.00)
+#        # calculating maximum
+#        val_max=(vmax/(pow(10,len(str(int(vmax)))-2))+1)*pow(10,len(str(int(vmax)))-2)
+#        bc = VerticalBarChart()
+#        bc.x = 50
+#        bc.y = 50
+#        bc.height = 245
+#        bc.width = 300
+#        bc.data = data
+#        value_step=(abs(val_max)-abs(val_min))/5
+#
+#        bc.strokeColor = colors.black
+#        bc.valueAxis.valueMin = val_min
+#        bc.valueAxis.valueMax = val_max
+#        bc.valueAxis.valueStep = value_step
+#
+#        bc.categoryAxis.labels.boxAnchor = 'ne'
+#        bc.categoryAxis.labels.dx = 8
+#
+#        bc.categoryAxis.labels.dy = -2
+#        bc.categoryAxis.labels.angle = 30
+#        bc.categoryAxis.categoryNames = data_period
+#        drawing.add(bc)
+#        drawing.save(formats=['png'],fnRoot=path+str(self.count),title="helo")
 #        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
-        return path+str(self.count)+'.png'
+        import os
+        dirname ='Temp_images'
+        if not os.path.isdir('./' + dirname + '/'):
+            os.mkdir('./' + dirname + '/')
+        pdf_string = StringIO.StringIO()
+        can = canvas.init('Image'+str(self.count)+".png")
+        chart_object.set_defaults(line_plot.T, line_style=None)
+        data=zip(self.header_name,self.header_val)
 
+        ar = area.T(size = (400,200),x_coord = category_coord.T(data, 0), y_range = (0, None),
+            x_axis = axis.X(label="Period//Year",format="/a-30{}%s"),
+            y_axis = axis.Y(label="Value"))
+
+
+        ar.add_plot(bar_plot.T(data = data, label = "Value",fill_style=fill_style.red))
+        ar.draw()
+
+        can.close()
+        os.system('cp '+'Image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
+        os.system('rm '+'Image'+str(self.count)+'.png')
+        return path+str(self.count)+'.png'
 
 report_sxw.report_sxw('report.print.indicators', 'account.report.history',
         'addons/account_report/report/print_indicator.rml',

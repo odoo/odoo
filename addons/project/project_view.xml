@@ -325,7 +325,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
-                    <level object="project.project" domain="[]">
+                    <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
                 </gantt>
