@@ -278,13 +278,30 @@ class ir_model_access(osv.osv):
         cr.execute("select 1 from res_groups_users_rel where uid=%d and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
-    def check_groups_by_id(self, cr, uid, group_id):
-        cr.execute("select 1 from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
-        return bool(cr.fetchone())
+    def check_group(self, cr, uid, model, mode, group_id):
+        """ Check if a specific group has the access mode to the specified model"""
+        if uid==1:
+            return True
+
+        assert mode in ['read','write','create','unlink'], 'Invalid access mode'
+
+        if isinstance(model, browse_record):
+            assert model._table_name == 'ir.model', 'Invalid model object'
+            model_name = model.name
+        else:
+            model_name = model
+
+        cr.execute("SELECT perm_" + mode + " "
+                   "  FROM ir_model_access a "
+                   "  JOIN ir_model m ON (m.id = a.model_id) "
+                   " WHERE m.model = %s AND a.group_id = %d", (model_name, group_id)
+                   )
+        return bool(cr.fetchone()[0])
 
     def check(self, cr, uid, model, mode='read', raise_exception=True):
-        # Users root have all access (Todo: exclude xml-rpc requests)
         if uid==1:
+            # User root have all accesses 
+            # TODO: exclude xml-rpc requests
             return True
 
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
