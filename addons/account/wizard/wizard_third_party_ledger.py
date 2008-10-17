@@ -30,35 +30,6 @@ import wizard
 import pooler
 
 
-#report_type =  '''<?xml version="1.0"?>
-#<form string="Select Report Type">
-#</form>'''
-#
-#
-#dates_form = '''<?xml version="1.0"?>
-#<form string="Select period">
-#	<field name="company_id" colspan="4"/>
-#	<newline/>
-#	<field name="date1"/>
-#	<field name="date2"/>
-#	<newline/>
-#	<field name="result_selection"/>
-#	<field name="soldeinit"/>
-#	<field name="reconcil"/>
-#	<newline/>
-#	<field name="page_split"/>
-#</form>'''
-#
-#dates_fields = {
-#	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-#	'date1': {'string':'Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-#	'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-#	'result_selection':{'string':"Display partners",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
-#	'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-#	'reconcil':{'string':"Inclure les ecritures reconsiliees",'type':'boolean'},
-#	'page_split':{'string':"Un partenaire par page",'type':'boolean'},
-#}
-
 period_form = '''<?xml version="1.0"?>
 <form string="Select period">
 	
@@ -150,36 +121,12 @@ class wizard_report(wizard.interface):
 		   data['form']['fiscalyear'] = False
 		return data['form']
 
-#	def _get_defaults_fordate(self, cr, uid, data, context):
-#		data['form']['result_selection'] = 'all'
-#		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
-#		if user.company_id:
-#			company_id = user.company_id.id
-#		else:
-#			company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-#		data['form']['company_id'] = company_id
-#		data['form']['page_split'] = False
-#		data['form']['reconcil'] = False
-#		data['form']['soldeinit'] = True
-#		return data['form']
 
 	states = {
 		'init': {
 			'actions': [_get_defaults],
 			'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
 		},
-#		'with_period': {
-#			'actions': [_get_defaults],
-#			'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
-#		},
-#		'with_date': {
-#			'actions': [_get_defaults_fordate],
-#			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
-#		},
-#		'checkdate': {
-#			'actions': [],
-#			'result': {'type':'choice','next_state':_check_date}
-#		},
 		'report': {
 			'actions': [_check_state],
 			'result': {'type':'print', 'report':'account.third_party_ledger', 'state':'end'}
