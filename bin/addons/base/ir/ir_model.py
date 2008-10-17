@@ -280,9 +280,6 @@ class ir_model_access(osv.osv):
 
     def check_group(self, cr, uid, model, mode, group_id):
         """ Check if a specific group has the access mode to the specified model"""
-        if uid==1:
-            return True
-
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
         if isinstance(model, browse_record):
@@ -290,13 +287,14 @@ class ir_model_access(osv.osv):
             model_name = model.name
         else:
             model_name = model
-
+        
         cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
                    " WHERE m.model = %s AND a.group_id = %d", (model_name, group_id)
                    )
-        return bool(cr.fetchone()[0])
+        r = cr.fetchone()
+        return bool(r and r[0])
 
     def check(self, cr, uid, model, mode='read', raise_exception=True):
         if uid==1:

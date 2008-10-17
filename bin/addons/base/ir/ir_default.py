@@ -54,6 +54,3 @@ class ir_default(osv.osv):
     }
 ir_default()
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
