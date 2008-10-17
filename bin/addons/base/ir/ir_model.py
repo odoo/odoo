@@ -278,7 +278,7 @@ class ir_model_access(osv.osv):
         cr.execute("select 1 from res_groups_users_rel where uid=%d and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
-    def check_group(self, cr, uid, model, mode, group_id):
+    def check_group(self, cr, uid, model, mode, group_ids):
         """ Check if a specific group has the access mode to the specified model"""
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
@@ -288,21 +288,28 @@ class ir_model_access(osv.osv):
         else:
             model_name = model
         
-        cr.execute("SELECT perm_" + mode + " "
+        if isinstance(group_ids, (int, long)):
+            group_ids = [group_ids]
+        for group_id in group_ids:
+            cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
                    " WHERE m.model = %s AND a.group_id = %d", (model_name, group_id)
                    )
-        r = cr.fetchone()
-        if r is None:
-            cr.execute("SELECT perm_" + mode + " "
+            r = cr.fetchone()
+            if r is None:
+                cr.execute("SELECT perm_" + mode + " "
                        "  FROM ir_model_access a "
                        "  JOIN ir_model m ON (m.id = a.model_id) "
                        " WHERE m.model = %s AND a.group_id IS NULL", (model_name, )
                        )
-            r = cr.fetchone()
+                r = cr.fetchone()
 
-        return bool(r and r[0])
+            access = bool(r and r[0])
+            if access:
+                return True
+        # pass no groups -> no access
+        return False
 
     def check(self, cr, uid, model, mode='read', raise_exception=True):
         if uid==1:
