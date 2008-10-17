@@ -79,8 +79,8 @@ period_fields = {
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
-    'result_selection':{'string':"Display partner",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+    'result_selection':{'string':"        Partner",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
+    'soldeinit':{'string':" Inclure les soldes initiaux",'type':'boolean'},
     'date1': {'string':'  Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
