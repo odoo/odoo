@@ -30,7 +30,7 @@ import wizard
 import pooler
 
 period_form = '''<?xml version="1.0"?>
-<form string="Select period">
+<form string="Select period" colspan="4">
     <field name="company_id"/>
     <field name="result_selection"/>
     <newline/>
@@ -41,13 +41,13 @@ period_form = '''<?xml version="1.0"?>
     <field name="state" required="True"/>
     <newline/>
     <group colspan="4">
-    <group attrs="{'invisible':[('state','=','byperiod')]}" colspan="2">
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="2">
         <separator string="Date Filter" colspan="4"/>
         <field name="date1"/>
         <newline/>
         <field name="date2"/>
     </group>
-    <group attrs="{'invisible':[('state','=','bydate')]}" colspan="2">
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="2">
         <separator string="Filter on Periods" colspan="4"/>
         <field name="periods" colspan="4" nolabel="1"/>
     </group>
@@ -60,7 +60,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'none'
+        'default': lambda *a:'byperiod'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
@@ -98,12 +98,8 @@ class wizard_report(wizard.interface):
     
     def _check_state(self, cr, uid, data, context):
       
-        if data['form']['state'] == 'byperiod':
-           data['form']['fiscalyear'] = True
-        else : 
+        if data['form']['state'] == 'bydate'  :
            self._check_date(cr, uid, data, context)
-           data['form']['fiscalyear'] = False
-           
         return data['form']
   
     def _check_date(self, cr, uid, data, context):

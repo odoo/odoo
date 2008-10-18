@@ -81,7 +81,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
         if not name=='array':
             return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
 
-        value=['X-Axis']
+        value=['Data']
         value.extend(self.header_name)
         type=['string'].extend(['float']*len(self.header_name))
         width=[40]*(len(self.header_name)+1)
@@ -159,7 +159,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.header_val=[str(x) for x in self.header_val]
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
-        res['X-Axis']='Y-Axis'
+        res['Data']='Value'
         result.append(res)
         return result
 
@@ -176,6 +176,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
             base='period'
 
         history_ids=obj_history.search(self.cr,self.uid,[('name','=',object['id']),tuple_search])
+        history_ids.sort()
         obj_his=obj_history.browse(self.cr,self.uid,history_ids)
 
         data_val=[]
@@ -241,13 +242,11 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
         data=zip(self.header_name,self.header_val)
 
-        y_min_range=0
-
         ar = area.T(size = (650,450),x_coord = category_coord.T(data, 0), y_range = (None, None),
             x_axis = axis.X(label="Period // Year",format="/a-30{}%s"),
             y_axis = axis.Y(label="Value"))
 
-        ar.add_plot(bar_plot.T(data = data,width=15, data_label_format="/o/17{}%s",label = "Value",fill_style=fill_style.red))
+        ar.add_plot(bar_plot.T(data = data,width=15, data_label_format="/o/15{}%s",label = "Value",fill_style=fill_style.red))
         ar.draw()
 
         can.close()

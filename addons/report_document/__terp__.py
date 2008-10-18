@@ -12,7 +12,10 @@
     """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_document_view.xml"],
+    "update_xml" : [
+        "report_document_view.xml",
+        "security/ir.model.access.csv",
+    ],
     "active": False,
     "installable": True
  }

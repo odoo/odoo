@@ -113,22 +113,23 @@
 <para style="P3">
 <font color="white"> </font>
 </para>
+<para style="P3"><seqReset/></para>
 <section>
 <para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
 <blockTable colWidths="362.0,166.0" style="Table3">
 <tr>
 <td>
-<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]][[ o['name'] ]]</para>
+<para style="P11"><b>(<seq/>)</b> [[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]]<u>[[ o['name'] ]]</u></para>
 </td>
 <td>
-<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]][[ o['code'] ]]</para>
+<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]]<u>[[ o['code'] ]]</u></para>
 </td>
 </tr>
 </blockTable>
 <para style="P3">
 <font color="white"> </font>
 </para>
-<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'width':'450.00','height':'200.00','file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
+<para style="P1">[[ o['disp_graph'] and setTag('para','image',{'width':'450.00','height':'215.00','file':test(data['form'],o)}) or removeParentNode('para') ]]</para>
 <para style="P3">
 <font color="white"> </font>
 </para>
@@ -167,20 +168,10 @@
 </td>
 </tr>
 </blockTable>
-<pageBreak>[[ o['last'] and removeParentNode('pageBreak')]]</pageBreak>
 <para style="P3">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="362.0,166.0" repeatRows="1" style="Table4">
-<tr>
-<td>
-<para style="P6">Name[[ o['last'] and removeParentNode('blockTable')]]</para>
-</td>
-<td>
-<para style="P6">Code</para>
-</td>
-</tr>
-</blockTable>
+<para>[[ o['last'] and removeParentNode('para')]]<b>[[ '='*92 ]]</b></para>
 </section>
 </story>
 </document>
