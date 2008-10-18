@@ -115,7 +115,10 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
                     if valitem[0]==0:
-                        fname = self.pool.get(model)._columns[key]._fields_id
+                        if key in self.pool.get(model)._columns:
+                            fname = self.pool.get(model)._columns[key]._fields_id
+                        else:
+                            fname = self.pool.get(model)._inherit_fields[key]._fields_id
                         valitem[2][fname] = record_id
                         newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
