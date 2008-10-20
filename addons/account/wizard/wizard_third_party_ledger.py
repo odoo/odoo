@@ -33,41 +33,51 @@ import pooler
 period_form = '''<?xml version="1.0"?>
 <form string="Select period">
 	
-	<group colspan = "4" >
-    <field name="company_id" colspan = "4"/>
-    </group>
-    <group colspan = "4" >
-	<field name="state" required="True"/>
-   
-	</group>
-	<newline/>
-	<group attrs="{'invisible':[('state','=','byperiod')]}" colspan = "4">
-	<field name="date1"/>
-	<field name="date2"/>
-	</group>
-	<newline/>
-	
-	<group attrs="{'invisible':[('state','=','bydate')]}" colspan = "4">
-    <field name="fiscalyear" colspan = "4"/>
-    <field name="periods" colspan = "4"/>
-    </group>
-    <group colspan = "4" >
+	<field name="company_id"/>
     <field name="result_selection"/>
-	<field name="soldeinit"/>
-	</group>
-	<group colspan = "4" >
+    <newline/>
+    <field name="fiscalyear"/>
+    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+    <group colspan = "4" >
 	<field name="reconcil"/>
 	<field name="page_split"/>
 	</group>
+    <newline/>
+    <separator string="Filters" colspan="4"/>
+    <field name="state" required="True"/>
+    <newline/>
+    
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
+        <separator string="Date Filter" colspan="4"/>
+        <field name="date1"/>
+        <field name="date2"/>
+    </group>
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
+        <separator string="Filter on Periods" colspan="4"/>
+        <field name="periods" colspan="4" nolabel="1"/>
+    </group>
+   
 </form>'''
 
 period_fields = {
-	'company_id': {'string': '   Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-	'state':{'string':"Report Type",'type':'selection','selection':[('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'byperiod' },
-	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-		'help': 'Keep empty for all open fiscal year'},
-	'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-	'result_selection':{'string':"     Partners",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
+	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'state':{
+        'string':"Date/Period Filter",
+        'type':'selection',
+        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
+        'default': lambda *a:'all'
+    },
+    'fiscalyear': {
+        'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+        'help': 'Keep empty for all open fiscal year'
+    },
+    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
+    'result_selection':{
+        'string':"Partner",
+        'type':'selection',
+        'selection':[('customer','Receivable Accounts'),('supplier','Payable Accounts'),('all','Receivable and Payable Accounts')],
+        'required':True
+    },
 	'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
 	'reconcil':{'string':"	   Inclure les ecritures reconsiliees",'type':'boolean'},
 	'page_split':{'string':"Un partenaire par page",'type':'boolean'},

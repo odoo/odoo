@@ -161,13 +161,13 @@ class partner_balance(report_sxw.rml_parse):
         if data['form']['state'] == 'none':
             print"========none=========="
             self.transform_none_into_date_array(data)
-        if data['form']['state'] == 'bydate':
+        elif data['form']['state'] == 'bydate':
             print"========bydate=========="
             self.transform_date_into_date_array(data)
-        if data['form']['state'] == 'byperiod':
+        elif data['form']['state'] == 'byperiod':
             print"========byperiod=========="
             self.transform_period_into_date_array(data)
-        if data['form']['state'] == 'all':
+        elif data['form']['state'] == 'all':
             print"========both=========="
             self.transform_both_into_date_array(data)      
                   
