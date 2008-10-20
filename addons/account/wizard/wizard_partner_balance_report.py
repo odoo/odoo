@@ -117,7 +117,6 @@ class wizard_report(wizard.interface):
         else:
             raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
 
-
     states = {
         'init': {
             'actions': [_get_defaults],
