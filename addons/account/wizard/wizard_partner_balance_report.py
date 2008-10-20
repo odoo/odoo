@@ -73,7 +73,7 @@ period_fields = {
         'required':True
     },
     'soldeinit':{'string':" Inclure les soldes initiaux",'type':'boolean'},
-    'date1': {'string':'  Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date1': {'string':'          Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
