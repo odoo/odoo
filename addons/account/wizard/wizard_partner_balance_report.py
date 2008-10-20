@@ -40,17 +40,16 @@ period_form = '''<?xml version="1.0"?>
     <separator string="Filters" colspan="4"/>
     <field name="state" required="True"/>
     <newline/>
-    <group colspan="4">
-    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="2">
+    
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
         <separator string="Date Filter" colspan="4"/>
         <field name="date1"/>
-        <newline/>
         <field name="date2"/>
     </group>
-    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="2">
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
         <separator string="Filter on Periods" colspan="4"/>
         <field name="periods" colspan="4" nolabel="1"/>
-    </group>
+   
     </group>
 </form>'''
 
@@ -60,7 +59,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'byperiod'
+        'default': lambda *a:'all'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
