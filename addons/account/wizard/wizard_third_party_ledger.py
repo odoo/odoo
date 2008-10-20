@@ -79,8 +79,8 @@ period_fields = {
         'required':True
     },
 	'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-	'reconcil':{'string':"	   Inclure les ecritures reconsiliees",'type':'boolean'},
-	'page_split':{'string':"Un partenaire par page",'type':'boolean'},
+	'reconcil':{'string':"	   Include Reconciled Entries",'type':'boolean'},
+	'page_split':{'string':"One Partner Per Page",'type':'boolean'},
 	'date1': {'string':'  Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
 	'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }

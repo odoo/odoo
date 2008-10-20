@@ -204,7 +204,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"FROM account_move_line AS line, account_account AS account " \
 				"WHERE line.partner_id IS NOT NULL " \
 					"AND line.account_id = account.id " \
-					"AND line.date < %s " \
+					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
 #					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
