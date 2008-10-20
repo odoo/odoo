@@ -52,6 +52,8 @@ view_form_profit = """<?xml version="1.0"?>
 
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
+    <notebook colspan="4">
+    <page string="General Information">
     <image name="gtk-dialog-info" colspan="2"/>
     <group>
         <separator string="Define Main Company" colspan="4"/>
@@ -67,12 +69,18 @@ view_form_company = """<?xml version="1.0"?>
         <field name="email" align="0.0"/>
         <field name="phone" align="0.0"/>
         <field name="currency" align="0.0"/>
+    </group>
+    </page>
+    <page string="Report Information">
         <separator string="Report header" colspan="4"/>
         <newline/>
         <field name="rml_header1" align="0.0" colspan="4"/>
         <field name="rml_footer1" align="0.0" colspan="4"/>
         <field name="rml_footer2" align="0.0" colspan="4"/>
-    </group>
+        <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
+        <field colspan="4" name="logo" widget="image"/>
+    </page>
+    </notebook>
 </form>"""
 
 view_form_update = """<?xml version="1.0"?>
@@ -106,11 +114,14 @@ class wizard_base_setup(wizard.interface):
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'),
             ('state', '<>', 'uninstallable')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
+        print ">>>>>",res
         res.append((-1, 'Minimal Profile'))
         res.sort()
         return res
 
-
+#    def _get_service_profile(self, cr, uid, context={}):
+#        print cr,uid,self,context
+#        return pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')])[0]
 
     def _get_company(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
@@ -121,7 +132,8 @@ class wizard_base_setup(wizard.interface):
         company=company_obj.browse(cr, uid, ids)[0]
         self.fields['name']['default']=company.name
         self.fields['currency']['default']=company.currency_id.id
-        return {}
+        serv_pro_id = pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')])[0]
+        return {'profile':serv_pro_id}
         #self.fields['rml_header1']['default']=company.rml_header1
         #self.fields['rml_footer1']['default']=company.rml_footer1
         #self.fields['rml_footer2']['default']=company.rml_footer2
@@ -161,9 +173,18 @@ class wizard_base_setup(wizard.interface):
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
 
+    def _get_currency(self, cr, uid, context):
+        pool=pooler.get_pool(cr.dbname)
+        currency_obj=pool.get('res.currency')
+        ids=currency_obj.search(cr, uid, [])
+        res=[(currency.id, currency.name) for currency in currency_obj.browse(cr, uid, ids)]
+        res.sort(lambda x,y: cmp(x[1],y[1]))
+        return res
+
     def _update(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
         form=data['form']
+        print data
         if 'profile' in data['form'] and data['form']['profile'] > 0:
             module_obj=pool.get('ir.module.module')
             module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
@@ -180,6 +201,7 @@ class wizard_base_setup(wizard.interface):
                 'rml_footer1': form['rml_footer1'],
                 'rml_footer2': form['rml_footer2'],
                 'currency_id': form['currency'],
+                'logo': form['logo'],
             })
         partner_obj.write(cr, uid, [company.partner_id.id], {
                 'name': form['name'],
@@ -275,7 +297,7 @@ class wizard_base_setup(wizard.interface):
             'string':'Profile',
             'type':'selection',
             'selection':_get_profiles,
-            'default': -1,
+#            'default': _get_service_profile,
             'required': True,
         },
 
@@ -326,8 +348,8 @@ class wizard_base_setup(wizard.interface):
         },
         'currency': {
             'string': 'Currency',
-            'type': 'many2one',
-            'relation': 'res.currency',
+            'type': 'selection',
+            'selection':_get_currency,
             'required': True,
         },
         'rml_header1':{
@@ -353,6 +375,10 @@ We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'type': 'char',
             'size': 200,
+        },
+        'logo':{
+            'string': 'Logo',
+            'type': 'binary',
         },
     }
     states={
