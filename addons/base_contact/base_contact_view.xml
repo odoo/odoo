@@ -23,10 +23,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Partner Contact">
-                <notebook>
+                <field name="name" select="1"/>
+                <field name="first_name" select="1"/>
+                <notebook colspan="4" >
                     <page string="General">
-                            <field name="name" select="1"/>
-                            <field name="first_name" select="1"/>
                             <newline/>
                             <separator string="General Information" colspan="4"/>
                             <field name="mobile" select="2"/>
@@ -43,6 +43,9 @@
                                     <field name="address_id"/>
                                     <field name="phone"/>
                                     <field name="email"/>
+                                    <field name="date_start" />
+                                    <field name="date_stop" />
+                                    <field name="state" />
                                 </form>
                                 <tree string="Functions">
                                     <field name="sequence_contact"/>
@@ -51,6 +54,7 @@
                                     <field name="address_id"/>
                                     <field name="phone"/>
                                     <field name="email"/>
+                                    <field name="state" />
                                 </tree>
                             </field>
                     </page>
