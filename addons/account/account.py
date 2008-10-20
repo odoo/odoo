@@ -1734,7 +1734,6 @@ class account_chart_template(osv.osv):
         'property_account_payable': fields.many2one('account.account.template','Payable Account'),
         'property_account_expense_categ': fields.many2one('account.account.template','Expense Category Account'),
         'property_account_income_categ': fields.many2one('account.account.template','Income Category Account'),
-        'property_account_tax': fields.many2one('account.account.template','Default Tax on Partner'),
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
     }
@@ -2035,7 +2034,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_payable','res.partner','account.account'),
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),
-            ('property_account_tax','res.partner','account.tax'),
             ('property_account_expense','product.template','account.account'),
             ('property_account_income','product.template','account.account')
         ]

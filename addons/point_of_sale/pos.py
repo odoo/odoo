@@ -335,9 +335,11 @@ class pos_order(osv.osv):
                     self.pool.get('stock.move').create(cr, uid, {
                         'name': 'Stock move (POS %d)' % (order.id, ),
                         'product_uom': line.product_id.uom_id.id,
+                        'product_uos': line.product_id.uom_id.id,
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
                         'product_uos_qty': line.qty,
+                        'product_qty': line.qty,
                         'tracking_id': False,
                         'state': 'waiting',
                         'location_id': location_id,

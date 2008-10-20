@@ -858,7 +858,8 @@ class account_invoice_line(osv.osv):
         lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            taxep = part.property_account_position and part.property_account_position.account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -867,7 +868,8 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            taxep = part.property_account_position and part.property_account_position.account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:
@@ -891,6 +893,8 @@ class account_invoice_line(osv.osv):
             a =  res.product_tmpl_id.property_account_expense.id
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
+
+        a = self.pool.get('account.fiscal.position').map_account(cr, uid, part, a)
         if a:
             result['account_id'] = a
 
@@ -963,7 +967,8 @@ class account_invoice_line(osv.osv):
         if not (partner_id and account_id):
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
-        taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        taxep = partner.property_account_position and partner.property_account_position.account_tax
         if not taxep.id:
             return {'value': {'invoice_line_tax_id': map(lambda x: x.id, taxes or []) }}
         res = [taxep.id]

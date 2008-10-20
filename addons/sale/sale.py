@@ -288,10 +288,9 @@ class sale_order(osv.osv):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery','invoice','contact'])
-        pricelist = self.pool.get('res.partner').property_get(cr, uid,
-						part,property_pref=['property_product_pricelist']).get('property_product_pricelist',False)
-        payment_term = self.pool.get('res.partner').property_get(cr, uid,
-						part,property_pref=['property_payment_term']).get('property_payment_term',False)
+        part = self.pool.get('res.partner').browse(cr, uid, part)
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        payment_term = part.property_payment_term and part.property_payment_term.id or False
         return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term}}
 
     def button_dummy(self, cr, uid, ids, context={}):
@@ -726,6 +725,7 @@ class sale_order_line(osv.osv):
                 if uosqty:
                     pu = round(line.price_unit * line.product_uom_qty / uosqty,
                             int(config['price_accuracy']))
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, line.order_id.partner_id, a)
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
                     'account_id': a,
@@ -841,10 +841,8 @@ class sale_order_line(osv.osv):
                     [x.id for x in product_obj.taxes_id])
             taxep = None
             if partner_id:
-				taxep_id = self.pool.get('res.partner').property_get(cr, uid,
-						partner_id,property_pref=['property_account_tax']).get('property_account_tax',False)
-				if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
+                partner = partner_obj.browse(cr, uid, partner_id)
+                taxep = partner.property_account_position and partner.property_account_position.account_tax
             if not taxep or not taxep.id:
                 result['tax_id'] = [x.id for x in product_obj.taxes_id]
             else:

@@ -65,7 +65,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'all'
+        'default': lambda *a:'bydate'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
@@ -81,7 +81,7 @@ period_fields = {
 	'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
 	'reconcil':{'string':"	   Include Reconciled Entries",'type':'boolean'},
 	'page_split':{'string':"One Partner Per Page",'type':'boolean'},
-	'date1': {'string':'  Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
+	'date1': {'string':'  	  Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
 	'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
