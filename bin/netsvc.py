@@ -287,9 +287,13 @@ class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
         SimpleXMLRPCServer.SimpleXMLRPCServer):
 
     def server_bind(self):
-        self.socket.setsockopt(socket.SOL_SOCKET,
-                socket.SO_REUSEADDR, 1)
-        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+        try:
+            self.socket.setsockopt(socket.SOL_SOCKET,
+                    socket.SO_REUSEADDR, 1)
+            SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+        except:
+            sys.stderr.write("ERROR: address already in use\n")
+            sys.exit(1)
 
 
 class HttpDaemon(threading.Thread):
@@ -308,9 +312,14 @@ class HttpDaemon(threading.Thread):
                     SecureXMLRPCServer.SecureXMLRPCServer):
 
                 def server_bind(self):
-                    self.socket.setsockopt(socket.SOL_SOCKET,
-                            socket.SO_REUSEADDR, 1)
-                    SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
+                    try:
+                        self.socket.setsockopt(socket.SOL_SOCKET,
+                                socket.SO_REUSEADDR, 1)
+                        SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
+                    except:
+                        sys.stderr.write("ERROR: address already in use\n")
+                        sys.exit(1)
+
 
             self.server = SecureThreadedXMLRPCServer((interface, port),
                     SecureXMLRPCRequestHandler, 0)
