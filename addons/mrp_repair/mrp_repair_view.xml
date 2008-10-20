@@ -18,6 +18,8 @@
             <field name="arch" type="xml">
                 <form string="Repairs order">
                     <group col="4" colspan="4">
+                    	<field name="name"/>
+                    	<newline/>
                         <field name="product_id" select="1"  on_change="onchange_product_id(product_id, move_id)"/>
                         <field name="prodlot_id" select="2" on_change="onchange_lot_id(prodlot_id)"/>
                         <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id)" />
@@ -34,24 +36,26 @@
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
                                 <form string="Operations">
                                     <field name="type"  on_change="onchange_operation_type(type)"/>
-                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_qty, parent.partner_id)"/>
-                                    <field name="product_qty" string="Qty"/>
+                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="repair_price"/>
-                                    <field name="prodlot_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="delay"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="invoice"/>
+                                    <field name="state"/>
                                 </form>
                                 <tree string="Operations lines"> <!-- editable="bottom"> -->
-                                    <field name="type" on_change="onchange_operation_type(type)"/>
-                                    <field name="product_id"/>
-                                    <field name="product_qty" string="Qty"/>
+                                    <field name="type"  on_change="onchange_operation_type(type)"/>
+                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="repair_price"/>
-                                    <field name="prodlot_id"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="discount"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_net"/>
+                                    <field name="price_subtotal"/>
                                     <field name="invoice"/>
                                 </tree>
                             </field>
@@ -74,13 +78,13 @@
                             <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
                             <form string="Fees Line">
                                     <field name="product_id" on_change="product_id_change(product_id,product_uom)" />
-                                    <field name="product_qty" string="Qty"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM" /> <!--on_change="product_id_change(product_id,product_uom)" /> -->
                                     <field name="price_unit"/>
                                 </form>
                                 <tree string="Fees lines"> <!-- editable="bottom"> -->
                                     <field name="product_id"/>
-                                    <field name="product_qty" string="Qty"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
                                     <field name="price_unit"/>
                                 </tree>
