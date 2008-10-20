@@ -114,14 +114,9 @@ class wizard_base_setup(wizard.interface):
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'),
             ('state', '<>', 'uninstallable')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
-        print ">>>>>",res
         res.append((-1, 'Minimal Profile'))
         res.sort()
         return res
-
-#    def _get_service_profile(self, cr, uid, context={}):
-#        print cr,uid,self,context
-#        return pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')])[0]
 
     def _get_company(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
@@ -132,29 +127,10 @@ class wizard_base_setup(wizard.interface):
         company=company_obj.browse(cr, uid, ids)[0]
         self.fields['name']['default']=company.name
         self.fields['currency']['default']=company.currency_id.id
-        serv_pro_id = pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')])[0]
-        return {'profile':serv_pro_id}
-        #self.fields['rml_header1']['default']=company.rml_header1
-        #self.fields['rml_footer1']['default']=company.rml_footer1
-        #self.fields['rml_footer2']['default']=company.rml_footer2
-        #if not company.partner_id.address:
-        #   return {}
-        #address=company.partner_id.address[0]
-        #self.fields['street']['default']=address.street
-        #self.fields['street2']['default']=address.street2
-        #self.fields['zip']['default']=address.zip
-        #self.fields['city']['default']=address.city
-        #self.fields['email']['default']=address.email
-        #self.fields['phone']['default']=address.phone
-        #if address.state_id:
-        #   self.fields['state_id']['default']=address.state_id.id
-        #else:
-        #   self.fields['state_id']['default']=-1
-        #if address.country_id:
-        #   self.fields['country_id']['default']=address.country_id.id
-        #else:
-        #   self.fields['country_id']['default']=-1
-        #return {}
+        serv_pro_id = pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')]) or False
+        if serv_pro_id:
+            return {'profile':serv_pro_id[0]}
+        return {}
 
     def _get_states(self, cr, uid, context):
         pool=pooler.get_pool(cr.dbname)
@@ -184,11 +160,9 @@ class wizard_base_setup(wizard.interface):
     def _update(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
         form=data['form']
-        print data
         if 'profile' in data['form'] and data['form']['profile'] > 0:
             module_obj=pool.get('ir.module.module')
             module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
-
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
