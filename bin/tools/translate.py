@@ -338,12 +338,6 @@ def trans_generate(lang, modules, dbname=None):
     query_param = not 'all' in modules and modules or None
     cr.execute(query, query_param)
 
-    #if 'all' in modules:
-    #   cr.execute('select name,model,res_id,module from ir_model_data')
-    #else:
-    #   cr.execute('select name,model,res_id,module from ir_model_data where module in ('+','.join(['%s']*len(modules))+')', modules)
-
-
     _to_translate = []
     def push_translation(module, type, name, id, source):
         tuple = (module, type, name, id, source)
@@ -353,6 +347,9 @@ def trans_generate(lang, modules, dbname=None):
 
     for (xml_name,model,res_id,module) in cr.fetchall():
         xml_name = module+'.'+xml_name
+        if not pool.get(model):
+            logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r" % (model,))
+            continue
         obj = pool.get(model).browse(cr, uid, res_id)
         if model=='ir.ui.view':
             d = xml.dom.minidom.parseString(obj.arch)
