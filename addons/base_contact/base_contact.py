@@ -140,7 +140,7 @@ class res_partner_job(osv.osv):
 
     _defaults = {
         'sequence_contact' : lambda *a: 0,
-        'state' : lambda *a: 'past', 
+        'state' : lambda *a: 'current', 
     }
 res_partner_job()
 
