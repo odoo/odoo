@@ -86,8 +86,6 @@ def find_addons():
 
 def data_files():
     '''Build list of data files to be installed'''
-	
-    print "Here"
     files = []
     if os.name == 'nt':
         os.chdir('bin')
