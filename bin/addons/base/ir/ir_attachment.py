@@ -47,9 +47,14 @@ class ir_attachment(osv.osv):
     
     check = tools.cache()(check)
         
-    def search(self, cr, uid, *args, **kwargs):
-        ids = super(ir_attachment, self).search(cr, uid, *args, **kwargs)
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        ids = super(ir_attachment, self).search(cr, uid, args, offset=offset, 
+                                                limit=limit, order=order, 
+                                                context=context, count=False)
         if not ids:
+            if count:
+                return 0
             return []
         models = super(ir_attachment,self).read(cr, uid, ids, ['id', 'res_model'])
         cache = {}
@@ -59,7 +64,11 @@ class ir_attachment(osv.osv):
                 if not cache[m['res_model']]:
                     ids.remove(m['id'])
                 continue
-            cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read', raise_exception=False)
+            cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read',
+                                              raise_exception=False)
+
+        if count:
+            return len(ids)
         return ids
 
     def read(self, cr, uid, ids, *args, **kwargs):
