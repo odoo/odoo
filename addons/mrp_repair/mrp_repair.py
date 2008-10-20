@@ -200,31 +200,32 @@ class repair_operation(osv.osv):
      def _get_price(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for val in self.browse(cr, uid, ids):
-            current_date = time.strftime('%Y-%m-%d')
-            if current_date < val.repair_id.guarantee_limit:
-                res[val.id] = 0.0
-            if current_date >= val.repair_id.guarantee_limit:
-                price = 0.0
-                pricelist = val.repair_id.pricelist_id.id
-                if pricelist:
-                    price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], val.product_id.id , 1.0, val.repair_id.partner_id.id)[pricelist]
-                if price is False:
-                     warning={
-                        'title':'No valid pricelist line found !',
-                        'message':
-                            "Couldn't find a pricelist line matching this product and quantity.\n"
-                            "You have to change either the product, the quantity or the pricelist."
-                        }
-                else:
-                    res[val.id] = price
+            if val.repair_id:
+                current_date = time.strftime('%Y-%m-%d')
+                if current_date < val.repair_id.guarantee_limit:
+                    res[val.id] = 0.0
+                if current_date >= val.repair_id.guarantee_limit:
+                    price = 0.0
+                    pricelist = val.repair_id.pricelist_id.id
+                    if pricelist:
+                        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], val.product_id.id , 1.0, val.repair_id.partner_id.id)[pricelist]
+                    if price is False:
+                         warning={
+                            'title':'No valid pricelist line found !',
+                            'message':
+                                "Couldn't find a pricelist line matching this product and quantity.\n"
+                                "You have to change either the product, the quantity or the pricelist."
+                            }
+                    else:
+                        res[val.id] = price
         return res
     
     
      _columns = {
-        'repair_id': fields.many2one('mrp.repair', 'Repair Order Ref', required=True, ondelete='cascade', select=True),
+        'repair_id': fields.many2one('mrp.repair', 'Repair Order Ref',ondelete='cascade', select=True),
         'type': fields.selection([('add','Add'),('remove','Remove')],'Type'),
         'invoice': fields.boolean('Invoice'),
-        'price_unit': fields.function(_get_price,  method=True, store= True, type='float', string='Price'),
+        'repair_price': fields.function(_get_price,  method=True, store= True, type='float', string='Price'),
     }
      
      
@@ -259,7 +260,7 @@ class repair_operation(osv.osv):
                         "You have to change either the product, the quantity or the pricelist."
                     }
             else:
-                result.update({'price_unit': price})
+                result.update({'repair_price': price})
                 
         return {'value': result , 'domain' :domain, 'warning':warning}
      
