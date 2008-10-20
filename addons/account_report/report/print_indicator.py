@@ -126,18 +126,19 @@ class accounting_report_indicator(report_sxw.rml_parse):
     def lines(self,data):
         res={}
         result=[]
-        obj_inds=self.pool.get('account.report.report').browse(self.cr,self.uid,data['indicator_id'])
+        ind_ids=self.pool.get('account.report.report').search(self.cr,self.uid,[])
+        obj_inds=self.pool.get('account.report.report').browse(self.cr,self.uid,ind_ids)
 
-        def find_child(obj):
-            self.list.append(obj)
-            if obj.child_ids:
-                for child in obj.child_ids:
-                    find_child(child)
-            return True
+#        def find_child(obj):
+#            self.list.append(obj)
+#            if obj.child_ids:
+#                for child in obj.child_ids:
+#                    find_child(child)
+#            return True
+#
+#        find_child(obj_inds)
 
-        find_child(obj_inds)
-
-        for obj_ind in self.list:
+        for obj_ind in obj_inds:
             res = {
                 'id':obj_ind.id,
                 'name':obj_ind.name,
@@ -146,10 +147,8 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'disp_graph':obj_ind.disp_graph,
                 'note':obj_ind.note,
                 'type':obj_ind.type,
-                'last':False,
                 }
             result.append(res)
-        result[-1]['last']=True
         return result
 
     def getarray(self,data,object):
@@ -165,7 +164,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
 
     def test1(self,data,object,intercall=False):
-        path=tools.config['root_path']+"/Temp_images/Image"
+
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
@@ -235,8 +234,11 @@ class accounting_report_indicator(report_sxw.rml_parse):
 #        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
         import os
         dirname ='Temp_images'
-        if not os.path.isdir('./' + dirname + '/'):
-            os.mkdir('./' + dirname + '/')
+        path=os.path.join(tools.config['root_path'],dirname,"Image")
+
+        if not os.path.isdir(tools.config['root_path']+ "/"+dirname + '/'):
+            os.mkdir(tools.config['root_path'] +"/"+ dirname + '/')
+            os.path.join(tools.config['root_path'],dirname,"/")
         can = canvas.init('Image'+str(self.count)+".png")
 #        can.clip(0,0,600,400)
 
