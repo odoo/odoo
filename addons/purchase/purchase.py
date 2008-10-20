@@ -442,9 +442,9 @@ class purchase_order_line(osv.osv):
         taxep = None
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            taxep_id = partner.property_account_position and partner.property_account_position.account_supplier_tax
+            taxep = partner.property_account_position and partner.property_account_position.account_supplier_tax
         if not taxep or not taxep.id:
-            res['value']['taxes_id'] = [x.id for x in prod['supplier_taxes_id']]
+            res['value']['taxes_id'] = prod['supplier_taxes_id']
         else:
             res5 = [taxep.id]
             for t in taxes:
