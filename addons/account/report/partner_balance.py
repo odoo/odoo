@@ -556,8 +556,9 @@ class partner_balance(report_sxw.rml_parse):
                 'GROUP BY partner_id',
                 (self.date_lst[0],))
             
+            print"self.cr.fetchone()[0]",self.cr.fetchone()[0]
             if self.cr.fetchone() != None:
-                result_tmp = float(self.cr.fetchone()[0])
+                result_tmp = self.cr.fetchone()[0]
             else:
                 result_tmp = 0.0
         #
