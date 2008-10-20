@@ -6,15 +6,15 @@
 			<field eval="&quot;terp-calendar&quot;" name="icon"/>
 			<field eval="False" name="parent_id"/>
 		</record>
-	<record id="association_vertical.menu_crm_case_fund_raise" model="ir.ui.menu">
+	<!--<record id="association_vertical.menu_crm_case_fund_raise" model="ir.ui.menu">
 			<field eval="&quot;Fund Raising&quot;" name="name"/>
 			<field eval="&quot;terp-account&quot;" name="icon"/>
 			<field eval="False" name="parent_id"/>
-		</record>
+		</record>-->
 		<record id="product.menu_main_product" model="ir.ui.menu">
 			<field model="ir.ui.menu" name="parent_id" search="[('name','=','Configuration'),('parent_id.name','=','Financial Management')]"/>
 		</record>
-		
+
 		<!-- For Shortcuts menu
 	 -->
 	 <!--
@@ -25,8 +25,8 @@
 			<field name="sequence">4</field>
 			<field name="res_id" ref="crm_configuration.menu_crm_case_categ_meet_my"/>
 		</record>
-		
-		
+
+
 		<record model="ir.ui.view_sc" id="ir_ui_view_sc_myopenprojects1">
 			<field name="name">&quot;My Open Projects&quot;</field>
 			<field name="user_id" ref="base.user_admin"/>
@@ -34,7 +34,7 @@
 			<field name="sequence">4</field>
 			<field name="res_id" ref="project.menu_open_view_my_project_open"/>
 		</record>
-		
+
 		<record id="ir_ui_view_sc_myopenprojects1" model="ir.ui.view_sc">
 			<field ref="project.menu_open_view_my_project_open" name="res_id"/>
 			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
@@ -48,7 +48,7 @@
 			<field eval="&quot;Products&quot;" name="name"/>
 			<field name="user_id" ref="base.user_root"/>
 		</record>
-		
+
 		<record id="ir_ui_view_sc_events0" model="ir.ui.view_sc">
 			<field ref="event.menu_event_event" name="res_id"/>
 			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
