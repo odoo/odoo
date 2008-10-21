@@ -890,7 +890,7 @@ class mrp_procurement(osv.osv):
                 return True
         return False
 
-    def action_confirm(self, cr, uid, ids):
+    def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
