@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data noupdate="1">
-
         <!--
         Account Type
         -->
@@ -18,6 +17,11 @@
         <record id="account_type_liability" model="account.account.type">
             <field name="name">Liability</field> 
             <field name="code">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_creances" model="account.account.type">
+            <field name="name">Créances</field> 
+            <field name="code">creances</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_cash_equity" model="account.account.type">
@@ -41,543 +45,6 @@
             <field name="close_method">balance</field>
         </record>
 
-		<!-- Tax Code Templates -->          
-        <record id="vat_code_chart_root_lu" model="account.tax.code.template">
-            <field name="name">Plan de Taxes Luxembourgeois</field>
-        </record>
-
-		<record id="account_tax_code_template_totalduchiffredaffaires0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;09&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total du chiffre d'affaires&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-		</record>
-		<record id="account_tax_code_template_ventesourecettes0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;03&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;1. Ventes ou recettes&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalduchiffredaffaires0"/>
-		</record>
-		<record id="account_tax_code_template_prlvementsprivsdebiensarta0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;04&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prélèvements privés de biens (art 13 a)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalduchiffredaffaires0"/>
-		</record>
-		<record id="account_tax_code_template_prlvementsprivsdeservicesart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;05&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prélèvements privés de services (art 16)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalduchiffredaffaires0"/>
-		</record>
-		<record id="account_tax_code_template_affectationdebiensartb0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;06&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Affectation de biens (art 13 b)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalduchiffredaffaires0"/>
-		</record>
-		<record id="account_tax_code_template_point0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;08&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Point 5&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalduchiffredaffaires0"/>
-		</record>
-		<record id="account_tax_code_template_prestationsdeservicesart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;10&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prestations de services (art 26)&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_livraisonsintradebiens0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;11&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Livraisons intracommunautaires de biens&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_exportationsart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;12&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Exportations (art 43)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_autresexonrationsart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;13&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Autres exonérations (art 43)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_autresexonrationsart1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;14&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Autres exonérations (art 44)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_tabacsfabriqus0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;15&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Tabacs fabriqués&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_livraisonsaquisitionsintracom0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;16&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Livraisons / aquisitions intracom.&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_autresoprationsralisesltranger0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;17&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Autres opérations réalisées à l'étranger&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_point1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;19&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Point 7&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_prestationsdeservicesart0"/>
-		</record>
-		<record id="account_tax_code_template_chiffredaffairesimposablesanstva0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;22&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Chiffre d'affaires imposable (sans TVA)&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_achatdebetslintrieurdupays0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;23&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Achat de B. et S. à l'intérieur du pays&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_acquisitionsintracomdebiens0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;24&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Acquisitions intracom. de biens&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_importationsdebiens0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;25&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Importations de biens&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_affectationsdebiens0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;26&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Affectations de biens&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_taxedclarecommedbiteur0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;27&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe déclarée comme débiteur&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_taxeacquittecommecautionsolidaire0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;28&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe acquittée comme caution solidaire&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_taxenondductibleopexonre0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;29&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe non déductible / op. exonérée&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_taxenondductibleart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;30&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe non déductible (art 50)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_chiffredaffairesimposablesanstva0"/>
-		</record>
-		<record id="account_tax_code_template_taxeenamontdductible0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;31&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe en amont déductible&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_baseca0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;32&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base CA 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_baseca1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;33&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base CA 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_baseca2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;34&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base CA 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_baseca3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;35&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base CA 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_basecaautauxindfini0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;82&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base CA au taux indéfini&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_taxeca0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;37&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe CA 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_taxeca1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;38&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe CA 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_taxeca2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;39&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe CA 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_taxesca0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;40&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxes CA 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_taxeautauxindfini0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;83&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe au taux indéfini&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_taxeenamontdductible0"/>
-		</record>
-		<record id="account_tax_code_template_totalbaseintracommunautaire0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;46&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total Base intracommunautaire&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_baseintracom0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;42&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base intracom. 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalbaseintracommunautaire0"/>
-		</record>
-		<record id="account_tax_code_template_baseintracom1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;43&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base intracom. 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalbaseintracommunautaire0"/>
-		</record>
-		<record id="account_tax_code_template_baseintracom2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;44&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base intracom. 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalbaseintracommunautaire0"/>
-		</record>
-		<record id="account_tax_code_template_baseintracom3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;45&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base intracom. 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalbaseintracommunautaire0"/>
-		</record>
-		<record id="account_tax_code_template_baseintracomexonre0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;85&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base intracom. exonérée&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totalbaseintracommunautaire0"/>
-		</record>
-		<record id="account_tax_code_template_areporter0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;86&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;A reporter&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_report0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;87&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Report&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_taxeintracom0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;47&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe intracom. 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_report0"/>
-		</record>
-		<record id="account_tax_code_template_taxeintracom1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;48&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;taxe intracom. 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_report0"/>
-		</record>
-		<record id="account_tax_code_template_taxeintracom2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;49&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe intracom. 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_report0"/>
-		</record>
-		<record id="account_tax_code_template_taxeintracom3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;50&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe intracom. 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_report0"/>
-		</record>
-		<record id="account_tax_code_template_totaltaxeintracom0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;51&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total Taxe intracom.&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_acquisitiontriangulaire0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;52&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Acquisition triangulaire&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationentr0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;53&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base importation (entr.) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationentr1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;54&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (entr.) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseuntauxexonr0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;81&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base à un taux exonéré&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationentr2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;55&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (entr.) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationentr3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;56&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (entr.) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationentr0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;62&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (entr.) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationentr1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;64&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (entr.) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationentr2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;65&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (entr.) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_totaltaxeimportationentr0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;70&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total Taxe Importation (entr.)&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeintracom0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationprives0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;57&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (privées) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeimportationentr0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationprives1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;58&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (privées) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeimportationentr0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationprives2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;59&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (privées) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeimportationentr0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationprives3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;60&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base Importation (privées) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_totaltaxeimportationentr0"/>
-		</record>
-		<record id="account_tax_code_template_baseimportationprives3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;61&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total Base Importation&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationprives0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;66&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (privées) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_baseimportationprives3"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationprives1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;67&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (privées) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_baseimportationprives3"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationprives2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;68&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (privées) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_baseimportationprives3"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportationprives3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;69&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe Importation (privées) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_baseimportationprives3"/>
-		</record>
-		<record id="account_tax_code_template_totaltaxeimportationprives0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;71&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total Taxe Importation (privées)&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_totaldelataxe0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;72&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total de la taxe&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_taxeenamontdductible1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;73&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe en amont déductible&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_excdentdetaxe0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;74&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Excédent de taxe&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_excdentdetaxeenamontnonrembours0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;75&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Excédent de taxe en amont non remboursé&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_excdentdetaxe0"/>
-		</record>
-		<record id="account_tax_code_template_soldeverser0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;76&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Solde à verser&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_prestationsdeservicesart1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;88&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prestations de services (art. 26) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_prestationsdeservicesart2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;89&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prestations de services (art. 26) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_prestationsdeservicesart3" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;90&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prestations de services (art. 26) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_prestationsdeservicesart4" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;91&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Prestations de services (art. 26) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_livraisonsdebiensart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;92&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Livraisons de biens (art. 26) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_taxeprestationsdeservicesart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;93&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe prestations de services (art. 26) 15%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_taxeprestationsdeservicesart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;94&quot;&quot;&quot;" name="code"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="&quot;&quot;&quot;Taxe prestations de services (art. 26) 6%&quot;&quot;&quot;" name="name"/>
-		</record>
-		<record id="account_tax_code_template_taxeprestationsdeservicesart1" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;95&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe prestations de services (art. 26) 3%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_taxeprestationsdeservicesart2" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;96&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe prestations de services (art. 26) 12%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_taxelivraisonsdebiensart0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;97&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe livraisons de biens (art. 26) 6%&quot;&quot;&quot;" name="name"/>
-			<field eval="1.0" name="sign"/>
-			<field name="parent_id" ref="account_tax_code_template_soldeverser0"/>
-		</record>
-		<record id="account_tax_code_template_totaldelataxepayer0" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;98&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Total de la taxe à payer&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_taxeimportation6" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;63&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe importation (entr.) 6%&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_baseimportation12" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;60&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base importation (privées.) 12%&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_taxeprestation15" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;93&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe prestation de services (Art.26) 15%&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_code422" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;422&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Base des prestations de services (art.26/1/c et d)&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
-		<record id="account_tax_code_template_code219" model="account.tax.code.template">
-			<field eval="&quot;&quot;&quot;219&quot;&quot;&quot;" name="code"/>
-			<field eval="&quot;&quot;&quot;Taxe des prestations de services (art.26/1/c et d)&quot;&quot;&quot;" name="name"/>
-			<field name="parent_id" ref="vat_code_chart_root_lu"/>
-			<field eval="1.0" name="sign"/>
-		</record>
 
     <!-- Account Templates -->
 <record id="account_lu_0" model="account.account.template">
@@ -2614,9 +2081,11 @@
   <field name="code">401000</field>
   <field name="name">Effets à recevoir - clients</field>
   <field name="user_type" ref="account_type_asset"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_40"/>
-  <field name="type">other</field>
+  <field name="type">receivable</field>
+  
 </record>
 <record id="account_403000" model="account.account.template">
   <field name="code">403000</field>
@@ -2624,7 +2093,7 @@
   <field name="user_type" ref="account_type_asset"/>
   
   <field name="parent_id" ref="account_40"/>
-  <field name="type">other</field>
+  <field name="type">receivable</field>
 </record>
 <record id="account_404000" model="account.account.template">
   <field name="code">404000</field>
@@ -2637,10 +2106,10 @@
 <record id="account_406000" model="account.account.template">
   <field name="code">406000</field>
   <field name="name">Acomptes versés aux fournisseurs</field>
-  <field name="user_type" ref="account_type_root"/>
+  <field name="user_type" ref="account_type_creances"/>
   
   <field name="parent_id" ref="account_40"/>
-  <field name="type">other</field>
+  <field name="type">payable</field>
 </record>
 <record id="account_407000" model="account.account.template">
   <field name="code">407000</field>
@@ -2677,15 +2146,15 @@
 <record id="account_411000" model="account.account.template">
   <field name="code">411000</field>
   <field name="name">T.v.a en amont</field>
-  <field name="user_type" ref="account_type_root"/>
-  
+  <field name="user_type" ref="account_type_asset"/>
+  <field name="reconcile">True</field>
   <field name="parent_id" ref="account_411"/>
   <field name="type">other</field>
 </record>
 <record id="account_411100" model="account.account.template">
   <field name="code">411100</field>
   <field name="name">T.v.a soumise à l&apos;origine amont</field>
-  <field name="user_type" ref="account_type_root"/>
+  <field name="user_type" ref="account_type_asset"/>
   
   <field name="parent_id" ref="account_411"/>
   <field name="type">other</field>
@@ -2693,7 +2162,7 @@
 <record id="account_411500" model="account.account.template">
   <field name="code">411500</field>
   <field name="name">Compte courant tva</field>
-  <field name="user_type" ref="account_type_root"/>
+  <field name="user_type" ref="account_type_asset"/>
   
   <field name="parent_id" ref="account_411"/>
   <field name="type">other</field>
@@ -2709,7 +2178,7 @@
 <record id="account_413100" model="account.account.template">
   <field name="code">413100</field>
   <field name="name">Autres créances sur entrepr. liées</field>
-  <field name="user_type" ref="account_type_root"/>
+  <field name="user_type" ref="account_type_asset"/>
   
   <field name="parent_id" ref="account_41"/>
   <field name="type">other</field>
@@ -2910,7 +2379,8 @@
   <field name="code">441000</field>
   <field name="name">Effets à payer</field>
   <field name="user_type" ref="account_type_liability"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_44"/>
   <field name="type">other</field>
 </record>
@@ -2918,7 +2388,8 @@
   <field name="code">442000</field>
   <field name="name">Factures à recevoir</field>
   <field name="user_type" ref="account_type_root"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_44"/>
   <field name="type">other</field>
 </record>
@@ -2950,7 +2421,8 @@
   <field name="code">451000</field>
   <field name="name">T.v.a en aval</field>
   <field name="user_type" ref="account_type_liability"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_451"/>
   <field name="type">other</field>
 </record>
@@ -2958,7 +2430,8 @@
   <field name="code">451100</field>
   <field name="name">T.v.a soumise à l&apos;origine aval</field>
   <field name="user_type" ref="account_type_root"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_451"/>
   <field name="type">other</field>
 </record>
@@ -2966,7 +2439,8 @@
   <field name="code">451200</field>
   <field name="name">T.v.a intracom</field>
   <field name="user_type" ref="account_type_root"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_451"/>
   <field name="type">other</field>
 </record>
@@ -3310,7 +2784,8 @@
   <field name="code">580000</field>
   <field name="name">Virements internes</field>
   <field name="user_type" ref="account_type_root"/>
-  
+  <field name="reconcile">True</field>
+
   <field name="parent_id" ref="account_5"/>
   <field name="type">other</field>
 </record>
@@ -4296,478 +3771,14 @@
         <record id="l10nlu_chart_template" model="account.chart.template">
             <field name="name">PCMN for Luxembourg</field>
             <field name="account_root_id" ref="account_lu_0"/>
-            <field name="tax_code_root_id" ref="vat_code_chart_root_lu"/>
+            <field name="tax_code_root_id" ref="account_tax_code_template_1"/>
             <field name="bank_account_view_id" ref="account_550"/>
-            <field name="property_account_receivable" ref="account_700000"/>
-            <field name="property_account_payable" ref="account_700000"/>
+            <field name="property_account_receivable" ref="account_401000"/>
+            <field name="property_account_payable" ref="account_441000"/>
             <field name="property_account_expense_categ" ref="account_600000"/>
             <field name="property_account_income_categ" ref="account_700000"/>
         </record>
 
-
-    <!-- TAXES -->
-        <!-- Intra Travail à façon 0% -->
-		<record id="account_tax_template_intratravailfaon0" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="&quot;&quot;&quot;Intra Travail à façon 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Intra Livraison avec installation 0% -->
-		<record id="account_tax_template_intralivraisonavecinstallation0" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="&quot;&quot;&quot;Intra Livraison avec installation 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Intra transfert de biens 0% -->
-		<record id="account_tax_template_intratransfertdebiens0" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_livraisonsintradebiens0"/>
-			<field eval="&quot;&quot;&quot;Intra transfert de biens 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Ventes 0% -->
-		<record id="account_tax_template_ventes0" model="account.tax.template">
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Ventes 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Ventes 3% -->
-		<record id="account_tax_template_ventes1" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_baseca2"/>
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca2"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca2"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="0.03" name="amount"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_baseca2"/>
-			<field eval="&quot;&quot;&quot;Ventes 3%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_451000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_451000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Ventes 6% -->
-		<record id="account_tax_template_ventes2" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_baseca1"/>
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca1"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca1"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="0.06" name="amount"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_baseca1"/>
-			<field eval="&quot;&quot;&quot;Ventes 6%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_451000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_451000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Ventes 12% -->
-		<record id="account_tax_template_ventes3" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_baseca3"/>
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_taxesca0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_taxesca0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="0.12" name="amount"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_baseca3"/>
-			<field eval="&quot;&quot;&quot;Ventes 12%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_451000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_451000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Ventes 15% -->
-		<record id="account_tax_template_ventes4" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_baseca0"/>
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_taxeca0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="0.15" name="amount"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_baseca0"/>
-			<field eval="&quot;&quot;&quot;Ventes 15%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_451000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_451000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Vente de tabacs 0% -->
-		<record id="account_tax_template_ventedetabacs0" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_tabacsfabriqus0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_tabacsfabriqus0"/>
-			<field eval="&quot;&quot;&quot;Vente de tabacs 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Exportations 0% -->
-		<record id="account_tax_template_exportations0" model="account.tax.template">
-			<field name="ref_base_code_id" ref="l10n_lu.account_tax_code_template_exportationsart0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="-1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field name="base_code_id" ref="l10n_lu.account_tax_code_template_exportationsart0"/>
-			<field eval="&quot;&quot;&quot;Exportations 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Achats frais généraux 0% -->
-		<record id="account_tax_template_achatsfraisgnraux0" model="account.tax.template">
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Achats frais généraux 0%&quot;&quot;&quot;" name="name"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Achats frais généraux 3% -->
-		<record id="account_tax_template_achatsfraisgnraux1" model="account.tax.template">
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Achats frais généraux 3%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_411000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_411000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="0.03" name="amount"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Achats frais généraux 6% -->
-		<record id="account_tax_template_achatsfraisgnraux1" model="account.tax.template">
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Achats frais généraux 6%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_411000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_411000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="0.06" name="amount"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Achats frais généraux 12% -->
-		<record id="account_tax_template_achatsfraisgnraux1" model="account.tax.template">
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Achats frais généraux 12%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_411000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_411000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="0.12" name="amount"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
-
-        <!-- Achats frais généraux 15% -->
-		<record id="account_tax_template_achatsfraisgnraux1" model="account.tax.template">
-			<field name="ref_tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="1" name="sequence"/>
-			<field eval="1.0" name="base_sign"/>
-			<field eval="0" name="child_depend"/>
-			<field eval="0" name="include_base_amount"/>
-			<field eval="&quot;&quot;&quot;true&quot;&quot;&quot;" name="applicable_type"/>
-			<field name="tax_code_id" ref="l10n_lu.account_tax_code_template_achatdebetslintrieurdupays0"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or False
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute_inv"/>
-			<field eval="-1.0" name="ref_tax_sign"/>
-			<field eval="&quot;&quot;&quot;percent&quot;&quot;&quot;" name="type"/>
-			<field eval="1.0" name="ref_base_sign"/>
-			<field eval="&quot;&quot;&quot;vat&quot;&quot;&quot;" name="tax_group"/>
-			<field eval="&quot;&quot;&quot;Achats frais généraux 15%&quot;&quot;&quot;" name="name"/>
-			<field name="account_paid_id" ref="l10n_lu.account_411000"/>
-			<field name="account_collected_id" ref="l10n_lu.account_411000"/>
-			<field name="chart_template_id" ref="l10n_lu.l10nlu_chart_template"/>
-			<field eval="0.15" name="amount"/>
-			<field eval="&quot;&quot;&quot;# price_unit
-# address : res.partner.address object or False
-# product : product.product object or None
-# partner : res.partner object or None
-
-result = price_unit * 0.10&quot;&quot;&quot;" name="python_compute"/>
-			<field eval="1.0" name="tax_sign"/>
-		</record>
 
 	</data>
 </openerp>
