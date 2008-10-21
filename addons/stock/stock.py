@@ -320,22 +320,31 @@ class stock_picking(osv.osv):
     _description = "Packing list"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
+        if isinstance(ids, (int, long)):
+            ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
-            cr.execute("""update stock_move set
-                    date_planned=%s 
+            sql_str="""update stock_move set
+                    date_planned='%s'
                 where
-                    picking_id=%d and 
-                    (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
+                    picking_id=%d """ % (value,pick.id)
+            
+            if pick.max_date:
+                sql_str += " and (date_planned='"+pick.max_date+"' or date_planned>'"+value+"')"
+            cr.execute(sql_str)
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
+        if isinstance(ids, (int, long)):
+            ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
-            cr.execute("""update stock_move set
-                    date_planned=%s 
+            sql_str="""update stock_move set
+                    date_planned='%s' 
                 where
-                    picking_id=%d and 
-                    (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
+                    picking_id=%d """ % (value,pick.id)
+            if pick.min_date:
+                sql_str += " and (date_planned='"+pick.min_date+"' or date_planned<'"+value+"')"
+            cr.execute(sql_str)
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -591,7 +600,6 @@ class stock_picking(osv.osv):
                 payment_term_id= picking.sale_id.payment_term.id
             else:
                 account_id = partner.property_account_payable.id
-#                payment_term_id = picking.purchase_id.payment_term.id
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
@@ -618,10 +626,8 @@ class stock_picking(osv.osv):
                         context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
-            
             sale_line_ids = sale_line_obj.search(cursor, user, [('order_id','=',picking.sale_id.id)])
             sale_lines = sale_line_obj.browse(cursor, user, sale_line_ids, context=context)
-            
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:
@@ -646,7 +652,8 @@ class stock_picking(osv.osv):
                     tax_ids = self._get_taxes_invoice(cursor, user, sale_line, type)
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)
-    
+
+                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
                     invoice_line_id = invoice_line_obj.create(cursor, user, {
                         'name': name,
                         'invoice_id': invoice_id,
@@ -662,7 +669,7 @@ class stock_picking(osv.osv):
                     sale_line_obj.write(cursor, user, [sale_line.id], {'invoiced':True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                         })
-                    
+
             for move_line in picking.move_lines:
                 if group:
                     name = picking.name + '-' + move_line.name
@@ -689,6 +696,7 @@ class stock_picking(osv.osv):
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
 
+                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'invoice_id': invoice_id,
@@ -808,7 +816,12 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
-    
+    def name_get(self, cr, uid, ids, context={}):
+        res = []
+        for line in self.browse(cr, uid, ids, context):
+            res.append((line.id, (line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
+        return res
+
     def _check_tracking(self, cr, uid, ids):
          for move in self.browse(cr, uid, ids):             
              if not move.prodlot_id and \

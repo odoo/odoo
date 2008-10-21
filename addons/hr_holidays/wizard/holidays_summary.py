@@ -43,7 +43,7 @@ form='''<?xml version="1.0"?>
 
 zero_form='''<?xml version="1.0"?>
 <form string="Notification">
-<label string="You have to select atleast 1 Department. Try again." colspan="4"/>
+<label string="You have to select at least 1 Department. Try again." colspan="4"/>
 </form>'''
 
 zero_fields={

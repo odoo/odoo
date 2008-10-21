@@ -84,12 +84,9 @@ def _create_returns(self, cr, uid, data, context):
             else:
                 new_type='internal'
             new_picking=pick_obj.copy(cr, uid, pick.id, {'name':'%s (return)' % pick.name,
-                    'move_lines':[], 'state':'draft', 'type':new_type, 'loc_move_id':False,
+                    'move_lines':[], 'state':'draft', 'type':new_type, 
                     'date':date_cur, 'invoice_state':data['form']['invoice_state'],})
-        if pick.loc_move_id:
-            new_location=pick.loc_move_id.id
-        else:
-            new_location=move.location_dest_id.id
+        new_location=move.location_dest_id.id
 
         new_move=move_obj.copy(cr, uid, move.id, {
             'product_qty': data['form']['return%s' % move.id],

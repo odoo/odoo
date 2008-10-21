@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
     <record id="group_sale_manager" model="res.groups">
         <field name="name">Sale / Manager</field>
@@ -8,6 +8,12 @@
     <record id="group_sale_user" model="res.groups">
         <field name="name">Sale / Salesman</field>
     </record>
+
+
+	<record model='ir.ui.menu' id='menu_shop_configuration'>
+		<field name="groups_id" eval="[(6,0,[ref('group_sale_manager')])]"/>
+	</record>
+
 
 </data>
 </openerp>

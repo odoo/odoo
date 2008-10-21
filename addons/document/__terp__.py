@@ -14,9 +14,11 @@
 """,
 	"depends" : ["base", "process"],
 	"init_xml" : ["document_data.xml"],
-	"update_xml" : ["document_view.xml",
-#				    "process/document_process.xml"
-				    ],
+	"update_xml" : [
+		"document_view.xml",
+		"security/document_security.xml",
+		"security/ir.model.access.csv",
+	],
 	"demo_xml" : ["document_demo.xml"],
 	"active": False,
 	"installable": True

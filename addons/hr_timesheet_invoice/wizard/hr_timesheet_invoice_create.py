@@ -113,7 +113,7 @@ class invoice_create(wizard.interface):
                     price = 0.0
 
                 taxes = product.taxes_id
-                taxep = account.partner_id.property_account_tax
+                taxep = account.partner_id.property_account_position and account.partner_id.property_account_position.account_tax
                 if not taxep.id:
                     tax = [x.id for x in taxes or []]
                 else:

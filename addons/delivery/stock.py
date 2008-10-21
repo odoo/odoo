@@ -88,9 +88,13 @@ class stock_picking(osv.osv):
             taxep = None
             partner_id=picking.address_id.partner_id and picking.address_id.partner_id.id or False
             if partner_id:
-                taxep_id = self.pool.get('res.partner').property_get(cursor, user,partner_id,property_pref=['property_account_tax']).get('property_account_tax',False)
-                if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cursor, user,taxep_id)                
+                print 'Found Partner'
+                partner = picking.address_id.partner_id
+                taxep = partner.property_account_position and partner.property_account_position.account_tax
+                print account_id
+                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner, account_id)
+                print account_id
+
             if not taxep or not taxep.id:
                 taxes_ids = [x.id for x in picking.carrier_id.product_id.taxes_id]
             else:

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><openerp><data noupdate="1">
+<?xml version="1.0" encoding="utf-8"?><openerp><data noupdate="0">
 
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Finance / Invoice</field>
@@ -11,4 +11,29 @@
     <record id="group_account_manager" model="res.groups">
         <field name="name">Finance / Manager</field>
     </record>
+
+	<record id="menu_finance_configuration" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_manager')])]" name="groups_id"/>
+	</record>
+
+	<record id="menu_finance_reporting" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_manager')])]" name="groups_id"/>
+	</record>
+
+	<record id="menu_finance_legal_statement" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_manager')])]" name="groups_id"/>
+	</record>
+
+	<record id="menu_finance_invoice" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_invoice')])]" name="groups_id"/>
+	</record>
+
+	<record id="menu_automatic_reconcile" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_user')])]" name="groups_id"/>
+	</record>
+
+	<record id="menu_finance_charts" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('group_account_user'), ref('group_account_manager')])]" name="groups_id"/>
+	</record>
+
 </data></openerp>

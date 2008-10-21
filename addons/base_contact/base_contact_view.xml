@@ -23,10 +23,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Partner Contact">
-                <notebook>
+                <field name="name" select="1"/>
+                <field name="first_name" select="1"/>
+                <notebook colspan="4" >
                     <page string="General">
-                            <field name="name" select="1"/>
-                            <field name="first_name" select="1"/>
                             <newline/>
                             <separator string="General Information" colspan="4"/>
                             <field name="mobile" select="2"/>
@@ -37,20 +37,24 @@
                             <separator string="Functions" colspan="4"/>
                             <field name="job_ids" colspan="4" nolabel="1" mode="tree, form">
                                 <form string="Functions">
-                                    <field name="sequence_contact"/>
                                     <field name="function_id"/>
-                                    <field name="name"/>
                                     <field name="address_id"/>
+                                    <field name="name"/>
+                                    <field name="sequence_contact"/>
                                     <field name="phone"/>
                                     <field name="email"/>
+                                    <field name="date_start" />
+                                    <field name="date_stop" />
+                                    <field name="state" />
                                 </form>
                                 <tree string="Functions">
-                                    <field name="sequence_contact"/>
+                                    <field name="sequence_contact" string="Seq."/>
                                     <field name="function_id"/>
                                     <field name="name"/>
                                     <field name="address_id"/>
                                     <field name="phone"/>
                                     <field name="email"/>
+                                    <field name="state" />
                                 </tree>
                             </field>
                     </page>
@@ -75,17 +79,6 @@
 
 
     <!-- Views for Partners -->
-    <record model="ir.ui.view" id="view_partner_tree_inherited1">
-        <field name="name">Partner tree inherited</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <field name="address" position="replace">
-                <field name='address' string='# of Addresses'/>
-            </field>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_partner_form_inherit">
         <field name="name">Partner form inherited</field>

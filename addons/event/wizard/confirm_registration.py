@@ -45,7 +45,7 @@ def _confirm(self, cr, uid, data, context):
     current_registration = registration_obj.browse(cr, uid, [data['id']])[0]
 
     total_confirmed = current_registration.event_id.register_current + current_registration.nb_register
-    if total_confirmed <= current_registration.event_id.register_max:
+    if total_confirmed <= current_registration.event_id.register_max or current_registration.event_id.register_max == 0:
         return 'confirm'
     return 'split'
 
@@ -53,7 +53,6 @@ def _confirm(self, cr, uid, data, context):
 def _check_confirm(self, cr, uid, data, context):
     registration_obj = pooler.get_pool(cr.dbname).get('event.registration')
     registration_obj.write(cr, uid, [data['id']], {'state':'open',})
-    reg = registration_obj.browse(cr, uid, [data['id']])
     registration_obj._history(cr, uid, reg, 'Open', history=True)
     registration_obj.mail_user(cr,uid,[data['id']])
     return {}

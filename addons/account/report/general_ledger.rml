@@ -16,14 +16,14 @@
 
 				<!--COL 1-->
 				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawString x="17.7cm" y="28.1cm">General Ledger</drawString>
+				<drawString x="16.7cm" y="28.1cm">General Ledger - [[ company.currency_id.name ]]</drawString>
 
 				<!--COL 2-->
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%d-%m-%Y %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
+
 
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
@@ -32,29 +32,29 @@
     </pageTemplate>
   </template>
    <stylesheet>
-   
+
     <blockTableStyle id="tbl_header">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-     
+
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
-    
+
     <blockTableStyle id="tbl_content">
-      
+
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
-    
-   
+
+
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <lineStyle kind="LINEBELOW" colorName="#777777" start="0,0" stop="0,0"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    
-    
+
+
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
@@ -91,7 +91,7 @@
     <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
-  	 <blockTable colWidths="54.0,155.0,70.0,20.0,80.0,59.0,52.0,54.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+  	 <blockTable colWidths="54.0,135.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3_centre">Date</para>
@@ -122,7 +122,7 @@
          	<para>[[ repeatIn(objects, 'a') ]]</para>
      			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
         	<td>
-        			<blockTable colWidths="48.0,155.0,70.0,20.0,80.0,59.0,52.0,54.0" style="tbl_content">
+        			<blockTable colWidths="48.0,135.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_content">
       		<tr>
 	        	<td>
 	        		<blockTable colWidths="273.00,100.0,52.5,52.5,52.5" style="Table5">
@@ -139,7 +139,7 @@
 			            <para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para>
 			          </td>
 			        </tr>
-	      			</blockTable>   
+	      			</blockTable>
 	        	</td>
         	</tr>
       		<tr>
@@ -147,7 +147,7 @@
 	          <td>
 	            <para style="P16"></para>
 	          </td>
-	 
+
 	          <td>
 	            <para style="P3">Balance Initial</para>
 	          </td>
@@ -169,13 +169,13 @@
 	          <td>
 	            <para style="P4">[[ (o.init_debit - o.init_credit) or '0.0' ]]</para>
 	          </td>
-	   
+
 	        </tr>
 	         <tr>[[ repeatIn(lines(o, data['form']), 'line') ]]
           <td>
             <para style="P3">[[ line['date']  ]]</para>
           </td>
- 
+
           <td>
             <para style="P3">[[ line['partner'] ]]</para>
           </td>
@@ -197,14 +197,14 @@
           <td>
             <para style="P4">[[ line['progress'] and line['progress'] or '0.0' ]]</para>
           </td>
-   
+
         </tr>
       	</blockTable>
         	</td>
         </tr>
      </blockTable>
-     
-      <blockTable colWidths="59.0,125.0,66.0,20.0,100.0,50.0,50.0,50.0,40.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+
+      <blockTable colWidths="59.0,105.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3_centre">Date</para>
@@ -229,20 +229,20 @@
           </td>
           <td>
             <para style="P4">Balance</para>
-          </td>          
+          </td>
           <td>
             <para style="P4">Currency</para>
-          </td>          
-  
+          </td>
+
         </tr>
         <tr>
         <para>[[ repeatIn(objects, 'a') ]]</para>
      			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
         	<td>
-        		<blockTable colWidths="54.0,125.0,66.0,20.0,100.0,50.0,50.0,50.0,40.0" style="tbl_content" >
+        		<blockTable colWidths="54.0,105.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_content" >
       		<tr>
 	        	<td>
-	        		<blockTable colWidths="259.00,100.0,50.0,50.0,49.0" style="Table5">
+	        		<blockTable colWidths="259.00,100.0,50.0,50.0,49.0,40.00" style="Table5">
 			        <tr>
 			          <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 			          <td><para style="Standard"></para></td>
@@ -255,15 +255,19 @@
 			          <td>
 			            <para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para>
 			          </td>
+			          <td>
+
+			            <para style="P9b"><u> [[ sum_currency_amount_account(a, data['form']) or '0.0' ]]</u></para>
+			          </td>
 			        </tr>
-	      			</blockTable>   
+	      			</blockTable>
 	        	</td>
         	</tr>
       		<tr>[[ data['form']['soldeinit'] == True or removeParentNode('tr') ]]
 	          <td>
 	            <para style="P16"></para>
 	          </td>
-	 
+
 	          <td>
 	            <para style="P3">Balance Initial</para>
 	          </td>
@@ -288,7 +292,7 @@
 	          <td>
 	            <para style="P4"> </para>
 	          </td>
-   
+
         </tr>
         <tr>[[ repeatIn(lines(o, data['form']), 'line') ]]
           <td>
@@ -319,15 +323,15 @@
             <para style="P4">[[ line['amount_currency'] or  '0.0' ]] [[ line['currency_code'] ]]</para>
           </td>
 
-  
+
         </tr>
-      	</blockTable>  
+      	</blockTable>
         	</td>
         </tr>
        </blockTable>
-  
+
   </story>
-  
-    
-    
+
+
+
 </document>

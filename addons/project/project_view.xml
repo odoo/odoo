@@ -116,7 +116,7 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem id="next_id_54" name="Projects" parent="project.menu_definitions"/><menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="next_id_54"/>
+        <menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="menu_all_project"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Template projects</field>
@@ -125,6 +125,7 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
+		<menuitem id="next_id_54" name="Projects" parent="project.menu_definitions"/>
         <menuitem action="open_view_template_project" id="menu_template_project" parent="next_id_54"/>
 
         <record id="open_view_project" model="ir.actions.act_window">
@@ -184,7 +185,7 @@
             <field name="name">My projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid)]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid)]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="project.menu_main"/>
@@ -194,7 +195,7 @@
             <field name="name">My unclosed projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project_open_unclosed" id="menu_open_view_my_project_open_unclosed" parent="project.menu_open_view_my_project"/>
@@ -204,7 +205,7 @@
             <field name="name">My open projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('manager', '=', uid),('state','=','open')]</field>
+            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','=','open')]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem action="open_view_my_project_open" id="menu_open_view_my_project_open" parent="project.menu_open_view_my_project_open_unclosed"/>
@@ -310,13 +311,28 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
+                <calendar type="gantt" color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
                     <field name="name"/>
                     <field name="project_id"/>
                 </calendar>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_project_task_graph">
+
+        <record id="view_task_gantt" model="ir.ui.view">
+            <field name="name">project.task.gantt</field>
+            <field name="model">project.task</field>
+            <field name="type">gantt</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
+                    <level object="project.project" link="project_id" domain="[]">
+                        <field name="name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
+        <record id="view_project_task_graph" model="ir.ui.view">
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="type">graph</field>
@@ -333,7 +349,7 @@
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_main"/>
@@ -342,7 +358,7 @@
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field name="domain">[('user_id', '=', uid)]</field>
         </record>
         <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_main"/>

@@ -9,7 +9,8 @@
     "update_xml" : [
        "hr_attendance_view.xml",
        "hr_attendance_wizard.xml",
-       "hr_attendance_report.xml"
+       "hr_attendance_report.xml",
+	   "security/ir.model.access.csv",
     ],
     "active": False,
     "installable": True,

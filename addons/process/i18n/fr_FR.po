@@ -1,232 +1,232 @@
-# Translation of OpenERP Server.
-# This file containt the translation of the following modules:
-#	* process
+# French translation for openobject-addons
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:41:42+0000"
-"PO-Revision-Date: 2008-09-11 15:41:42+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-09-05 13:34+0000\n"
+"PO-Revision-Date: 2008-10-13 14:46+0000\n"
+"Last-Translator: Olivier Laurent <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-10-13 14:56+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_partner_address_form
-#: view:process.node:0
-msgid "Process Node"
-msgstr ""
-
-#. module: process
+#. module: processus
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
 
-#. module: process
-#: view:process.node:0
-msgid "Node Description"
-msgstr ""
+#. module: processus
+#: model:ir.ui.menu,name:processus.menu_processus
+msgid "Enterprise Processus"
+msgstr "Processus d'entreprise"
 
-#. module: process
-#: field:process.node,menu_id:0
+#. module: processus
+#: field:processus.node,menu_id:0
 msgid "Related Menu"
-msgstr ""
+msgstr "Menu Relatif"
 
-#. module: process
-#: field:process.transition,action_ids:0
+#. module: processus
+#: field:processus.transition,action_ids:0
 msgid "Buttons"
-msgstr ""
+msgstr "Boutons"
 
-#. module: process
-#: selection:process.node,kind:0
+#. module: processus
+#: selection:processus.node,kind:0
 msgid "State"
-msgstr ""
+msgstr "État"
 
-#. module: process
-#: field:process.transition,node_to_id:0
+#. module: processus
+#: field:processus.transition,node_to_id:0
 msgid "Destination Node"
-msgstr ""
+msgstr "Noeud de Destination"
 
-#. module: process
-#: field:process.node,flow_start:0
+#. module: processus
+#: field:processus.node,flow_start:0
 msgid "Starting Flow"
-msgstr ""
+msgstr "Flux de Départ"
 
-#. module: process
-#: model:ir.model,name:process.model_process_node
-msgid "Process Nodes"
-msgstr ""
-
-#. module: process
-#: field:process.process,node_ids:0
-#: view:process.process:0
+#. module: processus
+#: field:processus.processus,node_ids:0
+#: view:processus.processus:0
 msgid "Nodes"
-msgstr ""
+msgstr "Nœuds"
 
-#. module: process
-#: field:process.transition.action,state:0
+#. module: processus
+#: field:processus.transition.action,state:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
-#. module: process
-#: selection:process.transition.action,state:0
+#. module: processus
+#: selection:processus.transition.action,state:0
 msgid "Workflow Trigger"
-msgstr ""
+msgstr "Déclenchement du Flux d'Entreprise"
 
-#. module: process
-#: field:process.transition,note:0
-#: view:process.node:0
-#: view:process.transition:0
+#. module: processus
+#: field:processus.transition,note:0
+#: view:processus.node:0
+#: view:processus.transition:0
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
-#. module: process
-#: model:ir.model,name:process.model_process_transition_action
-msgid "Process Transitions Actions"
-msgstr ""
-
-#. module: process
-#: field:process.node,model_id:0
+#. module: processus
+#: field:processus.node,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "Objet"
 
-#. module: process
-#: field:process.transition,transition_ids:0
+#. module: processus
+#: field:processus.transition,transition_ids:0
 msgid "Workflow Transitions"
-msgstr ""
+msgstr "Transitions du Flux de Travail"
 
-#. module: process
-#: model:ir.actions.report.xml,name:process.report_process
-msgid "Print Process"
-msgstr ""
+#. module: processus
+#: field:processus.node,kind:0
+msgid "Kind of Node"
+msgstr "Type de Noeud"
 
-#. module: process
-#: field:process.process,active:0
-msgid "Active"
-msgstr ""
+#. module: processus
+#: field:processus.transition.action,action:0
+msgid "Action ID"
+msgstr "ID de l'Action"
 
-#. module: process
-#: field:process.node,model_states:0
+#. module: processus
+#: field:processus.node,model_states:0
 msgid "States Expression"
 msgstr ""
 
-#. module: process
-#: view:process.node:0
+#. module: processus
+#: view:processus.node:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "Transitions sortantes"
 
-#. module: process
-#: selection:process.transition.action,state:0
+#. module: processus
+#: selection:processus.transition.action,state:0
 msgid "Dummy"
-msgstr ""
+msgstr "Factice"
 
-#. module: process
+#. module: processus
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML non valide pour l'architecture de la vue"
 
-#. module: process
-#: field:process.node,name:0
-#: field:process.process,name:0
-#: field:process.transition.action,name:0
-#: field:process.transition,name:0
-msgid "Name"
-msgstr ""
-
-#. module: process
-#: field:process.node,transition_in:0
+#. module: processus
+#: field:processus.node,transition_in:0
 msgid "Starting Transitions"
-msgstr ""
+msgstr "Transitions de Départ"
 
-#. module: process
-#: field:process.node,note:0
-#: field:process.process,note:0
+#. module: processus
+#: field:processus.node,note:0
+#: field:processus.processus,note:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
-#. module: process
-#: field:process.transition.action,transition_id:0
+#. module: processus
+#: field:processus.transition.action,transition_id:0
 msgid "Transition"
-msgstr ""
+msgstr "Transition"
 
-#. module: process
-#: selection:process.node,kind:0
+#. module: processus
+#: selection:processus.node,kind:0
 msgid "Subflow"
-msgstr ""
+msgstr "Sous-flux"
 
-#. module: process
-#: view:process.node:0
-msgid "Extra Information"
-msgstr ""
+#. module: processus
+#: model:ir.actions.act_window,name:processus.action_processus_node_form
+#: model:ir.ui.menu,name:processus.menu_partner_address_form
+#: view:processus.node:0
+msgid "Processus Node"
+msgstr "Noeud de Processus"
 
-#. module: process
-#: field:process.transition.action,action:0
-msgid "Action ID"
-msgstr ""
+#. module: processus
+#: model:ir.actions.report.xml,name:processus.report_processus
+msgid "Print Processus"
+msgstr "Imprimer Processus"
 
-#. module: process
-#: selection:process.transition.action,state:0
+#. module: processus
+#: selection:processus.transition.action,state:0
 msgid "Action"
-msgstr ""
+msgstr "Action"
 
-#. module: process
-#: selection:process.node,kind:0
+#. module: processus
+#: selection:processus.node,kind:0
 msgid "Router"
 msgstr ""
 
-#. module: process
-#: field:process.node,transition_out:0
-msgid "Ending Transitions"
-msgstr ""
+#. module: processus
+#: view:processus.node:0
+msgid "Node Description"
+msgstr "Description du Noeud"
 
-#. module: process
-#: model:ir.actions.act_window,name:process.action_transition_open
-#: model:ir.model,name:process.model_process_transition
-#: model:ir.ui.menu,name:process.menu_action_transition_open
-msgid "Process Transitions"
-msgstr ""
-
-#. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Process"
-msgstr ""
-
-#. module: process
-#: view:process.transition:0
-msgid "Actions"
-msgstr ""
-
-#. module: process
-#: field:process.transition,node_from_id:0
-msgid "Origin Node"
-msgstr ""
-
-#. module: process
-#: model:ir.model,name:process.model_process_process
-#: field:process.node,process_id:0
-#: model:ir.ui.menu,name:process.menu_process_form
-#: view:process.process:0
-msgid "Process"
-msgstr ""
-
-#. module: process
-#: field:process.node,kind:0
-msgid "Kind of Node"
-msgstr ""
-
-#. module: process
-#: view:process.node:0
-#: view:process.transition:0
+#. module: processus
+#: field:processus.transition.action,name:0
+#: field:processus.transition,name:0
+#: view:processus.node:0
+#: view:processus.transition:0
 msgid "Transitions"
-msgstr ""
+msgstr "Transitions"
 
-#. module: process
-#: selection:process.transition.action,state:0
+#. module: processus
+#: field:processus.node,transition_out:0
+msgid "Ending Transitions"
+msgstr "Transitions finales"
+
+#. module: processus
+#: model:ir.model,name:processus.model_processus_processus
+#: field:processus.node,name:0
+#: field:processus.node,processus_id:0
+#: field:processus.processus,name:0
+#: model:ir.ui.menu,name:processus.menu_processus_form
+#: view:processus.processus:0
+msgid "Processus"
+msgstr "Processus"
+
+#. module: processus
+#: view:processus.transition:0
+msgid "Actions"
+msgstr "Actions"
+
+#. module: processus
+#: field:processus.transition,node_from_id:0
+msgid "Origin Node"
+msgstr "Noeud d'Origine"
+
+#. module: processus
+#: model:ir.model,name:processus.model_processus_transition_action
+msgid "Processus Transitions Actions"
+msgstr "Actions des Transitions du Processus"
+
+#. module: processus
+#: view:processus.node:0
+msgid "Extra Information"
+msgstr "Information supplémentaire"
+
+#. module: processus
+#: model:ir.actions.act_window,name:processus.action_transition_open
+#: model:ir.model,name:processus.model_processus_transition
+#: model:ir.ui.menu,name:processus.menu_action_transition_open
+msgid "Processus Transitions"
+msgstr "Transitions du Processus"
+
+#. module: processus
+#: model:ir.model,name:processus.model_processus_node
+msgid "Processus Nodes"
+msgstr "Noeuds de Processus"
+
+#. module: processus
+#: selection:processus.transition.action,state:0
 msgid "Object Method"
-msgstr ""
+msgstr "Méthode de l'objet"
 
+#. module: processus
+#: field:processus.processus,active:0
+msgid "Active"
+msgstr "Actif"

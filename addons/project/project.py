@@ -197,7 +197,7 @@ class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Project task type'
     _columns = {
-        'name': fields.char('Type', required=True, size=64),
+        'name': fields.char('Type', required=True, size=64, translate=True),
         'description': fields.text('Description'),
     }
 project_task_type()

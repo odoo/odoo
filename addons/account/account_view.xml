@@ -141,7 +141,7 @@
             <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
         <menuitem id="account_account_menu" name="Financial Accounts" parent="account.menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
@@ -166,6 +166,7 @@
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">tree</field>
+            <field name="view_mode">form</field>
             <field name="view_id" ref="view_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
@@ -1567,7 +1568,6 @@
             <field name="arch" type="xml">
                 <form string="Account Tax Code Template">
                     <field name="name" select="1"/>
-                    <field name="company_id"/>
                     <field name="code" select="1"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
@@ -1629,6 +1629,17 @@
 
 		<menuitem parent="account.account_account_menu" action="action_wizard_multi_chart" id="menu_wizard"/>
 
+		<record id="account_account_graph" model="ir.ui.view">
+            <field name="name">account.account.graph</field>
+            <field name="model">account.account</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="name"/>
+                    <field name="balance" operator="+"/>
+                </graph>
+            </field>
+     </record>
 
     </data>
 </openerp>

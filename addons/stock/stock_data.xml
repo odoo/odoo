@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+
+        <record forcecreate="1" id="stock_journal" model="account.journal">
+            <field name="name">Stock Journal</field>
+            <field name="code">STJ</field>
+            <field name="type">general</field>
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
         <!--
 	Request link
 	-->

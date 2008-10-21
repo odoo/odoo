@@ -11,7 +11,10 @@
     "init_xml" : [],
     "description": "Allows the administrator to track every user operations on all objects of the system.",
     "category" : "Generic Modules/Others",
-    "update_xml" : ["audittrail_view.xml"],
+    "update_xml" : ["audittrail_view.xml", 
+                    "security/ir.model.access.csv",
+                    "security/audittrail_security.xml",
+                   ],
     "demo_xml" : ["audittrail_demo.xml"],
     "active" : False,
     "installable": True

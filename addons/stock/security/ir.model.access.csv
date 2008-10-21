@@ -1,16 +1,17 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_stock_incoterms_system,stock.incoterms.system,model_stock_incoterms,base.group_system,1,1,1,1
-access_stock_warehouse_system,stock.warehouse.system,model_stock_warehouse,base.group_system,1,1,1,1
-access_stock_location_system,stock.location.system,model_stock_location,base.group_system,1,1,1,1
-access_stock_incoterms,stock.incoterms,model_stock_picking_move_wizard,base.group_system,1,0,0,0
-access_stock_warehouse,stock.warehouse,model_stock_picking_move_wizard,base.group_system,1,0,0,0
-access_stock_location,stock.location,model_stock_picking_move_wizard,base.group_system,1,0,0,0
-access_stock_picking_move_wizard,stock.picking.move.wizard,model_stock_picking_move_wizard,stock.group_stock_user,1,0,0,0
-access_stock_tracking,stock.tracking,model_stock_tracking,stock.group_stock_user,1,1,1,0
-access_stock_picking,stock.picking,model_stock_picking,stock.group_stock_user,1,1,1,1
-access_stock_production_lot,stock.production.lot,model_stock_production_lot,stock.group_stock_user,1,1,1,0
-access_stock_production_lot_revision,stock.production.lot.revision,model_stock_production_lot_revision,stock.group_stock_user,1,1,1,1
-access_stock_move,stock.move,model_stock_move,stock.group_stock_user,1,1,1,0
-access_stock_inventory,stock.inventory,model_stock_inventory,stock.group_stock_user,1,1,1,1
-access_stock_inventory_line,stock.inventory.line,model_stock_inventory_line,stock.group_stock_user,1,1,1,1
-access_stock_report_prodlots,stock.report.prodlots,model_stock_report_prodlots,stock.group_stock_user,1,0,0,0
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_stock_incoterms_all","stock.incoterms all","model_stock_incoterms",,1,0,0,0
+"access_stock_warehouse_manager","stock.warehouse.manager","model_stock_warehouse","stock.group_stock_manager",1,1,1,1
+"access_stock_warehouse_user","stock.warehouse.user","model_stock_warehouse","base.group_user",1,0,0,0
+"access_stock_location_manager","stock.location.manager","model_stock_location","stock.group_stock_manager",1,1,1,1
+"access_stock_location_user","stock.location.user","model_stock_location","stock.group_stock_user",1,0,0,0
+"access_stock_location_partner_manager","stock.location partner manager","model_stock_location","base.group_partner_manager",1,0,0,0
+"access_stock_picking_move_wizard","stock.picking.move.wizard","model_stock_picking_move_wizard","stock.group_stock_user",1,1,1,1
+"access_stock_tracking","stock.tracking","model_stock_tracking","stock.group_stock_user",1,1,1,0
+"access_stock_picking","stock.picking","model_stock_picking","stock.group_stock_user",1,1,1,1
+"access_stock_production_lot","stock.production.lot","model_stock_production_lot","stock.group_stock_user",1,1,1,0
+"access_stock_production_lot_revision","stock.production.lot.revision","model_stock_production_lot_revision","stock.group_stock_user",1,1,1,1
+"access_stock_move","stock.move","model_stock_move","stock.group_stock_user",1,1,1,0
+"access_stock_inventory","stock.inventory","model_stock_inventory","stock.group_stock_user",1,1,1,1
+"access_stock_inventory_line","stock.inventory.line","model_stock_inventory_line","stock.group_stock_user",1,1,1,1
+"access_stock_report_prodlots","stock.report.prodlots","model_stock_report_prodlots","stock.group_stock_manager",1,0,0,0
+"access_stock_location_product_manager","stock.location product manager","model_stock_location","product.group_product_manager",1,0,0,0

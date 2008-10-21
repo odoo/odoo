@@ -42,12 +42,6 @@
         
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/rappel.rml" string="Followup Report"/>
         
-        <record id="action_account_followup_all_wizard" model="ir.actions.wizard">
-            <field name="name">Send followups</field>
-            <field name="wiz_name">account_followup.followup.print.all</field>
-        </record>
-        <menuitem action="action_account_followup_all_wizard" id="account_followup_wizard_menu" parent="account.menu_finance_periodical_processing" type="wizard"/>
-        
         
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>

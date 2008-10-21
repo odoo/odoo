@@ -51,7 +51,10 @@ class base_module_record(osv.osv):
     def _create_id(self, cr, uid, model, data):
         i = 0
         while True:
-            name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
+            try:
+                name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
+            except:
+                name=''
             val = model.replace('.','_')+'_'+name+ str(i)
             i+=1
             if val not in self.ids.values():
@@ -103,7 +106,8 @@ class base_module_record(osv.osv):
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
                     name = self.pool.get(fields[key]['relation']).browse(cr, uid, val).name
-                    print name
+                    if isinstance(name, basestring):
+                        name = name.decode('utf8')
                     field.setAttribute("search", "[('name','=','"+name+"')]")
                 else:
                     field.setAttribute("ref", id)
@@ -111,7 +115,10 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
                     if valitem[0]==0:
-                        fname = self.pool.get(model)._columns[key]._fields_id
+                        if key in self.pool.get(model)._columns:
+                            fname = self.pool.get(model)._columns[key]._fields_id
+                        else:
+                            fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
                         newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
@@ -172,7 +179,7 @@ class base_module_record(osv.osv):
         # Create the minidom document
         self.ids = {}
         doc = minidom.Document()
-        terp = doc.createElement("openerp")
+        terp = doc.createElement("terp")
         doc.appendChild(terp)
         for rec in self.recording_data:
             if rec[0]=='workflow':
@@ -199,16 +206,23 @@ class base_module_record(osv.osv):
                     data.appendChild(res)
             elif rec[0]=='assert':
                 pass
-        return  doc.toprettyxml(indent="    ").encode('utf8')
+        res = doc.toprettyxml(indent="\t")
+        return  doc.toprettyxml(indent="\t").encode('utf8')
 base_module_record()
 
 def fnct_call(fnct):
     def execute(*args, **argv):
+        if len(args) >= 6 and isinstance(args[5], dict):
+            _old_args = args[5].copy()
+        else:
+            _old_args = None
         res = fnct(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
             if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
+                if _old_args is not None:
+                    args[5].update(_old_args)
                 mod.recording_data.append(('query', args, argv,res))
         return res
     return execute

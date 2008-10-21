@@ -121,6 +121,7 @@
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
                                     <field name="ean" select="1"/>
+                                    <field name="sequence"/>
                                     <newline/>
                                     <field name="qty" select="1"/>
                                     <field name="ul"/>
@@ -322,6 +323,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
+                    <field name="sequence"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
@@ -336,7 +338,9 @@
             <field name="arch" type="xml">
                 <form string="Packaging">
                     <field name="product_id" select="1"/>
+                    <newline/>
                     <field name="ean" select="1"/>
+                    <field name="sequence"/>
                     <newline/>
                     <field name="qty" select="1"/>
                     <field name="ul"/>
