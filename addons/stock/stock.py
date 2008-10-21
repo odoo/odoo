@@ -83,8 +83,8 @@ class stock_location(osv.osv):
             res[id] = {}.fromkeys(field_names, 0.0)
         if ('product_id' not in context) or not ids:
             return res
-        location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
-        for loc in location_ids:
+        #location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
+        for loc in ids:
             context['location'] = [loc]
             prod = self.pool.get('product.product').browse(cr, uid, context['product_id'], context)
             if 'stock_real' in field_names:
