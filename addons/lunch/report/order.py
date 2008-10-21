@@ -1,9 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,38 +23,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-{
-    "name" : "Human Resources",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://tinyerp.com/module_hr.html",
-    "description": """
-    Module for human resource management. You can manage:
-    * Employees and hierarchies
-    * Work hours sheets
-    * Attendances and sign in/out system
+#
+##############################################################################
 
-    Different reports are also provided, mainly for attendance statistics.
-    """,
-    "depends" : ["base", "crm_configuration", "process"],
-    "init_xml" : [],
-    "demo_xml" : [
-        "hr_demo.xml", 
-        "hr_department_demo.xml",
-    ],
-    "update_xml" : [
-        "security/hr_security.xml",
-        "security/ir.model.access.csv",
-        "hr_view.xml", 
-        "hr_wizard.xml",
-        "hr_department_view.xml",
-        "process/hr_process.xml"
-    ],
-    "active": False,
-    "installable": True
-}
+import time
+from report import report_sxw
+from osv import osv
 
+
+class order(report_sxw.rml_parse):
+
+    def sum_price(self, orders):
+        res = 0.0
+        for o in orders:
+            res += o.price
+        return res
+
+    def __init__(self, cr, uid, name, context):
+        super(order, self).__init__(cr, uid, name, context)
+
+        self.localcontext.update({
+        'time': time,
+        'sum_price': self.sum_price,
+        })
+
+report_sxw.report_sxw('report.lunch.order', 'lunch.order',
+        'addons/lunch/report/order.rml',parser=order, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

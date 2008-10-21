@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+	
+		<!--
+			Process
+		-->
+    
+		<record id="process_process_employeecontractworkflow0" model="process.process">
+			<field eval="&quot;&quot;&quot;Employee Contract flow for services companies.&quot;&quot;&quot;" name="note"/>
+			<field eval="1" name="active"/>
+			<field eval="&quot;&quot;&quot;Employee Contract Workflow&quot;&quot;&quot;" name="name"/>
+		</record>
+		
+		<!--
+			Process Node
+		-->
+	
+		<record id="process_node_jobshiring0" model="process.node">
+			<field name="menu_id" ref="crm_configuration.menu_crm_case_categ0_act11"/>
+			<field name="model_id" ref="crm.model_crm_case"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Jobs hiring&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Jobs hiring to new employees&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="1" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_employee0" model="process.node">
+			<field name="menu_id" ref="hr.menu_open_view_employee_list"/>
+			<field name="model_id" ref="hr.model_hr_employee"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Employee&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Employee Complete Form&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_employeecontact0" model="process.node">
+			<field name="menu_id" ref="hr.menu_open_view_employee_list"/>
+			<field name="model_id" ref="hr.model_hr_employee"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Employee Contact&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Fill up employee's contact information&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_openerpuser0" model="process.node">
+			<field name="menu_id" ref="base.menu_users"/>
+			<field name="model_id" ref="base.model_res_users"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Openerp user&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Create OpenERP User&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<!--
+			Process Transition
+		-->
+	
+		<record id="process_transition_employeejob0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Employee Job&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;After confirming job, he will be a employee&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_employee0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_jobshiring0"/>
+		</record>
+	
+		<record id="process_transition_contactofemployee0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Contact  of employee&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Fill up contact information&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_employeecontact0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
+		</record>
+	
+		
+	</data>
+</openerp>
