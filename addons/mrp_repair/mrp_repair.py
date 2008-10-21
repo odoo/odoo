@@ -125,9 +125,46 @@ class mrp_repair(osv.osv):
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
             elif (o.invoice_method == 'b4repair'):
                 self.write(cr, uid, [o.id], {'state': '2binvoiced'})
+            elif (o.invoice_method == 'after_repair'):
+                self.write(cr, uid, [o.id], {'state': 'confirmed'})
+        self.pool.get('mrp.repair.lines').write(cr, uid, ids, {'state':'confirmed'})
         return True
+    
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed','done']):
+        res = False
+        invoices = {}
+        invoice_ids = []
 
-    def action_confirm(self, cr, uid, ids, *args):
+        for o in self.browse(cr,uid,ids):
+            lines = []
+            for line in o.operations:
+                if (line.state in states) and not line.invoiced:
+                    lines.append(line.id)
+#            created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
+#            if created_lines:
+#                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+
+        picking_obj=self.pool.get('stock.picking')
+        for val in invoices.values():
+            if grouped:
+                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []))
+                for o,l in val:
+                    self.write(cr, uid, [o.id], {'state' : 'progress'})
+                    if o.order_policy=='picking':
+                        picking_obj.write(cr,uid,map(lambda x:x.id,o.picking_ids),{'invoice_state':'invoiced'})
+                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (o.id, res))
+            else:
+                for order, il in val:
+                    res = self._make_invoice(cr, uid, order, il)
+                    invoice_ids.append(res)
+                    self.write(cr, uid, [order.id], {'state' : 'progress'})
+                    if order.order_policy=='picking':
+                        picking_obj.write(cr,uid,map(lambda x:x.id,order.picking_ids),{'invoice_state':'invoiced'})
+                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (order.id, res))
+        return res
+
+
+    def action_ship_create(self, cr, uid, ids, *args):
         picking_id=False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for repair in self.browse(cr, uid, ids, context={}):
@@ -182,7 +219,7 @@ class mrp_repair(osv.osv):
                         })
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-                          
+                        self.pool.get('mrp.repair.lines').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     elif line.product_id and line.product_id.product_tmpl_id.type=='service':
                         proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
                             'name': line.name or 'Repair',
@@ -196,7 +233,7 @@ class mrp_repair(osv.osv):
                         })
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-
+                        self.pool.get('mrp.repair.lines').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     else:
                         #
                         # No procurement because no product in the sale.order.line.
@@ -208,6 +245,54 @@ class mrp_repair(osv.osv):
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
                 self.write(cr, uid, [repair.id], val)
+                
+        return True
+
+    def procurement_lines_get(self, cr, uid, ids, *args):
+        res = []
+        for order in self.browse(cr, uid, ids, context={}):
+            for line in order.operations:
+                if line.procurement_id:
+                    res.append(line.procurement_id.id)
+        return res
+    
+    def test_state(self, cr, uid, ids, mode, *args):
+        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
+        finished = True
+        canceled = False
+        write_done_ids = []
+        write_cancel_ids = []
+        for order in self.browse(cr, uid, ids, context={}):
+            for line in order.operations:
+                if line.procurement_id and (line.procurement_id.state != 'done') and (line.state!='done'):
+                    finished = False
+                if line.procurement_id and line.procurement_id.state == 'cancel':
+                    canceled = True
+                # if a line is finished (ie its procuremnt is done or it has not procuremernt and it
+                # is not already marked as done, mark it as being so...
+                if ((not line.procurement_id) or line.procurement_id.state == 'done') and line.state != 'done':
+                    write_done_ids.append(line.id)
+                # ... same for canceled lines
+                if line.procurement_id and line.procurement_id.state == 'cancel' and line.state != 'cancel':
+                    write_cancel_ids.append(line.id)
+        if write_done_ids:
+            self.pool.get('mrp.repair.lines').write(cr, uid, write_done_ids, {'state': 'done'})
+        if write_cancel_ids:
+            self.pool.get('mrp.repair.liness').write(cr, uid, write_cancel_ids, {'state': 'cancel'})
+
+        if mode=='finished':
+            return finished
+        elif mode=='canceled':
+            return canceled
+        
+    def action_ship_end(self, cr, uid, ids, context={}):
+        for order in self.browse(cr, uid, ids):
+            val = {}
+            if (order.invoice_method=='after_repair'):
+                val['state'] = '2binvoiced'
+            else:
+                val['state'] = 'confirmed'
+            self.write(cr, uid, [order.id], val)
         return True
 mrp_repair()
 
