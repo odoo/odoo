@@ -78,15 +78,16 @@
             <field eval="&quot;&quot;&quot;Reconciliation of Entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Reconcilation of the entries with invoice.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+        
      <!--
         Process Transition
     -->
-     
-        <record id="process_transition_filestatement0" model="process.transition">
+    
+    	<record id="process_transition_filestatement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;File statement&quot;&quot;&quot;" name="name"/>
@@ -129,6 +130,26 @@
             <field eval="&quot;&quot;&quot;Reconciliation of entries of accounting entries&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_reconciliationofentries0"/>
             <field model="process.node" name="source_node_id" ref="process_node_accountingstatemententries0"/>
+        </record>
+        
+        <record id="process_transition_statemententries0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Statement Entries&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;From statement, create entries&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_paymententries0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_bankstatement0"/>
+        </record>
+        
+        <!--
+        	Process Action
+    	-->
+    	
+    	<record id="process_transition_action_draftconfirmstatement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;button_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_confirmstatementfromdraft0"/>
         </record>
     
     </data>
