@@ -131,7 +131,7 @@ class configmanager(object):
         group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
         group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
-        group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.")
+        group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.", action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
         (opt, args) = parser.parse_args()
@@ -201,6 +201,12 @@ class configmanager(object):
             assert len(self.options['language'])<=5, 'ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE'
         if opt.save:
             self.save()
+
+    def _check_addons_path(self, option, opt, value, parser):
+        res = os.path.abspath(os.path.expanduser(value))
+        if not os.path.exists(res):
+            raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+        setattr(parser.values, option.dest, res)
 
     def load(self):
         p = ConfigParser.ConfigParser()
