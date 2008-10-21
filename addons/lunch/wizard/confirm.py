@@ -1,9 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,38 +23,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-{
-    "name" : "Human Resources",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://tinyerp.com/module_hr.html",
-    "description": """
-    Module for human resource management. You can manage:
-    * Employees and hierarchies
-    * Work hours sheets
-    * Attendances and sign in/out system
+#
+##############################################################################
 
-    Different reports are also provided, mainly for attendance statistics.
-    """,
-    "depends" : ["base", "crm_configuration", "process"],
-    "init_xml" : [],
-    "demo_xml" : [
-        "hr_demo.xml", 
-        "hr_department_demo.xml",
-    ],
-    "update_xml" : [
-        "security/hr_security.xml",
-        "security/ir.model.access.csv",
-        "hr_view.xml", 
-        "hr_wizard.xml",
-        "hr_department_view.xml",
-        "process/hr_process.xml"
-    ],
-    "active": False,
-    "installable": True
+import wizard
+import netsvc
+import ir
+import pooler
+
+confirm_order_form = """<?xml version="1.0"?>
+<form title="Confirm">
+    <separator string="Orders Confirmation" colspan="4"/>
+    <field name="confirm_cashbox"/>
+    <newline/>
+</form>
+"""
+
+confirm_order_fields = {
+    'confirm_cashbox': {'string':'Name of box', 'type':'many2one', 'required':True, 'relation':'lunch.cashbox' },
 }
+
+def _confirm(self,cr,uid,data,context):
+    pool= pooler.get_pool(cr.dbname)
+    order_ref = pool.get('lunch.order')
+    order_ref.confirm(cr,uid,data['ids'],data['form']['confirm_cashbox'],context)
+    return {}
+
+class order_confirm(wizard.interface):
+    states = {
+        'init': {
+            'action':[],
+            'result':{'type' : 'form', 'arch' : confirm_order_form, 'fields' : confirm_order_fields, 'state' : [('end', 'Cancel'),('go', 'Confirm Order') ]},
+        },
+        'go' : {
+            'actions' : [_confirm],
+            'result' : {'type' : 'state', 'state' : 'end'}
+        },
+    }
+order_confirm('lunch.order.confirm')
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

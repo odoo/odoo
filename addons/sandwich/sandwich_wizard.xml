@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<wizard string="Reload / Complete  order" id="sandwich_order_wizard" model="sandwich.order" name="sandwich.order.wizard"/>
+		<wizard string="Send remind request" id="sandwich_order_recall_wizard" model="sandwich.order" name="sandwich.order.recall.wizard"/>
+
+		<record model="ir.actions.wizard" id="wiz_sandwich_create">
+			<field name="name">Create Order of the day</field>
+			<field name="wiz_name">sandwich.order_create</field>
+		</record>
+		
+		<menuitem name="Create Order" id="menu_tools_sandwich_createorder" parent="menu_tools_sandwich" action="wiz_sandwich_create" type="wizard"/>
+	
+	</data>
+</terp>
+
