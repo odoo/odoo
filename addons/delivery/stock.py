@@ -85,25 +85,13 @@ class stock_picking(osv.osv):
 
             taxes = self.pool.get('account.tax').browse(cursor, user,
                     [x.id for x in picking.carrier_id.product_id.taxes_id])
-            taxep = None
             partner_id=picking.address_id.partner_id and picking.address_id.partner_id.id or False
+            taxes_ids = [x.id for x in picking.carrier_id.product_id.taxes_id]
             if partner_id:
-                print 'Found Partner'
                 partner = picking.address_id.partner_id
                 taxep = partner.property_account_position and partner.property_account_position.account_tax
-                print account_id
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner, account_id)
-                print account_id
-
-            if not taxep or not taxep.id:
-                taxes_ids = [x.id for x in picking.carrier_id.product_id.taxes_id]
-            else:
-                res5 = [taxep.id]
-                for t in taxes:
-                    if not t.tax_group==taxep.tax_group:
-                        res5.append(t.id)
-                taxes_ids = res5
-
+                taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, picking.carrier_id.product_id.taxes_id)
 
             invoice_line_obj.create(cursor, user, {
                 'name': picking.carrier_id.name,
