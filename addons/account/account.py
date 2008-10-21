@@ -1032,6 +1032,7 @@ class account_tax_code(osv.osv):
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
+    _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=16),
@@ -1681,6 +1682,7 @@ class account_tax_code_template(osv.osv):
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
     _order = 'code'
+    _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=16),
