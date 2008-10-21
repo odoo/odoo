@@ -953,13 +953,8 @@ class account_invoice_line(osv.osv):
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        taxep = partner.property_account_position and partner.property_account_position.account_tax
-        if not taxep.id:
-            return {'value': {'invoice_line_tax_id': map(lambda x: x.id, taxes or []) }}
-        res = [taxep.id]
-        for t in taxes:
-            if not t.tax_group==taxep.tax_group:
-                res.append(t.id)
+
+        res = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, taxes)
         r = {'value':{'invoice_line_tax_id': res}}
         return r
 account_invoice_line()

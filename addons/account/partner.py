@@ -42,7 +42,7 @@ class account_fiscal_position(osv.osv):
     }
     def map_tax(self, cr, uid, partner, taxes, context={}):
         if (not partner) or (not partner.property_account_position) :
-            return taxes
+            return map(lambda x: x.id, taxes)
         result = []
         for t in taxes:
             ok = False

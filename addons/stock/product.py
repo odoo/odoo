@@ -131,35 +131,32 @@ class product_product(osv.osv):
             res[prod_id] -= amount
         return res
 
-    def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
-            if not field_names:
-                field_names=[]
-            context.update({
-                'states':states,
-                'what':what
-            })
-            stock=self.get_product_available(cr,uid,ids,context=context)
-            res = {}
+    def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        if not field_names:
+            field_names=[]
+        res = {}
+        for id in ids:
+            res[id] = {}.fromkeys(field_names, 0.0)
+        for f in field_names:
+            c = context.copy()
+            if f=='qty_available':
+                c.update({ 'states':('done',), 'what':('in', 'out') })
+            if f=='virtual_available':
+                c.update({ 'states':('confirmed','waiting','assigned','done'), 'what':('in', 'out') })
+            if f=='incoming_qty':
+                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('in',) })
+            if f=='outgoing_qty':
+                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('out',) })
+            stock=self.get_product_available(cr,uid,ids,context=c)
             for id in ids:
-                res[id] = {}.fromkeys(field_names, 0.0)
-                for a in field_names:
-                    res[id][a] = stock.get(id, 0.0)
-            return res
-
-        return _product_available
-
-    _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
-    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
-    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
-    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
-
+                res[id][f] = stock.get(id, 0.0)
+        return res
 
     _columns = {
-        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock',multi='qty_available', help="Current quantities of products in selected locations or all internal if none have been selected."),
-        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock',multi='qty_available', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."),
-        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming',multi='qty_available', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."),
-        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing',multi='qty_available', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected."),
+        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
+        'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
         'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
         'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
         'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
