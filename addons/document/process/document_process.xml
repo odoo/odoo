@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    
+    	<record id="process_node_papers0" model="process.node">
+			<field name="menu_id" ref="document.menu_document_directories"/>
+			<field name="model_id" ref="document.model_document_directory"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Papers&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Employee get papers and matrieal&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="hr.process_process_employeecontractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+		
+		<record id="process_transition_papersandmaterials0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Papers and materials&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Employee get papers and necessary materials&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_papers0"/>
+			<field model="process.node" name="source_node_id" ref="hr.process_node_employee0"/>
+		</record>
+    
+    </data>
+</openerp>
