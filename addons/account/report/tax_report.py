@@ -87,7 +87,7 @@ class tax_report(rml_parse.rml_parse):
 			while ind_general < len(res_general) :
 				res_general[ind_general]['type'] = 2
 				res_general[ind_general]['pos'] = 0
-				res_general[ind_general]['level'] = res_dict['level'] + ' '
+				res_general[ind_general]['level'] = res_dict['level']
 				top_result.append(res_general[ind_general])
 				ind_general+=1
 			i+=1
@@ -143,6 +143,7 @@ class tax_report(rml_parse.rml_parse):
 					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
 						company_id))
 		res = self.cr.dictfetchall()
+		
 						#AND line.period_id IN ('+ period_sql_list +') \
 		
 		i = 0
@@ -158,7 +159,7 @@ class tax_report(rml_parse.rml_parse):
 		res = []
 		for code in tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
 			res.append(('a'*2*level,code))
-			print"=====res=====",res
+			
 			res += self._get_codes(based_on, code.id, level+1)
 		return res
 	

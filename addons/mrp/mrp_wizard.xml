@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="wiz_mrp_proc0" model="ir.actions.wizard">
-            <field name="name">Compute All Schedulers</field>
-            <field name="wiz_name">mrp.procurement.compute.all</field>
-        </record>
+		<wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard"/>
         
-        <record id="wiz_mrp_proc1" model="ir.actions.wizard">
-            <field name="name">Compute Procurements Only</field>
-            <field name="wiz_name">mrp.procurement.compute</field>
-        </record>
+		<wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
         
-        <record id="wiz_mrp_proc2" model="ir.actions.wizard">
-            <field name="name">Compute Stock Minimum Rules Only</field>
-            <field name="wiz_name">mrp.procurement.orderpoint.compute</field>
-        </record>
+		<wizard id="wiz_mrp_proc2" model="mrp.procurement" string="Compute Stock Minimum Rules Only" name="mrp.procurement.orderpoint.compute"/>
         <menuitem action="wiz_mrp_proc2" id="menu_wiz_mrp_proc2" parent="mrp.mrp_Sched_all" type="wizard"/>
         
         <wizard id="wizard_workcenter_load" model="mrp.workcenter" name="mrp.workcenter.load" string="Workcenter load"/>

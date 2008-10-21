@@ -171,7 +171,7 @@ class account_invoice(osv.osv):
             ('cancel','Canceled')
         ],'State', select=True, readonly=True),
 
-        'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+        'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
@@ -203,7 +203,7 @@ class account_invoice(osv.osv):
     }
     _defaults = {
         'type': _get_type,
-        'date_invoice': lambda *a: time.strftime('%Y-%m-%d'),
+        #'date_invoice': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
@@ -332,9 +332,9 @@ class account_invoice(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False,})
+        default.update({'state':'draft', 'number':False, 'move_id':False})
         if 'date_invoice' not in default:
-            default['date_invoice'] = time.strftime('%Y-%m-%d')
+            default['date_invoice'] = False
         if 'date_due' not in default:
             default['date_due'] = False
         return super(account_invoice, self).copy(cr, uid, id, default, context)
@@ -428,6 +428,8 @@ class account_invoice(osv.osv):
                 continue
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
+            if not inv.date_invoice:
+                self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
@@ -473,7 +475,7 @@ class account_invoice(osv.osv):
                     i['amount_currency'] = i['price']
                     i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
                             company_currency, i['price'],
-                            context={'date': inv.date_invoice})
+                            context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
                 else:
                     i['amount_currency'] = False
                     i['currency_id'] = False
@@ -534,7 +536,7 @@ class account_invoice(osv.osv):
                     'ref': ref
             })
 
-            date = inv.date_invoice
+            date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
 
@@ -549,7 +551,7 @@ class account_invoice(osv.osv):
             move = {'name': name, 'line_id': line, 'journal_id': journal_id}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
-                period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice),('date_stop','>=',inv.date_invoice)])
+                period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
                 if len(period_ids):
                     period_id=period_ids[0]
             if period_id:
@@ -856,7 +858,8 @@ class account_invoice_line(osv.osv):
         lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            taxep = part.property_account_position and part.property_account_position.account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -865,7 +868,8 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+            taxep = part.property_account_position and part.property_account_position.account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:
@@ -889,6 +893,8 @@ class account_invoice_line(osv.osv):
             a =  res.product_tmpl_id.property_account_expense.id
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
+
+        a = self.pool.get('account.fiscal.position').map_account(cr, uid, part, a)
         if a:
             result['account_id'] = a
 
@@ -961,7 +967,8 @@ class account_invoice_line(osv.osv):
         if not (partner_id and account_id):
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
-        taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        taxep = partner.property_account_position and partner.property_account_position.account_tax
         if not taxep.id:
             return {'value': {'invoice_line_tax_id': map(lambda x: x.id, taxes or []) }}
         res = [taxep.id]
@@ -1020,14 +1027,14 @@ class account_invoice_tax(osv.osv):
                 if inv.type in ('out_invoice','in_invoice'):
                     val['base_code_id'] = tax['base_code_id']
                     val['tax_code_id'] = tax['tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice})
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice})
+                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
+                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
                     val['account_id'] = tax['account_collected_id'] or line.account_id.id
                 else:
                     val['base_code_id'] = tax['ref_base_code_id']
                     val['tax_code_id'] = tax['ref_tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice})
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice})
+                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
+                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
 
                 key = (val['tax_code_id'], val['base_code_id'], val['account_id'])

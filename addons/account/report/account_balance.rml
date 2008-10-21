@@ -42,7 +42,7 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P2" fontName="Helvetica" fontSize="2.0" leading="0" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P10" fontName="Helvetica" fontSize="9.0" leading="14" spaceBefore="0.0" spaceAfter="6.0" alignment="RIGHT"/>
     <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="12" leftIndent="-5.0"/>
@@ -50,7 +50,7 @@
     <paraStyle name="P9a" fontName="Helvetica-Bold" fontSize="9" leftIndent="0.0" alignment="LEFT"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P12a" fontName="Helvetica" fontSize="9.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="5" spaceBefore="0.0" spaceAfter="6.0"/>
     
     <blockTableStyle id="TrLevel8">
       <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
@@ -78,6 +78,31 @@
  	<blockTableStyle id="TrLevel1">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
       <blockLeftPadding length="0" start="0,0" stop="1,0"/>
+    </blockTableStyle>
+    
+    <blockTableStyle id="TrLevel_Name8">
+      <blockLeftPadding length="100" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name7">
+      <blockLeftPadding length="80" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name6">
+      <blockLeftPadding length="60" start="1,0" stop="1,0"/>
+     </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name5">
+      <blockLeftPadding length="40" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name4">
+     <blockLeftPadding length="20" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name3">
+      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="TrLevel_Name2">
+      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
+    </blockTableStyle>
+ 	<blockTableStyle id="TrLevel_Name1">
+      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
     </blockTableStyle>
     
     <paraStyle
@@ -266,7 +291,7 @@
 				      </tr>
 				      <tr>
 						<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]][[ a['jname'] or removeParentNode('tr') ]]</para></td>
-				       	<td><para style="P14"><font color="white">[[  a['level']&lt;4 and removeParentNode('font') or '...'*(2) ]]</font>[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]]<font>[ref: [[ a['ref'] or removeParentNode('font') ]] ]</font> [[ a['lname'] ]]</para></td>
+				       	<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]] [[ setTag('tr','tr',{'style':('TrLevel_Name'+str(a['level']))}) ]]<font>[ref: [[ a['ref'] or removeParentNode('font') ]] ]</font> [[ a['lname'] ]]</para></td>
 				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit1']) and '%.2f'%a['debit1'] or '0.00']]</para></td>
 				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit1']) and '%.2f'%a['credit1'] or '0.00']]</para></td>
 				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance1']) and '%.2f'%a['balance1'] or '0.00' ]]</para></td>	        
@@ -277,4 +302,3 @@
 </blockTable>
  </story>
 </document>
-

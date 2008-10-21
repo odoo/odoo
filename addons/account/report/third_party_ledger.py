@@ -79,6 +79,54 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.date_lst = return_array
 		self.date_lst.sort()
 
+	def transform_both_into_date_array(self,data):
+		
+		if not data['form']['periods'][0][2] :
+			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+		else:
+			periods_id = data['form']['periods'][0][2]
+		date_array = [] 
+		for period_id in periods_id:
+			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
+			date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+			
+		period_start_date = date_array[0]
+		date_start_date = data['form']['date1']
+		period_stop_date = date_array[-1]
+		date_stop_date = data['form']['date2']
+		
+		if period_start_date<date_start_date:
+			start_date = period_start_date
+		else :
+			start_date = date_start_date
+			
+		if date_stop_date<period_stop_date:
+			stop_date = period_stop_date
+		else :
+			stop_date = date_stop_date
+			
+		print"start_date",start_date
+		print"stop_date",stop_date
+		final_date_array = []
+		final_date_array = final_date_array + self.date_range(start_date, stop_date)
+		self.date_lst = final_date_array
+		self.date_lst.sort()
+		
+	def transform_none_into_date_array(self,data):
+		sql = "SELECT min(date) as start_date from account_move_line"
+		self.cr.execute(sql)
+		start_date = self.cr.fetchone()[0]
+		print"start_date",start_date
+		sql = "SELECT max(date) as start_date from account_move_line"
+		self.cr.execute(sql)
+		stop_date = self.cr.fetchone()[0]
+		print"stop_date",stop_date
+		array= []
+		array = array + self.date_range(start_date, stop_date)
+		self.date_lst = array
+		self.date_lst.sort()
+		
+	
 	def comma_me(self,amount):
 		if  type(amount) is float :
 			amount = str('%.2f'%amount)
@@ -108,11 +156,25 @@ class third_party_ledger(rml_parse.rml_parse):
 		# Transformation des date
 		#
 		#
-		if data['form'].has_key('fiscalyear'): 
-			self.transform_period_into_date_array(data)
-		else:
-			self.transform_date_into_date_array(data)
+#		if data['form']['fiscalyear']: 
+#			self.transform_period_into_date_array(data)
+#		else:
+#			self.transform_date_into_date_array(data)
 		##
+		if data['form']['state'] == 'none':
+			print"-----none-----"
+			self.transform_none_into_date_array(data)
+		elif data['form']['state'] == 'bydate':
+			print"-----bydate-------"
+			self.transform_date_into_date_array(data)
+		elif data['form']['state'] == 'byperiod':
+			print"-----byperiod-------"
+			self.transform_period_into_date_array(data)
+		elif data['form']['state'] == 'all':
+			print"-----all-------"
+			self.transform_both_into_date_array(data)
+			
+		
 		self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
@@ -142,7 +204,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"FROM account_move_line AS line, account_account AS account " \
 				"WHERE line.partner_id IS NOT NULL " \
 					"AND line.account_id = account.id " \
-					"AND line.date < %s " \
+					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
 #					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \

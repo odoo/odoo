@@ -128,19 +128,11 @@
         
     </blockTableStyle>
     <blockTableStyle id="TrLevelaa">
-      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#777777" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="1,0" stop="-1,-1"/>
-      <blockTopPadding length="13" start="0,0" stop="-1,0"/>
-      <blockBottomPadding length="2" start="0,0" stop="-1,0"/>
-	  <blockFont name="Times-Bold" start="0,0" stop="-1,-1"/>
+    
     </blockTableStyle>
     <blockTableStyle id="TrLevel">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
-      <blockTopPadding length="26" start="0,0" stop="-1,0"/>
-      <blockBottomPadding length="2" start="0,0" stop="-1,0"/>
-	  <blockFont name="Times-Bold" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
 
 	<paraStyle
@@ -171,15 +163,14 @@
 		fontSize="8.0" />
     <paraStyle
 		name="Levelaaaa" 
-		fontName="Helvetica" 
+		fontName="Helvetica-Bold" 
 		fontSize="8.0" />
     <paraStyle
 		name="Levelaaa" 
-		fontName="Helvetica" 
+		fontName="Helvetica-Bold" 
 		fontSize="8.0" />
     <paraStyle
 		name="Levelaa" 
-		firstLineIndent="-0.03cm"
 		fontName="Helvetica-Bold" 
 		fontSize="8.0" />
     <paraStyle name="Level"
@@ -215,19 +206,29 @@
       	   <para style="Caption">[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</para>
            <td>
            		<para style="P5"><font color="white">[[ o['level'] ]]</font> 
-            					[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica'}))]]<font></font> 
+            					<font>[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica'}))]]</font> 
             					[[ setTag('tr','tr',{'style':'TrLevel'+str(o['level']), 'paraStyle':('Level'+str(o['level']))}) ]]<font></font>
               					[[ o['code'] ]]  [[ o['name'] ]]<font></font>
             	</para>
            </td>
            <td>
-            	<para style="P6">[[o['type']==2 and  (o['debit']) ]]</para>
+        
+				          
+            	<para style="P6"> <font><u>[[ len(o['level'])&gt;3 and removeParentNode('font') ]][[ formatLang(o['debit']) and '%.2f'%o['debit'] or '0.00' ]]</u></font>
+				          <font>[[ len(o['level'])&lt;4 and removeParentNode('font') ]][[ formatLang(o['debit']) and '%.2f'%o['debit'] or '0.00' ]]</font>
+            	</para>
            </td>
            <td>
-            	<para style="P6"> [[o['type']==2 and (o['credit']) ]] </para>
+           		<para style="P6"> <font><u>[[ len(o['level'])&gt;3 and removeParentNode('font') ]][[ formatLang(o['credit']) and '%.2f'%o['credit'] or '0.00' ]]</u></font>
+				          <font>[[ len(o['level'])&lt;4 and removeParentNode('font') ]][[ formatLang(o['credit']) and '%.2f'%o['credit'] or '0.00' ]]</font>
+            	</para>
+            	
            </td>
            <td>
-            	<para style="P6">[[ o['tax_amount'] ]]</para>
+           		<para style="P6"> <font><u>[[ len(o['level'])&gt;3 and removeParentNode('font') ]][[ formatLang(o['tax_amount']) and '%.2f'%o['tax_amount'] or '0.00' ]]</u></font>
+				          <font>[[ len(o['level'])&lt;4 and removeParentNode('font') ]][[ formatLang(o['tax_amount']) and '%.2f'%o['tax_amount'] or '0.00' ]]</font>
+            	</para>
+            	
            </td>
           
       </tr>

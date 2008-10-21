@@ -1004,9 +1004,7 @@ class mrp_procurement(osv.osv):
                     [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])
             taxep = None
             if partner_id:
-                taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
-                if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
+                taxep = partner.property_account_position and partner.property_account_position.account_supplier_tax
             if not taxep or not taxep.id:
                 taxes_ids = [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id]
             else:

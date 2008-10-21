@@ -4,21 +4,24 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:41:43+0000"
-"PO-Revision-Date: 2008-09-11 15:41:43+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 4.3.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-09-05 16:25+0000\n"
+"PO-Revision-Date: 2008-10-13 12:10+0000\n"
+"Last-Translator: Olivier Laurent <Unknown>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-10-13 12:40+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
+#~ msgid "Configuration"
+#~ msgstr "Configuration"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr ""
+msgstr "Feuille de Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -32,8 +35,11 @@ msgstr "Présence"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -66,13 +72,7 @@ msgstr "Feuilles de présence non-validées"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Timesheet by Days"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "You can not sign out from an other date than today"
-msgstr ""
+msgstr "Feuille de Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -80,10 +80,8 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.next_id_60
-#: view:res.company:0
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheets"
 msgstr "Timesheets"
@@ -92,7 +90,7 @@ msgstr "Timesheets"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_confirm
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_confirm
 msgid "Timesheets To Confirm"
-msgstr ""
+msgstr "Feuille de Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_confirm
@@ -106,7 +104,7 @@ msgstr "Mes feuilles de présence à confirmer"
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
-msgstr "Feuille "
+msgstr "Feuille"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -126,13 +124,7 @@ msgstr "Aujourd'hui"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr ""
+msgstr "État"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
@@ -142,11 +134,9 @@ msgid "Attendances"
 msgstr "Présences"
 
 #. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
-msgid "Error !"
-msgstr ""
+#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
+msgid "Invoice rate"
+msgstr "Taux de facturation"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
@@ -166,18 +156,12 @@ msgstr "Accepter"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Lines"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
-msgid "No employee defined for your user !"
-msgstr ""
+msgstr "Lignes des Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
-msgstr ""
+msgstr "État actuel"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -192,17 +176,17 @@ msgstr "Semaine"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_to:0
 msgid "Date to"
-msgstr "Date de "
+msgstr "Date de"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
 msgid "User"
-msgstr "Utilisateur "
+msgstr "Utilisateur"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Account"
-msgstr ""
+msgstr "Feuilles de Présence par Compte"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -218,7 +202,7 @@ msgstr "Date"
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_current
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr ""
+msgstr "Ma Feuille de Présence actuelle"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_difference:0
@@ -240,7 +224,7 @@ msgstr "Présent"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
 msgid "Date from"
-msgstr "Date de "
+msgstr "Date de"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
@@ -255,39 +239,22 @@ msgstr "Absent"
 #. module: hr_timesheet_sheet
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "UserError"
-msgstr ""
+msgstr "XML non valide pour l'architecture de la vue!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Daily View"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:hr_timesheet_sheet.sheet:0
-msgid "You must select a Current date wich is in the timesheet dates !"
-msgstr ""
+msgstr "Vue Journalière"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "By Day"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "Par Jour"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Difference"
-msgstr ""
+msgstr "Différence Totale"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -296,25 +263,15 @@ msgid "Timesheets by period"
 msgstr "Feuilles de présence par période"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Go to:"
-msgstr "Aller à :"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
-msgid "Invoice rate"
-msgstr "Taux de facturation"
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_valid
+msgid "Timesheets To Validate"
+msgstr "Feuilles de Présence à Valider"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign In"
 msgstr "Pointer l'entrée"
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_confirm
@@ -327,20 +284,18 @@ msgid "My department's timesheet"
 msgstr "Les feuilles de présence de mon département"
 
 #. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "Warning !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by accounts"
 msgstr "Feuille de présence par compte"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
-msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "La différence permise entre le sign in/out and le calcul de la timesheet pour une feuille. Mettez cette valeur à 0 si vous ne voulez aucun contrôle."
+msgid ""
+"Allowed difference between the sign in/out and the timesheet computation for "
+"one sheet. Set this to 0 if you do not want any control."
+msgstr ""
+"La différence permise entre le sign in/out and le calcul de la timesheet "
+"pour une feuille. Mettez cette valeur à 0 si vous ne voulez aucun contrôle."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -348,9 +303,9 @@ msgid "Analytic accounts"
 msgstr "Compte analytique"
 
 #. module: hr_timesheet_sheet
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Configuration"
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Go to:"
+msgstr "Aller à :"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my
@@ -384,7 +339,7 @@ msgstr "Période"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheet"
-msgstr "Feuille de présence "
+msgstr "Feuille de présence"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -412,12 +367,6 @@ msgid "Current date"
 msgstr "Date actuelle"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_valid
-msgid "Timesheets To Validate"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Year"
 msgstr "Année"
@@ -425,10 +374,9 @@ msgstr "Année"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
-msgstr ""
-
+msgstr "Feuilles de Présence par Jour"

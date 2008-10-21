@@ -3,6 +3,37 @@
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      	<header>
+			<pageGraphics>
+				<!--logo-->
+				<!--<fill color="darkblue"/>-->
+				<!--<stroke color="darkblue"/>-->
+
+				<!--TITLE COMPANY-->
+				<!-- <drawString x="4.6cm" y="28.7cm">[[ company.partner_id.name ]]</drawString> -->
+
+				<setFont name="Helvetica-Bold" size="9"/>
+
+
+				<!--COL 1-->
+				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
+				<drawRightString x="20cm" y="28.1cm">Print Journal - [[ company.currency_id.name ]]</drawRightString>
+
+
+				<!-- Header -->
+
+
+				<setFont name="Helvetica" size="9"/>
+				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
+				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
+
+
+			    <lineMode width="0.7"/>
+				<lines>1cm 27.7cm 20cm 27.7cm</lines>
+				<setFont name="Helvetica" size="8"/>
+			</pageGraphics>
+		</header>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -13,23 +44,24 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,2" stop="-1,-1"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
+
+
       <blockValign value="TOP"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table4">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -38,14 +70,18 @@
     <paraStyle name="P2" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P4" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Times-Roman" alignment="CENTER"/>
-    <paraStyle name="P6" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P7" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Times-Roman" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P9" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P10" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10a" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10b" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P11" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P11a" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P13" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -53,111 +89,102 @@
     <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_8_Italic" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
+  <images/>
   <story>
     <para style="Table Contents">[[ repeatIn(objects, 'o') ]]</para>
-    <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Table1">
+    <blockTable colWidths="65.0,62.0,58.0,62.0,174.0,57.0,61.0" style="Table1" repeatRows="1">
       <tr>
         <td>
-          <para style="Table Contents">
-            <font color="white"> </font>
-          </para>
+          <para style="P10a">Date</para>
         </td>
         <td>
-          <para style="P1">Journal</para>
+          <para style="P10">Voucher No</para>
         </td>
         <td>
-          <para style="P2">[[o.period_id.name ]]</para>
+          <para style="P10">A/c No.</para>
+        </td>
+        <td>
+          <para style="P10a">Third party</para>
+        </td>
+        <td>
+          <para style="P10a">Entry label</para>
+        </td>
+        <td>
+          <para style="P10b">Debit</para>
+        </td>
+        <td>
+          <para style="P10b">Credit</para>
         </td>
       </tr>
-      <tr>
+       <tr>
         <td>
-          <para style="Table Contents">[[ company.name ]]</para>
+            <para style="P11">[[o.period_id.name ]]</para>
         </td>
         <td>
-          <para style="P3">[[ o.journal_id.code ]] [[ o.journal_id.name ]]</para>
+          <para style="P11a">[[ o.journal_id.code ]]</para></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <para style="P12"><u>[[ '%.2f' % sum_debit(o.period_id.id, o.journal_id.id) or '0.00' ]]</u></para>
         </td>
         <td>
-          <para style="P4">Currency: [[ company.currency_id.name ]]</para>
+          <para style="P12"><u>[[ '%.2f' % sum_credit(o.period_id.id, o.journal_id.id) or '0.00' ]]</u></para>
         </td>
       </tr>
-    </blockTable>
-    <para style="Standard">
+       <tr>
+        <td>
+          <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para>
+          <para style="terp_default_8">[[ line.date ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ line.ref ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ line.account_id.code ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_8">[[ line.partner_id and line.partner_id.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_8">[[ line.name ]]</para>
+        </td>
+        <td>
+          <para style="P8">[[ line.debit and '%.2f' % line.debit or '0.00' ]]</para>
+        </td>
+        <td>
+          <para style="P8">[[ line.credit and '%.2f' % line.credit or '0.00' ]]</para>
+        </td>
+        <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P5">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
-    <para style="P6">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="49.0,48.0,61.0,98.0,108.0,58.0,60.0" repeatRows="1" style="Table2">
-      <tr>
-        <td>
-          <para style="P7">Date</para>
-        </td>
-        <td>
-          <para style="P7">Voucher Nb</para>
-        </td>
-        <td>
-          <para style="P7">Account Number</para>
-        </td>
-        <td>
-          <para style="P7">Third party</para>
-        </td>
-        <td>
-          <para style="P7">Entry label</para>
-        </td>
-        <td>
-          <para style="P7">Debit</para>
-        </td>
-        <td>
-          <para style="P7">Credit</para>
-        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="49.0,48.0,61.0,98.0,108.0,58.0,60.0" style="Table3">
-      <tr>
-        <td>
-          <para style="Table Contents">
-            <font face="Times-Roman" size="8.0">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]] </font>
-            <font face="Times-Roman" size="8.0">[[ line.date ]]</font>
-          </para>
-        </td>
-        <td>
-          <para style="P8">[[ line.ref ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ line.account_id.code ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ line.partner_id and line.partner_id.name ]]</para>
-        </td>
-        <td>
-          <para style="P9">[[ line.name ]]</para>
-        </td>
-        <td>
-          <para style="P10">[[ line.debit and '%.2f' % line.debit or '' ]]</para>
-        </td>
-        <td>
-          <para style="P10">[[ line.credit and '%.2f' % line.credit or '' ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="364.0,58.0,60.0" style="Table4">
-      <tr>
-        <td>
-          <para style="P11">TOTAL:</para>
-        </td>
-        <td>
-          <para style="P12">[[ '%.2f' % sum_debit(o.period_id.id, o.journal_id.id) ]]</para>
-        </td>
-        <td>
-          <para style="P12">[[ '%.2f' % sum_credit(o.period_id.id, o.journal_id.id) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>
-

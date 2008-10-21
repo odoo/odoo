@@ -72,11 +72,9 @@ invoice_fields = {
 
 def _get_type(obj, cr, uid, data, context):
     picking_obj=pooler.get_pool(cr.dbname).get('stock.picking')
-
-    pick=picking_obj.browse(cr, uid, data['id'])
-    if pick.loc_move_id:
-        usage=pick.loc_move_id.usage
-    else:
+    usage = 'customer'
+    pick = picking_obj.browse(cr, uid, data['id'], context)
+    if pick.move_lines:
         usage=pick.move_lines[0].location_id.usage
 
     if pick.type == 'out' and usage == 'supplier':
