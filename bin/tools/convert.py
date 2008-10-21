@@ -488,7 +488,7 @@ form: module.record_id""" % (xml_id,)
                         print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
-                    self.logger.notifyChannel("init", netsvc.LOG_INFO, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
+                    self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
         else:
             menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.getAttribute('parent'))
