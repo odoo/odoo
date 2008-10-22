@@ -158,11 +158,9 @@ class osv_pool(netsvc.Service):
         module = module.split('.')[0][2:]
         self.module_object_list.setdefault(module, []).append(obj_inst)
 
+    # Return False if object does not exist
     def get(self, name):
         obj = self.obj_pool.get(name, None)
-# We cannot uncomment this line because it breaks initialisation since objects do not initialize
-# in the correct order and the ORM doesnt support correctly when some objets do not exist yet
-#       assert obj, "object %s does not exist !" % name
         return obj
 
     #TODO: pass a list of modules to load
