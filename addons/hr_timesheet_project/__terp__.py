@@ -35,7 +35,7 @@
     "website" : "http://tinyerp.com/module_hr.html",
     "depends" : ["project", "hr_timesheet_sheet"],
     "update_xml" : ["hr_timesheet_project_view.xml", 
-#                    "process/hr_timesheet_project_process.xml",
+                    "process/hr_timesheet_project_process.xml",
                     ],
     "active": False,
     "installable": True

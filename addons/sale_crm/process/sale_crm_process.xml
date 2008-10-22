@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+	
+		<record id="process_node_contractsale0" model="process.node">
+			<field name="menu_id" ref="sale.menu_sale_order"/>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Contract Sale&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Contract Command (sale)&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="crm_configuration.process_process_contractworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state in ('draft', 'manual', 'waiting_date', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+		
+		<record id="process_transition_accordsale0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Accord Sale&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Goes into the Sale&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_contractsale0"/>
+			<field model="process.node" name="source_node_id" ref="crm_configuration.process_node_accord0"/>
+		</record>
+	
+	</data>
+</openerp>
