@@ -698,6 +698,12 @@ class _rml_flowable(object):
             return CurrentFrameFlowable(str(node.getAttribute('name')))
         elif node.localName == 'frameEnd':
             return EndFrameFlowable()
+        elif node.localName == 'hr':
+            width_hr=node.hasAttribute('width') and node.getAttribute('width') or '100%'
+            color_hr=node.hasAttribute('color') and node.getAttribute('color') or 'black'
+            thickness_hr=node.hasAttribute('thickness') and node.getAttribute('thickness') or 1
+            lineCap_hr=node.hasAttribute('lineCap') and node.getAttribute('lineCap') or 'round'
+            return platypus.flowables.HRFlowable(width=width_hr,color=color.get(color_hr),thickness=float(thickness_hr),lineCap=str(lineCap_hr))
         else:
             sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.localName,))
             return None
