@@ -51,9 +51,6 @@ fields = {
 
 }
 
-def print_journal(self, cr, uid, data, context):
-    return {}
-
 class wizard_print_journal(wizard.interface):
     states = {
         'init': {
@@ -61,7 +58,7 @@ class wizard_print_journal(wizard.interface):
             'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('print', 'Print'))},
         },
         'print': {
-            'actions': [print_journal],
+            'actions': [],
             'result': {'type':'print', 'report':'account.journal.period.print.wiz', 'state':'end'},
         },
     }
