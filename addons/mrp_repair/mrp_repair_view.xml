@@ -2,15 +2,6 @@
 <openerp>
     <data>
     
-    <wizard 
-            id="action_cancel_repair" 
-            model="mrp.repair" 
-            name="mrp.repair.cancel"
-            string="Cancel Repair"
-            menu = "False"
-            multi = "True"
-            />
-            
     <record id="view_repair_order_form" model="ir.ui.view">
             <field name="name">mrp.repair.form</field>
             <field name="model">mrp.repair</field>
@@ -36,6 +27,7 @@
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
                                 <form string="Operations">
                                     <field name="type"  on_change="onchange_operation_type(type)"/>
+                                    <field name="invoice"/>
                                     <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                     <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
@@ -45,6 +37,7 @@
                                     <field name="delay"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
+                                    <newline/>
                                     <field name="state"/>
                                 </form>
                                 <tree string="Operations lines"> <!-- editable="bottom"> -->
@@ -62,9 +55,22 @@
                             <newline/>
                             <group col="13" colspan="4">
                                 <field name="state" select="2"/>
+                                
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
+                                <button name="cancel" states="draft" string="Cancel Order"/>
+                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
+                                
+                                
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>
-                                <button name="repair_done" states="confirmed" string="Repair Done"/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
+                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement"/>
+                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected"/>
                                 <button name="make_invoice" states="2binvoiced" string="Make Invoice"/>
+                                <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
+                                <button name="repair_done" states="confirmed" string="Repair Done"/>
+                                
                                 <button name="%(action_cancel_repair)d" states="draft,confirmed,2binvoiced" string="Cancel Repair" type="action"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                             </group>
