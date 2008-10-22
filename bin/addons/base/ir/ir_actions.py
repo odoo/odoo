@@ -501,9 +501,11 @@ class actions_server(osv.osv):
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
-
-                address = self.get_field_value(cr, uid, str(action.message), action, context)
-                body = self.merge_message(cr, uid, action, context)
+                address = self.get_field_value(cr, uid, action, context)
+                if not address:
+                    raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
+                
+                body = self.merge_message(cr, uid, str(action.message), action, context)
 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
@@ -522,7 +524,7 @@ class actions_server(osv.osv):
                 # for the sms gateway user / password
                 api_id = ''
                 text = action.sms
-                to = self.get_field_value(cr, uid, str(action.message), action, context)
+                to = self.get_field_value(cr, uid, action, context)
                 #TODO: Apply message mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))

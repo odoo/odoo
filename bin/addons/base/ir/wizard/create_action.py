@@ -38,7 +38,7 @@ action_type =  '''<?xml version="1.0"?>
 </form>'''
 
 action_type_fields = {
-    'type': {'string':"Start date",'type':'selection','required':True ,'selection':[('ir.actions.report.xml','Open Report')]},
+    'type': {'string':"Select Action Type",'type':'selection','required':True ,'selection':[('ir.actions.report.xml','Open Report')]},
 }
 
 report_action =  '''<?xml version="1.0"?>
@@ -60,13 +60,7 @@ class create_action(wizard.interface):
         
         rpt = reports.browse(cr, uid, form['report'])
         
-        action = """
-action = {
-    'type': 'ir.actions.report.xml',
-    'model':'%s',
-    'report_name': '%s',
-    'ids': context['active_ids'],
-}""" % (rpt.model, rpt.report_name)
+        action = """action = {"type": "ir.actions.report.xml","model":"%s","report_name": "%s","ids": context["active_ids"]}""" % (rpt.model, rpt.report_name)
         
         obj = pool.get('ir.actions.server')
         obj.write(cr, uid, data['ids'], {'code':action})
