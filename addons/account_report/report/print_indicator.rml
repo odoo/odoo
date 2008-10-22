@@ -3,6 +3,12 @@
 <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
 <pageTemplate id="first">
 <frame id="first" x1="34.0" y1="28.0" width="527" height="786"/>
+<pageGraphics>
+<setFont name="Helvetica" size="8.5"/>
+<drawString x="10.5cm" y="1cm"><pageNumber/></drawString>
+
+<setFont name="Helvetica" size="9"/>
+</pageGraphics>
 </pageTemplate>
 </template>
 <stylesheet>
@@ -38,27 +44,32 @@
 <blockValign value="TOP"/>
 <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
 </blockTableStyle>
+<blockTableStyle id="Table6">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+<lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+</blockTableStyle>
 <initialize>
 <paraStyle name="all" alignment="justify"/>
 </initialize>
-<paraStyle name="P1" fontName="Times-Roman" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P2" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P2" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P3" fontName="Times-BoldItalic" fontSize="10.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P4" fontName="Times-Bold" fontSize="18.0" leading="22" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P5" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P6" fontName="Times-Roman" fontSize="13.0" leading="16" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P7" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P8" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P9" fontName="Times-Roman" fontSize="8.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P10" fontName="Times-Roman" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P11" fontName="Times-Roman" fontSize="10.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P13" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="P14" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="Standard" fontName="Times-Roman"/>
-<paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="P4" fontName="Helvetica-Bold" fontSize="18.0" leading="22" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P5" fontName="Helvetica" fontSize="9.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P6" fontName="Helvetica" fontSize="13.0" leading="16" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P7" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P8" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P9" fontName="Helvetica" fontSize="9.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P10" fontName="Helvetica" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P11" fontName="Helvetica" fontSize="10.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P12" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P13" fontName="Helvetica" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="P14" fontName="Helvetica" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+<paraStyle name="Standard" fontName="Helvetica"/>
+<paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
 <paraStyle name="Index" fontName="Times-Roman"/>
@@ -151,26 +162,39 @@
 <para style="P3">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="528.0" repeatRows="1" style="Table3">
+<blockTable colWidths="14.0,500.0,14.0" repeatRows="1" style="Table6">
 <tr>
 <td>
-<para style="P11"><b>Expression :</b> [[ o['expression'] ]]</para>
+  <para style="P9"> </para>
+  </td>
+<td>
+<para style="P5"><b>Expression :</b> [[ o['expression'] ]]</para>
 </td>
+<td>
+  <para style="P9"> </para>
+  </td>
 </tr>
 </blockTable>
 <para style="P3">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="528.0" repeatRows="1" style="Table3">
+<blockTable colWidths="14.0,500.0,14.0" repeatRows="1" style="Table6">
 <tr>
 <td>
-<para style="P11"><b>Notes :</b> [[ o['note'] ]]</para>
+  <para style="P9"> </para>
+  </td>
+<td>
+<para style="P5"><b>Notes :</b> [[ o['note'] ]]</para>
 </td>
+<td>
+  <para style="P9"> </para>
+  </td>
 </tr>
 </blockTable>
 <para style="P3">
 <font color="white"> </font>
 </para>
+<hr color="black" thickness="1.5"/>
 </section>
 </story>
 </document>
