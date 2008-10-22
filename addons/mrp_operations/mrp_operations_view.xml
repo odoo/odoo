@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <field name="hour" position="after">
                 <button name="button_done" string="Finished" states="startworking"/>
-                <button name="button_start_working" string="Start working" states="draft,pause"/>            
+                <button name="button_start_working" string="Start working" states="draft,pause"/>
                 <field name="uom"/>
                 <field name="qty"/>
                 <field name="product"/>
@@ -167,7 +167,7 @@
             </field>
         </record>
 
-        
+
 
     <!--<record model="ir.ui.view" id="mrp_production_operation_form_view">
         <field name="name">mrp.production.operation.form</field>
@@ -191,12 +191,12 @@
         <field name="view_id" ref="mrp_production_operation_tree_view"/>
     </record>
 
-    <menuitem 
+    <menuitem
         name="Work Order Events Using Bar Codes"
-        parent="mrp.menu_mrp_root" 
-        id="menu_mrp_production_operation_action" 
+        parent="mrp.menu_mrp_root"
+        id="menu_mrp_production_operation_action"
         action="mrp_production_operation_action"/>
-    
+
     <record model="ir.ui.view" id="operation_calendar_view">
             <field name="name">mrp.perations.calendar</field>
             <field name="model">mrp_operations.operation</field>

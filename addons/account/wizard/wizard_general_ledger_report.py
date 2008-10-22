@@ -29,31 +29,31 @@ import pooler
 import locale
 import time
 
-report_type =  '''<?xml version="1.0"?>
-<form string="Select Report Type">
-</form>'''
-
-dates_form = '''<?xml version="1.0"?>
-<form string="Select period ">
-    <field name="date_from" colspan="4"/>
-    <field name="date_to" colspan="4"/>
-    <field name="sortbydate" colspan="4"/>
-    <field name="display_account" colspan="4"/>
-    <field name="landscape" colspan="4"/>
-    <field name="soldeinit"/>
-    <field name="amount_currency" colspan="4"/>
-</form>'''
-
-dates_fields = {
-    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
-    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'sortbydate':{'string':"Sort by",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Mouvement')]},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-    'landscape':{'string':"Print in Landscape Mode",'type':'boolean'},
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-    'amount_currency':{'string':"with amount in currency",'type':'boolean'}
-
-}
+#report_type =  '''<?xml version="1.0"?>
+#<form string="Select Report Type">
+#</form>'''
+#
+#dates_form = '''<?xml version="1.0"?>
+#<form string="Select period ">
+#    <field name="date_from" colspan="4"/>
+#    <field name="date_to" colspan="4"/>
+#    <field name="sortbydate" colspan="4"/>
+#    <field name="display_account" colspan="4"/>
+#    <field name="landscape" colspan="4"/>
+#    <field name="soldeinit"/>
+#    <field name="amount_currency" colspan="4"/>
+#</form>'''
+#
+#dates_fields = {
+#    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+#    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+#    'sortbydate':{'string':"Sort by",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Mouvement')]},
+#    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
+#    'landscape':{'string':"Print in Landscape Mode",'type':'boolean'},
+#    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+#    'amount_currency':{'string':"with amount in currency",'type':'boolean'}
+#
+#}
 
 account_form = '''<?xml version="1.0"?>
 <form string="Select parent account">
@@ -68,25 +68,59 @@ account_fields = {
 
 
 period_form = '''<?xml version="1.0"?>
-<form string="Select period ">
-    <field name="fiscalyear" colspan="4"/>
-    <field name="periods" colspan="4"/>
-    <field name="sortbydate" colspan="4"/>
-    <field name="display_account" colspan="4"/>
-    <field name="landscape" colspan="4"/>
-    <field name="soldeinit"/>
-    <field name="amount_currency" colspan="4"/>
+<form string="Select Date-Period">
+    
+    <field name="company_id" colspan="4"/>
+    <newline/>
+    <field name="fiscalyear"/>
+    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+    <newline/>
+    <field name="display_account"/>
+    <field name="sortbydate"/>
+    
+    <field name="landscape"/>
+    <field name="amount_currency"/>
+    
+    <newline/>
+    <separator string="Filters" colspan="4"/>
+    <field name="state" required="True"/>
+    <newline/>
+    
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
+        <separator string="Date Filter" colspan="4"/>
+        <field name="date_from"/>
+        <field name="date_to"/>
+    </group>
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
+        <separator string="Filter on Periods" colspan="4"/>
+        <field name="periods" colspan="4" nolabel="1"/>
+    </group>
+
+    
+    
+   
+    
 </form>'''
 
 period_fields = {
+    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'state':{
+        'string':"Date/Period Filter",
+        'type':'selection',
+        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
+        'default': lambda *a:'bydate'
+    },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year'},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
     'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Mouvement')]},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-    'landscape':{'string':"Print in Landscape Mode",'type':'boolean'},
+    'landscape':{'string':"Landscape Mode",'type':'boolean'},
     'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-    'amount_currency':{'string':"with amount in currency",'type':'boolean'}
+    'amount_currency':{'string':"With Currency",'type':'boolean'},
+    'date_from': {'string':"           Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    
 }
 def _check_path(self, cr, uid, data, context):
     if data['model'] == 'account.account':
@@ -117,20 +151,22 @@ def _check_date(self, cr, uid, data, context):
 
 class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            company_id = user.company_id.id
+        else:
+            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        data['form']['company_id'] = company_id
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
+        data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         data['form']['sortbydate'] = 'sort_date'
         data['form']['display_account']='bal_all'
         data['form']['landscape']=True
         data['form']['amount_currency'] = True
         return data['form']
-    def _get_defaults_fordate(self, cr, uid, data, context):
-        data['form']['sortbydate'] = 'sort_date'
-        data['form']['display_account']='bal_all'
-        data['form']['landscape']=True
-        data['form']['amount_currency'] = True
-        return data['form']
-
 
     states = {
         'init': {
@@ -142,20 +178,8 @@ class wizard_report(wizard.interface):
             'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel'),('checktype','Print')]}
         },
         'checktype': {
-            'actions': [],
-            'result': {'type':'form', 'arch':report_type,'fields':{}, 'state':[('with_period','Use with Period'),('with_date','Use with Date')]}
-        },
-        'with_period': {
             'actions': [_get_defaults],
             'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('checkreport','Print')]}
-        },
-        'with_date': {
-            'actions': [_get_defaults_fordate],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
-        },
-        'checkdate': {
-            'actions': [],
-            'result': {'type':'choice','next_state':_check_date}
         },
         'checkreport': {
             'actions': [],
