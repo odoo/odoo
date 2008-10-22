@@ -287,7 +287,7 @@ class account_invoice(osv.osv):
         pt_obj= self.pool.get('account.payment.term')
 
         if not date_invoice :
-            date_invoice = self._defaults["date_invoice"](cr,uid,{})
+            date_invoice = time.strftime('%Y-%m-%d')
 
         pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
 
