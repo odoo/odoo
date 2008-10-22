@@ -27,9 +27,19 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_mrp_configuration" name="Configuration" parent="menu_mrp_root"/>
-        <menuitem id="menu_mrp_property_group_action_prop" name="Properties" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_property_group_action" id="menu_mrp_property_group_action" parent="menu_mrp_property_group_action_prop"/>
+        <menuitem
+            id="menu_mrp_configuration"
+            name="Configuration"
+            parent="menu_mrp_root"/>
+        <menuitem
+            id="menu_mrp_property_group_action_prop"
+            name="Properties"
+            parent="menu_mrp_configuration"
+            groups="base.group_extended"/>
+        <menuitem
+            action="mrp_property_group_action"
+            id="menu_mrp_property_group_action"
+            parent="menu_mrp_property_group_action_prop"/>
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -65,7 +75,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="mrp_property_action" id="menu_mrp_property_action" parent="menu_mrp_property_group_action_prop"/>
+        <menuitem
+            action="mrp_property_action"
+            id="menu_mrp_property_action"
+            parent="menu_mrp_property_group_action_prop"/>
 
         <!--
     Workcenters
@@ -216,20 +229,20 @@
                 <form string="Bill of Material">
                     <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                     <newline/>
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_qty"/>
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
                     <newline/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="routing_id" select="2"/>
-                    <field name="type"/>
+                    <field name="routing_id" select="2" groups="base.group_extended"/>
+                    <field name="type" groups="base.group_extended"/>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Revisions">
+                        <page string="Revisions" groups="base.group_extended">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Properties">
@@ -242,7 +255,7 @@
                             <field name="date_stop" select="2"/>
                             <field name="product_rounding"/>
                             <field name="product_efficiency"/>
-                            <field colspan="4" name="property_ids" nolabel="2"/>
+                            <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
                         </page>
                     </notebook>
                 </form>
@@ -404,7 +417,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="date_planned" select="1"/>
-                        <field name="priority"/>
+                        <field name="priority" groups="base.group_extended"/>
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
@@ -656,12 +669,12 @@
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
                         <field name="bom_id" select="2"/>
-                        <field name="move_id"/>
+                        <field name="move_id" groups="base.group_extended"/>
                         <field name="date_close" select="2"/>
-                        <field name="close_move"/>
+                        <field name="close_move" groups="base.group_extended"/>
                         <field name="purchase_id"/>
                         <separator colspan="4" string="Properties"/>
-                        <field colspan="4" name="property_ids" nolabel="1"/>
+                        <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
                     </page>
                     </notebook>
                 </form>

@@ -67,11 +67,13 @@
         <field name="res_model">document.directory</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-    </record>
+	</record>
+	<menuitem name="Configuration" id="menu_document_configuration" parent="menu_document"/>
     <menuitem
-        name="Document Management/Configuration/Directories"
+        name="Directories"
         action="action_document_directory_form"
-        id="menu_document_directories"/>
+		id="menu_document_directories"
+		parent="menu_document_configuration"/>
 
     <record model="ir.actions.act_window" id="action_document_directory_tree">
         <field name="type">ir.actions.act_window</field>
@@ -80,9 +82,10 @@
         <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
     </record>
     <menuitem
-        name="Document Management/Directorie's Structure"
+        name="Directorie's Structure"
         action="action_document_directory_tree"
-        id="menu_document_directories_tree"/>
+		id="menu_document_directories_tree"
+		parent="menu_document"/>
 
 
     <record model="ir.ui.view" id="view_document_file_form">
@@ -141,9 +144,10 @@
         <field name="view_type">form</field>
     </record>
     <menuitem
-        name="Document Management/Search a File"
+        name="Search a File"
         action="action_document_file_form"
-        id="menu_document_files"/>
+		id="menu_document_files"
+		parent="menu_document"/>
 
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>
@@ -201,21 +205,31 @@
 
 	<record id="view_auto_config_form" model="ir.ui.view">
             <field name="name">Auto Configure Directory</field>
-            <field name="model">auto.configuration</field>
+            <field name="model">document.configuration.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Auto Configure">
-                    <label string="" colspan="2"/>
+					<separator string="Connect to Document Management System." colspan="4"/>
+					<label align="0.0"  string="You can use ftp://admin:admin@localhost:8021 " colspan="4"/>
+                    <separator string="Configure Ressources Directory :" colspan="4"/>
                     <newline/>
-                    <label string="Do you want to configure Directory Automatically ?" colspan="2"/>
+                    <label string="'All Sales Order' -> sale.order" align="0.0" colspan="4"/>
+					<label string="'Sales by Salesman' -> res.users" align="0.0" colspan="4"/>
+                    <label string="'Personnal Folders' -> res.users" align="0.0" colspan="4"/>
+                    <label string="'Projects' -> account.analytic.account with ressource tree" align="0.0"  colspan="4"/>
+					<separator string="New Directories." colspan="4"/>
+					<label string="'Sales' -> sale.order which is link directory of 'res.users' model" align="0.0"  colspan="4"/>
+					<label align="0.0"  string="'Quotation','Meetings','Analysis Reports' -> static directories which are link directories of 'account.analytic.account' model" colspan="4"/>
                     <newline/>
                     <newline/>
+					<separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
                     <group col="4" colspan="2">
                         <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
                         <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
                     </group>
                     <newline/>
-                    <label string="You Can use ftp://admin:admin@localhost:8021 " colspan="2"/>
+                   
                 </form>
             </field>
         </record>
@@ -223,7 +237,7 @@
         <record id="action_config_auto_directory" model="ir.actions.act_window">
             <field name="name">Auto Configure Directory</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">auto.configuration</field>
+            <field name="res_model">document.configuration.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -232,6 +246,7 @@
       <record model="ir.actions.todo"
             id="config_auto_directory">
             <field name="name">Auto Configure Directory</field>
+			<field name="note">This wizard will be configure directory for ressource model.</field>
             <field name="action_id" ref="action_config_auto_directory"/>
             <field name="state">open</field>
         </record>

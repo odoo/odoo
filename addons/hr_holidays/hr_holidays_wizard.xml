@@ -10,6 +10,11 @@
 		 type="wizard"
 		 id="menu_holidays_summary"/>
 
+	 <!-- restrict menu access to HR Manager -->
+	 <record model='ir.ui.menu' id="menu_holidays_summary">
+		 <field eval="[(6,0,[ref('hr.group_hr_manager')])]" name="groups_id"/>
+  	 </record>
+
 	<wizard string="Print Summary of Employee's Holidays"
 		model="hr.employee" name="hr.holidays.summary.employee"
 		keyword="client_print_multi" id="wizard_holidays_summary" />

@@ -46,7 +46,7 @@ dates_form = '''<?xml version="1.0"?>
 dates_fields = {
     'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'display_account':{'string':"Display accounts",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]}
+    'display_account':{'string':"Filter on Accounts",'type':'selection','selection':[('bal_mouvement','With Entries'),('bal_all','All Accounts'),('bal_solde','With Balance Different Than 0')]}
 }
 
 
@@ -61,8 +61,12 @@ period_form = '''<?xml version="1.0"?>
 
 
 period_fields = {
-    'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-        'help': 'Keep empty for all open fiscal year'},
+    'fiscalyear': {
+        'string':'Fiscal year',
+        'type':'many2one',
+        'relation':'account.fiscalyear',
+        'help':'Keep empty for all open fiscal year'
+    },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]}
 }

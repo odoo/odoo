@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <record id="view_account_position_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position">
+                    <field name="name" select="1"/>
+                    <field name="company_id"/>
+                    <newline/>
+                    <field name="tax_ids" colspan="4">
+                        <tree string="Taxes Mapping" editable="bottom">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </tree>
+                        <form string="Taxes Mapping">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </form>
+                    </field>
+                    <field name="account_ids" colspan="4">
+                        <tree string="Accounts Mapping" editable="bottom">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </tree>
+                        <form string="Accounts Mapping">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_position_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tree</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_position_form" model="ir.actions.act_window">
+            <field name="name">Fiscal Positions</field>
+            <field name="res_model">account.fiscal.position</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_account_fiscal_position_form"
+            id="menu_action_account_fiscal_position_form"
+            parent="account.menu_finance_accounting" sequence="20"/>
+
         <!--
         Partners Extension
     -->
@@ -17,13 +74,12 @@
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
                         <field name="property_account_receivable"/>
-                        <field name="property_account_tax"/>
+                        <field name="property_account_position"/>
                         <field name="property_payment_term"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Accounting Properties" colspan="2"/>
                         <field name="property_account_payable"/>
-                        <field name="property_account_supplier_tax"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>

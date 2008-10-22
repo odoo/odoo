@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:41:42+0000"
-"PO-Revision-Date: 2008-09-11 15:41:42+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 4.3.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-09-05 16:22+0000\n"
+"PO-Revision-Date: 2008-10-13 12:01+0000\n"
+"Last-Translator: Olivier Laurent <Unknown>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-10-13 12:20+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,date_from:0
@@ -42,12 +43,6 @@ msgstr "Entrées non-facturées"
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoicing"
 msgstr "Facturation"
-
-#. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-msgid "At least on line have no product !"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -111,8 +106,11 @@ msgstr "Devise"
 
 #. module: hr_timesheet_invoice
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -133,7 +131,7 @@ msgstr "Choisissez les comptes que vous désirez facturer"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Total ("
-msgstr "Total "
+msgstr "Total"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.create,init,product:0
@@ -158,7 +156,7 @@ msgstr "Période de début"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -190,18 +188,6 @@ msgid "to"
 msgstr "à"
 
 #. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-msgid "Error"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-msgid "Balance product needed"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_invoice_create
 msgid "Invoice analytic lines"
 msgstr "Facturation des lignes analytiques"
@@ -216,7 +202,7 @@ msgstr "Date"
 #. module: hr_timesheet_invoice
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_draft_analytic_accounts
 msgid "Draft Analytic Accounts"
-msgstr "Comptes analytiques brouillon"
+msgstr "Compte analytique brouiilon"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -248,7 +234,7 @@ msgstr "Créer des factures"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
-msgstr ""
+msgstr "Types de Facture"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,time:0
@@ -269,29 +255,23 @@ msgstr "Types de facturation"
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Theorical"
-msgstr ""
+msgstr "Théorique"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced_my
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr ""
+msgstr "Mes Entrées Non Facturées"
 
 #. module: hr_timesheet_invoice
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML non valide pour l'architecture de la vue!"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Type of invoicing"
 msgstr "Type de facturation"
-
-#. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-msgid "Please fill a Balance product in the wizard"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_pending_analytic_accounts
@@ -320,13 +300,6 @@ msgid "Invoice rate"
 msgstr "Taux de facture"
 
 #. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-msgid "Analytic account incomplete"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date2:0
 msgid "End of period"
 msgstr "Fin de période"
@@ -339,13 +312,7 @@ msgstr "Nom interne"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Balance"
-msgstr "Balance "
-
-#. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
-msgid "Error !"
-msgstr ""
+msgstr "Balance"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init:0
@@ -357,12 +324,6 @@ msgstr "Sélectionnez une période"
 #: wizard_field:hr.timesheet.invoice.create,init,name:0
 msgid "Name of entry"
 msgstr "Nom de l'entrée"
-
-#. module: hr_timesheet_invoice
-#, python-format
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
-msgid "You can not modify an invoiced analytic line!"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -378,7 +339,7 @@ msgstr "à"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_invoice_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_open_invoice_analytic_accounts
 msgid "Unclosed Invoiceable Accounts"
-msgstr ""
+msgstr "Comptes Facturables Non Cloturés"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
@@ -429,7 +390,7 @@ msgstr "Factures finales"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Total"
-msgstr "Total "
+msgstr "Total"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,journal_ids:0
@@ -444,5 +405,4 @@ msgstr "Montant de la balance"
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Invoice rate by user"
-msgstr ""
-
+msgstr "Taux Facturable par Utilisateur"

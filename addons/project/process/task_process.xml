@@ -112,5 +112,44 @@
             <field model="process.node" name="source_node_id" ref="process_node_donetask0"/>
         </record>
         
+        <!--    
+        	Process Action
+    	-->
+        
+        <record id="process_transition_action_draftopentask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;do_open&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Open&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_draftopentask0"/>
+        </record>
+        
+        <record id="process_transition_action_draftcanceltask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;do_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_draftopentask0"/>
+        </record>
+        
+        <record id="process_transition_action_openpendingtask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;do_pending&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Set pending&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_opendonetask0"/>
+        </record>
+        
+        <record id="process_transition_action_opendrafttask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;do_draft&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Draft&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_opendonetask0"/>
+        </record>
+        
+        <record id="process_transition_action_opencanceltask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;do_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_opendonetask0"/>
+        </record>
+        
     </data>
 </openerp>

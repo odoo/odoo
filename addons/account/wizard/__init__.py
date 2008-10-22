@@ -64,6 +64,7 @@ import wizard_use_model
 import wizard_state_open
 
 import wizard_statement_from_invoice
+import wizard_print_journal
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

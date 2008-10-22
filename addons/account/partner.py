@@ -31,6 +31,64 @@
 from osv import fields, osv
 import ir
 
+class account_fiscal_position(osv.osv):
+    _name = 'account.fiscal.position'
+    _description = 'Fiscal Position'
+    _columns = {
+        'name': fields.char('Fiscal Position', size=64, translate=True, required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Accounts Mapping'),
+        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Taxes Mapping')
+    }
+    def map_tax(self, cr, uid, partner, taxes, context={}):
+        if (not partner) or (not partner.property_account_position) :
+            return map(lambda x: x.id, taxes)
+        result = []
+        for t in taxes:
+            ok = False
+            for tax in partner.property_account_position.tax_ids:
+                if tax.tax_src_id.id==t.id:
+                    if tax.tax_dest_id:
+                        result.append(tax.tax_dest_id.id)
+                    ok=True
+            if not ok:
+                result.append(t.id)
+        return result
+
+    def map_account(self, cr, uid, partner, account_id, context={}):
+        if (not partner) or (not partner.property_account_position) :
+            return account_id
+        for pos in partner.property_account_position.account_ids:
+            if pos.account_src_id.id==account_id:
+                account_id = pos.account_dest_id.id
+                break
+        return account_id
+account_fiscal_position()
+
+
+class account_fiscal_position_tax(osv.osv):
+    _name = 'account.fiscal.position.tax'
+    _description = 'Fiscal Position Taxes Mapping'
+    _rec_name = 'position_id'
+    _columns = {
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
+        'tax_src_id': fields.many2one('account.tax', 'Tax Source', required=True),
+        'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
+    }
+account_fiscal_position_tax()
+
+
+class account_fiscal_position_account(osv.osv):
+    _name = 'account.fiscal.position.account'
+    _description = 'Fiscal Position Accounts Mapping'
+    _rec_name = 'position_id'
+    _columns = {
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
+        'account_src_id': fields.many2one('account.account', 'Account Source', required=True),
+        'account_dest_id': fields.many2one('account.account', 'Account Destination', required=True)
+    }
+account_fiscal_position_account()
+
 class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
@@ -109,24 +167,15 @@ class res_partner(osv.osv):
             domain="[('type', '=', 'receivable')]",
             help="This account will be used, instead of the default one, as the receivable account for the current partner",
             required=True),
-        'property_account_supplier_tax': fields.property(
-            'account.tax',
+        'property_account_position': fields.property(
+            'account.fiscal.position',
             type='many2one',
-            relation='account.tax',
-            string="Default Supplier Tax",
+            relation='account.fiscal.position',
+            string="Fiscal Position",
             method=True,
             view_load=True,
-            domain=[('parent_id','=',False)],
-            help="This tax will be used, instead of the default one for supplier invoices."),
-        'property_account_tax': fields.property(
-            'account.tax',
-            type='many2one',
-            relation='account.tax',
-            string="Default Tax",
-            method=True,
-            view_load=True,
-            domain=[('parent_id','=',False)],
-            help="This tax will be used, instead of the default one for customers."),
+            help="The fiscal position will determine taxes and the accounts used for the the partner.",
+        ),
         'property_payment_term': fields.property(
             'account.payment.term',
             type='many2one',

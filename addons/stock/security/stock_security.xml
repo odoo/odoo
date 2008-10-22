@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
 
     <record id="group_stock_manager" model="res.groups">
         <field name="name">Stock / Manager</field>
@@ -8,6 +8,14 @@
     <record id="group_stock_user" model="res.groups">
         <field name="name">Stock / Worker</field>
     </record>
+
+	<record model='ir.ui.menu' id='menu_stock_root'>
+		<field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user')])]"/>
+	</record>
+
+	<record model='ir.ui.menu' id='menu_stock_configuration'>
+		<field name="groups_id" eval="[(6,0,[ref('group_stock_manager')])]"/>
+	</record>
 
 </data>
 </openerp>

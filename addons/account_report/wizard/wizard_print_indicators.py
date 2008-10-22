@@ -33,12 +33,12 @@ import pooler
 
 form = '''<?xml version="1.0"?>
 <form string="Print Indicators">
-    <field name="indicator_id"/>
+    <label string="Select the criteria based on which Indicators will be printed."/>
+    <newline/>
     <field name="select_base"/>
 </form>'''
 
 fields = {
-    'indicator_id': {'string':'Choose Indicator', 'type':'many2one', 'relation': 'account.report.report','required':True,},
     'select_base': {'string':'Choose Criteria', 'type':'selection','selection':[('year','Based On Fiscal Years'),('periods','Based on Fiscal Periods')],'required':True,},
 }
 
@@ -73,7 +73,7 @@ class wizard_print_indicators(wizard.interface):
         },
         'print': {
             'actions':[],
-            'result' :{'type':'print','report':'report.print.indicators', 'state':'end'}
+            'result' :{'type':'print','report':'print.indicators', 'state':'end'}
         }
     }
 wizard_print_indicators('print.indicators')

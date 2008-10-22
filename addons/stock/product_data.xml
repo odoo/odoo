@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <record id="property_stock_journal" model="ir.property">
             <field name="name">property_stock_journal</field>
             <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')]"/>
-            <field eval="'account.journal,'+str(ref('account.stock_journal'))" model="account.journal" name="value"/>
+            <field eval="'account.journal,'+str(ref('stock.stock_journal'))" model="account.journal" name="value"/>
         </record>
-        
+
         <record forcecreate="True" id="property_stock_account_output_prd" model="ir.property">
             <field name="name">property_stock_account_output</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_account_output')]"/>

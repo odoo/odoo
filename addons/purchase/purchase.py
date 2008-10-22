@@ -238,11 +238,11 @@ class purchase_order(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        pricelist = self.pool.get('res.partner').property_get(cr, uid,
-                    part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
+        part = self.pool.get('res.partner').browse(cr, uid, part)
+        pricelist = part.property_product_pricelist_purchase.id
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
-    def wkf_approve_order(self, cr, uid, ids):
+    def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
         return True
 
@@ -275,15 +275,15 @@ class purchase_order(osv.osv):
                        })
     def inv_line_create(self,a,ol):
         return (0, False, {
-                    'name': ol.name,
-                    'account_id': a,
-                    'price_unit': ol.price_unit or 0.0,
-                    'quantity': ol.product_qty,
-                    'product_id': ol.product_id.id or False,
-                    'uos_id': ol.product_uom.id or False,
-                    'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-                    'account_analytic_id': ol.account_analytic_id.id,
-                })
+            'name': ol.name,
+            'account_id': a,
+            'price_unit': ol.price_unit or 0.0,
+            'quantity': ol.product_qty,
+            'product_id': ol.product_id.id or False,
+            'uos_id': ol.product_uom.id or False,
+            'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
+            'account_analytic_id': ol.account_analytic_id.id,
+        })
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
@@ -299,17 +299,8 @@ class purchase_order(osv.osv):
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
                     a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, o.partner_id, a)
                 il.append(self.inv_line_create(a,ol))
-#               il.append((0, False, {
-#                   'name': ol.name,
-#                   'account_id': a,
-#                   'price_unit': ol.price_unit or 0.0,
-#                   'quantity': ol.product_qty,
-#                   'product_id': ol.product_id.id or False,
-#                   'uos_id': ol.product_uom.id or False,
-#                   'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-#                   'account_analytic_id': ol.account_analytic_id.id,
-#               }))
 
             a = o.partner_id.property_account_payable.id
             inv = {
@@ -457,21 +448,9 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
 
-        
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,prod['supplier_taxes_id'])
-        taxep = None
-        if partner_id:
-            taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
-            if taxep_id:
-                taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
-        if not taxep or not taxep.id:
-            res['value']['taxes_id'] = [x.id for x in prod['supplier_taxes_id']]
-        else:
-            res5 = [taxep.id]
-            for t in taxes:
-                if not t.tax_group==taxep.tax_group:
-                    res5.append(t.id)
-            res['value']['taxes_id'] = res5
+        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])

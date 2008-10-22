@@ -132,8 +132,10 @@
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_9_Italic" fontName="Times-Italic" fontSize="9.0" leading="7" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_9_Italic_Right" fontName="Times-Italic" fontSize="9.0" leading="7" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9_Center" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic" fontName="Times-Italic" fontSize="8.0" leading="7" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic_Center" fontName="Times-Italic" fontSize="8.0" leading="7" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic_Right" fontName="Times-Italic" fontSize="8.0" leading="7" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Rignt_9_U" fontName="Helvetica" fontSize="9.0" leading="7" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9_Right_U" fontName="Helvetica-Bold" fontSize="9.0" leading="7" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
@@ -217,12 +219,10 @@
     	<blockTable colWidths="69.0,298.0,115.0" style="Table_Final_Total">
 	      <tr>
 	        <td>
-	          <para style="terp_default_Bold_9">
-	            <font color="white"> </font>
-	          </para>
+	          <para style="terp_default_Bold_9_Center">Total:</para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9">Total:</para>
+	          <para style="terp_default_Bold_9"><font color="white"> </font></para>
 	        </td>
 	        <td>
 	          <para style="terp_default_Bold_9_Right_U">[[ '%.2f' % (sum_quantity(objects,data['form']['date1'],data['form']['date2'], data['form']['journal']) or 0.0) ]]</para>
@@ -238,7 +238,7 @@
       	<blockTable colWidths="67.0,291.0,55.0,70.0" style="Table_Account_Detail">
 	        <tr>
 	          <td>
-	            <para style="terp_default_Bold_9">[[ o.code ]]</para>
+	            <para style="terp_default_Bold_9_Center">[[ o.code ]]</para>
 	          </td>
 	          <td>
 	            <para style="terp_default_Bold_9">[[ o.complete_name ]]</para>
@@ -257,33 +257,30 @@
 			    <blockTable colWidths="61.0,284.0,70.0,64.0" style="Table_Analytical_Detail">
 			      <tr>
 			        <td>
-			          <para style="terp_default_9">[[ move_g['code'] ]] </para>
+			          <para style="terp_default_Bold_9_Center">[[ move_g['code'] ]] </para>
 			        </td>
 			        <td>
-			          <para style="terp_default_9">[[ move_g['name'] ]]</para>
+			          <para style="terp_default_Bold_9">[[ move_g['name'] ]]</para>
 			        </td>
 			        <td>
-			          <para style="terp_default_9">
+			          <para style="terp_default_Bold_9">
 			            <font color="white"> </font>
 			          </para>
 			        </td>
 			        <td>
-			          <para style="terp_default_Rignt_9_U">[[ '%.2f' % (move_g['quantity'] or 0.0) ]]</para>
+			          <para style="terp_default_Bold_9_Right_U">[[ '%.2f' % (move_g['quantity'] or 0.0) ]]</para>
 			        </td>
 			      </tr>
 			 	  
 			 	  <tr>
 			 	  <td>
-			        <blockTable colWidths="57.0,45.0,280.0,89.0" style="Table_Move_Line_Content">
+			        <blockTable colWidths="55.0,327.0,89.0" style="Table_Move_Line_Content">
 			          <tr>
 			            <td>
-			              <para style="terp_default_9_Italic">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2'],data['form']['journal']),'move_a') ]]<font>[[ move_a['date'] ]]</font></para>
+			              <para style="terp_default_9_Italic_Center">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2'],data['form']['journal']),'move_a') ]]<font>[[ move_a['date'] ]]</font></para>
 			            </td>
 			            <td>
-			              <para style="terp_default_9_Italic"> [[ move_a['cj'] ]]</para>
-			            </td>
-			            <td>
-			              <para style="terp_default_9_Italic">[[ move_a['name'] ]]</para>
+			              <para style="terp_default_9_Italic">[[ move_a['cj'] ]] / [[ move_a['name'] ]]</para>
 			            </td>
 			            <td>
 			              <para style="terp_default_9_Italic_Right">[[ '%.2f' % (move_a['quantity'] or 0.0 )]]</para>

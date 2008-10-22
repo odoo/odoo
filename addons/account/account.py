@@ -844,7 +844,7 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account'))
+                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.' % (line.account_id.code, line.account_id.name)))
 
             if abs(amount) < 0.0001:
                 if not len(line_draft_ids):
@@ -1032,6 +1032,7 @@ class account_tax_code(osv.osv):
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
+    _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=16),
@@ -1681,14 +1682,18 @@ class account_tax_code_template(osv.osv):
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
     _order = 'code'
+    _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=16),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Sign for parent', required=True),
+    }
+
+    _defaults = {
+        'sign': lambda *args: 1.0,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -1699,17 +1704,6 @@ class account_tax_code_template(osv.osv):
         reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
-
-    def _default_company(self, cr, uid, context={}):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
-    _defaults = {
-        'company_id': _default_company,
-        'sign': lambda *args: 1.0,
-    }
 
     def _check_recursion(self, cr, uid, ids):
         level = 100
@@ -1742,7 +1736,6 @@ class account_chart_template(osv.osv):
         'property_account_payable': fields.many2one('account.account.template','Payable Account'),
         'property_account_expense_categ': fields.many2one('account.account.template','Expense Category Account'),
         'property_account_income_categ': fields.many2one('account.account.template','Income Category Account'),
-        'property_account_tax': fields.many2one('account.account.template','Default Tax on Partner'),
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
     }
@@ -1859,9 +1852,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
 
-        if obj_multi.code_digits<=5:
-            raise osv.except_osv(_('User Error'), _('Account code should be of more than 5 digits.'))
-
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -1926,6 +1916,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
+
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
             tax_ids = []
@@ -1943,7 +1934,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc[:dig],
+                'code': code_acc,
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
@@ -1963,8 +1954,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], vals={
-                    'account_collected_id': value['account_collected_id'],
-                    'account_paid_id': value['account_paid_id'],
+                    'account_collected_id': acc_template_ref[value['account_collected_id']],
+                    'account_paid_id': acc_template_ref[value['account_paid_id']],
                 })
 
         # Creating Journals
@@ -2045,7 +2036,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_payable','res.partner','account.account'),
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),
-            ('property_account_tax','res.partner','account.tax'),
             ('property_account_expense','product.template','account.account'),
             ('property_account_income','product.template','account.account')
         ]

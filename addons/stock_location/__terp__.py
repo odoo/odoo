@@ -18,7 +18,9 @@ This module may be usefull for different purposes:
     """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["stock_view.xml"],
+    "update_xml" : ["stock_view.xml",
+					"security/ir.model.access.csv",
+				   ],
     "active": False,
     "installable": True
 }

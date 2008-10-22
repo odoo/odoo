@@ -1,7 +1,9 @@
-#############################################################################
+# -*- encoding: utf-8 -*-
+##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -597,8 +599,8 @@ class document_file(osv.osv):
 		return super(document_file, self).unlink(cr, uid, ids, context)
 document_file()
 
-class auto_configuration(osv.osv_memory):
-    _name='auto.configuration'
+class document_configuration_wizard(osv.osv_memory):
+    _name='document.configuration.wizard'
     _rec_name = 'Auto Directory configuration'
     _columns = {
      			}
@@ -687,4 +689,4 @@ class auto_configuration(osv.osv_memory):
 	            doc_obj.create(cr,uid,res)
 	    return True
 
-auto_configuration()
+document_configuration_wizard()
