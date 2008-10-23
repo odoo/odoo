@@ -36,8 +36,52 @@
             <field name="code">cloture</field>
             <field name="close_method">none</field>
         </record>
+        <record id="account_type_view" model="account.account.type">
+            <field name="name">Vue</field>
+            <field name="code">view</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_type_capitaux" model="account.account.type">
+            <field name="name">Capital</field>
+            <field name="code">capital</field>
+            <field name="close_method">balance</field>
+        </record>
 
-
+        <record id="account_type_tiers" model="account.account.type">
+            <field name="name">Tiers</field>
+            <field name="code">tiers</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_tiers_receiv" model="account.account.type">
+            <field name="name">Tiers - Recevable</field>
+            <field name="code">tiers -rec</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_tiers_payable" model="account.account.type">
+            <field name="name">Tiers - Payable</field>
+            <field name="code">tiers - pay</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_tax" model="account.account.type">
+            <field name="name">Tax</field>
+            <field name="code">tax</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_financiers" model="account.account.type">
+            <field name="name">Financier</field>
+            <field name="code">financier</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_charge" model="account.account.type">
+            <field name="name">Charge</field>
+            <field name="code">charge</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_type_produit" model="account.account.type">
+            <field name="name">Produit</field>
+            <field name="code">produit</field>
+            <field name="close_method">none</field>
+        </record>
 
 
 
