@@ -145,7 +145,9 @@ class account_move_line(osv.osv):
         ref_id = False
         move = self.pool.get('account.move').browse(cr, uid, move_id, context)
 
+        acc1 = False
         for l in move.line_id:
+            acc1 = l.account_id
             partner_id = partner_id or l.partner_id.id
             ref_id = ref_id or l.ref
             total += (l.debit or 0.0) - (l.credit or 0.0)
@@ -175,6 +177,17 @@ class account_move_line(osv.osv):
         s = -total
         data['debit'] = s>0  and s or 0.0
         data['credit'] = s<0  and -s or 0.0
+
+        if account.currency_id:
+            data['currency_id'] = account.currency_id.id
+            acc = account
+            if s>0:
+                acc = acc1
+            v = self.pool.get('res.currency').compute(cr, uid,
+                account.company_id.currency_id.id, 
+                data['currency_id'],
+                s, account=acc, account_invert=True)
+            data['amount_currency'] = v
         return data
 
     def _on_create_write(self, cr, uid, id, context={}):
@@ -325,12 +338,19 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
+    def _get_currency(self, cr, uid, context={}):
+        if not context.get('journal_id', False):
+            return False
+        cur = self.pool.get('account.journal').browse(cr, uid, context['journal_id']).currency
+        return cur and cur.id or False
+
     _defaults = {
         'blocked': lambda *a: False,
         'centralisation': lambda *a: 'normal',
         'date': _get_date,
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
+        'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
     }
@@ -367,6 +387,21 @@ class account_move_line(osv.osv):
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
+
+    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False):
+        if (not currency_id) or (not account_id):
+            return {}
+        result = {}
+        acc =self.pool.get('account.account').browse(cr, uid, account_id)
+        if (amount>0) and journal:
+            x = self.pool.get('account.journal').browse(cr, uid, journal).default_credit_account_id
+            if x: acc = x
+        v = self.pool.get('res.currency').compute(cr, uid, currency_id,acc.company_id.currency_id.id, amount, account=acc)
+        result['value'] = {
+            'debit': v>0 and v or 0.0,
+            'credit': v<0 and -v or 0.0
+        }
+        return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
@@ -603,6 +638,8 @@ class account_move_line(osv.osv):
                     attrs.append('required="1"')
                 else:
                     attrs.append('required="0"')
+                if field.field in ('amount_currency','currency_id'):
+                    attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field == 'partner_id':
                     attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field in widths:
@@ -749,7 +786,9 @@ class account_move_line(osv.osv):
                 ctx = {}
                 if 'date' in vals:
                     ctx['date'] = vals['date']
-                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
+                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
+                    account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0),
+                    context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 
