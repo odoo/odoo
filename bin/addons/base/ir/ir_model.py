@@ -204,8 +204,6 @@ class ir_model_fields(osv.osv):
         'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
-        'relate': fields.boolean('Click and Relate'),
-
         'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
         'selection': fields.char('Field Selection',size=128),
         'required': fields.boolean('Required'),
@@ -221,7 +219,6 @@ class ir_model_fields(osv.osv):
         'view_load': fields.boolean('View Auto-Load'),
     }
     _defaults = {
-        'relate': lambda *a: 0,
         'view_load': lambda *a: 0,
         'selection': lambda *a: "[]",
         'domain': lambda *a: "[]",

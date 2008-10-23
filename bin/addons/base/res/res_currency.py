@@ -79,7 +79,7 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None):
         if not from_currency_id:
             from_currency_id = to_currency_id
         xc=self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
@@ -94,6 +94,14 @@ class res_currency(osv.osv):
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (code, date))
+        rate = to_currency.rate/from_currency.rate
+        if account and (account.currency_mode=='average') and account.currency_id:
+            q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+            cr.execute('select sum(debit-credit),sum(amount_currency) from account_move_line l ' \
+              'where l.currency_id=%d and l.account_id=%d and '+q, (account.currency_id.id,account.id,))
+            tot1,tot2 = cr.fetchone()
+            if tot2:
+                rate = float(tot1)/float(tot2)
         if to_currency_id==from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
@@ -101,9 +109,10 @@ class res_currency(osv.osv):
                 return from_amount
         else:
             if round:
-                return self.round(cr, uid, to_currency, from_amount * to_currency.rate/from_currency.rate)
+                return self.round(cr, uid, to_currency, from_amount * rate)
             else:
-                return (from_amount * to_currency.rate/from_currency.rate)
+                return (from_amount * rate)
+
     def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
         args2 = args[:]
         if name:

@@ -328,7 +328,6 @@ class orm_template(object):
                 'name': k,
                 'field_description': f.string.replace("'", " "),
                 'ttype': f._type,
-                'relate': (f.relate and 1) or 0,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': str(f.select or 0),
@@ -341,12 +340,12 @@ class orm_template(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relate,relation,view_load,state,select_level
+                    relation,view_load,state,select_level
                 ) VALUES (
-                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                    bool(vals['relate']), vals['relation'], bool(vals['view_load']), 'base',
+                     vals['relation'], bool(vals['view_load']), 'base',
                     vals['select_level']
                 ))
                 if 'module' in context:
@@ -359,11 +358,11 @@ class orm_template(object):
                         cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
-                            model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
+                            model_id=%s, field_description=%s, ttype=%s, relation=%s,
                             view_load=%s, select_level=%s, readonly=%s ,required=%s
                         WHERE
                             model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'], bool(vals['relate']),
+                                vals['model_id'], vals['field_description'], vals['ttype'], 
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
                             ))
