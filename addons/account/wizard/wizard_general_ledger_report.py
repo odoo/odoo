@@ -145,6 +145,20 @@ def _check_date(self, cr, uid, data, context):
         raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
     
 def _check_state(self, cr, uid, data, context):
+        print"data",data
+        my_ids=data['ids']
+        if data['model']!='account.account':
+            my_ids=[data['form']['Account_list']]
+
+        child_ids = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid,[('parent_id', 'child_of',my_ids )])
+        
+        for child in child_ids :
+            child_account = pooler.get_pool(cr.dbname).get('account.account').browse(cr, uid, child)
+            res = pooler.get_pool(cr.dbname).get('account.move.line').search(cr, uid,[('account_id','=',child_account.id)])
+            print"res",res
+        if not len(res):
+            raise  wizard.except_wizard('UserError',"Make sure the account you select has children accounts.")
+
         if data['form']['state'] == 'bydate':
            data['form']['fiscalyear'] = False
         else :
@@ -190,7 +204,7 @@ class wizard_report(wizard.interface):
             'result': {'type':'choice','next_state':_check}
         },
         'report_landscape': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.general.ledger_landscape', 'state':'end'}
         },
         'report': {
