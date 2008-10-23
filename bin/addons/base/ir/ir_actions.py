@@ -545,6 +545,7 @@ class actions_server(osv.osv):
                     exec code in localdict
                     if 'action' in localdict:
                         return localdict['action']
+            
             if action.state == 'object_write':
                 res = {}
                 for exp in action.fields_lines:
