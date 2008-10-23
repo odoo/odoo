@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<report id="account_invoices_tax" 
+			string="Invoices" 
+			model="account.invoice" 
+			name="tax.retail.account.invoice" 
+			rml="account_voucher/report/invoice.rml"
+			auto="False"
+		/>
+		
+		<report id="account_vat_declaration_india"
+			string="Taxes report"
+			model="account.invoice"
+			name="indianvat.declaration"
+			rml="account_voucher/report/tax_report.rml"
+			auto="False"
+			menu="True"/>
+		
+		<wizard 
+			string="Wizard Indiataxes report"
+			model="account.invoice"
+			name="account.indianvat.declaration"
+			menu="False"
+			id="wizard_indianvat_declaration"/>
+		
+		<menuitem
+			name="Financial Management/Reporting/India Taxes Report"
+			action="wizard_indianvat_declaration"
+			type="wizard"
+			id="wizard_indianvat_declaration_menu"/>
+			
+			
+		<report id="report_account_voucher"
+			string="Voucher Report (Cr/Dr)"
+			model="account.voucher"
+			name="voucher.cash_receipt"
+			rml="account_voucher/report/report_voucher.rml"
+			auto="False"
+			header = "False"
+			menu="True"/>
+			
+			
+		<report id="report_account_voucher_amt"
+			string="Voucher Report"
+			model="account.voucher"
+			name="voucher.cash_amount"
+			rml="account_voucher/report/report_voucher_amount.rml"
+			auto="False"
+			header = "False"
+			menu="True"/>
+			
+	</data>
+</terp>
