@@ -27,40 +27,40 @@
                 <field name="first_name" select="1"/>
                 <notebook colspan="4" >
                     <page string="General">
-                            <newline/>
-                            <separator string="General Information" colspan="4"/>
-                            <field name="mobile" select="2"/>
-                            <field name="title" select="1" />
-                            <field name="website"/>
-                            <field name="lang_id"/>
-                            <field name="active"/>
-                            <separator string="Functions" colspan="4"/>
-                            <field name="job_ids" colspan="4" nolabel="1" mode="tree, form">
-                                <form string="Functions">
-                                    <field name="function_id"/>
-                                    <field name="address_id"/>
-                                    <field name="name"/>
-                                    <field name="sequence_contact"/>
-                                    <field name="phone"/>
-                                    <field name="email"/>
-                                    <field name="date_start" />
-                                    <field name="date_stop" />
-                                    <field name="state" />
-                                </form>
-                                <tree string="Functions">
-                                    <field name="sequence_contact" string="Seq."/>
-                                    <field name="function_id"/>
-                                    <field name="name"/>
-                                    <field name="address_id"/>
-                                    <field name="phone"/>
-                                    <field name="email"/>
-                                    <field name="state" />
-                                </tree>
-                            </field>
+                        <newline/>
+                        <separator string="General Information" colspan="4"/>
+                        <field name="mobile" select="2"/>
+                        <field name="title" select="1" />
+                        <field name="website"/>
+                        <field name="lang_id"/>
+                        <field name="active"/>
+                        <separator string="Functions" colspan="4"/>
+                        <field name="job_ids" colspan="4" nolabel="1" mode="tree, form">
+                            <form string="Functions">
+                                <field name="function_id"/>
+                                <field name="address_id"/>
+                                <field name="name"/>
+                                <field name="sequence_contact"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                                <field name="date_start" />
+                                <field name="date_stop" />
+                                <field name="state" />
+                            </form>
+                            <tree string="Functions">
+                                <field name="sequence_contact" string="Seq."/>
+                                <field name="function_id"/>
+                                <field name="name"/>
+                                <field name="address_id"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                                <field name="state" />
+                            </tree>
+                        </field>
                     </page>
                     <page string="Extra Information">
-                            <field name="country_id"/>
-                            <field name="birthdate" select="1" />
+                        <field name="country_id"/>
+                        <field name="birthdate" select="1" />
                     </page>
                 </notebook>
             </form>
@@ -105,14 +105,14 @@
                         <newline/>
                         <field name="job_ids" mode="tree, form" colspan="4">
                             <tree string="Contacts" editable="top">
-	                            <field name="sequence_partner"/>
+                                <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
-	                            <field name="sequence_partner"/>
+                                <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
@@ -240,7 +240,7 @@
         </field>
     </record>
 
-<!-- Views for res.partner.job -->
+    <!-- Views for res.partner.job -->
     <record model="ir.ui.view" id="view_partner_job_tree">
         <field name="name">res.partner.job.tree</field>
         <field name="model">res.partner.job</field>
@@ -253,6 +253,7 @@
                 <field name="function_id"/>
                 <field name="email"/>
                 <field name="phone"/>
+                <field name="state" />
             </tree>
         </field>
     </record>
@@ -273,26 +274,29 @@
                         <field name="phone" select="2"/>
                         <field name="sequence_contact" select="2"/>
                         <field name="sequence_partner" select="2"/>
+                        <field name="date_start" />
+                        <field name="date_stop" />
+                        <field name="state" select="2" />
                     </page>
                 </notebook>
             </form>
         </field>
     </record>
 
-<!-- Menuitem for res.partner.job -->
-        <record model="ir.actions.act_window" id="action_res_partner_job">
-            <field name="name">Functions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.job</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem name="Partners/Functions" action="action_res_partner_job" id="menu_action_res_partner_job"/>
-<!-- Act window defining a shorcut on partners to open all his contacts -->
-        <act_window name="Open all Partner's Function"
-            domain="[('name', '=', active_id)]"
-            res_model="res.partner.job"
-            src_model="res.partner"
-            view_mode='tree,form'
-            id="act_res_partner_jobs"/>
+    <!-- Menuitem for res.partner.job -->
+    <record model="ir.actions.act_window" id="action_res_partner_job">
+        <field name="name">Functions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner.job</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem name="Partners/Functions" action="action_res_partner_job" id="menu_action_res_partner_job"/>
+    <!-- Act window defining a shorcut on partners to open all his contacts -->
+    <act_window name="Open all Partner's Function"
+        domain="[('name', '=', active_id)]"
+        res_model="res.partner.job"
+        src_model="res.partner"
+        view_mode='tree,form'
+        id="act_res_partner_jobs"/>
 </data>
 </openerp>

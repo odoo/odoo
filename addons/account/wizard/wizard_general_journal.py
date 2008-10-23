@@ -1,6 +1,9 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,26 +28,33 @@
 #
 ##############################################################################
 
-import time
-from report import report_sxw
+import wizard
+import pooler
 
-class account_invoice_tax_retail(report_sxw.rml_parse):
-	def __init__(self, cr, uid, name, context):
-		super(account_invoice_tax_retail, self).__init__(cr, uid, name, context)
-		self.localcontext.update({
-			'time': time,
-			'title': self.getTitle,
-		})
-	
-	def getTitle(self, invoice):
-		title = '';
-		if invoice.retail_tax:
-			title = invoice.retail_tax[0].swapcase() + invoice.retail_tax[1:]
-		return title;
+form = '''<?xml version="1.0"?>
+<form string="Print General Journal">
+    <field name="journal_id"/>
+    <field name="period_id"/>
+</form>'''
 
-report_sxw.report_sxw(
-	'report.tax.retail.account.invoice',
-	'account.invoice',
-	'addons/india/account/report/invoice.rml',
-	parser=account_invoice_tax_retail,
-)
+fields = {
+  'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'required': True},
+  'period_id': {'string': 'Period', 'type': 'many2many', 'relation': 'account.period', 'required': True},
+}
+
+
+class wizard_print_journal(wizard.interface):
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('print', 'Print'))},
+        },
+        'print': {
+            'actions': [],
+            'result': {'type':'print', 'report':'account.general.journal.wiz', 'state':'end'},
+        },
+    }
+wizard_print_journal('account.general.journal.report')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -82,7 +82,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
              'actions': [],
-             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print VAT Declaration')]},
+             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print Taxes Statement')]},
         },
         'pdf': {
             'actions': [],
