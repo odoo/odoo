@@ -837,23 +837,10 @@ class sale_order_line(osv.osv):
 
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
-            taxes = self.pool.get('account.tax').browse(cr, uid,
-                    [x.id for x in product_obj.taxes_id])
-            taxep = None
-            if partner_id:
-                partner = partner_obj.browse(cr, uid, partner_id)
-                taxep = partner.property_account_position and partner.property_account_position.account_tax
-            if not taxep or not taxep.id:
-                result['tax_id'] = [x.id for x in product_obj.taxes_id]
-            else:
-                res5 = [taxep.id]
-                for t in taxes:
-                    if not t.tax_group==taxep.tax_group:
-                        res5.append(t.id)
-                result['tax_id'] = res5
+            partner = partner_obj.browse(cr, uid, partner_id)
+            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, product_obj.taxes_id)
 
         result['name'] = product_obj.partner_ref
-
         domain = {}
         if not uom and not uos:
             result['product_uom'] = product_obj.uom_id.id

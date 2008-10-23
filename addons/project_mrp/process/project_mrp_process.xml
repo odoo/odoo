@@ -9,10 +9,11 @@
         <record id="process_node_tasks0" model="process.node">
             <field name="menu_id" ref="project.menu_action_view_task"/>
             <field name="model_id" ref="project.model_project_task"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Tasks&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case you sell services on sale order (task subflow)&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="sale.process_process_salesworkflow0"/>
+            <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -35,6 +36,7 @@
             <field eval="&quot;&quot;&quot;Procure task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If Procure method is produce&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
+            <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -78,6 +80,32 @@
             <field eval="&quot;&quot;&quot;If procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_procuretask0"/>
             <field model="process.node" name="source_node_id" ref="mrp.process_node_maketoorder0"/>
+            <field eval="[(6,0,[ref('mrp.trans_draft_confirm')])]" name="transition_ids"/>
+        </record>
+        
+        <!--    
+        	Process Action
+    	-->
+        
+        <record id="process_transition_action_orderconfirmtask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
+        </record>
+        
+        <record id="process_transition_action_ordercanceltask0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
+        </record>
+        
+        <record id="process_transition_action_taskrunprocurement0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_ordertask0"/>
         </record>
         
     </data>

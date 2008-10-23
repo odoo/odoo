@@ -68,22 +68,9 @@ def _delivery_set(self, cr, uid, data, context):
         grid_obj=pooler.get_pool(cr.dbname).get('delivery.grid')
         grid = grid_obj.browse(cr, uid, [grid_id])[0]
 
-        taxes = pooler.get_pool(cr.dbname).get('account.tax').browse(cr, uid,
-                    [x.id for x in grid.carrier_id.product_id.taxes_id])
-        taxep = None
-        partner_id=order.partner_id and order.partner_id.id or False
-        if partner_id:
-            partner = order.partner_id
-            taxep = partner.property_account_position and partner.property_account_position.account_tax
-        if not taxep or not taxep.id:
-            taxes_ids = [x.id for x in grid.carrier_id.product_id.taxes_id]
-        else:
-            res5 = [taxep.id]
-            for t in taxes:
-                if not t.tax_group==taxep.tax_group:
-                    res5.append(t.id)
-            taxes_ids = res5
-        
+        taxes = grid.carrier_id.product_id.taxes_id
+        taxes_ids = pooler.get_pool(cr.dbname).get('account.fiscal.position').map_tax(cr, uid, order.partner_id, taxes)
+
         line_obj.create(cr, uid, {
             'order_id': order.id,
             'name': grid.carrier_id.name,

@@ -11,8 +11,16 @@
                     <field name="name" select="1"/>
                     <field name="company_id"/>
                     <newline/>
-                    <field name="account_tax" select="2"/>
-                    <field name="account_supplier_tax" select="2"/>
+                    <field name="tax_ids" colspan="4">
+                        <tree string="Taxes Mapping" editable="bottom">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </tree>
+                        <form string="Taxes Mapping">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </form>
+                    </field>
                     <field name="account_ids" colspan="4">
                         <tree string="Accounts Mapping" editable="bottom">
                             <field name="account_src_id"/>
@@ -34,8 +42,6 @@
                 <tree string="Fiscal Position">
                     <field name="name"/>
                     <field name="company_id"/>
-                    <field name="account_tax"/>
-                    <field name="account_supplier_tax"/>
                 </tree>
             </field>
         </record>

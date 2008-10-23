@@ -32,7 +32,7 @@
         "hr_view.xml",
         "hr_holidays_report.xml",
         "hr_holidays_wizard.xml",
-#        "process/hr_holidays_process.xml"
+        "process/hr_holidays_process.xml"
     ],
 #    "demo_xml" : ["hr_bel_holidays_2008.xml",],
     "demo_xml" : [],

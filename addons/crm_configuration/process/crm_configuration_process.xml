@@ -1,0 +1,113 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		
+		<!--	
+			Process
+		-->
+		
+        <record id="process_process_contractworkflow0" model="process.process">
+			<field eval="&quot;&quot;&quot;Contracts flow for services companies.&quot;&quot;&quot;" name="note"/>
+			<field eval="1" name="active"/>
+			<field eval="&quot;&quot;&quot;Contract Workflow&quot;&quot;&quot;" name="name"/>
+		</record>
+		
+		<!--	
+			Process Node
+		-->
+		
+		<record id="process_node_leads0" model="process.node">
+			<field name="menu_id" ref="crm_configuration.menu_crm_case_categ0_act_leads_all"/>
+			<field name="model_id" ref="crm.model_crm_case"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Leads&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Premier Contact Leads&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="1" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_opportunities0" model="process.node">
+			<field name="menu_id" ref="crm_configuration.menu_crm_case_categ0_act_oppor11"/>
+			<field name="model_id" ref="crm.model_crm_case"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Opportunities&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Business Opportunities&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_accord0" model="process.node">
+			<field name="menu_id" ref="crm_configuration.menu_crm_case_categ0_act_leads_all"/>
+			<field name="model_id" ref="crm.model_crm_case"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Accord&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Accord Client Contract&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field eval="&quot;&quot;&quot;object.state=='done'&quot;&quot;&quot;" name="model_states"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_contractanalytic0" model="process.node">
+			<field name="menu_id" ref="account.account_analytic_def_account"/>
+			<field name="model_id" ref="account.model_account_analytic_account"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Contract Analytic&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Analytic accounts&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	
+		<record id="process_node_contractpricelist0" model="process.node">
+			<field name="menu_id" ref="product.menu_product_pricelist_action2"/>
+			<field name="model_id" ref="product.model_product_pricelist"/>
+			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Contract Pricelist&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Contract Volume (pricelist)&quot;&quot;&quot;" name="note"/>
+			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+		
+		<!--	
+			Process Transition
+		-->
+	
+		<record id="process_transition_leadopportunity0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Lead Opportunity&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Creating business opportunities from leads&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_opportunities0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_leads0"/>
+		</record>
+	
+		<record id="process_transition_opportunitiesaccord0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Opportunities Accord&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;When leads are confirmed&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_accord0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_opportunities0"/>
+		</record>
+		
+		<record id="process_transition_accordanalytic0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Accord Analytic&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Goes into the Analytic&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_contractanalytic0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_accord0"/>
+		</record>
+	
+		<record id="process_transition_accordpricelist0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Accord Pricelist&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Goes into the Pricelist&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_contractpricelist0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_accord0"/>
+		</record>
+
+	</data>
+</openerp>

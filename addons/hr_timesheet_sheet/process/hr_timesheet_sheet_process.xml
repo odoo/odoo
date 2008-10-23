@@ -89,6 +89,7 @@
             <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Defines the task work entry into timesheet line&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="subflow_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -140,6 +141,14 @@
         <!-- 
             Process Transition
         -->
+        
+        <record id="res_roles_hr0" model="res.roles">
+            <field eval="&quot;&quot;&quot;HR&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+        <record id="hr_timesheet_sheet.t1" model="workflow.transition">
+            <field name="role_id" ref="res_roles_hr0"/>
+        </record>
     
         <record id="process_transition_attendance0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
@@ -166,6 +175,7 @@
             <field eval="&quot;&quot;&quot;timesheet is confirmed at the end of the week / month&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_confirmedtimesheet0"/>
             <field model="process.node" name="source_node_id" ref="process_node_drafttimesheetsheet0"/>
+            <field eval="[(6,0,[ref('hr_timesheet_sheet.t1')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_validatetimesheet0" model="process.transition">
@@ -221,6 +231,39 @@
             <field model="process.node" name="target_node_id" ref="process_node_timesheetconfirming0"/>
             <field model="process.node" name="source_node_id" ref="process_node_review0"/>
         </record>
+        
+        <!-- 
+            Process Action
+        -->
+        
+        <record id="process_transition_action_draftconfirmtimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;button_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_confirmtimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_validatetimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'done'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Validate&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_validatetimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_refusetimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;write({'state':'draft'})&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Refuse&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_validatetimesheet0"/>
+        </record>
+        
+        <record id="process_transition_action_reviewtimesheet0" model="process.transition.action">
+            <field eval="&quot;&quot;&quot;button_confirm&quot;&quot;&quot;" name="action"/>
+            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;Review&quot;&quot;&quot;" name="name"/>
+            <field name="transition_id" ref="process_transition_confirmtimesheetsheet0"/>
+        </record>
+        
         
     </data>
 </openerp>

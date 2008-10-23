@@ -67,11 +67,13 @@
         <field name="res_model">document.directory</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-    </record>
+	</record>
+	<menuitem name="Configuration" id="menu_document_configuration" parent="menu_document"/>
     <menuitem
-        name="Document Management/Configuration/Directories"
+        name="Directories"
         action="action_document_directory_form"
-        id="menu_document_directories"/>
+		id="menu_document_directories"
+		parent="menu_document_configuration"/>
 
     <record model="ir.actions.act_window" id="action_document_directory_tree">
         <field name="type">ir.actions.act_window</field>
@@ -80,9 +82,10 @@
         <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
     </record>
     <menuitem
-        name="Document Management/Directorie's Structure"
+        name="Directorie's Structure"
         action="action_document_directory_tree"
-        id="menu_document_directories_tree"/>
+		id="menu_document_directories_tree"
+		parent="menu_document"/>
 
 
     <record model="ir.ui.view" id="view_document_file_form">
@@ -141,9 +144,10 @@
         <field name="view_type">form</field>
     </record>
     <menuitem
-        name="Document Management/Search a File"
+        name="Search a File"
         action="action_document_file_form"
-        id="menu_document_files"/>
+		id="menu_document_files"
+		parent="menu_document"/>
 
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>

@@ -37,16 +37,24 @@ class account_fiscal_position(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Position', size=64, translate=True, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'account_tax': fields.many2one(
-            'account.tax', 'Customer Tax',
-            help="This account will be used as the receivable account for partners in this position",
-        ),
-        'account_supplier_tax': fields.many2one(
-            'account.tax', 'Supplier Tax',
-            help="This account will be used as the payable account for partners in this position",
-        ),
-        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Accounts Mapping')
+        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Accounts Mapping'),
+        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Taxes Mapping')
     }
+    def map_tax(self, cr, uid, partner, taxes, context={}):
+        if (not partner) or (not partner.property_account_position) :
+            return map(lambda x: x.id, taxes)
+        result = []
+        for t in taxes:
+            ok = False
+            for tax in partner.property_account_position.tax_ids:
+                if tax.tax_src_id.id==t.id:
+                    if tax.tax_dest_id:
+                        result.append(tax.tax_dest_id.id)
+                    ok=True
+            if not ok:
+                result.append(t.id)
+        return result
+
     def map_account(self, cr, uid, partner, account_id, context={}):
         if (not partner) or (not partner.property_account_position) :
             return account_id
@@ -56,6 +64,18 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 account_fiscal_position()
+
+
+class account_fiscal_position_tax(osv.osv):
+    _name = 'account.fiscal.position.tax'
+    _description = 'Fiscal Position Taxes Mapping'
+    _rec_name = 'position_id'
+    _columns = {
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
+        'tax_src_id': fields.many2one('account.tax', 'Tax Source', required=True),
+        'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
+    }
+account_fiscal_position_tax()
 
 
 class account_fiscal_position_account(osv.osv):
