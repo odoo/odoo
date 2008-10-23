@@ -56,20 +56,16 @@ import time
 #}
 
 account_form = '''<?xml version="1.0"?>
-<form string="Select parent account">
+<form string="Select Chart">
     <field name="Account_list" colspan="4"/>
 </form>'''
 
 account_fields = {
-    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
+    'Account_list': {'string':'Chart of Accounts', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
 }
-
-
-
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
-    
     <field name="company_id" colspan="4"/>
     <newline/>
     <field name="fiscalyear"/>
@@ -77,10 +73,8 @@ period_form = '''<?xml version="1.0"?>
     <newline/>
     <field name="display_account"/>
     <field name="sortbydate"/>
-    
     <field name="landscape"/>
     <field name="amount_currency"/>
-    
     <newline/>
     <separator string="Filters" colspan="4"/>
     <field name="state" required="True"/>
