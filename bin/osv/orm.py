@@ -1594,6 +1594,14 @@ class orm(orm_template):
                     self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
+                elif field['ttype'] == 'one2many':
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], field['relation_field'], **attrs)
+                elif field['ttype'] == 'many2many':
+                    import random
+                    _rel1 = field['relation'].replace('.', '_')
+                    _rel2 = field['model'].replace('.', '_')
+                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, random.randint(0, 10000))
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 

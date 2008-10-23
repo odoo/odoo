@@ -72,7 +72,7 @@ class ir_model(osv.osv):
     def unlink(self, cr, user, ids, context=None):
         for model in self.browse(cr, user, ids, context):
             if model.state <> 'manual':
-                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(field.name,))
+                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
         res = super(ir_model, self).unlink(cr, user, ids, context)
         pooler.restart_pool(cr.dbname)
         return res
@@ -201,6 +201,7 @@ class ir_model_fields(osv.osv):
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True),
         'relation': fields.char('Object Relation', size=64),
+        'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
         'relate': fields.boolean('Click and Relate'),
@@ -212,7 +213,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created', required=True, readonly=True),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
 

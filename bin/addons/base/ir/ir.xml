@@ -647,11 +647,14 @@
                                     <group colspan="2" col="2">
                                         <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
-                                        <field name="relation" select="2"/>
-                                        <field name="selection"/>
-                                        <field name="size"/>
+                                        <field name="relation" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                                                                  'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
+                                        <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
+                                                                             'readonly': [('ttype','!=','one2many')]}"/>
+                                        <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
+                                        <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
                                         <field name="state"/>
-                                        <field name="domain"/>
+                                        <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                                     </group>
 
                                     <group colspan="2" col="2">
@@ -661,7 +664,7 @@
                                         <field name="select_level"/>
                                         <field name="translate"/>
                                         <field name="relate"/>
-                                        <field name="on_delete"/>
+                                        <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                                     </group>
                                     <separator string="Security on Groups" colspan="4"/>
                                     <field name="groups" colspan="4" nolabel="1"/>
@@ -724,11 +727,14 @@
                         <page string="Properties">
                             <group colspan="2" col="2">
                                 <field name="ttype" select="2"/>
-                                <field name="relation" select="2"/>
-                                <field name="selection"/>
-                                <field name="size"/>
+                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                                                          'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
+                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
+                                                                     'readonly': [('ttype','!=','one2many')]}"/>
+                                <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
+                                <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
                                 <field name="state"/>
-                                <field name="domain"/>
+                                <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             </group>
 
                             <group colspan="2" col="2">
@@ -737,7 +743,7 @@
                                 <field name="select_level"/>
                                 <field name="translate"/>
                                 <field name="relate"/>
-                                <field name="on_delete"/>
+                                <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                             </group>
                         </page>
                         <page string="Security on Groups" colspan="4">
