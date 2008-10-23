@@ -68,11 +68,13 @@ period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
     <field name="company_id" colspan="4"/>
     <newline/>
-    <field name="fiscalyear"/>
+    <field name="fiscalyear" attrs="{'readonly':[('state','=','bydate')]}"/>
     <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
     <newline/>
-    <field name="display_account"/>
-    <field name="sortbydate"/>
+
+    <field name="display_account" required="True"/>
+    <field name="sortbydate" required="True"/>
+  
     <field name="landscape"/>
     <field name="amount_currency"/>
     <newline/>
@@ -141,6 +143,14 @@ def _check_date(self, cr, uid, data, context):
 
     else:
         raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
+    
+def _check_state(self, cr, uid, data, context):
+        if data['form']['state'] == 'bydate':
+           data['form']['fiscalyear'] = False
+        else :
+           self._check_date(cr, uid, data, context)
+           data['form']['fiscalyear'] = True
+        return data['form']
 
 
 class wizard_report(wizard.interface):
@@ -184,7 +194,7 @@ class wizard_report(wizard.interface):
             'result': {'type':'print', 'report':'account.general.ledger_landscape', 'state':'end'}
         },
         'report': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.general.ledger', 'state':'end'}
         }
     }
