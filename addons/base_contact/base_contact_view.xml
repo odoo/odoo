@@ -253,6 +253,7 @@
                 <field name="function_id"/>
                 <field name="email"/>
                 <field name="phone"/>
+                <field name="state" />
             </tree>
         </field>
     </record>
@@ -273,6 +274,9 @@
                         <field name="phone" select="2"/>
                         <field name="sequence_contact" select="2"/>
                         <field name="sequence_partner" select="2"/>
+                        <field name="date_start" />
+                        <field name="date_stop" />
+                        <field name="state" select="2" />
                     </page>
                 </notebook>
             </form>
