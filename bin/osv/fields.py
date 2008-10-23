@@ -81,7 +81,6 @@ class _column(object):
         self.ondelete = ondelete
         self.translate = translate
         self._domain = domain or []
-        self.relate = False
         self._context = context
         self.write = False
         self.read = False
@@ -90,8 +89,6 @@ class _column(object):
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
-        if self.relate:
-            warnings.warn("The relate attribute doesn't work anymore, use act_window tag instead", DeprecationWarning)
 
     def restart(self):
         pass
