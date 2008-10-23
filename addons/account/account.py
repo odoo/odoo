@@ -281,7 +281,16 @@ class account_account(osv.osv):
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
-        'check_history': fields.boolean('Display History', help="Check this box if you want to print all entries when printing the General Ledger, otherwise it will only print its balance.")
+        'currency_mode': fields.selection([('current','At Date'),('average','Average Rate')], 'Outgoing Currencies Rate',
+            help=
+            'This will select how is computed the current currency rate for outgoing transactions. '\
+            'In most countries the legal method is "average" but only a few softwares are able to '\
+            'manage this. So if you import from another software, you may have to use the rate at date. ' \
+            'Incoming transactions, always use the rate at date.', \
+            required=True),
+        'check_history': fields.boolean('Display History',
+            help="Check this box if you want to print all entries when printing the General Ledger, "\
+            "otherwise it will only print its balance.")
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -296,6 +305,7 @@ class account_account(osv.osv):
         'company_id': _default_company,
         'active': lambda *a: True,
         'check_history': lambda *a: True,
+        'currency_mode': lambda *a: 'current'
     }
 
     def _check_recursion(self, cr, uid, ids):

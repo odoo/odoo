@@ -43,9 +43,9 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model':'product.product',
         'type': 'ir.actions.act_window',
         'view_id': view_res,
-        }
-    
-    
+    }
+
+
 class product_margins(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="View Stock of Products">
@@ -58,13 +58,13 @@ class product_margins(wizard.interface):
              'from_date': {
                 'string': 'From',
                 'type': 'date',
-				'default': lambda *a:time.strftime('%Y-01-01'),
+                'default': lambda *a:time.strftime('%Y-01-01'),
 
         },
              'to_date': {
                 'string': 'To',
                 'type': 'date',
-				'default': lambda *a:time.strftime('%Y-12-31'),
+                'default': lambda *a:time.strftime('%Y-12-31'),
 
         },
          'invoice_state': {
