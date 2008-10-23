@@ -7063,6 +7063,18 @@
         <record id="account.property_account_income_categ" model="ir.property">
             <field eval="'account.account,'+str(a_sale)" name="value"/>
         </record>
+
+             <!-- Chart template -->
+         <!--<record id="l10nfr_chart_template" model="account.chart.template">
+            <field name="name">France PCMN</field>
+            <field name="account_root_id" ref="pcg_0"/>
+            <field name="tax_code_root_id" ref="vat_code_chart_root"/> modify it
+          	<field name="bank_account_view_id" ref="a550"/> modify it
+            <field name="property_account_receivable" ref="a_recv"/> modify it
+            <field name="property_account_payable" ref="a_pay"/> modify it
+            <field name="property_account_expense_categ" ref="a_expense"/> modify it
+            <field name="property_account_income_categ" ref="a_sale"/> modify  it
+        </record>-->
         <!-- la taxe nulle n'est pas acceptee -->
     </data>
 </openerp>
