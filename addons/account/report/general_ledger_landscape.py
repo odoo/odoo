@@ -179,7 +179,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 	def get_children_accounts(self, account, form):
 
-		print"account",account
+		
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
 #
@@ -224,7 +224,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					res.append(child_account)
 		##
 		if not len(res):
-			print"==================="
+			
 			return [account]
 		else:
 			## We will now compute solde initiaux
