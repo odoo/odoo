@@ -68,7 +68,7 @@ period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
     <field name="company_id" colspan="4"/>
     <newline/>
-    <field name="fiscalyear" attrs="{'readonly':[('state','=','bydate')]}"/>
+    <field name="fiscalyear"/>
     <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
     <newline/>
 
@@ -131,6 +131,7 @@ def _check(self, cr, uid, data, context):
         return 'report'
 
 def _check_date(self, cr, uid, data, context):
+    
     sql = """
         SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date_from'])
     cr.execute(sql)
@@ -145,25 +146,13 @@ def _check_date(self, cr, uid, data, context):
         raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
     
 def _check_state(self, cr, uid, data, context):
-        
-        my_ids=data['ids']
-        if data['model']!='account.account':
-            my_ids=[data['form']['Account_list']]
-
-        child_ids = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid,[('parent_id', 'child_of',my_ids )])
-        
-        for child in child_ids :
-            child_account = pooler.get_pool(cr.dbname).get('account.account').browse(cr, uid, child)
-            res = pooler.get_pool(cr.dbname).get('account.move.line').search(cr, uid,[('account_id','=',child_account.id)])
-           
-        if not len(res):
-            raise  wizard.except_wizard('UserError',"Make sure the account you select has children accounts.")
 
         if data['form']['state'] == 'bydate':
-           data['form']['fiscalyear'] = False
+           _check_date(self, cr, uid, data, context)
+           data['form']['fiscalyear'] = 0
         else :
-           self._check_date(cr, uid, data, context)
-           data['form']['fiscalyear'] = True
+           
+           data['form']['fiscalyear'] = 1
         return data['form']
 
 

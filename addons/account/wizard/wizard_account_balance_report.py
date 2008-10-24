@@ -35,7 +35,7 @@ period_form = '''<?xml version="1.0"?>
     <field name="company_id"/>
     <field name="display_account" required = "True"/>
     <newline/>
-    <field name="fiscalyear" attrs="{'readonly':[('state','=','bydate')]}"/>
+    <field name="fiscalyear"/>
     <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
     <newline/>
     <separator string="Filters" colspan="4"/>
@@ -99,15 +99,7 @@ class wizard_report(wizard.interface):
         return data['form']
 
     def _check_state(self, cr, uid, data, context):
-        my_ids=data['ids']
-        if data['model']!='account.account':
-            my_ids=[data['form']['Account_list']]
-        child_ids = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid,[('parent_id', 'child_of',my_ids )])
-        for child in child_ids :
-            child_account = pooler.get_pool(cr.dbname).get('account.account').browse(cr, uid, child)
-            res = pooler.get_pool(cr.dbname).get('account.move.line').search(cr, uid,[('account_id','=',child_account.id)])
-        if not len(res):
-            raise  wizard.except_wizard('UserError',"Make sure the account you select has children accounts.")
+
         if data['form']['state'] == 'bydate':
            self._check_date(cr, uid, data, context)
            data['form']['fiscalyear'] = 0
