@@ -167,31 +167,34 @@ class general_ledger(rml_parse.rml_parse):
 	
 		
 		## We will now compute solde initiaux
-		for move in res:
-			
-			SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date <= '" + self.borne_date['max_date'] + "'" +  " AND l.date >= '" + self.borne_date['min_date'] + "'"
-			self.cr.execute(SOLDEINIT)
-			resultat = self.cr.dictfetchall() 
-			
-			if resultat[0] :
+		if not len(res):
+			return[account]
+		else:
+			for move in res:
 				
-				if resultat[0]['sum_debit'] == None:
-					sum_debit = 0
-				else:
-					
-					sum_debit = resultat[0]['sum_debit']
-				if resultat[0]['sum_credit'] == None:
-					sum_credit = 0
-				else:
-					sum_credit = resultat[0]['sum_credit']
-					
-				move.init_credit = sum_credit
-				move.init_debit = sum_debit
+				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date <= '" + self.borne_date['max_date'] + "'" +  " AND l.date >= '" + self.borne_date['min_date'] + "'"
+				self.cr.execute(SOLDEINIT)
+				resultat = self.cr.dictfetchall() 
 				
-			else:
-				move.init_credit = 0
-				move.init_debit = 0
-	
+				if resultat[0] :
+					
+					if resultat[0]['sum_debit'] == None:
+						sum_debit = 0
+					else:
+						
+						sum_debit = resultat[0]['sum_debit']
+					if resultat[0]['sum_credit'] == None:
+						sum_credit = 0
+					else:
+						sum_credit = resultat[0]['sum_credit']
+						
+					move.init_credit = sum_credit
+					move.init_debit = sum_debit
+					
+				else:
+					move.init_credit = 0
+					move.init_debit = 0
+		
 		##
 		
 		return res
