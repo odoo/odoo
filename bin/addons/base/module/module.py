@@ -219,6 +219,65 @@ class module(osv.osv):
                 res[m.id] = ''
         return res
 
+    def _get_menus(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = {}
+        model_data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
+        for m in self.browse(cr, uid, ids):
+            if m.state == 'installed':
+                menu_txt = ''
+                menus_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.menu')])
+                for data_id in model_data_obj.browse(cr,uid,menus_id):
+                    menu_txt += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+                res[m.id] = menu_txt
+            else:
+                res[m.id] = ''
+        return res
+
+    def _get_reports(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = {}
+        model_data_obj = self.pool.get('ir.model.data')
+        report_obj = self.pool.get('ir.actions.report.xml')
+        for m in self.browse(cr, uid, ids):
+            if m.state == 'installed':
+                report_txt = ''
+                report_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.actions.report.xml')])
+                for data_id in model_data_obj.browse(cr,uid,report_id):
+                    report_txt += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                res[m.id] = report_txt
+            else:
+                res[m.id] = ''
+        return res
+
+    def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = {}
+        model_data_obj = self.pool.get('ir.model.data')
+        view_obj = self.pool.get('ir.ui.view')
+        for m in self.browse(cr, uid, ids):
+            if m.state == 'installed':
+                view_txt = ''
+                view_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.view')])
+                for data_id in model_data_obj.browse(cr,uid,view_id):
+                    view_txt += view_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                res[m.id] = view_txt
+            else:
+                res[m.id] = ''
+        return res
+
+    def _get_objects(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = {}
+        model_data_obj=self.pool.get('ir.model.data')
+        for m in self.browse(cr, uid, ids):
+            if m.state=='installed':
+                cr.execute('''select distinct model from ir_model_data where module = '%s' '''%(m.name))
+                objects = cr.fetchall()
+                obj_lst=map(lambda x:x[0],objects)
+                res[m.id] = '\n'.join(obj_lst)
+            else:
+                res[m.id] = ''
+        return res
+
+
     _columns = {
         'name': fields.char("Name", size=128, readonly=True, required=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True),
@@ -245,6 +304,10 @@ class module(osv.osv):
         'license': fields.selection([('GPL-2', 'GPL-2'),('GPL-3', 'GPL-3'),
             ('Other proprietary', 'Other proprietary')], string='License',
             readonly=True),
+        'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
+        'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
+        'objects_by_module': fields.function(_get_objects, method=True, string='Objects', type='text'),
     }
 
     _defaults = {
