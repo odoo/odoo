@@ -32,6 +32,7 @@ from report import report_sxw
 import xml
 import rml_parse
 import pooler
+from osv import osv
 
 class general_ledger(rml_parse.rml_parse):
 	_name = 'report.account.general.ledger'
@@ -135,9 +136,12 @@ class general_ledger(rml_parse.rml_parse):
 		
 		for child_id in self.pool.get('account.account').search(self.cr, self.uid,
 		[('parent_id', 'child_of', [account.id])]):
+			
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
+			
 			sold_account = self._sum_solde_account(child_account,form)
 			self.sold_accounts[child_account.id] = sold_account
+			
 			if form['display_account'] == 'bal_mouvement':
 				if child_account.type != 'view' \
 				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
@@ -163,7 +167,6 @@ class general_ledger(rml_parse.rml_parse):
 	
 		
 		## We will now compute solde initiaux
-		
 		for move in res:
 			
 			SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date <= '" + self.borne_date['max_date'] + "'" +  " AND l.date >= '" + self.borne_date['min_date'] + "'"
@@ -188,7 +191,7 @@ class general_ledger(rml_parse.rml_parse):
 			else:
 				move.init_credit = 0
 				move.init_debit = 0
-
+	
 		##
 		
 		return res

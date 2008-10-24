@@ -56,31 +56,27 @@ import time
 #}
 
 account_form = '''<?xml version="1.0"?>
-<form string="Select parent account">
+<form string="Select Chart">
     <field name="Account_list" colspan="4"/>
 </form>'''
 
 account_fields = {
-    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
+    'Account_list': {'string':'Chart of Accounts', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
 }
-
-
-
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
-    
     <field name="company_id" colspan="4"/>
     <newline/>
-    <field name="fiscalyear"/>
+    <field name="fiscalyear" attrs="{'readonly':[('state','=','bydate')]}"/>
     <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
     <newline/>
-    <field name="display_account"/>
-    <field name="sortbydate"/>
-    
+
+    <field name="display_account" required="True"/>
+    <field name="sortbydate" required="True"/>
+  
     <field name="landscape"/>
     <field name="amount_currency"/>
-    
     <newline/>
     <separator string="Filters" colspan="4"/>
     <field name="state" required="True"/>
@@ -147,6 +143,28 @@ def _check_date(self, cr, uid, data, context):
 
     else:
         raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
+    
+def _check_state(self, cr, uid, data, context):
+        
+        my_ids=data['ids']
+        if data['model']!='account.account':
+            my_ids=[data['form']['Account_list']]
+
+        child_ids = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid,[('parent_id', 'child_of',my_ids )])
+        
+        for child in child_ids :
+            child_account = pooler.get_pool(cr.dbname).get('account.account').browse(cr, uid, child)
+            res = pooler.get_pool(cr.dbname).get('account.move.line').search(cr, uid,[('account_id','=',child_account.id)])
+           
+        if not len(res):
+            raise  wizard.except_wizard('UserError',"Make sure the account you select has children accounts.")
+
+        if data['form']['state'] == 'bydate':
+           data['form']['fiscalyear'] = False
+        else :
+           self._check_date(cr, uid, data, context)
+           data['form']['fiscalyear'] = True
+        return data['form']
 
 
 class wizard_report(wizard.interface):
@@ -186,11 +204,11 @@ class wizard_report(wizard.interface):
             'result': {'type':'choice','next_state':_check}
         },
         'report_landscape': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.general.ledger_landscape', 'state':'end'}
         },
         'report': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.general.ledger', 'state':'end'}
         }
     }

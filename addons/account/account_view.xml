@@ -60,6 +60,9 @@
         <!--
     Period
     -->
+        <record id="res_role_period" model="res.roles">
+            <field eval="&quot;&quot;&quot;Period&quot;&quot;&quot;" name="name"/>
+        </record>
 
         <record id="view_account_period_form" model="ir.ui.view">
             <field name="name">account.period.form</field>
@@ -74,6 +77,7 @@
                     <field name="fiscalyear_id"/>
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object"/>
                 </form>
             </field>
         </record>
@@ -122,8 +126,9 @@
                         <page string="General Information">
                             <newline/>
                             <field name="currency_id" select="2"/>
-                            <field name="active" select="2"/>
+                            <field name="currency_mode" select="2"/>
                             <field name="reconcile"/>
+                            <field name="active" select="2"/>
                             <field name="check_history"/>
                             <newline/>
                             <newline/>
@@ -323,7 +328,7 @@
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency}" name="reconcile_id"/>
+                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id}" name="reconcile_id"/>
                                     <field invisible="1" name="reconcile_amount"/>
                                 </tree>
                                 <form string="Statement lines">
@@ -333,7 +338,7 @@
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="amount"/>
-                                    <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}" name="reconcile_id"/>
+                                    <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'journal_id':parent.journal_id}" name="reconcile_id"/>
                                     <field name="ref"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
@@ -605,6 +610,7 @@
             <field name="res_model">account.tax</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tax_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27"/>
 

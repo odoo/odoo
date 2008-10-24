@@ -32,7 +32,7 @@ import wizard
 import pooler
 
 form = '''<?xml version="1.0"?>
-<form string="Print Journal">
+<form string="Print Central Journal">
     <field name="journal_id"/>
     <field name="period_id"/>
 </form>'''
