@@ -87,26 +87,19 @@ class wizard_info_get(wizard.interface):
         db, pool = pooler.get_db_and_pool(cr.dbname)
         cr = db.cursor()
         mod_obj = pool.get('ir.module.module')
-        ids = mod_obj.search(cr, uid, [
-            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-        unmet_packages=[]
+        ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        unmet_packages = []
         mod_dep_obj = pool.get('ir.module.module.dependency')
-        for mod in mod_obj.browse(cr,uid,ids):
-            depends_mod_ids=mod_dep_obj.search(cr,uid,[('module_id','=',mod.id)])            
-            for dep_mod in mod_dep_obj.browse(cr,uid,depends_mod_ids):                
+        for mod in mod_obj.browse(cr, uid, ids):
+            depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])            
+            for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):                
                 if dep_mod.state in ('unknown','uninstalled'):
                     unmet_packages.append(dep_mod.name)        
         if len(unmet_packages):
-            raise wizard.except_wizard('Unmet dependency !','Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
+            raise wizard.except_wizard('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-        
-        # Update translations for all installed languages
-        cr = db.cursor()
-        modobj = pool.get('ir.module.module')
-        mids = modobj.search(cr, uid, [('state', '=', 'installed')])
-        modobj.update_translations(cr, uid, mids, None)
         return {}
 
     def _config(self, cr, uid, data, context=None):

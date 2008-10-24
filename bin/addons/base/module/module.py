@@ -604,9 +604,9 @@ class module(osv.osv):
 
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
-            lang_obj=pool.get('res.lang')
-            lang_ids=lang_obj.search(cr, uid, [('translatable', '=', True)])
-            filter_lang= [lang.code for lang in lang_obj.browse(cr, uid, lang_ids)]
+            lang_obj = pool.get('res.lang')
+            lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)])
+            filter_lang = [lang.code for lang in lang_obj.browse(cr, uid, lang_ids)]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
 
@@ -617,7 +617,7 @@ class module(osv.osv):
             for lang in filter_lang:
                 f = os.path.join(tools.config['addons_path'], mod.name, 'i18n', lang + '.po')
                 if os.path.exists(f):
-                    logger.notifyChannel("init", netsvc.LOG_INFO, 'addons %s: loading translation file for language %s' % (mod.name, lang))
+                    logger.notifyChannel("init", netsvc.LOG_INFO, 'addon %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
 
 module()
