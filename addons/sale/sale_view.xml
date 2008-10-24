@@ -360,7 +360,8 @@
             <field name="arch" type="xml">
                 <tree string="Sales order lines">
                     <field name="order_id"/>
-                    <field colspan="4" name="name"/>
+                    <field name="order_partner_id"/>
+                    <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
@@ -368,6 +369,7 @@
                     <field name="price_unit"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
