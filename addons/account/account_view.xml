@@ -60,6 +60,9 @@
         <!--
     Period
     -->
+        <record id="res_role_period" model="res.roles">
+            <field eval="&quot;&quot;&quot;Period&quot;&quot;&quot;" name="name"/>
+        </record>
 
         <record id="view_account_period_form" model="ir.ui.view">
             <field name="name">account.period.form</field>
@@ -74,6 +77,7 @@
                     <field name="fiscalyear_id"/>
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object"/>
                 </form>
             </field>
         </record>

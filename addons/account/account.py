@@ -562,6 +562,17 @@ class account_period(osv.osv):
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date !\nPlease create a fiscal year.'))
         return ids
+
+    def action_draft(self, cr, uid, ids, *args):
+        users_roles = self.pool.get('res.users').browse(cr, uid, uid).roles_id
+        for role in users_roles:
+            if role.name=='Period':
+                mode = 'draft'
+                for id in ids:
+                    cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
+                    cr.execute('update account_period set state=%s where id=%d', (mode, id))
+        return True
+
 account_period()
 
 class account_journal_period(osv.osv):
