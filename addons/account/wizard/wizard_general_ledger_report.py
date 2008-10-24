@@ -131,6 +131,7 @@ def _check(self, cr, uid, data, context):
         return 'report'
 
 def _check_date(self, cr, uid, data, context):
+    
     sql = """
         SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date_from'])
     cr.execute(sql)
@@ -147,10 +148,11 @@ def _check_date(self, cr, uid, data, context):
 def _check_state(self, cr, uid, data, context):
 
         if data['form']['state'] == 'bydate':
-           data['form']['fiscalyear'] = False
+           _check_date(self, cr, uid, data, context)
+           data['form']['fiscalyear'] = 0
         else :
-           self._check_date(cr, uid, data, context)
-           data['form']['fiscalyear'] = True
+           
+           data['form']['fiscalyear'] = 1
         return data['form']
 
 
