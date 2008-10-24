@@ -527,5 +527,10 @@
         </record>
         <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config"/>
 
+        <act_window domain="[('partner_id', '=', active_id)]"
+            id="act_res_partner_event" name="Events"
+            res_model="res.partner.event"
+            src_model="res.partner"/>
+
     </data>
 </openerp>

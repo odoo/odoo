@@ -1542,6 +1542,7 @@ class orm(orm_template):
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
+        self._columns = self._columns.copy()
         f = filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
         if f:
             list_store = []
@@ -1587,8 +1588,6 @@ class orm(orm_template):
                     'translate': (field['translate']),
                     #'select': int(field['select_level'])
                 }
-                #if field['relation']:
-                #   attrs['relation'] = field['relation']
                 if field['ttype'] == 'selection':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':

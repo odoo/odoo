@@ -79,7 +79,7 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None, account_invert=False):
         if not from_currency_id:
             from_currency_id = to_currency_id
         xc=self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
@@ -100,8 +100,10 @@ class res_currency(osv.osv):
             cr.execute('select sum(debit-credit),sum(amount_currency) from account_move_line l ' \
               'where l.currency_id=%d and l.account_id=%d and '+q, (account.currency_id.id,account.id,))
             tot1,tot2 = cr.fetchone()
-            if tot2:
+            if tot2 and not account_invert:
                 rate = float(tot1)/float(tot2)
+            elif tot1 and account_invert:
+                rate = float(tot2)/float(tot1)
         if to_currency_id==from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
