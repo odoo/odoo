@@ -1056,7 +1056,7 @@ class account_tax_code(osv.osv):
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
-        'code': fields.char('Case Code', size=16),
+        'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
@@ -1706,7 +1706,7 @@ class account_tax_code_template(osv.osv):
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
-        'code': fields.char('Case Code', size=16),
+        'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
@@ -1950,7 +1950,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             code_acc = account_template.code
             if code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
-
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
@@ -1967,7 +1966,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             }
             new_account = obj_acc.create(cr,uid,vals)
             acc_template_ref[account_template.id] = new_account
-
         #reactivate the parent_store functionnality on account_account
         self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)
