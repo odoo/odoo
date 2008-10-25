@@ -244,6 +244,7 @@ def get_pg_type(f):
     type_dict = {
             fields.boolean: 'bool',
             fields.integer: 'int4',
+            fields.integer_big: 'int8',
             fields.text: 'text',
             fields.date: 'date',
             fields.time: 'time',

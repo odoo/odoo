@@ -124,6 +124,12 @@ class boolean(_column):
     _symbol_set = (_symbol_c, _symbol_f)
 
 
+class integer_big(_column):
+    _type = 'integer_big'
+    _symbol_c = '%d'
+    _symbol_f = lambda x: int(x or 0)
+    _symbol_set = (_symbol_c, _symbol_f)
+
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%d'
@@ -675,7 +681,7 @@ class related(function):
                     where += " %s.%s %s '%%%s%%' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
                 if field_detail[1] in ('date'):
                     where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-                if field_detail[1] in ['integer', 'long', 'float']:
+                if field_detail[1] in ['integer', 'long', 'float','integer_big']:
                     where += " %s.%s %s '%d' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
         query += where.rstrip('and')
         cr.execute(query)
