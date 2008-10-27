@@ -1939,6 +1939,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         self.pool._init = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
+        children_acc_template.sort()
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
             tax_ids = []
             for tax in account_template.tax_ids:

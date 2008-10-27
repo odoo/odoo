@@ -4,8 +4,8 @@
         "author" : "Tiny",
         "website" : "http://openerp.com",
         "category" : "Localisation/Account Charts",
-        "description": """ 
-This module install:
+        "description": """
+This module installs:
 
     *the KLUWER Chart of Accounts,
     *the Tax Code Chart for Luxembourg
@@ -21,4 +21,4 @@ This module install:
             "l10n_lu_report.xml",
         ],
         "installable": True
-} 
+}
