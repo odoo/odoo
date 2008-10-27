@@ -1404,7 +1404,10 @@ class orm(orm_template):
                                     for key,val in res.items():
                                         if f._multi:
                                             val = val[k]
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        if (val<>False) or (type(val)<>bool):
+                                            cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        #else:
+                                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):

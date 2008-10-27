@@ -396,7 +396,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     msg = MIMEMultipart()
 
     if not ssl:
-        ssl = config['smtp_ssl']
+        ssl = config.get('smtp_ssl', False)
 
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
