@@ -30,11 +30,17 @@
                             <newline/>
                             <separator colspan="4" string="Project's members"/>
                             <field colspan="4" name="members" nolabel="1"/>
-                            <group col="6" colspan="8">
+                            <group col="9" colspan="8">
                                 <field name="state"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open"/>
+                                <button name="set_open" string="Reopen Project" type="object" states="pending,cancelled,done"/>
+                                <button name="set_pending" string="Set as Pending" type="object" states="open"/>
+                                <button name="set_cancel" string="Set as Cancel" type="object" states="open,pending"/>
+                                <button name="set_done" string="Set as Done" type="object" states="open,pending"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template"/>
-                                <button name="duplicate_template" string="Duplicate Template" type="object" states="template"/>
+                                <button name="duplicate_template" string="New Project Based on Template"
+                                    type="object"
+                                    states="template"/>
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
@@ -48,6 +54,7 @@
                             <field name="warn_header" nolabel="1" colspan="2"/>
                             <field name="warn_footer" nolabel="1" colspan="2"/>
                             <group col="3" colspan="4">
+                                <separator string="Automatic variables you can use, use exactly the same form" colspan="4"/>
                                 <label string="Task: %%(name)s"/>
                                 <label string="User: %%(user_id)s"/>
                                 <label string="ID: %%(task_id)s"/>
@@ -474,6 +481,15 @@
 
         <act_window
             domain="[('project_id', '=', active_id)]"
+            id="act_project_project_2_project_task_new"
+            name="Create a Task"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="form,tree,calendar,graph"
+            view_type="form"/>
+
+        <act_window
+            domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
             name="All Tasks"
             res_model="project.task"
@@ -489,8 +505,6 @@
             src_model="project.project"
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
-
-        <act_window id="act_project_project_2_project_task_all" name="All tasks" res_model="project.task" src_model="project.project" view_mode="tree,form" view_type="form"/>
 
         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>

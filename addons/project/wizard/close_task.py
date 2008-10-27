@@ -31,6 +31,7 @@
 import wizard
 from tools import email_send as email
 import pooler
+from osv import osv
 
 mail_form = """<?xml version="1.0" ?>
 <form string="Send mail to customer">

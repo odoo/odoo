@@ -465,6 +465,8 @@
                     <field name="name"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -807,11 +809,15 @@
             <field name="arch" type="xml">
                 <form string="Account Entry">
                     <separator colspan="4" string="General Information"/>
+                    <group colspan="4" col="6">
                     <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="to_check" select="2"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="amount" select="2"/>
+                    <field name="ref" select="1" groups="base.group_extended"/>
+                    <field name="to_check" select="2" groups="base.group_extended"/>
+                    </group>
 
                     <separator colspan="4" string="Entry Lines"/>
                     <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
