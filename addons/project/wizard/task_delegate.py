@@ -46,13 +46,13 @@ ask_form = """<?xml version="1.0" ?>
 </form>"""
 
 ask_fields = {
-    'name': {'string': 'Title', 'type': 'char', 'required': 'True', 'size':64},
-    'prefix': {'string': 'Prefix of Task', 'type': 'char', 'required': 'True', 'size':64},
-    'user_id': {'string':'Assign To', 'type':'many2one', 'relation': 'res.users', 'required':'True'},
-    'include_info': {'string':'Copy Description', 'type':'boolean'},
-    'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time'},
-    'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time'},
-    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')]},
+    'name': {'string': 'Delegated Title', 'type': 'char', 'required': 'True', 'size':64, 'help':"New title of the task delegated to the user."},
+    'prefix': {'string': 'Your Task Title', 'type': 'char', 'required': 'True', 'size':64, 'help':"New title of your own task to validate the work done."},
+    'user_id': {'string':'Assign To', 'type':'many2one', 'relation': 'res.users', 'required':'True', 'help':"User you want to delegate this task to."},
+    'include_info': {'string':'Copy Description', 'type':'boolean', 'help':"Reinclude the description of the task in the task of the user."},
+    'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time', 'help':"Estimated time to close this task by the delegated user."},
+    'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time', 'help':"Estimated time for you to validate the work done by the user to whom you delegate this task."},
+    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed.", 'required':True},
 }
 
 class wizard_delegate(wizard.interface):
@@ -60,8 +60,7 @@ class wizard_delegate(wizard.interface):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         task = task_obj.browse(cr, uid, data['id'], context)
         newname = task.name
-        if not task.name.startswith(data['form']['prefix'] or '++'):
-            newname = (data['form']['prefix'] or '')+task.name
+        newname = data['form']['prefix'] or ''
         task_obj.copy(cr, uid, data['id'], {
             'name': data['form']['name'],
             'user_id': data['form']['user_id'],
@@ -70,10 +69,11 @@ class wizard_delegate(wizard.interface):
             'parent_id': data['id'],
             'state': 'open',
             'description': data['form']['include_info'] and task.description or '',
-            'child_ids': []
+            'child_ids': [],
+            'work_ids': []
         })
         task_obj.write(cr, uid, data['id'], {
-            'planned_hours': data['form']['planned_hours_me'],
+            'remaining_hours': data['form']['planned_hours_me'],
             'name': newname
         })
         if data['form']['state']=='pending':
@@ -88,9 +88,9 @@ class wizard_delegate(wizard.interface):
         return {
             'name':task.name,
             'user_id': False,
-            'planned_hours': task.planned_hours,
-            'planned_hours_me': task.planned_hours / 5.0,
-            'prefix': 'CHECK: ',
+            'planned_hours': task.remaining_hours,
+            'planned_hours_me': 1.0,
+            'prefix': 'CHECK: '+ (task.name or ''),
             'state': 'pending'
         }
 

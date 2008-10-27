@@ -1576,7 +1576,6 @@ class account_config_wizard(osv.osv_memory):
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
-        'charts': lambda *a: -1,
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {

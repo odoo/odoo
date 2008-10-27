@@ -34,11 +34,12 @@
                                 <field name="state"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open"/>
                                 <button name="set_open" string="Reopen Project" type="object" states="pending,cancelled,done"/>
-                                <button name="set_pending" string="Set as Pending" type="object" states="open"/>
-                                <button name="set_cancel" string="Set as Cancel" type="object" states="open,pending"/>
-                                <button name="set_done" string="Set as Done" type="object" states="open,pending"/>
+                                <button name="set_pending" string="Pending" type="object" states="open"/>
+                                <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
+                                <button name="set_done" string="Done" type="object" states="open,pending"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template"/>
-                                <button name="duplicate_template" string="New Project Based on Template"
+                                <button name="duplicate_template"
+                                    string="New Project Based on Template"
                                     type="object"
                                     states="template"/>
                             </group>
@@ -247,10 +248,10 @@
                             <newline/>
                             <group col="11" colspan="4">
                                 <field name="state" select="1"/>
-                                <button name="do_draft" states="open" string="Set Draft" type="object"/>
+                                <button name="do_draft" states="open" string="Draft" type="object"/>
                                 <button name="do_open" states="pending,draft" string="Open" type="object"/>
                                 <button name="do_reopen" states="done,cancelled" string="Re-open" type="object"/>
-                                <button name="do_pending" states="open" string="Set Pending" type="object"/>
+                                <button name="do_pending" states="open" string="Pending" type="object"/>
                                 <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
                                 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
