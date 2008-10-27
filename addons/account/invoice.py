@@ -851,13 +851,12 @@ class account_invoice_line(osv.osv):
                 return {'domain':{'product_uom':[]}}
             else:
                 return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
-        lang=False
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        lang=part.lang
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
-        lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         if type in ('out_invoice', 'out_refund'):
             tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.taxes_id)
         else:

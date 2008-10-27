@@ -12,7 +12,7 @@
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
                     <field name="name"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
-                    <field name="product_id" required="1"/>
+                    <field name="product_id" required="1" domain="[('type','=','service')]"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     <field name="amount" sum="Total cost"/>
                     <field name="general_account_id"/>
@@ -30,7 +30,7 @@
                     <field name="date" select="1"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     <newline/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" select="1"/>
@@ -86,7 +86,7 @@
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('date', '=',	time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date', '=',    time.strftime('%Y-%m-%d'))]</field>
         </record>
         <menuitem action="act_hr_timesheet_line_evry1_today_form" id="menu_act_hr_timesheet_line_evry1_today_form" parent="menu_act_hr_timesheet_line_evry1_all_form"/>
        
@@ -96,10 +96,10 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-					<page string="Timesheets">
-						<field name="product_id"/>
-						<field name="journal_id"/>
-					</page>
+                    <page string="Timesheets">
+                        <field name="product_id" domain="[('type','=','service')]"/>
+                        <field name="journal_id"/>
+                    </page>
                 </notebook>
             </field>
         </record>
