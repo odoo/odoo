@@ -2325,7 +2325,10 @@ class orm(orm_template):
                         continue
                     value = res[field]
                     if self._columns[field]._type in ('many2one', 'one2one'):
-                        value = res[field][0]
+                        try:
+                            value = res[field][0]
+                        except:
+                            value = res[field]
                     upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                     upd1.append(self._columns[field]._symbol_set[1](value))
                 upd1.append(res['id'])
