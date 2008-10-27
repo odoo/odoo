@@ -281,7 +281,16 @@ class account_account(osv.osv):
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
-        'check_history': fields.boolean('Display History', help="Check this box if you want to print all entries when printing the General Ledger, otherwise it will only print its balance.")
+        'currency_mode': fields.selection([('current','At Date'),('average','Average Rate')], 'Outgoing Currencies Rate',
+            help=
+            'This will select how is computed the current currency rate for outgoing transactions. '\
+            'In most countries the legal method is "average" but only a few softwares are able to '\
+            'manage this. So if you import from another software, you may have to use the rate at date. ' \
+            'Incoming transactions, always use the rate at date.', \
+            required=True),
+        'check_history': fields.boolean('Display History',
+            help="Check this box if you want to print all entries when printing the General Ledger, "\
+            "otherwise it will only print its balance.")
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -296,6 +305,7 @@ class account_account(osv.osv):
         'company_id': _default_company,
         'active': lambda *a: True,
         'check_history': lambda *a: True,
+        'currency_mode': lambda *a: 'current'
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -552,6 +562,17 @@ class account_period(osv.osv):
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date !\nPlease create a fiscal year.'))
         return ids
+
+    def action_draft(self, cr, uid, ids, *args):
+        users_roles = self.pool.get('res.users').browse(cr, uid, uid).roles_id
+        for role in users_roles:
+            if role.name=='Period':
+                mode = 'draft'
+                for id in ids:
+                    cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
+                    cr.execute('update account_period set state=%s where id=%d', (mode, id))
+        return True
+
 account_period()
 
 class account_journal_period(osv.osv):
@@ -1035,7 +1056,7 @@ class account_tax_code(osv.osv):
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
-        'code': fields.char('Case Code', size=16),
+        'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
@@ -1685,7 +1706,7 @@ class account_tax_code_template(osv.osv):
     _rec_name = 'code'
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True),
-        'code': fields.char('Case Code', size=16),
+        'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
@@ -1929,7 +1950,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             code_acc = account_template.code
             if code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
-
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
@@ -1946,7 +1966,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             }
             new_account = obj_acc.create(cr,uid,vals)
             acc_template_ref[account_template.id] = new_account
-
         #reactivate the parent_store functionnality on account_account
         self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)

@@ -122,9 +122,12 @@ class hr_analytic_timesheet(osv.osv):
             res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)
             return res
         except Exception,e:
-            if 'journal_id' in e.args[0]:
+            if '"journal_id" viol' in e.args[0]:
                 raise except_orm(_('ValidateError'),
                      _('No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal.'))
+            elif '"account_id" viol' in e.args[0]:
+                raise except_orm(_('ValidateError'),
+                     _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
             else:
                 raise
 

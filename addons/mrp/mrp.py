@@ -1013,7 +1013,7 @@ class mrp_procurement(osv.osv):
             }
 
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
+            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes_ids)
             line.update({
                 'taxes_id':[(6,0,taxes_ids)]
             })

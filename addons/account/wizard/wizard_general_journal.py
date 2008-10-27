@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -25,26 +25,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
 #
-# Plan comptable général pour la France, conforme au
-# Règlement n° 99-03 du 29 avril 1999
-# Version applicable au 1er janvier 2005.
-# Règlement disponible sur http://comptabilite.erp-libre.info
-# Mise en forme et paramétrage par http://sisalp.fr et http://nbconseil.net
-#
-{
-    "name" : "France - Plan comptable Societe - 99-03",
-    "version" : "1.1",
-    "author" : "SISalp-NBconseil",
-    "category" : "Localisation/Account Charts",
-    "website": "http://erp-libre.info",
-    "depends" : ["base", "account", "account_chart", 'base_vat'],
-    "init_xml" : [],
-    "update_xml" : ["types.xml", "plan-99-03_societe.xml", "taxes.xml","fr_wizard.xml"],
-    "demo_xml" : [],
-    "installable": True
+##############################################################################
+
+import wizard
+import pooler
+
+form = '''<?xml version="1.0"?>
+<form string="Print General Journal">
+    <field name="journal_id"/>
+    <field name="period_id"/>
+</form>'''
+
+fields = {
+  'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'required': True},
+  'period_id': {'string': 'Period', 'type': 'many2many', 'relation': 'account.period', 'required': True},
 }
+
+
+class wizard_print_journal(wizard.interface):
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('print', 'Print'))},
+        },
+        'print': {
+            'actions': [],
+            'result': {'type':'print', 'report':'account.general.journal.wiz', 'state':'end'},
+        },
+    }
+wizard_print_journal('account.general.journal.report')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

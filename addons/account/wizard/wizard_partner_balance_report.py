@@ -30,7 +30,7 @@ import wizard
 import pooler
 
 period_form = '''<?xml version="1.0"?>
-<form string="Select period" colspan="4">
+<form string="Select Date-Period">
     <field name="company_id"/>
     <field name="result_selection"/>
     <newline/>

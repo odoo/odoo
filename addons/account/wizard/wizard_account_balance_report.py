@@ -30,37 +30,38 @@ import wizard
 import pooler
 import time
 
-report_type =  '''<?xml version="1.0"?>
-<form string="Select Report Type">
-</form>'''
-
-
-dates_form = '''<?xml version="1.0"?>
-<form string="Select period">
-    <field name="date_from" colspan="4"/>
-    <field name="date_to" colspan="4"/>
-    <field name="display_account" colspan="4"/>
-
-</form>'''
-
-dates_fields = {
-    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
-    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'display_account':{'string':"Filter on Accounts",'type':'selection','selection':[('bal_mouvement','With Entries'),('bal_all','All Accounts'),('bal_solde','With Balance Different Than 0')]}
-}
-
-
 period_form = '''<?xml version="1.0"?>
 <form string="Select period">
-    <field name="fiscalyear" colspan="4"/>
-    <field name="periods" colspan="4"/>
-    <field name="display_account" colspan="4"/>
+    <field name="company_id"/>
+    <field name="display_account" required = "True"/>
+    <newline/>
+    <field name="fiscalyear"/>
+    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+    <newline/>
+    <separator string="Filters" colspan="4"/>
+    <field name="state" required="True"/>
+    <newline/>
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
+        <separator string="Date Filter" colspan="4"/>
+        <field name="date_from"/>
+        <field name="date_to"/>
+    </group>
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
+        <separator string="Filter on Periods" colspan="4"/>
+        <field name="periods" colspan="4" nolabel="1"/>
+
+    </group>
 
 </form>'''
 
-
-
 period_fields = {
+    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'state':{
+        'string':"Date/Period Filter",
+        'type':'selection',
+        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
+        'default': lambda *a:'bydate'
+    },
     'fiscalyear': {
         'string':'Fiscal year',
         'type':'many2one',
@@ -68,7 +69,9 @@ period_fields = {
         'help':'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]}
+    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With Movements'),('bal_solde','With Balance != 0'),('bal_all','All')]},
+    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
 account_form = '''<?xml version="1.0"?>
@@ -80,9 +83,14 @@ account_fields = {
     'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
 }
 
-
 class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+           company_id = user.company_id.id
+        else:
+           company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        data['form']['company_id'] = company_id
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
@@ -90,17 +98,20 @@ class wizard_report(wizard.interface):
         data['form']['display_account']='bal_all'
         return data['form']
 
-    def _get_defaults_fordate(self, cr, uid, data, context):
-        data['form']['display_account']='bal_all'
+    def _check_state(self, cr, uid, data, context):
+
+        if data['form']['state'] == 'bydate':
+           self._check_date(cr, uid, data, context)
+           data['form']['fiscalyear'] = 0
+        else :
+           data['form']['fiscalyear'] = 1
         return data['form']
-
-
+    
     def _check_path(self, cr, uid, data, context):
         if data['model'] == 'account.account':
-            return 'checktype'
+           return 'checktype'
         else:
-            return 'account_selection'
-
+           return 'account_selection'
 
     def _check_date(self, cr, uid, data, context):
         sql = """
@@ -112,7 +123,6 @@ class wizard_report(wizard.interface):
                 raise  wizard.except_wizard('UserError','Date to must be set between ' + res[0]['date_start'] + " and " + res[0]['date_stop'])
             else:
                 return 'report'
-
         else:
             raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
 
@@ -127,27 +137,12 @@ class wizard_report(wizard.interface):
             'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel'),('checktype','Print')]}
         },
         'checktype': {
-            'actions': [],
-            'result': {'type':'form', 'arch':report_type,'fields':{}, 'state':[('with_period','Use with Period'),('with_date','Use with Date')]}
-        },
-        'with_period': {
             'actions': [_get_defaults],
             'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
         },
-        'with_date': {
-            'actions': [_get_defaults_fordate],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
-        },
-        'checkdate': {
-            'actions': [],
-            'result': {'type':'choice','next_state':_check_date}
-        },
-
         'report': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.account.balance', 'state':'end'}
         }
     }
 wizard_report('account.account.balance.report')
-
-

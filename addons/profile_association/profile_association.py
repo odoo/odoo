@@ -58,7 +58,7 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
                     ids = mod_obj.search(cr, uid, [('name', '=', r)])
                     mod_obj.action_install(cr, uid, ids, context=context)
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname,force_demo=True, update_module=True)
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

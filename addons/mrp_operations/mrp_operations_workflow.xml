@@ -49,7 +49,7 @@
 			<field name="flow_stop">True</field>
 			<field name="action">action_done()</field>
 		</record>
-		
+
 	# -----------------------------------------------------------
 	# Transition
 	# -----------------------------------------------------------
@@ -84,11 +84,29 @@
 			<field name="act_to" ref="prod_act_wc_pause"/>
 			<field name="signal">button_pause</field>
 		</record>
-		
+
 		<record model="workflow.transition" id="prod_trans_wc_pause_resume">
 			<field name="act_from" ref="prod_act_wc_pause"/>
 			<field name="act_to" ref="prod_act_wc_resume"/>
 			<field name="signal">button_resume</field>
 		</record>
+
+		<record model="workflow.transition" id="prod_trans_wc_resume_pause">
+			<field name="act_from" ref="prod_act_wc_resume"/>
+			<field name="act_to" ref="prod_act_wc_pause"/>
+			<field name="signal">button_pause</field>
+		</record>
+		<record model="workflow.transition" id="prod_trans_wc_resume_cancel">
+			<field name="act_from" ref="prod_act_wc_resume"/>
+			<field name="act_to" ref="prod_act_wc_cancel"/>
+			<field name="signal">button_cancel</field>
+		</record>
+		<record model="workflow.transition" id="prod_trans_wc_resume_done">
+			<field name="act_from" ref="prod_act_wc_resume"/>
+			<field name="act_to" ref="prod_act_wc_done"/>
+			<field name="signal">button_done</field>
+		</record>
+
+
 </data>
 </openerp>

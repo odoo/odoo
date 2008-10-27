@@ -2,76 +2,78 @@
 <openerp>
 <data>
 
-	<wizard id="action_open_margin" menu="False" model="product.product" name="product.margins" string="Product Margins"/>	
-        
+    <wizard id="action_open_margin" menu="False" model="product.product" name="product.margins" string="Product Margins"/>
+
     <menuitem id="menu_product_reporting" name="Reporting" parent ="product.menu_main_product" />
-        
+
     <menuitem icon="STOCK_JUSTIFY_FILL" action="action_open_margin" id="menu_action_product_margin" type="wizard" sequence="5" parent="menu_product_reporting" />
-	
-	<record model="ir.ui.view" id="view_product_margin_graph">
+
+    <record model="ir.ui.view" id="view_product_margin_graph">
             <field name="name">product.margin.graph</field>
             <field name="model">product.product</field>
             <field name="type">graph</field>
+            <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <graph string="Product Margins" type="bar">
                     <field name="name"/>
                     <field name="turnover" operator="+"/>
-					<field name="total_cost" operator="+"/>
+                    <field name="total_cost" operator="+"/>
                 </graph>
             </field>
     </record>
 
-	 <record id="view_product_margin_form" model="ir.ui.view">
+     <record id="view_product_margin_form" model="ir.ui.view">
             <field name="name">product.margin.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>            
-            <field name="priority">5</field>
-            <field name="arch" type="xml"> 
-				 <form string="Product Margins">              
-					<group col="6" colspan="4">
+            <field name="type">form</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                 <form string="Product Margins">
+                    <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="default_code" select="1"/>
-                    </group>		
-					<notebook colspan="4">		
-                	<page string="Margins">
-	                	<separator string="Analysis Criteria" colspan="4"/>
-	                    <field name="date_from"/>
-	                    <field name="date_to"/>
-	                    <newline/>
-	                    <field name="invoice_state" />
-	                    
-	                    <separator string="Sales" colspan="4"/>
-	                    <field name="sale_avg_price"/>
-	                    <field name="list_price" string="Catalog Price" readonly="1"/>
-	                    <field name="sale_num_invoiced" />
-	     				 <field name="sales_gap" /> 
-	                    <field name="turnover" />
-	                    <field name="sale_expected" />
-	                    
-	                    <separator string="Purchases" colspan="4"/>
-	                    <field name="purchase_avg_price"/>
-	                    <field name="standard_price" string="Standard Price" readonly="1"/>
-	                    <field name="purchase_num_invoiced" />
-	                   <field name="purchase_gap" />
-	                   <field name="total_cost" />
-	                   <field name="normal_cost" />
-	                    
-	                    <separator string="Margins" colspan="4"/>
-	                    <field name="total_margin"/>
-	                    <field name="expected_margin"/>
-	                    <field name="total_margin_rate" widget="progressbar"/>
-	                    <field name="expected_margin_rate" widget="progressbar"/>
-	                   
-                	</page>
-					</notebook>
+                    </group>
+                    <notebook colspan="4">
+                    <page string="Margins">
+                        <separator string="Analysis Criteria" colspan="4"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <newline/>
+                        <field name="invoice_state" />
+
+                        <separator string="Sales" colspan="4"/>
+                        <field name="sale_avg_price"/>
+                        <field name="list_price" string="Catalog Price" readonly="1"/>
+                        <field name="sale_num_invoiced" />
+                        <field name="sales_gap" />
+                        <field name="turnover" />
+                        <field name="sale_expected" />
+
+                        <separator string="Purchases" colspan="4"/>
+                        <field name="purchase_avg_price"/>
+                        <field name="standard_price" string="Standard Price" readonly="1"/>
+                        <field name="purchase_num_invoiced" />
+                        <field name="purchase_gap" />
+                        <field name="total_cost" />
+                        <field name="normal_cost" />
+
+                        <separator string="Margins" colspan="4"/>
+                        <field name="total_margin"/>
+                        <field name="expected_margin"/>
+                        <field name="total_margin_rate" widget="progressbar"/>
+                        <field name="expected_margin_rate" widget="progressbar"/>
+
+                    </page>
+                    </notebook>
                 </form>
             </field>
         </record>
-		
-		<record id="view_product_margin_tree" model="ir.ui.view">
+
+        <record id="view_product_margin_tree" model="ir.ui.view">
             <field name="name">product.margin.tree</field>
             <field name="model">product.product</field>
             <field name="type">tree</field>
+            <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <tree string="Product Margins">
                     <field name="name" select="1"/>
@@ -89,6 +91,6 @@
             </tree>
             </field>
         </record>
-	
+
 </data>
 </openerp>

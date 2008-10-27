@@ -53,6 +53,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 	def __init__(self, cr, uid, name, context):
 		super(general_ledger_landscape, self).__init__(cr, uid, name, context)
+		self.date_borne = {}
 		self.query = ""
 		self.child_ids = ""
 		self.tot_currency = 0.0
@@ -106,44 +107,80 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		return result
 
 	def get_min_date(self,form):
+		
 		## Get max born from account_fiscal year
 		#
-		sql = """ select min(fy.date_start) from account_fiscalyear
+		sql = """ select min(fy.date_start) as start_date,max(fy.date_stop) as stop_date from account_fiscalyear
 			  As fy where fy.state <> 'close'
 			"""
 		self.cr.execute(sql)
 		res = self.cr.dictfetchall()
-		borne_min = res[0]['min']
-		#
-		##
-		if form.has_key('fiscalyear'):
+		borne_min = res[0]['start_date']
+		borne_max = res[0]['stop_date']
+		if form['state'] == 'byperiod':
 			## This function will return the most aged date
 			periods = form['periods'][0][2]
 			if not periods:
 				sql = """
-					Select min(p.date_start) from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """
+					Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """ 
 					"""
-			else:
+			else:	
 				periods_id = ','.join(map(str, periods))
 				sql = """
-					Select min(p.date_start) from account_period as p where p.id in ( """ + periods_id   + """)
+					Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
 					"""
 			self.cr.execute(sql)
 			res = self.cr.dictfetchall()
-			borne_max = res[0]['min']
-		else:
-			borne_max = form['date_from']
-		date_borne = {
+			borne_min = res[0]['start_date']
+			borne_max = res[0]['stop_date']
+		elif form['state'] == 'bydate':
+			borne_min = form['date_from']
+			borne_max = form['date_to']
+		elif form['state'] == 'all':
+			periods = form['periods'][0][2]
+			if not periods:
+				sql = """
+					Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """ 
+					"""
+			else:	
+				periods_id = ','.join(map(str, periods))
+				sql = """
+					Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
+					"""
+			self.cr.execute(sql)
+			res = self.cr.dictfetchall()
+			period_min = res[0]['start_date']
+			period_max = res[0]['stop_date']
+			date_min = form['date_from']
+			date_max = form['date_to']
+			if period_min<date_min:
+				borne_min = period_min
+			else :
+				borne_min = date_min
+			if date_max<period_max:
+				borne_max = period_max
+			else :
+				borne_max = date_max
+		elif form['state'] == 'none':
+			
+			sql = """
+					SELECT min(date) as start_date,max(date) as stop_date FROM account_move_line """
+			self.cr.execute(sql)
+			res = self.cr.dictfetchall()
+			borne_min = res[0]['start_date']
+			borne_max = res[0]['stop_date']
+		self.date_borne = {
 			'min_date': borne_min,
 			'max_date': borne_max,
 			}
-		return date_borne
+		return self.date_borne
+
 
 
 
 	def get_children_accounts(self, account, form):
 
-
+		
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
 #
@@ -187,7 +224,10 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					context=ctx)) <> 0 :
 					res.append(child_account)
 		##
-		if form['soldeinit']:
+		if not len(res):
+			
+			return [account]
+		else:
 			## We will now compute solde initiaux
 			for move in res:
 				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
@@ -210,7 +250,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					move.init_credit = 0
 					move.init_debit = 0
 
-		##
+		
 		return res
 
 	def lines(self, account, form):
@@ -226,12 +266,19 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		else:
 			sorttag = 'j.code'
 		sql = """
-			SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name, l.debit, l.credit, l.period_id
-			FROM account_move_line l LEFT JOIN res_currency c on (l.currency_id=c.id) JOIN account_journal j on (l.journal_id=j.id)
-			AND account_id = %d AND %s
-			ORDER by %s"""%(account.id,self.query,sorttag)
+			SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name , l.debit, l.credit, l.period_id  
+					FROM account_move_line as l
+   					LEFT JOIN res_currency c on (l.currency_id=c.id) 
+   	   				JOIN account_journal j on (l.journal_id=j.id)
+   	   	   			AND account_id = %d
+   	   	   			AND %s 
+   	   	   	  		WHERE l.date<='%s' 
+   	   	   	  		AND l.date>='%s' 
+   	   	   	  		ORDER by %s"""%(account.id,self.query,self.date_borne['max_date'],self.date_borne['min_date'],sorttag)		
+		
 		self.cr.execute(sql)
-		res = self.cr.dictfetchall()
+		
+		res = self.cr.dictfetchall() 
 		sum = 0.0
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		for l in res:

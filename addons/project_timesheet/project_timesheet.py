@@ -25,7 +25,6 @@ class project_work(osv.osv):
         vals_line['amount']=(-1) * vals['hours']*obj.browse(cr,uid,timeline_id).product_id.standard_price
         obj.write(cr, uid,[timeline_id],vals_line,{})
         vals['hr_analytic_timesheet_id']=timeline_id
-
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids,vals,context={}):
