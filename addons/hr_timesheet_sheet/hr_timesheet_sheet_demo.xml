@@ -9,10 +9,6 @@
             <field eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_to"/>
         </record>
         
-        <record id="hr_timesheet.analytic_timesheet10" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet0"/>
-        </record>
-        
         <record id="sheet1" model="hr_timesheet_sheet.sheet">
             <field name="name">Sheet 1</field>
             <field name="user_id" ref="base.user_root"/>
@@ -79,33 +75,6 @@
         <record id="hr.attendance20" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record> -->
-        
-        <record id="hr_timesheet.analytic_timesheet1" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet2" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet3" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet4" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet5" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet6" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet7" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet8" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
-        <record id="hr_timesheet.analytic_timesheet9" model="hr.analytic.timesheet">
-            <field name="sheet_id" ref="sheet1"/>
-        </record>
+
     </data>
 </openerp>
