@@ -465,6 +465,8 @@
                     <field name="name"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -714,9 +716,9 @@
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
                         <page string="Move Lines">
-	                        <field colspan="4" name="reconcile_implicit"/>
+                            <field colspan="4" name="reconcile_implicit"/>
                             <field colspan="4" name="parent_move_lines" nolabel="0"/>
-                       	</page>
+                           </page>
                     </notebook>
                 </form>
             </field>
@@ -756,7 +758,7 @@
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
-							<field colspan="4" name="reconcile_implicit"/>
+                            <field colspan="4" name="reconcile_implicit"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -807,11 +809,15 @@
             <field name="arch" type="xml">
                 <form string="Account Entry">
                     <separator colspan="4" string="General Information"/>
+                    <group colspan="4" col="6">
                     <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="to_check" select="2"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="amount" select="2"/>
+                    <field name="ref" select="1" groups="base.group_extended"/>
+                    <field name="to_check" select="2" groups="base.group_extended"/>
+                    </group>
 
                     <separator colspan="4" string="Entry Lines"/>
                     <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
@@ -871,7 +877,7 @@
         <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_accounting"/>
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
-		<record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
+        <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
             <field name="name">Entries Encoding by Move</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
@@ -1347,9 +1353,9 @@
                     <field name="code"/>
                     <field name="date1"/>
                     <field name="date2"/>
-					<field name="period" colspan="4"/>
-					<separator col="4" colspan="4" string="Select Chart of Accounts"/>
-					<field name="charts"/>
+                    <field name="period" colspan="4"/>
+                    <separator col="4" colspan="4" string="Select Chart of Accounts"/>
+                    <field name="charts"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
                     <group col="2" colspan="2">
@@ -1414,17 +1420,17 @@
             </field>
         </record>
 
-		<record id="view_account_template_tree" model="ir.ui.view">
-			<field name="name">account.account.template.tree</field>
-			<field name="model">account.account.template</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Account Template">
-					<field name="code"/>
-					<field name="name"/>
-				</tree>
-			</field>
-		</record>
+        <record id="view_account_template_tree" model="ir.ui.view">
+            <field name="name">account.account.template.tree</field>
+            <field name="model">account.account.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Template">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="action_account_template_form" model="ir.actions.act_window">
             <field name="name">Account Templates</field>
@@ -1524,8 +1530,8 @@
                         <page groups="base.group_extended" string="Special Computation">
                             <separator colspan="4" string="Compute Code (if type=code)"/>
                             <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')]}"/>
-							<separator colspan="4" string="Compute Code for Taxes included prices"/>
-							<field colspan="4" name="python_compute_inv" nolabel="1"/>
+                            <separator colspan="4" string="Compute Code for Taxes included prices"/>
+                            <field colspan="4" name="python_compute_inv" nolabel="1"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')]}"/>
                         </page>
@@ -1553,8 +1559,8 @@
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="next_id_27" sequence="13"/>
 
-		<!-- Account Tax Code Templates -->
-		<record id="view_tax_code_template_tree" model="ir.ui.view">
+        <!-- Account Tax Code Templates -->
+        <record id="view_tax_code_template_tree" model="ir.ui.view">
             <field name="name">account.tax.code.template.tree</field>
             <field name="model">account.tax.code.template</field>
             <field name="type">tree</field>
@@ -1592,50 +1598,51 @@
         <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="next_id_27" sequence="14"/>
 
 
-		<!--  Wizard for Multi Charts of Accounts -->
+        <!--  Wizard for Multi Charts of Accounts -->
 
         <record id="view_wizard_multi_chart" model="ir.ui.view">
-			<field name="name">Generate Chart of Accounts from a Chart Template</field>
-			<field name="model">wizard.multi.charts.accounts</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Generate Chart of Accounts from a Chart Template">
-					<separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
-					<field name="company_id" />
+            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="model">wizard.multi.charts.accounts</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Generate Chart of Accounts from a Chart Template">
+                    <separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
+                    <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
+                    <field name="company_id" />
                     <field name ="code_digits" />
-	                <field name="chart_template_id" colspan="4"/>
-		            <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
-		            	<form string="Bank Information">
-	                    	<field name="acc_no"/>
-		                    <field name="currency_id"/>
-			            </form>
-						<tree editable="bottom" string="Bank Information">
-							<field name="acc_no"/>
-							<field name="currency_id"/>
-						</tree>
-					</field>
+                    <field name="chart_template_id" colspan="4"/>
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                        <form string="Bank Information">
+                            <field name="acc_no"/>
+                            <field name="currency_id"/>
+                        </form>
+                        <tree editable="bottom" string="Bank Information">
+                            <field name="acc_no"/>
+                            <field name="currency_id"/>
+                        </tree>
+                    </field>
                     <separator string="" colspan="4"/>
-					<label string="" colspan="2"/>
-					<group col="2" colspan="2">
-						<button icon="gtk-cancel" special="cancel" type="object" name="action_cancel" string="Cancel"/>
-						<button icon="gtk-ok" name="action_create" string="Create" type="object"/>
-					</group>
-				</form>
-			</field>
-		</record>
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button icon="gtk-cancel" special="cancel" type="object" name="action_cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_wizard_multi_chart" model="ir.actions.act_window">
-			<field name="name">Generate Chart of Accounts from a Chart Template</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">wizard.multi.charts.accounts</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
+        <record id="action_wizard_multi_chart" model="ir.actions.act_window">
+            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.multi.charts.accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-		<menuitem parent="account.account_account_menu" action="action_wizard_multi_chart" id="menu_wizard"/>
+        <menuitem parent="account.account_account_menu" action="action_wizard_multi_chart" id="menu_wizard"/>
 
-		<record id="account_account_graph" model="ir.ui.view">
+        <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
             <field name="model">account.account</field>
             <field name="type">graph</field>

@@ -30,12 +30,18 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Jobs - Recruitment Form">
+				<group colspan="4" col="6">
+					<field name="partner_name"/>
+					<field name="section_id" colspan="1"/>
+					<field name="categ_id" string="Applied Job" select="1" on_change="onchange_categ_id(categ_id)"/>
+					<newline/>
+					<field name="date" string="Next Meeting"/>
+					<field name="duration" string="Meeting Duration" widget="float_time"/>
+					<field name="category2_id" string="Degree" select="1"/>
+				</group>
 				<notebook>
 				<page string="Job Info">
 						<field name="name" string="Jobs Description" colspan="2"/>
-						<field name="section_id" colspan="1"/>
-						<newline/>
-						<field name="partner_name"/>
 						<field name="partner_name2"/>
 						<newline/>
 						<field name="partner_phone"/>
@@ -45,8 +51,6 @@
 						<field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
 						<newline/>
 						<separator colspan="4"/>
-						<field name="categ_id" string="Applied Job" select="1" on_change="onchange_categ_id(categ_id)"/>
-						<field name="category2_id" string="Degree" select="1"/>
 						<field name="priority" string="Quality"/>
 						<field name="probability" string="Availability (weeks)"/>
 						<newline/>
@@ -54,9 +58,6 @@
 						<field name="planned_revenue" string="Proposed Salary"/>
 						<field name="stage_id" colspan="2"/>
 						<field name="user_id" string="Responsible" select="2"/>
-						<field name="date" string="Next Meeting"/>
-						<field name="duration" string="Meeting Duration" widget="float_time"/>
-						
 						<newline/>
 						<separator colspan="4"/>
 						<field name="history_line" colspan="2" nolabel="1" mode="tree,form">

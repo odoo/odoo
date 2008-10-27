@@ -665,6 +665,15 @@ class account_move(osv.osv):
             return periods[0]
         else:
             return False
+
+    def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
+        if not ids: return {}
+        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        result = dict(cr.fetchall())
+        for id in ids:
+            result.setdefault(id, 0.0)
+        return result
+
     _columns = {
         'name': fields.char('Entry Name', size=64, required=True),
         'ref': fields.char('Ref', size=64),
@@ -673,6 +682,8 @@ class account_move(osv.osv):
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
+        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2), store=True),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -1861,8 +1872,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits':fields.integer('# of Digits',required=True,help="No. of Digits to use for account code"),
     }
 
+    def _get_chart(self, cr, uid, context={}):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            return ids[0]
+        return False
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
+        'chart_template_id': _get_chart,
         'code_digits': lambda *a:6,
     }
 

@@ -176,8 +176,13 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active'),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without having two production orders."),
-
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help=
+            "Use a phantom bill of material in raw materials lines that have to be " \
+            "automatically computed in on eproduction order and not one per level." \
+            "If you put \"Phantom/Set\" at the root level of a bill of material " \
+            "it is considered as a set or pack: the products are replaced by the components " \
+            "between the sale order to the picking without going through the production order." \
+            "The normal BoM will generate one production order per BoM level."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
 
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),

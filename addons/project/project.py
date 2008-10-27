@@ -132,7 +132,7 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time'),
-        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
      }
 
     _defaults = {
@@ -152,6 +152,22 @@ class project(osv.osv):
     def set_template(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids, value=False, context=context) 
         return res
+
+    def set_done(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True
+
+    def set_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        return True
+
+    def set_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        return True
+
+    def set_open(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True
 
     def reset_project(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids,value=True, context=context)
@@ -176,7 +192,11 @@ class project(osv.osv):
             project_ids = [x[0] for x in res]
             for child in project_ids:
                 self.duplicate_template(cr, uid, [child],context={'parent_id':new_id}) 
-        return True
+
+        # TODO : Improve this to open the new project (using a wizard)
+
+        cr.commit()
+        raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):   
@@ -269,12 +289,12 @@ class task(osv.osv):
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
 
-        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True),
-        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
-        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True),
-        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True),
+        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
+        'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True, help="Computed as: Time Spent + Remaining Time."),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True, help="Computed as: Time Spent / Total Time."),
+        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True, help="Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."),
 
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
