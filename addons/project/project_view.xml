@@ -34,11 +34,12 @@
                                 <field name="state"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open"/>
                                 <button name="set_open" string="Reopen Project" type="object" states="pending,cancelled,done"/>
-                                <button name="set_pending" string="Set as Pending" type="object" states="open"/>
-                                <button name="set_cancel" string="Set as Cancel" type="object" states="open,pending"/>
-                                <button name="set_done" string="Set as Done" type="object" states="open,pending"/>
+                                <button name="set_pending" string="Pending" type="object" states="open"/>
+                                <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
+                                <button name="set_done" string="Done" type="object" states="open,pending"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template"/>
-                                <button name="duplicate_template" string="New Project Based on Template"
+                                <button name="duplicate_template"
+                                    string="New Project Based on Template"
                                     type="object"
                                     states="template"/>
                             </group>
