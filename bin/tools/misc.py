@@ -62,6 +62,8 @@ def init_db(cr):
     for i in addons.get_modules():
         terp_file = addons.get_module_resource(i, '__terp__.py')
         mod_path = addons.get_module_path(i)
+        if not mod_path:
+            continue
         info = False
         if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
             info = eval(file(terp_file).read())
