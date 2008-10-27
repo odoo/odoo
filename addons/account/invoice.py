@@ -194,7 +194,7 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', store=True, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
