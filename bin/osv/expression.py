@@ -232,9 +232,9 @@ class expression(object):
                 query = '(%s OR %s IS NULL)' % (query, left)
         else:
             params = []
-            if (right == False or right is None) and operator == '=':
+            if (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
                 query = '%s IS NULL' % left
-            elif (right == False or right is None) and operator in ['<>', '!=']:
+            elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
                 query = '%s IS NOT NULL' % left
             else:
                 if left == 'id':
