@@ -14,43 +14,45 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Bug Tracker Form">
+				<group colspan="4" col="4">
+					<field name="name" string="Title" colspan="2"/>
+					<field name="section_id" colspan="1"/>
+					<newline/>
+					<field name="date" string="Next Meeting"/>
+					<field name="duration" string="Meeting Duration"/>	
+				</group>
 				<notebook>
 				<page string="General">
-						<field name="name" string="Title" colspan="2"/>
-						<field name="section_id" colspan="1"/>
-						<newline/>
-						<field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-						<field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-						<newline/>
-						<field name="email_from"  colspan="2"/>
-						<field name="user_id" />
-						<separator colspan="4"/>
-						<field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
-						<field name="priority" string="Severity"/>
-						<newline/>
-						<field name="stage_id" string="Resolution" colspan="2"/>
-						<field name="category2_id" string="Version"/>
+					<field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+					<field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+				    <newline/>
+					<field name="email_from"  colspan="2"/>
+				    <field name="user_id" />
+				    <separator colspan="4"/>
+				    <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
+				    <field name="priority" string="Severity"/>
+				    <newline/>
+				    <field name="stage_id" string="Resolution" colspan="2"/>
+				    <field name="category2_id" string="Version"/>
 
 					<separator colspan="4"/>
 					<field name="history_line" colspan="2" nolabel="1" mode="tree,form">
-						<form string="Resolution history">
-							<group col="6" colspan="4">
-								<field name="date"/>
-								<field name="email" />
-								<field name="canal_id" />
-							</group>
-							<newline/>
-							<field name="description" colspan="4" nolabel="1" />
-						</form>
-						<tree string="Resolution history">
-							<field name="description"/>
-							<field name="email"/>
-							<field name="date"/>
-						</tree>
+				    <form string="Resolution history">
+				    	<group col="6" colspan="4">
+				    		<field name="date"/>
+				    		<field name="email" />
+				    		<field name="canal_id" />
+				    	</group>
+				    	<newline/>
+				    	<field name="description" colspan="4" nolabel="1" />
+				    </form>
+				    <tree string="Resolution history">
+				    	<field name="description"/>
+				    	<field name="email"/>
+				    	<field name="date"/>
+				    </tree>
 					</field>
 					<group col="2" colspan="2" expand="1">
-						<field name="date" string="Next Meeting"/>
-						<field name="duration" string="Meeting Duration"/>
 						<button name="add_reply" string="Add Last Mail for Replying"
 							states="open" type="object" colspan="2"/>
 						<field name="description" colspan="2" nolabel="1"/>

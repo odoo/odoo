@@ -28,28 +28,28 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Funds Form">
-				<notebook>
-				<page string="Funds">
+				<group colspan="4" col="6">
 					<field name="name" select="1" string="Name" colspan="2"/>
 					<field name="section_id" colspan="1"/>
+					<field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
 					<newline/>
 					<field name="date" string="Next Meeting"/>
 					<field name="duration" string="Meeting Duration"/>
+					<field name="category2_id" select="1" string="Payment Mode"/>
+				</group>
+				<notebook>
+				<page string="Funds">
 					<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
 					<field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
 					<newline/>
 					<field name="email_from" colspan="2"/>
 					<field name="user_id" select="2" string="Responsible"/>
-					<separator colspan="4"/>
-					<field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
-					<field name="category2_id" select="1" string="Payment Mode"/>
-					<newline/>
 					<separator colspan="4" string="Estimates"/>
-					<field name="planned_cost" string="Amount"/>
-					<field name="probability"/>
+					<field name="planned_cost"/>
+					<field name="planned_revenue"/>
+					<field name="probability" colspan="4"/>
 					<separator colspan="4" string="Description Information"/>
 						<field name="note" nolabel="1" colspan="4"/>
-
 					<separator colspan="4"/>
 					<group col="8" colspan="4">
 						<field name="state" select="2"/> 
@@ -61,7 +61,6 @@
 						<button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
 					</group>
 				</page>
-
 				<page string="Extra Info">
 					<field name="id"/>
 					<field name="active"/>
