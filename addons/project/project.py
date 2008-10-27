@@ -131,7 +131,7 @@ class project(osv.osv):
         'warn_header': fields.text('Mail header'),
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time'),
+        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
         'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
      }
 
