@@ -70,7 +70,7 @@ period_fields = {
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With Movements'),('bal_solde','With Balance != 0'),('bal_all','All')]},
-    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date_from': {'string':"          Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 

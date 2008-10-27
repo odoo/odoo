@@ -1,9 +1,6 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,37 +22,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-# -*- encoding: utf-8 -*-
-{
-    "name":"Products Repairs Module",
-    "version":"1.0",
-    "author":"Tiny",
-    "description": """
-            The aim is to have a complete module to manage all products repairs. The following topics 
-        should be covered by this module:
-           Add/remove products in the reparation
+#
+##############################################################################
 
-           Impact for stocks
+import time
+from report import report_sxw
+from tools import amount_to_text_en
 
-           Invoicing (products and/or services)
 
-           Warrenty concept
+class report_voucher_amount(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(report_voucher_amount, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+            'time': time,
+            'convert':self.convert
+        })
 
-           Repair quotation report
-
-           Notes for the technician and for the final customer
-
-           (Link to Cases) (option)
-""",    
+    def convert(self,amount, cur):
+        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
+        return amt_en
     
-    "category":"Custom",
-    "depends":["sale","account"],
-    "demo_xml":[],
-    "update_xml":["mrp_repair_view.xml", "mrp_repair_workflow.xml", "mrp_repair_wizard.xml","mrp_repair_report.xml"],
-    "active": False,
-    "installable": True,
-}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+    
+report_sxw.report_sxw(
+    'report.voucher.cash_amount',
+    'account.voucher',
+    'addons/account_voucher/report/report_voucher_amount.rml',
+    parser=report_voucher_amount,header=False
+)
