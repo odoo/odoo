@@ -67,20 +67,10 @@
                                 <field groups="base.group_extended" name="product_manager" select="2"/>
                             </group>
 
-                            <group colspan="2" col="2" name="lot">
-                                <separator string="Lots" colspan="2"/>
-                                <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uom">
+                                <separator string="UOM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                                 <field name="uom_po_id"/>
-                                </group>
-                                <group colspan="1" col="2" name="tracking1">
-                                <field name="track_production"/>
-                                <field name="track_incoming"/>
-                                </group>
-                                <group colspan="1" col="2" name="tracking2">
-                                <field name="track_outgoing"/>
-                                <field name="track_other"/>
-                                </group>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">

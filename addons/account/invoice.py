@@ -850,7 +850,7 @@ class account_invoice_line(osv.osv):
             if type in ('in_invoice', 'in_refund'):
                 return {'domain':{'product_uom':[]}}
             else:
-                return {'value': {'price_unit': 0.0 }, 'domain':{'uos_id': []}}
+                return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         lang=False
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
@@ -884,12 +884,11 @@ class account_invoice_line(osv.osv):
             result['account_id'] = a
 
         domain = {}
-        result['uos_id'] = res.uom_id.id or uom or False
+        result['uos_id'] = uom or res.uom_id.id or False
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2 :
                 domain = {'uos_id':[('category_id','=',res2 )]}
-                result
         return {'value':result, 'domain':domain}
 
     def move_line_get(self, cr, uid, invoice_id, context={}):

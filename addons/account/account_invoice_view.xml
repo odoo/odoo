@@ -53,10 +53,7 @@
                     <notebook>
                         <page string="Line">
                             <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)" select="1"/>
-                            <field name="uos_id"
-                            context="product_id=product_id"
-                            on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)"          
-                            />
+                            <field name="uos_id"/>
                             <field name="quantity" select="1"/>
                             <field name="price_unit" select="1"/>
                             <field name="discount"/>

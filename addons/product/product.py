@@ -271,10 +271,6 @@ class product_template(osv.osv):
             help='Coefficient to convert UOM to UOS\n'
             ' uom = uos * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot number during Production"),
-        'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot number during Purchase"),
-        'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot number during Sale"),
-        'track_other' : fields.boolean('Track Lots', help="Force to use a Production Lot number during stock operations for traceability."),
         'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
