@@ -1872,8 +1872,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits':fields.integer('# of Digits',required=True,help="No. of Digits to use for account code"),
     }
 
+    def _get_chart(self, cr, uid, context={}):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            return ids[0]
+        return False
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
+        'chart_template_id': _get_chart,
         'code_digits': lambda *a:6,
     }
 
