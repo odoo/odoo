@@ -12,11 +12,15 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Leads Form">
-				<notebook>
-				 <page string="Leads">
-				 	<field name="name" select="1" string="Name"/>
+				<group colspan="4" col="4">
+					<field name="name" select="1" string="Name"/>
 				 	<field name="section_id" colspan="1"/>
 				 	<newline/>
+				 	<field name="date" string="Next Meeting"/>
+					<field name="duration" string="Meeting Duration" widget="float_time"/>
+				</group>
+				<notebook>
+				 <page string="Leads">
 				 	<field name="partner_name" string="Designation"/>
 					<field name="partner_name2" string="Email"/>
 					<newline/>
@@ -32,8 +36,6 @@
 					<field name="email_from"/>
 					<field name="priority" string="Priority"/>
 					<field name="category2_id" string="Campaign Type" select="1"/>
-					<field name="date" string="Next Meeting"/>
-					<field name="duration" string="Meeting Duration" widget="float_time"/>
 					<newline/>
 					<separator colspan="4" string="Description Information"/>
 						<field name="note" nolabel="1" colspan="4"/>

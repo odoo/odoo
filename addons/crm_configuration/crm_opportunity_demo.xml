@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+	<data noupdate="1">
 	<!-- 
 		((((((((((( Demo Cases ))))))))))) 
 	-->
@@ -18,6 +18,7 @@
 			<field name="user_id" ref="base.user_root"/>
 			<field eval="&quot;open&quot;" name="state"/>
 			<field eval="75000.0" name="planned_cost"/>
+			<field eval="85000.0" name="planned_revenue"/>
 			<field name="section_id" ref="crm_configuration.section_support3"/>
 			<field eval="time.strftime('%Y-%m-07 10:05:15')" name="date"/>
 			<field name="categ_id" ref="crm_configuration.categ_oppor1"/>
@@ -33,6 +34,7 @@
 			<field name="user_id" ref="base.user_root"/>
 			<field eval="&quot;draft&quot;" name="state"/>
 			<field eval="30000.0" name="planned_cost"/>
+			<field eval="45000.0" name="planned_revenue"/>
 			<field eval="0.5" name="probability"/>
 			<field eval="8.0" name="duration"/>
 			<field name="section_id" ref="crm_configuration.section_support3"/>
@@ -51,6 +53,7 @@
 			<field name="user_id" ref="base.user_root"/>
 			<field eval="&quot;pending&quot;" name="state"/>
 			<field eval="50000.0" name="planned_cost"/>
+			<field eval="55000.0" name="planned_revenue"/>
 			<field eval="0.75" name="probability"/>
 			<field eval="10.0" name="duration"/>
 			<field name="section_id" ref="crm_configuration.section_support3"/>
@@ -70,6 +73,7 @@
 			<field name="user_id" ref="base.user_demo"/>
 			<field eval="&quot;open&quot;" name="state"/>
 			<field eval="50000.0" name="planned_cost"/>
+			<field eval="45000.0" name="planned_revenue"/>
 			<field eval="24.0" name="duration"/>
 			<field name="section_id" ref="crm_configuration.section_support3"/>
 			<field eval="time.strftime('%Y-%m-23 16:32:23')" name="date"/>
@@ -88,6 +92,7 @@
 			<field name="user_id" ref="base.user_root"/>
 			<field eval="&quot;done&quot;" name="state"/>
 			<field eval="25000.0" name="planned_cost"/>
+			<field eval="42000.0" name="planned_revenue"/>
 			<field name="section_id" ref="crm_configuration.section_support3"/>
 			<field eval="time.strftime('%Y-%m-25 16:05:15')" name="date"/>
 			<field name="categ_id" ref="crm_configuration.categ_oppor2"/>

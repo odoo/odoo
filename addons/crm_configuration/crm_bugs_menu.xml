@@ -61,31 +61,9 @@
 		<field name="view_id" ref="crm_case_form_view"/>
 		<field name="act_window_id" ref="crm_case_categ_act0"/>
 	</record>
-	<menuitem name="Bug Tracking" id="menu_crm_case_bug_track"  parent="crm.menu_crm"/>
+	<menuitem name="Bug Tracking" id="menu_crm_case_bug_track"  parent="crm.menu_crm" action="crm_case_categ_act0"/>
 	<menuitem  id="menu_crm_case_categ_act0" action="crm_case_categ_act0" parent="menu_crm_case_bug_track"/>
 
-	<record model="ir.actions.act_window" id="crm_case_categ_act_new">
-		<field name="name">New Bug</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view1_new">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm_case_form_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act_new"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view1_new">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm_case_tree_view"/>
-		<field name="act_window_id" ref="crm_case_categ_act_new"/>
-	</record>	
-	<menuitem  id="menu_crm_case_categ_act_new" action="crm_case_categ_act_new" parent="menu_crm_case_categ_act0"/>
-	
 	<record model="ir.actions.act_window" id="crm_case_category_act_all1">
 		<field name="name">Bugs Waiting Approval</field>
 		<field name="res_model">crm.case</field>
@@ -340,6 +318,28 @@
 		<field name="act_window_id" ref="crm_case_category_act_my0"/>
 	</record>
 	<menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_categ0_act_my0" action="crm_case_category_act_my0"/>
+	
+		<record model="ir.actions.act_window" id="crm_case_categ_act_new">
+		<field name="name">New Bug</field>
+		<field name="res_model">crm.case</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" ref="crm_case_form_view"/>
+		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view1_new">
+		<field name="sequence" eval="1"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="crm_case_form_view"/>
+		<field name="act_window_id" ref="crm_case_categ_act_new"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view1_new">
+		<field name="sequence" eval="2"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="crm_case_tree_view"/>
+		<field name="act_window_id" ref="crm_case_categ_act_new"/>
+	</record>	
+	<menuitem  id="menu_crm_case_categ_act_new" action="crm_case_categ_act_new" parent="menu_crm_case_categ0_act_my0"/>
 	
 	<record model="ir.actions.act_window" id="crm_case_category_act_my1">
 		<field name="name">My Open Bugs</field>
