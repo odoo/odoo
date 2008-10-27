@@ -289,6 +289,23 @@ class crm_case_rule(osv.osv):
         case_obj = self.pool.get('crm.case')
         cases = case_obj.browse(cr, uid, ids2, context)
         return case_obj._action(cr, uid, cases, False, context=context)
+
+
+    def _check_mail(self, cr, uid, ids, context=None):
+        caseobj = self.pool.get('crm.case')
+        emptycase = orm.browse_null()
+        for rule in self.browse(cr, uid, ids):
+            if rule.act_mail_body:
+                try:
+                    caseobj.format_mail(emptycase, rule.act_mail_body)
+                except (ValueError, KeyError, TypeError):
+                    return False
+        return True
+            
+    _constraints = [
+        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
+    ]
+
 crm_case_rule()
 
 def _links_get(self, cr, uid, context={}):
@@ -487,7 +504,7 @@ class crm_case(osv.osv):
             level -= 1
         return True
 
-    def email_send(self, cr, uid, case, emails, body, context={}):
+    def format_mail(self, case, body):
         data = {
             'case_id': case.id,
             'case_subject': case.name,
@@ -501,7 +518,10 @@ class crm_case(osv.osv):
             'partner': (case.partner_id and case.partner_id.name) or '/',
             'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
         }
-        body = body % data
+        return body % data
+
+    def email_send(self, cr, uid, case, emails, body, context={}):
+        body = self.format_mail(case, body)
         if case.user_id and case.user_id.address_id and case.user_id.address_id.email:
             emailfrom = case.user_id.address_id.email
         else:
