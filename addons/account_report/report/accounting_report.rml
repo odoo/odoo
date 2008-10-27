@@ -119,13 +119,13 @@
 <blockTable colWidths="362.0,73.0,93.0" repeatRows="1" style="Table3">
 <tr>
 <td>
-<para style="P11">[[ ' \t '*(obj['level']) + obj['name'] ]] [[ obj['color_font'] and ( setTag('para','para',{'textColor':obj['color_font']})) ]] [[ obj['color_back'] and ( setTag('para','para',{'backColor':obj['color_back']})) ]]</para>
+<para style="P11"><font color="white">[[ '....'*(obj['level']) ]]</font>[[ obj['name'] ]]</para>
 </td>
 <td>
-<para style="P11">[[obj['code'] ]] [[ obj['color_font'] and (setTag('para','para',{'textColor':obj['color_font']})) ]] [[ obj['color_back'] and ( setTag('para','para',{'backColor':obj['color_back']})) ]]</para>
+<para style="P11">[[obj['code'] ]]</para>
 </td>
 <td>
-<para style="P12">[['%.2f' % obj['amount'] ]] [[ obj['color_font'] and ( setTag('para','para',{'textColor':obj['color_font']})) ]][[ obj['color_back'] and ( setTag('para','para',{'backColor':obj['color_back']})) ]]</para>
+<para style="P12">[['%.2f' % obj['amount'] ]] </para>
 </td>
 </tr>
 <tr>
