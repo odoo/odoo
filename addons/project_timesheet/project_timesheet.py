@@ -54,7 +54,7 @@ class project_work(osv.osv):
         # delete entry from timesheet too while deleting entry to task.
         list_avail_ids=self.pool.get('hr.analytic.timesheet').search(cr,uid,[])
         if timesheet_id in list_avail_ids:
-           obj = self.pool.get('hr.analytic.timesheet').unlink(cr,uid,[timesheet_id],*args)
+            obj = self.pool.get('hr.analytic.timesheet').unlink(cr,uid,[timesheet_id],*args)
 
         return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 
@@ -70,7 +70,7 @@ class project_project(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         result = []
         for project in self.browse(cr, user, ids, context):
-            if project.category_id and projet.category_id.code:
+            if project.category_id and project.category_id.code:
                 result.append((project.id, '['+(project.category_id.code or '')+'] '+project.name))
             else:
                 result.append((project.id, '[?] '+project.name))
