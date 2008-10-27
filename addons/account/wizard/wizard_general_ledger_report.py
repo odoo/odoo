@@ -182,7 +182,7 @@ class wizard_report(wizard.interface):
         },
         'account_selection': {
             'actions': [],
-            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel','gtk-cancel'),('checktype','Print','gtk-print')]}
+            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel','gtk-cancel'),('checktype','Next','gtk-go-forward')]}
         },
         'checktype': {
             'actions': [_get_defaults],
