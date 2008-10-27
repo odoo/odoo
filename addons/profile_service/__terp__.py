@@ -33,7 +33,6 @@
     "category":"Profile",
     "depends":[
         "hr",
-        "crm",
         "project",
         "board_project",
         "account_analytic_analysis"
