@@ -286,9 +286,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             
             # Update translations for all installed languages
             modobj = pool.get('ir.module.module')
-            modobj.update_translations(cr, 1, [mid], None)
-            
-            cr.commit()
+            if modobj:
+                modobj.update_translations(cr, 1, [mid], None)
+                cr.commit()
+
         statusi+=1
 
     cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
