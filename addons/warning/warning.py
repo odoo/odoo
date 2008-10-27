@@ -35,13 +35,13 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'sale_warn' : fields.boolean('Sale Order'),
-        'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
+        'sale_warn_msg' : fields.text('Message for Sale Order'),
         'purchase_warn' : fields.boolean('Purchase Order'),
-        'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
+        'purchase_warn_msg' : fields.text('Message for Purchase Order'),
         'picking_warn' : fields.boolean('Stock Picking'),
-        'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
+        'picking_warn_msg' : fields.text('Message for Stock Picking'),
         'invoice_warn' : fields.boolean('Invoice'),
-        'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
+        'invoice_warn_msg' : fields.text('Message for Invoice'),
     }
 res_partner()
 
@@ -56,8 +56,10 @@ class sale_order(osv.osv):
         message=False
         partner = self.pool.get('res.partner').browse(cr, uid, part)
         if partner.sale_warn:
-            title= "Message",
-            message=partner.sale_warn_msg
+           warning={
+                'title': "Message",
+                'message': partner.sale_warn_msg
+                }
              
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)['value']
         if result.get('warning',False):
@@ -132,9 +134,9 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
                  'sale_line_warn' : fields.boolean('Sale Order Line'),
-                 'sale_line_warn_msg' : fields.char('Message for Sale Order Line', size=64),
+                 'sale_line_warn_msg' : fields.text('Message for Sale Order Line'),
                  'purchase_line_warn' : fields.boolean('Purchase Order Line'),
-                 'purchase_line_warn_msg' : fields.char('Message for Purchase Order Line', size=64),
+                 'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
                  }
 product_product()
 

@@ -88,25 +88,12 @@
              <field name="view_mode">form,graph</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
-        
         <menuitem
             action="action_account_analytic_account_tree2"
             id="account_analytic_def_chart"
-<<<<<<< TREE
-            parent="account.account_analytic_def_account"/>
-        
-      <!--
-      	OVERRIDDEN BY NEW WIZARD
-=======
             parent="account_analytic_def_account"/>
->>>>>>> MERGE-SOURCE
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
-        -->
 
-		<wizard id="action_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.line1" string="Analytic Chart of Accounts"/>
-        
-		<menuitem type="wizard" icon="STOCK_INDENT" action="action_analytic_account_chart" id="account_analytic_chart" parent="account.menu_finance_charts" name="Analytic Account lines"/>
-        
 		<record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>
