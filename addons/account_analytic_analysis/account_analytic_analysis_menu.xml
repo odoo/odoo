@@ -45,13 +45,12 @@
         <menuitem action="action_account_analytic_managed_pending" id="menu_analytic_account_to_valid_pending" parent="account_analytic_analysis.menu_analytic_account_managed"/>
 
         <record id="action_account_analytic_managed_overpassed" model="ir.actions.act_window">
-            <field name="name">Overpassed accounts</field>
+            <field name="name">Overpassed Accounts</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('state','=','open')]</field>
         </record>
-
         <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" parent="account_analytic_analysis.next_id_71"/>
 
         <record id="action_account_analytic_all" model="ir.actions.act_window">
