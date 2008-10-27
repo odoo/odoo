@@ -196,8 +196,8 @@
                 <tree string="Working Time">
                     <field name="name"/>
                     <field name="dayofweek"/>
-                    <field name="hour_from"/>
-                    <field name="hour_to"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
                 </tree>
             </field>
         </record>
@@ -210,8 +210,8 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="date_from"/>
                     <field name="dayofweek" select="1"/>
-                    <field name="hour_from"/>
-                    <field name="hour_to"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
                 </form>
             </field>
         </record>
