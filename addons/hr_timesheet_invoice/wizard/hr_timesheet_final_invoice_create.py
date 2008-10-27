@@ -42,10 +42,7 @@ from tools.translate import _
 #
 class final_invoice_create(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
-        if not data['ids']:
-            return {}
-        account = pooler.get_pool(cr.dbname).get('account.analytic.account').browse(cr, uid, data['ids'], context)[0]
-        return {'use_amount_max': bool(account.amount_max)}
+        return {}
 
     def _do_create(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -93,63 +90,26 @@ class final_invoice_create(wizard.interface):
                     "WHERE account_id = %d " \
                         "AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id, to_invoice", (account.id,))
-            for product_id,factor_id,qty in cr.fetchall():
-                product = pool.get('product.product').browse(cr, uid, product_id, context2)
-                factor_name = ''
-                factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
-                if factor.customer_name:
-                    factor_name = product.name+' - '+factor.customer_name
-                else:
-                    factor_name = product.name
-                if account.pricelist_id:
-                    pl = account.pricelist_id.id
-                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id)[pl]
-                else:
-                    price = 0.0
 
-                taxes = product.taxes_id
-                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
-                account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
-
-                curr_line = {
-                    'price_unit': price,
-                    'quantity': qty,
-                    'discount':factor.factor,
-                    'invoice_line_tax_id': [(6,0,tax )],
-                    'invoice_id': last_invoice,
-                    'name': factor_name,
-                    'product_id': product_id,
-                    'uos_id': product.uom_id.id,
-                    'account_id': account_id,
-                    'account_analytic_id': account.id,
-                }
-
-                amount_total += round((price * ( 1.0 - (factor.factor or 0.0)/100.0)), 2) * qty
-
-                #
-                # Compute for lines
-                #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %d AND product_id=%d and to_invoice=%d" % (account.id, product_id, factor_id))
-                line_ids = cr.dictfetchall()
-                note = []
-                for line in line_ids:
-                    # set invoice_line_note
-                    details = []
-                    if data['form']['date']:
-                        details.append(line['date'])
-                    if data['form']['time']:
-                        details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
-                    if data['form']['name']:
-                        details.append(line['name'])
-                    #if data['form']['price']:
-                    #   details.append(abs(line['amount']))
-                    note.append(' - '.join(map(str,details)))
-
-                curr_line['note'] = "\n".join(map(str,note))
-                pool.get('account.invoice.line').create(cr, uid, curr_line)
-                cr.execute("update account_analytic_line set invoice_id=%d WHERE account_id = %d and invoice_id is null" % (last_invoice,account.id,))
-
-            cr.execute("SELECT line.product_id, sum(line.amount), line.account_id, line.product_uom_id, move_line.ref FROM account_analytic_line as line, account_move_line as move_line WHERE line.account_id = %d AND line.move_id IS NOT NULL AND move_line.id = line.move_id GROUP BY line.product_id, line.account_id, line.product_uom_id, move_line.ref" % (account.id))
+            cr.execute("""SELECT
+                    line.product_id,
+                    sum(line.amount),
+                    line.general_account_id,
+                    line.product_uom_id,
+                    move_line.ref 
+                FROM
+                    account_analytic_line as line
+                    LEFT JOIN account_move_line as move_line on (line.move_id=move_line.id)
+                    LEFT JOIN account_analytic_journal as journal on (line.journal_id=journal.id)
+                WHERE
+                    line.account_id = %d AND 
+                    line.move_id IS NOT NULL AND 
+                    journal.type = 'sale'
+                GROUP BY
+                    line.product_id,
+                    line.general_account_id,
+                    line.product_uom_id,
+                    move_line.ref""" % (account.id))
             for product_id, amount, account_id, product_uom_id, ref in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
 
@@ -158,7 +118,7 @@ class final_invoice_create(wizard.interface):
                 else:
                     taxes = []
 
-                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -169,33 +129,33 @@ class final_invoice_create(wizard.interface):
                     'product_id': product_id,
                     'uos_id': product_uom_id,
                     'account_id': account_id,
+                    'account_analytic_id': account.id
                 }
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
 
-            if data['form']['use_amount_max']:
-                if abs(account.amount_max - amount_total) > data['form']['balance_amount'] :
-                    if not data['form']['balance_product']:
-                        raise wizard.except_wizard(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
-                    product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
+            if not data['form']['balance_product']:
+                raise wizard.except_wizard(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
+            product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
 
-                    taxes = product.taxes_id
-                    tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
-                    account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
-
-                    curr_line = {
-                        'price_unit': account.amount_max - amount_total,
-                        'quantity': 1.0,
-                        'discount': 0.0,
-                        'invoice_line_tax_id': [(6,0,tax)],
-                        'invoice_id': last_invoice,
-                        'name': product.name,
-                        'product_id': product_id,
-                        'uos_id': product.uom_id.id,
-                        'account_id': account_id,
-                    }
-                    pool.get('account.invoice.line').create(cr, uid, curr_line)
-                    if account.amount_max < amount_total:
-                        pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
+            taxes = product.taxes_id
+            tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+            account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
+            curr_line = {
+                'price_unit': account.amount_max - amount_total,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'invoice_line_tax_id': [(6,0,tax)],
+                'invoice_id': last_invoice,
+                'name': product.name,
+                'product_id': product_id,
+                'uos_id': product.uom_id.id,
+                'account_id': account_id,
+                'account_analytic_id': account.id
+            }
+            pool.get('account.invoice.line').create(cr, uid, curr_line)
+            if account.amount_max < amount_total:
+                pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
+            cr.execute('update account_analytic_line set invoice_id=%d where invoice_id is null and account_id=%d', (last_invoice, account.id))
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
@@ -217,19 +177,15 @@ class final_invoice_create(wizard.interface):
         <field name="name"/>
         <field name="price"/>
         <separator string="Invoice Balance amount" colspan="4"/>
-        <field name="use_amount_max"/>
-        <field name="balance_amount"/>
-        <field name="balance_product"/>
+        <field name="balance_product" required="1"/>
     </form>"""
 
     _create_fields = {
-        'date': {'string':'Date', 'type':'boolean'},
-        'time': {'string':'Time spent', 'type':'boolean'},
-        'name': {'string':'Name of entry', 'type':'boolean'},
-        'price': {'string':'Cost', 'type':'boolean'},
-        'use_amount_max': {'string':'Use Max. Invoice Price', 'type':'boolean'},
-        'balance_amount': {'string':'Balance amount', 'type': 'float'},
-        'balance_product': {'string':'Balance product', 'type': 'many2one', 'relation':'product.product'},
+        'date': {'string':'Date', 'type':'boolean', 'help':"Display date in the history of works"},
+        'time': {'string':'Time spent', 'type':'boolean', 'help':"Display time in the history of works"},
+        'name': {'string':'Name of entry', 'type':'boolean', 'help':"Display detail of work in the invoice line."},
+        'price': {'string':'Cost', 'type':'boolean', 'help':"Display cost of the item you reinvoice"},
+        'balance_product': {'string':'Balance product', 'type': 'many2one', 'relation':'product.product', 'help':"The product that will be used to invoice the remaining amount."},
     }
 
     states = {

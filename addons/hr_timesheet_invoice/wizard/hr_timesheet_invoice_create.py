@@ -113,7 +113,7 @@ class invoice_create(wizard.interface):
                     price = 0.0
 
                 taxes = product.taxes_id
-                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
                 curr_line = {
@@ -167,24 +167,30 @@ class invoice_create(wizard.interface):
 
     _create_form = """<?xml version="1.0"?>
     <form title="Invoice on analytic entries">
-        <separator string="Do you want details for each line of the invoices ?" colspan="4"/>
-        <field name="date"/>
-        <field name="time"/>
-        <field name="name"/>
-        <field name="price"/>
-        <separator string="Choose accounts you want to invoice" colspan="4"/>
-        <field name="accounts" colspan="4"/>
-        <separator string="Choose a product for intermediary invoice" colspan="4"/>
-        <field name="product"/>
+        <notebook>
+        <page string="Invoicing Data">
+            <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
+            <field name="date"/>
+            <field name="time"/>
+            <field name="name"/>
+            <field name="price"/>
+            <separator string="Force to use a specific product" colspan="4"/>
+            <field name="product"/>
+        </page>
+        <page string="Filter on Accounts" groups="base.group_extended">
+            <separator string="Choose accounts you want to invoice" colspan="4"/>
+            <field name="accounts" colspan="4" nolabel="1"/>
+        </page>
+        </notebook>
     </form>"""
 
     _create_fields = {
         'accounts': {'string':'Analytic Accounts', 'type':'many2many', 'required':'true', 'relation':'account.analytic.account'},
-        'date': {'string':'Date', 'type':'boolean'},
-        'time': {'string':'Time spent', 'type':'boolean'},
-        'name': {'string':'Name of entry', 'type':'boolean'},
-        'price': {'string':'Cost', 'type':'boolean'},
-        'product': {'string':'Product', 'type':'many2one', 'relation': 'product.product'},
+        'date': {'string':'Date', 'type':'boolean', 'help':'The real date of each work will be displayed on the invoice'},
+        'time': {'string':'Time spent', 'type':'boolean', 'help':'The time of each work done will be displayed on the invoice'},
+        'name': {'string':'Name of entry', 'type':'boolean', 'help':'The detail of each work done will be displayed on the invoice'},
+        'price': {'string':'Cost', 'type':'boolean', 'help':'The cost of each work done will be displayed on the invoice. You probably don\'t want to check this.'},
+        'product': {'string':'Product', 'type':'many2one', 'relation': 'product.product', 'help':"Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost."},
     }
 
     states = {
