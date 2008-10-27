@@ -9,7 +9,7 @@ import fnmatch
 
 import pooler
 import netsvc
-import posix
+import os
 from service import security
 
 class abstracted_fs:
@@ -491,7 +491,7 @@ class abstracted_fs:
 		r[7] = self.getmtime(node)
 		r[8] =  self.getmtime(node)
 		r[9] =  self.getmtime(node)
-		return posix.stat_result(r)
+		return os.stat_result(r)
 	lstat = stat
 
 	# --- Wrapper methods around os.path.*
