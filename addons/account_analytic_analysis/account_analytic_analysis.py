@@ -195,26 +195,13 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            # First part with expense and purchase
-            cr.execute("""select account_analytic_line.account_id,sum(amount) \
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
-                        and account_analytic_journal.type = 'purchase' \
-                    GROUP BY account_analytic_line.account_id"""%acc_set)
-            for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
-
-            # Second part with timesheet (with invoice factor)
-            acc_set = ",".join(map(str, ids2))
             cr.execute("""select account_analytic_line.account_id as account_id, \
                         sum((account_analytic_line.unit_amount * pt.list_price) \
                             - (account_analytic_line.unit_amount * pt.list_price \
                                 * hr.factor)) as somme
                     from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    left join account_analytic_journal \
+                        on (account_analytic_line.journal_id = account_analytic_journal.id) \
                     join product_product pp \
                         on (account_analytic_line.product_id = pp.id) \
                     join product_template pt \
@@ -225,6 +212,7 @@ class account_analytic_account(osv.osv):
                         on (hr.id=a.to_invoice) \
                 where account_analytic_line.account_id IN (%s) \
                     and a.to_invoice IS NOT NULL \
+                    and account_analytic_journal.type in ('purchase','general')
                 GROUP BY account_analytic_line.account_id"""%acc_set)
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
