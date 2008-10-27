@@ -88,7 +88,7 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
         self.stopping = True
 
     def SvcDoRun(self):
-    # Start OpenERP Server itself
+        # Start OpenERP Server itself
         self.StartTERP()
         # start the loop waiting for the Service Manager's stop signal
         thread.start_new_thread(self.StartControl, (self.hWaitStop,))

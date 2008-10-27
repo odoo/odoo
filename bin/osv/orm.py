@@ -724,9 +724,11 @@ class orm_template(object):
                     # translate each selection option
                     sel2 = []
                     for (key, val) in sel:
-                        val2 = translation_obj._get_source(cr, user,
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user,
                                 self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)
+                                context.get('lang', False) or 'en_US', val)			
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
@@ -829,14 +831,15 @@ class orm_template(object):
                     continue
 
                 ok = True
-
-                serv = netsvc.LocalService('object_proxy')
-                user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
-                roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+            
+                if user != 1:   # admin user has all roles
+                    serv = netsvc.LocalService('object_proxy')
+                    user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
+                    cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+                    roles = cr.fetchall()
+                    for role in roles:
+                        if role[0]:
+                            ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
 
                 if not ok:
                     button.setAttribute('readonly', '1')
@@ -1404,7 +1407,10 @@ class orm(orm_template):
                                     for key,val in res.items():
                                         if f._multi:
                                             val = val[k]
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        if (val<>False) or (type(val)<>bool):
+                                            cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        #else:
+                                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -2322,7 +2328,10 @@ class orm(orm_template):
                         continue
                     value = res[field]
                     if self._columns[field]._type in ('many2one', 'one2one'):
-                        value = res[field][0]
+                        try:
+                            value = res[field][0]
+                        except:
+                            value = res[field]
                     upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                     upd1.append(self._columns[field]._symbol_set[1](value))
                 upd1.append(res['id'])

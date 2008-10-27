@@ -101,8 +101,8 @@ def check(cr, workitem, ident, transition, signal):
     if transition['signal']:
         ok = (signal==transition['signal'])
 
-    if transition['role_id']:
-        uid = ident[0]
+    uid = ident[0]
+    if transition['role_id'] and uid != 1:
         serv = netsvc.LocalService('object_proxy')
         user_roles = serv.execute_cr(cr, uid, 'res.users', 'read', [uid], ['roles_id'])[0]['roles_id']
         ok = ok and serv.execute_cr(cr, uid, 'res.roles', 'check', user_roles, transition['role_id'])

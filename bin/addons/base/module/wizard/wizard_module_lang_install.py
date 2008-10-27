@@ -47,7 +47,7 @@ view_form = """<?xml version="1.0"?>
     <group colspan="2" col="4">
     <separator string="System Upgrade" colspan="4"/>
         <label align="0.0" string="Choose a language to install:" colspan="4"/>
-        <field name="lang" colspan="4"/>
+        <field name="lang" colspan="4" required="1"/>
         <label align="0.0" string="Note that this operation may take a few minutes." colspan="4"/>
     </group>
 </form>"""

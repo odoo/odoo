@@ -142,6 +142,8 @@ def get_module_path(module):
     if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
         return opj(_ad, module)
 
+    logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:%s:module not found' % (module,))
+    return False
     raise IOError, 'Module not found : %s' % module
 
 def get_module_resource(module, *args):
@@ -152,7 +154,8 @@ def get_module_resource(module, *args):
 
     @return: absolute path to the resource
     """
-    return opj(get_module_path(module), *args)
+    a = get_module_path(module)
+    return a and opj(a, *args) or False
 
 def get_modules():
     """Returns the list of module names
@@ -178,6 +181,7 @@ def create_graph(module_list, force=None):
         except IOError:
             continue
         terp_file = get_module_resource(module, '__terp__.py')
+        if not terp_file: continue
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
             try:
                 info = eval(tools.file_open(terp_file).read())
@@ -282,9 +286,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             
             # Update translations for all installed languages
             modobj = pool.get('ir.module.module')
-            modobj.update_translations(cr, 1, [mid], None)
-            
-            cr.commit()
+            if modobj:
+                modobj.update_translations(cr, 1, [mid], None)
+                cr.commit()
+
         statusi+=1
 
     cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")

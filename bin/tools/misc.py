@@ -62,6 +62,8 @@ def init_db(cr):
     for i in addons.get_modules():
         terp_file = addons.get_module_resource(i, '__terp__.py')
         mod_path = addons.get_module_path(i)
+        if not mod_path:
+            continue
         info = False
         if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
             info = eval(file(terp_file).read())
@@ -396,7 +398,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     msg = MIMEMultipart()
 
     if not ssl:
-        ssl = config['smtp_ssl']
+        ssl = config.get('smtp_ssl', False)
 
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
