@@ -831,14 +831,15 @@ class orm_template(object):
                     continue
 
                 ok = True
-
-                serv = netsvc.LocalService('object_proxy')
-                user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
-                roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+            
+                if user != 1:   # admin user has all roles
+                    serv = netsvc.LocalService('object_proxy')
+                    user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
+                    cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+                    roles = cr.fetchall()
+                    for role in roles:
+                        if role[0]:
+                            ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
 
                 if not ok:
                     button.setAttribute('readonly', '1')
