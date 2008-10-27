@@ -17,6 +17,7 @@
     "demo_xml" : [],
     "update_xml" : [
             "analytic_journal_billing_rate_view.xml",
+            "security/ir.model.access.csv",
             ],
     "active": False,
     "installable": True

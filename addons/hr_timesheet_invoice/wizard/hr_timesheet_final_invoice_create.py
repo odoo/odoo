@@ -108,15 +108,7 @@ class final_invoice_create(wizard.interface):
                     price = 0.0
 
                 taxes = product.taxes_id
-                taxep = account.partner_id.property_account_tax
-                if not taxep.id:
-                    tax = [x.id for x in taxes or []]
-                else:
-                    tax = [taxep.id]
-                    for t in taxes:
-                        if not t.tax_group==taxep.tax_group:
-                            tax.append(t.id)
-
+                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
                 curr_line = {
@@ -165,15 +157,8 @@ class final_invoice_create(wizard.interface):
                     taxes = product.taxes_id
                 else:
                     taxes = []
-                taxep = account.partner_id.property_account_tax
-                if not taxep.id:
-                    tax = [x.id for x in taxes or []]
-                else:
-                    tax = [taxep.id]
-                    for t in taxes:
-                        if not t.tax_group==taxep.tax_group:
-                            tax.append(t.id)
 
+                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -194,15 +179,7 @@ class final_invoice_create(wizard.interface):
                     product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
 
                     taxes = product.taxes_id
-                    taxep = account.partner_id.property_account_tax
-                    if not taxep.id:
-                        tax = [x.id for x in taxes or []]
-                    else:
-                        tax = [taxep.id]
-                        for t in taxes:
-                            if not t.tax_group==taxep.tax_group:
-                                tax.append(t.id)
-    
+                    tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                     account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
                     curr_line = {

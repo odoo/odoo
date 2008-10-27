@@ -32,19 +32,22 @@
 import pooler
 import time
 from report import report_sxw
-from crm.report import report_businessopp
-from report.interface import report_int
-from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.charts.barcharts import VerticalBarChart
-import reportlab.lib.colors as colors
+
+#from report.interface import report_int
+#from reportlab.graphics.shapes import Drawing
+#from reportlab.graphics.charts.barcharts import VerticalBarChart
+#import reportlab.lib.colors as colors
 #from reportlab.graphics.widgetbase import Widget, TypedPropertyCollection
 #from reportlab.graphics.charts.textlabels import BarChartLabel
 #from reportlab.graphics import renderPM
-from report.render import render
-from report.interface import report_int
+#from report.render import render
+#from report.interface import report_int
 from pychart import *
 import StringIO
 theme.use_color = 1
+theme.default_font_family = "Helvetica-Bold"
+theme.default_font_size = 18
+theme.default_line_width = 1.0
 import tools
 
 
@@ -78,7 +81,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
         if not name=='array':
             return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
 
-        value=['X-Axis']
+        value=['Data']
         value.extend(self.header_name)
         type=['string'].extend(['float']*len(self.header_name))
         width=[40]*(len(self.header_name)+1)
@@ -123,18 +126,19 @@ class accounting_report_indicator(report_sxw.rml_parse):
     def lines(self,data):
         res={}
         result=[]
-        obj_inds=self.pool.get('account.report.report').browse(self.cr,self.uid,data['indicator_id'])
+        ind_ids=self.pool.get('account.report.report').search(self.cr,self.uid,[])
+        obj_inds=self.pool.get('account.report.report').browse(self.cr,self.uid,ind_ids)
 
-        def find_child(obj):
-            self.list.append(obj)
-            if obj.child_ids:
-                for child in obj.child_ids:
-                    find_child(child)
-            return True
+#        def find_child(obj):
+#            self.list.append(obj)
+#            if obj.child_ids:
+#                for child in obj.child_ids:
+#                    find_child(child)
+#            return True
+#
+#        find_child(obj_inds)
 
-        find_child(obj_inds)
-
-        for obj_ind in self.list:
+        for obj_ind in obj_inds:
             res = {
                 'id':obj_ind.id,
                 'name':obj_ind.name,
@@ -143,10 +147,8 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'disp_graph':obj_ind.disp_graph,
                 'note':obj_ind.note,
                 'type':obj_ind.type,
-                'last':False,
                 }
             result.append(res)
-        result[-1]['last']=True
         return result
 
     def getarray(self,data,object):
@@ -156,28 +158,40 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.header_val=[str(x) for x in self.header_val]
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
-        res['X-Axis']='Value'
+        res['Data']='Value'
         result.append(res)
         return result
 
 
     def test1(self,data,object,intercall=False):
-        path=tools.config['root_path']+"/Temp_images/Image"
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
             tuple_search=('fiscalyear_id','in',data['base_selection'][0][2])
+            base='year'
         else:
             tuple_search=('period_id','in',data['base_selection'][0][2])
+            base='period'
 
         history_ids=obj_history.search(self.cr,self.uid,[('name','=',object['id']),tuple_search])
+        history_ids.sort()
         obj_his=obj_history.browse(self.cr,self.uid,history_ids)
 
         data_val=[]
         data_period=[]
-        for item in obj_his:
-            data_val.append(item.val)
-            data_period.append(item.period_id.name)
+        if base=='period':
+            for item in obj_his:
+                data_val.append(item.val)
+                data_period.append(item.period_id.name)
+        else:
+            for i in data['base_selection'][0][2]:
+                val_temp=[]
+                data_period.append(self.pool.get('account.fiscalyear').browse(self.cr,self.uid,i).name)
+                for item in obj_his:
+                    if item.fiscalyear_id.id==i:
+                        val_temp.append(item.val)
+                data_val.append(sum(val_temp))
+
         self.header_name=data_period
         self.header_val=data_val
 
@@ -218,25 +232,28 @@ class accounting_report_indicator(report_sxw.rml_parse):
 #        drawing.save(formats=['png'],fnRoot=path+str(self.count),title="helo")
 #        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
         import os
-        dirname ='Temp_images'
-        if not os.path.isdir('./' + dirname + '/'):
-            os.mkdir('./' + dirname + '/')
-        pdf_string = StringIO.StringIO()
-        can = canvas.init('Image'+str(self.count)+".png")
-        chart_object.set_defaults(line_plot.T, line_style=None)
+        path=tools.config['addons_path']+"/account_report/tmp_images/image"
+
+        dirname =tools.config['addons_path']+'/account_report/tmp_images/'
+        if not os.path.isdir(dirname):
+            os.mkdir(dirname)
+
+        can = canvas.init('image'+str(self.count)+".png")
+#        can.clip(0,0,600,400)
+
         data=zip(self.header_name,self.header_val)
 
-        ar = area.T(size = (400,200),x_coord = category_coord.T(data, 0), y_range = (0, None),
-            x_axis = axis.X(label="Period//Year",format="/a-30{}%s"),
+        ar = area.T(size = (650,450),x_coord = category_coord.T(data, 0), y_range = (None, None),
+            x_axis = axis.X(label="Period // Year",format="/a-30{}%s"),
             y_axis = axis.Y(label="Value"))
 
-
-        ar.add_plot(bar_plot.T(data = data, label = "Value",fill_style=fill_style.red))
+        ar.add_plot(bar_plot.T(data = data,width=15, data_label_format="/o/15{}%s",label = "Value",fill_style=fill_style.red))
         ar.draw()
 
         can.close()
-        os.system('cp '+'Image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
-        os.system('rm '+'Image'+str(self.count)+'.png')
+        os.system('cp '+'image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
+        os.system('rm '+'image'+str(self.count)+'.png')
+#        can.endclip()
         return path+str(self.count)+'.png'
 
 report_sxw.report_sxw('report.print.indicators', 'account.report.history',

@@ -51,7 +51,10 @@ class base_module_record(osv.osv):
     def _create_id(self, cr, uid, model, data):
         i = 0
         while True:
-            name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
+            try:
+                name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
+            except:
+                name=''
             val = model.replace('.','_')+'_'+name+ str(i)
             i+=1
             if val not in self.ids.values():
@@ -79,11 +82,7 @@ class base_module_record(osv.osv):
             self.depends[res[0]['module']]=True
         record_list = [record]
         fields = self.pool.get(model).fields_get(cr, uid)
-#        print "before>>>>",fields
-#        fields = self.pool.get(model).fields_view_get(cr, uid, context={})['fields']
-#        print "after>>>>",fields
         for key,val in data.items():
-            print key,val
             if not (val or (fields[key]['type']=='boolean')):
                 continue
             if fields[key]['type'] in ('integer','float'):
@@ -107,7 +106,8 @@ class base_module_record(osv.osv):
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
                     name = self.pool.get(fields[key]['relation']).browse(cr, uid, val).name
-                    print name
+                    if isinstance(name, basestring):
+                        name = name.decode('utf8')
                     field.setAttribute("search", "[('name','=','"+name+"')]")
                 else:
                     field.setAttribute("ref", id)
@@ -115,7 +115,10 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
                     if valitem[0]==0:
-                        fname = self.pool.get(model)._columns[key]._fields_id
+                        if key in self.pool.get(model)._columns:
+                            fname = self.pool.get(model)._columns[key]._fields_id
+                        else:
+                            fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
                         newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
@@ -153,7 +156,6 @@ class base_module_record(osv.osv):
         return record_list, noupdate
 
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
-        print "_generate_object_xml>>>",rec,recv,doc
         record_list = []
         noupdate = False
         if rec[4]=='write':

@@ -37,9 +37,21 @@
     "name" : "France - Plan comptable Societe - 99-03",
     "version" : "1.1",
     "author" : "SISalp-NBconseil",
-    "category" : "Localisation/Account charts",
+    "category" : "Localisation/Account Charts",
     "website": "http://erp-libre.info",
     "depends" : ["base", "account", "account_chart", 'base_vat'],
+     "description": """
+    This is the base module to manage the accounting chart for France in Tiny ERP.
+
+    After Installing this module,The Configuration wizard for accounting is launched.
+    * We have the account templates which can be helpful to generate Charts of Accounts.
+    * On that particular wizard,You will be asked to pass the name of the company,the chart template to follow,the no. of digits to generate the code for your account and Bank account,currency  to create Journals.
+        Thus,the pure copy of Chart Template is generated.
+    * This is the same wizard that runs from Financial Managament/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+
+    * This module installs :
+        The Tax Code chart and taxes for French Accounting.
+    """,
     "init_xml" : [],
     "update_xml" : ["types.xml", "plan-99-03_societe.xml", "taxes.xml","fr_wizard.xml"],
     "demo_xml" : [],

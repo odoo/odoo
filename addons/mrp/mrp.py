@@ -890,7 +890,7 @@ class mrp_procurement(osv.osv):
                 return True
         return False
 
-    def action_confirm(self, cr, uid, ids):
+    def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
@@ -1000,27 +1000,11 @@ class mrp_procurement(osv.osv):
                 'notes':product.description_purchase,
             }
 
-            taxes = self.pool.get('account.tax').browse(cr, uid,
-                    [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])
-            taxep = None
-            if partner_id:
-                taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
-                if taxep_id:
-					taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
-            if not taxep or not taxep.id:
-                taxes_ids = [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id]
-            else:
-                res5 = [taxep.id]
-                for t in taxes:
-                    if not t.tax_group==taxep.tax_group:
-                        res5.append(t.id)
-                taxes_ids = res5
-
+            taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
+            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes_ids)
             line.update({
                 'taxes_id':[(6,0,taxes_ids)]
             })
-
-
             purchase_id = self.pool.get('purchase.order').create(cr, uid, {
                 'origin': procurement.origin,
                 'partner_id': partner_id,

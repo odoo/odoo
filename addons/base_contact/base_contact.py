@@ -133,10 +133,14 @@ class res_partner_job(osv.osv):
         'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this function in the list of functions of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
+        'date_start' : fields.date('Date Start'),
+        'date_stop' : fields.date('Date Stop'),
+        'state' : fields.selection([('past', 'Past'),('current', 'Current')], 'State', required=True),
     }
 
     _defaults = {
         'sequence_contact' : lambda *a: 0,
+        'state' : lambda *a: 'current', 
     }
 res_partner_job()
 

@@ -77,6 +77,47 @@ class account_balance(report_sxw.rml_parse):
                         result+=r[0]+", "
             return str(result and result[:-1]) or ''
 
+        def transform_both_into_date_array(self,data):
+            if not data['periods'][0][2] :
+                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+            else:
+                periods_id = data['periods'][0][2]
+            date_array = []
+            for period_id in periods_id:
+                period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
+                date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+
+            period_start_date = date_array[0]
+            date_start_date = data['date_from']
+            period_stop_date = date_array[-1]
+            date_stop_date = data['date_to']
+
+            if period_start_date<date_start_date:
+                start_date = period_start_date
+            else :
+                start_date = date_start_date
+
+            if date_stop_date<period_stop_date:
+                stop_date = period_stop_date
+            else :
+                stop_date = date_stop_date
+            final_date_array = []
+            final_date_array = final_date_array + self.date_range(start_date, stop_date)
+            self.date_lst = final_date_array
+            self.date_lst.sort()
+
+        def transform_none_into_date_array(self,data):
+            sql = "SELECT min(date) as start_date from account_move_line"
+            self.cr.execute(sql)
+            start_date = self.cr.fetchone()[0]
+            sql = "SELECT max(date) as start_date from account_move_line"
+            self.cr.execute(sql)
+            stop_date = self.cr.fetchone()[0]
+            array= []
+            array = array + self.date_range(start_date, stop_date)
+            self.date_lst = array
+            self.date_lst.sort()
+
         def lines(self, form, ids={}, done=None, level=1):
             if not ids:
                 ids = self.ids
@@ -90,14 +131,18 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
-            if form.has_key('fiscalyear'):
+            if form['state']=='byperiod' :
                 self.transform_period_into_date_array(form)
                 ctx['fiscalyear'] = form['fiscalyear']
                 ctx['periods'] = form['periods'][0][2]
-            else:
+            elif form['state']== 'bydate':
                 self.transform_date_into_date_array(form)
-                ctx['date_from'] = form['date_from']
-                ctx['date_to'] = form['date_to']
+            elif form['state'] == 'all' :
+                self.transform_both_into_date_array(form)
+            elif form['state'] == 'none' :
+                self.transform_none_into_date_array(form)
+#                ctx['date_from'] = form['date_from']
+#                ctx['date_to'] = form['date_to']
 
             accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
             def cmp_code(x, y):
@@ -169,9 +214,12 @@ class account_balance(report_sxw.rml_parse):
                     "LEFT JOIN account_journal j " \
                         "ON (l.journal_id = j.id) " \
                     "WHERE l.account_id = '"+str(ids)+"' " \
-                    "AND l.date IN (" + self.date_lst_string + ") " \
+                    "AND l.date >= '"+self.date_lst[0]+"'   " \
+                     "AND l.date <= '"+self.date_lst[-1]+"'  " \
                         "ORDER BY l.id")
+
             res = self.cr.dictfetchall()
+
             sum = 0.0
             for r in res:
                 sum = r['debit1'] - r['credit1']
@@ -227,5 +275,5 @@ class account_balance(report_sxw.rml_parse):
 
         def _sum_debit(self):
             return self.sum_debit
-report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
 
+report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)

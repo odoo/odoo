@@ -91,16 +91,19 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+
     <paraStyle name="P1" fontName="Helvetica" fontSize="16.0" leading="20"/>
-	<paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="11"/>
+	<paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="11"/>
     <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11"/>
     <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
     <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="LEFT"/>
     <paraStyle name="P7" fontName="Helvetica-Oblique" fontSize="9.0" leading="11"/>
     <paraStyle name="P8" fontName="Helvetica" fontSize="9.0" leading="11"/>
+
     <paraStyle name="P9" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="LEFT"/>
+
     <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="CENTER"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
@@ -118,6 +121,7 @@
     <paraStyle name="P23" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P24" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
     <paraStyle name="P25" fontName="Helvetica-Bold" fontSize="16.0" leading="20"/>
+
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -142,8 +146,10 @@
       <font color="white"> </font>
     </para>
     <blockTable colWidths="74.0,88.0,78.0,89.0,199.0" repeatRows="1" style="Table1">
+
       <tr>
         <td>
+
           <para style="terp_tblheader_General_Centre">Printing date</para>
         </td>
         <td>
@@ -157,6 +163,7 @@
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Product Name</para>
+
         </td>
       </tr>
     </blockTable>
@@ -164,6 +171,7 @@
       <blockTable colWidths="74.0,88.0,78.0,89.0,199.0" style="Table2">
         <tr>
           <td>
+
             <para style="terp_default_Centre_8">[[ time.strftime('%d/%m/%Y') ]]</para>
           </td>
           <td>
@@ -177,10 +185,12 @@
           </td>
           <td>
             <para style="terp_default_Centre_8">[[ '['+ o.product_id.code +']' ]] [[ o.product_id.name ]]</para>
+
           </td>
         </tr>
       </blockTable>
     </section>
+
     <para style="P2">
       <font color="white"> </font>
     </para>
@@ -200,10 +210,10 @@
       <tr>
         <td>
           <para style="P3">[[ repeatIn(o.move_lines,'line') ]]</para>
-          <para style="P3">[[ '['+line.product_id.code +']' ]][[ line.product_id.name ]]</para>
+          <para style="P3">[[ '['+line.product_id.code +']' ]] [[ line.product_id.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ line.product_qty ]] [[line.product_uom.name]]</para>
+          <para style="P5">[[ '%.2f' % line.product_qty ]] [[line.product_uom.name]]</para>
         </td>
       </tr>
     </blockTable>

@@ -12,9 +12,14 @@
 	* User Authentification
 	* Document Indexation
 """,
-	"depends" : ["base", "process"],
+	"depends" : ["base", "process", "hr"],
 	"init_xml" : ["document_data.xml"],
-	"update_xml" : ["document_view.xml"],
+	"update_xml" : [
+		"document_view.xml",
+		"security/document_security.xml",
+		"security/ir.model.access.csv",
+        "process/document_process.xml"
+	],
 	"demo_xml" : ["document_demo.xml"],
 	"active": False,
 	"installable": True

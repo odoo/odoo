@@ -77,13 +77,20 @@ class stock_location(osv.osv):
             res[m.id] = _get_one_full_name(m)
         return res
 
-    def _product_qty_available(self, cr, uid, ids, name, arg, context={}):
-        res = {}.fromkeys(ids, 0.0)
-        if 'product_id' not in context:
-            return res
+    def _product_qty_available(self, cr, uid, ids, field_names, arg, context={}):
+        res = {}
         for id in ids:
-            location_ids = self.search(cr, uid, [('location_id', 'child_of', [id])])
-            res[id] = self._product_get_multi_location(cr, uid, location_ids, [context['product_id']], context, ('done',), ('in','out'))[context['product_id']]
+            res[id] = {}.fromkeys(field_names, 0.0)
+        if ('product_id' not in context) or not ids:
+            return res
+        #location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
+        for loc in ids:
+            context['location'] = [loc]
+            prod = self.pool.get('product.product').browse(cr, uid, context['product_id'], context)
+            if 'stock_real' in field_names:
+                res[loc]['stock_real'] = prod.qty_available
+            if 'stock_virtual' in field_names:
+                res[loc]['stock_virtual'] = prod.virtual_available
         return res
 
     _columns = {
@@ -94,8 +101,8 @@ class stock_location(osv.osv):
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
 
-        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
-        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock'),
+        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock"),
+        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock', multi="stock"),
 
         'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','!=','view')]),
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
@@ -401,7 +408,7 @@ class stock_picking(osv.osv):
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
             ("none","Not from Packing")], "Invoice Status", 
-            select=True, required=True),
+            select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
@@ -566,9 +573,19 @@ class stock_picking(osv.osv):
     def _get_taxes_invoice(self, cursor, user, move_line, type):
         '''Return taxes ids for the move line'''
         if type in ('in_invoice', 'in_refund'):
-            return [x.id for x in move_line.product_id.supplier_taxes_id]
+            taxes = move_line.product_id.supplier_taxes_id
         else:
-            return [x.id for x in move_line.product_id.taxes_id]
+            taxes = move_line.product_id.taxes_id
+
+        if move_line.picking_id and move_line.picking_id.address_id and move_line.picking_id.address_id.partner_id:
+            return self.pool.get('account.fiscal.position').map_tax(
+                cursor,
+                user,
+                move_line.picking_id.address_id.partner_id,
+                taxes
+            )
+        else:
+            return map(lambda x: x.id, taxes)
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         return False
@@ -597,10 +614,10 @@ class stock_picking(osv.osv):
             partner = picking.address_id and picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                payment_term_id= picking.sale_id.payment_term.id
+                if picking.sale_id and picking.sale_id.payment_term:
+                    payment_term_id= picking.sale_id.payment_term.id
             else:
                 account_id = partner.property_account_payable.id
-#                payment_term_id = picking.purchase_id.payment_term.id
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
@@ -612,7 +629,7 @@ class stock_picking(osv.osv):
             else:
                 invoice_vals = {
                     'name': picking.name,
-                    'origin': picking.name + ':' + picking.origin,
+                    'origin': picking.name + (picking.origin and (':' + picking.origin) or ''),
                     'type': type,
                     'account_id': account_id,
                     'partner_id': partner.id,
@@ -627,10 +644,8 @@ class stock_picking(osv.osv):
                         context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
-            
             sale_line_ids = sale_line_obj.search(cursor, user, [('order_id','=',picking.sale_id.id)])
             sale_lines = sale_line_obj.browse(cursor, user, sale_line_ids, context=context)
-            
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:
@@ -653,9 +668,11 @@ class stock_picking(osv.osv):
                             sale_line, type)
                     discount = self._get_discount_invoice(cursor, user, sale_line)
                     tax_ids = self._get_taxes_invoice(cursor, user, sale_line, type)
+
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)
-    
+
+                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
                     invoice_line_id = invoice_line_obj.create(cursor, user, {
                         'name': name,
                         'invoice_id': invoice_id,
@@ -671,7 +688,7 @@ class stock_picking(osv.osv):
                     sale_line_obj.write(cursor, user, [sale_line.id], {'invoiced':True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                         })
-                    
+
             for move_line in picking.move_lines:
                 if group:
                     name = picking.name + '-' + move_line.name
@@ -698,6 +715,7 @@ class stock_picking(osv.osv):
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
 
+                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'invoice_id': invoice_id,
@@ -706,7 +724,7 @@ class stock_picking(osv.osv):
                     'account_id': account_id,
                     'price_unit': price_unit,
                     'discount': discount,
-                    'quantity': move_line.product_uos_qty,
+                    'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
                     }, context=context)
@@ -721,7 +739,6 @@ class stock_picking(osv.osv):
         self.write(cursor, user, res.keys(), {
             'invoice_state': 'invoiced',
             }, context=context)
-        print res
         return res
 
 stock_picking()

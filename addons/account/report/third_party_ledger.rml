@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-    
+
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
       	<header>
 			<pageGraphics>
@@ -19,24 +19,24 @@
 				<!--COL 1-->
 				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
 				<drawRightString x="20cm" y="28.1cm">Third Party Ledger [[ data['form']['result_selection'] == 'customer' and '/ Débiteur' ]] [[ data['form']['result_selection'] == 'supplier' and '/ Créancier' ]] [[ data['form']['result_selection'] == 'all' and '/ Créancier et Débiteur' ]]</drawRightString>
-				
+
 				<!-- Header -->
-				
-				
+
+
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
+
 
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
 				<setFont name="Helvetica" size="8"/>
-			
+
 			</pageGraphics>
-			</header>            
+			</header>
     </pageTemplate>
-    
+
   </template>
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
@@ -53,43 +53,43 @@
       <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
       <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
     </blockTableStyle>
-    
+
     <blockTableStyle id="tbl_heading">
-      
+
       <blockValign value="TOP"/>
-   
+
        <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
     </blockTableStyle>
-         
+
 	<blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="LEFT"/>
-     
+
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
-     
-      
+
+
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockLeftPadding length="0" start="1,0" stop="1,0"/>
       <blockAlignment value="LEFT"/>
       <blockValign value="LEFT"/>
-    
-     <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/> 
+
+     <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <blockValign value="LEFT"/>
 	  <lineStyle kind="LINEBELOW" colorName="#777777" start="0,0" stop="0,-1"/>
-     
-      
+
+
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
       <blockValign value="LEFT"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
-    
-    
+
+
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
@@ -124,7 +124,7 @@
     <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
-  	
+
 	<para style="P2"><font color="white"></font></para>
     	<para>
     		<font color="white">[[ data['form']['page_split'] == True or removeParentNode('para') ]] </font>
@@ -133,7 +133,7 @@
     <blockTable colWidths="50.0,30.0,42.0,220.0,69.0,72.0,63.0" repeatRows="1" style="tbl_heading">
   	 <tr>
         <td>
-        
+
        		<para style="date">Date</para>
        	</td>
        	<td>
@@ -147,7 +147,7 @@
        	</td>
        	<td>
        		<para style="P16">Debit</para>
-       	</td>	
+       	</td>
        	<td>
        		<para style="P16">Credit</para>
        	</td>
@@ -183,7 +183,7 @@
 		      <font color="white">[[ data['form']['page_split'] == False or removeParentNode('para') ]] </font>
 		       <font color="white">[[ repeatIn(objects, 'p') ]]</font>
 		    </para>
-		   	<blockTable colWidths="200.0,137.0,69.0,72.0,63.0" style="Table5">
+		   	<blockTable colWidths="300.0,37.0,69.0,72.0,63.0" style="Table5">
 		     <tr>
 		     	<td>
 		        	<para style="total">[[ p.ref ]] - [[ p.name ]]</para>
@@ -202,7 +202,7 @@
 		        </td>
 		     </tr>
 		    </blockTable>
-		    <blockTable colWidths="45.0,30.0,42.0,220.0,69.0,72.0,63.0" style="Table2">
+		    <blockTable colWidths="45.0,30.0,262.0,0.0,69.0,72.0,63.0" style="Table2">
 		     <tr>
 			     <td>
 		    	 	<para style="P15"><font face="Helvetica">[[ repeatIn(lines(p,data), 'line') ]]</font>[[ line['date'] ]]</para>
@@ -211,29 +211,29 @@
 		         	<para style="P3">[[ line['code'] ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P3">[[ line['ref'] ]]</para>
+		           	<para style="P3">[[ line['ref'] ]] / [[ line['name'] ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P4">[[ line['name'] ]]</para>
+		           	<para style="P4"></para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['debit']) or '' ]]</para>
+		           	<para style="P5">[[ (line['debit']) or '0.0' ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['credit']) or '' ]]</para>
+		           	<para style="P5">[[ (line['credit']) or '0.0' ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['progress'])  or '' ]]</para>
+		           	<para style="P5">[[ (line['progress'])  or '0.0' ]]</para>
 		         </td>
 		     </tr>
 		    </blockTable>
-		    
+
      	</td>
      </tr>
     </blockTable>
-    
-	
-    
-   	
+
+
+
+
   </story>
 </document>

@@ -67,10 +67,14 @@ class partner_balance(report_sxw.rml_parse):
         return full_str_date
         
     #
+    
+    
     def transform_period_into_date_array(self,data):
         ## Get All Period Date
         #
         # If we have no period we will take all perdio in the FiscalYear.
+        
+        
         if not data['form']['periods'][0][2] :
             periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         else:
@@ -79,18 +83,62 @@ class partner_balance(report_sxw.rml_parse):
         for period_id in periods_id:
             period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
             date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
-            
         self.date_lst = date_array
         self.date_lst.sort()
         
             
     def transform_date_into_date_array(self,data):
-       
         return_array = self.date_range(data['form']['date1'],data['form']['date2'])
         self.date_lst = return_array
         self.date_lst.sort()
     
-    
+    def transform_both_into_date_array(self,data):
+        if not data['form']['periods'][0][2] :
+            periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+        else:
+            periods_id = data['form']['periods'][0][2]
+        date_array = [] 
+        for period_id in periods_id:
+            period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
+            date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+        
+        period_start_date = date_array[0]
+        date_start_date = data['form']['date1']
+        period_stop_date = date_array[-1]
+        date_stop_date = data['form']['date2']
+        
+        if period_start_date<date_start_date:
+            start_date = period_start_date
+        else :
+            start_date = date_start_date
+       
+        if date_stop_date<period_stop_date:
+            stop_date = period_stop_date
+        else :
+            stop_date = date_stop_date
+        
+        
+        final_date_array = []
+        final_date_array = final_date_array + self.date_range(start_date,stop_date)
+        self.date_lst = final_date_array
+        self.date_lst.sort()
+        
+    def transform_none_into_date_array(self,data):
+        
+        sql = "SELECT min(date) as start_date from account_move_line"
+        self.cr.execute(sql)
+        start_date = self.cr.fetchone()[0]
+        
+        sql = "SELECT max(date) as start_date from account_move_line"
+        self.cr.execute(sql)
+        stop_date = self.cr.fetchone()[0]
+        
+        
+        array = []
+        array = array + self.date_range(start_date,stop_date)
+        self.date_lst = array
+        self.date_lst.sort()
+        
     
     def comma_me(self,amount):
         if  type(amount) is float :
@@ -110,13 +158,27 @@ class partner_balance(report_sxw.rml_parse):
         # Transformation des date
         #
         #
-       
-        if data['form']['fiscalyear']: 
-            print"data['form']['fiscalyear']=True"
-            self.transform_period_into_date_array(data)
-        else:
-            print"data['form']['fiscalyear']=False"
+        if data['form']['state'] == 'none':
+            
+            self.transform_none_into_date_array(data)
+        elif data['form']['state'] == 'bydate':
+           
             self.transform_date_into_date_array(data)
+        elif data['form']['state'] == 'byperiod':
+           
+            self.transform_period_into_date_array(data)
+        elif data['form']['state'] == 'all':
+           
+            self.transform_both_into_date_array(data)      
+                  
+                
+            
+#        if data['form']['fiscalyear']: 
+#            print"data['form']['fiscalyear']=True"
+#            self.transform_period_into_date_array(data)
+#        else:
+#            print"data['form']['fiscalyear']=False"
+#            self.transform_date_into_date_array(data)
         ##
         self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
         ## Compute Code
@@ -151,6 +213,7 @@ class partner_balance(report_sxw.rml_parse):
         #
         #
         if data['form']['soldeinit'] :
+            
             self.cr.execute(
                 "SELECT p.ref, p.name,l.account_id,ac.name as account_name,ac.code as code , sum(debit) as debit, sum(credit) as credit, " \
                         "CASE WHEN sum(debit) > sum(credit) " \
@@ -182,6 +245,7 @@ class partner_balance(report_sxw.rml_parse):
         #
         #
         #
+        
         self.cr.execute(
             "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, sum(debit) as debit, sum(credit) as credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
@@ -461,7 +525,7 @@ class partner_balance(report_sxw.rml_parse):
                 'l.date IN (' + self.date_lst_string + ') ' \
             'GROUP BY partner_id')
         a = self.cr.fetchone()[0]
-        print"====self.cr.fetchone()====",a
+        
         if self.cr.fetchone() != None:
             result_tmp = result_tmp + (a or 0.0)
         else:
@@ -493,7 +557,7 @@ class partner_balance(report_sxw.rml_parse):
                 (self.date_lst[0],))
             
             if self.cr.fetchone() != None:
-                result_tmp = float(self.cr.fetchone()[0])
+                result_tmp = float(self.cr.fetchone()[0]) or 0.0
             else:
                 result_tmp = 0.0
         #

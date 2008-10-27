@@ -29,64 +29,57 @@ import time
 import wizard
 import pooler
 
-#report_type =  '''<?xml version="1.0"?>
-#<form string="Select Report Type">
-#</form>'''
-#
-#
-#dates_form = '''<?xml version="1.0"?>
-#<form string="Select period">
-#    <field name="company_id" colspan="4"/>
-#    <newline/>
-#    <field name="date1"/>
-#    <field name="date2"/>
-#    <newline/>
-#    <field name="result_selection"/>
-#    <field name="soldeinit"/>
-#</form>'''
-#
-#dates_fields = {
-#    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-#    'result_selection':{'string':"Display partner ",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
-#    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-#    'date1': {'string':'Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-#    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-#}
-
 period_form = '''<?xml version="1.0"?>
-<form string="Select period" colspan = "4">
-    <field name="company_id" colspan="4"/>
-    <field name="state" required="True" colspan = "4"/>
-    <newline/>
-    <group attrs="{'invisible':[('state','=','none'),('state','=','byperiod')]}" colspan = "4">
-    <field name="date1"/>
-    <field name="date2"/>
-    </group>
-    <newline/>
-    <group attrs="{'invisible':[('state','=','none'),('state','=','bydate')]}" colspan = "4">
-    <field name="fiscalyear" colspan="4"/>
-    <field name="periods" colspan="4"/>
-    </group>
+<form string="Select Date-Period">
+    <field name="company_id"/>
     <field name="result_selection"/>
-    <field name="soldeinit"/>
+    <newline/>
+    <field name="fiscalyear"/>
+    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+    <newline/>
+    <separator string="Filters" colspan="4"/>
+    <field name="state" required="True"/>
+    <newline/>
+    
+    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
+        <separator string="Date Filter" colspan="4"/>
+        <field name="date1"/>
+        <field name="date2"/>
+    </group>
+    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
+        <separator string="Filter on Periods" colspan="4"/>
+        <field name="periods" colspan="4" nolabel="1"/>
+   
+    </group>
 </form>'''
 
 period_fields = {
     'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-    'state':{'string':"Select Report Type",'type':'selection','selection':[('none','None'),('bydate','By Date'),('byperiod','By Period')],'default': lambda *a:'none' },
-    'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-        'help': 'Keep empty for all open fiscal year','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
+    'state':{
+        'string':"Date/Period Filter",
+        'type':'selection',
+        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
+        'default': lambda *a:'bydate'
+    },
+    'fiscalyear': {
+        'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+        'help': 'Keep empty for all open fiscal year'
+    },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
-    'result_selection':{'string':"Display partner",'type':'selection','selection':[('customer','Debiteur'),('supplier','Creancier'),('all','Tous')]},
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-    'date1': {'string':'Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
+    'result_selection':{
+        'string':"Partner",
+        'type':'selection',
+        'selection':[('customer','Receivable Accounts'),('supplier','Payable Accounts'),('all','Receivable and Payable Accounts')],
+        'required':True
+    },
+    'soldeinit':{'string':" Inclure les soldes initiaux",'type':'boolean'},
+    'date1': {'string':'          Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
-
 class wizard_report(wizard.interface):
     
-    def _get_load(self,cr,uid,data,context):
+    def _get_defaults(self,cr,uid,data,context):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
            company_id = user.company_id.id
@@ -102,30 +95,12 @@ class wizard_report(wizard.interface):
         data['form']['result_selection'] = 'all'
         return data['form']
     
-    def _get_defaults(self, cr, uid, data, context):
+    def _check_state(self, cr, uid, data, context):
       
-        if data['form']['state'] == 'none':
-           return 'report'
-        else :
-           if data['form']['state'] == 'byperiod':
-              data['form']['fiscalyear'] = True
-           else : 
-              self._check_date(cr, uid, data, context)
-              data['form']['fiscalyear'] = False
-           
+        if data['form']['state'] == 'bydate'  :
+           self._check_date(cr, uid, data, context)
         return data['form']
-    
-#    def _get_defaults_fordate(self, cr, uid, data, context):
-#        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
-#        if user.company_id:
-#            company_id = user.company_id.id
-#        else:
-#            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-#        data['form']['company_id'] = company_id
-#        data['form']['soldeinit'] = True
-#        data['form']['result_selection'] = 'all'
-#        return data['form']
-    
+  
     def _check_date(self, cr, uid, data, context):
         
         sql = """
@@ -141,27 +116,14 @@ class wizard_report(wizard.interface):
         else:
             raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
 
-
     states = {
         'init': {
-            'actions': [_get_load],
+            'actions': [_get_defaults],
            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
         },
-#        'with_period': {
-#            'actions': [_get_defaults],
-#            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
-#        },
-#        'with_date': {
-#            'actions': [_get_defaults_fordate],
-#            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('checkdate','Print')]}
-#        },
-##        'checkdate': {
-##            'actions': [],
-##            'result': {'type':'choice','next_state':_check_date}
-##        },
         
         'report': {
-            'actions': [_get_defaults],
+            'actions': [_check_state],
             'result': {'type':'print', 'report':'account.partner.balance', 'state':'end'}
         }
     }

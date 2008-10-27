@@ -2,160 +2,160 @@
 <openerp>
 <data>
 
-	<record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
-		<field name="name">mrp.production.workcenter.line.inherit.tree</field>
-		<field name="model">mrp.production.workcenter.line</field>
-		<field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view"/>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<field name="hour" position="after">
-				<button name="button_done" string="Finished" states="startworking"/>
-				<button name="button_start_working" string="Start working" states="draft,pause"/>			
-				<field name="uom"/>
-				<field name="qty"/>
-				<field name="product"/>
-				<field name="production_id"/>
-				<field name="state" />
-			</field>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
+        <field name="name">mrp.production.workcenter.line.inherit.tree</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <field name="hour" position="after">
+                <button name="button_done" string="Finished" states="startworking"/>
+                <button name="button_start_working" string="Start working" states="draft,pause"/>
+                <field name="uom"/>
+                <field name="qty"/>
+                <field name="product"/>
+                <field name="production_id"/>
+                <field name="state" />
+            </field>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
-		<field name="name">mrp.production.workcenter.line.form.inherit</field>
-		<field name="model">mrp.production.workcenter.line</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view"/>
-		<field name="arch" type="xml">
-				<field name="hour" position="after">
-					<group colspan="8" col="8">
-							<field name="state" select="2"/>
-							<button name="button_draft" string="Set Draft" states="cancel"/>
-							<button name="button_start_working" string="Start working" states="draft"/>
-							<button name="button_resume" string="Resume" states="pause"/>
-							<button name="button_done" string="Finished" states="startworking"/>
-							<button name="button_pause" string="Pause" states="startworking"/>
-							<button name="button_cancel" string="Cancel" states="draft,startworking"/>
-					</group>
-					<field name="delay"/>
-					<field name="production_id"/>
-				</field>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
+        <field name="name">mrp.production.workcenter.line.form.inherit</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view"/>
+        <field name="arch" type="xml">
+                <field name="hour" position="after">
+                    <group colspan="8" col="8">
+                            <field name="state" select="2"/>
+                            <button name="button_draft" string="Set Draft" states="cancel"/>
+                            <button name="button_start_working" string="Start working" states="draft"/>
+                            <button name="button_resume" string="Resume" states="pause"/>
+                            <button name="button_done" string="Finished" states="startworking"/>
+                            <button name="button_pause" string="Pause" states="startworking"/>
+                            <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                    </group>
+                    <field name="delay"/>
+                    <field name="production_id"/>
+                </field>
+        </field>
+    </record>
 
-	<!-- Action for tree view of workcenter line   -->
+    <!-- Action for tree view of workcenter line   -->
 
-	<record model="ir.actions.act_window" id="mrp_production_wc_action_form">
-		<field name="name">Work Order</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production.workcenter.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('id','=',active_id)]</field>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
+        <field name="name">Work Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('id','=',active_id)]</field>
+    </record>
 
-	<!-- Action for All Operations   -->
+    <!-- Action for All Operations   -->
 
-	<record model="ir.actions.act_window" id="mrp_production_wc_action">
-		<field name="name">All Work Order</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production.workcenter.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form,graph</field>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_wc_action">
+        <field name="name">All Work Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
 
-	<!-- Action for Confirm Operations   -->
+    <!-- Action for Confirm Operations   -->
 
-	<record model="ir.actions.act_window" id="mrp_production_wc_confirm_action">
-		<field name="name">Confirm Work Order</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production.workcenter.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form,graph</field>
-		<field name="domain">[('state','=','confirm')]</field>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_wc_confirm_action">
+        <field name="name">Confirm Work Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('state','=','confirm')]</field>
+    </record>
 
-	<!-- Action for Draft Operations   -->
+    <!-- Action for Draft Operations   -->
 
-	<record model="ir.actions.act_window" id="mrp_production_wc_draft_action">
-		<field name="name">Draft Work Order</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production.workcenter.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form,graph</field>
-		<field name="domain">[('state','=','draft')]</field>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_wc_draft_action">
+        <field name="name">Draft Work Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('state','=','draft')]</field>
+    </record>
 
-	<record model="ir.values" id="mrp_production_wc_action_open">
-		<field name="key2" eval="'tree_but_open'"/>
-		<field name="model" eval="'mrp.production.workcenter.line'"/>
-		<field name="name">Work Order</field>
-		<field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
-		<field name="object" eval="True"/>
+    <record model="ir.values" id="mrp_production_wc_action_open">
+        <field name="key2" eval="'tree_but_open'"/>
+        <field name="model" eval="'mrp.production.workcenter.line'"/>
+        <field name="name">Work Order</field>
+        <field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
+        <field name="object" eval="True"/>
 
-	</record>
+    </record>
 
-	<menuitem name="All Work Order" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
-	<menuitem name="Production Orders to Do" parent="menu_mrp_production_wc_action" action="mrp_production_wc_confirm_action" id="menu_mrp_production_wc_confirm_action"/>
-	<menuitem name="Waiting Production Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
+    <menuitem name="All Work Order" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
+    <menuitem name="Work Orders to Do" parent="menu_mrp_production_wc_action" action="mrp_production_wc_confirm_action" id="menu_mrp_production_wc_confirm_action"/>
+    <menuitem name="Waiting Work Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
 
 <!-- Operation codes -->
 
-	<record model="ir.ui.view" id="mrp_production_code_tree_view">
-		<field name="name">mrp.production.code.tree</field>
-		<field name="model">mrp_operations.operation.code</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Production Operation Code">
-				<field name="name" select="1"/>
-				<field name="code" select="1"/>
-				<field name="start_stop" select="1"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="mrp_production_code_tree_view">
+        <field name="name">mrp.production.code.tree</field>
+        <field name="model">mrp_operations.operation.code</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Production Operation Code">
+                <field name="name" select="1"/>
+                <field name="code" select="1"/>
+                <field name="start_stop" select="1"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="mrp_production_code_form_view">
-		<field name="name">mrp.production.code.form</field>
-		<field name="model">mrp_operations.operation.code</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Production Operation Code">
-				<field name="name" select="1"/>
-				<field name="code" select="1"/>
-				<field name="start_stop" select="1"/>
-			</form>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="mrp_production_code_form_view">
+        <field name="name">mrp.production.code.form</field>
+        <field name="model">mrp_operations.operation.code</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Production Operation Code">
+                <field name="name" select="1"/>
+                <field name="code" select="1"/>
+                <field name="start_stop" select="1"/>
+            </form>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="mrp_production_code_action">
-		<field name="name">Operations Code</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp_operations.operation.code</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="mrp_production_code_tree_view"/>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_code_action">
+        <field name="name">Operations Code</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp_operations.operation.code</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="mrp_production_code_tree_view"/>
+    </record>
 
-	<menuitem name="Start - Stop Codes" parent="mrp.menu_mrp_configuration" id="menu_mrp_production_code_action" action="mrp_production_code_action"/>
+    <menuitem name="Start - Stop Codes" parent="mrp.menu_mrp_configuration" id="menu_mrp_production_code_action" action="mrp_production_code_action"/>
 
 <!-- Operations -->
 
-	<record model="ir.ui.view" id="mrp_production_operation_tree_view">
-		<field name="name">mrp.production.operation.tree</field>
-		<field name="model">mrp_operations.operation</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Production Operation" editable="top">
-				<field name="production_id"/>
-				<field name="workcenter_id"/>
-				<field name="code_id"/>
-				<field name="date_start"/>
-				<field name="date_finished"/>
-				<field name="order_date"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="mrp_production_operation_tree_view">
+        <field name="name">mrp.production.operation.tree</field>
+        <field name="model">mrp_operations.operation</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Production Operation" editable="top">
+                <field name="production_id"/>
+                <field name="workcenter_id"/>
+                <field name="code_id"/>
+                <field name="date_start"/>
+                <field name="date_finished"/>
+                <field name="order_date"/>
+            </tree>
+        </field>
+    </record>
 
- 	<record id="graph_in_hrs_workcenter" model="ir.ui.view">
+     <record id="graph_in_hrs_workcenter" model="ir.ui.view">
             <field name="name">graph.in.hrs.workcenter</field>
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">graph</field>
@@ -167,44 +167,48 @@
             </field>
         </record>
 
-        
 
-	<!--<record model="ir.ui.view" id="mrp_production_operation_form_view">
-		<field name="name">mrp.production.operation.form</field>
-		<field name="model">mrp_operations.operation</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Production Operation">
-				<field name="production_id" select="1"/>
-				<field name="workcenter_id" select="1"/>
-				<field name="code_id" select="1"/>
-			</form>
-		</field>
-	</record>
+
+    <!--<record model="ir.ui.view" id="mrp_production_operation_form_view">
+        <field name="name">mrp.production.operation.form</field>
+        <field name="model">mrp_operations.operation</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Production Operation">
+                <field name="production_id" select="1"/>
+                <field name="workcenter_id" select="1"/>
+                <field name="code_id" select="1"/>
+            </form>
+        </field>
+    </record>
 -->
-	<record model="ir.actions.act_window" id="mrp_production_operation_action">
-		<field name="name">Operations</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp_operations.operation</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="mrp_production_operation_tree_view"/>
-	</record>
-	<menuitem name="Operations to Manufacturing" parent="mrp.menu_mrp_configuration" id="menu_mrp_production_operation_main"/>
-	<menuitem name="Operations" parent="menu_mrp_production_operation_main" id="menu_mrp_production_operation_action" action="mrp_production_operation_action"/>
-	
-	<record model="ir.ui.view" id="operation_calendar_view">
-			<field name="name">mrp.perations.calendar</field>
-			<field name="model">mrp_operations.operation</field>
-			<field name="type">calendar</field>
-			<field name="priority" eval="2"/>
-			<field name="arch" type="xml">
-				<calendar string="Calendar View" date_start="order_date" color="workcenter_id">
-					<field name="date_start"/>
-					<field name="date_finished"/>
-				</calendar>
-			</field>
-	</record>
+    <record model="ir.actions.act_window" id="mrp_production_operation_action">
+        <field name="name">Operations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp_operations.operation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="mrp_production_operation_tree_view"/>
+    </record>
+
+    <menuitem
+        name="Work Order Events Using Bar Codes"
+        parent="mrp.menu_mrp_root"
+        id="menu_mrp_production_operation_action"
+        action="mrp_production_operation_action"/>
+
+    <record model="ir.ui.view" id="operation_calendar_view">
+            <field name="name">mrp.perations.calendar</field>
+            <field name="model">mrp_operations.operation</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="order_date" color="workcenter_id">
+                    <field name="date_start"/>
+                    <field name="date_finished"/>
+                </calendar>
+            </field>
+    </record>
 
 </data>
 </openerp>

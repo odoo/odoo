@@ -4,7 +4,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_sale.html",
-    "depends" : ["sale", "crm", "product", "account"],
+    "depends" : ["sale", "crm_configuration", "product", "account"],
     "category" : "Generic Modules/Sales & Purchases",
     "description": """
     This module adds a shortcut on one or several cases in the CRM.
@@ -18,7 +18,9 @@
     """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["sale_crm_wizard.xml"],
+    "update_xml" : ["sale_crm_wizard.xml",
+                    "process/sale_crm_process.xml"
+                    ],
     "active": False,
     "installable": True
 }

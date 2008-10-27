@@ -33,12 +33,12 @@ import pooler
 
 form = '''<?xml version="1.0"?>
 <form string="Print Indicators">
-    <field name="indicator_id"/>
+    <label string="Select the criteria based on which Indicators will be printed."/>
+    <newline/>
     <field name="select_base"/>
 </form>'''
 
 fields = {
-    'indicator_id': {'string':'Choose Indicator', 'type':'many2one', 'relation': 'account.report.report','required':True,},
     'select_base': {'string':'Choose Criteria', 'type':'selection','selection':[('year','Based On Fiscal Years'),('periods','Based on Fiscal Periods')],'required':True,},
 }
 
@@ -61,6 +61,11 @@ def _load_base(self, cr, uid, data, context):
         next_fields['base_selection']['relation']='account.period'
     return data['form']
 
+def _check_len(self, cr, uid, data, context):
+    if len(data['form']['base_selection'][0][2])>12:
+        raise wizard.except_wizard('User Error!',"Please select maximum 12 records to fit the page-width.")
+    return data['form']
+
 class wizard_print_indicators(wizard.interface):
     states = {
         'init': {
@@ -72,7 +77,7 @@ class wizard_print_indicators(wizard.interface):
             'result': {'type':'form', 'arch':next_form, 'fields':next_fields, 'state':[('end','Cancel'),('print','Print')]}
         },
         'print': {
-            'actions':[],
+            'actions':[_check_len],
             'result' :{'type':'print','report':'print.indicators', 'state':'end'}
         }
     }

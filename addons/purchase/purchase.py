@@ -154,7 +154,7 @@ class purchase_order(osv.osv):
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64, 
+        'origin': fields.char('Origin', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Partner Ref.', size=64),
@@ -173,7 +173,7 @@ class purchase_order(osv.osv):
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
         'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
-        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
@@ -227,11 +227,11 @@ class purchase_order(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        pricelist = self.pool.get('res.partner').property_get(cr, uid,
-                    part,property_pref=['property_product_pricelist_purchase']).get('property_product_pricelist_purchase',False)
+        part = self.pool.get('res.partner').browse(cr, uid, part)
+        pricelist = part.property_product_pricelist_purchase.id
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
-    def wkf_approve_order(self, cr, uid, ids):
+    def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
         return True
 
@@ -264,15 +264,24 @@ class purchase_order(osv.osv):
                        })
     def inv_line_create(self,a,ol):
         return (0, False, {
-                    'name': ol.name,
-                    'account_id': a,
-                    'price_unit': ol.price_unit or 0.0,
-                    'quantity': ol.product_qty,
-                    'product_id': ol.product_id.id or False,
-                    'uos_id': ol.product_uom.id or False,
-                    'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-                    'account_analytic_id': ol.account_analytic_id.id,
-                })
+            'name': ol.name,
+            'account_id': a,
+            'price_unit': ol.price_unit or 0.0,
+            'quantity': ol.product_qty,
+            'product_id': ol.product_id.id or False,
+            'uos_id': ol.product_uom.id or False,
+            'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
+            'account_analytic_id': ol.account_analytic_id.id,
+        })
+
+    def action_cancel_draft(self, cr, uid, ids, *args):
+        if not len(ids):
+            return False
+        self.write(cr, uid, ids, {'state':'draft','shipped':0})
+        wf_service = netsvc.LocalService("workflow")
+        for p_id in ids:
+            wf_service.trg_create(uid, 'purchase.order', p_id, cr)
+        return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
@@ -288,17 +297,8 @@ class purchase_order(osv.osv):
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
                     a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, o.partner_id, a)
                 il.append(self.inv_line_create(a,ol))
-#               il.append((0, False, {
-#                   'name': ol.name,
-#                   'account_id': a,
-#                   'price_unit': ol.price_unit or 0.0,
-#                   'quantity': ol.product_qty,
-#                   'product_id': ol.product_id.id or False,
-#                   'uos_id': ol.product_uom.id or False,
-#                   'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-#                   'account_analytic_id': ol.account_analytic_id.id,
-#               }))
 
             a = o.partner_id.property_account_payable.id
             inv = {
@@ -326,6 +326,31 @@ class purchase_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
+
+    def action_cancel(self, cr, uid, ids, context={}):
+        ok = True
+        purchase_order_line_obj = self.pool.get('purchase.order.line')
+        for purchase in self.browse(cr, uid, ids):
+            for pick in purchase.picking_ids:
+                if pick.state not in ('draft','cancel'):
+                    raise osv.except_osv(
+                        _('Could not cancel purchase order !'),
+                        _('You must first cancel all packings attached to this purchase order.'))
+            for r in self.read(cr,uid,ids,['picking_ids']):
+                for pick in r['picking_ids']:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
+            for inv in purchase.invoice_ids:
+                if inv.state not in ('draft','cancel'):
+                    raise osv.except_osv(
+                        _('Could not cancel this purchase order !'),
+                        _('You must first cancel all invoices attached to this purchase order.'))
+            for r in self.read(cr,uid,ids,['invoice_ids']):
+                for inv in r['invoice_ids']:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+        self.write(cr,uid,ids,{'state':'cancel'})
+        return True
 
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = False
@@ -446,21 +471,9 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
 
-        
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,prod['supplier_taxes_id'])
-        taxep = None
-        if partner_id:
-            taxep_id = self.pool.get('res.partner').property_get(cr, uid,partner_id,property_pref=['property_account_supplier_tax']).get('property_account_supplier_tax',False)
-            if taxep_id:
-                taxep=self.pool.get('account.tax').browse(cr, uid,taxep_id)
-        if not taxep or not taxep.id:
-            res['value']['taxes_id'] = [x.id for x in prod['supplier_taxes_id']]
-        else:
-            res5 = [taxep.id]
-            for t in taxes:
-                if not t.tax_group==taxep.tax_group:
-                    res5.append(t.id)
-            res['value']['taxes_id'] = res5
+        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])

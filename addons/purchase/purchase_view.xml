@@ -50,7 +50,7 @@
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
                             <field name="partner_ref" select="2"/>
                             <newline/>
-                            <field colspan="4" name="order_line" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="order_line" nolabel="1"/>
                             <group col="7" colspan="4">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
@@ -63,8 +63,8 @@
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order"/>
-
-                                <button name="purchase_cancel" states="approved" string="Cancel Purchase Order"/>
+								<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                <button name="action_cancel" states="approved" string="Cancel Purchase Order" type="object"/>
 
                                 <button name="shipping_ok" states="except_shipping" string="Shipping Done"/>
                                 <button name="invoice_ok" states="except_invoice" string="Invoice Done"/>
@@ -195,7 +195,6 @@
                 <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Line">
                     <field name="date_planned"/>
                     <field name="name"/>
-                    <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="price_unit"/>
