@@ -74,7 +74,7 @@
             <field name="domain">[('state','=','draft')]</field>
         </record>
 
-        <menuitem id="next_id_72" name="All Analytic Accounts" parent="account_analytic_analysis.next_id_71"/><menuitem action="action_account_analytic_all_draft" id="menu_action_account_analytic_all_draft" parent="next_id_72"/>
+        <menuitem action="action_account_analytic_all_draft" id="menu_action_account_analytic_all_draft" parent="next_id_71"/>
 
         <record id="action_account_analytic_all_open" model="ir.actions.act_window">
             <field name="name">Open Analytic Accounts</field>
@@ -85,7 +85,7 @@
             <field name="domain">[('state','=','open')]</field>
         </record>
 
-        <menuitem action="action_account_analytic_all_open" id="menu_action_account_analytic_all_open" parent="account_analytic_analysis.next_id_72"/>
+        <menuitem action="action_account_analytic_all_open" id="menu_action_account_analytic_all_open" parent="account_analytic_analysis.next_id_71"/>
 
         <record id="action_account_analytic_all_pending" model="ir.actions.act_window">
             <field name="name">Pending Analytic Accounts</field>
@@ -96,7 +96,7 @@
             <field name="domain">[('state','=','pending')]</field>
         </record>
 
-        <menuitem action="action_account_analytic_all_pending" id="menu_action_account_analytic_all_pending" parent="account_analytic_analysis.next_id_72"/>
+        <menuitem action="action_account_analytic_all_pending" id="menu_action_account_analytic_all_pending" parent="account_analytic_analysis.next_id_71"/>
 
         <record id="action_account_analytic_all_simplified" model="ir.actions.act_window">
             <field name="name">Simplified View Analytic Accounts</field>
@@ -107,7 +107,7 @@
             <field name="domain">[]</field>
         </record>
 
-        <menuitem action="action_account_analytic_all_simplified" id="menu_action_account_analytic_all_simplified" parent="account_analytic_analysis.next_id_72"/>
+        <menuitem action="action_account_analytic_all_simplified" id="menu_action_account_analytic_all_simplified" parent="account_analytic_analysis.next_id_71"/>
 
     </data>
 </openerp>
