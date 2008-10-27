@@ -119,14 +119,13 @@
         <menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="menu_all_project"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
-            <field name="name">Template projects</field>
+            <field name="name">Template of Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-		<menuitem id="next_id_54" name="Projects" parent="project.menu_definitions"/>
-        <menuitem action="open_view_template_project" id="menu_template_project" parent="next_id_54"/>
+        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>
 
         <record id="open_view_project" model="ir.actions.act_window">
             <field name="name">New Project</field>

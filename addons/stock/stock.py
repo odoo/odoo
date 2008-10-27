@@ -612,6 +612,9 @@ class stock_picking(osv.osv):
                 continue
             payment_term_id = False
             partner = picking.address_id and picking.address_id.partner_id
+            raise osv.except_osv(_('Error, no partner !'),
+                    _('Please put a partner on the picking list if you want to generate invoice.'))
+
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
                 if picking.sale_id and picking.sale_id.payment_term:

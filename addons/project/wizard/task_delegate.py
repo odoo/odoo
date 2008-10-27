@@ -66,6 +66,7 @@ class wizard_delegate(wizard.interface):
             'name': data['form']['name'],
             'user_id': data['form']['user_id'],
             'planned_hours': data['form']['planned_hours'],
+            'remaining_hours': data['form']['planned_hours'],
             'parent_id': data['id'],
             'state': 'open',
             'description': data['form']['include_info'] and task.description or '',
