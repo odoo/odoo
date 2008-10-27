@@ -52,7 +52,7 @@ ask_fields = {
     'include_info': {'string':'Copy Description', 'type':'boolean', 'help':"Reinclude the description of the task in the task of the user."},
     'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time', 'help':"Estimated time to close this task by the delegated user."},
     'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time', 'help':"Estimated time for you to validate the work done by the user to whom you delegate this task."},
-    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed."},
+    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed.", 'required':True},
 }
 
 class wizard_delegate(wizard.interface):
@@ -69,7 +69,8 @@ class wizard_delegate(wizard.interface):
             'parent_id': data['id'],
             'state': 'open',
             'description': data['form']['include_info'] and task.description or '',
-            'child_ids': []
+            'child_ids': [],
+            'work_ids': []
         })
         task_obj.write(cr, uid, data['id'], {
             'remaining_hours': data['form']['planned_hours_me'],

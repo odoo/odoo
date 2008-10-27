@@ -248,10 +248,10 @@
                             <newline/>
                             <group col="11" colspan="4">
                                 <field name="state" select="1"/>
-                                <button name="do_draft" states="open" string="Set Draft" type="object"/>
+                                <button name="do_draft" states="open" string="Draft" type="object"/>
                                 <button name="do_open" states="pending,draft" string="Open" type="object"/>
                                 <button name="do_reopen" states="done,cancelled" string="Re-open" type="object"/>
-                                <button name="do_pending" states="open" string="Set Pending" type="object"/>
+                                <button name="do_pending" states="open" string="Pending" type="object"/>
                                 <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
                                 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
