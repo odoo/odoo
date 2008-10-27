@@ -90,6 +90,9 @@ class browse_null(object):
     def __getitem__(self, name):
         return False
 
+    def __getattr__(self, name):
+        return False  # XXX: return self ?
+
     def __int__(self):
         return False
 
