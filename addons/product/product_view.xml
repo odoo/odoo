@@ -48,7 +48,7 @@
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
-                                <field name="supply_method"/>
+                                <field name="supply_method" attrs="{'readonly':['&amp;', ('type', '=', 'service'), ('procure_method', '=', 'make_to_stock')]}"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
