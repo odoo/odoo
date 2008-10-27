@@ -33,7 +33,7 @@ class audittrail_rule(osv.osv):
         for obj_name in pool.obj_list():
             obj=pool.get(obj_name)
             for field in ('read','write','create','unlink'):
-                 setattr(obj, field, self.logging_fct(getattr(obj,field), obj))
+                setattr(obj, field, self.logging_fct(getattr(obj,field), obj))
         super(audittrail_rule, self).__init__(pool,cr)
 
     def subscribe(self, cr, uid, ids, *args):
@@ -72,7 +72,7 @@ class audittrail_rule(osv.osv):
                 if field['ttype']=='many2one':
                     if values:
                         if type(values)==tuple:
-                                values=values[0]
+                            values=values[0]
                         val=self.pool.get(model).read(cr,uid,[values],['name'])
                         if len(val):
                             return val[0]['name']
@@ -131,7 +131,7 @@ class audittrail_rule(osv.osv):
                 self.__functions.setdefault(thisrule.id, [])
                 self.__functions[thisrule.id].append( (obj,field, getattr(obj,field)) )
                 for user in thisrule.user_id:
-                            logged_uids.append(user.id)
+                    logged_uids.append(user.id)
 
             if fct_src.__name__ in ('create'):
                 res_id =fct_src( cr, uid, *args, **args2)
