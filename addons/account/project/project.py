@@ -166,7 +166,9 @@ class account_analytic_account(osv.osv):
         'type' : lambda *a : 'normal',
         'company_id': _default_company,
         'state' : lambda *a : 'draft',
-        'user_id' : lambda self,cr,uid,ctx : uid
+        'user_id' : lambda self,cr,uid,ctx : uid,
+        'partner_id': lambda self,cr, uid, ctx: ctx.get('partner_id', False),
+        'contact_id': lambda self,cr, uid, ctx: ctx.get('contact_id', False),
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):

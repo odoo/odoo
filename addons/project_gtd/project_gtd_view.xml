@@ -160,9 +160,9 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <newline/>
-                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
-                <field name="context_id" select="2"/>
                 <separator string="Getting Things Done" colspan="4"/>
+                <field name="context_id" select="2"/>
+                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
                 <newline/>
             </field>
         </field>

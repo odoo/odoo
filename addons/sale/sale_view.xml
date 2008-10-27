@@ -107,7 +107,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id"/>
-                            <field name="project_id" select="2"/>
+                            <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id}"/>
                             <newline/>
                             <field colspan="4" mode="tree,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
