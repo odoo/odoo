@@ -53,6 +53,17 @@
         </record>
         <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" parent="account_analytic_analysis.next_id_71"/>
 
+        <record id="action_account_analytic_new" model="ir.actions.act_window">
+            <field name="name">New Analytic Account</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree,graph</field>
+        </record>
+        <menuitem
+            action="action_account_analytic_new"
+            id="menu_action_account_analytic_new"
+            parent="account_analytic_analysis.next_id_71"/>
+
         <record id="action_account_analytic_all" model="ir.actions.act_window">
             <field name="name">All Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
@@ -94,7 +105,6 @@
             <field name="view_id" ref="account.view_account_analytic_account_list"/>
             <field name="domain">[('state','=','pending')]</field>
         </record>
-
         <menuitem action="action_account_analytic_all_pending" id="menu_action_account_analytic_all_pending" parent="menu_action_account_analytic_all"/>
 
         <record id="action_account_analytic_all_simplified" model="ir.actions.act_window">
@@ -105,7 +115,6 @@
             <field name="view_id" ref="view_account_analytic_simplified"/>
             <field name="domain">[]</field>
         </record>
-
         <menuitem action="action_account_analytic_all_simplified" id="menu_action_account_analytic_all_simplified" parent="menu_action_account_analytic_all"/>
 
     </data>

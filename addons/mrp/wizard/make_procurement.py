@@ -64,7 +64,8 @@ class MakeProcurement(wizard.interface):
     <label string="Your procurement request has been sent !"/>
 </form>"""
     procurement_form = """<?xml version="1.0"?>
-<form string="Make Procurement">
+<form string="Internal Procurement Request">
+    <label string="This wizard will planify the procurement for this product. This procurement may generate task, production orders or purchase orders." align="0.0" colspan="4"/>
     <field name="product_id"/>
     <field name="warehouse_id"/>
     <field name="qty"/>
@@ -75,7 +76,7 @@ class MakeProcurement(wizard.interface):
         'qty': {'string': 'Quantity', 'type': 'float', 'digits':(16,2), 'required': True},
         'product_id': {'string': 'product', 'type': 'many2one', 'relation': 'product.product', 'required': True, 'readonly':1},
         'uom_id': {'string': 'Unit of Measure', 'type': 'many2one', 'relation': 'product.uom', 'required':True},
-        'warehouse_id': {'string': 'Location', 'type': 'many2one', 'relation':'stock.warehouse', 'required':True},
+        'warehouse_id': {'string': 'Warehouse', 'type': 'many2one', 'relation':'stock.warehouse', 'required':True},
         'date_planned': {'string': 'Planned Date', 'type': 'date', 'required':True, 'default': lambda *args: time.strftime('%Y-%m-%d')}
     }
 
