@@ -724,9 +724,11 @@ class orm_template(object):
                     # translate each selection option
                     sel2 = []
                     for (key, val) in sel:
-                        val2 = translation_obj._get_source(cr, user,
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user,
                                 self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)
+                                context.get('lang', False) or 'en_US', val)			
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
