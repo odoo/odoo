@@ -125,7 +125,7 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem action="open_view_template_project" id="menu_template_project" parent="menu_definition"/>
+        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>
 
         <record id="open_view_project" model="ir.actions.act_window">
             <field name="name">New Project</field>
