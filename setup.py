@@ -138,6 +138,7 @@ def data_files():
                           glob.glob(opj(add_path, 'report', '*sxw')) +
                           glob.glob(opj(add_path, 'report', '*xsl')))]
             files.extend(pathfiles)
+    files.append(('.', [('bin/import_xml.rng')]))
     return files
 
 check_modules()
@@ -158,7 +159,7 @@ options = {"py2exe": {
     "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
                  "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
                  "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                 "pydot"],
+                 "pydot","asyncore","asynchat"],
     "excludes" : ["Tkconstants","Tkinter","tcl"],
     }}
 
