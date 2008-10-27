@@ -40,7 +40,7 @@
 
     Different reports are also provided, mainly for attendance statistics.
     """,
-    "depends" : ["base", "crm_configuration", "process"],
+    "depends" : ["base", "process"],
     "init_xml" : [],
     "demo_xml" : [
         "hr_demo.xml", 

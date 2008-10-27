@@ -22,7 +22,9 @@
     """,
     "depends" : ["base"],
     "init_xml" : [],
-    "demo_xml" : ["base_contact_demo.xml"],
+    "demo_xml" : [
+        "base_contact_demo.xml"
+    ],
     "update_xml" : [
         "security/ir.model.access.csv",
         'base_contact_view.xml'

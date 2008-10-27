@@ -35,7 +35,7 @@
                         <field name="lang_id"/>
                         <field name="active"/>
                         <separator string="Functions" colspan="4"/>
-                        <field name="job_ids" colspan="4" nolabel="1" mode="tree, form">
+                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions">
                                 <field name="function_id"/>
                                 <field name="address_id"/>
@@ -103,7 +103,7 @@
                         <field name="phone"/>
                         <field name="fax"/>
                         <newline/>
-                        <field name="job_ids" mode="tree, form" colspan="4">
+                        <field name="job_ids" mode="tree,form" colspan="4">
                             <tree string="Contacts" editable="top">
                                 <field name="sequence_partner"/>
                                 <field name="contact_id"/>
@@ -222,7 +222,7 @@
         <field name='type'>form</field>
         <field name='arch' type='xml'>
             <field name="email" position="replace">
-                <field name="job_ids" mode="tree, form" colspan="4">
+                <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>
                         <field name="function_id"/>

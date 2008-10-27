@@ -25,7 +25,7 @@
             <field name="model">hr_timesheet_sheet.sheet.account</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet by accounts">
+                <form string="Timesheet by Accounts">
                     <field name="sheet_id" select="1"/>
                     <field name="name" select="1"/>
                     <field name="total" sum="Total"/>
@@ -149,17 +149,6 @@
                             <field name="total_timesheet" widget="float_time"/>
                             <field name="total_difference" widget="float_time"/>
                         </page>
-                        <!--
-                    <page string="By account">
-                        <field name="account_ids" colspan="4" nolabel="1">
-                            <tree string="Analytic accounts">
-                                <field name="name"/>
-                                <field name="total" widget="float_time"/>
-                                <field name="invoice_rate"/>
-                            </tree>
-                        </field>
-                    </page>
-                    -->
                     </notebook>
                     <field name="state"/>
                     <group col="4" colspan="2">
@@ -201,14 +190,13 @@
         </record>
         <menuitem action="act_hr_timesheet_sheet_form_my_confirm" id="menu_act_hr_timesheet_sheet_form_my_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my"/>
         
-        <wizard id="act_hr_timesheet_sheet_form_department_current" model="hr.employee" name="hr_timesheet_sheet.department.open" string="My department's timesheet"/>
+        <wizard id="act_hr_timesheet_sheet_form_department_current" model="hr.employee" name="hr_timesheet_sheet.department.open" string="My Department's Timesheet"/>
         <menuitem action="act_hr_timesheet_sheet_form_department_current" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_current" parent="hr_timesheet_sheet.next_id_60" type="wizard"/>
         
-        <wizard id="act_hr_timesheet_sheet_form_department_validate" model="hr.employee" name="hr_timesheet_sheet.department.validate.open" string="My department's timesheet"/>
+        <wizard id="act_hr_timesheet_sheet_form_department_validate" model="hr.employee" name="hr_timesheet_sheet.department.validate.open" string="My Department's Timesheet to Validate"/>
         <menuitem action="act_hr_timesheet_sheet_form_department_validate" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_validate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
         
-        
-        <wizard id="act_hr_timesheet_sheet_form_department_confirm" model="hr.employee" name="hr_timesheet_sheet.department.confirm.open" string="My department's timesheet"/>
+        <wizard id="act_hr_timesheet_sheet_form_department_confirm" model="hr.employee" name="hr_timesheet_sheet.department.confirm.open" string="My Department's Timesheet to Confirm"/>
         <menuitem action="act_hr_timesheet_sheet_form_department_confirm" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
         
         
