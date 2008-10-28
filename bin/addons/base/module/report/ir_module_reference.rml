@@ -112,7 +112,7 @@
       <blockTable colWidths="276.0,234.0" repeatRows="1" style="Tableau2">
         <tr>
           <td>
-            <para style="Standard">Name: [[ module.shortdesc]]</para>
+            <pre style="Standard">Name: [[ objdoc(module.shortdesc) ]]</pre>
           </td>
           <td>
             <para style="Standard">Version: [[module.latest_version]]</para>
@@ -127,7 +127,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="P6">[[ module.description ]]</para>
+      <pre style="P6">[[ module.description ]]</pre>
       <section>
         <para style="Standard">[[ repeatIn(findobj(module.name) ,'object') ]]</para>
         <blockTable colWidths="510.0" repeatRows="1" style="Tableau3">

@@ -214,10 +214,10 @@ class ir_model_fields(osv.osv):
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created', required=True, readonly=True),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
-
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
     }
+    _rec_name='field_description'
     _defaults = {
         'view_load': lambda *a: 0,
         'selection': lambda *a: "[]",

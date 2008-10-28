@@ -298,13 +298,12 @@ def model_get(self, cr, uid, context={}):
 
 class ir_model_fields(osv.osv):
     _inherit = 'ir.model.fields'
-    _rec_name = 'complete_name'
+    _rec_name = 'field_description'
     _columns = {
         'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
     }
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
-
         def get_fields(cr, uid, field, rel):
             result = []
             mobj = self.pool.get('ir.model')
