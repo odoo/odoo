@@ -37,7 +37,7 @@ _date_form = '''<?xml version="1.0"?>
     <field name="init_date"/>
     <field name="end_date"/>
     <field name="max_delay"/>
-    <label string="Bellow this delay, the error is considered as volunteer" colspan="2"/>
+    <label string="Bellow this delay, the error is considered to be voluntary" colspan="2"/>
 </form>'''
 
 _date_fields = {

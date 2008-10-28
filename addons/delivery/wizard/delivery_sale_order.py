@@ -34,12 +34,9 @@ import ir
 import pooler
 from tools.translate import _
 
-delivery_form = """<?xml version="1.0"?>
-<form string="Create deliveries">
-    <separator colspan="4" string="Delivery Method" />
-    <field name="carrier_id"/>
-</form>
-"""
+from tools.misc import UpdateableStr
+
+delivery_form = UpdateableStr()
 
 delivery_fields = {
     'carrier_id' : {'string':'Delivery Method', 'type':'many2one', 'relation': 'delivery.carrier','required':True}
@@ -48,6 +45,13 @@ delivery_fields = {
 def _delivery_default(self, cr, uid, data, context):
     order_obj = pooler.get_pool(cr.dbname).get('sale.order')
     order = order_obj.browse(cr, uid, data['ids'])[0]
+    delivery_form.string="""<?xml version="1.0"?>
+    <form string="Create deliveries">
+        <separator colspan="4" string="Delivery Method" />
+        <field name="carrier_id" context="{'order_id': %d}"/>
+    </form>
+    """ % (data['id'],)
+
     
     if not order.state in ('draft'):
         raise wizard.except_wizard(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
@@ -80,7 +84,7 @@ def _delivery_set(self, cr, uid, data, context):
             'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context), 
             'tax_id': [(6,0,taxes_ids)],
             'type': 'make_to_stock'
-            })
+        })
 
     return {}
 

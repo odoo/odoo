@@ -284,7 +284,7 @@ class hr_timesheet_sheet(osv.osv):
 
 
     _constraints = [
-        (_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to']),
+        (_sheet_date, 'You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
         (_date_current_check, 'You must select a Current date wich is in the timesheet dates !', ['date_current']),
     ]
 

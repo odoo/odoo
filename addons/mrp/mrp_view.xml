@@ -642,12 +642,12 @@
                         <separator colspan="2" string="Planification"/>
                         <field name="date_planned" select="1"/>
                         <field name="procure_method" select="2"/>
-                        <field name="priority"/>
+                        <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" select="1"/>
+                        <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" select="2"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
@@ -709,7 +709,7 @@
         <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action"/>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Exceptions procurements</field>
+            <field name="name">Exceptions Procurements</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -719,7 +719,7 @@
         <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="stock.menu_stock_root"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Exceptions procurements to fix</field>
+            <field name="name">Exceptions Procurements to Fix</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>

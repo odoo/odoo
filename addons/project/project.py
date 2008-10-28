@@ -109,6 +109,11 @@ class project(osv.osv):
                 res[id] = prog / tot
         return res
 
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for proj in self.browse(cr, uid, ids):
+            if proj.tasks:
+                raise osv.except_osv(_('Operation Not Permited !'), _('You can not delete a project with tasks. I suggest you to desactivate it.'))
+        return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
         'active': fields.boolean('Active'),

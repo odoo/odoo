@@ -65,8 +65,14 @@ class account_analytic_account(osv.osv):
     _columns = {
         'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
         'amount_max': fields.float('Max. Invoice Price'),
-        'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount'),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Invoicing'),
+        'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
+            help="Total invoiced"),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
+            help="Check this field if you plan to automatically generate invoices based " \
+            "on the costs in this analytic account: timesheets, expenses, ..."),
+    }
+    _defaults = {
+        'pricelist_id': lambda self,cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 account_analytic_account()
 

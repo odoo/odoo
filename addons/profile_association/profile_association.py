@@ -33,11 +33,9 @@ import pooler
 class profile_association_config_install_modules_wizard(osv.osv_memory):
     _name='profile.association.config.install_modules_wizard'
     _columns = {
-        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
         'project':fields.boolean('Project Management'),
         'event' : fields.boolean('Events Organisation'),
-        'crm' : fields.boolean('Fund Raising'),
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
@@ -47,8 +45,6 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
-
-
     def action_install(self, cr, uid, ids, context=None):
         result=self.read(cr,uid,ids)
         mod_obj = self.pool.get('ir.module.module')
@@ -66,8 +62,6 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-
-
 profile_association_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

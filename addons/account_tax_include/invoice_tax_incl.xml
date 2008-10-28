@@ -9,8 +9,8 @@
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
                 <field name="python_compute" position="after">
-                    <field colspan="4" name="python_compute_inv" nolabel="1"/>
                     <separator colspan="4" string="Compute Code for Taxes included prices"/>
+                    <field colspan="4" name="python_compute_inv" nolabel="1"/>
                 </field>
             </field>
         </record>

@@ -107,7 +107,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id"/>
-                            <field name="project_id" select="2"/>
+                            <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id}"/>
                             <newline/>
                             <field colspan="4" mode="tree,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -427,7 +427,7 @@
         <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"/>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced lines</field>
+            <field name="name">Uninvoiced Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>

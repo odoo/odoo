@@ -87,21 +87,22 @@ class account_analytic_account(osv.osv):
                     WHERE account_analytic_account.id IN (%s) \
                         AND account_analytic_line.invoice_id is null \
                         AND account_analytic_line.to_invoice IS NOT NULL \
+                        and account_analytic_journal.type in ('purchase','general') \
                     GROUP BY account_analytic_account.id;"""%acc_set)
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
 
             # Expense amount and purchase invoice
-            acc_set = ",".join(map(str, ids2))
-            cr.execute ("select account_analytic_line.account_id, sum(amount) \
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
-                        and account_analytic_journal.type = 'purchase' \
-                    GROUP BY account_analytic_line.account_id;"%acc_set)
-            for account_id, sum in cr.fetchall():
-                res2[account_id] = round(sum,2)
+            #acc_set = ",".join(map(str, ids2))
+            #cr.execute ("select account_analytic_line.account_id, sum(amount) \
+            #        from account_analytic_line \
+            #        join account_analytic_journal \
+            #            on account_analytic_line.journal_id = account_analytic_journal.id \
+            #        where account_analytic_line.account_id IN (%s) \
+            #            and account_analytic_journal.type = 'purchase' \
+            #        GROUP BY account_analytic_line.account_id;"%acc_set)
+            #for account_id, sum in cr.fetchall():
+            #    res2[account_id] = round(sum,2)
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -195,26 +196,13 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            # First part with expense and purchase
-            cr.execute("""select account_analytic_line.account_id,sum(amount) \
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
-                        and account_analytic_journal.type = 'purchase' \
-                    GROUP BY account_analytic_line.account_id"""%acc_set)
-            for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
-
-            # Second part with timesheet (with invoice factor)
-            acc_set = ",".join(map(str, ids2))
             cr.execute("""select account_analytic_line.account_id as account_id, \
                         sum((account_analytic_line.unit_amount * pt.list_price) \
                             - (account_analytic_line.unit_amount * pt.list_price \
                                 * hr.factor)) as somme
                     from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    left join account_analytic_journal \
+                        on (account_analytic_line.journal_id = account_analytic_journal.id) \
                     join product_product pp \
                         on (account_analytic_line.product_id = pp.id) \
                     join product_template pt \
@@ -225,6 +213,7 @@ class account_analytic_account(osv.osv):
                         on (hr.id=a.to_invoice) \
                 where account_analytic_line.account_id IN (%s) \
                     and a.to_invoice IS NOT NULL \
+                    and account_analytic_journal.type in ('purchase','general')
                 GROUP BY account_analytic_line.account_id"""%acc_set)
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
@@ -350,7 +339,7 @@ class account_analytic_account(osv.osv):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
             elif account.real_margin <> 0.0:
-                res[account.id] = (account.ca_invoiced / account.real_margin) * 100
+                res[account.id] = -(account.real_margin / account.total_cost) * 100
             else:
                 res[account.id] = 0.0
         for id in ids:
@@ -410,19 +399,19 @@ class account_analytic_account(osv.osv):
         'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced Amount', help="Total customer invoiced amount for this account."),
         'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total Costs', help="Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets."),
         'ca_to_invoice': fields.function(_ca_to_invoice_calc, method=True, type='float', string='Uninvoiced Amount', help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs."),
-        'ca_theorical': fields.function(_ca_theorical_calc, method=True, type='float', string='Theorical Revenue', help="Based on the costs you had on the project, what would have been the revenue of all these costs have been invoiced at the normal sale price provided by the pricelist."),
-        'hours_quantity': fields.function(_hours_quantity_calc, method=True, type='float', string='Hours Tot', help="Number of hours on spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
+        'ca_theorical': fields.function(_ca_theorical_calc, method=True, type='float', string='Theorical Revenue', help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist."),
+        'hours_quantity': fields.function(_hours_quantity_calc, method=True, type='float', string='Hours Tot', help="Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
         'last_invoice_date': fields.function(_last_invoice_date_calc, method=True, type='date', string='Last Invoice Date', help="Date of the last invoice created for this analytic account."),
-        'last_worked_invoiced_date': fields.function(_last_worked_invoiced_date_calc, method=True, type='date', string='Last Invoiced Worked Date', help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
-        'last_worked_date': fields.function(_last_worked_date_calc, method=True, type='date', string='Last Worked Date', help="Date of the latest work done on this account."),
+        'last_worked_invoiced_date': fields.function(_last_worked_invoiced_date_calc, method=True, type='date', string='Date of Last Invoiced Cost', help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
+        'last_worked_date': fields.function(_last_worked_date_calc, method=True, type='date', string='Date of Last Cost/Work', help="Date of the latest work done on this account."),
         'hours_qtt_non_invoiced': fields.function(_hours_qtt_non_invoiced_calc, method=True, type='float', string='Uninvoiced Hours', help="Number of hours (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
-        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced Hours', help="Number of hours that already have invoiced. If you don't invoice based on costs, it's the number of hours spent. If you invoice based on hours, it's the hours that have been invoiced."),
-        'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining Hours', help="Computed using the forumla: Maximum Quantity - Hours Tot."),
-        'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining Revenue', help="If you invoice based on costs, this is the revenue you will invoice to the customer when you will launch the invoicing wizard."),
+        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced Hours', help="Number of hours that can be invoiced plus those that already have been invoiced."),
+        'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining Hours', help="Computed using the formula: Maximum Quantity - Hours Tot."),
+        'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining Revenue', help="Computed using the formula: Max Invoice Price - Invoiced Amount."),
         'revenue_per_hour': fields.function(_revenue_per_hour_calc, method=True, type='float', string='Revenue per Hours (real)', help="Computed using the formula: Invoiced Amount / Hours Tot."),
         'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real Margin', help="Computed using the formula: Invoiced Amount - Total Costs."),
-        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical Margin', help="Computed using the formula: (Theorical Revenue / Total Costs) * 100."),
-        'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real Margin Rate (%)', help="Computes using the formula: (Invoiced Amount / Total Costs) * 100."),
+        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical Margin', help="Computed using the formula: Theorial Revenue - Total Costs"),
+        'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real Margin Rate (%)', help="Computes using the formula: (Real Margin / Total Costs) * 100."),
         'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
     }
@@ -449,8 +438,7 @@ class account_analytic_account_summary_user(osv.osv):
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
                     'WHERE account_id in (%s) ' \
-                        'AND "user" in (%s) ' % \
-                        (acc_set, user_set))
+                        'AND "user" in (%s) ' % (acc_set, user_set))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:

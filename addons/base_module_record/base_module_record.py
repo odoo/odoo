@@ -179,7 +179,7 @@ class base_module_record(osv.osv):
         # Create the minidom document
         self.ids = {}
         doc = minidom.Document()
-        terp = doc.createElement("terp")
+        terp = doc.createElement("openerp")
         doc.appendChild(terp)
         for rec in self.recording_data:
             if rec[0]=='workflow':
