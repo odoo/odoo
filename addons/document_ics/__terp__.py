@@ -12,6 +12,7 @@
     "init_xml" : ["document_data.xml"],
     "update_xml" : [
         "document_view.xml",
+        "security/ir.model.access.csv",
     ],
     "demo_xml" : [],
     "active": False,
