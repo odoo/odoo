@@ -239,6 +239,9 @@
                         <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
+                        <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" select="1"/>
+                        <field name="period_id"/>
+                        <label align="0.0" colspan="2" string="(keep empty to use the current period)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
@@ -284,9 +287,6 @@
                             <field name="origin" select="2"/>
                             <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"/>
                             <field name="move_id"/>
-                            <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" select="1"/>
-                            <field name="period_id"/>
-                            <label align="0.0" colspan="2" string="(keep empty to use the current period)"/>
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>

@@ -66,7 +66,7 @@
             <field eval="'Packing List'" name="name"/>
             <field eval="'The worker have to pack the requested products.'" name="note"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>
-            <field eval="'object.state in ('assigned', 'confirmed')'" name="model_states"/>
+            <field name="model_states">object.state in ('assigned', 'confirmed')</field>
         </record>
 
         <record id="process_node_deliveryorder0" model="process.node">
@@ -76,7 +76,7 @@
             <field eval="'Delivery Order'" name="name"/>
             <field eval="'The delivery order document, when boxes leaves the warehouse.'" name="note"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>
-            <field eval="'object.state in ('done')'" name="model_states"/>
+            <field name="model_states">object.state in ('done')</field>
         </record>
 
         <record id="process_node_invoice0" model="process.node">
@@ -107,7 +107,7 @@
         <record id="process_condition_conditionafterdelivery0" model="process.condition">
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="node_id" ref="process_node_invoiceafterdelivery0"/>
-            <field eval="'object.order_policy=='postpaid''" name="model_states"/>
+            <field name="model_states">object.order_policy=='postpaid'</field>
             <field eval="'condition_after_delivery'" name="name"/>
         </record>
         
@@ -139,7 +139,7 @@
         <record id="process_transition_packing0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="'Packing'" name="name"/>
-            <field eval="'Packing list is created when 'Assign' is being clicked after confirming the sale order. This transaction moves the sale order to packing list.'" name="note"/>
+            <field eval="'Packing list is created when the Assign button is being clicked after confirming the sale order. This transaction moves the sale order to packing list.'" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
         </record>
@@ -147,7 +147,7 @@
         <record id="process_transition_deliver0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="'Deliver'" name="name"/>
-            <field eval="'Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button.'" name="note"/>
+            <field eval="'Confirming the packing list moves them to delivery order. This can be done by clicking on the Validate button.'" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_deliveryorder0"/>
             <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
         </record>
@@ -155,7 +155,7 @@
         <record id="process_transition_invoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="'Invoice'" name="name"/>
-            <field eval="'Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices.'" name="note"/>
+            <field eval="'Invoice is created when Create Invoice is being clicked after confirming the sale order. This transaction moves the sale order to invoices.'" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
             <field eval="[(6,0,[ref('sale.trans_wait_invoice_invoice_manual')])]" name="transition_ids"/>
@@ -164,7 +164,7 @@
         <record id="process_transition_invoiceafterdelivery0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="'Invoice after delivery'" name="name"/>
-            <field eval="'When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it will automatic create after delivery.'" name="note"/>
+            <field eval="'When you select Shipping Ploicy = Automatic Invoice after delivery , it will automatic create after delivery.'" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoiceafterdelivery0"/>
             <field model="process.node" name="source_node_id" ref="process_node_deliveryorder0"/>
         </record>
