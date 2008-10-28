@@ -4,7 +4,7 @@
     "version":"0.1",
     "author":"Tiny",
     "category":"Profile",
-    "depends":["membership", "event", "board_association"],
+    "depends":["membership", "board_association"],
     "demo_xml":[],
     "update_xml":[
         "security/ir.model.access.csv",

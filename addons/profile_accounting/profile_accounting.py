@@ -39,6 +39,9 @@ class profile_accounting_config_install_modules_wizard(osv.osv_memory):
         'account_asset':fields.boolean('Asset Management'),
         'hr_timesheet_invoice':fields.boolean('Invoice on Analytic Entries'),
         'account_budget_crossover':fields.boolean('Analytic Budgets'),
+        'board_document':fields.boolean('Document Management',help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+
+
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {

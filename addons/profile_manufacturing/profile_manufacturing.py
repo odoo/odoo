@@ -71,7 +71,10 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
         'portal': fields.boolean('Portal',
             help="This module allows you to manage a Portal system."),
          'mrp_subproduct': fields.boolean('Mrp Sub Product',
-            help="This module allows you to add sub poducts in mrp bom.")
+            help="This module allows you to add sub poducts in mrp bom."),
+        'board_document':fields.boolean('Document Management', 
+            help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {

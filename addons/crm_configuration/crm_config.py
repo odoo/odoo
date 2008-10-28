@@ -86,6 +86,7 @@ class crm_menu_config_wizard(osv.osv_memory):
         'lead' : fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests, the very first contact with a customer request."),
         'opportunity' : fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
         'jobs' : fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
+        'board_document':fields.boolean('Document Management', help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
         'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
         'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
         'helpdesk' : fields.boolean('Help Desk Operations', help="This may help your Help Desk."),
