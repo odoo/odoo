@@ -8,11 +8,11 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Directories">
-                <notebook>
+                <field name="name" select="1" colspan="4"/>
+                <field name="user_id"/>
+                <field name="parent_id"/>
+                <notebook colspan="4">
                 <page string="Definition">
-                    <field name="name" select="1" colspan="4"/>
-                    <field name="user_id"/>
-                    <field name="parent_id"/>
                     <separator string="Directory Type" colspan="4"/>
                     <field name="type"/>
                     <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"/>
@@ -29,14 +29,15 @@
                             <field name="sequence"/>
                             <field name="suffix"/>
                             <field name="extension"/>
+                            <field name="include_name"/>
+                            <separator string="PDF Report" colspan="4"/>
                             <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
                         </form>
                         <tree string="Contents">
-                            <field name="sequence"/>
+                            <field name="sequence" string="Seq."/>
                             <field name="name"/>
                             <field name="suffix"/>
                             <field name="extension"/>
-                            <field name="report_id"/>
                         </tree>
                     </field>
                 </page><page string="Security">
