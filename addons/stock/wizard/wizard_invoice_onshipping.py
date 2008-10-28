@@ -90,9 +90,9 @@ def _get_type(obj, cr, uid, data, context):
     return {'type': type}
 
 def _create_invoice(obj, cr, uid, data, context):
-    if context and context.get('new_picking',False):
-        data['id'] = context['new_picking']
-        data['ids'] = [context['new_picking']]
+    if data['form'].get('new_picking',False):
+        data['id'] = data['form']['new_picking']
+        data['ids'] = [data['form']['new_picking']]
     pool = pooler.get_pool(cr.dbname)
     picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
     mod_obj = pool.get('ir.model.data')

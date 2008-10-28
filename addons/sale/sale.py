@@ -898,6 +898,7 @@ class sale_order_line(osv.osv):
                     }
             else:
                 result.update({'price_unit': price})
+        print result
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

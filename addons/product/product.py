@@ -386,6 +386,10 @@ class product_product(osv.osv):
         res = {}
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
+            if not data['code']:
+                data['name'] = p.code
+            if not data['name']:
+                data['name'] = p.name
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
                     (data['name'] or '')
         return res
