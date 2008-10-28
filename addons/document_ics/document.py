@@ -33,16 +33,30 @@ from osv.orm import except_orm
 import os
 import StringIO
 import base64
+import datetime
+import time
 
-ICS_TAGS = [
-    'summary'
-]
+ICS_TAGS = {
+    'summary':'normal',
+    'uid':'normal' ,
+    'dtstart':'date' ,
+    'dtend':'date' ,
+    'created':'date' ,
+    'dt-stamp':'date' ,
+    'last-modified':'normal' ,
+    'url':'normal' ,
+    'attendee':'multiple',
+    'location':'normal',
+    'categories': 'normal',
+    'description':'normal'
+}
 
 class document_directory_ics_fields(osv.osv):
     _name = 'document.directory.ics.fields'
     _columns = {
-        'field_ids': fields.many2one('ir.model.fields', 'Open ERP Field', required=True),
-        'name': fields.selection(map(lambda x: (x,x), ICS_TAGS),'ICS Value', required=True),
+        'field_id': fields.many2one('ir.model.fields', 'Open ERP Field', required=True),
+        'name': fields.selection(map(lambda x: (x,x), ICS_TAGS.keys()),'ICS Value', required=True),
+        'content_id': fields.many2one('document.directory.content', 'Content', required=True, ondelete='cascade')
     }
 document_directory_ics_fields()
 
@@ -65,12 +79,22 @@ class document_directory_content(osv.osv):
         ids = obj_class.search(cr, uid, domain, context)
         cal = vobject.iCalendar()
         for obj in obj_class.browse(cr, uid, ids, context):
-            cal.add('vevent')
-            cal.vevent.add('summary').value = "This is a note"
-            break
+            event = cal.add('vevent')
+            for field in node.content.ics_field_ids:
+                if ICS_TAGS[field.name]=='normal':
+                    value = getattr(obj, field.field_id.name) or ''
+                    event.add(field.name).value = value
+                elif ICS_TAGS[field.name]=='date':
+                    dt = getattr(obj, field.field_id.name) or time.strftime('%Y-%m-%d %H:%M:%S')
+                    if len(dt)==10:
+                        if field.name=='dtend':
+                            dt = dt+' 10:00:00'
+                        else:
+                            dt = dt+' 09:00:00'
+                    value = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
+                    event.add(field.name).value = value
         s= StringIO.StringIO(cal.serialize())
         s.name = node
         return s
-
 document_directory_content()
 
