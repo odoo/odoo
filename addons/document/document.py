@@ -38,6 +38,8 @@ import os
 
 import pooler
 from content_index import content_index
+import netsvc
+import StringIO
 
 # Unsupported WebDAV Commands:
 #     label
@@ -77,7 +79,6 @@ class node_class(object):
         fobj = pool.get('ir.attachment')
         res2 = []
         where = []
-        print '_FILE_GET', nodename
         if self.object2:
             where.append( ('res_model','=',self.object2._name) )
             where.append( ('res_id','=',self.object2.id) )
@@ -87,7 +88,6 @@ class node_class(object):
                     test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
                 else:
                     test_nodename = (content.suffix or '') + (content.extension or '')
-                print 'TESTING CONTENT', test_nodename
                 if test_nodename.find('/'):
                     test_nodename=test_nodename.replace('/', '_')
                 path = self.path+'/'+test_nodename
@@ -131,12 +131,10 @@ class node_class(object):
         return res
 
     def _child_get(self, nodename=False):
-        print 'Getting Childs', nodename, self.type
         if self.type not in ('collection','database'):
             return []
         res = self.directory_list_for_child(nodename)
         result= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, x.type=='directory' and self.object2 or False, root=self.root), res)
-        print 'RESULT', result
         if self.type=='database':
             pool = pooler.get_pool(self.cr.dbname)
             fobj = pool.get('ir.attachment')
@@ -147,9 +145,7 @@ class node_class(object):
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
             result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, type='file', root=self.root), res)
-            print 'DATABASE', result
         if self.type=='collection' and self.object.type=="ressource":
-            print 'ICI'
             where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
             pool = pooler.get_pool(self.cr.dbname)
             obj = pool.get(self.object.ressource_type_id.model)
@@ -257,7 +253,6 @@ class document_directory(osv.osv):
             _parent(dir_id,path)
             path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
             user=self.pool.get('res.users').browse(cr,uid,uid)
-            #print "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
             return "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
         return False
     def _check_duplication(self, cr, uid,vals):
@@ -422,7 +417,7 @@ class document_directory_content(osv.osv):
         'include_name': lambda *args: 1,
     }
     def process_read_pdf(self, cr, uid, node, context={}):
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id.id)
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.content.report_id.id)
         srv = netsvc.LocalService('report.'+report.report_name)
         pdf,pdftype = srv.create(cr, uid, [node.object.id], {}, {})
         s = StringIO.StringIO(pdf)
@@ -670,7 +665,6 @@ class document_configuration_wizard(osv.osv_memory):
                 if  doc_obj.name=='All Sales Order':
                     val={}
                     id=model_obj.search(cr,uid,[('model','=','sale.order')])
-                    print 'Found', id
                     if id and not len(doc_obj.content_ids):
                         val['name']='Sale Report'
                         val['suffix']='_report'
