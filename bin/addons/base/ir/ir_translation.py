@@ -160,7 +160,7 @@ class ir_translation(osv.osv, Cacheable):
 
     def unlink(self, cursor, user, ids, context=None):
         self.clear()
-        return super(ir_translation, self).unlink(cusor, user, ids,
+        return super(ir_translation, self).unlink(cursor, user, ids,
                 context=context)
 
     def create(self, cursor, user, vals, context=None):
