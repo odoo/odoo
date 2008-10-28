@@ -16,6 +16,7 @@
     "init_xml" : ["document_data.xml"],
     "update_xml" : [
         "document_view.xml",
+        "document_data.xml",
         "security/document_security.xml",
         "security/ir.model.access.csv",
     ],

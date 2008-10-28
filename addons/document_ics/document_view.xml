@@ -1,0 +1,25 @@
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="view_document_directory_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="document.view_document_directory_form"/>
+        <field name="arch" type="xml">
+            <field name="report_id" position="after">
+                <separator string="ICS Calendar" colspan="4"/>
+                <field name="ics_object_id"/>
+                <field name="ics_domain"/>
+                <field name="ics_field_ids" colspan="4">
+                    <tree string="ICS Mapping" editable="bottom">
+                        <field name="name"/>
+                        <field name="field_id" domain="[('model_id','=',ics_object_id)]"/>
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+
+</data>
+</openerp>

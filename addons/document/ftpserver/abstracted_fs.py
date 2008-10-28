@@ -205,7 +205,7 @@ class abstracted_fs:
             cr = node.cr
             uid = node.uid
             pool = pooler.get_pool(cr.dbname)
-            return getattr(pool.get('document.directory.content'), 'process_read_'+node.extension[1:])(cr, uid, node)
+            return getattr(pool.get('document.directory.content'), 'process_read_'+node.content.extension[1:])(cr, uid, node)
         else:
             raise OSError(1, 'Operation not permited.')
 

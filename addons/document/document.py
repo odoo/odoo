@@ -77,14 +77,17 @@ class node_class(object):
         fobj = pool.get('ir.attachment')
         res2 = []
         where = []
+        print '_FILE_GET', nodename
         if self.object2:
             where.append( ('res_model','=',self.object2._name) )
             where.append( ('res_id','=',self.object2.id) )
-            for content in self.object.content_ids:
+        for content in self.object.content_ids:
+            if self.object2 or not content.include_name:
                 if content.include_name:
                     test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
                 else:
                     test_nodename = (content.suffix or '') + (content.extension or '')
+                print 'TESTING CONTENT', test_nodename
                 if test_nodename.find('/'):
                     test_nodename=test_nodename.replace('/', '_')
                 path = self.path+'/'+test_nodename
@@ -128,10 +131,12 @@ class node_class(object):
         return res
 
     def _child_get(self, nodename=False):
+        print 'Getting Childs', nodename, self.type
         if self.type not in ('collection','database'):
             return []
         res = self.directory_list_for_child(nodename)
         result= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, x.type=='directory' and self.object2 or False, root=self.root), res)
+        print 'RESULT', result
         if self.type=='database':
             pool = pooler.get_pool(self.cr.dbname)
             fobj = pool.get('ir.attachment')
@@ -142,7 +147,9 @@ class node_class(object):
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
             result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, type='file', root=self.root), res)
+            print 'DATABASE', result
         if self.type=='collection' and self.object.type=="ressource":
+            print 'ICI'
             where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
             pool = pooler.get_pool(self.cr.dbname)
             obj = pool.get(self.object.ressource_type_id.model)
@@ -379,36 +386,41 @@ class document_directory_node(osv.osv):
     }
 document_directory_node()
 
+class document_directory_content_type(osv.osv):
+    _name = 'document.directory.content.type'
+    _description = 'Directory Content Type'
+    _columns = {
+        'name': fields.char('Content Type', size=64, required=True),
+        'code': fields.char('Extension', size=4),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': lambda *args: 1
+    }
+document_directory_content_type()
+
 class document_directory_content(osv.osv):
     _name = 'document.directory.content'
     _description = 'Directory Content'
     _order = "sequence"
+    def _extension_get(self, cr, uid, context={}):
+        cr.execute('select code,name from document_directory_content_type where active')
+        res = cr.fetchall()
+        return res
     _columns = {
         'name': fields.char('Content Name', size=64, required=True),
         'sequence': fields.integer('Sequence', size=16),
         'suffix': fields.char('Suffix', size=16),
-        'report_id': fields.many2one('ir.actions.report.xml', 'Report', required=True),
-        'extension': fields.selection([('.pdf','PDF Report'),('.ics','ICS Calendar')], 'Report Type', required=True),
+        'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
+        'extension': fields.selection(_extension_get, 'Report Type', required=True, size=4),
         'include_name': fields.boolean('Include Record Name', help="Check if you cant that the name of the file start by the record name."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
-        'ics_object_id': fields.many2one('ir.model', 'Object'),
-        'ics_domain': fields.char('Domain', size=64)
     }
     _defaults = {
         'extension': lambda *args: '.pdf',
         'sequence': lambda *args: 1,
         'include_name': lambda *args: 1,
     }
-    def process_read_ics(self, cr, uid, node, context={}):
-        import vobject
-        obj_class = self.pool.get(node.ics_object_id.name)
-        ids = obj_class.search(cr, uid, node.ics_domain, context)
-        cal = vobject.iCalendar()
-        for obj in obj_class.browse(cr, uid, ids, context):
-            cal.add('vevent')
-            cal.vevent.add('summary').value = "This is a note"
-        return cal.serialize()
-
     def process_read_pdf(self, cr, uid, node, context={}):
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id.id)
         srv = netsvc.LocalService('report.'+report.report_name)
