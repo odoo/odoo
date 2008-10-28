@@ -234,7 +234,8 @@ class ir_ui_menu(osv.osv):
         'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups'),
+            'menu_id', 'gid', 'Groups', help="If you put groups, the visibility of this menu will be based on these groups. "\
+                "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),

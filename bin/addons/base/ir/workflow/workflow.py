@@ -153,7 +153,7 @@ class wkf_instance(osv.osv):
     _rec_name = 'res_type'
     _log_access = False
     _columns = {
-        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict', select=True),
+        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'uid': fields.integer('User ID'),
         'res_id': fields.integer('Resource ID', select=True),
         'res_type': fields.char('Resource Object', size=64, select=True),

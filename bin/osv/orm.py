@@ -938,16 +938,13 @@ class orm_template(object):
                                 parent.insertBefore(child, node)
                         parent.removeChild(node)
                     else:
+                        sib = node.nextSibling
                         for child in node2.childNodes:
                             if child.nodeType == child.ELEMENT_NODE:
                                 if pos == 'inside':
                                     node.appendChild(child)
                                 elif pos == 'after':
-                                    sib = node.nextSibling
-                                    if sib:
-                                        node.parentNode.insertBefore(child, sib)
-                                    else:
-                                        node.parentNode.appendChild(child)
+                                    node.parentNode.insertBefore(child, sib)
                                 elif pos=='before':
                                     node.parentNode.insertBefore(child, node)
                                 else:

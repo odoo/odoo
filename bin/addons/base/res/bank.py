@@ -55,6 +55,11 @@ class Bank(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
     }
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for bank in self.browse(cr, uid, ids, context):
+            result.append((bank.id, (bank.bic and (bank.bic + ' - ') or '') + bank.name))
+        return result
 
 Bank()
 
