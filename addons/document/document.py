@@ -81,7 +81,10 @@ class node_class(object):
             where.append( ('res_model','=',self.object2._name) )
             where.append( ('res_id','=',self.object2.id) )
             for content in self.object.content_ids:
-                test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
+                if content.include_name:
+                    test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
+                else:
+                    test_nodename = (content.suffix or '') + (content.extension or '')
                 if test_nodename.find('/'):
                     test_nodename=test_nodename.replace('/', '_')
                 path = self.path+'/'+test_nodename
@@ -384,15 +387,35 @@ class document_directory_content(osv.osv):
         'name': fields.char('Content Name', size=64, required=True),
         'sequence': fields.integer('Sequence', size=16),
         'suffix': fields.char('Suffix', size=16),
-        'versioning': fields.boolean('Versioning'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report', required=True),
-        'extension': fields.selection([('.pdf','.pdf'),('','None')], 'Extension', required=True),
-        'directory_id': fields.many2one('document.directory', 'Directory')
+        'extension': fields.selection([('.pdf','PDF Report'),('.ics','ICS Calendar')], 'Report Type', required=True),
+        'include_name': fields.boolean('Include Record Name', help="Check if you cant that the name of the file start by the record name."),
+        'directory_id': fields.many2one('document.directory', 'Directory'),
+        'ics_object_id': fields.many2one('ir.model', 'Object'),
+        'ics_domain': fields.char('Domain', size=64)
     }
     _defaults = {
-        'extension': lambda *args: '',
-        'sequence': lambda *args: 1
+        'extension': lambda *args: '.pdf',
+        'sequence': lambda *args: 1,
+        'include_name': lambda *args: 1,
     }
+    def process_read_ics(self, cr, uid, node, context={}):
+        import vobject
+        obj_class = self.pool.get(node.ics_object_id.name)
+        ids = obj_class.search(cr, uid, node.ics_domain, context)
+        cal = vobject.iCalendar()
+        for obj in obj_class.browse(cr, uid, ids, context):
+            cal.add('vevent')
+            cal.vevent.add('summary').value = "This is a note"
+        return cal.serialize()
+
+    def process_read_pdf(self, cr, uid, node, context={}):
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id.id)
+        srv = netsvc.LocalService('report.'+report.report_name)
+        pdf,pdftype = srv.create(cr, uid, [node.object.id], {}, {})
+        s = StringIO.StringIO(pdf)
+        s.name = node
+        return s
 document_directory_content()
 
 class ir_action_report_xml(osv.osv):
@@ -635,6 +658,7 @@ class document_configuration_wizard(osv.osv_memory):
                 if  doc_obj.name=='All Sales Order':
                     val={}
                     id=model_obj.search(cr,uid,[('model','=','sale.order')])
+                    print 'Found', id
                     if id and not len(doc_obj.content_ids):
                         val['name']='Sale Report'
                         val['suffix']='_report'

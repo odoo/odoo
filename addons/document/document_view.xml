@@ -29,14 +29,18 @@
                             <field name="sequence"/>
                             <field name="suffix"/>
                             <field name="extension"/>
+                            <separator string="PDF Report" colspan="4"/>
                             <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            <separator string="ICS Calendar" colspan="4"/>
+                            <field name="include_name"/>
+                            <field name="ics_object_id"/>
+                            <field name="ics_domain"/>
                         </form>
                         <tree string="Contents">
-                            <field name="sequence"/>
+                            <field name="sequence" string="Seq."/>
                             <field name="name"/>
                             <field name="suffix"/>
                             <field name="extension"/>
-                            <field name="report_id"/>
                         </tree>
                     </field>
                 </page><page string="Security">
