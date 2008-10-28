@@ -443,7 +443,7 @@ class module(osv.osv):
                 continue
             terp_file = addons.get_module_resource(name, '__terp__.py')
             mod_path = addons.get_module_path(name)
-            if os.path.isdir(mod_path) or os.path.islink(mod_path) or zipfile.is_zipfile(mod_path):
+            if mod_path and (os.path.isdir(mod_path) or os.path.islink(mod_path) or zipfile.is_zipfile(mod_path)):
                 terp = self.get_module_info(mod_name)
                 if not terp or not terp.get('installable', True):
                     continue

@@ -178,6 +178,8 @@ def create_graph(module_list, force=None):
             module = module[:-4]
         try:
             mod_path = get_module_path(module)
+            if not mod_path:
+                continue
         except IOError:
             continue
         terp_file = get_module_resource(module, '__terp__.py')
