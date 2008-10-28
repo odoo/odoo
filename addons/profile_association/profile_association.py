@@ -35,7 +35,10 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
     _columns = {
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
         'project':fields.boolean('Project Management'),
-        'event' : fields.boolean('Events Organisation'),
+        'board_document':fields.boolean('Document Management'),
+        'segmentation':fields.boolean('Segmentation'),
+        'crm_configuration' : fields.boolean('Partner Relation & Calendars'),
+        'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
