@@ -12,6 +12,43 @@ import netsvc
 import os
 from service import security
 
+class file_wrapper(StringIO.StringIO):
+    def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
+        StringIO.StringIO.__init__(self, sstr)
+        self.ressource_id = ressource_id
+        self.name = name
+        self.dbname = dbname
+        self.uid = uid
+    def close(self, *args, **kwargs):
+        db,pool = pooler.get_db_and_pool(self.dbname)
+        cr = db.cursor()
+        uid =self.uid
+        val = self.getvalue()
+        val2 = {
+            'datas': base64.encodestring(val),
+            'file_size': len(val),
+        }
+        pool.get('ir.attachment').write(cr, uid, [self.ressource_id], val2)
+        cr.commit()
+        StringIO.StringIO.close(self, *args, **kwargs)
+
+class content_wrapper(StringIO.StringIO):
+    def __init__(self, dbname, uid, pool, node, name=''):
+        StringIO.StringIO.__init__(self, '')
+        self.dbname = dbname
+        self.uid = uid
+        self.node = node
+        self.pool = pool
+        self.name = name
+    def close(self, *args, **kwargs):
+        db,pool = pooler.get_db_and_pool(self.dbname)
+        cr = db.cursor()
+        getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+        StringIO.StringIO.close(self, *args, **kwargs)
+        cr.commit()
+        cr.close()
+
+
 class abstracted_fs:
     """A class used to interact with the file system, providing a high
     level, cross-platform interface compatible with both Windows and
@@ -114,31 +151,17 @@ class abstracted_fs:
 
     # Ok
     def create(self, node, objname, mode):
+        cr = node.cr
+        uid = node.uid
+        pool = pooler.get_pool(cr.dbname)
+        child = node.child(objname)
+        if child:
+            if child.type in ('collection','database'):
+                raise OSError(1, 'Operation not permited.')
+            if child.type=='content':
+                s = content_wrapper(cr.dbname, uid, pool, child)
+                return s
         try:
-            class file_wrapper(StringIO.StringIO):
-                def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
-                    StringIO.StringIO.__init__(self, sstr)
-                    self.ressource_id = ressource_id
-                    self.name = name
-                    self.dbname = dbname
-                    self.uid = uid
-                def close(self, *args, **kwargs):
-                    db,pool = pooler.get_db_and_pool(self.dbname)
-                    cr = db.cursor()
-                    uid =self.uid
-                    val = self.getvalue()
-                    val2 = {
-                        'datas': base64.encodestring(val),
-                        'file_size': len(val),
-                    }
-                    pool.get('ir.attachment').write(cr, uid, [self.ressource_id], val2)
-                    cr.commit()
-                    StringIO.StringIO.close(self, *args, **kwargs)
-
-            cr = node.cr
-            uid = node.uid
-            pool = pooler.get_pool(cr.dbname)
-
             fobj = pool.get('ir.attachment')
             ext = objname.find('.') >0 and objname.split('.')[1] or False
 

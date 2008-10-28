@@ -35,6 +35,7 @@ import StringIO
 import base64
 import datetime
 import time
+import random
 
 ICS_TAGS = {
     'summary':'normal',
@@ -70,8 +71,41 @@ class document_directory_content(osv.osv):
     _defaults = {
         'ics_domain': lambda *args: '[]'
     }
+    def process_write_ics(self, cr, uid, node, data, context={}):
+        import vobject
+        parsedCal = vobject.readOne(data)
+        fields = {}
+        fobj = self.pool.get('document.directory.content')
+        content = fobj.browse(cr, uid, node.content.id, context)
+
+        for n in content.ics_field_ids:
+            fields[n.name] = n.field_id.name
+        if 'uid' not in fields:
+            return True
+        for child in parsedCal.getChildren():
+            result = {}
+            uuid = None
+            for event in child.getChildren():
+                if event.name.lower()=='uid':
+                    uuid = event.value
+                if event.name.lower() in fields:
+                    if ICS_TAGS[event.name.lower()]=='normal':
+                        result[fields[event.name.lower()]] = event.value.encode('utf8')
+                    elif ICS_TAGS[event.name.lower()]=='date':
+                        result[fields[event.name.lower()]] = event.value.strftime('%Y-%m-%d %H:%M:%S')
+            if not uuid:
+                continue
+
+            fobj = self.pool.get(content.ics_object_id.model)
+            id = fobj.search(cr, uid, [(fields['uid'], '=', uuid.encode('utf8'))], context=context)
+            if id:
+                fobj.write(cr, uid, id, result, context=context)
+            else:
+                fobj.create(cr, uid, result, context=context)
+
+        return True
+
     def process_read_ics(self, cr, uid, node, context={}):
-        print 'READ ICS'
         import vobject
         obj_class = self.pool.get(node.content.ics_object_id.model)
         # Can be improved to use context and active_id !
@@ -81,20 +115,24 @@ class document_directory_content(osv.osv):
         for obj in obj_class.browse(cr, uid, ids, context):
             event = cal.add('vevent')
             for field in node.content.ics_field_ids:
+                value = getattr(obj, field.field_id.name)
+                if (not value) and field.name=='uid':
+                    value = 'OpenERP-'+str(random.randint(1999999999, 9999999999))
+                    obj_class.write(cr, uid, [obj.id], {field.field_id.name: value})
                 if ICS_TAGS[field.name]=='normal':
-                    value = getattr(obj, field.field_id.name) or ''
-                    event.add(field.name).value = value
+                    value = value or ''
+                    event.add(field.name).value = value and value.decode('utf8') or ''
                 elif ICS_TAGS[field.name]=='date':
-                    dt = getattr(obj, field.field_id.name) or time.strftime('%Y-%m-%d %H:%M:%S')
+                    dt = value or time.strftime('%Y-%m-%d %H:%M:%S')
                     if len(dt)==10:
-                        if field.name=='dtend':
-                            dt = dt+' 10:00:00'
-                        else:
-                            dt = dt+' 09:00:00'
+                        dt = dt+' 09:00:00'
                     value = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
+                    if field.name=='dtend':
+                        value += datetime.timedelta(hours=2)
                     event.add(field.name).value = value
-        s= StringIO.StringIO(cal.serialize())
+        s= StringIO.StringIO(cal.serialize().encode('utf8'))
         s.name = node
+        cr.commit()
         return s
 document_directory_content()
 

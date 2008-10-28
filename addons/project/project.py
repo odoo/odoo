@@ -273,6 +273,11 @@ class task(osv.osv):
     def onchange_planned(self, cr, uid, ids, planned, effective):
         return {'value':{'remaining_hours': planned-effective}}
 
+    def _default_project(self, cr, uid, context={}):
+        if 'project_id' in context and context['project_id']:
+            return context['project_id']
+        return False
+
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
@@ -313,6 +318,7 @@ class task(osv.osv):
         'sequence': lambda *a: 10,
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'project_id': _default_project,
     }
     _order = "sequence, priority, date_deadline, id"
 

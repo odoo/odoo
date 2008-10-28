@@ -416,6 +416,8 @@ class document_directory_content(osv.osv):
         'sequence': lambda *args: 1,
         'include_name': lambda *args: 1,
     }
+    def process_write_pdf(self, cr, uid, node, context={}):
+        return True
     def process_read_pdf(self, cr, uid, node, context={}):
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.content.report_id.id)
         srv = netsvc.LocalService('report.'+report.report_name)

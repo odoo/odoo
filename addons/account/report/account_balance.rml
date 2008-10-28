@@ -50,7 +50,7 @@
     <paraStyle name="P9a" fontName="Helvetica-Bold" fontSize="9" leftIndent="0.0" alignment="LEFT"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P12a" fontName="Helvetica" fontSize="9.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="5" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="12" spaceBefore="0.0" spaceAfter="6.0"/>
     
     <blockTableStyle id="TrLevel8">
       <blockLeftPadding length="0" start="0,0" stop="-1,0"/>
@@ -174,33 +174,33 @@
 	<paraStyle
 		name="Det_Level8" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
      <paraStyle
 		name="Det_Level7" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
      <paraStyle
 		name="Det_Level6" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
     <paraStyle
 		name="Det_Level5" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
     <paraStyle
 		name="Det_Level4" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
     <paraStyle
 		name="Det_Level3" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5"/>
+		fontSize="8.0" leading="7"/>
     <paraStyle name="Det_Level2"
-		fontSize="8.0" leading="5"
+		fontSize="8.0" leading="7"
 		fontName="Times-Italic" 
 		/>
 	<paraStyle name="Det_Level1"
-		fontSize="8.0" leading="5"
+		fontSize="8.0" leading="7"
 		fontName="Times-Italic"  
 		/>
 		
@@ -277,24 +277,24 @@
 						<td><para style="P14">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]]<i>[[ a['code'] or removeParentNode('tr') ]]</i></para></td>
 				        <td><para style="P14">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ setTag('blockTable','blockTable',{'style':'TrLevel'+str(a['level'])}) ]][[ a['name'] ]]</para></td>
 				        <td>
-				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) and '%.2f'%a['debit'] or '0.00' ]]</u></font>
-				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) and '%.2f'%a['debit'] or '0.00' ]]</font></para>  
+				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) or '0.00' ]]</u></font>
+				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) or '0.00' ]]</font></para>  
 				        </td>
 				        <td>
-				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit']) and '%.2f'%a['credit'] or '0.00' ]]</u></font>
-				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit']) and '%.2f'%a['credit'] or '0.00' ]]</font></para>  
+				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit'])  or '0.00' ]]</u></font>
+				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit']) or '0.00' ]]</font></para>  
 				        </td>
 				        <td>
-						<para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance']) and '%.2f'%a['balance'] or '0.00' ]]</u></font>
-						<font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance']) and '%.2f'%a['balance'] or '0.00' ]]</font></para>
+						<para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance'])  or '0.00' ]]</u></font>
+						<font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance'])  or '0.00' ]]</font></para>
 				        </td>
 				      </tr>
 				      <tr>
 						<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]][[ a['jname'] or removeParentNode('tr') ]]</para></td>
 				       	<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]] [[ setTag('tr','tr',{'style':('TrLevel_Name'+str(a['level']))}) ]]<font>[ref: [[ a['ref'] or removeParentNode('font') ]] ]</font> [[ a['lname'] ]]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit1']) and '%.2f'%a['debit1'] or '0.00']]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit1']) and '%.2f'%a['credit1'] or '0.00']]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance1']) and '%.2f'%a['balance1'] or '0.00' ]]</para></td>	        
+				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit1']) or '0.00']]</para></td>
+				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit1']) or '0.00']]</para></td>
+				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance1']) or '0.00' ]]</para></td>	        
 				      </tr>
 				 </blockTable>
 		 	</td>
