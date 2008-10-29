@@ -63,6 +63,7 @@ def _makeInvoices(self, cr, uid, data, context):
         obj_event_reg=pool_obj.get('event.registration')
         data_event_reg=obj_event_reg.browse(cr,uid,data['ids'])
         obj_lines=pool_obj.get('account.invoice.line')
+        partner_address_id = reg.partner_invoice_id and reg.partner_invoice_id.
 
         for reg in data_event_reg:
             if reg.state=='draft':
@@ -71,23 +72,23 @@ def _makeInvoices(self, cr, uid, data, context):
                continue
             if (not reg.tobe_invoiced):
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Cannot Be Invoiced. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration is set as 'Cannot be invoiced'. \n"
                 continue
             if reg.invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Already Has an Invoice Linked. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration already has an invoice linked. \n"
                 continue
             if not reg.event_id.product_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Event Related Doesn't Have any Product. \n"
-                continue
-            if not reg.partner_address_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Contact. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Event related doesn't have any product defined. \n"
                 continue
             if not reg.partner_invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Partner to Invoice. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
+                continue
+            if not partner_address_id:
+                inv_reject = inv_reject + 1
+                inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
                 continue
 
             inv_create = inv_create + 1

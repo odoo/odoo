@@ -53,7 +53,7 @@ def _confirm(self, cr, uid, data, context):
 def _check_confirm(self, cr, uid, data, context):
     registration_obj = pooler.get_pool(cr.dbname).get('event.registration')
     registration_obj.write(cr, uid, [data['id']], {'state':'open',})
-    registration_obj._history(cr, uid, reg, 'Open', history=True)
+    registration_obj._history(cr, uid, [data['id']], 'Open', history=True)
     registration_obj.mail_user(cr,uid,[data['id']])
     return {}
 
