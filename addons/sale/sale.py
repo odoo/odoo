@@ -937,24 +937,33 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct','Direct Delivery'),
             ('one','All at once')
-        ], 'Packing Policy', required=True ),
+        ], 'Packing Default Policy', required=True ),
         'order_policy': fields.selection([
             ('manual','Invoice based on Sales Orders'),
             ('picking','Invoice based on Deliveries'),
-        ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        ], 'Shipping Default Policy', required=True),
+        'step': fields.selection([
+            ('one','Delivery Order Only'),
+            ('two','Packing List & Delivery Order')
+        ], 'Steps To Deliver a Sale Order', required=True)
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking'
+        'order_policy': lambda *a: 'picking',
+        'step': lambda *a: 'one'
     }
     def set_default(self, cr, uid, ids, context=None):
-        print context
         for o in self.browse(cr, uid, ids, context=context):
-            print o.picking_policy, o.order_policy
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
+
+            #id = self.pool.get('ir.model.data')._get_id
+
+
+            # base.group_no_one
+
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

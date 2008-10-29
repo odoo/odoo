@@ -12,7 +12,7 @@
     * User Authentification
     * Document Indexation
 """,
-    "depends" : ["base"],
+    "depends" : ["base","process"],
     "init_xml" : ["document_data.xml"],
     "update_xml" : [
         "document_view.xml",
