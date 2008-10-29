@@ -63,6 +63,9 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             "is often used for: localisation of products, managing a manufacturing "\
             "chain, a quality control location, product that you rent, etc."\
         ),
+        'warning': fields.boolean('Alerts',
+            help="Allows to manage alerts on products and partners that are "\
+            "showed on different events: sale order, invoice, purchase order, ..."),
         'point_of_sale': fields.boolean('Point of Sale',
             help="This module allows you to manage a point of sale system. "\
             "It offers a basic form for pos operations. You must also check "\
@@ -70,7 +73,7 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             "materials and payment processing hardware."),
         'portal': fields.boolean('Portal',
             help="This module allows you to manage a Portal system."),
-         'mrp_subproduct': fields.boolean('Mrp Sub Product',
+        'mrp_subproduct': fields.boolean('Mrp Sub Product',
             help="This module allows you to add sub poducts in mrp bom."),
         'board_document':fields.boolean('Document Management', 
             help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
