@@ -229,6 +229,7 @@ class document_directory(osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
+        'ressource_id': lambda *a: 0
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !')
@@ -647,49 +648,69 @@ class document_configuration_wizard(osv.osv_memory):
 
     def action_config(self, cr, uid, ids, context=None):
         obj=self.pool.get('document.directory')
-        search_ids=obj.search(cr,uid,[])
-        browse_lst=obj.browse(cr,uid,search_ids)
-        model_obj=self.pool.get('ir.model')
+        objid=self.pool.get('ir.model.data')
 
-        for doc_obj in browse_lst:            
-            if doc_obj.name in ('Partner','Contacts','Personnal Folders','Partner Category','Sales Order','All Sales Order','Sales by Salesman','Projects'):
-                res={}
-                id=[]
-                if doc_obj.name=='Partner':
-                    id=model_obj.search(cr,uid,[('model','=','res.partner')])
+        if self.pool.get('sale.order'):
+            id = objid._get_id(cr, uid, 'document', 'dir_sale_order_all')
+            id = objid.browse(cr, uid, id, context=context).res_id
+            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','sale.order')])
+            obj.write(cr, uid, [id], {
+                'type':'ressource',
+                'ressource_type_id': mid[0],
+                'domain': '[]',
+            })
+            aid = objid._get_id(cr, uid, 'sale', 'report_sale_order')
+            aid = objid.browse(cr, uid, aid, context=context).res_id
 
-                if doc_obj.name=='Contacts':
-                    id=model_obj.search(cr,uid,[('model','=','res.partner.address')])
+            self.pool.get('document.directory.content').create(cr, uid, {
+                'name': "Print Order",
+                'suffix': "_print",
+                'report_id': aid,
+                'extension': '.pdf',
+                'include_name': 1,
+                'directory_id': id,
+            })
+            id = objid._get_id(cr, uid, 'document', 'dir_sale_order_quote')
+            id = objid.browse(cr, uid, id, context=context).res_id
+            obj.write(cr, uid, [id], {
+                'type':'ressource',
+                'ressource_type_id': mid[0],
+                'domain': "[('state','=','draft')]",
+            })
 
-                if doc_obj.name=='Partner Category':
-                    id=model_obj.search(cr,uid,[('model','=','res.partner.category')])
+        if self.pool.get('product.product'):
+            id = objid._get_id(cr, uid, 'document', 'dir_product')
+            id = objid.browse(cr, uid, id, context=context).res_id
+            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','product.product')])
+            obj.write(cr, uid, [id], {
+                'type':'ressource',
+                'ressource_type_id': mid[0],
+            })
 
-                if  doc_obj.name=='All Sales Order':
-                    val={}
-                    id=model_obj.search(cr,uid,[('model','=','sale.order')])
-                    if id and not len(doc_obj.content_ids):
-                        val['name']='Sale Report'
-                        val['suffix']='_report'
-                        val['report_id']=self.pool.get('ir.actions.report.xml').search(cr,uid,[('report_name','=','sale.order')])[0]
-                        val['extension']='.pdf'
-                        val['directory_id']=doc_obj.id
-                        self.pool.get('document.directory.content').create(cr,uid,val)
+        if self.pool.get('stock.location'):
+            aid = objid._get_id(cr, uid, 'stock', 'report_product_history')
+            aid = objid.browse(cr, uid, aid, context=context).res_id
 
-                if doc_obj.name=='Sales by Salesman':
-                    id=model_obj.search(cr,uid,[('model','=','res.users')])
+            self.pool.get('document.directory.content').create(cr, uid, {
+                'name': "Product Stock",
+                'suffix': "_stock_forecast",
+                'report_id': aid,
+                'extension': '.pdf',
+                'include_name': 1,
+                'directory_id': id,
+            })
+ 
+        if self.pool.get('account.analytic.account'):
+            id = objid._get_id(cr, uid, 'document', 'dir_project')
+            id = objid.browse(cr, uid, id, context=context).res_id
+            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','account.analytic.account')])
+            obj.write(cr, uid, [id], {
+                'type':'ressource',
+                'ressource_type_id': mid[0],
+                'domain': '[]',
+                'ressource_tree': 1
+            })
 
-                if doc_obj.name=='Personnal Folders':
-                    id=model_obj.search(cr,uid,[('model','=','res.users')])
-
-                if doc_obj.name=='Projects':
-                    id=model_obj.search(cr,uid,[('model','=','account.analytic.account')])
-                    res['ressource_tree']=True
-
-                if id:
-                    res['ressource_type_id']=id[0]
-                    res['type']='ressource'
-                    obj.write(cr,uid,doc_obj.id,res)
-        self.create_folder(cr, uid, ids, context=None)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -697,28 +718,5 @@ class document_configuration_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-
-    def create_folder(self, cr, uid, ids, context=None):
-        doc_obj=self.pool.get('document.directory')
-        model_obj=self.pool.get('ir.model')
-        for name in ('Sales','Quotation','Meetings','Analysis Reports'):
-            res={}
-            if name=='Sales':
-                child_model=model_obj.search(cr,uid,[('model','=','sale.order')])
-                link_model=model_obj.search(cr,uid,[('model','=','res.users')])
-                if child_model:
-                    res['type']='ressource'
-                    res['ressource_type_id']=child_model[0]
-                    res['ressource_parent_type_id']=link_model[0]
-                    res['domain']="[('user_id','=',active_id)]"
-            else:
-                link_model=model_obj.search(cr,uid,[('model','=','account.analytic.account')])
-                if link_model:
-                    res['ressource_parent_type_id']=link_model[0]
-                    res['ressource_id']=0
-            if res:
-                res['name']=name
-                doc_obj.create(cr,uid,res)
-        return True
 
 document_configuration_wizard()

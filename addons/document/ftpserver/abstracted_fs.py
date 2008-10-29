@@ -327,7 +327,7 @@ class abstracted_fs:
         cr = db.cursor()
         uid = security.login(dbname, self.username, self.password)
         if not uid:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(2, 'Authentification Required.')
         return cr, uid, pool
 
     # Ok

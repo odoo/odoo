@@ -2512,9 +2512,14 @@ class FTPHandler(asynchat.async_chat):
             path = self.fs.ftp2fs(line, datacr)
             self.run_as_current_user(self.fs.chdir, path)
         except OSError, err:
-            why = _strerror(err)
-            self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
-            self.respond('550 %s.' %why)
+            if err.errno==2:
+                why = 'Authentication Required or Failed'
+                self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
+                self.respond('530 %s.' %why)
+            else:
+                why = _strerror(err)
+                self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
+                self.respond('550 %s.' %why)
         else:
             self.log('OK CWD "%s".' %self.fs.cwd)
             self.respond('250 "%s" is the current directory.' %self.fs.cwd)

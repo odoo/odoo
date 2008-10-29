@@ -2,92 +2,73 @@
 <openerp>
 <data noupdate="1">
 
-	<record model="document.directory" id="dir_root">
-		<field name="name">Main Repository</field>
-		<field name="user_id" ref="base.user_admin"/>
-		
+    <record model="document.directory" id="dir_root">
+        <field name="name">Documents</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
 
-	</record>
+    <record model="document.directory" id="dir_my_folder">
+        <field name="name">My Folder</field>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
 
-	<record model="document.directory" id="dir_my_folder">
-		<field name="name">My Folder</field>
-		<field name="parent_id" ref="dir_root"/>
-		<field name="user_id" ref="base.user_admin"/>
-		
-	</record>
+    <record model="document.directory" id="dir_partner_category">
+        <field name="name">Partners by Category</field>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="type">ressource</field>
+        <field name="ressource_tree">1</field>
+        <field name="ressource_type_id" search="[('model','=','res.partner.category')]" />
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
 
-	<record model="document.directory" id="dir_partner_category">
-		<field name="name">Partner Category</field>
-		<field name="parent_id" ref="dir_root"/>
-		<field name="type">ressource</field>
-		<field name="ressource_tree">1</field>
-		<field name="ressource_type_id" search="[('model','=','res.partner.category')]" />
-		<field name="user_id" ref="base.user_admin"/>
-		
-	</record>
+    <record model="document.directory" id="dir_partner">
+        <field name="name">Partners</field>
+        <field name="type">ressource</field>
+        <field name="domain">[('category_id','in',[active_id])]</field>
+        <field name="ressource_type_id" search="[('model','=','res.partner')]" />
+        <field name="ressource_parent_type_id" search="[('model','=','res.partner.category')]" />
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
 
+    <record model="document.directory" id="dir_my_partner">
+        <field name="name">My Folder</field>
+    </record>
 
+    <record model="document.directory" id="dir_personnal_folder">
+        <field name="name">Personnal Folders</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
 
-	<record model="document.directory" id="dir_partner">
-		<field name="name">Partner</field>
-		<field name="type">ressource</field>
-		<field name="domain">[('category_id','in',[active_id])]</field>
-		<field name="ressource_type_id" search="[('model','=','res.partner')]" />
-		<field name="ressource_parent_type_id" search="[('model','=','res.partner.category')]" />
-		<field name="user_id" ref="base.user_admin"/>
-		
-	</record>
+    <record model="document.directory" id="dir_product">
+        <field name="name">Products</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
 
-	<record model="document.directory" id="dir_partner_contacts">
-		<field name="name">Contacts</field>
-		<field name="type">ressource</field>
-		<field name="domain">[('partner_id','=',active_id)]</field>
-		<field name="ressource_type_id" search="[('model','=','res.partner.address')]" />
-		<field name="ressource_parent_type_id" search="[('model','=','res.partner')]" />
-		<field name="user_id" ref="base.user_admin"/>
-		
-	</record>
+    <record model="document.directory" id="dir_sale_order">
+        <field name="name">Sales Order</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
 
-	<record model="document.directory" id="dir_my_partner">
-		<field name="name">My Folder</field>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="ressource_parent_type_id" search="[('model','=','res.partner')]" />
-		
-	</record>
+    <record model="document.directory" id="dir_sale_order_all">
+        <field name="name">All Sales Order</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_sale_order"/>
+    </record>
 
-	<record model="document.directory" id="dir_personnal_folder">
-		<field name="name">Personnal Folders</field>
-		<field name="parent_id" ref="dir_root"/>
-		<field name="user_id" ref="base.user_admin"/>
-		
-	</record>
+    <record model="document.directory" id="dir_sale_order_quote">
+        <field name="name">Quotations</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_sale_order"/>
+    </record>
 
-	<record model="document.directory" id="dir_sale_order">
-		<field name="name">Sales Order</field>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="parent_id" ref="dir_root"/>
-		
-	</record>
-
-	<record model="document.directory" id="dir_sale_order_all">
-		<field name="name">All Sales Order</field>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="parent_id" ref="dir_sale_order"/>
-		
-	</record>
-	<record model="document.directory" id="dir_sale_order_salesman">
-		<field name="name">Sales by Salesman</field>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="parent_id" ref="dir_sale_order"/>
-		
-	</record>
-
-	<record model="document.directory" id="dir_project">
-		<field name="name">Projects</field>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="parent_id" ref="dir_root"/>
-		
-	</record>
+    <record model="document.directory" id="dir_project">
+        <field name="name">Projects</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
 
 </data>
 </openerp>
