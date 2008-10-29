@@ -456,19 +456,22 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
-                if line.procurement_id and (line.procurement_id.state != 'done') and (line.state!='done'):
+                if (not line.procurement_id) or (line.procurement_id.state=='done') or (line.procurement_id.move_id and line.procurement_id.move_id.state=='done'):
+                    finished = True
+                else:
                     finished = False
-                if line.procurement_id and line.procurement_id.state == 'cancel':
-                    canceled = True
-                if line.procurement_id and line.procurement_id.state <> 'cancel':
-                    notcanceled = True
+                if line.procurement_id:
+                    if (line.procurement_id.state == 'cancel') or (line.procurement_id.move_id and line.procurement_id.move_id.state=='cancel'):
+                        canceled = True
+                        if line.state != 'cancel':
+                            write_cancel_ids.append(line.id)
+                    else:
+                        notcanceled = True
                 # if a line is finished (ie its procuremnt is done or it has not procuremernt and it
                 # is not already marked as done, mark it as being so...
                 if ((not line.procurement_id) or line.procurement_id.state == 'done') and line.state != 'done':
                     write_done_ids.append(line.id)
-                # ... same for canceled lines
-                if line.procurement_id and line.procurement_id.state == 'cancel' and line.state != 'cancel':
-                    write_cancel_ids.append(line.id)
+
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -477,6 +480,7 @@ class sale_order(osv.osv):
         if mode=='finished':
             return finished
         elif mode=='canceled':
+            return canceled
             if notcanceled:
                 return False
             return canceled

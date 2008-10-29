@@ -137,7 +137,7 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'notes': fields.text('Notes', help="Internal description of the project."),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
      }
 
     _defaults = {
@@ -289,8 +289,8 @@ class task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
-        'date_start': fields.datetime('Date Opened'),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
+        'date_start': fields.datetime('Starting Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
@@ -375,7 +375,7 @@ class task(osv.osv):
             project = task.project_id
             if project and project.warn_manager and project.manager.id and (project.manager.id != uid):
                 request.create(cr, uid, {
-                    'name': "Task '%s' reopened" % task.name,
+                    'name': "Task '%s' set in progress" % task.name,
                     'state': 'waiting',
                     'act_from': uid,
                     'act_to': project.manager.id,

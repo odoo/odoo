@@ -33,7 +33,7 @@
                             <group col="9" colspan="8">
                                 <field name="state"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open"/>
-                                <button name="set_open" string="Reopen Project" type="object" states="pending,cancelled,done"/>
+                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,done"/>
                                 <button name="set_pending" string="Pending" type="object" states="open"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending"/>
@@ -89,36 +89,10 @@
                 </tree>
             </field>
         </record>
-        <record id="open_view_all_project" model="ir.actions.act_window">
-            <field name="name">All Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_id" ref="view_project"/>
-        </record>
-        <menuitem action="open_view_all_project" id="menu_all_project" parent="project.menu_main"/>
-
-        <record id="open_view_all_project_unclosed" model="ir.actions.act_window">
-            <field name="name">Unclosed projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
-            <field name="view_id" ref="view_project"/>
-        </record>
-        <menuitem action="open_view_all_project_unclosed" id="menu_all_project_unclosed" parent="project.menu_all_project"/>
-
-
-        <record id="open_view_all_project_unclosed_open" model="ir.actions.act_window">
-            <field name="name">Open projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False),('state','=','open')]</field>
-            <field name="view_id" ref="view_project"/>
-        </record>
-        <menuitem action="open_view_all_project_unclosed_open" id="menu_all_project_unclosed_open" parent="project.menu_all_project_unclosed"/>        
+        <menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/>
 
         <record id="open_view_project_open" model="ir.actions.act_window">
-            <field name="name">Open projects</field>
+            <field name="name">Running projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','=','open')]</field>
@@ -142,7 +116,7 @@
             <field name="view_mode">form,tree,calendar</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="open_view_project" id="menu_open_view_project" parent="menu_all_project"/>
+        <menuitem action="open_view_project" id="menu_open_view_project" parent="menu_all_project" sequence="50"/>
 
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
@@ -189,33 +163,36 @@
             </field>
         </record>
         <record id="open_view_my_project" model="ir.actions.act_window">
-            <field name="name">My projects</field>
+            <field name="name">My Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False),('manager', '=', uid)]</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('manager', '=', uid)]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
-        <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="project.menu_main"/>
+        <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="menu_open_view_project"/>
 
-
-        <record id="open_view_my_project_open_unclosed" model="ir.actions.act_window">
-            <field name="name">My unclosed projects</field>
+        <record id="open_view_my_project_my_run" model="ir.actions.act_window">
+            <field name="name">My Running Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('manager', '=', uid),('state','=','open')]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
-        <menuitem action="open_view_my_project_open_unclosed" id="menu_open_view_my_project_open_unclosed" parent="project.menu_open_view_my_project"/>
-
+        <menuitem
+            action="open_view_my_project_my_run"
+            id="menu_open_view_my_project_my_run"
+            parent="menu_open_view_my_project"/>
 
         <record id="open_view_my_project_open" model="ir.actions.act_window">
-            <field name="name">My open projects</field>
+            <field name="name">Projects Structure</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False),('manager', '=', uid),('state','=','open')]</field>
-            <field name="view_id" ref="view_my_project"/>
+            <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="open_view_my_project_open" id="menu_open_view_my_project_open" parent="project.menu_open_view_my_project_open_unclosed"/>
+        <menuitem
+            action="open_view_my_project_open"
+            id="menu_open_view_my_project_open"
+            parent="project.menu_main"/>
 
         <!-- Task -->
         <record id="view_task_form2" model="ir.ui.view">
@@ -249,8 +226,8 @@
                             <group col="11" colspan="4">
                                 <field name="state" select="1"/>
                                 <button name="do_draft" states="open" string="Draft" type="object"/>
-                                <button name="do_open" states="pending,draft" string="Open" type="object"/>
-                                <button name="do_reopen" states="done,cancelled" string="Re-open" type="object"/>
+                                <button name="do_open" states="pending,draft" string="Set In Progress" type="object"/>
+                                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object"/>
                                 <button name="do_pending" states="open" string="Pending" type="object"/>
                                 <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
                                 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
@@ -379,15 +356,6 @@
         </record>
         <menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" parent="menu_action_view_task4"/>
 
-        <record id="action_view_task5" model="ir.actions.act_window">
-            <field name="name">My Open Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
-        </record>
-        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="menu_action_view_task4"/>
-
         <record id="action_view_task5_prog" model="ir.actions.act_window">
             <field name="name">My Tasks in Progress</field>
             <field name="res_model">project.task</field>
@@ -404,15 +372,6 @@
             <field name="view_mode">form,tree,calendar,graph</field>
         </record>
         <menuitem action="action_view_task_new" id="menu_action_view_task_new" parent="menu_action_view_task4"/>
-
-        <record id="action_view_task6" model="ir.actions.act_window">
-            <field name="name">Open Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state', '=', 'open')]</field>
-        </record>
-        <menuitem action="action_view_task6" id="menu_action_view_task6" parent="project.menu_action_view_task"/>
 
         <record id="action_view_task6_prog" model="ir.actions.act_window">
             <field name="name">Tasks in Progress</field>
@@ -502,7 +461,7 @@
          <act_window
             domain="[('project_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]"
             id="act_project_project_2_project_task_opened"
-            name="Open Tasks"
+            name="Tasks in Progress"
             res_model="project.task"
             src_model="project.project"
             view_mode="tree,form,calendar,graph"
