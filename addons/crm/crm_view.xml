@@ -134,16 +134,15 @@
                             <field name="trg_priority_to"/>
                             <separator colspan="4" string="Conditions on Timing"/>
                             <field name="trg_date_type"/>
-                            <label align="1.0" string="Delay after trigger date:"/>
+                            <label align="1.0" string="Delay After Trigger Date:"/>
                             <group col="2" colspan="1">
                                 <field name="trg_date_range" nolabel="1"/>
                                 <field name="trg_date_range_type" nolabel="1"/>
                             </group>
                             <separator colspan="4" string="Note"/>
-                            <label string="The case must match all non empty fields so that the rule trigger the action described in the 'Actions' tab." colspan="4"/>
+                            <label align="0.0" string="The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
                         </page>
                         <page string="Actions">
-                            
                             <separator colspan="4" string="Fields to Change"/>
                             <field name="act_state"/>
                             <field name="act_section_id"/>

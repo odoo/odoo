@@ -689,15 +689,6 @@
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
 
-        <record id="mrp_procurement_action2" model="ir.actions.act_window">
-            <field name="name">Draft procurements</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-        <menuitem action="mrp_procurement_action2" id="menu_mrp_procurement_action2" parent="mrp.menu_mrp_procurement_action"/>
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Unscheduled procurements</field>
             <field name="type">ir.actions.act_window</field>
