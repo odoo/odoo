@@ -162,7 +162,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_price_type_action" groups="base.group_extended" id="menu_product_price_type_action" parent="product.menu_config_product"/>
+        <menuitem name="Prices Computations" id="menu_price" parent="product.menu_config_product"/>
+        <menuitem action="product_price_type_action" groups="base.group_extended" id="menu_product_price_type_action" parent="menu_price"/>
         
         <record id="product_pricelist_type_view" model="ir.ui.view">
             <field name="name">product.pricelist.type.form</field>
@@ -182,7 +183,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_pricelist_type_action" groups="base.group_extended" id="menu_product_pricelist_type_action" parent="product.menu_config_product"/>
+        <menuitem action="product_pricelist_type_action" groups="base.group_extended" id="menu_product_pricelist_type_action" parent="menu_price"/>
         
     </data>
 </openerp>
