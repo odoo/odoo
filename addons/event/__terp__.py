@@ -8,7 +8,6 @@
 
     This module allow you
         * to manage your events and their registrations
-        * to create retro planning for managing your events
         * to use emails to automaticly confirm and send acknowledgements for any registration to an event
         * ...
 
@@ -19,7 +18,7 @@
                 Events \ Reporting
 """,
     "depends" : [
-        "project","crm","base_contact","account_budget",
+        "crm","base_contact","account_budget",
     ],
     "demo_xml" : ["event_demo.xml"],
     "init_xml" : ["event_data.xml"],

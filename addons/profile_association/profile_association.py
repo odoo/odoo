@@ -36,7 +36,6 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
         'project':fields.boolean('Project Management'),
         'board_document':fields.boolean('Document Management', help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
-        'document_ics':fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
         'segmentation':fields.boolean('Segmentation'),
         'crm_configuration' : fields.boolean('Partner Relation & Calendars'),
         'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),

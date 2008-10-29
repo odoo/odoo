@@ -39,6 +39,7 @@
     "update_xml" : [
         "security/ir.model.access.csv",
         "report_intrastat_view.xml",
+        "intrastat_report.xml",
     ],
     "active": False,
     "installable": True

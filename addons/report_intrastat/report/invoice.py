@@ -1,9 +1,6 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,8 +25,17 @@
 #
 ##############################################################################
 
-import report_intrastat
-import report
+import time
+from report import report_sxw
+import pooler
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class account_invoice_intrastat(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(account_invoice_intrastat, self).__init__(cr, uid, name, context)
+        self.total=0
+        self.localcontext.update({
+            'time': time,
+        })
+
+report_sxw.report_sxw('report.account.invoice.intrastat', 'account.invoice', 'addons/report_intrastat/report/invoice.rml', parser=account_invoice_intrastat)
 

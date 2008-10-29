@@ -51,6 +51,8 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Invoice_Line_Content">
       <blockAlignment value="LEFT"/>
@@ -63,6 +65,8 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="8,-1" stop="8,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="9,-1" stop="9,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Format_2">
       <blockAlignment value="LEFT"/>
@@ -203,7 +207,7 @@
     <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="15.0" leading="19" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_8" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Footer" fontName="Times-Roman"/>
     <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
@@ -259,7 +263,7 @@
     </blockTable>
     <para style="terp_header">Invoice [[ ((o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')) or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
     <para style="terp_header">PRO-FORMA [[ ((o.type == 'out_invoice' and o.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
-    <para style="terp_header">PRO-FORMA [[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
+    <para style="terp_header">Draft Invoice [[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
     <para style="terp_header">Canceled Invoice [[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
     <para style="terp_header">Refund [[ (o.type=='out_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
     <para style="terp_header">Supplier Refund [[ (o.type=='in_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
@@ -276,7 +280,7 @@
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Partner Code</para>
+          <para style="terp_tblheader_General_Centre">Partner Ref.</para>
         </td>
       </tr>
     </blockTable>
@@ -296,13 +300,19 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="211.0,62.0,63.0,63.0,36.0,89.0" style="Table_Header_Invoice_Line">
+    <blockTable colWidths="170.0,50.0,50.0,50.0,51.0,51.0,29.0,72.0" style="Table_Header_Invoice_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Taxes</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Intrastat</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Weight</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Quantity</para>
@@ -314,19 +324,25 @@
           <para style="terp_tblheader_Details_Right">Disc. (%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_Details_Centre">Price</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.invoice_line,'l') ]]</para>
-      <blockTable colWidths="211.0,62.0,36.0,27.0,63.0,36.0,62.0,26.0" style="Table_Invoice_Line_Content">
+      <blockTable colWidths="170.0,50.0,50.0,50.0,29.0,22.0,51.0,29.0,50.0,21.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ l.name ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[l.product_id and l.product_id.intrastat_id and l.product_id.intrastat_id.name or '']]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ l.product_id and l.product_id.weight or '']]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.quantity) ]]</para>
@@ -350,6 +366,19 @@
         <tr>
           <td>
             <para style="terp_default_Note">[[ format(l.note or removeParentNode('tr')) ]]</para>
+            <para style="terp_default_Note">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Note">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Note">
+              <font color="white"> </font>
+            </para>
           </td>
           <td>
             <para style="terp_default_Note">
@@ -411,7 +440,7 @@
           <blockTable colWidths="120.0,91.0,29.0" style="Table_eclu_Taxes_Total">
             <tr>
               <td>
-                <para style="terp_default_Bold_9">Net Total:</para>
+                <para style="terp_default_Bold_9">Total (excl. taxes):</para>
               </td>
               <td>
                 <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed) ]]</para>
@@ -443,7 +472,7 @@
           <blockTable colWidths="119.0,93.0,28.0" style="Table_Total_Include_Taxes">
             <tr>
               <td>
-                <para style="terp_default_Bold_9">Total:</para>
+                <para style="terp_default_Bold_9">Total (inclu. taxes):</para>
               </td>
               <td>
                 <para style="terp_default_Right_9">[[ formatLang(o.amount_total) ]]</para>
@@ -463,16 +492,19 @@
           <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
-                <para style="terp_tblheader_General_Centre">Tax</para>
+                <para style="terp_tblheader_Details_Centre">Tax</para>
               </td>
               <td>
-                <para style="terp_tblheader_General_Right">Base</para>
+                <para style="terp_tblheader_Details_Right">Base</para>
               </td>
               <td>
-                <para style="terp_tblheader_General_Right">Amount</para>
+                <para style="terp_tblheader_Details_Right">Amount</para>
               </td>
             </tr>
           </blockTable>
+          <para style="terp_default_2">
+            <font color="white"> </font>
+          </para>
         </td>
       </tr>
       <tr>
@@ -550,6 +582,12 @@
     </blockTable>
     <para style="terp_default_2">
       <font color="white"> </font>
+    </para>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_Centre_9">
+      <font face="Times-Roman"/>
     </para>
   </story>
 </document>
