@@ -456,7 +456,9 @@ class account_journal(osv.osv):
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want that new account moves pass through the \'draft\' state and goes direclty to the \'posted state\' without any manual validation.'),
+        'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
     }
+
     _defaults = {
         'active': lambda *a: 1,
         'user_id': lambda self,cr,uid,context: uid,

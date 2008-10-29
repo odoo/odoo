@@ -283,6 +283,11 @@ class product_template(osv.osv):
         res = cr.fetchone()
         return res and res[0] or False
 
+    def _default_category(self, cr, uid, context={}):
+        if 'categ_id' in context and context['categ_id']:
+            return context['categ_id']
+        return False
+
     _defaults = {
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
@@ -298,6 +303,7 @@ class product_template(osv.osv):
         'uom_po_id': _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
+        'categ_id' : _default_category,
     }
 
     def _check_uom(self, cursor, user, ids):

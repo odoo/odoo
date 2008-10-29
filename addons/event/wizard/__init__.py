@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 import event_registration
-import project_wizard
 import make_invoice
 import event_registrations_partner
 import confirm_registration

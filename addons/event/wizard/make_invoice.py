@@ -71,23 +71,25 @@ def _makeInvoices(self, cr, uid, data, context):
                continue
             if (not reg.tobe_invoiced):
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Cannot Be Invoiced. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration is set as 'Cannot be invoiced'. \n"
                 continue
             if reg.invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Already Has an Invoice Linked. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration already has an invoice linked. \n"
                 continue
             if not reg.event_id.product_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Event Related Doesn't Have any Product. \n"
-                continue
-            if not reg.partner_address_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Contact. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Event related doesn't have any product defined. \n"
                 continue
             if not reg.partner_invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Partner to Invoice. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
+                continue
+            partner_address_list = reg.partner_invoice_id and pool_obj.get('res.partner').address_get(cr, uid, [reg.partner_invoice_id.id], adr_pref=['invoice'])
+            partner_address_id = partner_address_list['invoice'] 
+            if not partner_address_id:
+                inv_reject = inv_reject + 1
+                inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
                 continue
 
             inv_create = inv_create + 1
@@ -117,8 +119,8 @@ def _makeInvoices(self, cr, uid, data, context):
                 'reference': False,
                 'account_id': reg.partner_invoice_id.property_account_receivable.id,
                 'partner_id': reg.partner_invoice_id.id,
-                'address_invoice_id':reg.partner_address_id.id,
-                'address_contact_id':reg.partner_address_id.id,
+                'address_invoice_id':partner_address_id,
+                'address_contact_id':partner_address_id,
                 'invoice_line': [(6,0,[inv_id])],
                 'currency_id' :reg.partner_invoice_id.property_product_pricelist.currency_id.id,
                 'comment': "",
@@ -129,7 +131,7 @@ def _makeInvoices(self, cr, uid, data, context):
             inv_id = inv_obj.create(cr, uid, inv)
             list_inv.append(inv_id)
             obj_event_reg.write(cr, uid,reg.id, {'invoice_id' : inv_id,'state':'done'})
-            obj_event_reg._history(cr, uid,[reg], 'Invoiced', history=True)
+            obj_event_reg._history(cr, uid,[reg.id], 'Invoiced', history=True)
 
         return {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject) , 'invoice_ids':  list_inv, 'inv_rej_reason': inv_rej_reason}
 

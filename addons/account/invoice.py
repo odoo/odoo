@@ -79,8 +79,7 @@ class account_invoice(osv.osv):
     def _get_journal_analytic(self, cr, uid, type_inv, context={}):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         tt = type2journal.get(type_inv, 'sale')
-        cr.execute("select id from account_analytic_journal where type=%s limit 1", (tt,))
-        result = cr.fetchone()
+        result = self.pool.get('account_analytic_journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
             raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
         return result[0]

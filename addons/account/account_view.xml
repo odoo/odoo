@@ -236,6 +236,7 @@
                 <tree string="Account Journal">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -979,9 +980,21 @@
         <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/>
         <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>
 
-        <act_window domain="[('account_id', '=', active_id)]" id="act_account_acount_move_line_open" name="Entries" res_model="account.move.line" src_model="account.account"/>
+        <act_window
+            domain="[('account_id', '=', active_id)]"
+            id="act_account_acount_move_line_open" 
+            name="" 
+            context="{'account_id': active_id}"
+            res_model="account.move.line" 
+            src_model="account.account"/>
 
-        <act_window domain="[('account_id', '=', active_id),('reconcile_id','=',False)]" id="act_account_acount_move_line_open_unreconciled" name="Unreconciled entries" res_model="account.move.line" src_model="account.account"/>
+        <act_window
+            domain="[('account_id', '=', active_id),('reconcile_id','=',False)]" 
+            id="act_account_acount_move_line_open_unreconciled" 
+            name="Unreconciled entries" 
+            res_model="account.move.line" 
+            context="{'account_id': active_id}"
+            src_model="account.account"/>
 
         <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
 
@@ -1267,7 +1280,7 @@
         </record>
 
         <record id="action_move_line_tree1" model="ir.actions.act_window">
-            <field name="name">Entries</field>
+            <field name="name" eval="False"/>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

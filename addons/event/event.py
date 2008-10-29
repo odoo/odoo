@@ -45,24 +45,6 @@ class crm_case_log(osv.osv):
     }
 crm_case_log()
 
-class one2many_mod_task(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
-        if not values:
-                values = {}
-        res = {}
-        for id in ids:
-            res[id] = []
-        for id in ids:
-            query = "select project_id from event_event where id = %i" %id
-            cr.execute(query)
-            project_ids = [ x[0] for x in cr.fetchall()]
-            ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',project_ids),('state','<>','done')], limit=self._limit)
-            for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-                res[id].append( r['id'] )
-        return res
-
 class event_type(osv.osv):
     _name = 'event.type'
     _description= 'Event type'
@@ -130,9 +112,6 @@ class event(osv.osv):
                 reg_ids = self.pool.get('event.registration').search(cr, uid, [('event_id','=',eve.id)])
                 if reg_ids:
                     self.pool.get('event.registration').write(cr, uid, reg_ids, {'date_deadline':vals['date_begin']})
-                #change the date of the project
-                if eve.project_id:
-                    self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin})
 
         #change the description of the registration linked to this event
         if 'mail_auto_confirm' in vals:
@@ -156,8 +135,6 @@ class event(osv.osv):
         'register_min': fields.integer('Minimum Registrations'),
         'register_current': fields.function(_get_register, method=True, string='Confirmed Registrations'),
         'register_prospect': fields.function(_get_prospect, method=True, string='Unconfirmed Registrations'),
-        'project_id': fields.many2one('project.project', 'Project', readonly=True),
-        'task_ids': one2many_mod_task('project.task', 'project_id', "Project tasks", readonly=True, domain="[('state','&lt;&gt;', 'done')]"),
         'date_begin': fields.datetime('Beginning date', required=True),
         'date_end': fields.datetime('Ending date', required=True),
         'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, required=True),
@@ -178,7 +155,7 @@ event()
 class event_registration(osv.osv):
 
     def _history(self, cr, uid,ids,keyword, history=False, email=False, context={}):
-        for case in ids:
+        for case in self.browse(cr, uid, ids):
             data = {
                 'name': keyword,
                 'som': case.som.id,
@@ -192,14 +169,12 @@ class event_registration(osv.osv):
 
     def button_reg_close(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'done',})
-        cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, 'Done', history=True)
+        self._history(cr, uid, ids, 'Done', history=True)
         return True
 
     def button_reg_cancel(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'cancel',})
-        cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, 'Cancel', history=True)
+        self._history(cr, uid, ids, 'Cancel', history=True)
         return True
 
     def create(self, cr, uid, *args, **argv):
@@ -208,7 +183,7 @@ class event_registration(osv.osv):
         args[0]['date_deadline']= event.date_begin
         args[0]['description']= event.mail_confirm
         res = super(event_registration, self).create(cr, uid, *args, **argv)
-        self._history(cr, uid,self.browse(cr, uid, [res]), 'Created', history=True)
+        self._history(cr, uid,[res], 'Created', history=True)
         return res
 
     def write(self, cr, uid, *args, **argv):

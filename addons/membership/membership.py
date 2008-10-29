@@ -542,17 +542,16 @@ class Invoice(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
-
         if context is None:
             context = {}
         member_line_obj = self.pool.get('membership.membership_line')
         today = time.strftime('%Y-%m-%d')
-
         for invoice in self.browse(cr, uid, ids):
             mlines = member_line_obj.search(cr,uid,
                     [('account_invoice_line','in',
                         [ l.id for l in invoice.invoice_line])], context)
             member_line_obj.write(cr,uid,mlines, {'date_cancel':today}, context)
+        return super(Invoice, self).action_cancel(cr, uid, ids, context)
 Invoice()
 
 
