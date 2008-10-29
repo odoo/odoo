@@ -936,16 +936,20 @@ class sale_config_picking_policy(osv.osv_memory):
         'name':fields.char('Name', size=64),
         'picking_policy': fields.selection([
             ('direct','Direct Delivery'),
-            ('one','All at once')
+            ('one','All at Once')
         ], 'Packing Default Policy', required=True ),
         'order_policy': fields.selection([
-            ('manual','Invoice based on Sales Orders'),
-            ('picking','Invoice based on Deliveries'),
+            ('manual','Invoice Based on Sales Orders'),
+            ('picking','Invoice Based on Deliveries'),
         ], 'Shipping Default Policy', required=True),
         'step': fields.selection([
             ('one','Delivery Order Only'),
             ('two','Packing List & Delivery Order')
-        ], 'Steps To Deliver a Sale Order', required=True)
+        ], 'Steps To Deliver a Sale Order', required=True,
+           help="By default, Open ERP is able to manage complex routing and paths "\
+           "of products in your warehouse and partner locations. This will configure "\
+           "the most common and simple methods to deliver products to the customer "\
+           "in one or two operations by the worker.")
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
@@ -959,10 +963,17 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
 
-            #id = self.pool.get('ir.model.data')._get_id
+            if o.step=='one':
+                md = self.pool.get('ir.model.data')
+                group_id = md._get_id(cr, uid, 'base', 'group_no_one')
+                group_id = md.browse(cr, uid, group_id, context).res_id
+                menu_id  = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
+                menu_id = md.browse(cr, uid, menu_id, context).res_id
+                self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id':[(6,0,[group_id])]})
 
-
-            # base.group_no_one
+                location_id  = md._get_id(cr, uid, 'stock', 'stock_location_output')
+                location_id = md.browse(cr, uid, location_id, context).res_id
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing':'transparent'})
 
         return {
                 'view_type': 'form',
