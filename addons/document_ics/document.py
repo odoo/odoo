@@ -78,6 +78,9 @@ class document_directory_content(osv.osv):
         fobj = self.pool.get('document.directory.content')
         content = fobj.browse(cr, uid, node.content.id, context)
 
+        idomain = {}
+        for d in eval(content.ics_domain):
+            idomain[d[0]]=d[2]
         for n in content.ics_field_ids:
             fields[n.name] = n.field_id.name
         if 'uid' not in fields:
@@ -101,7 +104,9 @@ class document_directory_content(osv.osv):
             if id:
                 fobj.write(cr, uid, id, result, context=context)
             else:
-                fobj.create(cr, uid, result, context=context)
+                r = idomain.copy()
+                r.update(result)
+                fobj.create(cr, uid, r, context=context)
 
         return True
 
