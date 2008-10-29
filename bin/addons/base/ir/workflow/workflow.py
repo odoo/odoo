@@ -132,10 +132,10 @@ class wkf_transition(osv.osv):
     _table = "wkf_transition"
     _name = "workflow.transition"
     _log_access = False
-    _rec_name = 'signal' #TODO: pas top mais bon...
+    _rec_name = 'signal'
     _columns = {
-        'trigger_model': fields.char('Trigger Type', size=128),
-        'trigger_expr_id': fields.char('Trigger Expr ID', size=128),
+        'trigger_model': fields.char('Trigger Object', size=128),
+        'trigger_expr_id': fields.char('Trigger Expression', size=128),
         'signal': fields.char('Signal (button Name)', size=64),
         'role_id': fields.many2one('res.roles', 'Role Required'),
         'condition': fields.char('Condition', required=True, size=128),

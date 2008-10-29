@@ -504,7 +504,7 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_partner_form" sequence="1"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name" eval="False"/>
