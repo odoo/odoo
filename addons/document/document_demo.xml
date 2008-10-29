@@ -31,13 +31,11 @@
         <field name="user_id" ref="base.user_admin"/>
     </record>
 
-    <record model="document.directory" id="dir_my_partner">
-        <field name="name">My Folder</field>
-    </record>
-
     <record model="document.directory" id="dir_personnal_folder">
         <field name="name">Personnal Folders</field>
         <field name="parent_id" ref="dir_root"/>
+        <field name="type">ressource</field>
+        <field name="ressource_type_id" ref="base.model_res_users" />
     </record>
 
     <record model="document.directory" id="dir_product">
