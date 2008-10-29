@@ -114,39 +114,42 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Case Rule">
-                    <notebook>
-                        <page string="Rule Information">
-                            <separator colspan="4" string="General Information"/>
-                            <field name="name" select="1"/>
-                            <field name="active" select="2"/>
-                            
-                            <separator colspan="4" string="Criterions to be checked"/>
+                    <field name="name" select="1"/>
+                    <field name="active" select="2"/>
+                    <notebook colspan="4">
+                        <page string="Conditions">
+                            <separator colspan="4" string="Conditions on States"/>
                             <field name="trg_state_from" select="2"/>
                             <field name="trg_state_to" select="2"/>
                             
+                            <separator colspan="4" string="Conditions on Case Fields"/>
                             <field name="trg_section_id" select="1"/>
                             <field name="trg_categ_id"/>
                             <field name="trg_user_id" select="2"/>
-                            
-                            <newline/>
-                            <field name="trg_priority_from"/>
-                            <field name="trg_priority_to"/>
-                            
+                            <separator colspan="4" string="Conditions on Case Partner"/>
                             <field name="trg_partner_id"/>
                             <field name="trg_partner_categ_id"/>
-                            
+                            <separator colspan="4" string="Conditions on Priority Range"/>
+                            <field name="trg_priority_from"/>
+                            <field name="trg_priority_to"/>
+                            <separator colspan="4" string="Conditions on Timing"/>
                             <field name="trg_date_type"/>
                             <label align="1.0" string="Delay after trigger date:"/>
                             <group col="2" colspan="1">
                                 <field name="trg_date_range" nolabel="1"/>
                                 <field name="trg_date_range_type" nolabel="1"/>
                             </group>
+                            <separator colspan="4" string="Note"/>
+                            <label string="The case must match all non empty fields so that the rule trigger the action described in the 'Actions' tab." colspan="4"/>
+                        </page>
+                        <page string="Actions">
                             
-                            <separator colspan="4" string="Actions to execute"/>
+                            <separator colspan="4" string="Fields to Change"/>
                             <field name="act_state"/>
                             <field name="act_section_id"/>
                             <field name="act_user_id"/>
                             <field name="act_priority"/>
+                            <separator colspan="4" string="E-Mail Reminders (includes the content of the case)"/>
                             <field name="act_remind_user"/>
                             <field name="act_remind_partner"/>
                             <field name="act_remind_attach"/>
@@ -154,26 +157,25 @@
                             <!--
 					<field name="act_method" colspan="4" readonly="1"/>
 					-->
-                            
                         </page>
-                        <page string="E-Mail Information">
-                            <separator colspan="4" string="Email to send"/>
+                        <page string="E-Mail Actions">
+                            <separator colspan="4" string="Template of Email to Send"/>
                             <field name="act_mail_to_user"/>
                             <field name="act_mail_to_partner"/>
                             <field name="act_mail_to_watchers"/>
                             <field colspan="4" name="act_mail_to_email"/>
                             <field colspan="4" name="act_mail_body"/>
-                            <group col="2" colspan="4" string="Special Keywords">
-                                <label align="0.0" string="%%(case_id)s = Case ID"/>
-                                <label align="0.0" string="%%(case_subject)s = Case subject"/>
-                                <label align="0.0" string="%%(case_date)s = Creation date"/>
-                                <label align="0.0" string="%%(email_from)s = Partner email"/>
-                                <label align="0.0" string="%%(partner)s = Partner name"/>
-                                <label align="0.0" string="%%(partner_email)s = Partner email"/>
-                                <label align="0.0" string="%%(case_user)s = Responsible name"/>
-                                <label align="0.0" string="%%(case_user_email)s = Responsible email"/>
-                                <label align="0.0" string="%%(case_user_phone)s = Responsible phone"/>
-                            </group>
+
+                            <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
+                            <label align="0.0" string="%%(case_id)s = Case ID" colspan="2"/>
+                            <label align="0.0" string="%%(case_subject)s = Case subject" colspan="2"/>
+                            <label align="0.0" string="%%(case_date)s = Creation date" colspan="2"/>
+                            <label align="0.0" string="%%(email_from)s = Partner email" colspan="2"/>
+                            <label align="0.0" string="%%(partner)s = Partner name" colspan="2"/>
+                            <label align="0.0" string="%%(partner_email)s = Partner email" colspan="2"/>
+                            <label align="0.0" string="%%(case_user)s = Responsible name" colspan="2"/>
+                            <label align="0.0" string="%%(case_user_email)s = Responsible email" colspan="2"/>
+                            <label align="0.0" string="%%(case_user_phone)s = Responsible phone" colspan="2"/>
                         </page>
                     </notebook>
                 </form>

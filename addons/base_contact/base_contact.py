@@ -91,7 +91,7 @@ class res_partner_address(osv.osv):
     _inherit='res.partner.address'
     _description ='Partner Address'
     _columns = {
-        'job_ids':fields.one2many('res.partner.job', 'address_id', 'Functions and Addresses'),
+        'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
         'email': fields.related('job_ids', 'email', type='char', string='Default Email'),
     }
 res_partner_address()
