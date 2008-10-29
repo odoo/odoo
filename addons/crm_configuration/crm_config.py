@@ -103,6 +103,8 @@ class crm_menu_config_wizard(osv.osv_memory):
             for section in res :
                 if res[section]:
                     file_name = 'crm_'+section+'_menu.xml'
+                    if section=='document_ics':
+                        continue
                     try:
                         tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_configuration',file_name )),  {}, 'init', *args)
                     except Exception, e:
