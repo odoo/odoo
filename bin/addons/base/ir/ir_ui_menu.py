@@ -247,8 +247,8 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
-                                ('ir.actions.url', 'ir.actions.act_url'),
-                ]),
+                ('ir.actions.url', 'ir.actions.url'),
+            ]),
     }
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',

@@ -253,7 +253,7 @@ class module(osv.osv):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
-        for m in self.browse(cr, uid, ids):
+        for m in self.browse(cr, uid, ids, context=context):
             if m.state == 'installed':
                 view_txt = ''
                 view_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.view')])
@@ -263,20 +263,6 @@ class module(osv.osv):
             else:
                 res[m.id] = ''
         return res
-
-    def _get_objects(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj=self.pool.get('ir.model.data')
-        for m in self.browse(cr, uid, ids):
-            if m.state=='installed':
-                cr.execute('''select distinct model from ir_model_data where module = '%s' '''%(m.name))
-                objects = cr.fetchall()
-                obj_lst=map(lambda x:x[0],objects)
-                res[m.id] = '\n'.join(obj_lst)
-            else:
-                res[m.id] = ''
-        return res
-
 
     _columns = {
         'name': fields.char("Name", size=128, readonly=True, required=True),
@@ -307,7 +293,6 @@ class module(osv.osv):
         'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
         'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
-        'objects_by_module': fields.function(_get_objects, method=True, string='Objects', type='text'),
     }
 
     _defaults = {

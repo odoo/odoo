@@ -96,15 +96,12 @@
                             </field>
                         </page>
                         <page string="Added Features" attrs="{'invisible':[('state','!=','installed')]}">
-<!--                        	<separator string="The following information describes the features provided by this module. It will be completed only if the module is installed" colspan="4"/>-->
-                        	<separator string="List of menus introduced by this module" colspan="2"/>
-                        	<separator string="List of reports introduced by this module" colspan="2"/>
-                            <field colspan="2" name="menus_by_module" nolabel="1"/>
-                            <field colspan="2" name="reports_by_module" nolabel="1"/>
-                        	<separator string="List of views introduced by this module" colspan="2"/>
-                        	<separator string="List of objects introduced by this module" colspan="2"/>
+                            <separator string="List of menus" colspan="4"/>
+                            <field colspan="4" name="menus_by_module" nolabel="1"/>
+                            <separator string="List of views" colspan="2"/>
+                            <separator string="List of reports" colspan="2"/>
                             <field colspan="2" name="views_by_module" nolabel="1"/>
-                            <field colspan="2" name="objects_by_module" nolabel="1"/>
+                            <field colspan="2" name="reports_by_module" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
