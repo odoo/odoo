@@ -163,6 +163,7 @@ class account_balance(report_sxw.rml_parse):
                         'credit1':'',
                         'balance1' :'',
                         'id' : account.id,
+                        'type' : account.type,
                         'code': account.code,
                         'name': account.name,
                         'level': level,
@@ -172,6 +173,7 @@ class account_balance(report_sxw.rml_parse):
                         'leef': not bool(account.child_id),
                         'bal_type':'',
                     }
+                print ">>>",res['type']
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
                 if not (res['credit'] or res['debit']) and not account.child_id:
@@ -226,6 +228,7 @@ class account_balance(report_sxw.rml_parse):
             for r in res:
                 sum = r['debit1'] - r['credit1']
                 r['balance1'] = sum
+                r['type']= ''
                 r['id'] =''
                 r['code']= ''
                 r['name']=''

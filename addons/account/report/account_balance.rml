@@ -76,7 +76,7 @@
       <blockLeftPadding length="0" start="0,0" stop="1,0"/>
     </blockTableStyle>
  	<blockTableStyle id="TrLevel1">
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#100000" start="0,0" stop="-1,0"/>
       <blockLeftPadding length="0" start="0,0" stop="1,0"/>
     </blockTableStyle>
     
@@ -108,33 +108,37 @@
     <paraStyle
 		name="Level8" 
 		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontSize="4.5" />
      <paraStyle
 		name="Level7" 
 		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontSize="5.0" />
      <paraStyle
 		name="Level6" 
 		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontSize="5.5" />
     <paraStyle
 		name="Level5" 
-		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontName="Helvetica" 
+		fontSize="6.0" />
+
     <paraStyle
 		name="Level4" 
-		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontName="Times-Italic" 
+		fontSize="6.5" />
+
     <paraStyle
 		name="Level3" 
-		fontName="Helvetica-Bold" 
-		fontSize="8.0" />
+		fontName="Helvetica" 
+		fontSize="6.8" />
+
     <paraStyle name="Level2"
-		fontSize="8.0"
+		fontSize="7.0"
 		fontName="Helvetica-Bold" 
 		/>
+
 	<paraStyle name="Level1"
-		fontSize="8.0"
+		fontSize="7.5"
 		fontName="Helvetica-Bold"  
 		/>
 		
@@ -174,11 +178,11 @@
 	<paraStyle
 		name="Det_Level8" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="7"/>
+		fontSize="7.0" leading="7"/>
      <paraStyle
 		name="Det_Level7" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="7"/>
+		fontSize="7.5" leading="7"/>
      <paraStyle
 		name="Det_Level6" 
 		fontName="Times-Italic" 
@@ -186,32 +190,32 @@
     <paraStyle
 		name="Det_Level5" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="7"/>
+		fontSize="8.5" leading="7"/>
     <paraStyle
 		name="Det_Level4" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="7"/>
+		fontSize="9.0" leading="7"/>
     <paraStyle
 		name="Det_Level3" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="7"/>
+		fontSize="9.5" leading="7"/>
     <paraStyle name="Det_Level2"
-		fontSize="8.0" leading="7"
+		fontSize="10.0" leading="7"
 		fontName="Times-Italic" 
 		/>
 	<paraStyle name="Det_Level1"
-		fontSize="8.0" leading="7"
+		fontSize="10.5" leading="7"
 		fontName="Times-Italic"  
 		/>
 		
 	<paraStyle
 		name="Det_Amt_Level8" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+		fontSize="7.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
      <paraStyle
 		name="Det_Amt_Level7" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+		fontSize="7.5" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
      <paraStyle
 		name="Det_Amt_Level6" 
 		fontName="Times-Italic" 
@@ -219,21 +223,21 @@
     <paraStyle
 		name="Det_Amt_Level5" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+		fontSize="8.5" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle
 		name="Det_Amt_Level4" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+		fontSize="9.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle
 		name="Det_Amt_Level3" 
 		fontName="Times-Italic" 
-		fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+		fontSize="9.5" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Det_Amt_Level2"
-		fontSize="8.0" 
+		fontSize="10.0" 
 		fontName="Times-Italic" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0" 
 		/>
 	<paraStyle name="Det_Amt_Level1"
-		fontSize="8.0"
+		fontSize="10.5"
 		fontName="Times-Italic" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"
 		/>
 		
@@ -251,7 +255,7 @@
 <para style="P2">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="50.0,248.0,73.0,72.0,87.0" style="Table1" repeatRows="1">
+<blockTable colWidths="50.0,238.0,83.0,82.0,90.0" style="Table1" repeatRows="1">
       <tr>
         <td>
           <para style="P12a">Code</para>
@@ -271,32 +275,24 @@
       </tr>
 	  <tr>
 			<td>
-				 <blockTable colWidths="50.0,248.0,73.0,72.0,82.0" style="Table3">
-				     <para style="P2">[[ repeatIn(lines(data['form']), 'a') ]]</para>
-				      <tr>
-						<td><para style="P14">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]]<i>[[ a['code'] or removeParentNode('tr') ]]</i></para></td>
-				        <td><para style="P14">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ setTag('blockTable','blockTable',{'style':'TrLevel'+str(a['level'])}) ]][[ a['name'] ]]</para></td>
-				        <td>
-				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) or '0.00' ]]</u></font>
-				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit']) or '0.00' ]]</font></para>  
-				        </td>
-				        <td>
-				          <para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit'])  or '0.00' ]]</u></font>
-				          <font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit']) or '0.00' ]]</font></para>  
-				        </td>
-				        <td>
-						<para style="P3"><font><u>[[ a['level']&gt;3 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance'])  or '0.00' ]]</u></font>
-						<font>[[ a['level']&lt;4 and removeParentNode('font') ]][[ setTag('para','para',{'style':('Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance'])  or '0.00' ]]</font></para>
-				        </td>
-				      </tr>
-				      <tr>
-						<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]][[ a['jname'] or removeParentNode('tr') ]]</para></td>
-				       	<td><para style="P14">[[ setTag('para','para',{'style':('Det_Level'+str(a['level']))}) ]] [[ setTag('tr','tr',{'style':('TrLevel_Name'+str(a['level']))}) ]]<font>[ref: [[ a['ref'] or removeParentNode('font') ]] ]</font> [[ a['lname'] ]]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['debit1']) or '0.00']]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['credit1']) or '0.00']]</para></td>
-				        <td><para style="P3">[[ setTag('para','para',{'style':('Det_Amt_Level'+str(a['level']))}) ]][[ formatLang(a['balance1']) or '0.00' ]]</para></td>	        
-				      </tr>
-				 </blockTable>
+				<blockTable colWidths="50.0,288.0,88.0,87.0,83.0" style="Table3">
+				<tr>[[ repeatIn(lines(data['form']), 'a') ]]
+				<td><para style="P10">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ a['code'] or removeParentNode('tr') ]]</para></td>
+				<td><para style="P10">[[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ setTag('blockTable','blockTable',{'style':'TrLevel'+str(a['level'])}) ]][[ a['name'] ]]</para></td>
+				<td>
+				<para style="P10"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ formatLang(a['debit']) or '0.00' ]]</font>
+				<font><u>[[ a['type']!='view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]] [[ formatLang(a['debit']) or '0.00' ]]</u></font></para>
+				</td>
+				<td>
+				<para style="P10"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ formatLang(a['credit']) or '0.00' ]]</font>
+				<font><u>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]] [[ formatLang(a['credit']) or '0.00' ]]</u></font></para>
+				</td>
+				<td>
+				<para style="P10"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]][[ formatLang(a['balance']) or '0.00' ]]</font>
+					<font><u>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]][[ setTag('para','para',{'style':('Level'+str(a['level']))}) ]] [[ formatLang(a['balance']) or '0.00' ]]</u></font></para>  
+				</td>
+				</tr>
+				</blockTable>
 		 	</td>
 	  </tr>
 </blockTable>
