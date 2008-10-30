@@ -4,7 +4,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Board/Associations",
-    "depends":["event","membership","board"],
+    "depends":["event","membership","board","project"],
     "demo_xml":["board_association_demo.xml"],
     "update_xml":["board_association_view.xml"],
     "description": """

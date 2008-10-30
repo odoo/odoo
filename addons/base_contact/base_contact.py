@@ -100,12 +100,6 @@ res_partner_address()
 
 class res_partner_job(osv.osv):
 
-    def _get_partner_id(self, cr, uid, ids, *a):
-        res={}
-        for id in self.browse(cr, uid, ids):
-            res[id.id] = id.address_id.partner_id and id.address_id.partner_id.id or False
-        return res
-
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
@@ -127,7 +121,7 @@ class res_partner_job(osv.osv):
     _description ='Contact Job Title'
     _order = 'sequence_contact'
     _columns = {
-        'name': fields.function(_get_partner_id, method=True, type='many2one', relation='res.partner', string='Partner',store=True),
+        'name': fields.related('address_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
         'address_id':fields.many2one('res.partner.address','Address', required=True),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
         'function_id': fields.many2one('res.partner.function','Job Title', required=True),
