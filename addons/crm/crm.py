@@ -223,8 +223,8 @@ class crm_case_rule(osv.osv):
         'active': fields.boolean('Active'),
         'sequence': fields.integer('Sequence'),
 
-        'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state from', size=16),
-        'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state to', size=16),
+        'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case State', size=16),
+        'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Button Pressed', size=16),
 
         'trg_date_type':  fields.selection([
             ('none','None'),
@@ -242,19 +242,19 @@ class crm_case_rule(osv.osv):
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
 
-        'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Priority min'),
-        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Priority max'),
+        'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
+        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximim Priority'),
 
         'act_method': fields.char('Call Object Method', size=64),
         'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
         'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
         'act_user_id': fields.many2one('res.users', 'Set responsible to'),
         'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250),
+        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people will receive a copy of the futur communication between partner and users by email"),
 
-        'act_remind_partner': fields.boolean('Remind partner'),
-        'act_remind_user': fields.boolean('Remind responsible'),
-        'act_remind_attach': fields.boolean('Remind with attachment'),
+        'act_remind_partner': fields.boolean('Remind Partner', help="Check this if you want the rule to send a reminder by email to the partner."),
+        'act_remind_user': fields.boolean('Remind responsible', help="Check this if you want the rule to send a reminder by email to the user."),
+        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the case be attached to the reminder email sent."),
 
         'act_mail_to_user': fields.boolean('Mail to responsible'),
         'act_mail_to_partner': fields.boolean('Mail to partner'),

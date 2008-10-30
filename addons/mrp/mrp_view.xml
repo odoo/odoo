@@ -3,6 +3,7 @@
     <data>
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--
     Property / Property Group
@@ -689,15 +690,6 @@
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
 
-        <record id="mrp_procurement_action2" model="ir.actions.act_window">
-            <field name="name">Draft procurements</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-        <menuitem action="mrp_procurement_action2" id="menu_mrp_procurement_action2" parent="mrp.menu_mrp_procurement_action"/>
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Unscheduled procurements</field>
             <field name="type">ir.actions.act_window</field>
@@ -716,7 +708,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="stock.menu_stock_root"/>
+        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements to Fix</field>
@@ -789,7 +781,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
         </record>
-        <menuitem id="menu_mrp_reordering" name="Reordering Policy" parent="stock.menu_stock_root" sequence="4"/>
         <menuitem action="action_orderpoint_form" id="menu_action_orderpoint_form" parent="menu_mrp_reordering"/>
 
         <act_window domain="[('warehouse_id', '=', active_id)]" id="act_stock_warehouse_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="stock.warehouse"/>

@@ -289,7 +289,7 @@
             <field name="model">product.ul</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Logistical Unit">
+                <form string="Packagings">
                     <field name="name"/>
                     <field name="type"/>
                 </form>
@@ -300,14 +300,14 @@
             <field name="model">product.ul</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Logistical Unit">
+                <tree string="Packagings">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                 </tree>
             </field>
         </record>
         <record id="product_ul_form_action" model="ir.actions.act_window">
-            <field name="name">Logistical Unit</field>
+            <field name="name">Packagings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>

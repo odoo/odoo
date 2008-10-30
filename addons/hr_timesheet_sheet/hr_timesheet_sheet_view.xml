@@ -190,17 +190,30 @@
         </record>
         <menuitem action="act_hr_timesheet_sheet_form_my_confirm" id="menu_act_hr_timesheet_sheet_form_my_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my"/>
         
-        <wizard id="act_hr_timesheet_sheet_form_department_current" model="hr.employee" name="hr_timesheet_sheet.department.open" string="My Department's Timesheet"/>
+        <wizard
+            id="act_hr_timesheet_sheet_form_department_current" 
+            model="hr.employee" 
+            name="hr_timesheet_sheet.department.open" 
+            string="My Department's Timesheet"
+            multi="True"/>
         <menuitem action="act_hr_timesheet_sheet_form_department_current" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_current" parent="hr_timesheet_sheet.next_id_60" type="wizard"/>
         
-        <wizard id="act_hr_timesheet_sheet_form_department_validate" model="hr.employee" name="hr_timesheet_sheet.department.validate.open" string="My Department's Timesheet to Validate"/>
+        <wizard
+            id="act_hr_timesheet_sheet_form_department_validate" 
+            model="hr.employee" 
+            name="hr_timesheet_sheet.department.validate.open" 
+            string="My Department's Timesheet to Validate"
+            multi="True"/>
         <menuitem action="act_hr_timesheet_sheet_form_department_validate" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_validate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
         
-        <wizard id="act_hr_timesheet_sheet_form_department_confirm" model="hr.employee" name="hr_timesheet_sheet.department.confirm.open" string="My Department's Timesheet to Confirm"/>
+        <wizard 
+            id="act_hr_timesheet_sheet_form_department_confirm" 
+            model="hr.employee" 
+            name="hr_timesheet_sheet.department.confirm.open" 
+            string="My Department's Timesheet to Confirm"
+            multi="True"/>
+
         <menuitem action="act_hr_timesheet_sheet_form_department_confirm" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
-        
-        
-        
         
         <wizard id="act_hr_timesheet_sheet_form_my_current" model="hr.employee" name="hr_timesheet_sheet.current.open" string="My Current Timesheet"/>
         <menuitem action="act_hr_timesheet_sheet_form_my_current" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" type="wizard"/>

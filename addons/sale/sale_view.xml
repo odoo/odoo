@@ -424,7 +424,8 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"/>
+        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"
+            groups="base.group_extended"/>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Lines</field>
@@ -463,6 +464,8 @@
                     <field name="picking_policy"/>
                     <newline/>
                     <field name="order_policy"/>
+                    <newline/>
+                    <field name="step"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>

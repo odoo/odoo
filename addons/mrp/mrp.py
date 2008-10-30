@@ -1136,6 +1136,11 @@ class StockMove(osv.osv):
     _columns = {
         'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
     }
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['procurements'] = []
+        return super(StockMove, self).copy(cr, uid, id, default, context)
+
     def _action_explode(self, cr, uid, move, context={}):
         if move.product_id.supply_method=='produce' and move.product_id.procure_method=='make_to_order':
             bis = self.pool.get('mrp.bom').search(cr, uid, [

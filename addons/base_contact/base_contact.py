@@ -52,6 +52,8 @@ class res_partner_contact(osv.osv):
         'country_id':fields.many2one('res.country','Nationality'),
         'birthdate':fields.date('Birth Date'),
         'active' : fields.boolean('Active'),
+        'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
+        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Job'),
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -91,18 +93,12 @@ class res_partner_address(osv.osv):
     _inherit='res.partner.address'
     _description ='Partner Address'
     _columns = {
-        'job_ids':fields.one2many('res.partner.job', 'address_id', 'Functions and Addresses'),
+        'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
         'email': fields.related('job_ids', 'email', type='char', string='Default Email'),
     }
 res_partner_address()
 
 class res_partner_job(osv.osv):
-
-    def _get_partner_id(self, cr, uid, ids, *a):
-        res={}
-        for id in self.browse(cr, uid, ids):
-            res[id.id] = id.address_id.partner_id and id.address_id.partner_id.id or False
-        return res
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
@@ -122,15 +118,15 @@ class res_partner_job(osv.osv):
         return super(res_partner_job,self).search(cr, user, args, offset, limit, order, context, count)
 
     _name = 'res.partner.job'
-    _description ='Contact Function'
+    _description ='Contact Job Title'
     _order = 'sequence_contact'
     _columns = {
-        'name': fields.function(_get_partner_id, method=True, type='many2one', relation='res.partner', string='Partner'),
+        'name': fields.related('address_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
         'address_id':fields.many2one('res.partner.address','Address', required=True),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
-        'function_id': fields.many2one('res.partner.function','Function', required=True),
+        'function_id': fields.many2one('res.partner.function','Job Title', required=True),
         'sequence_contact':fields.integer('Sequence (Contact)',help='order of importance of this address in the list of addresses of the linked contact'),
-        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this function in the list of functions of the linked partner'),
+        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this job title in the list of job title of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
         'date_start' : fields.date('Date Start'),
