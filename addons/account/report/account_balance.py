@@ -119,7 +119,6 @@ class account_balance(report_sxw.rml_parse):
             self.date_lst.sort()
 
         def lines(self, form, ids={}, done=None, level=1):
-            print "DS LINES", ids
             if not ids:
                 ids = self.ids
             if not ids:
@@ -173,7 +172,6 @@ class account_balance(report_sxw.rml_parse):
                         'leef': not bool(account.child_id),
                         'bal_type':'',
                     }
-                print ">>>",res['type']
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
                 if not (res['credit'] or res['debit']) and not account.child_id:
@@ -197,7 +195,6 @@ class account_balance(report_sxw.rml_parse):
                 else:
                     result_acc.append(res)
                 res1 = self.moveline(form, account.id,res['level'])
-                print "NNN",res1, res
                 if res1:
                     for r in res1:
                         result_acc.append(r)
