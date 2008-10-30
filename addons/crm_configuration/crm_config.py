@@ -97,17 +97,23 @@ class crm_menu_config_wizard(osv.osv_memory):
         'opportunity': lambda *args: True,
     }
     def action_create(self, cr, uid, ids, *args):
-        for res in self.read(cr,uid,ids):
-            res.__delitem__('id')
-    #        'update'
-            for section in res :
-                if res[section]:
-                    file_name = 'crm_'+section+'_menu.xml'
-                    try:
-                        tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_configuration',file_name )),  {}, 'init', *args)
-                    except Exception, e:
-                        raise osv.except_osv('Error !', e)
-
+        modid = self.pool.get('ir.module.module').search(cr, uid, [('name','=','crm_configuration')])
+        moddemo = self.pool.get('ir.module.module').browse(cr, uid, modid[0]).demo
+        lst= ('data','menu')
+        if moddemo:
+            lst = ('data','menu','demo')
+        res = self.read(cr,uid,ids)[0]
+        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk'] :
+            if (not res[section]):
+                continue
+            for fname in lst:
+                file_name = 'crm_'+section+'_'+fname+'.xml'
+                try:
+                    fp = tools.file_open(os.path.join('crm_configuration',file_name ))
+                except IOError, e:
+                    fp = None
+                if fp:
+                    tools.convert_xml_import(cr, 'crm_configuration', fp,  {}, 'init', *args)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
