@@ -39,10 +39,12 @@ Var STARTMENU_FOLDER
 ;Pages
 
 !define MUI_ICON ".\pixmaps\openerp.ico"
-!define MUI_UNICON ".\pixmaps\openerp.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-header.bmp"
+!define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
+!define MUI_HEADER_TRANSPARENT_TEXT ""
+!define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-slogan.bmp"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "doc\\License.rtf"
@@ -111,6 +113,7 @@ Section "OpenERP Server" SecOpenERPServer
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
+        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
     !insertmacro MUI_STARTMENU_WRITE_END
 
     nsExec::Exec '"$INSTDIR\\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\\openerp-server.log" -s'
@@ -141,6 +144,7 @@ Section "Uninstall"
     RMDIR /r "$INSTDIR" 
     !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
 
+    Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP Server.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
