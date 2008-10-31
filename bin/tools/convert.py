@@ -97,12 +97,13 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
             a_eval = node.getAttribute('eval')
             if len(a_eval):
                 import time
-                idref['time'] = time
+                idref2 = idref.copy()
+                idref2['time'] = time
                 import release
-                idref['version'] = release.version.rsplit('.', 1)[0]
-                idref['ref'] = lambda x: self.id_get(cr, False, x)
+                idref2['version'] = release.version.rsplit('.', 1)[0]
+                idref2['ref'] = lambda x: self.id_get(cr, False, x)
                 if len(f_model):
-                    idref['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
+                    idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
                 try:
                     import pytz
                 except:
@@ -111,8 +112,8 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     class pytzclass(object):
                         all_timezones=[]
                     pytz=pytzclass()
-                idref['pytz'] = pytz
-                return eval(a_eval, idref)
+                idref2['pytz'] = pytz
+                return eval(a_eval, idref2)
             if t == 'xml':
                 def _process(s, idref):
                     m = re.findall('[^%]%\((.*?)\)[ds]', s)
@@ -842,7 +843,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = 
         logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
         raise
 
-    if not idref:
+    if idref is None:
         idref={}
     if report is None:
         report=assertion_report()
