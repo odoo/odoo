@@ -167,7 +167,16 @@
           <field name="view_id" ref="crm_case_tree_view_oppor"/>
           <field name="act_window_id" ref="crm_case_category_act_oppor"/>
      </record>
-     <menuitem name="New Opportunity" parent="menu_crm_case_opp" id="menu_crm_case_categ0_act_oppor" action="crm_case_category_act_oppor" sequence="50"/>
+     <record model="ir.actions.act_window.view" id="action_crm_tag_cal_view_oppor">
+          <field name="sequence" eval="3"/>
+          <field name="view_mode">calendar</field>
+          <field name="act_window_id" ref="crm_case_category_act_oppor"/>
+     </record>
+     <menuitem name="New Opportunity"
+        parent="menu_crm_case_opp"
+        id="menu_crm_case_categ0_act_oppor"
+        action="crm_case_category_act_oppor"
+        sequence="50"/>
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor2">
           <field name="name">My Open Opportunities</field>
