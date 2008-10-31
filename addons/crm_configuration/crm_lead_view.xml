@@ -13,7 +13,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="name" select="1" string="Lead"/>
+                    <field name="name" select="1" string="Lead Subject"/>
                     <field name="section_id" colspan="1"/>
                     <field name="stage_id" select="1"/>
                     <button string="Create Partner" name="button_partner_set" icon="gtk-new"/>
@@ -55,6 +55,9 @@
                     <field name="id"/>
                     <field name="active" select="2"/>
                     <field name="email_cc" colspan="2"/>
+                    <newline/>
+                    <field name="planned_revenue"/>
+                    <field name="planned_cost"/>
                     <field name="probability"/>
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
