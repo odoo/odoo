@@ -2,7 +2,12 @@
 <openerp>
     <data>
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
-        <menuitem id="menu_config_product" name="Configuration" parent="product.menu_main_product" sequence="1"/>
+        <menuitem
+            id="menu_config_product"
+            name="Configuration"
+            parent="product.menu_main_product"
+            sequence="1"
+            groups="group_product_manager"/>
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>

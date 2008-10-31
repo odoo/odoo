@@ -83,9 +83,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="next_id_50" name="Configuration" parent="board.dashboard_menu"/><menuitem action="action_view_board_list_form" id="menu_view_board_form" parent="next_id_50"/>
-        
-        
+        <menuitem
+            id="next_id_50"
+            name="Configuration"
+            parent="board.dashboard_menu"
+            groups="base.group_system"/>
+        <menuitem
+            action="action_view_board_list_form"
+            id="menu_view_board_form"
+            parent="next_id_50"/>
         <act_window context="{'view': active_id}" id="dashboard_open" multi="True" name="Open Dashboard" res_model="board.board" src_model="board.board"/>
         
     </data>

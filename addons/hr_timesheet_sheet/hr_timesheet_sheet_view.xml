@@ -168,7 +168,9 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/><menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"/>
+        <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"
+            groups="hr.group_hr_manager"/>
         
         <record id="act_hr_timesheet_sheet_form_my" model="ir.actions.act_window">
             <field name="name">My timesheets</field>
@@ -196,7 +198,12 @@
             name="hr_timesheet_sheet.department.open" 
             string="My Department's Timesheet"
             multi="True"/>
-        <menuitem action="act_hr_timesheet_sheet_form_department_current" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_current" parent="hr_timesheet_sheet.next_id_60" type="wizard"/>
+        <menuitem action="act_hr_timesheet_sheet_form_department_current" 
+            icon="STOCK_JUSTIFY_FILL" 
+            id="menu_act_hr_timesheet_sheet_form_department_current" 
+            parent="hr_timesheet_sheet.next_id_60" 
+            groups="hr.group_hr_manager"
+            type="wizard"/>
         
         <wizard
             id="act_hr_timesheet_sheet_form_department_validate" 

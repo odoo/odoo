@@ -2,8 +2,17 @@
 <openerp>
     <data>
         <menuitem icon="terp-hr" id="menu_hr_root" name="Human Resources"/>
-        <menuitem id="menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="40"/>
-        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root"/>
+        <menuitem 
+            id="menu_hr_reporting" 
+            name="Reporting" 
+            parent="hr.menu_hr_root" 
+            sequence="40"
+            groups="group_hr_manager"/>
+        <menuitem 
+            id="menu_hr_configuration" 
+            name="Configuration" 
+            parent="hr.menu_hr_root"
+            sequence="5" groups="group_hr_manager"/>
         
         <!--
         ==========
@@ -93,20 +102,22 @@
             <field name="view_id" eval="False"/>
         </record>
         <menuitem
-			action="open_view_employee_list"
-			id="menu_open_view_employee_list"
-			parent="hr.menu_hr_root"/>
+            id="menu_open_view_employee_list"
+            name="Employees"
+            groups="group_hr_manager"
+            parent="hr.menu_hr_root"/>
+
         <menuitem
-			action="open_view_employee_tree"
-			id="menu_open_view_employee_tree"
-			parent="menu_open_view_employee_list"/>
+            action="open_view_employee_tree"
+            id="menu_open_view_employee_tree"
+            parent="menu_open_view_employee_list"/>
 
        <record id="open_view_employee_list_my" model="ir.actions.act_window">
-            <field name="name">My Employees</field>
+            <field name="name">All Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('parent_id.user_id','=',uid)]</field>
+            <field name="domain">[]</field>
         </record>
         <menuitem
             action="open_view_employee_list_my"
@@ -120,9 +131,9 @@
             <field name="view_mode">form,tree</field>
         </record>
         <menuitem
-			action="open_view_employee_new"
-			id="menu_open_view_employee_new" 
-			parent="menu_open_view_employee_list"/>
+            action="open_view_employee_new"
+            id="menu_open_view_employee_new" 
+            parent="menu_open_view_employee_list"/>
 
         <!--
         =======================

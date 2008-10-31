@@ -49,8 +49,8 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"/>
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance"/>
-        
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance"
+            parent="menu_hr_attendance" groups="hr.group_hr_manager"/>
         
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>

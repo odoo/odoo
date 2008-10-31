@@ -134,9 +134,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <field name="client_order_ref" position="after">
-                <field name="invoice_type_id" select="1"/>
+            <field name="invoiced" position="after">
                 <field name="journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
             </field>
         </field>
     </record>

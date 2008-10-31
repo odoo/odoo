@@ -2,7 +2,8 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"/>
+        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--

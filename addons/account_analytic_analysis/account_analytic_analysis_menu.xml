@@ -8,7 +8,12 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem id="next_id_71" name="Financial Project Management" parent="project.menu_main" sequence="20"/>
+        <menuitem
+            id="next_id_71" 
+            name="Financial Project Management"
+            parent="project.menu_main" 
+            groups="account.group_account_invoice"
+            sequence="20"/>
         <menuitem id="menu_account" name="Analytic Accounts" parent="next_id_71" sequence="10"/>
         <menuitem id="menu_invoicing" name="Invoicing" parent="next_id_71" sequence="20"/>
 

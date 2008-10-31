@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"/>
+        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"
+            groups="group_sale_user"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
