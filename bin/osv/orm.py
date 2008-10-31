@@ -788,6 +788,11 @@ class orm_template(object):
                                 'fields': xfields
                             }
                     attrs = {'views': views}
+                    if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
+                        # We can not use the domain has it is defined according to the record !
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', context=context)
+                        if not attrs.get('required',False):
+                            attrs['selection'].append((False,''))
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
@@ -894,7 +899,6 @@ class orm_template(object):
             context = {}
         def _inherit_apply(src, inherit):
             def _find(node, node2):
-                # Check if xpath query or normal inherit (with field matching)
                 if node2.nodeType == node2.ELEMENT_NODE and node2.localName == 'xpath':
                     res = xpath.Evaluate(node2.getAttribute('expr'), node)
                     return res and res[0]
@@ -1245,6 +1249,11 @@ class orm_memory(orm_template):
                             field_value2[i][field2] = field_value[i][field2]
                     field_value = field_value2
                 value[field] = field_value
+
+        # get the default values from the context
+        for key in context or {}:
+            if key.startswith('default_'):
+                value[key[8:]] = context[key]
         return value
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
@@ -1680,6 +1689,9 @@ class orm(orm_template):
                             field_value2[i][field2] = field_value[i][field2]
                     field_value = field_value2
                 value[field] = field_value
+        for key in context or {}:
+            if key.startswith('default_'):
+                value[key[8:]] = context[key]
         return value
 
 

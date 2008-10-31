@@ -45,6 +45,7 @@ class res_currency(osv.osv):
             date=context['date']
         else:
             date=time.strftime('%Y-%m-%d')
+        date= date or time.strftime('%Y-%m-%d')
         for id in ids:
             cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %d AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
             if cr.rowcount:
