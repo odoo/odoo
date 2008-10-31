@@ -13,35 +13,29 @@
             <form string="Meetings Form">
                 <group colspan="4" col="6">
                     <field name="name" select="1" string="Title"/>
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
                     <field name="section_id"/>
+                    <field name="user_id" select="2" string="Responsible" required="1"/>
                     <newline/>
-                    <field name="date" string="Next Meeting"/>
-                    <field name="duration" colspan="1" string="Meeting Duration"/>
-                    <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
+                    <field name="date" string="Meeting Date" required="1"/>
+                    <field name="duration" colspan="1" widget="float_time" required="1"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
                 </group>
-                <notebook>
+                <notebook colspan="4">
                 <page string="Meeting">
                     <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
-                    <field name="priority" select="2"/>
-                    <newline/>
-                    <field name="user_id" select="2" string="Responsible"/>
                     <field name="email_from"/>
-                    <newline/>
-                    <field name="stage_id" select="1"/>
+                    <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
                     <field name="category2_id" select="1" string="Location"/>
+                    <field name="priority" select="2"/>
                     <newline/>
                     <separator string="Description" colspan="4"/>
                     <field name="note"  nolabel="1" colspan="4" />
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
                         <field name="state" select="2"/> 
-                        <button name="case_close" string="Done" states="open,draft,pending" type="object"/>
-                        <button name="case_open" string="Open" states="draft,pending" type="object"/>
+                        <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object"/>
                         <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object"/>
-                        <button name="case_pending" string="Pending" states="draft,open" type="object"/>
-                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
+                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object"/>
                     </group>
                 </page>
                 <page string="Extra Info">
@@ -119,7 +113,6 @@
                 <field name="date" string="Next Meeting"/>
                 <field name="section_id"/>
                 <field name="priority"/>
-                <field name="stage_id"/>
                 <field name="categ_id"/>
                 <field name="category2_id" string="Type"/>
                 <field name="user_id"/>

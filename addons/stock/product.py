@@ -41,7 +41,7 @@ class product_product(osv.osv):
 
     def get_product_available(self,cr,uid,ids,context=None):
         if not context:
-            context = {}        
+            context = {}
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
@@ -69,7 +69,7 @@ class product_product(osv.osv):
                 location_ids = context['location']
         else:
             cr.execute("select lot_stock_id from stock_warehouse")
-            location_ids = [id for (id,) in cr.fetchall()]            
+            location_ids = [id for (id,) in cr.fetchall()]
 
         # build the list of ids of children of the location given by id
         child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
@@ -90,11 +90,11 @@ class product_product(osv.osv):
         to_date=context.get('to_date',False)
         date_str=False
         if from_date and to_date:
-            date_str="date>='%s' and date<='%s'"%(from_date,to_date)
+            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
         elif from_date:
-            date_str="date>='%s'"%(from_date)
+            date_str="date_planned>='%s'"%(from_date)
         elif to_date:
-            date_str="date<='%s'"%(to_date)
+            date_str="date_planned<='%s'"%(to_date)
 
         if 'in' in what:
             # all moves from a location out of the set to a location in the set

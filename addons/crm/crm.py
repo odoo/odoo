@@ -207,7 +207,7 @@ class crm_case_categ(osv.osv):
     _description = "Category of case"
     _columns = {
         'name': fields.char('Case Category Name', size=64, required=True),
-        'probability': fields.float('Probability', required=True),
+        'probability': fields.float('Probability (%)', required=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
     }
     _defaults = {
@@ -341,7 +341,7 @@ class crm_case(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),
-        'probability': fields.float('Probability (0.50)'),
+        'probability': fields.float('Probability (%)'),
         'email_from': fields.char('Partner Email', size=128),
         'email_cc': fields.char('Watchers Emails', size=252),
         'email_last': fields.function(_email_last, method=True,
@@ -354,7 +354,7 @@ class crm_case(osv.osv):
         'date_deadline': fields.datetime('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
-        'user_id': fields.many2one('res.users', 'User Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication'),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History'),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
@@ -392,9 +392,8 @@ class crm_case(osv.osv):
         'partner_id': _get_default_partner,
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
-        'state': lambda *a: 'draft',
+        'state': lambda *a: 'open',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 
@@ -557,7 +556,8 @@ class crm_case(osv.osv):
                 'som': case.som.id,
                 'canal_id': case.canal_id.id,
                 'user_id': uid,
-                'case_id': case.id
+                'case_id': case.id,
+                'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
             if history and case.description:
@@ -755,13 +755,14 @@ crm_case()
 
 class crm_case_log(osv.osv):
     _name = "crm.case.log"
-    _description = "Case communication history"
+    _description = "Case Communication History"
     _order = "id desc"
     _columns = {
         'name': fields.char('Action', size=64),
         'som': fields.many2one('res.partner.som', 'State of Mind'),
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
+        'section_id': fields.many2one('crm.case.section', 'Section'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
         'case_id': fields.many2one('crm.case', 'Case', required=True, ondelete='cascade')
     }

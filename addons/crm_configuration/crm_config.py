@@ -75,7 +75,6 @@ class crm_cases(osv.osv):
         'partner_phone': fields.char('Phone', size=16),
         'partner_mobile': fields.char('Mobile', size=16),
     }
-
 crm_cases()
 
 class crm_menu_config_wizard(osv.osv_memory):
@@ -103,6 +102,7 @@ class crm_menu_config_wizard(osv.osv_memory):
         if moddemo:
             lst = ('data','menu','demo')
         res = self.read(cr,uid,ids)[0]
+        idref = {}
         for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk'] :
             if (not res[section]):
                 continue
@@ -113,7 +113,9 @@ class crm_menu_config_wizard(osv.osv_memory):
                 except IOError, e:
                     fp = None
                 if fp:
-                    tools.convert_xml_import(cr, 'crm_configuration', fp,  {}, 'init', *args)
+                    tools.convert_xml_import(cr, 'crm_configuration', fp,  idref, 'init', noupdate=True)
+        for name in idref.keys():
+            cr.execute('delete from ir_model_data where name=%s and module=%s', (name, 'crm_configuration'))
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

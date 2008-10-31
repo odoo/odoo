@@ -900,7 +900,6 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
-    
     _constraints = [
         (_check_tracking,
             'You must assign a production lot for this product',
@@ -908,7 +907,6 @@ class stock_move(osv.osv):
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
-    
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
             return context['move_line'][0][2]['location_dest_id']
@@ -1195,16 +1193,13 @@ class stock_move(osv.osv):
                                 'ref': ref,
                                 'date': date})
                     ]
-                    self.pool.get('account.move').create(cr, uid,
-                            {
-                                'name': move.name,
-                                'journal_id': journal_id,
-                                'line_id': lines,
-                                'ref': ref,
-                            })
-            
-        self.write(cr, uid, ids, {'state':'done'})
-
+                    self.pool.get('account.move').create(cr, uid, {
+                        'name': move.name,
+                        'journal_id': journal_id,
+                        'line_id': lines,
+                        'ref': ref,
+                    })
+        self.write(cr, uid, ids, {'state':'done','date_planned':time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)

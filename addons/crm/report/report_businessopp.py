@@ -68,7 +68,7 @@ class report_custom(report_int):
         res = cr.dictfetchall()
 
         for row in res:
-            proba = row['probability'] or 0
+            proba = row['probability'] or 0 / 100.0
             cost = row['planned_cost'] or 0
             revenue = row['planned_revenue'] or 0
             userid = row['user_id'] or 0

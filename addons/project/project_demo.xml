@@ -98,6 +98,7 @@
             <field name="type" ref="project_tt_feature"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="priority">2</field>
+            <field name="state">open</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Analysis, Data Importation</field>
         </record>
@@ -105,6 +106,7 @@
             <field name="sequence">20</field>
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
+            <field name="state">open</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Parameters</field>
@@ -114,6 +116,7 @@
             <field name="planned_hours">32.0</field>
             <field name="remaining_hours">32.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
+            <field name="state">open</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Start of the doc redaction + MRP</field>
         </record>
@@ -123,6 +126,7 @@
             <field name="remaining_hours">24.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
+            <field name="state">done</field>
             <field name="name">MRP Tests</field>
         </record>
         <record id="project_task_193" model="project.task">
@@ -197,6 +201,7 @@
             <field name="remaining_hours">32.0</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="project_id" ref="project_project_23"/>
+            <field name="state">open</field>
             <field name="name">In house trainings</field>
             <field name="date_deadline">2007-06-06</field>
         </record>
