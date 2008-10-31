@@ -208,12 +208,16 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         full_account = []
         result_tmp = 0.0
-
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
         #
         #
         #
         if data['form']['soldeinit'] :
-            
             self.cr.execute(
                 "SELECT p.ref, p.name,l.account_id,ac.name as account_name,ac.code as code , sum(debit) as debit, sum(credit) as credit, " \
                         "CASE WHEN sum(debit) > sum(credit) " \
@@ -233,11 +237,11 @@ class partner_balance(report_sxw.rml_parse):
                 "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
                 "JOIN account_account ac ON (l.account_id = ac.id)" \
                 "WHERE " \
-#                    " account_id IN (" + self.account_ids + ") " \
-                    "l.date < %s  AND l.reconcile_id IS NULL " \
+                    "ac.type IN %s  " \
+                    "AND l.date < %s  AND l.reconcile_id IS NULL " \
                 "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
                 "ORDER BY l.account_id,p.name",
-                (self.date_lst[0],self.date_lst[0]))
+                (self.date_lst[0],a1,self.date_lst[0]))
             res = self.cr.dictfetchall()
             
             for r in res:
@@ -265,10 +269,10 @@ class partner_balance(report_sxw.rml_parse):
             "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
             "JOIN account_account ac ON (l.account_id = ac.id)" \
             "WHERE  " \
-#                " account_id IN (" + self.account_ids + ") " \
-                " l.date IN (" + self.date_lst_string + ") " \
+                " ac.type IN %s " \
+                "AND l.date IN (" + self.date_lst_string + ") " \
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
-            "ORDER BY l.account_id,p.name")
+            "ORDER BY l.account_id,p.name",(a1,))
         res = self.cr.dictfetchall()
         
         for r in res:
@@ -285,7 +289,10 @@ class partner_balance(report_sxw.rml_parse):
         tot_scredit = 0.0
         tot_sdebit = 0.0
         tot_enlitige = 0.0
+        tot_d=0.0
+        print "WWW",cleanarray
         for r in cleanarray:
+            print "r",r
             # For the first element we always add the line
             # type = 1 is the line is the first of the account
             # type = 2 is an other line of the account
@@ -305,10 +312,12 @@ class partner_balance(report_sxw.rml_parse):
                 new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                 new_header['type'] = 3
                 ##
+                print "33", new_header
                 completearray.append(new_header)
                 #
                 r['type'] = 1
                 r['balance'] = float(r['sdebit']) - float(r['scredit'])
+                print "LEVEL1", r
                
                 completearray.append(r)
                 #
@@ -361,6 +370,7 @@ class partner_balance(report_sxw.rml_parse):
                     new_header['enlitige'] = tot_enlitige
                     new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                     new_header['type'] = 3
+                    print "NEW GEA", new_header
                     ##
                     ##
                     completearray.append(new_header)
@@ -369,6 +379,7 @@ class partner_balance(report_sxw.rml_parse):
                     r['type'] = 1
                     #
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
+                    print "RR LEVEEL1",r
                     #
                     completearray.append(r)
                     
@@ -384,46 +395,67 @@ class partner_balance(report_sxw.rml_parse):
                     r['type'] = 2
                     #
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
+                    print "LEVELE2",i,r
                     #
                    
                     completearray.append(r)
-                    
+            print "fin",i 
             i = i + 1
             
         return completearray
 
 
     def _sum_debit(self,data):
+        print "daa",data
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         result_tmp = 0.0
         #
         #
-        
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
+
         if data['form']['soldeinit'] :
             self.cr.execute(
                     'SELECT sum(debit) ' \
-                    'FROM account_move_line AS l ' \
+                    'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                     'WHERE  ' \
-#                        ' account_id IN (' + self.account_ids + ') ' \
-                        ' l.reconcile_id IS NULL ' \
+                        ' ac.type IN %s ' \
+                        'AND l.reconcile_id IS NULL ' \
                         'AND date < %s ',
-                    (self.date_lst[0],))
-            result_tmp = float(self.cr.fetchone()[0] or 0.0)
+                    (a1,self.date_lst[0],))
+
+            v_res = self.cr.fetchone()   
+            if v_res and v_res != None:
+                result_tmp = float(v_res[0] or 0.0)
+            else:
+                result_tmp = 0.0
         #
         #
         self.cr.execute(
                 'SELECT sum(debit) ' \
-                'FROM account_move_line AS l ' \
+                'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                 'WHERE  ' \
 #                    ' account_id IN (' + self.account_ids + ') ' \
-                    ' l.date IN (' + self.date_lst_string + ') ' )
+                    ' ac.type IN %s ' \
+                    'AND l.date IN (' + self.date_lst_string + ') ',(a1,) )
         result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
         
         return result_tmp
 
     def _sum_credit(self,data):
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
+
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -434,27 +466,34 @@ class partner_balance(report_sxw.rml_parse):
         if data['form']['soldeinit'] :
             self.cr.execute(
                     'SELECT sum(credit) ' \
-                    'FROM account_move_line AS l ' \
+                    'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                     'WHERE  ' \
-#                        '  account_id IN (' + self.account_ids + ') ' \
-                        ' l.reconcile_id IS NULL ' \
+                        ' ac.type IN %s ' \
+                        'AND l.reconcile_id IS NULL ' \
                         'AND date < %s ' ,
-                (self.date_lst[0],))
+                (a1,self.date_lst[0],))
             result_tmp = float(self.cr.fetchone()[0] or 0.0)
         #
         #
         self.cr.execute(
                 'SELECT sum(credit) ' \
-                'FROM account_move_line AS l ' \
+                'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                 'WHERE  ' \
 #                    ' account_id IN (' + self.account_ids + ') ' \
-                    ' l.date IN (' + self.date_lst_string + ') ' )
+                    ' ac.type IN %s ' \
+                    'AND l.date IN (' + self.date_lst_string + ') ',(a1,) )
                 
         result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
         
         return result_tmp
 
     def _sum_litige(self,data):
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -465,28 +504,35 @@ class partner_balance(report_sxw.rml_parse):
         if data['form']['soldeinit'] :
             self.cr.execute(
                     'SELECT sum(debit-credit) ' \
-                    'FROM account_move_line AS l ' \
+                    'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                     'WHERE  ' \
 #                        '  account_id IN (' + self.account_ids + ') ' \
                         ' l.reconcile_id IS NULL ' \
+                        'AND ac.type IN %s ' \
                         'AND date < %s ' \
                         'AND blocked=TRUE ' ,
-                (self.date_lst[0],))
+                (a1,self.date_lst[0],))
             result_tmp = float(self.cr.fetchone()[0] or 0.0)
         #
         #
         self.cr.execute(
                 'SELECT sum(debit-credit) ' \
-                'FROM account_move_line AS l ' \
+                'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                 'WHERE  ' \
-#                    '  account_id IN (' + self.account_ids + ') ' \
-                    ' l.date IN (' + self.date_lst_string + ') ' \
-                    'AND blocked=TRUE ' )
+                    'ac.type IN %s ' \
+                    'AND l.date IN (' + self.date_lst_string + ') ' \
+                    'AND blocked=TRUE ',(a1,) )
         result_tmp = result_tmp + float(self.cr.fetchone()[0] or 0.0)
         
         return result_tmp
 
     def _sum_sdebit(self,data):
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -500,16 +546,17 @@ class partner_balance(report_sxw.rml_parse):
                         'THEN sum(debit) - sum(credit) ' \
                         'ELSE 0 ' \
                     'END ' \
-                'FROM account_move_line AS l  ' \
+                'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                 'WHERE  ' \
-#                    '  account_id IN (' + self.account_ids + ') ' \
-                    ' date < %s ' \
+                    'ac.type IN %s ' \
+                    'AND  date < %s ' \
                     'AND reconcile_id IS NULL ' \
                 'GROUP BY partner_id',
-                (self.date_lst[0],))
+                (a1,self.date_lst[0],))
             
-            if self.cr.fetchone() != None:
-                result_tmp = float(self.cr.fetchone()[0])
+            v_res = self.cr.fetchone()   
+            if v_res != None :
+                result_tmp = float(v_res[0]) or 0.0
             else:
                 result_tmp = 0.0
         #
@@ -519,15 +566,14 @@ class partner_balance(report_sxw.rml_parse):
                     'THEN sum(debit) - sum(credit) ' \
                     'ELSE 0 ' \
                 'END ' \
-            'FROM account_move_line AS l ' \
+            'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
             'WHERE  ' \
-#                '  account_id IN (' + self.account_ids + ') ' \
-                'l.date IN (' + self.date_lst_string + ') ' \
-            'GROUP BY partner_id')
-        a = self.cr.fetchone()[0]
-        
-        if self.cr.fetchone() != None:
-            result_tmp = result_tmp + (a or 0.0)
+                ' ac.type IN %s ' \
+                'AND l.date IN (' + self.date_lst_string + ') ' \
+            'GROUP BY partner_id',(a1,))
+        v_res = self.cr.fetchone()   
+        if v_res != None:
+            result_tmp = result_tmp + ( v_res[0] or 0.0)
         else:
             result_tmp = 0.0
         
@@ -535,6 +581,12 @@ class partner_balance(report_sxw.rml_parse):
 
     def _sum_scredit(self,data):
         
+        if data['form']['result_selection']=='all':
+            a1=('receivable','payable')
+        elif data['form']['result_selection']=='customer':
+            a1=('receivable','')
+        elif data['form']['result_selection']=='supplier':
+            a1=('payable','')
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -548,16 +600,17 @@ class partner_balance(report_sxw.rml_parse):
                         'THEN sum(credit) - sum(debit) ' \
                         'ELSE 0 ' \
                     'END ' \
-                'FROM account_move_line AS l ' \
+                'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
                 'WHERE  ' \
-#                    ' account_id IN (' + self.account_ids + ') ' \
-                    ' date <= %s ' \
+                    ' ac.type IN %s ' \
+                    'AND date <= %s ' \
                     'AND l.reconcile_id IS NULL ' \
                 'GROUP BY partner_id',
-                (self.date_lst[0],))
+                (a1,self.date_lst[0],))
             
-            if self.cr.fetchone() != None:
-                result_tmp = float(self.cr.fetchone()[0]) or 0.0
+            v_res = self.cr.fetchone()   
+            if v_res != None:
+                result_tmp = float(v_res[0]) or 0.0
             else:
                 result_tmp = 0.0
         #
@@ -567,14 +620,14 @@ class partner_balance(report_sxw.rml_parse):
                     'THEN sum(credit) - sum(debit) ' \
                     'ELSE 0 ' \
                 'END ' \
-            'FROM account_move_line AS l ' \
+            'FROM account_move_line AS l left join account_account ac ON (l.account_id = ac.id)' \
             'WHERE   ' \
-#                ' account_id IN (' + self.account_ids + ') ' \
-                'l.date IN (' + self.date_lst_string + ') ' \
-            'GROUP BY partner_id')
-        a = self.cr.fetchone()[0]
-        if self.cr.fetchone() != None:
-            result_tmp = result_tmp + (a or 0.0)
+                ' ac.type IN %s ' \
+                ' AND l.date IN (' + self.date_lst_string + ') ' \
+            'GROUP BY partner_id',(a1,))
+        a = self.cr.fetchone()
+        if a != None :
+            result_tmp = result_tmp + (a[0] or 0.0)
             
         else:
             result_tmp = 0.0
