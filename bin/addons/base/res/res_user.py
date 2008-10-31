@@ -57,6 +57,7 @@ class groups(osv.osv):
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
         self.pool.get('ir.rule').domain_get()
+        self.pool.get('ir.model.access').check()
         return res
 
     def create(self, cr, uid, vals, context=None):

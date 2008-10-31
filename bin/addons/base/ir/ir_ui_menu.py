@@ -87,7 +87,7 @@ class ir_ui_menu(osv.osv):
             return []
 
         modelaccess = self.pool.get('ir.model.access')
-        user_groups = set(self.pool.get('res.users').read(cr, 1, uid)['groups_id'])
+        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         result = []
         for menu in self.browse(cr, uid, ids):
             # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
@@ -103,8 +103,11 @@ class ir_ui_menu(osv.osv):
                 restrict_to_groups = [g.id for g in menu.groups_id]
                 if not user_groups.intersection(restrict_to_groups):
                     continue
+                result.append(menu.id)
+                self._cache[key] = True
+                continue
 
-            if menu.action:     # FIXME elif ?
+            if menu.action:
                 # we check if the user has access to the action of the menu
                 m, oid = menu.action.split(',', 1)
                 data = self.pool.get(m).browse(cr, 1, int(oid))
@@ -127,8 +130,8 @@ class ir_ui_menu(osv.osv):
                     # not displayed if there is no children 
                     continue
 
-            self._cache[key] = True
             result.append(menu.id)
+            self._cache[key] = True
 
         if count:
             return len(result)

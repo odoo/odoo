@@ -182,8 +182,8 @@ class ir_model_grid(osv.osv):
         cols = ['model', 'name']
         xml = '''<?xml version="1.0"?>
 <%s editable="bottom">
-    <field name="name" select="1" readonly="1"/>
-    <field name="model" select="1" readonly="1"/>
+    <field name="name" select="1" readonly="1" required="1"/>
+    <field name="model" select="1" readonly="1" required="1"/>
     <field name="group_0"/>
     ''' % (view_type,)
         for group in groups_br:
