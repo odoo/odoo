@@ -162,8 +162,8 @@ class ir_model_grid(osv.osv):
                         'model_id':model_id,
                         'group_id':group_id
                     }) ]
-                vals = dict(map(lambda x: ('perm_'+x, x[0] in (vals[val] or '')), perms_rel))
-                acc_obj.write(cr, uid, rules, vals, context=context)
+                vals2 = dict(map(lambda x: ('perm_'+x, x[0] in (vals[val] or '')), perms_rel))
+                acc_obj.write(cr, uid, rules, vals2, context=context)
         return True
 
     def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
