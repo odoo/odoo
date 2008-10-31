@@ -92,7 +92,8 @@ Section "OpenERP Server" SecOpenERPServer
     ClearErrors
     ReadRegStr $0 HKCU "Software\OpenERP Server" ""
     IfErrors +2 0
-        Abort "Can't install this version of OpenERP Server, because there is a previous installation on this system !"
+        MessageBox MB_OK "Can't install this version of OpenERP Server because there is a previous installation on this system !"
+        Quit
 
     nsExec::Exec "net stop openerp-service"
     sleep 2
