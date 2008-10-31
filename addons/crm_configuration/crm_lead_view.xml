@@ -25,11 +25,11 @@
                 <notebook colspan="4">
                 <page string="Leads">
                     <separator string="Prospect Information" colspan="4"/>
-                    <field name="partner_name" string="Partner Name"/>
+                    <field name="partner_name" string="Prospect Name"/>
                     <field name="partner_name2" string="Contact Name"/>
                     <field name="partner_phone"/>
                     <field name="partner_mobile"/>
-                    <field name="email_from"/>
+                    <field name="email_from" string="Prospect Email"/>
                     <newline/>
                     <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)"/>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
@@ -85,7 +85,7 @@
                             states="open" type="object" colspan="2"/>
                         <field name="description" colspan="2" nolabel="1"/>
                         <button name="case_log_reply"
-                            string="Send Partner &amp; Historize" states="open"
+                            string="Send Prospect &amp; Historize" states="open"
                             type="object"/>
                         <button name="case_log" string="Historize" states="open"
                             type="object"/>
