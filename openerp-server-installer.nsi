@@ -21,6 +21,8 @@ InstallDir "$PROGRAMFILES\OpenERP Server"
 ;Get installation folder from registry if available
 InstallDirRegKey HKCU "Software\OpenERP Server" ""
 
+BrandingText "OpenERP Server v5.0-Alpha"
+
 ;Vista redirects $SMPROGRAMS to all users without this
 RequestExecutionLevel admin
 
@@ -47,7 +49,7 @@ Var STARTMENU_FOLDER
 !define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-slogan.bmp"
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "doc\\License.rtf"
+!insertmacro MUI_PAGE_LICENSE "doc\License.rtf"
 # !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 
@@ -79,6 +81,10 @@ Var STARTMENU_FOLDER
 
 !insertmacro MUI_LANGUAGE "English"
 
+!macro CreateInternetShortcut FILENAME URL
+	WriteINIStr "${FILENAME}.url" "InternetShortcut" "URL" "${URL}"
+!macroend
+
 ;--------------------------------
 ;Installer Sections
 
@@ -90,12 +96,12 @@ Section "OpenERP Server" SecOpenERPServer
     SetOutPath "$INSTDIR"
 
     ;ADD YOUR OWN FILES HERE...
-    File /r "dist\\*"
+    File /r "dist\*"
 
     SetOutPath "$INSTDIR\service"
-    File /r "win32\\dist\\*"
-    File "win32\\start.bat"
-    File "win32\\stop.bat"
+    File /r "win32\dist\*"
+    File "win32\start.bat"
+    File "win32\stop.bat"
 
     ;Store installation folder
     WriteRegStr HKCU "Software\OpenERP Server" "" $INSTDIR
@@ -114,10 +120,12 @@ Section "OpenERP Server" SecOpenERPServer
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
+	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
     !insertmacro MUI_STARTMENU_WRITE_END
 
-    nsExec::Exec '"$INSTDIR\\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\\openerp-server.log" -s'
-    nsExec::Exec '"$INSTDIR\\service\\OpenERPServerService.exe" -auto -install'
+    nsExec::Exec '"$INSTDIR\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\openerp-server.log" -s'
+    nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -auto -install'
 
 SectionEnd
 
@@ -138,12 +146,14 @@ Section "Uninstall"
 
     nsExec::Exec "net stop openerp-service"
     sleep 2
-    nsExec::Exec '"$INSTDIR\\service\\OpenERPServerService.exe" -remove'
+    nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -remove'
     sleep 2
 
     RMDIR /r "$INSTDIR" 
     !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
 
+    Delete "$SMPROGRAMS\$MUI_TEMP\Forum.url"
+    Delete "$SMPROGRAMS\$MUI_TEMP\Translation.url"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP Server.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
