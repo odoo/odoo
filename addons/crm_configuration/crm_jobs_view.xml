@@ -18,6 +18,7 @@
                 <field name="categ_id" string="Applied Job" select="1"/>
                 <field name="category2_id" string="Degree" select="1"/>
                 <field name="stage_id"/>
+                <field name="priority" string="Appreciation"/>
                 <field name="user_id"/>
                 <field name="state"/>
             </tree>
@@ -34,7 +35,7 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                    <button name="set_partner" string="Convert to Quote" icon="terp-sale"/>
+                    <button name="set_partner" string="Convert to Partner" icon="terp-sale"/>
                     <newline/>
                     <field name="stage_id"/>
                     <field name="date" string="Next Interview"/>
@@ -60,14 +61,14 @@
                         <field name="categ_id" string="Applied Job" select="1" on_change="onchange_categ_id(categ_id)"/>
                         <field name="category2_id" string="Degree" select="1"/>
                         <separator colspan="4" string="Qualication"/>
-                        <field name="priority" string="Priority"/>
+                        <field name="priority" string="Appreciation" select="2"/>
 
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
                             <field name="state" select="1"/> 
-                             <button name="case_close" string="Done" states="open,draft,pending" type="object"/>
+                            <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object"/>
                             <button name="case_open" string="Open" states="draft,pending" type="object"/>
-                            <button name="case_cancel" string="Refuse Candidate" states="draft,open,pending" type="object"/>
+                            <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object"/>
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
                         </group>

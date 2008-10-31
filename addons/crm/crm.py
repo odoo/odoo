@@ -397,6 +397,13 @@ class crm_case(osv.osv):
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 
+    def unlink(self, cr, uid, ids, context={}):
+        for case in self.browse(cr, uid, ids, context):
+            if case.state <> 'draft':
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this case. You should better cancel it.'))
+        return super(crm_case, self).unlink(cr, uid, ids, context)
+
     def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
         if not scrit:
             scrit = []
