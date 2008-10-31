@@ -89,6 +89,10 @@ Var STARTMENU_FOLDER
 ;Installer Sections
 
 Section "OpenERP Server" SecOpenERPServer
+    ClearErrors
+    ReadRegStr $0 HKCU "Software\OpenERP Server" ""
+    IfErrors +2 0
+        Abort "Can't install this version of OpenERP Server, because there is a previous installation on this system !"
 
     nsExec::Exec "net stop openerp-service"
     sleep 2
@@ -143,7 +147,6 @@ LangString DESC_SecOpenERPServer ${LANG_ENGLISH} "OpenERP Server."
 ;Uninstaller Section
 
 Section "Uninstall"
-
     nsExec::Exec "net stop openerp-service"
     sleep 2
     nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -remove'
