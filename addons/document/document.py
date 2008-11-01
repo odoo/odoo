@@ -408,7 +408,7 @@ class document_directory_content(osv.osv):
         'sequence': fields.integer('Sequence', size=16),
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
-        'extension': fields.selection(_extension_get, 'Report Type', required=True, size=4),
+        'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
         'include_name': fields.boolean('Include Record Name', help="Check if you cant that the name of the file start by the record name."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }

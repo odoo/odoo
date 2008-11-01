@@ -8,13 +8,15 @@
     "category" : "Generic Modules/Others",
     "website": "http://www.tinyerp.com",
     "description": """Allows to synchronize calendars with others applications.""",
-    "depends" : ["document"],
+    "depends" : ["document","crm"],
     "init_xml" : ["document_data.xml"],
     "update_xml" : [
         "document_view.xml",
         "security/ir.model.access.csv",
     ],
-    "demo_xml" : [],
+    "demo_xml" : [
+        "document_demo.xml"
+    ],
     "active": False,
     "installable": True
 }
