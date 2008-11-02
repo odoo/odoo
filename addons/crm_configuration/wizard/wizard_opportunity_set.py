@@ -80,6 +80,7 @@ class make_opportunity(wizard.interface):
 
 
         case_obj = pool.get('crm.case')
+        case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), 'convert')
         case_obj.write(cr, uid, data['ids'], {
             'section_id': id,
             'name': data['form']['name'],
