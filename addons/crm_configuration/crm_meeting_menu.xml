@@ -8,7 +8,7 @@
         res_model="crm.case"
         src_model="res.partner"
         view_mode="calendar,tree,form"
-        context="{'default_partner_id': active_id}"
+        context="{'default_partner_id': active_id, 'default_duration': 4.0}"
         domain="[('section_id','=','Meetings')]"/>
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
