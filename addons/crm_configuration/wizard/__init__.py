@@ -29,3 +29,5 @@
 ##############################################################################
 
 import meeting_planify
+import wizard_partner_create
+import wizard_opportunity_set

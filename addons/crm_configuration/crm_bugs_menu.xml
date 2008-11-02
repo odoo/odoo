@@ -3,10 +3,6 @@
 <data noupdate="1">
     <menuitem id="menu_aftersale" name="After-Sale Services" parent="crm.menu_crm"/>
 
-    <record model="crm.case.section" id="section_support">
-        <field name="name">Bug Tracking</field>
-        <field name="code">BugSup</field>
-    </record>
     <record model="crm.case.categ" id="categ1">
         <field name="name">Bugs</field>
         <field name="section_id" ref="section_support"/>

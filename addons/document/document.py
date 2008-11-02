@@ -709,7 +709,7 @@ class document_configuration_wizard(osv.osv_memory):
                 'ressource_type_id': mid[0],
                 'domain': '[]',
                 'ressource_tree': 1
-            })
+        })
 
         return {
                 'view_type': 'form',
@@ -717,6 +717,5 @@ class document_configuration_wizard(osv.osv_memory):
                 'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
-            }
-
+        }
 document_configuration_wizard()

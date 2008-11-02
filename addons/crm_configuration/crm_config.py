@@ -82,13 +82,13 @@ class crm_menu_config_wizard(osv.osv_memory):
     _columns = {
         'name':fields.char('Name', size=64),
         'meeting' : fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
-        'lead' : fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests, the very first contact with a customer request."),
+        'lead' : fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
         'opportunity' : fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
         'jobs' : fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
         'document_ics':fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
         'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
+        'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
-        'helpdesk' : fields.boolean('Help Desk Operations', help="This may help your Help Desk."),
     }
     _defaults = {
         'meeting': lambda *args: True,

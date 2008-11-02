@@ -3,12 +3,29 @@
     <data>
 
         <wizard
+            id="wizard_crm_partner_create"
+            keyword="client_action_multi"
+            model="crm.case"
+            name="crm.case.partner_create"
+            multi="True"
+            string="Create Partner"/>
+
+        <wizard
             id="wizard_crm_meeting"
             keyword="client_action_multi"
             model="crm.case"
             name="crm.case.meeting"
             multi="True"
             string="Schedule Meeting"/>
+
+        <wizard
+            id="wizard_crm_opportunity_set"
+            keyword="client_action_multi"
+            model="crm.case"
+            name="crm.case.opportunity_set"
+            multi="True"
+            string="Convert To Opportunity"/>
+
 
     </data>
 </openerp>

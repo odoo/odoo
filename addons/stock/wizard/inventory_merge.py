@@ -48,14 +48,14 @@ def do_merge(self, cr, uid, data, context):
 
     if len(data['ids']) < 2:
         raise wizard.except_wizard("Warning",
-                                   "Please select at least two inventories.")
+            _("Please select at least two inventories."))
 
 
 
     for inventory in invent_obj.browse(cr, uid, data['ids'], context=context):
         if inventory.state == "done":
             raise wizard.except_wizard("Warning",
-                                       "Merging is only allowed on draft inventories.")
+                _("Merging is only allowed on draft inventories."))
 
         for line in inventory.inventory_line_id:
             key = (line.location_id.id, line.product_id.id, line.product_uom.id)

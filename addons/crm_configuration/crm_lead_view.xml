@@ -16,11 +16,11 @@
                     <field name="name" select="1" string="Lead Subject"/>
                     <field name="section_id" colspan="1"/>
                     <field name="stage_id" select="1"/>
-                    <button string="Create Partner" name="button_partner_set" icon="gtk-new"/>
+                    <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
                     <field name="user_id" select="2"/>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>
                     <field name="category2_id" string="Campaign Type" select="1"/>
-                    <button string="Convert to Opportunity" name="button_partner_set" icon="gtk-go-forward"/>
+                    <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-go-forward" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Leads">

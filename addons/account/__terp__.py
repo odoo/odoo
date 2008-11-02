@@ -50,9 +50,9 @@
         "account_unit_test.xml",
     ],
     "update_xml" : [
-        "account_menuitem.xml",
         "security/account_security.xml",
         "security/ir.model.access.csv",
+        "account_menuitem.xml",
         "account_wizard.xml",
         "account_view.xml",
         "account_end_fy.xml",

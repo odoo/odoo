@@ -39,6 +39,7 @@ case_form = """<?xml version="1.0"?>
 <form string="Planify Meeting">
     <field name="date"/>
     <field name="duration" widget="float_time"/>
+    <label string="Note that you can also use the calendar view to graphically schedule your next meeting." colspan="4"/>
 </form>"""
 
 case_fields = {
@@ -51,7 +52,7 @@ class make_meeting(wizard.interface):
     def _selectPartner(self, cr, uid, data, context):
         case_obj = pooler.get_pool(cr.dbname).get('crm.case')
         case = case_obj.browse(cr, uid, data['id'])
-        return {'date': case.date, 'duration': case.duration}
+        return {'date': case.date, 'duration': case.duration or 2.0}
 
     def _makeOrder(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
