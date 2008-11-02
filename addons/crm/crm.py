@@ -563,6 +563,7 @@ class crm_case(osv.osv):
                 'som': case.som.id,
                 'canal_id': case.canal_id.id,
                 'user_id': uid,
+                'date': case.date or time.strftime('%Y-%m-%d %H:%M:%S'),
                 'case_id': case.id,
                 'section_id': case.section_id.id
             }
@@ -575,6 +576,7 @@ class crm_case(osv.osv):
                             case.user_id.address_id.email) or False
             obj.create(cr, uid, data, context)
         return True
+    _history = __history
 
     def create(self, cr, uid, *args, **argv):
         res = super(crm_case, self).create(cr, uid, *args, **argv)

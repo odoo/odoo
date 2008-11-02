@@ -54,7 +54,7 @@ class make_meeting(wizard.interface):
         case = case_obj.browse(cr, uid, data['id'])
         return {'date': case.date, 'duration': case.duration or 2.0}
 
-    def _makeOrder(self, cr, uid, data, context):
+    def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
 
         case_obj = pool.get('crm.case')
@@ -62,7 +62,7 @@ class make_meeting(wizard.interface):
             'date': data['form']['date'],
             'duration': data['form']['duration']
         }, context=context)
-        case_obj = pool.get('crm.case')
+        case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), 'meeting')
         return {}
 
     states = {
@@ -73,7 +73,7 @@ class make_meeting(wizard.interface):
         },
         'order': {
             'actions': [],
-            'result': {'type': 'action', 'action': _makeOrder, 'state': 'end'}
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'end'}
         }
     }
 
