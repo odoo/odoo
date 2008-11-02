@@ -18,16 +18,16 @@
                     <newline/>
                     <field name="date" string="Meeting Date" required="1"/>
                     <field name="duration" colspan="1" widget="float_time" required="1"/>
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                    <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Meeting">
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
                     <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
                     <field name="email_from"/>
+                    <newline/>
                     <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
                     <field name="category2_id" select="1" string="Location"/>
-                    <field name="priority" select="2"/>
-                    <newline/>
                     <separator string="Description" colspan="4"/>
                     <field name="note"  nolabel="1" colspan="4" />
                     <separator colspan="4"/>
@@ -45,6 +45,7 @@
                         <newline/>
                         <field name="email_cc" colspan="1"/>
                         <field name="date_deadline" select="2" string="Deadlines"/>
+                        <field name="priority" select="2"/>
                         <newline/>
 
                         <field name="planned_revenue"/>
