@@ -64,7 +64,7 @@ class report_document_user(osv.osv):
                      f.file_size as file_size,
                      min(f.title) as file_title,
                      min(d.type) as type,
-                     min(EXTRACT(MONTH FROM f.create_date)||'-'||substring(to_char(f.create_date,'YY-Month-DD') from 4 for 9)) as month,
+                     min(EXTRACT(MONTH FROM f.create_date)||'-'||to_char(f.create_date,'Month')) as month,
                      f.write_date as change_date
                  from ir_attachment f
                      left join document_directory d on (f.parent_id=d.id and d.name<>'')
@@ -74,8 +74,8 @@ class report_document_user(osv.osv):
          """)
 report_document_user()
 
-class report_files_partenr(osv.osv):
-    _name = "report.files.partenr"
+class report_files_partner(osv.osv):
+    _name = "report.files.partner"
     _description = "Files details by Partners"
     _auto = False
     _columns = {
@@ -91,11 +91,18 @@ class report_files_partenr(osv.osv):
      }
     def init(self, cr):
          cr.execute("""
-            create or replace view report_files_partenr as (
-                select min(f.id) as id,count(*) as nbr,min(to_char(f.create_date,'YYYY-MM')||'-'||'01') as name,min(f.title) as file_title,p.name as partner from ir_attachment f inner join res_partner p on (f.partner_id=p.id) group by p.name
+            create or replace view report_files_partner as (
+                select min(f.id) as id,count(*) as nbr,
+                       min(to_char(f.create_date,'YYYY-MM-01')) as name,
+                       min(f.title) as file_title,
+                       p.name as partner 
+                from ir_attachment f 
+                inner join res_partner p 
+                on (f.partner_id=p.id) 
+                group by p.name
              )
          """)
-report_files_partenr()
+report_files_partner()
 
 class report_document_file(osv.osv):
     _name = "report.document.file"
@@ -110,9 +117,10 @@ class report_document_file(osv.osv):
     def init(self, cr):
          cr.execute("""
             create or replace view report_document_file as (
-                select min(f.id) as id,count(*) as nbr,
-                min(EXTRACT(MONTH FROM f.create_date)||'-'||substring(to_char(f.create_date,'YY-Month-DD') from 4 for 9)) as month,
-                sum(f.file_size) as file_size  
+                select min(f.id) as id,
+                       count(*) as nbr,
+                       min(EXTRACT(MONTH FROM f.create_date)||'-'||to_char(f.create_date,'Month')) as month,
+                       sum(f.file_size) as file_size  
                 from ir_attachment f 
                 group by EXTRACT(MONTH FROM f.create_date) 
              )
@@ -139,15 +147,15 @@ class report_document_wall(osv.osv):
                select max(f.id) as id,
                min(title) as file_name,
                to_char(min(f.create_date),'YYYY-MM-DD HH24:MI:SS') as last,
-               f.user_id as user_id,f.user_id as user,
-               substring(to_char(f.create_date,'YY-Month-DD') from 4 for 9) as month 
+               f.user_id as user_id, f.user_id as user,
+               to_char(f.create_date,'Month') as month 
                from ir_attachment f 
                where create_date in (
                    select max(create_date) 
                    from ir_attachment i 
                    inner join res_users u on (i.user_id=u.id) 
                    group by i.user_id) group by f.user_id,f.create_date 
-                   having (to_date(substring(CURRENT_DATE for 10),'YYYY-MM-DD') - to_date(substring(f.create_date for 10),'YYYY-MM-DD')) > 30
+                   having (CURRENT_DATE - to_date(to_char(f.create_date,'YYYY-MM-DD'),'YYYY-MM-DD')) > 30
              )
          """)
 report_document_wall()
