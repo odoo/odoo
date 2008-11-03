@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
         "name" : "CRM Verticalisation",
-        "version" : "CRM Verticalisation",
+        "version" : "1.0",
         "author" : "Tiny",
         "website" : "http://tinyerp.com",
         "category" : "Vertical Modules/Parametrization",
