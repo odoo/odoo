@@ -188,7 +188,7 @@ setup(name             = name,
                           'openerp-server.wizard', 'openerp-server.workflow'] + \
                          list(find_addons()),
       package_dir      = {'openerp-server': 'bin'},
-      console = [{"script":"bin\\openerp-server.py", "icon_resources":[(1,"pixmaps\\openerp.ico")]}],
+      console = [{"script":"bin\\openerp-server.py", "icon_resources":[(1,"pixmaps\\openerp-icon.ico")]}],
       options = options,
       )
 
