@@ -109,7 +109,7 @@ period_fields = {
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year'},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Mouvement')]},
+    'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Movement')]},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
     'landscape':{'string':"Landscape Mode",'type':'boolean'},
     'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
