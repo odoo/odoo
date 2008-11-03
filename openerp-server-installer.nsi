@@ -66,7 +66,7 @@ Var STARTMENU_FOLDER
 ;--------------------------------
 ;Pages
 
-!define MUI_ICON ".\pixmaps\openerp.ico"
+!define MUI_ICON ".\pixmaps\openerp-icon.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
 !define MUI_HEADERIMAGE
