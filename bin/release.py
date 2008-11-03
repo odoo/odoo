@@ -40,7 +40,7 @@ url = 'http://www.openerp.com'
 author = 'Tiny.be'
 author_email = 'info@tiny.be'
 support_email = 'support@openerp.com'
-license = 'GPL-2'
+license = 'GPL-3'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
