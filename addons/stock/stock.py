@@ -112,8 +112,8 @@ class stock_location(osv.osv):
         'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')],
             'Chained Location Type', required=True),
         'chained_auto_packing': fields.selection(
-            [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')], 
-            'Automatic Move', 
+            [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
+            'Automatic Move',
             required=True,
             help="This is used only if you selected a chained location type.\n" \
                 "The 'Automatic Move' value will create a stock move after the current one that will be "\
@@ -209,13 +209,13 @@ class stock_location(osv.osv):
                     })
         return result
 
-    def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):                
-        product_obj = self.pool.get('product.product')        
+    def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):
+        product_obj = self.pool.get('product.product')
         context.update({
             'states':states,
             'what':what,
             'location':ids
-        })                
+        })
         return product_obj.get_product_available(cr,uid,product_ids,context=context)
 
     def _product_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
@@ -334,7 +334,7 @@ class stock_picking(osv.osv):
                     date_planned='%s'
                 where
                     picking_id=%d """ % (value,pick.id)
-            
+
             if pick.max_date:
                 sql_str += " and (date_planned='"+pick.max_date+"' or date_planned>'"+value+"')"
             cr.execute(sql_str)
@@ -346,7 +346,7 @@ class stock_picking(osv.osv):
             ids=[ids]
         for pick in self.browse(cr, uid, ids, context):
             sql_str="""update stock_move set
-                    date_planned='%s' 
+                    date_planned='%s'
                 where
                     picking_id=%d """ % (value,pick.id)
             if pick.min_date:
@@ -365,7 +365,7 @@ class stock_picking(osv.osv):
                 min(date_planned),
                 max(date_planned)
             from
-                stock_move 
+                stock_move
             where
                 picking_id in (""" + ','.join(map(str, ids)) + """)
             group by
@@ -407,7 +407,7 @@ class stock_picking(osv.osv):
         'invoice_state':fields.selection([
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
-            ("none","Not from Packing")], "Invoice Status", 
+            ("none","Not from Packing")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
@@ -467,7 +467,7 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
-    
+
     def draft_force_assign(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
@@ -477,7 +477,7 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
-    
+
     def draft_validate(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
@@ -485,7 +485,7 @@ class stock_picking(osv.osv):
             self.action_move(cr, uid, [pick.id])
             wf_service.trg_validate(uid, 'stock.picking', pick.id , 'button_done', cr)
         return True
-    
+
     def cancel_assign(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
@@ -500,7 +500,7 @@ class stock_picking(osv.osv):
 
     def test_finnished(self, cr, uid, ids):
         move_ids=self.pool.get('stock.move').search(cr,uid,[('picking_id','in',ids)])
-        
+
         for move in self.pool.get('stock.move').browse(cr,uid,move_ids):
             if move.state not in ('done','cancel') :
                 if move.product_qty != 0.0:
@@ -565,7 +565,7 @@ class stock_picking(osv.osv):
             return move_line.product_id.standard_price
         else:
             return move_line.product_id.list_price
-    
+
     def _get_discount_invoice(self, cursor, user, move_line):
         '''Return the discount for the move line'''
         return 0.0
@@ -607,8 +607,8 @@ class stock_picking(osv.osv):
         invoices_group = {}
         res = {}
         sale_line_obj = self.pool.get('sale.order.line')
-        
-        for picking in self.browse(cursor, user, ids, context=context):            
+
+        for picking in self.browse(cursor, user, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
@@ -762,7 +762,7 @@ class stock_production_lot(osv.osv):
                 name=name+'/'+record['ref']
             res.append((record['id'], name))
         return res
-    
+
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
@@ -846,7 +846,7 @@ class stock_move(osv.osv):
         return res
 
     def _check_tracking(self, cr, uid, ids):
-         for move in self.browse(cr, uid, ids):             
+         for move in self.browse(cr, uid, ids):
              if not move.prodlot_id and \
                 (move.state == 'done' and \
                 ( \
@@ -861,9 +861,9 @@ class stock_move(osv.osv):
     def _check_product_lot(self, cr, uid, ids):
          for move in self.browse(cr, uid, ids):
              if move.prodlot_id and (move.prodlot_id.product_id.id != move.product_id.id):
-                return False                          
+                return False
          return True
-         
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
@@ -975,11 +975,11 @@ class stock_move(osv.osv):
         result = {}
         for m in moves:
             dest = self.pool.get('stock.location').chained_location_get(
-                cr, 
-                uid, 
-                m.location_dest_id, 
-                m.picking_id and m.picking_id.address_id and m.picking_id.address_id.partner_id, 
-                m.product_id, 
+                cr,
+                uid,
+                m.location_dest_id,
+                m.picking_id and m.picking_id.address_id and m.picking_id.address_id.partner_id,
+                m.product_id,
                 context
             )
             if dest:
@@ -1318,22 +1318,22 @@ class stock_warehouse(osv.osv):
 stock_warehouse()
 
 
-# Move wizard : 
+# Move wizard :
 #    get confirm or assign stock move lines of partner and put in current picking.
 class stock_picking_move_wizard(osv.osv_memory):
     _name='stock.picking.move.wizard'
-    def _get_picking(self,cr, uid, ctx):        
+    def _get_picking(self,cr, uid, ctx):
         if ctx.get('action_id',False):
             return ctx['action_id']
-        return False     
-    def _get_picking_address(self,cr,uid,ctx):        
-        picking_obj=self.pool.get('stock.picking')        
-        if ctx.get('action_id',False):
-            picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]            
-            return picking.address_id and picking.address_id.id or False        
         return False
-            
-            
+    def _get_picking_address(self,cr,uid,ctx):
+        picking_obj=self.pool.get('stock.picking')
+        if ctx.get('action_id',False):
+            picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]
+            return picking.address_id and picking.address_id.id or False
+        return False
+
+
     _columns={
         'name':fields.char('Name',size=64,invisible=True),
         #'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',readonly=True),
@@ -1351,13 +1351,39 @@ class stock_picking_move_wizard(osv.osv_memory):
         for act in self.read(cr,uid,ids):
             move_lines=move_obj.browse(cr,uid,act['move_ids'])
             for line in move_lines:
-                 picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})                 
+                 picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
                  picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
                  cr.commit()
                  old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
                  if not len(old_picking['move_lines']):
                     picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
         return {'type':'ir.actions.act_window_close' }
-            
-stock_picking_move_wizard()        
+
+stock_picking_move_wizard()
+
+
+class report_stock_lines_date(osv.osv):
+    _name = "report.stock.lines.date"
+    _description = "Dates of Inventories"
+    _auto = False
+    _columns = {
+        'id': fields.integer('Id',size=20),
+        'product_id':fields.integer('Product Id',size=20),
+        'create_date': fields.datetime('Latest Date of Inventory'),
+        }
+    def init(self, cr):
+        cr.execute("""
+            create or replace view report_stock_lines_date as (
+                select
+                p.id as id,
+                p.id as product_id,
+                max(l.create_date) as create_date
+                from
+                product_product p
+                left outer join
+                stock_inventory_line l on (p.id=l.product_id)
+                where l.create_date is not null
+                group by p.id
+            )""")
+report_stock_lines_date()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
