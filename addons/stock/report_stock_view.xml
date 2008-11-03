@@ -80,23 +80,10 @@
 			</field>
 		</record>
 
-		<record model="ir.ui.view" id="report_stock_lines_date_graph">
-			<field name="name">report.stock.lines.date.graph</field>
-			<field name="model">report.stock.lines.date</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Dates of Inventories" type="bar" >
-					<field name="create_date"/>
-					<field name="product_id"/>
-				</graph>
-			</field>
-		</record>
-
 		<record model="ir.actions.act_window" id="action_stock_line_date">
 			<field name="name">Dates of Inventories</field>
 			<field name="res_model">report.stock.lines.date</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree</field>
 		</record>
 			<menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date"/>
 
