@@ -68,7 +68,7 @@ def _createInvoices(self, cr, uid, data, context={}):
         if sale.order_policy == 'postpaid':
             raise osv.except_osv(
                 _('Error'),
-                _('You must cannot make an advance on a sale order that is defined as \'Automatic Invoice after delivery\'.'))
+                _('You cannot make an advance on a sale order that is defined as \'Automatic Invoice after delivery\'.'))
         val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id)
         line_id =obj_lines.create(cr, uid, {
         'name': val['value']['name'],
