@@ -36,7 +36,7 @@
 ;General
 
 ;Name and file
-Name "OpenERP Server ${VERSION}"
+Name "OpenERP Server"
 OutFile "openerp-server-setup-${VERSION}.exe"
 SetCompressor lzma
 SetCompress auto
