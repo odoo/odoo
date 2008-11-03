@@ -336,6 +336,7 @@ class partner_balance(report_sxw.rml_parse):
 #                    completearray.append(new_tot)
                     
                     
+                    
                     new_header['debit'] = tot_debit
                     new_header['credit'] = tot_credit
                     new_header['scredit'] = tot_scredit
@@ -371,12 +372,9 @@ class partner_balance(report_sxw.rml_parse):
                     r['type'] = 1
                     #
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
-                    tot_debit = r['debit']
-                    tot_credit = r['credit']
-                    tot_scredit = r['scredit']
-                    tot_sdebit = r['sdebit']
-                    tot_enlitige = (r['enlitige'] or 0.0)
+                    
                     #
+                    
                     completearray.append(r)
                     
                 if cleanarray[i]['account_id'] == cleanarray[i-1]['account_id']:
