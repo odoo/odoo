@@ -287,9 +287,13 @@ class module(osv.osv):
             ('to install','To be installed')
         ], string='State', readonly=True),
         'demo': fields.boolean('Demo data'),
-        'license': fields.selection([('GPL-2', 'GPL-2'),('GPL-3', 'GPL-3'),
-            ('Other proprietary', 'Other proprietary')], string='License',
-            readonly=True),
+        'license': fields.selection([
+                ('GPL-2', 'GPL-2'),
+                ('GPL-2 or any later version', 'GPL-2 or later version'),
+                ('GPL-3', 'GPL-3'),
+                ('GPL-3 or any later version', 'GPL-3 or later version'),
+                ('Other proprietary', 'Other proprietary')
+            ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
         'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
