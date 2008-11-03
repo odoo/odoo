@@ -208,7 +208,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"WHERE line.partner_id IS NOT NULL " \
 					"AND line.account_id = account.id " \
 					"AND line.date IN (" + self.date_lst_string + ") " \
-#					"AND line.account_id IN (" + self.account_ids + ") " \
+					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %d " \
 					"AND account.active " ,
@@ -237,7 +237,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"LEFT JOIN account_journal j " \
 						"ON (l.journal_id = j.id) " \
 					"WHERE l.partner_id = %d " \
-#						"AND l.account_id IN (" + self.account_ids + ") " \
+						"AND l.account_id IN (" + self.account_ids + ") " \
 						"AND l.date < %s " \
 						"AND l.reconcile_id IS NULL "
 					"ORDER BY l.id",
@@ -282,7 +282,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
 				(partner.id, self.date_lst[0],))
@@ -321,7 +321,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%d " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(partner.id,self.date_lst[0],))
@@ -335,7 +335,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(credit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id=%d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
 				(partner.id,))
@@ -375,7 +375,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id IN (" + self.partner_ids + ") " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") "
 				)
@@ -403,7 +403,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id IN (" + self.partner_ids + ") " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(self.date_lst[0],))
@@ -416,7 +416,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(credit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id IN (" + self.partner_ids + ") " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") "
 				)
