@@ -22,7 +22,7 @@ fields = {
           }
 def _create_entries(self, cr, uid, data, context):
     pool_obj = pooler.get_pool(cr.dbname)
-    if data['model']=='ir.ui.menu':
+    if data['model']=='ir.ui.menu' or data['model']=='account.move.line':
         model_ids = data['form']['model'][0][2]
         data_model = pool_obj.get('account.model').browse(cr,uid,model_ids)
     else:
@@ -95,7 +95,7 @@ class use_model(wizard.interface):
         }
 
     def _check(self, cr, uid, data, context):
-        if data['model']=='ir.ui.menu':
+        if data['model']=='ir.ui.menu' or data['model']=='account.move.line':
              return 'init_form'
         return 'create'
 
