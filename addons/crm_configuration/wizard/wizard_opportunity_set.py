@@ -89,6 +89,7 @@ class make_opportunity(wizard.interface):
         })
         value = {
             'domain': "[]",
+            'name': _('Opportunity'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'crm.case',
