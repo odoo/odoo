@@ -25,7 +25,7 @@
             <field name="close_method">balance</field>
         </record>
 
-        <record id="account_type_stocks" model="account.account.type">
+        <record id="account_type_stock" model="account.account.type">
             <field name="name">Stocks</field>
             <field name="code">stocks</field>
             <field name="close_method">balance</field>
@@ -70,7 +70,7 @@
 	    <record model="account.account.type" id="account_type_tax">
 	      <field name="name">Tax</field>
 	      <field name="code">tax</field>
-	      <field name="close_method">balance</field>
+	      <field name="close_method">unreconciled</field>
 	    </record>
 
 	    <record model="account.account.type" id="account_type_cash">
@@ -103,7 +103,7 @@
 	      <field name="close_method">balance</field>
 	    </record>
 
-	    <record model="account.account.type" id="account_type_stock">
+	    <record model="account.account.type" id="account_type_stocks">
 	      <field name="name">Actif circulant</field>
 	      <field name="code">current asset</field>
 	      <field name="close_method">balance</field>
