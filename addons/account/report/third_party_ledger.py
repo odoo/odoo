@@ -169,22 +169,22 @@ class third_party_ledger(rml_parse.rml_parse):
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
-			ACCOUNT_TYPE = "AND a.type='payable' "
+			self.ACCOUNT_TYPE = "('receivable')"
 		elif data['form']['result_selection'] == 'customer':
-			ACCOUNT_TYPE = "AND a.type='receivable' "
+			self.ACCOUNT_TYPE = "('payable')"
 		elif data['form']['result_selection'] == 'all':
-			ACCOUNT_TYPE = "AND (a.type='receivable' OR a.type='payable') "
+			self.ACCOUNT_TYPE = "('payable','receivable')"
 
 		self.cr.execute(
 			"SELECT a.id " \
 			"FROM account_account a " \
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
-			"WHERE t.partner_account=TRUE " \
-				"AND a.company_id = %d " \
-				" " + ACCOUNT_TYPE + " " \
+			"WHERE a.company_id = %d " \
+				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
+		print"self.account_ids",self.account_ids
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
@@ -196,7 +196,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.account_id = account.id " \
 					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
-#					"AND line.account_id IN (" + self.account_ids + ") " \
+					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %d " \
 					"AND account.active " ,
@@ -213,11 +213,9 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND account.company_id = %d " \
 					"AND account.active " ,
 				(data['form']['company_id']))
+		
 		res = self.cr.dictfetchall()
-		for res_line in res:
-		    partner_to_use.append(res_line['partner_id'])
-		res = self.cr.dictfetchall()
-
+		print"res",res
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
