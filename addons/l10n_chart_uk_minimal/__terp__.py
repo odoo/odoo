@@ -26,6 +26,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
+
 #
 # This module provides a minimal UK chart of accounts for building upon further
 # Tiny ERP's default currency and accounts are remapped to this chart

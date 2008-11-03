@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-'''Membership'''
 ##############################################################################
 #
 # Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.

@@ -26,6 +26,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
+
 #
 # Plan comptable général pour la France, conforme au
 # Règlement n° 99-03 du 29 avril 1999

@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-'''Make case wizard'''
 ##############################################################################
 #
 # Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
