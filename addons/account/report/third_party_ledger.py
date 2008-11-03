@@ -255,7 +255,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
 				"WHERE l.partner_id = %d " \
-#					"AND l.account_id IN (" + self.account_ids + ") " \
+					"AND l.account_id IN (" + self.account_ids + ") " \
 					"AND l.date IN (" + self.date_lst_string + ") " \
 					" " + RECONCILE_TAG + " "\
 					"ORDER BY l.id",
@@ -297,7 +297,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
 				(partner.id,))
@@ -361,7 +361,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id IN (" + self.partner_ids + ") " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(self.date_lst[0],))
