@@ -3298,23 +3298,23 @@
         <record id="pcg_448600" model="account.account.template">
             <field name="name">Charges à payer</field>
             <field name="code">448600</field>
-            <field name="type">other</field>
+			<field name="type">other</field>
 			<field name="user_type" ref="account_type_tax"/>
             <field ref="pcg_448000" name="parent_id"/>
         </record>
         <record id="pcg_448700" model="account.account.template">
             <field name="name">Produits à recevoir</field>
             <field name="code">448700</field>
-            <field name="type">other</field>
+ 			<field name="type">other</field>
 			<field name="user_type" ref="account_type_tax"/>
             <field ref="pcg_448000" name="parent_id"/>
         </record>
-        <record id="pcg_449000" model="account.account">
+        <record id="pcg_449000" model="account.account.template">
 		     <field name="name">Quotas d'émission à restituer à l'État</field>
 		     <field name="code">449000</field>
-		     <field name="type">other</field>
-			`<field name="user_type" ref="account_type_tax"/>
-		     <field ref="pcg_440000" name="parent_id"/>
+			 <field name="type">other</field>
+			 <field name="user_type" ref="account_type_tax"/>
+		     <field ref="pcg_Comptes_44" name="parent_id"/>
 		     <field name="reconcile" eval="True"/>
 		</record>
         <record id="pcg_Comptes_45" model="account.account.template">
