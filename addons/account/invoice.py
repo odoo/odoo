@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -79,8 +71,7 @@ class account_invoice(osv.osv):
     def _get_journal_analytic(self, cr, uid, type_inv, context={}):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         tt = type2journal.get(type_inv, 'sale')
-        cr.execute("select id from account_analytic_journal where type=%s limit 1", (tt,))
-        result = cr.fetchone()
+        result = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
             raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
         return result[0]
@@ -194,7 +185,7 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', store=True, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
@@ -851,13 +842,12 @@ class account_invoice_line(osv.osv):
                 return {'domain':{'product_uom':[]}}
             else:
                 return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
-        lang=False
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        lang=part.lang
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
-        lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         if type in ('out_invoice', 'out_refund'):
             tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.taxes_id)
         else:

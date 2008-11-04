@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -240,7 +232,7 @@ class product_template(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, select=True),
+        'name': fields.char('Name', size=128, required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
@@ -283,6 +275,11 @@ class product_template(osv.osv):
         res = cr.fetchone()
         return res and res[0] or False
 
+    def _default_category(self, cr, uid, context={}):
+        if 'categ_id' in context and context['categ_id']:
+            return context['categ_id']
+        return False
+
     _defaults = {
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
@@ -298,6 +295,7 @@ class product_template(osv.osv):
         'uom_po_id': _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
+        'categ_id' : _default_category,
     }
 
     def _check_uom(self, cursor, user, ids):
@@ -386,6 +384,10 @@ class product_product(osv.osv):
         res = {}
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
+            if not data['code']:
+                data['name'] = p.code
+            if not data['name']:
+                data['name'] = p.name
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
                     (data['name'] or '')
         return res

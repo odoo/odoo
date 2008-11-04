@@ -264,15 +264,15 @@
             </field>
         </record>
 
-        <wizard 
-            id="action_lot2" 
-            model="stock.production.lot" 
-            name="stock.traceability.lot.amont" 
+        <wizard
+            id="action_lot2"
+            model="stock.production.lot"
+            name="stock.traceability.lot.amont"
             string="Downstream traceability"/>
-        <wizard 
-            id="action_lot4" 
-            model="stock.production.lot" 
-            name="stock.traceability.lot.aval" 
+        <wizard
+            id="action_lot4"
+            model="stock.production.lot"
+            name="stock.traceability.lot.aval"
             string="Upstream traceability"/>
 
         <wizard id="action2" model="stock.tracking" name="stock.traceability.amont" string="Upstream traceability"/>
@@ -608,6 +608,7 @@
                         <field name="name" select="1" readonly="1"/>
                         <field name="min_date" select="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
+                        <field name="origin" select="2"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -794,8 +795,9 @@
                         <field name="address_id" select="2"/>
                         <field name="name" select="1" readonly="1"/>
                         <field name="min_date" select="2"/>
-						<field name="invoice_state"/>
+                        <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
+                        <field name="origin" select="2" readonly="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -855,7 +857,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Sending Products</field>
+            <field name="name">Outgoing Products</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1036,7 +1038,7 @@
 
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Getting Products</field>
+            <field name="name">Incoming Products</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1120,7 +1122,7 @@
         <menuitem action="action_picking_form" id="menu_action_picking_form" parent="menu_action_picking_tree4"/>
 
         <record id="action_picking_tree6" model="ir.actions.act_window">
-            <field name="name">Internal Packings</field>
+            <field name="name">Internal Moves</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1302,31 +1304,51 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>		
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>
 
-        <act_window context="{'location': active_id}" domain="[('type','&lt;&gt;','service')]" id="act_product_location_open" name="Products" res_model="product.product" src_model="stock.location"/>
+        <act_window
+            context="{'location': active_id}"
+            domain="[('type','&lt;&gt;','service')]"
+            id="act_product_location_open"
+            name="Products"
+            res_model="product.product"
+            src_model="stock.location"/>
 
-        <act_window context="{'location': active_id}" domain="[('product_id','=',active_id)]" id="act_product_stock_move_open" name="Stock Moves" res_model="stock.move" src_model="product.product"/>
-  
-		<record id="ir_act_product_location_open" model="ir.values">
+        <act_window
+            context="{'location': active_id}"
+            domain="[('product_id','=',active_id)]"
+            id="act_product_stock_move_open"
+            name="All Stock Moves"
+            res_model="stock.move" 
+            src_model="product.product"/>
+
+        <act_window
+            context="{'location': active_id}"
+            domain="[('product_id','=',active_id),('state','in',('waiting','confirmed','assigned'))]"
+            id="act_product_stock_move_futur_open"
+            name="Futur Stock Moves"
+            res_model="stock.move" 
+            src_model="product.product"/>
+
+        <record id="ir_act_product_location_open" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">stock.location</field>
             <field name="name">Products</field>
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
             <field eval="True" name="object"/>
-        </record>     
+        </record>    
 
-		
-		<record id="ir_act_product_location_open" model="ir.values">
+
+        <record id="ir_act_product_location_open" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">stock.location</field>
             <field name="name">Open Products</field>
             <field eval="'ir.actions.wizard,%d'%ref('location_product')" name="value"/>
-            <field eval="True" name="object"/>			
-        </record>   
-		
-	      
-		
+            <field eval="True" name="object"/>
+        </record>  
+
+         
+
 
     </data>
 </openerp>

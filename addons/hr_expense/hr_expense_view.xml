@@ -95,7 +95,15 @@
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem id="next_id_49" name="Expenses" parent="hr.menu_hr_root"/><menuitem action="expense_all" id="menu_expense_all" parent="next_id_49"/>
+        <menuitem
+            id="next_id_49"
+            name="Expenses"
+            parent="hr.menu_hr_root"/>
+        <menuitem
+            action="expense_all"
+            id="menu_expense_all"
+            parent="next_id_49"
+            groups="hr.group_hr_manager"/>
         <record id="expense_all_draft" model="ir.actions.act_window">
             <field name="name">Draft expenses</field>
             <field name="res_model">hr.expense.expense</field>
@@ -136,10 +144,21 @@
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
         <menuitem action="expense_my" id="menu_expense_my" parent="hr_expense.next_id_49"/>
+
+        <record id="expense_my_new" model="ir.actions.act_window">
+            <field name="name">New Expenses Sheet</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+        </record>
+        <menuitem action="expense_my_new" id="menu_expense_my_new" parent="hr_expense.next_id_49"/>
+
+
         <record id="expense_my_draft" model="ir.actions.act_window">
             <field name="name">My Draft expenses</field>
             <field name="res_model">hr.expense.expense</field>

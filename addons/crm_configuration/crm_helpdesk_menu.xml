@@ -1,350 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-	<record id="crm.section_support_help" model="crm.case.section">
-            <field name="name">Helpdesk and Support</field>
-            <field name="code">support</field>
-    </record>
+    <menuitem id="menu_aftersale" name="After-Sale Services" parent="crm.menu_crm"/>
+
     ######################## Help Desk (menu) ###########################
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
+        <field name="name">All Helpdesk Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act111">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act111">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+    </record>
+    <menuitem name="Helpdesk and Support" id="menu_help_support_main" parent="menu_aftersale" action="crm_case_helpdesk_act111"/>    
+
+    <record model="ir.actions.act_window" id="crm_case_categ_help_act">
+        <field name="name">My Helpdesk</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid)]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view1">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_categ_help_act"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_calendar_view3">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm_case_calendar_view11"/>
+        <field name="act_window_id" ref="crm_case_categ_help_act"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view2">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_categ_help_act"/>
+    </record>
     
-	<menuitem name="Helpdesk and Support" id="menu_help_support_main" parent="crm.menu_crm"/>	
-	
-	<record model="ir.actions.act_window" id="crm_case_categ_help_act">
-		<field name="name">My Helpdesk</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_categ_help_act"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_calendar_view3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm_case_calendar_view11"/>
-		<field name="act_window_id" ref="crm_case_categ_help_act"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_categ_help_act"/>
-	</record>
-	
-	<menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_my_act" action="crm_case_categ_help_act"/>
-	
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
-		<field name="name">My Unclosed Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'&lt;&gt;\',\'done\')]'"/>
-	</record>
-	
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view_my1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_calendar_view_my1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	
-	<record model="ir.actions.act_window.view" id="action_crm_helpdesk_form_view_my1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	
-	<menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_my_helpdesk" action="crm_case_helpdesk_act_my1"/>	
+    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_my_act" action="crm_case_categ_help_act"/>
+    
+    <record model="ir.actions.act_window" id="crm_case_categ_help_new_act">
+        <field name="name">New Helpdesk</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view1">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_categ_help_new_act"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view2">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_categ_help_new_act"/>
+    </record>
+    
+    <menuitem parent="menu_help_support_main" id="menu_crm_case_categ_help_new_act" action="crm_case_categ_help_new_act" sequence="1"/>
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_my2">
-		<field name="name">My helpdesk Propositions to Review</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk2" action="crm_case_helpdesk_act_my2"/>	
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
+        <field name="name">My Unclosed Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'&lt;&gt;\',\'done\')]'"/>
+    </record>
+    
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view_my1">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_calendar_view_my1">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    
+    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_form_view_my1">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    
+    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_my_helpdesk" action="crm_case_helpdesk_act_my1"/>    
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
-		<field name="name">My Pending helpdesk Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk1" action="crm_case_helpdesk_act_my1"/>		
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my2">
+        <field name="name">My helpdesk Propositions to Review</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my2">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my2">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my2">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk2" action="crm_case_helpdesk_act_my2"/>    
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_my0">
-		<field name="name">My Open Helpdesk Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my0">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my0">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my0">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk0" action="crm_case_helpdesk_act_my0"/>	
-		
-	
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_myhelpdesk">
-		<field name="name">Calendar of Helpdesk</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'=\',\'done\'),(\'user_id\',\'=\',uid)]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_myhelpdesk">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_myhelpdesk">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_myhelpdesk">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
-	</record>	
-	<menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk" action="crm_case_helpdesk_act_myhelpdesk"/>
-	
-	<!-- 
-		ALL Helpdesk REQUESTS 
-	-->
-	 <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
-		<field name="name">All Helpdesk Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act111">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act111">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-	</record>
-	<menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_act_all" action="crm_case_helpdesk_act111"/>	
-	
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
+        <field name="name">My Pending helpdesk Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'pending\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my1">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my1">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my1">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk1" action="crm_case_helpdesk_act_my1"/>        
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_all3">
-		<field name="name">All Unclosed Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'&lt;&gt;\',\'done\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all3">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all3">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all3">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all3" action="crm_case_helpdesk_act_all3"/>
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my0">
+        <field name="name">My Open Helpdesk Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my0">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_my0">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_my0">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk0" action="crm_case_helpdesk_act_my0"/>    
+        
+    
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_myhelpdesk">
+        <field name="name">Calendar of Helpdesk</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'=\',\'done\'),(\'user_id\',\'=\',uid)]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_myhelpdesk">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_myhelpdesk">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_myhelpdesk">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
+    </record>    
+    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk" action="crm_case_helpdesk_act_myhelpdesk"/>
+    
+    <!-- 
+        ALL Helpdesk REQUESTS 
+    -->
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_all2">
-		<field name="name">All Helpdesk Propositions</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'=\',\'draft\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all2">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all2">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all2" action="crm_case_helpdesk_act_all2"/>	
+    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_act_all" action="crm_case_helpdesk_act111"/>    
+    
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_all1">
-		<field name="name">All Pending Helpdesk Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'=\',\'pending\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all1">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all1">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
-	</record>
-	<menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all1" action="crm_case_helpdesk_act_all1"/>	
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all3">
+        <field name="name">All Unclosed Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'&lt;&gt;\',\'done\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all3">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all3">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all3">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all3" action="crm_case_helpdesk_act_all3"/>
+
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all2">
+        <field name="name">All Helpdesk Propositions</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'=\',\'draft\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all2">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all2">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all2">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all2" action="crm_case_helpdesk_act_all2"/>    
+
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all1">
+        <field name="name">All Pending Helpdesk Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'=\',\'pending\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all1">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all1">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all1">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
+    </record>
+    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all1" action="crm_case_helpdesk_act_all1"/>    
 
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_all0">
-		<field name="name">All Open Helpdesk Requests</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">tree,calendar,form</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'=\',\'open\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all0">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all0">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all0">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
-	</record>
-	<menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all0" action="crm_case_helpdesk_act_all0"/>	
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all0">
+        <field name="name">All Open Helpdesk Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'=\',\'open\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all0">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_all0">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_all0">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
+    </record>
+    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all0" action="crm_case_helpdesk_act_all0"/>    
 
-	<record model="ir.actions.act_window" id="crm_case_helpdesk_act_allhelpdesk">
-		<field name="name">Calendar of Helpdesk</field>
-		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('crm.section_support_help'))+'),(\'state\',\'=\',\'done\')]'"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_allhelpdesk">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">calendar</field>
-		<field name="view_id" ref="crm.crm_case_calendar-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_allhelpdesk">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="crm.crm_case_tree-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_crm_sec_form_view_allhelpdesk">
-		<field name="sequence" eval="3"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="crm.crm_case-view"/>
-		<field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
-	</record>
-	<menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_allhelpdesk" action="crm_case_helpdesk_act_allhelpdesk"/>
-	
-	
+    <record model="ir.actions.act_window" id="crm_case_helpdesk_act_allhelpdesk">
+        <field name="name">Calendar of Helpdesk</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'state\',\'=\',\'done\')]'"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_allhelpdesk">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_allhelpdesk">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_allhelpdesk">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm.crm_case-view"/>
+        <field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
+    </record>
+    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_allhelpdesk" action="crm_case_helpdesk_act_allhelpdesk"/>
+    
+    
 </data>
 </openerp>
         

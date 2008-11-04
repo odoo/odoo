@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -113,7 +105,7 @@ class invoice_create(wizard.interface):
                     price = 0.0
 
                 taxes = product.taxes_id
-                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
                 curr_line = {
@@ -167,24 +159,30 @@ class invoice_create(wizard.interface):
 
     _create_form = """<?xml version="1.0"?>
     <form title="Invoice on analytic entries">
-        <separator string="Do you want details for each line of the invoices ?" colspan="4"/>
-        <field name="date"/>
-        <field name="time"/>
-        <field name="name"/>
-        <field name="price"/>
-        <separator string="Choose accounts you want to invoice" colspan="4"/>
-        <field name="accounts" colspan="4"/>
-        <separator string="Choose a product for intermediary invoice" colspan="4"/>
-        <field name="product"/>
+        <notebook>
+        <page string="Invoicing Data">
+            <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
+            <field name="date"/>
+            <field name="time"/>
+            <field name="name"/>
+            <field name="price"/>
+            <separator string="Force to use a specific product" colspan="4"/>
+            <field name="product"/>
+        </page>
+        <page string="Filter on Accounts" groups="base.group_extended">
+            <separator string="Choose accounts you want to invoice" colspan="4"/>
+            <field name="accounts" colspan="4" nolabel="1"/>
+        </page>
+        </notebook>
     </form>"""
 
     _create_fields = {
         'accounts': {'string':'Analytic Accounts', 'type':'many2many', 'required':'true', 'relation':'account.analytic.account'},
-        'date': {'string':'Date', 'type':'boolean'},
-        'time': {'string':'Time spent', 'type':'boolean'},
-        'name': {'string':'Name of entry', 'type':'boolean'},
-        'price': {'string':'Cost', 'type':'boolean'},
-        'product': {'string':'Product', 'type':'many2one', 'relation': 'product.product'},
+        'date': {'string':'Date', 'type':'boolean', 'help':'The real date of each work will be displayed on the invoice'},
+        'time': {'string':'Time spent', 'type':'boolean', 'help':'The time of each work done will be displayed on the invoice'},
+        'name': {'string':'Name of entry', 'type':'boolean', 'help':'The detail of each work done will be displayed on the invoice'},
+        'price': {'string':'Cost', 'type':'boolean', 'help':'The cost of each work done will be displayed on the invoice. You probably don\'t want to check this.'},
+        'product': {'string':'Product', 'type':'many2one', 'relation': 'product.product', 'help':"Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost."},
     }
 
     states = {

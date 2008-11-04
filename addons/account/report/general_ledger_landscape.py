@@ -162,6 +162,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			else :
 				borne_max = date_max
 		elif form['state'] == 'none':
+			
 			sql = """
 					SELECT min(date) as start_date,max(date) as stop_date FROM account_move_line """
 			self.cr.execute(sql)
@@ -249,7 +250,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					move.init_credit = 0
 					move.init_debit = 0
 
-		print"res",res
+		
 		return res
 
 	def lines(self, account, form):

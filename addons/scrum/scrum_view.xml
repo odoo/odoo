@@ -17,10 +17,10 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
-                    <newline/>
-                    <field name="sprint_size"/>
-                    <field name="product_owner_id" required="1" select="1"/>
                     <separator string="Scrum Data" colspan="4"/>
+                    <field name="product_owner_id" required="1" select="1"/>
+                    <field name="sprint_size"/>
+                    <newline/>
                 </field>
             </field>
         </record>

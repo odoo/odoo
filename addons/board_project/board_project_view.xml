@@ -76,8 +76,16 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_project_form"/>
         </record>
-        
-        <menuitem id="next_id_86" name="Project" parent="board.dashboard_menu"/><menuitem action="open_board_project" icon="terp-graph" id="menu_board_project" parent="next_id_86" sequence="1"/>
-        
+
+        <menuitem
+            id="next_id_86"
+            name="Project"
+            parent="board.dashboard_menu"/>
+        <menuitem
+            action="open_board_project" 
+            icon="terp-graph" 
+            id="menu_board_project" 
+            parent="next_id_86" 
+            sequence="1"/>
     </data>
 </openerp>
