@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"/>
+        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"
+            groups="group_sale_user"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -107,7 +108,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id"/>
-                            <field name="project_id" select="2"/>
+                            <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id}"/>
                             <newline/>
                             <field colspan="4" mode="tree,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -360,7 +361,8 @@
             <field name="arch" type="xml">
                 <tree string="Sales order lines">
                     <field name="order_id"/>
-                    <field colspan="4" name="name"/>
+                    <field name="order_partner_id"/>
+                    <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
@@ -368,6 +370,7 @@
                     <field name="price_unit"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -422,10 +425,11 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"/>
+        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"
+            groups="base.group_extended"/>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced lines</field>
+            <field name="name">Uninvoiced Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
@@ -461,6 +465,8 @@
                     <field name="picking_policy"/>
                     <newline/>
                     <field name="order_policy"/>
+                    <newline/>
+                    <field name="step"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>

@@ -162,6 +162,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			else :
 				borne_max = date_max
 		elif form['state'] == 'none':
+			
 			sql = """
 					SELECT min(date) as start_date,max(date) as stop_date FROM account_move_line """
 			self.cr.execute(sql)
@@ -179,7 +180,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 	def get_children_accounts(self, account, form):
 
-
+		
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
 #
@@ -223,7 +224,10 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					context=ctx)) <> 0 :
 					res.append(child_account)
 		##
-		if form['soldeinit']:
+		if not len(res):
+			
+			return [account]
+		else:
 			## We will now compute solde initiaux
 			for move in res:
 				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
@@ -246,7 +250,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					move.init_credit = 0
 					move.init_debit = 0
 
-		##
+		
 		return res
 
 	def lines(self, account, form):

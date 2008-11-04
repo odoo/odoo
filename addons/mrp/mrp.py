@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -133,7 +125,8 @@ class mrp_routing_workcenter(osv.osv):
         'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence'),
-        'cycle_nbr': fields.float('Number of Cycle', required=True),
+        'cycle_nbr': fields.float('Number of Cycle', required=True,
+            help="A cycle is defined in the workcenter definition."),
         'hour_nbr': fields.float('Number of Hours', required=True),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
         'note': fields.text('Description')
@@ -176,10 +169,14 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active'),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without having two production orders."),
-
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help=
+            "Use a phantom bill of material in raw materials lines that have to be " \
+            "automatically computed in on eproduction order and not one per level." \
+            "If you put \"Phantom/Set\" at the root level of a bill of material " \
+            "it is considered as a set or pack: the products are replaced by the components " \
+            "between the sale order to the picking without going through the production order." \
+            "The normal BoM will generate one production order per BoM level."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
-
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence'),
@@ -189,8 +186,8 @@ class mrp_bom(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_rounding': fields.float('Product Rounding'),
-        'product_efficiency': fields.float('Product Efficiency', required=True),
+        'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity. For integer only values, put 1.0"),
+        'product_efficiency': fields.float('Product Efficiency', required=True, help="Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
@@ -209,7 +206,8 @@ class mrp_bom(osv.osv):
     }
     _order = "sequence"
     _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>0)',  'All product quantities must be greater than 0 !'),
+        ('bom_qty_zero', 'CHECK (product_qty>0)',  'All product quantities must be greater than 0.\n' \
+            'You should install the mrp_subproduct module if you want to manage extra products on BoMs !'),
     ]
 
     def _check_recursion(self, cr, uid, ids):
@@ -380,8 +378,10 @@ class mrp_production(osv.osv):
         'product_uos_qty': fields.float('Product Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOM'),
 
-        'location_src_id': fields.many2one('stock.location', 'Raw Products Location', required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True),
+        'location_src_id': fields.many2one('stock.location', 'Raw Products Location', required=True,
+            help="Location where the system will look for products used in raw materials."),
+        'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True,
+            help="Location where the system will stock the finnished products."),
 
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
@@ -389,7 +389,8 @@ class mrp_production(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
 
-        'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True),
+        'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True,
+            help="This is the internal picking list take bring the raw materials to the production plan."),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
@@ -734,7 +735,9 @@ class mrp_procurement(osv.osv):
     _description = "Procurement"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64,
+            help="Reference of the document that created this procurement.\n"
+            "This is automatically completed by Open ERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
         'date_close': fields.datetime('Date Closed'),
@@ -749,7 +752,9 @@ class mrp_procurement(osv.osv):
 
         'close_move': fields.boolean('Close Move at end', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]}, readonly=True, required=True),
+        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
+            readonly=True, required=True, help="If you encode manually a procurement, you probably want to use" \
+            " a make to order method."),
 
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
         'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order Line'),
@@ -766,6 +771,16 @@ class mrp_procurement(osv.osv):
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
+    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+        if product_id:
+            w=self.pool.get('product.product').browse(cr,uid,product_id, context)
+            v = {
+                'product_uom':w.uom_id.id,
+                'product_uos':w.uos_id and w.uos_id.id or w.uom_id.id
+            }
+            return {'value': v}
+        return {}
+
     def check_product(self, cr, uid, ids):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
@@ -1076,9 +1091,14 @@ class stock_warehouse_orderpoint(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')]),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
-        'product_min_qty': fields.float('Min Quantity', required=True),
-        'product_max_qty': fields.float('Max Quantity', required=True),
-        'qty_multiple': fields.integer('Qty Multiple', required=True),
+        'product_min_qty': fields.float('Min Quantity', required=True,
+            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            "a procurement to bring the virtual stock to the Max Quantity."),
+        'product_max_qty': fields.float('Max Quantity', required=True,
+            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            "a procurement to bring the virtual stock to the Max Quantity."),
+        'qty_multiple': fields.integer('Qty Multiple', required=True,
+            help="The procurement quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
     }
     _defaults = {
@@ -1108,6 +1128,11 @@ class StockMove(osv.osv):
     _columns = {
         'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
     }
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['procurements'] = []
+        return super(StockMove, self).copy(cr, uid, id, default, context)
+
     def _action_explode(self, cr, uid, move, context={}):
         if move.product_id.supply_method=='produce' and move.product_id.procure_method=='make_to_order':
             bis = self.pool.get('mrp.bom').search(cr, uid, [

@@ -134,7 +134,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <field name="client_order_ref" position="after">
+            <field name="invoiced" position="after">
                 <field name="journal_id" select="1"/>
                 <field name="invoice_type_id" select="1"/>
             </field>
@@ -147,8 +147,8 @@
         <field name="inherit_id" ref="sale.view_order_tree" />
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="journal_id"/>
                 <field name="invoice_type_id"/>
+                <field name="journal_id"/>
             </field>
         </field>
     </record>
@@ -160,9 +160,9 @@
         <field name="inherit_id" ref="stock.view_picking_form" />
         <field name="arch" type="xml">
             <field name="origin" position="after">
-                <field name="invoice_type_id" select="1"/>
-                <field name="sale_journal_id" select="1"/>
                 <field name="journal_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
             </field>
         </field>
     </record>
@@ -174,9 +174,9 @@
         <field name="inherit_id" ref="stock.vpicktree" />
         <field name="arch" type="xml">
             <field name="invoice_state" position="after">
-                <field name="sale_journal_id" select="1"/>
-                <field name="invoice_type_id" select="1"/>
                 <field name="journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
             </field>
         </field>
     </record>

@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -207,7 +199,7 @@ class crm_case_categ(osv.osv):
     _description = "Category of case"
     _columns = {
         'name': fields.char('Case Category Name', size=64, required=True),
-        'probability': fields.float('Probability', required=True),
+        'probability': fields.float('Probability (%)', required=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
     }
     _defaults = {
@@ -223,8 +215,8 @@ class crm_case_rule(osv.osv):
         'active': fields.boolean('Active'),
         'sequence': fields.integer('Sequence'),
 
-        'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state from', size=16),
-        'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state to', size=16),
+        'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case State', size=16),
+        'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Button Pressed', size=16),
 
         'trg_date_type':  fields.selection([
             ('none','None'),
@@ -242,19 +234,19 @@ class crm_case_rule(osv.osv):
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
 
-        'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Priority min'),
-        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Priority max'),
+        'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
+        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximim Priority'),
 
         'act_method': fields.char('Call Object Method', size=64),
         'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
         'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
         'act_user_id': fields.many2one('res.users', 'Set responsible to'),
         'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250),
+        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people will receive a copy of the futur communication between partner and users by email"),
 
-        'act_remind_partner': fields.boolean('Remind partner'),
-        'act_remind_user': fields.boolean('Remind responsible'),
-        'act_remind_attach': fields.boolean('Remind with attachment'),
+        'act_remind_partner': fields.boolean('Remind Partner', help="Check this if you want the rule to send a reminder by email to the partner."),
+        'act_remind_user': fields.boolean('Remind responsible', help="Check this if you want the rule to send a reminder by email to the user."),
+        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the case be attached to the reminder email sent."),
 
         'act_mail_to_user': fields.boolean('Mail to responsible'),
         'act_mail_to_partner': fields.boolean('Mail to partner'),
@@ -289,6 +281,23 @@ class crm_case_rule(osv.osv):
         case_obj = self.pool.get('crm.case')
         cases = case_obj.browse(cr, uid, ids2, context)
         return case_obj._action(cr, uid, cases, False, context=context)
+
+
+    def _check_mail(self, cr, uid, ids, context=None):
+        caseobj = self.pool.get('crm.case')
+        emptycase = orm.browse_null()
+        for rule in self.browse(cr, uid, ids):
+            if rule.act_mail_body:
+                try:
+                    caseobj.format_mail(emptycase, rule.act_mail_body)
+                except (ValueError, KeyError, TypeError):
+                    return False
+        return True
+            
+    _constraints = [
+        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
+    ]
+
 crm_case_rule()
 
 def _links_get(self, cr, uid, context={}):
@@ -324,7 +333,7 @@ class crm_case(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),
-        'probability': fields.float('Probability (0.50)'),
+        'probability': fields.float('Probability (%)'),
         'email_from': fields.char('Partner Email', size=128),
         'email_cc': fields.char('Watchers Emails', size=252),
         'email_last': fields.function(_email_last, method=True,
@@ -337,7 +346,7 @@ class crm_case(osv.osv):
         'date_deadline': fields.datetime('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
-        'user_id': fields.many2one('res.users', 'User Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication'),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History'),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
@@ -375,11 +384,17 @@ class crm_case(osv.osv):
         'partner_id': _get_default_partner,
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
-        'state': lambda *a: 'draft',
+        'state': lambda *a: 'open',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
+
+    def unlink(self, cr, uid, ids, context={}):
+        for case in self.browse(cr, uid, ids, context):
+            if case.state <> 'draft':
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this case. You should better cancel it.'))
+        return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
         if not scrit:
@@ -487,13 +502,13 @@ class crm_case(osv.osv):
             level -= 1
         return True
 
-    def email_send(self, cr, uid, case, emails, body, context={}):
+    def format_mail(self, case, body):
         data = {
             'case_id': case.id,
             'case_subject': case.name,
             'case_date': case.date,
 
-            'case_user': case.user_id.name or '/',
+            'case_user': (case.user_id and case.user_id.name) or '/',
             'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',
             'case_user_phone': (case.user_id and case.user_id.address_id and case.user_id.address_id.phone) or '/',
 
@@ -501,7 +516,10 @@ class crm_case(osv.osv):
             'partner': (case.partner_id and case.partner_id.name) or '/',
             'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
         }
-        body = body % data
+        return body % data
+
+    def email_send(self, cr, uid, case, emails, body, context={}):
+        body = self.format_mail(case, body)
         if case.user_id and case.user_id.address_id and case.user_id.address_id.email:
             emailfrom = case.user_id.address_id.email
         else:
@@ -537,7 +555,9 @@ class crm_case(osv.osv):
                 'som': case.som.id,
                 'canal_id': case.canal_id.id,
                 'user_id': uid,
-                'case_id': case.id
+                'date': case.date or time.strftime('%Y-%m-%d %H:%M:%S'),
+                'case_id': case.id,
+                'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
             if history and case.description:
@@ -548,6 +568,7 @@ class crm_case(osv.osv):
                             case.user_id.address_id.email) or False
             obj.create(cr, uid, data, context)
         return True
+    _history = __history
 
     def create(self, cr, uid, *args, **argv):
         res = super(crm_case, self).create(cr, uid, *args, **argv)
@@ -735,13 +756,14 @@ crm_case()
 
 class crm_case_log(osv.osv):
     _name = "crm.case.log"
-    _description = "Case communication history"
+    _description = "Case Communication History"
     _order = "id desc"
     _columns = {
         'name': fields.char('Action', size=64),
         'som': fields.many2one('res.partner.som', 'State of Mind'),
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
+        'section_id': fields.many2one('crm.case.section', 'Section'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
         'case_id': fields.many2one('crm.case', 'Case', required=True, ondelete='cascade')
     }

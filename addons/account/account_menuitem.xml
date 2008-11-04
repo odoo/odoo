@@ -12,10 +12,13 @@
         <menuitem id="menu_finance_legal_statement" name="Legal Statements" parent="account.menu_finance" sequence="8"/>
         <menuitem id="menu_generic_report" name="Generic Reports" parent="account.menu_finance_legal_statement" sequence="8"/>
 
-        <menuitem id="menu_finance_entries" name="Entries Encoding" parent="account.menu_finance" sequence="2"/>
+        <menuitem id="menu_finance_entries" name="Entries Encoding" parent="account.menu_finance" sequence="2"
+            groups="group_account_user"/>
         <menuitem id="account.menu_finance_recurrent_entries" name="Recurrent Entries" parent="account.menu_finance_entries" sequence="15"/>
 
-        <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="account.menu_finance" sequence="3"/>
+        <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="account.menu_finance"
+            sequence="3"
+            groups="group_account_user"/>
         <menuitem id="menu_account_end_year_treatments" name="End of Year Treatments" parent="account.menu_finance_periodical_processing" sequence="20"/>
 
     </data>

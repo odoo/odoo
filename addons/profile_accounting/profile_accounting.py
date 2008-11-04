@@ -1,30 +1,24 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id: __terp__.py 8595 2008-06-16 13:00:21Z stw $
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+##############################################################################
 
 from osv import fields, osv
 import pooler
@@ -39,6 +33,9 @@ class profile_accounting_config_install_modules_wizard(osv.osv_memory):
         'account_asset':fields.boolean('Asset Management'),
         'hr_timesheet_invoice':fields.boolean('Invoice on Analytic Entries'),
         'account_budget_crossover':fields.boolean('Analytic Budgets'),
+        'board_document':fields.boolean('Document Management',help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+
+
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
@@ -59,7 +56,7 @@ class profile_accounting_config_install_modules_wizard(osv.osv_memory):
                     ids += mod_obj.search(cr, uid, [('name', '=', r)])
                     mod_obj.action_install(cr, uid, ids, context=context)
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname,force_demo=True, update_module=True)
+        db, pool = pooler.restart_pool(cr.dbname,update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

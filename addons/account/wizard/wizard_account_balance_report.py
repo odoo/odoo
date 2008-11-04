@@ -1,28 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,7 +29,7 @@ period_form = '''<?xml version="1.0"?>
     <field name="company_id"/>
     <field name="display_account" required = "True"/>
     <newline/>
-    <field name="fiscalyear" attrs="{'readonly':[('state','=','bydate')]}"/>
+    <field name="fiscalyear"/>
     <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
     <newline/>
     <separator string="Filters" colspan="4"/>
@@ -69,8 +63,8 @@ period_fields = {
         'help':'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With Movements'),('bal_solde','With Balance != 0'),('bal_all','All')]},
+    'date_from': {'string':"          Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
@@ -99,15 +93,7 @@ class wizard_report(wizard.interface):
         return data['form']
 
     def _check_state(self, cr, uid, data, context):
-        my_ids=data['ids']
-        if data['model']!='account.account':
-            my_ids=[data['form']['Account_list']]
-        child_ids = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid,[('parent_id', 'child_of',my_ids )])
-        for child in child_ids :
-            child_account = pooler.get_pool(cr.dbname).get('account.account').browse(cr, uid, child)
-            res = pooler.get_pool(cr.dbname).get('account.move.line').search(cr, uid,[('account_id','=',child_account.id)])
-        if not len(res):
-            raise  wizard.except_wizard('UserError',"Make sure the account you select has children accounts.")
+
         if data['form']['state'] == 'bydate':
            self._check_date(cr, uid, data, context)
            data['form']['fiscalyear'] = 0
@@ -142,11 +128,11 @@ class wizard_report(wizard.interface):
         },
         'account_selection': {
             'actions': [],
-            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel'),('checktype','Print')]}
+            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel','gtk-cancel'),('checktype','Next','gtk-go-forward')]}
         },
         'checktype': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel'),('report','Print')]}
+            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
         },
         'report': {
             'actions': [_check_state],

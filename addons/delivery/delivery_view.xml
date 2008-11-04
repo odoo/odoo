@@ -137,8 +137,8 @@
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="address_id" position="after">
-                    <field name="weight"/>
                     <field name="carrier_id"/>
+                    <field name="weight"/>
                 </field>
             </field>
         </record>
@@ -150,8 +150,8 @@
             <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
             <field name="arch" type="xml">
                 <field name="address_id" position="after">
-                    <field name="weight"/>
                     <field name="carrier_id"/>
+                    <field name="weight"/>
                 </field>
             </field>
         </record>
@@ -161,7 +161,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>			
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree"/>

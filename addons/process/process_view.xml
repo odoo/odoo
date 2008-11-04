@@ -39,7 +39,7 @@
                                     <field name="kind" select="1"/>
                                     <field name="help_url" widget="url"/>
                                     <field name="model_states"/>
-                                    <field name="subflow_id" domain="[('name', '!=', parent.name)]"/>
+                                    <field name="subflow_id" domain="[('name', '!=', parent.name)]" attrs="{'readonly':[('kind','=','state')]}"/>
                                 </group>
                                 <notebook colspan="4">
                                     <page string="Outgoing Transitions">
@@ -169,7 +169,7 @@
                     <field name="kind" select="1"/>
                     <field name="help_url" widget="url"/>
                     <field name="model_states"/>
-                    <field name="subflow_id"/>
+                    <field name="subflow_id" attrs="{'readonly':[('kind','=','state')]}"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Outgoing Transitions">

@@ -1,28 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -48,10 +42,12 @@ class res_partner_contact(osv.osv):
         'title': fields.selection(_title_get, 'Title'),
         'website':fields.char('Website',size=120),
         'lang_id':fields.many2one('res.lang','Language'),
-        'job_ids':fields.one2many('res.partner.job','contact_id','Functions'),
+        'job_ids':fields.one2many('res.partner.job','contact_id','Functions and Addresses'),
         'country_id':fields.many2one('res.country','Nationality'),
         'birthdate':fields.date('Birth Date'),
         'active' : fields.boolean('Active'),
+        'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
+        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Job'),
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -98,12 +94,6 @@ res_partner_address()
 
 class res_partner_job(osv.osv):
 
-    def _get_partner_id(self, cr, uid, ids, *a):
-        res={}
-        for id in self.browse(cr, uid, ids):
-            res[id.id] = id.address_id.partner_id and id.address_id.partner_id.id or False
-        return res
-
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
@@ -122,15 +112,15 @@ class res_partner_job(osv.osv):
         return super(res_partner_job,self).search(cr, user, args, offset, limit, order, context, count)
 
     _name = 'res.partner.job'
-    _description ='Contact Function'
+    _description ='Contact Job Title'
     _order = 'sequence_contact'
     _columns = {
-        'name': fields.function(_get_partner_id, method=True, type='many2one', relation='res.partner', string='Partner'),
+        'name': fields.related('address_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
         'address_id':fields.many2one('res.partner.address','Address', required=True),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
-        'function_id': fields.many2one('res.partner.function','Function', required=True),
+        'function_id': fields.many2one('res.partner.function','Job Title', required=True),
         'sequence_contact':fields.integer('Sequence (Contact)',help='order of importance of this address in the list of addresses of the linked contact'),
-        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this function in the list of functions of the linked partner'),
+        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this job title in the list of job title of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
         'date_start' : fields.date('Date Start'),

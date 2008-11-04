@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,13 +27,13 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'sale_warn' : fields.boolean('Sale Order'),
-        'sale_warn_msg' : fields.char('Message for Sale Order', size=64),
+        'sale_warn_msg' : fields.text('Message for Sale Order'),
         'purchase_warn' : fields.boolean('Purchase Order'),
-        'purchase_warn_msg' : fields.char('Message for Purchase Order', size=64),
+        'purchase_warn_msg' : fields.text('Message for Purchase Order'),
         'picking_warn' : fields.boolean('Stock Picking'),
-        'picking_warn_msg' : fields.char('Message for Stock Picking', size=64),
+        'picking_warn_msg' : fields.text('Message for Stock Picking'),
         'invoice_warn' : fields.boolean('Invoice'),
-        'invoice_warn_msg' : fields.char('Message for Invoice', size=64),
+        'invoice_warn_msg' : fields.text('Message for Invoice'),
     }
 res_partner()
 
@@ -131,11 +123,11 @@ stock_picking()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-                 'sale_line_warn' : fields.boolean('Sale Order Line'),
-                 'sale_line_warn_msg' : fields.char('Message for Sale Order Line', size=64),
-                 'purchase_line_warn' : fields.boolean('Purchase Order Line'),
-                 'purchase_line_warn_msg' : fields.char('Message for Purchase Order Line', size=64),
-                 }
+         'sale_line_warn' : fields.boolean('Sale Order Line'),
+         'sale_line_warn_msg' : fields.text('Message for Sale Order Line'),
+         'purchase_line_warn' : fields.boolean('Purchase Order Line'),
+         'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
+    }
 product_product()
 
 class sale_order_line(osv.osv):
