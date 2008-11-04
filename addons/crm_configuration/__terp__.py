@@ -1,4 +1,24 @@
 # -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 {
     "name" : "Customer Relationship Management",
     "version" : "1.0",
@@ -25,6 +45,8 @@ meetings, eso.
         "crm_meeting_view.xml",
         "crm_opportunity_view.xml",
         "crm_fund_view.xml",
+        "crm_claims_view.xml",
+        "crm_phonecall_view.xml",
         "crm_report_view.xml"
     ],
     "demo_xml" : [
@@ -34,6 +56,8 @@ meetings, eso.
 #        "crm_meeting_demo.xml",
 #        "crm_lead_demo.xml",
 #        "crm_opportunity_demo.xml",
+#        "crm_claims_demo.xml", 
+#        "crm_phonecall_demo.xml", 
    ],
    "update_xml" : [
 #         "crm_bugs_data.xml",
@@ -49,6 +73,10 @@ meetings, eso.
 #         "crm_meeting_menu.xml",
 #         "crm_opportunity_data.xml",
 #         "crm_opportunity_menu.xml",
+#         "crm_claims_data.xml",
+#         "crm_claims_menu.xml",
+#         "crm_phonecall_data.xml",
+#         "crm_phonecall_menu.xml",
          "security/ir.model.access.csv",
          "process/crm_configuration_process.xml",
     ],

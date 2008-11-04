@@ -1,3 +1,24 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 import time
 import netsvc
 from osv import fields, osv
@@ -7,7 +28,6 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 
 from tools import config
-
 
 class account_voucher(osv.osv):
     def _get_period(self, cr, uid, context):
@@ -24,10 +44,8 @@ class account_voucher(osv.osv):
     def _get_reference_type(self, cursor, user, context=None):
         return [('none', 'Free Reference')]
     
-    
-    
     def _get_journal(self, cr, uid, context):
-        type_inv = context.get('type', 'rec_voucher')
+        type_inv = context #.get('type', 'rec_voucher')
         type2journal = {'rec_voucher': 'cash', 'bank_rec_voucher': 'cash','pay_voucher': 'cash','bank_pay_voucher': 'cash', 'cont_voucher': 'cash','journal_sale_voucher': 'sale','journal_pur_voucher': 'purchase' }
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'cash'))], limit=1)
@@ -72,8 +90,7 @@ class account_voucher(osv.osv):
                      ('cancel','Cancel')
                     ], 'State', 
                     readonly=True),
-        'amount':fields.float('Amount', readonly=True),
-#        , states={'draft':[('readonly',False)]}
+        'amount':fields.float('Amount'),
         'number':fields.char('Number', size=32, readonly=True),
         'reference': fields.char('Voucher Reference', size=64),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
@@ -147,11 +164,13 @@ class account_voucher(osv.osv):
         self.write(cr,uid,ids,{'amount':total})
         self.write(cr, uid, ids, {'state':'proforma'})
         return True
+    
     def proforma_voucher(self, cr, uid, ids, context={}):
         self.action_move_line_create(cr, uid, ids)
         self.action_number(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'posted'})
         return True
+    
     def cancel_voucher(self,cr,uid,ids,context={}):
         self.action_cancel(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'cancel'})
@@ -192,12 +211,13 @@ class account_voucher(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
+                
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': inv['date'],
                     'account_id': il['account_analytic_id'],
                     'amount': inv['amount'] * sign,
-                    'partner_id': il['partner_id'] or False,
+                    #'partner_id': il['partner_id'] or False,
                     'general_account_id': il['account_id'] or False,
                     'journal_id': self._get_journal(cr, uid, inv.type),
                     'ref': ref,
@@ -206,10 +226,14 @@ class account_voucher(osv.osv):
         return iml
     
     def action_move_line_create(self, cr, uid, ids, *args):
+        
         for inv in self.browse(cr, uid, ids):
+            
             if inv.move_id:
                 continue
+            
             company_currency = inv.company_id.currency_id.id
+            
             # create the analytical lines
             line_ids = self.read(cr, uid, [inv.id], ['payment_ids'])[0]['payment_ids']
             ils = self.pool.get('account.voucher.line').read(cr, uid, line_ids)
@@ -256,13 +280,12 @@ class account_voucher(osv.osv):
                 'currency_id': diff_currency_p \
                         and inv.currency_id.id or False,
                 'ref': ref
-                })
+            })
 
             date = inv.date
             inv.amount=total
 
-
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x,date, context={})) ,iml)
+            line = map(lambda x:(0, 0, self.line_get_convert(cr, uid, x,date, context={})), iml)
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
@@ -270,6 +293,7 @@ class account_voucher(osv.osv):
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
             move = {'name': name, 'line_id': line, 'journal_id': journal_id}
+            
             if inv.period_id:
                 move['period_id'] = inv.period_id.id
                 for i in line:
@@ -280,12 +304,9 @@ class account_voucher(osv.osv):
             obj=self.pool.get('account.move').browse(cr,uid,move_id)
             for line in obj.line_id :
                 cr.execute('insert into voucher_id (account_id,rel_account_move) values (%d, %d)',(int(ids[0]),int(line.id)))
-#            self.pool.get('account.move').post(cr, uid, [move_id])
-#        self._log_event(cr, uid, ids)
-        return True
-            
 
-    
+        return True
+
     def line_get_convert(self, cr, uid, x, date, context={}):
         return {
             'date':date,
