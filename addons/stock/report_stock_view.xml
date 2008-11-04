@@ -73,17 +73,31 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Dates of Inventories">
-					<field name="id"/>
 					<field name="product_id"/>
+					<field name="id"/>
 					<field name="create_date" />
 				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="report_stock_lines_date_form">
+			<field name="name">report.stock.lines.date.form</field>
+			<field name="model">report.stock.lines.date</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Dates of Inventories">
+					<field name="product_id" select="1"/>
+					<field name="id" select="2"/>
+					<field name="create_date" select="1" />
+				</form>
 			</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="action_stock_line_date">
 			<field name="name">Dates of Inventories</field>
 			<field name="res_model">report.stock.lines.date</field>
-			<field name="view_mode">tree</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
 		</record>
 			<menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date"/>
 
