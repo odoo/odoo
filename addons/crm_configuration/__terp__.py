@@ -45,6 +45,8 @@ meetings, eso.
         "crm_meeting_view.xml",
         "crm_opportunity_view.xml",
         "crm_fund_view.xml",
+        "crm_claims_view.xml",
+        "crm_phonecall_view.xml",
         "crm_report_view.xml"
     ],
     "demo_xml" : [
@@ -54,6 +56,8 @@ meetings, eso.
 #        "crm_meeting_demo.xml",
 #        "crm_lead_demo.xml",
 #        "crm_opportunity_demo.xml",
+#        "crm_claims_demo.xml", 
+#        "crm_phonecall_demo.xml", 
    ],
    "update_xml" : [
 #         "crm_bugs_data.xml",
@@ -69,6 +73,10 @@ meetings, eso.
 #         "crm_meeting_menu.xml",
 #         "crm_opportunity_data.xml",
 #         "crm_opportunity_menu.xml",
+#         "crm_claims_data.xml",
+#         "crm_claims_menu.xml",
+#         "crm_phonecall_data.xml",
+#         "crm_phonecall_menu.xml",
          "security/ir.model.access.csv",
          "process/crm_configuration_process.xml",
     ],

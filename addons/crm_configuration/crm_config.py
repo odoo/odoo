@@ -96,11 +96,14 @@ class crm_menu_config_wizard(osv.osv_memory):
         'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
+        'claims' : fields.boolean('Supplier Claims', help="Manages the supplier complaints."),
+        'phonecall' : fields.boolean('Phone Calls', help="Help you to encode the result of a phone call"),
     }
     _defaults = {
         'meeting': lambda *args: True,
         'jobs': lambda *args: True,
         'opportunity': lambda *args: True,
+        'phonecall': lambda *args: True,
     }
     def action_create(self, cr, uid, ids, *args):
         modid = self.pool.get('ir.module.module').search(cr, uid, [('name','=','crm_configuration')])
@@ -110,7 +113,7 @@ class crm_menu_config_wizard(osv.osv_memory):
             lst = ('data','menu','demo')
         res = self.read(cr,uid,ids)[0]
         idref = {}
-        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk'] :
+        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk','claims','phonecall'] :
             if (not res[section]):
                 continue
             for fname in lst:
