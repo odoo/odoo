@@ -179,7 +179,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
-		print"self.account_ids",self.account_ids
+		
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
@@ -210,7 +210,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				(data['form']['company_id']))
 		
 		res = self.cr.dictfetchall()
-		print"res",res
+		
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use

@@ -195,7 +195,7 @@ class partner_balance(report_sxw.rml_parse):
                     "AND a.type IN " + self.ACCOUNT_TYPE + " " \
                     "AND a.active", (data['form']['company_id'],))
         self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
-        print"self.account_ids",self.account_ids
+        
         super(partner_balance, self).preprocess(objects, data, ids)
 
     def lines(self,data):
@@ -208,7 +208,7 @@ class partner_balance(report_sxw.rml_parse):
         #
         #
         if data['form']['soldeinit'] :
-            print"=====self.account_ids======",self.account_ids
+           
             
             self.cr.execute(
                 "SELECT p.ref, p.name,l.account_id,ac.name as account_name,ac.code as code , sum(debit) as debit, sum(credit) as credit, " \
@@ -234,7 +234,7 @@ class partner_balance(report_sxw.rml_parse):
                 "ORDER BY l.account_id,p.name",
                 (self.date_lst[0],self.date_lst[0]))
             res = self.cr.dictfetchall()
-            print":::::::::::::::::::::res",res
+           
             for r in res:
                 full_account.append(r)
         #
@@ -264,7 +264,7 @@ class partner_balance(report_sxw.rml_parse):
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name")
         res = self.cr.dictfetchall()
-        print"==========res",res
+        
         for r in res:
             full_account.append(r)
         
