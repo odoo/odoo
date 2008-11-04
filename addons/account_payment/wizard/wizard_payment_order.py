@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -42,7 +42,7 @@ arch_duedate='''<?xml version="1.0"?>
 
 def search_entries(self, cr, uid, data, context):
     search_due_date=data['form']['duedate']
-    
+
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('payment.order')
     line_obj = pool.get('account.move.line')
@@ -54,14 +54,9 @@ def search_entries(self, cr, uid, data, context):
         ctx = '''context="{'journal_id': %d}"''' % payment.mode.journal.id
 
     # Search for move line to pay:
-    line_ids = line_obj.search(cr, uid, [
-            ('reconcile_id', '=', False),
-            ('account_id.type', '=', 'payable'),
-            ('amount_to_pay', '>', 0),
-            ('date_maturity','<=',search_due_date)
-        ], context=context)
-        
-    
+    domain = [('reconcile_id', '=', False),('account_id.type', '=', 'payable'),('amount_to_pay', '>', 0)]
+    domain = domain + ['|',('date_maturity','<',search_due_date),('date_maturity','=',False)]
+    line_ids = line_obj.search(cr, uid, domain, context=context)
     FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Payment:">
     <field name="entries" colspan="4" height="300" width="800" nolabel="1"
@@ -115,7 +110,7 @@ class wizard_payment_order(wizard.interface):
     If a type is given, unsuitable account move lines are ignored.
     """
     states = {
-        
+
         'init': {
             'actions': [],
             'result': {
@@ -128,7 +123,7 @@ class wizard_payment_order(wizard.interface):
                 ]
             },
          },
-          
+
         'search': {
             'actions': [search_entries],
             'result': {

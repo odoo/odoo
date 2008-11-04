@@ -17,47 +17,17 @@
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
-      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,-1"/>
-      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,-1"/>
-      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <blockBackground colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <blockBackground colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <blockBackground colorName="#e6e6e6" start="4,0" stop="4,0"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="GRID" colorName="black"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -77,7 +47,6 @@
     <paraStyle name="Table Contents" fontName="Times-Roman"/>
     <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
   </stylesheet>
-  <images/>
   <story>
     <para style="Standard">[[ repeatIn(objects, 'o') ]]</para>
     <para style="Standard">
@@ -115,7 +84,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="83.0,98.0,190.0,71.0,85.0" style="Table2">
+    <blockTable colWidths="83.0,98.0,190.0,70.0,85.0" style="Table2">
       <tr>
         <td>
           <para style="P4">Partner</para>
@@ -134,7 +103,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="83.0,98.0,190.0,71.0,85.0" style="Table1">
+    <blockTable colWidths="83.0,98.0,190.0,70.0,85.0" style="Table1">
       <tr>
         <td>
           <para style="Table Contents">[[repeatIn(o.line_ids, 'line') ]]</para>
@@ -144,13 +113,13 @@
           <para style="Table Contents">[[ line.bank_id and line.bank_id.name ]]</para>
         </td>
         <td>
-          <para style="Table Contents">[[ line.reference ]]</para>
+          <para style="Table Contents">[[ line.name ]]</para>
         </td>
         <td>
-          <para style="P2">[[ formatLang(line.value_date, date=True) ]]</para>
+          <para style="P2">[[ line.date ]]</para>
         </td>
         <td>
-          <para style="P3">[[ formatLang(line.to_pay_currency) ]] [[ line.currency.name ]]</para>
+          <para style="P3">[[ formatLang(line.amount_currency) ]] [[ line.currency.name ]]</para>
         </td>
       </tr>
     </blockTable>
