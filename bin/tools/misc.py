@@ -1,31 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+##############################################################################
 
 """
 Miscelleanous tools used by OpenERP.
@@ -62,6 +55,8 @@ def init_db(cr):
     for i in addons.get_modules():
         terp_file = addons.get_module_resource(i, '__terp__.py')
         mod_path = addons.get_module_path(i)
+        if not mod_path:
+            continue
         info = False
         if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
             info = eval(file(terp_file).read())
@@ -327,7 +322,7 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False, ssl=False, debug=False):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False, ssl=False, debug=False,subtype='plain'):
     """Send an email."""
     if not email_cc:
         email_cc=[]
@@ -339,7 +334,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Header import Header
     from email.Utils import formatdate, COMMASPACE
 
-    msg = MIMEText(body or '', _charset='utf-8')
+    msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
@@ -396,7 +391,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     msg = MIMEMultipart()
 
     if not ssl:
-        ssl = config['smtp_ssl']
+        ssl = config.get('smtp_ssl', False)
 
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
@@ -589,6 +584,13 @@ class currency(float):
     #   return str(display_value)
 
 
+def is_hashable(h):
+    try:
+        hash(h)
+        return True
+    except TypeError:
+        return False
+
 #
 # Use it as a decorator of the function you plan to cache
 # Timeout: 0 = no timeout, otherwise in seconds
@@ -607,6 +609,11 @@ class cache(object):
 
             # Update named arguments with positional argument values
             kwargs.update(dict(zip(arg_names, args)))
+            for k in kwargs:
+                if isinstance(kwargs[k], (list, dict, set)):
+                    kwargs[k] = tuple(kwargs[k])
+                elif not is_hashable(kwargs[k]):
+                    kwargs[k] = repr(kwargs[k])
             kwargs = kwargs.items()
             kwargs.sort()
 
@@ -621,7 +628,8 @@ class cache(object):
                     return value
 
             # Work out new value, cache it and return it
-            # Should copy() this value to avoid futur modf of the cacle ?
+            # FIXME Should copy() this value to avoid futur modifications of the cache ?
+            # FIXME What about exceptions ?
             result = fn(self2,cr,**dict(kwargs))
 
             self.cache[key] = (result, time.time())
@@ -655,8 +663,9 @@ def get_languages():
 
 def scan_languages():
     import glob
-    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['addons_path'], 'base', 'i18n', '*.po'))]
+    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
+    r=[(lang, lang_dict.get(lang, lang)) for lang in file_list]
     return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
 

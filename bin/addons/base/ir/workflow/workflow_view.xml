@@ -43,13 +43,13 @@
             <field name="view_id" ref="view_workflow_tree"/>
         </record>
         <menuitem action="action_workflow_form" id="menu_workflow" parent="base.menu_workflow_root"/>
-        
+
         <!--
-	================================
-	Activities
-	================================
-	-->
-        
+        ================================
+        Activities
+        ================================
+        -->
+
         <record id="view_workflow_activity_form" model="ir.ui.view">
             <field name="name">workflow.activity.form</field>
             <field name="model">workflow.activity</field>
@@ -59,9 +59,9 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="wkf_id" select="1"/>
                     <field name="kind" select="1"/>
-                    <field name="action" select="1"/>
-                    <field name="action_id" select="1"/>
-                    <field name="subflow_id"/>
+                    <field name="action_id" select="1" colspan="4"/>
+                    <field name="action" select="1" colspan="4" attrs="{'readonly':[('kind','=','dummy')]}"/>
+                    <field name="subflow_id" attrs="{'readonly':[('kind','&lt;&gt;','subflow')]}"/>
                     <field name="signal_send"/>
                     <newline/>
                     <field name="flow_start"/>
@@ -77,9 +77,7 @@
                             <field name="condition"/>
                             <field name="trigger_model"/>
                             <field name="trigger_expr_id"/>
-                            	
                         </tree>
-                        	
                     </field>
                     <separator colspan="4" string="Incoming transitions"/>
                     <field colspan="4" name="in_transitions" nolabel="1">

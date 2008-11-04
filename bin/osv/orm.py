@@ -1,31 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+##############################################################################
 
 #
 # Object relationnal mapping to postgresql module
@@ -48,7 +41,6 @@
 
 import time
 import types
-from xml import dom, xpath
 import string
 import netsvc
 import re
@@ -57,6 +49,14 @@ import pickle
 
 import fields
 import tools
+
+import sys
+try:
+    from xml import dom, xpath
+except ImportError:
+    sys.stderr.write("ERROR: Import xpath module\n")
+    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
+    sys.exit(2)
 
 from tools.config import config
 
@@ -82,6 +82,9 @@ class browse_null(object):
 
     def __getitem__(self, name):
         return False
+
+    def __getattr__(self, name):
+        return False  # XXX: return self ?
 
     def __int__(self):
         return False
@@ -237,6 +240,7 @@ def get_pg_type(f):
     type_dict = {
             fields.boolean: 'bool',
             fields.integer: 'int4',
+            fields.integer_big: 'int8',
             fields.text: 'text',
             fields.date: 'date',
             fields.time: 'time',
@@ -321,7 +325,6 @@ class orm_template(object):
                 'name': k,
                 'field_description': f.string.replace("'", " "),
                 'ttype': f._type,
-                'relate': (f.relate and 1) or 0,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': str(f.select or 0),
@@ -334,12 +337,12 @@ class orm_template(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relate,relation,view_load,state,select_level
+                    relation,view_load,state,select_level
                 ) VALUES (
-                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %d,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                    bool(vals['relate']), vals['relation'], bool(vals['view_load']), 'base',
+                     vals['relation'], bool(vals['view_load']), 'base',
                     vals['select_level']
                 ))
                 if 'module' in context:
@@ -352,11 +355,11 @@ class orm_template(object):
                         cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
-                            model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
+                            model_id=%s, field_description=%s, ttype=%s, relation=%s,
                             view_load=%s, select_level=%s, readonly=%s ,required=%s
                         WHERE
                             model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'], bool(vals['relate']),
+                                vals['model_id'], vals['field_description'], vals['ttype'], 
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
                             ))
@@ -367,6 +370,14 @@ class orm_template(object):
         self._field_create(cr, context)
 
     def __init__(self, cr):
+        if not self._name and not hasattr(self, '_inherit'):
+            name = type(self).__name__.split('.')[0]
+            msg = "The class %s has to have a _name attribute" % name
+
+            logger = netsvc.Logger()
+            logger.notifyChannel('orm', netsvc.LOG_ERROR, msg )
+            raise except_orm('ValueError', msg )
+
         if not self._description:
             self._description = self._name
         if not self._table:
@@ -709,9 +720,11 @@ class orm_template(object):
                     # translate each selection option
                     sel2 = []
                     for (key, val) in sel:
-                        val2 = translation_obj._get_source(cr, user,
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user,
                                 self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)
+                                context.get('lang', False) or 'en_US', val)			
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
@@ -768,6 +781,11 @@ class orm_template(object):
                                 'fields': xfields
                             }
                     attrs = {'views': views}
+                    if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
+                        # We can not use the domain has it is defined according to the record !
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', context=context)
+                        if not attrs.get('required',False):
+                            attrs['selection'].append((False,''))
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
@@ -814,14 +832,15 @@ class orm_template(object):
                     continue
 
                 ok = True
-
-                serv = netsvc.LocalService('object_proxy')
-                user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
-                roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+            
+                if user != 1:   # admin user has all roles
+                    serv = netsvc.LocalService('object_proxy')
+                    user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
+                    cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+                    roles = cr.fetchall()
+                    for role in roles:
+                        if role[0]:
+                            ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
 
                 if not ok:
                     button.setAttribute('readonly', '1')
@@ -873,7 +892,6 @@ class orm_template(object):
             context = {}
         def _inherit_apply(src, inherit):
             def _find(node, node2):
-                # Check if xpath query or normal inherit (with field matching)
                 if node2.nodeType == node2.ELEMENT_NODE and node2.localName == 'xpath':
                     res = xpath.Evaluate(node2.getAttribute('expr'), node)
                     return res and res[0]
@@ -917,16 +935,13 @@ class orm_template(object):
                                 parent.insertBefore(child, node)
                         parent.removeChild(node)
                     else:
+                        sib = node.nextSibling
                         for child in node2.childNodes:
                             if child.nodeType == child.ELEMENT_NODE:
                                 if pos == 'inside':
                                     node.appendChild(child)
                                 elif pos == 'after':
-                                    sib = node.nextSibling
-                                    if sib:
-                                        node.parentNode.insertBefore(child, sib)
-                                    else:
-                                        node.parentNode.appendChild(child)
+                                    node.parentNode.insertBefore(child, sib)
                                 elif pos=='before':
                                     node.parentNode.insertBefore(child, node)
                                 else:
@@ -1227,6 +1242,11 @@ class orm_memory(orm_template):
                             field_value2[i][field2] = field_value[i][field2]
                     field_value = field_value2
                 value[field] = field_value
+
+        # get the default values from the context
+        for key in context or {}:
+            if key.startswith('default_'):
+                value[key[8:]] = context[key]
         return value
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
@@ -1389,7 +1409,10 @@ class orm(orm_template):
                                     for key,val in res.items():
                                         if f._multi:
                                             val = val[k]
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        if (val<>False) or (type(val)<>bool):
+                                            cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                                        #else:
+                                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -1528,6 +1551,7 @@ class orm(orm_template):
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
+        self._columns = self._columns.copy()
         f = filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
         if f:
             list_store = []
@@ -1573,12 +1597,18 @@ class orm(orm_template):
                     'translate': (field['translate']),
                     #'select': int(field['select_level'])
                 }
-                #if field['relation']:
-                #   attrs['relation'] = field['relation']
                 if field['ttype'] == 'selection':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
+                elif field['ttype'] == 'one2many':
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], field['relation_field'], **attrs)
+                elif field['ttype'] == 'many2many':
+                    import random
+                    _rel1 = field['relation'].replace('.', '_')
+                    _rel2 = field['model'].replace('.', '_')
+                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, random.randint(0, 10000))
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 
@@ -1652,6 +1682,9 @@ class orm(orm_template):
                             field_value2[i][field2] = field_value[i][field2]
                     field_value = field_value2
                 value[field] = field_value
+        for key in context or {}:
+            if key.startswith('default_'):
+                value[key[8:]] = context[key]
         return value
 
 
@@ -2300,7 +2333,10 @@ class orm(orm_template):
                         continue
                     value = res[field]
                     if self._columns[field]._type in ('many2one', 'one2one'):
-                        value = res[field][0]
+                        try:
+                            value = res[field][0]
+                        except:
+                            value = res[field]
                     upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                     upd1.append(self._columns[field]._symbol_set[1](value))
                 upd1.append(res['id'])
@@ -2449,10 +2485,40 @@ class orm(orm_template):
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
+
+        trans_obj = self.pool.get('ir.translation')
+        trans_name=''
+        trans_data=[]
+        for f in fields:
+            trans_flag=True
+            if f in self._columns and self._columns[f].translate:
+                trans_name=self._name+","+f
+            elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
+                trans_name=self._inherit_fields[f][0]+","+f
+            else:
+                trans_flag=False
+
+            if trans_flag:
+                trans_ids = trans_obj.search(cr, uid, [
+                        ('name', '=', trans_name),
+                        ('res_id','=',data['id'])
+                    ])
+
+                trans_data.extend(trans_obj.read(cr,uid,trans_ids,context=context))
+
         del data['id']
+
         for v in self._inherits:
             del data[self._inherits[v]]
-        return self.create(cr, uid, data)
+
+        new_id=self.create(cr, uid, data)
+
+        for record in trans_data:
+            del record['id']
+            record['res_id']=new_id
+            trans_obj.create(cr,uid,record)
+
+        return new_id
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         if not context:

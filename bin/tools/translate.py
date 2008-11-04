@@ -1,31 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+##############################################################################
 
 import os
 from os.path import join
@@ -121,6 +114,9 @@ class TinyPoFile(object):
                     tmp_tnrs.append( line[2:].strip().split(':') )
 		elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
 			fuzzy = True
+                line = self.lines.pop(0).strip()
+            while not line:
+                # allow empty lines between comments and msgid
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
                 raise Exception("malformed file: bad line: %s" % line)
@@ -344,12 +340,6 @@ def trans_generate(lang, modules, dbname=None):
     query_param = not 'all' in modules and modules or None
     cr.execute(query, query_param)
 
-    #if 'all' in modules:
-    #   cr.execute('select name,model,res_id,module from ir_model_data')
-    #else:
-    #   cr.execute('select name,model,res_id,module from ir_model_data where module in ('+','.join(['%s']*len(modules))+')', modules)
-
-
     _to_translate = []
     def push_translation(module, type, name, id, source):
         tuple = (module, type, name, id, source)
@@ -359,6 +349,9 @@ def trans_generate(lang, modules, dbname=None):
 
     for (xml_name,model,res_id,module) in cr.fetchall():
         xml_name = module+'.'+xml_name
+        if not pool.get(model):
+            logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r" % (model,))
+            continue
         obj = pool.get(model).browse(cr, uid, res_id)
         if model=='ir.ui.view':
             d = xml.dom.minidom.parseString(obj.arch)

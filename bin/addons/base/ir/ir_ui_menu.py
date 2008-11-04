@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -61,7 +53,13 @@ class ir_ui_menu(osv.osv):
 
     def __init__(self, *args, **kwargs):
         self._cache = {}
-        return super(ir_ui_menu, self).__init__(*args, **kwargs)
+        r = super(ir_ui_menu, self).__init__(*args, **kwargs)
+        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
+        return r
+
+    def __del__(self):
+        self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
+        return super(ir_ui_menu, self).__del__()
 
     def clear_cache(self):
         # radical but this doesn't frequently happen
@@ -81,7 +79,7 @@ class ir_ui_menu(osv.osv):
             return []
 
         modelaccess = self.pool.get('ir.model.access')
-        user_groups = set(self.pool.get('res.users').read(cr, 1, uid)['groups_id'])
+        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         result = []
         for menu in self.browse(cr, uid, ids):
             # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
@@ -97,8 +95,11 @@ class ir_ui_menu(osv.osv):
                 restrict_to_groups = [g.id for g in menu.groups_id]
                 if not user_groups.intersection(restrict_to_groups):
                     continue
+                result.append(menu.id)
+                self._cache[key] = True
+                continue
 
-            if menu.action:     # FIXME elif ?
+            if menu.action:
                 # we check if the user has access to the action of the menu
                 m, oid = menu.action.split(',', 1)
                 data = self.pool.get(m).browse(cr, 1, int(oid))
@@ -121,8 +122,8 @@ class ir_ui_menu(osv.osv):
                     # not displayed if there is no children 
                     continue
 
-            self._cache[key] = True
             result.append(menu.id)
+            self._cache[key] = True
 
         if count:
             return len(result)
@@ -228,7 +229,8 @@ class ir_ui_menu(osv.osv):
         'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups'),
+            'menu_id', 'gid', 'Groups', help="If you put groups, the visibility of this menu will be based on these groups. "\
+                "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
@@ -240,8 +242,8 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
-                                ('ir.actions.url', 'ir.actions.act_url'),
-                ]),
+                ('ir.actions.url', 'ir.actions.url'),
+            ]),
     }
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',

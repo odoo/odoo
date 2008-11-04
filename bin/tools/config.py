@@ -1,31 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+##############################################################################
 
 import ConfigParser,optparse,os,sys
 import netsvc,logging
@@ -131,7 +124,7 @@ class configmanager(object):
         group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
         group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
-        group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.")
+        group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.", action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
         (opt, args) = parser.parse_args()
@@ -201,6 +194,12 @@ class configmanager(object):
             assert len(self.options['language'])<=5, 'ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE'
         if opt.save:
             self.save()
+
+    def _check_addons_path(self, option, opt, value, parser):
+        res = os.path.abspath(os.path.expanduser(value))
+        if not os.path.exists(res):
+            raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+        setattr(parser.values, option.dest, res)
 
     def load(self):
         p = ConfigParser.ConfigParser()
