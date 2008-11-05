@@ -115,9 +115,7 @@ class product_product(osv.osv):
         'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total',help="Excepted Sale - Normal Cost"),
         'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),
-    }   
-    
-    
+    }
 product_product()
 
 
