@@ -2360,6 +2360,12 @@ class orm(orm_template):
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
             if args:
                 args.insert(0, ('active', '=', 1))
+                active_in_args = False
+                for a in args:
+                    if a[0] == 'active':
+                        active_in_args = True
+                if not active_in_args:
+                   args.insert(0, ('active', '=', 1))
             else:
                 args = [('active', '=', 1)]
 
