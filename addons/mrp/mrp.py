@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -1211,7 +1211,7 @@ class StockPicking(osv.osv):
     # Explode picking by replacing phantom BoMs
     #
     def action_explode(self, cr, uid, picks, *args):
-        for move in picks:
+        for move in self.pool.get('stock.move').browse(cr, uid, picks):
             self.pool.get('stock.move')._action_explode(cr, uid, move)
         return picks
 
