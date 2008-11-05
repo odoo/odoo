@@ -46,7 +46,7 @@ _aged_trial_fields = {
     'result_selection':{
         'string':"Filter on Partners",
         'type':'selection',
-        'selection':[('customer','Customer'),('supplier','Supplier'),('all','All')],
+        'selection':[('customer','Receivable'),('supplier','Payable'),('all','Receivable and Payable')],
         'required':True,
         'default': lambda *a: 'customer',
     },
