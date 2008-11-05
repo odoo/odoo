@@ -128,7 +128,7 @@ class document_directory_content(osv.osv):
                         dt = dt+' 09:00:00'
                     value = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
                     if field.name=='dtend':
-                        value += datetime.timedelta(hours=2)
+                        value += datetime.timedelta(hours=3)
                     event.add(field.name).value = value
         s= StringIO.StringIO(cal.serialize().encode('utf8'))
         s.name = node

@@ -96,12 +96,11 @@ class crm_menu_config_wizard(osv.osv_memory):
         'bugs' : fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund' : fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
-        'claims' : fields.boolean('Supplier Claims', help="Manages the supplier complaints."),
-        'phonecall' : fields.boolean('Phone Calls', help="Help you to encode the result of a phone call"),
+        'claims' : fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
+        'phonecall' : fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to planify a list of phone calls to process."),
     }
     _defaults = {
         'meeting': lambda *args: True,
-        'jobs': lambda *args: True,
         'opportunity': lambda *args: True,
         'phonecall': lambda *args: True,
     }
