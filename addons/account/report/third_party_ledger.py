@@ -184,19 +184,22 @@ class third_party_ledger(rml_parse.rml_parse):
 		partner_to_use = []
 
 		if data['form']['soldeinit'] :
+			
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
 				"FROM account_move_line AS line, account_account AS account " \
 				"WHERE line.partner_id IS NOT NULL " \
 					"AND line.account_id = account.id " \
+					"AND line.date >= %s " \
 					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
 					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %d " \
 					"AND account.active " ,
-				(self.date_lst[len(self.date_lst)-1],data['form']['company_id']))
+				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],data['form']['company_id']))
 		else:
+			
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
 				"FROM account_move_line AS line, account_account AS account " \
@@ -214,6 +217,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
+		
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
 		super(third_party_ledger, self).preprocess(objects, data, new_ids)
@@ -226,6 +230,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		else:
 			RECONCILE_TAG = "AND l.reconcile_id IS NULL"
 		if data['form']['soldeinit'] :
+			
 			self.cr.execute(
 					"SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
 					"FROM account_move_line l " \
@@ -233,11 +238,12 @@ class third_party_ledger(rml_parse.rml_parse):
 						"ON (l.journal_id = j.id) " \
 					"WHERE l.partner_id = %d " \
 						"AND l.account_id IN (" + self.account_ids + ") " \
-						"AND l.date < %s " \
+						"AND l.date <= %s " \
 						"AND l.reconcile_id IS NULL "
 					"ORDER BY l.id",
 					(partner.id, self.date_lst[0]))
 			res = self.cr.dictfetchall()
+			
 			sum = 0.0
 			for r in res:
 				sum = r['debit'] - r['credit']
@@ -256,6 +262,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"ORDER BY l.id",
 					(partner.id,))
 		res = self.cr.dictfetchall()
+		
 		sum = 0.0
 		for r in res:
 			sum = r['debit'] - r['credit']

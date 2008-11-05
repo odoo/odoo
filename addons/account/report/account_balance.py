@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -142,18 +142,19 @@ class account_balance(report_sxw.rml_parse):
                 return cmp(x.code, y.code)
             accounts.sort(cmp_code)
             for account in accounts:
+
                 if account.id in done:
                     continue
                 done[account.id] = 1
                 res = {
-                        'lid' :'',
-                        'date':'',
-                        'jname':'',
-                        'ref':'',
-                        'lname':'',
-                        'debit1':'',
-                        'credit1':'',
-                        'balance1' :'',
+#                        'lid' :'',
+#                        'date':'',
+#                        'jname':'',
+#                        'ref':'',
+#                        'lname':'',
+#                        'debit1':'',
+#                        'credit1':'',
+#                        'balance1' :'',
                         'id' : account.id,
                         'type' : account.type,
                         'code': account.code,
@@ -167,40 +168,48 @@ class account_balance(report_sxw.rml_parse):
                     }
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
-                if not (res['credit'] or res['debit']) and not account.child_id:
-                    continue
+#                if not (res['credit'] or res['debit']) and not account.child_id:
+#                    continue
+
                 if account.child_id:
                     def _check_rec(account):
                         if not account.child_id:
                             return bool(account.credit or account.debit)
                         for c in account.child_id:
-                            if _check_rec(c):
+                            if not _check_rec(c):
                                 return True
                         return False
-                    if not _check_rec(account):
+                    if not _check_rec(account) :
                         continue
+
+
                 if form['display_account'] == 'bal_mouvement':
-                    if res['credit'] <> 0 or res['debit'] <> 0 or res['balance'] <> 0:
+                    if res['credit'] >= 0 or res['debit'] >= 0 or res['balance'] >= 0 :
                         result_acc.append(res)
                 elif form['display_account'] == 'bal_solde':
-                    if  res['balance'] <> 0:
+                    if  res['balance'] >= 0:
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
+
+
+
                 res1 = self.moveline(form, account.id,res['level'])
                 if res1:
                     for r in res1:
                         result_acc.append(r)
-                if account.code=='0':
-                    result_acc.pop(-1)
+#                if account.code=='0':
+#                    result_acc.pop(-1)
                 if account.child_id:
                     ids2 = [(x.code,x.id) for x in account.child_id]
                     ids2.sort()
                     result_acc += self.lines(form, [x[1] for x in ids2], done, level+1)
+
             return result_acc
 
         def moveline(self,form,ids,level):
             res={}
+
             self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
             self.cr.execute(
                     "SELECT l.id as lid,l.date,j.code as jname, l.ref, l.name as lname, l.debit as debit1, l.credit as credit1 " \
@@ -227,7 +236,7 @@ class account_balance(report_sxw.rml_parse):
                 r['credit']=''
                 r['balance']=''
                 r['leef']=''
-                if sum > 0.0:
+                if sum >= 0.0:
                     r['bal_type']=" Dr."
                 else:
                     r['bal_type']=" Cr."

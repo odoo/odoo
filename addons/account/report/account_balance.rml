@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="35.0" y1="35.0" width="525" height="772"/>
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
 	  <pageGraphics>
 			<setFont name="Helvetica-Bold" size="9"/>
 
@@ -15,11 +15,11 @@
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%m-%d-%y %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
-				
+
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
 				<setFont name="Helvetica" size="8"/>
-	  
+
 	</pageGraphics>
 
     </pageTemplate>
@@ -126,25 +126,29 @@
     </blockTableStyle>
 
     <paraStyle
-		name="Level5" 
+		name="Level6"
 		fontName="Helvetica"
 		fontSize="8.0" />
     <paraStyle
-		name="Level4" 
-		fontName="Helvetica" 
+		name="Level5"
+		fontName="Helvetica"
 		fontSize="8.0" />
     <paraStyle
-		name="Level3" 
-		fontName="Helvetica" 
+		name="Level4"
+		fontName="Helvetica"
 		fontSize="8.0" />
     <paraStyle
-		name="Level2" 
+		name="Level3"
+		fontName="Helvetica"
+		fontSize="8.0" />
+    <paraStyle
+		name="Level2"
 		firstLineIndent="-0.03cm"
-		fontName="Helvetica-Bold" 
+		fontName="Helvetica-Bold"
 		fontSize="8.0" />
     <paraStyle name="Level1"
 		fontSize="8.0"
-		fontName="Helvetica-Bold" 
+		fontName="Helvetica-Bold"
 		/>
     <paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Helvetica"/>
@@ -170,7 +174,7 @@
 <font color="white"> </font>
 </para>
     <blockTable colWidths="46,278.0,73.0,72.0,82.0" style="Table2" repeatRows="1">
-      <tr>
+      <tr noRowsplits="1">
         <td>
           <para style="P12a">Code</para>
         </td>
@@ -195,19 +199,18 @@
           [[ a['name'] ]]</para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['debit'] and formatLang(a['debit']) or '0.00' ]]</font> 
-			<font><u>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['debit'] and formatLang(a['debit']) or '0.00' ]]</u></font></para>  
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['debit'] and formatLang(a['debit']) or '0.00' ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['debit'] and formatLang(a['debit']) or '0.00' ]]</font></para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['credit'] and formatLang(a['credit']) or '0.00' ]]</font> 
-			<font><u>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['credit'] and formatLang(a['credit']) or '0.00' ]]</u></font></para>  
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['credit'] and formatLang(a['credit']) or '0.00' ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['credit'] and formatLang(a['credit']) or '0.00' ]]</font></para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['balance'] and formatLang(a['balance']) or '0.00' ]]</font> 
-			<font><u>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['balance'] and formatLang(a['balance']) or '0.00' ]]</u></font></para>  
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['balance'] and formatLang(a['balance']) or '0.00' ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['balance'] and formatLang(a['balance']) or '0.00' ]]</font></para>
         </td>
       </tr>
     </blockTable>
   </story>
 </document>
-
