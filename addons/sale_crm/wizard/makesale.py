@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id: makesale.py 1183 2005-08-23 07:43:32Z pinky $
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,32 +28,29 @@ import ir
 import pooler
 
 sale_form = """<?xml version="1.0"?>
-<form string="Make Sale Order">
-    <field name="name"/>
-    <field name="close"/>
+<form string="Convert to Quote">
     <field name="partner_id" required="True"/>
     <field name="shop_id" required="True"/>
     <field name="analytic_account"/>
     <field name="picking_policy" required="True"/>
+    <field name="close"/>
     <newline/>
     <field name="products" colspan="4"/>
 </form>"""
 
 sale_fields = {
-    'name': {'string': 'Order name', 'type': 'char',
-        'help': 'Keep empty for default value'},
     'shop_id': {'string': 'Shop', 'type': 'many2one', 'relation': 'sale.shop'},
-    'partner_id': {'string': 'Default partner', 'type': 'many2one',
+    'partner_id': {'string': 'Customer', 'type': 'many2one',
         'relation': 'res.partner',
         'help': 'Use this partner if there is no partner on the case'},
-    'picking_policy': {'string': 'Packing policy', 'type': 'selection',
+    'picking_policy': {'string': 'Packing Policy', 'type': 'selection',
         'selection': [('direct','Direct Delivery'),('one','All at once')]},
     'products': {'string': 'Products', 'type': 'many2many',
         'relation': 'product.product'},
-    'analytic_account': {'string': 'Analytic account', 'type': 'many2one',
+    'analytic_account': {'string': 'Analytic Account', 'type': 'many2one',
         'relation': 'account.analytic.account'},
-    'close': {'string': 'Close', 'type': 'boolean', 'default': lambda *a: 1,
-        'help': 'Select to close the case'},
+    'close': {'string': 'Close Case', 'type': 'boolean', 'default': lambda *a: 1,
+        'help': 'Check this to close the case after having created the sale order.'},
 }
 
 
@@ -110,8 +99,6 @@ class make_sale(wizard.interface):
                 'order_policy': 'manual',
                 'date_order': now(),
             }
-            if data['form']['name']:
-                vals['name'] = data['form']['name']
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
             new_id = sale_obj.create(cr, uid, vals)
@@ -143,7 +130,7 @@ class make_sale(wizard.interface):
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': sale_form, 'fields': sale_fields,
-                'state' : [('end', 'Cancel'),('order', 'Make Sale Order')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create Quote', 'gtk-go-forward')]}
         },
         'order': {
             'actions': [],
@@ -152,5 +139,4 @@ class make_sale(wizard.interface):
     }
 
 make_sale('crm.case.make_order')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

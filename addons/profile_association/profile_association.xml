@@ -7,16 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Install Extra Module">
-					<separator string="Project Management" colspan="4"/>
+                    <separator string="Project Management" colspan="4"/>
                     <field name="project"/>
-                    <field name="event"/>
                     <separator string="Resources Management" colspan="4"/>
                     <field name="hr_expense"/>
                     <separator string="Relationship Management" colspan="4"/>
                     <field name="crm_configuration"/>
-                    <field name="crm"/>
-					<separator string="" colspan="4"/>
-					<label string="" colspan="2"/>
+                    <separator string="" colspan="4"/>
+                    <field name="board_document"/>
+                    <label string="" colspan="2"/>
                     <group col="4" colspan="2">
                         <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
                         <button name="action_install" string="Install" icon='gtk-ok' type="object"/>

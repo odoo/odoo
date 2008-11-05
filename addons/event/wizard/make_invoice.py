@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id: make_invoice.py 1070 2005-07-29 12:41:24Z nicoe $
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -71,23 +63,25 @@ def _makeInvoices(self, cr, uid, data, context):
                continue
             if (not reg.tobe_invoiced):
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Cannot Be Invoiced. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration is set as 'Cannot be invoiced'. \n"
                 continue
             if reg.invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Already Has an Invoice Linked. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration already has an invoice linked. \n"
                 continue
             if not reg.event_id.product_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Event Related Doesn't Have any Product. \n"
-                continue
-            if not reg.partner_address_id:
-                inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Contact. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Event related doesn't have any product defined. \n"
                 continue
             if not reg.partner_invoice_id:
                 inv_reject = inv_reject + 1
-                inv_rej_reason += "ID "+str(reg.id)+": Registration Doesn't Have any Partner to Invoice. \n"
+                inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
+                continue
+            partner_address_list = reg.partner_invoice_id and pool_obj.get('res.partner').address_get(cr, uid, [reg.partner_invoice_id.id], adr_pref=['invoice'])
+            partner_address_id = partner_address_list['invoice'] 
+            if not partner_address_id:
+                inv_reject = inv_reject + 1
+                inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
                 continue
 
             inv_create = inv_create + 1
@@ -117,8 +111,8 @@ def _makeInvoices(self, cr, uid, data, context):
                 'reference': False,
                 'account_id': reg.partner_invoice_id.property_account_receivable.id,
                 'partner_id': reg.partner_invoice_id.id,
-                'address_invoice_id':reg.partner_address_id.id,
-                'address_contact_id':reg.partner_address_id.id,
+                'address_invoice_id':partner_address_id,
+                'address_contact_id':partner_address_id,
                 'invoice_line': [(6,0,[inv_id])],
                 'currency_id' :reg.partner_invoice_id.property_product_pricelist.currency_id.id,
                 'comment': "",
@@ -129,7 +123,7 @@ def _makeInvoices(self, cr, uid, data, context):
             inv_id = inv_obj.create(cr, uid, inv)
             list_inv.append(inv_id)
             obj_event_reg.write(cr, uid,reg.id, {'invoice_id' : inv_id,'state':'done'})
-            obj_event_reg._history(cr, uid,[reg], 'Invoiced', history=True)
+            obj_event_reg._history(cr, uid,[reg.id], 'Invoiced', history=True)
 
         return {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject) , 'invoice_ids':  list_inv, 'inv_rej_reason': inv_rej_reason}
 

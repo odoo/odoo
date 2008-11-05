@@ -1,27 +1,22 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -169,22 +164,22 @@ class third_party_ledger(rml_parse.rml_parse):
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
-			ACCOUNT_TYPE = "AND a.type='payable' "
+			self.ACCOUNT_TYPE = "('receivable')"
 		elif data['form']['result_selection'] == 'customer':
-			ACCOUNT_TYPE = "AND a.type='receivable' "
+			self.ACCOUNT_TYPE = "('payable')"
 		elif data['form']['result_selection'] == 'all':
-			ACCOUNT_TYPE = "AND (a.type='receivable' OR a.type='payable') "
+			self.ACCOUNT_TYPE = "('payable','receivable')"
 
 		self.cr.execute(
 			"SELECT a.id " \
 			"FROM account_account a " \
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
-			"WHERE t.partner_account=TRUE " \
-				"AND a.company_id = %d " \
-				" " + ACCOUNT_TYPE + " " \
+			"WHERE a.company_id = %d " \
+				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
+		
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
@@ -196,7 +191,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.account_id = account.id " \
 					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
-#					"AND line.account_id IN (" + self.account_ids + ") " \
+					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %d " \
 					"AND account.active " ,
@@ -208,16 +203,14 @@ class third_party_ledger(rml_parse.rml_parse):
 				"WHERE line.partner_id IS NOT NULL " \
 					"AND line.account_id = account.id " \
 					"AND line.date IN (" + self.date_lst_string + ") " \
-#					"AND line.account_id IN (" + self.account_ids + ") " \
+					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %d " \
 					"AND account.active " ,
 				(data['form']['company_id']))
+		
 		res = self.cr.dictfetchall()
-		for res_line in res:
-		    partner_to_use.append(res_line['partner_id'])
-		res = self.cr.dictfetchall()
-
+		
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
@@ -239,7 +232,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"LEFT JOIN account_journal j " \
 						"ON (l.journal_id = j.id) " \
 					"WHERE l.partner_id = %d " \
-#						"AND l.account_id IN (" + self.account_ids + ") " \
+						"AND l.account_id IN (" + self.account_ids + ") " \
 						"AND l.date < %s " \
 						"AND l.reconcile_id IS NULL "
 					"ORDER BY l.id",
@@ -257,7 +250,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
 				"WHERE l.partner_id = %d " \
-#					"AND l.account_id IN (" + self.account_ids + ") " \
+					"AND l.account_id IN (" + self.account_ids + ") " \
 					"AND l.date IN (" + self.date_lst_string + ") " \
 					" " + RECONCILE_TAG + " "\
 					"ORDER BY l.id",
@@ -284,7 +277,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
 				(partner.id, self.date_lst[0],))
@@ -299,7 +292,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
 				(partner.id,))
@@ -323,7 +316,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%d " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(partner.id,self.date_lst[0],))
@@ -337,7 +330,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(credit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id=%d " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
 				(partner.id,))
@@ -363,7 +356,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id IN (" + self.partner_ids + ") " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(self.date_lst[0],))
@@ -377,7 +370,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id IN (" + self.partner_ids + ") " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") "
 				)
@@ -405,7 +398,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id IN (" + self.partner_ids + ") " \
-#						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
 					(self.date_lst[0],))
@@ -418,7 +411,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(credit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id IN (" + self.partner_ids + ") " \
-#					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") "
 				)

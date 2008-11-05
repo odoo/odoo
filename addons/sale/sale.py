@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -467,19 +459,22 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
-                if line.procurement_id and (line.procurement_id.state != 'done') and (line.state!='done'):
+                if (not line.procurement_id) or (line.procurement_id.state=='done') or (line.procurement_id.move_id and line.procurement_id.move_id.state=='done'):
+                    finished = True
+                else:
                     finished = False
-                if line.procurement_id and line.procurement_id.state == 'cancel':
-                    canceled = True
-                if line.procurement_id and line.procurement_id.state <> 'cancel':
-                    notcanceled = True
+                if line.procurement_id:
+                    if (line.procurement_id.state == 'cancel') or (line.procurement_id.move_id and line.procurement_id.move_id.state=='cancel'):
+                        canceled = True
+                        if line.state != 'cancel':
+                            write_cancel_ids.append(line.id)
+                    else:
+                        notcanceled = True
                 # if a line is finished (ie its procuremnt is done or it has not procuremernt and it
                 # is not already marked as done, mark it as being so...
                 if ((not line.procurement_id) or line.procurement_id.state == 'done') and line.state != 'done':
                     write_done_ids.append(line.id)
-                # ... same for canceled lines
-                if line.procurement_id and line.procurement_id.state == 'cancel' and line.state != 'cancel':
-                    write_cancel_ids.append(line.id)
+
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -488,6 +483,7 @@ class sale_order(osv.osv):
         if mode=='finished':
             return finished
         elif mode=='canceled':
+            return canceled
             if notcanceled:
                 return False
             return canceled
@@ -682,6 +678,7 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight' : fields.float('Weight'),
         'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', required=True, readonly=True),
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer')
     }
     _order = 'sequence, id'
     _defaults = {
@@ -908,6 +905,7 @@ class sale_order_line(osv.osv):
                     }
             else:
                 result.update({'price_unit': price})
+        print result
         return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
@@ -941,16 +939,25 @@ class sale_config_picking_policy(osv.osv_memory):
         'name':fields.char('Name', size=64),
         'picking_policy': fields.selection([
             ('direct','Direct Delivery'),
-            ('one','All at once')
-        ], 'Packing Policy', required=True ),
+            ('one','All at Once')
+        ], 'Packing Default Policy', required=True ),
         'order_policy': fields.selection([
-            ('manual','Invoice based on Sales Orders'),
-            ('picking','Invoice based on Deliveries'),
-        ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+            ('manual','Invoice Based on Sales Orders'),
+            ('picking','Invoice Based on Deliveries'),
+        ], 'Shipping Default Policy', required=True),
+        'step': fields.selection([
+            ('one','Delivery Order Only'),
+            ('two','Packing List & Delivery Order')
+        ], 'Steps To Deliver a Sale Order', required=True,
+           help="By default, Open ERP is able to manage complex routing and paths "\
+           "of products in your warehouse and partner locations. This will configure "\
+           "the most common and simple methods to deliver products to the customer "\
+           "in one or two operations by the worker.")
     }
     _defaults={
         'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking'
+        'order_policy': lambda *a: 'picking',
+        'step': lambda *a: 'one'
     }
     def set_default(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
@@ -958,6 +965,19 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
+
+            if o.step=='one':
+                md = self.pool.get('ir.model.data')
+                group_id = md._get_id(cr, uid, 'base', 'group_no_one')
+                group_id = md.browse(cr, uid, group_id, context).res_id
+                menu_id  = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
+                menu_id = md.browse(cr, uid, menu_id, context).res_id
+                self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id':[(6,0,[group_id])]})
+
+                location_id  = md._get_id(cr, uid, 'stock', 'stock_location_output')
+                location_id = md.browse(cr, uid, location_id, context).res_id
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing':'transparent'})
+
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

@@ -53,240 +53,247 @@
             <field name="name">Capital</field>
             <field name="code">101000</field>
             <field name="type">other</field>
-            <field name="note">pour sociétés (SARL, SA) : choix statuts, montage : cf site erp-libre.info</field>
-			<field name="user_type" ref="account_type_asset"/>
+            <field name="note">Capital pour sociétés de type (SARL, SA). Pour une EI utiliser le compte 108000</field>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_101100" model="account.account.template">
             <field name="name">Capital souscrit - non appelé</field>
             <field name="code">101100</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101000" name="parent_id"/>
         </record>
         <record id="pcg_101200" model="account.account.template">
             <field name="name">Capital souscrit - appelé non versé</field>
             <field name="code">101200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101000" name="parent_id"/>
         </record>
         <record id="pcg_101300" model="account.account.template">
             <field name="name">Capital souscrit - appelé versé</field>
             <field name="code">101300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101000" name="parent_id"/>
         </record>
         <record id="pcg_101310" model="account.account.template">
             <field name="name">Capital non amorti</field>
             <field name="code">101310</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101300" name="parent_id"/>
         </record>
         <record id="pcg_101320" model="account.account.template">
             <field name="name">Capital amorti</field>
             <field name="code">101320</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101300" name="parent_id"/>
         </record>
         <record id="pcg_101800" model="account.account.template">
             <field name="name">Capital souscrit soumis à des réglementations particulières</field>
             <field name="code">101800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_101000" name="parent_id"/>
         </record>
         <record id="pcg_104000" model="account.account.template">
             <field name="name">Primes liées au capital social</field>
             <field name="code">104000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_104100" model="account.account.template">
             <field name="name">Primes d'émission</field>
             <field name="code">104100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_104000" name="parent_id"/>
         </record>
         <record id="pcg_104200" model="account.account.template">
             <field name="name">Primes de fusion</field>
             <field name="code">104200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_104000" name="parent_id"/>
         </record>
         <record id="pcg_104300" model="account.account.template">
             <field name="name">Primes d'apport</field>
             <field name="code">104300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_104000" name="parent_id"/>
         </record>
         <record id="pcg_104400" model="account.account.template">
             <field name="name">Primes de conversion d'obligations en actions</field>
             <field name="code">104400</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_104000" name="parent_id"/>
         </record>
         <record id="pcg_104500" model="account.account.template">
             <field name="name">Bons de souscription d'actions</field>
             <field name="code">104500</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_104000" name="parent_id"/>
         </record>
         <record id="pcg_105000" model="account.account.template">
             <field name="name">Écarts de réévaluation</field>
             <field name="code">105000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_105100" model="account.account.template">
             <field name="name">Réserve spéciale de réévaluation</field>
             <field name="code">105100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_105200" model="account.account.template">
             <field name="name">Écart de réévaluation libre</field>
             <field name="code">105200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_105300" model="account.account.template">
             <field name="name">Réserve de réévaluation</field>
             <field name="code">105300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_105500" model="account.account.template">
             <field name="name">Écarts de réévaluation (autres opérations légales)</field>
             <field name="code">105500</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_105700" model="account.account.template">
             <field name="name">Autres écarts de réévaluation en France</field>
             <field name="code">105700</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_105800" model="account.account.template">
             <field name="name">Autres écarts de réévaluation à l'étranger</field>
             <field name="code">105800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_105000" name="parent_id"/>
         </record>
         <record id="pcg_106000" model="account.account.template">
             <field name="name">Réserves</field>
             <field name="code">106000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_106100" model="account.account.template">
             <field name="name">Réserve légale</field>
             <field name="code">106100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106000" name="parent_id"/>
         </record>
         <record id="pcg_106110" model="account.account.template">
             <field name="name">Réserve légale proprement dite</field>
             <field name="code">106110</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106100" name="parent_id"/>
         </record>
         <record id="pcg_106120" model="account.account.template">
             <field name="name">Plus-values nettes à long terme</field>
             <field name="code">106120</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106100" name="parent_id"/>
         </record>
         <record id="pcg_106200" model="account.account.template">
             <field name="name">Réserves indisponibles</field>
             <field name="code">106200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106000" name="parent_id"/>
         </record>
         <record id="pcg_106300" model="account.account.template">
             <field name="name">Réserves statutaires ou contractuelles </field>
             <field name="code">106300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106000" name="parent_id"/>
         </record>
         <record id="pcg_106400" model="account.account.template">
             <field name="name">Réserves réglementées</field>
             <field name="code">106400</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106000" name="parent_id"/>
         </record>
         <record id="pcg_106410" model="account.account.template">
             <field name="name">Plus-values nettes à long terme </field>
             <field name="code">106410</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106400" name="parent_id"/>
         </record>
+        <record id="pcg_106430" model="account.account.template">
+     		<field name="name">Réserves consécutives à l'octroi de subventions d'investissement</field>
+		    <field name="code">106430</field>
+      		<field name="type">other</field>
+      		<field name="user_type" ref="account_type_equity"/>
+		    <field ref="pcg_106400" name="parent_id"/>
+    	</record>
         <record id="pcg_106480" model="account.account.template">
             <field name="name">Autres réserves réglementées</field>
             <field name="code">106480</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106400" name="parent_id"/>
         </record>
         <record id="pcg_106800" model="account.account.template">
             <field name="name">Autres réserves</field>
             <field name="code">106800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106000" name="parent_id"/>
         </record>
         <record id="pcg_106810" model="account.account.template">
             <field name="name">Réserve de propre assureur</field>
             <field name="code">106810</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106800" name="parent_id"/>
         </record>
         <record id="pcg_106880" model="account.account.template">
             <field name="name">Réserves diverses</field>
             <field name="code">106880</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_106800" name="parent_id"/>
         </record>
         <record id="pcg_107000" model="account.account.template">
             <field name="name">Écarts d'équivalence</field>
             <field name="code">107000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_108000" model="account.account.template">
             <field name="name">Compte de l'exploitant</field>
             <field name="code">108000</field>
             <field name="type">other</field>
-            <field name="note">pour les entreprises individuelles</field>
-			<field name="user_type" ref="account_type_asset"/>
+            <field name="note">Capital pour une Entreprise Individuelle</field>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_10" name="parent_id"/>
         </record>
         <record id="pcg_109000" model="account.account.template">
@@ -307,14 +314,14 @@
             <field name="name">Report à nouveau (solde créditeur)</field>
             <field name="code">110000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_11" name="parent_id"/>
         </record>
         <record id="pcg_119000" model="account.account.template">
             <field name="name">Report à nouveau (solde débiteur)</field>
             <field name="code">119000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_11" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_12" model="account.account.template">
@@ -328,14 +335,14 @@
             <field name="name">Résultat de l'exercice (bénéfice)</field>
             <field name="code">120000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_12" name="parent_id"/>
         </record>
         <record id="pcg_129000" model="account.account.template">
             <field name="name">Résultat de l'exercice (perte)</field>
             <field name="code">129000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_12" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_13" model="account.account.template">
@@ -349,147 +356,147 @@
             <field name="name">Subventions d'équipement</field>
             <field name="code">131000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_13" name="parent_id"/>
         </record>
         <record id="pcg_131100" model="account.account.template">
             <field name="name">État</field>
             <field name="code">131100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131200" model="account.account.template">
             <field name="name">Régions</field>
             <field name="code">131200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131300" model="account.account.template">
             <field name="name">Départements</field>
             <field name="code">131300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131400" model="account.account.template">
             <field name="name">Communes</field>
             <field name="code">131400</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131500" model="account.account.template">
             <field name="name">Collectivités publiques</field>
             <field name="code">131500</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131600" model="account.account.template">
             <field name="name">Entreprises publiques</field>
             <field name="code">131600</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131700" model="account.account.template">
             <field name="name">Entreprises et organismes privés</field>
             <field name="code">131700</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_131800" model="account.account.template">
             <field name="name">Autres</field>
             <field name="code">131800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_131000" name="parent_id"/>
         </record>
         <record id="pcg_138000" model="account.account.template">
-            <field name="name">Autres subventions d'investissement</field>
+            <field name="name">Autres subventions d'investissement (même ventilation que celle du compte 131000)</field>
             <field name="code">138000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_13" name="parent_id"/>
         </record>
         <record id="pcg_139000" model="account.account.template">
             <field name="name">Subventions d'investissement inscrites au compte de résultat</field>
             <field name="code">139000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_13" name="parent_id"/>
         </record>
         <record id="pcg_139100" model="account.account.template">
             <field name="name">Subventions d'équipement</field>
             <field name="code">139100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139000" name="parent_id"/>
         </record>
         <record id="pcg_139110" model="account.account.template">
             <field name="name">Etat</field>
             <field name="code">139110</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139120" model="account.account.template">
             <field name="name">Régions</field>
             <field name="code">139120</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139130" model="account.account.template">
             <field name="name">Départements</field>
             <field name="code">139130</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139140" model="account.account.template">
             <field name="name">Communes</field>
             <field name="code">139140</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139150" model="account.account.template">
             <field name="name">Collectivités publiques</field>
             <field name="code">139150</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139160" model="account.account.template">
             <field name="name">Entreprises publiques</field>
             <field name="code">139160</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139170" model="account.account.template">
             <field name="name">Entreprises et organismes privés </field>
             <field name="code">139170</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139180" model="account.account.template">
             <field name="name">Autres</field>
             <field name="code">139180</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139100" name="parent_id"/>
         </record>
         <record id="pcg_139800" model="account.account.template">
-            <field name="name">Autres subventions d'investissement</field>
+            <field name="name">Autres subventions d'investissement (même ventilation que celle du compte 139100)</field>
             <field name="code">139800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_139000" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_14" model="account.account.template">
@@ -503,77 +510,77 @@
             <field name="name">Provisions réglementées relatives aux immobilisations</field>
             <field name="code">142000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_142300" model="account.account.template">
             <field name="name">Provisions reconstitution des gisements miniers et pétroliers</field>
             <field name="code">142300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_142000" name="parent_id"/>
         </record>
         <record id="pcg_142400" model="account.account.template">
             <field name="name">Provisions pour investissement (participation des salariés)</field>
             <field name="code">142400</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_142000" name="parent_id"/>
         </record>
         <record id="pcg_143000" model="account.account.template">
             <field name="name">Provisions réglementées relatives aux stocks</field>
             <field name="code">143000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_143100" model="account.account.template">
             <field name="name">Hausse des prix</field>
             <field name="code">143100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_143000" name="parent_id"/>
         </record>
         <record id="pcg_143200" model="account.account.template">
             <field name="name">Fluctuation des cours</field>
             <field name="code">143200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_143000" name="parent_id"/>
         </record>
         <record id="pcg_144000" model="account.account.template">
             <field name="name">Provisions réglementées relatives aux autres éléments de l'actif</field>
             <field name="code">144000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_145000" model="account.account.template">
             <field name="name">Amortissements dérogatoires</field>
             <field name="code">145000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_146000" model="account.account.template">
             <field name="name">Provision spéciale de réévaluation</field>
             <field name="code">146000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_147000" model="account.account.template">
             <field name="name">Plus-values réinvesties</field>
             <field name="code">147000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_148000" model="account.account.template">
             <field name="name">Autres provisions réglementées</field>
             <field name="code">148000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_equity"/>
             <field ref="pcg_Comptes_14" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_15" model="account.account.template">
@@ -587,7 +594,7 @@
             <field name="name">Provisions pour risques</field>
             <field name="code">151000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_151100" model="account.account.template">
@@ -601,98 +608,98 @@
             <field name="name">Provisions pour garanties données aux clients</field>
             <field name="code">151200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_151300" model="account.account.template">
             <field name="name">Provisions pour pertes sur marchés à terme</field>
             <field name="code">151300</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_151400" model="account.account.template">
             <field name="name">Provisions pour amendes et pénalités</field>
             <field name="code">151400</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_151500" model="account.account.template">
             <field name="name">Provisions pour pertes de change</field>
             <field name="code">151500</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_151600" model="account.account.template">
             <field name="name">Provisions pour pertes sur contrats</field>
             <field name="code">151600</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_151800" model="account.account.template">
             <field name="name">Autres provisions pour risques</field>
             <field name="code">151800</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_151000" name="parent_id"/>
         </record>
         <record id="pcg_153000" model="account.account.template">
             <field name="name">Provisions pour pensions et obligations similaires</field>
             <field name="code">153000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_154000" model="account.account.template">
             <field name="name">Provisions pour restructurations</field>
             <field name="code">154000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_155000" model="account.account.template">
             <field name="name">Provisions pour impôts</field>
             <field name="code">155000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_156000" model="account.account.template">
             <field name="name">Provisions pour renouvellement des immobilisations (entreprises concessionnaires)</field>
             <field name="code">156000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_157000" model="account.account.template">
             <field name="name">Provisions pour charges à répartir sur plusieurs exercices</field>
             <field name="code">157000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_157200" model="account.account.template">
             <field name="name">Provisions pour gros entretien ou grandes révisions </field>
             <field name="code">157200</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_157000" name="parent_id"/>
         </record>
         <record id="pcg_158000" model="account.account.template">
             <field name="name">Autres provisions pour charges</field>
             <field name="code">158000</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_Comptes_15" name="parent_id"/>
         </record>
         <record id="pcg_158100" model="account.account.template">
             <field name="name">Provisions pour remises en état</field>
             <field name="code">158100</field>
             <field name="type">other</field>
-			<field name="user_type" ref="account_type_asset"/>
+			<field name="user_type" ref="account_type_provision"/>
             <field ref="pcg_158000" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_16" model="account.account.template">
@@ -966,7 +973,7 @@
             <field name="code">Classe_2</field>
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
-            <field name="note">Les comptes de la classe 2 regroupent les immobilisations incorporelles, les immobilisations</field>
+            <field name="note">Immobilisations incorporelles, corporelles, financières et frais d'établissement</field>
             <field ref="pcg_Classes_1_a_5" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_20" model="account.account.template">
@@ -1059,7 +1066,7 @@
             <field name="name">Immobilisations corporelles</field>
             <field name="code">Comptes_21</field>
             <field name="type">view</field>
-            <field name="note">dès valeur unitaire supérieure à 500 Euros HT</field>
+            <field name="note">Si valeur unitaire supérieure à 500 Euros HT</field>
 			<field name="user_type" ref="account_type_view"/>
             <field ref="pcg_Classe_2" name="parent_id"/>
         </record>
@@ -1267,7 +1274,7 @@
             <field ref="pcg_Comptes_21" name="parent_id"/>
         </record>
         <record id="pcg_215000" model="account.account.template">
-            <field name="name">Installations techniques matériels et outillages industriels</field>
+            <field name="name">Constructions sur sol d'autrui (même ventilation que celle du compte 213000)</field>
             <field name="code">215000</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -1502,7 +1509,7 @@
             <field name="name">Titres de participation</field>
             <field name="code">261000</field>
             <field name="type">other</field>
-            <field name="note">ne s'amortissent pas</field>
+            <field name="note">Pas d'amortissement sur les titres de participation</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_Comptes_26" name="parent_id"/>
         </record>
@@ -1520,11 +1527,19 @@
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_261000" name="parent_id"/>
         </record>
+        <record id="pcg_262000" model="account.account.template">
+		     <field name="name">Titres évalués par équivalence</field>
+      		 <field name="code">262000</field>
+      		 <field name="type">other</field>
+			 <field name="user_type" ref="account_type_immobilisations"/>
+		     <field name="note">Pas d'amortissement sur les titres évalués par équivalence</field>
+      		 <field ref="pcg_Comptes_26" name="parent_id"/>
+    	</record>
         <record id="pcg_266000" model="account.account.template">
             <field name="name">Autres formes de participation</field>
             <field name="code">266000</field>
             <field name="type">other</field>
-            <field name="note">ne s'amortissent pas</field>
+            <field name="note">Pas d'amortissement sur les titres évalués par équivalence</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_Comptes_26" name="parent_id"/>
         </record>
@@ -1609,7 +1624,7 @@
             <field name="name">Autres immobilisations financières</field>
             <field name="code">Comptes_27</field>
             <field name="type">view</field>
-            <field name="note">ne s'amortissent pas</field>
+            <field name="note">Pas d'amortissement sur les immobilisations financières</field>
 			<field name="user_type" ref="account_type_view"/>
             <field ref="pcg_Classe_2" name="parent_id"/>
         </record>
@@ -1656,7 +1671,7 @@
             <field ref="pcg_272000" name="parent_id"/>
         </record>
         <record id="pcg_273000" model="account.account.template">
-            <field name="name">Titres immobilisés de l'activité de portefeuille</field>
+            <field name="name">Titres immobilisés de l'activité de portefeuille (TIAP)</field>
             <field name="code">273000</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -1800,7 +1815,7 @@
             <field name="name">Amortissement des immobilisations</field>
             <field name="code">Comptes_28</field>
             <field name="type">view</field>
-            <field name="note">cf tableau des taux sur erp-libre.info</field>
+            <field name="note">cf tableau des taux sur erp-libre.info , http://fr.wikipedia.org/wiki/Amortissement_comptable</field>
 			<field name="user_type" ref="account_type_view"/>
             <field ref="pcg_Classe_2" name="parent_id"/>
         </record>
@@ -1812,7 +1827,7 @@
             <field ref="pcg_Comptes_28" name="parent_id"/>
         </record>
         <record id="pcg_280100" model="account.account.template">
-            <field name="name">Frais d'établissement (même ventilation que celle du compte 201) </field>
+            <field name="name">Frais d'établissement (même ventilation que celle du compte 201000) </field>
             <field name="code">280100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -1861,35 +1876,35 @@
             <field ref="pcg_281000" name="parent_id"/>
         </record>
         <record id="pcg_281200" model="account.account.template">
-            <field name="name">Agencements aménagements de terrains (même ventilation que celle du compte 212)</field>
+            <field name="name">Agencements aménagements de terrains (même ventilation que celle du compte 212000)</field>
             <field name="code">281200</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_281000" name="parent_id"/>
         </record>
         <record id="pcg_281300" model="account.account.template">
-            <field name="name">Constructions (même ventilation que celle du compte 213)</field>
+            <field name="name">Constructions (même ventilation que celle du compte 213000)</field>
             <field name="code">281300</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_281000" name="parent_id"/>
         </record>
         <record id="pcg_281400" model="account.account.template">
-            <field name="name">Constructions sur sol d'autrui (même ventilation que celle du compte 214)</field>
+            <field name="name">Constructions sur sol d'autrui (même ventilation que celle du compte 214000)</field>
             <field name="code">281400</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_281000" name="parent_id"/>
         </record>
         <record id="pcg_281500" model="account.account.template">
-            <field name="name">Installations matériel et outillage industriels (même ventilation que celle du compte 215)</field>
+            <field name="name">Installations matériel et outillage industriels (même ventilation que celle du compte 215000)</field>
             <field name="code">281500</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_281000" name="parent_id"/>
         </record>
         <record id="pcg_281800" model="account.account.template">
-            <field name="name">Autres immobilisations corporelles (même ventilation que celle du compte 218)</field>
+            <field name="name">Autres immobilisations corporelles (même ventilation que celle du compte 218000)</field>
             <field name="code">281800</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -1946,7 +1961,7 @@
             <field ref="pcg_290000" name="parent_id"/>
         </record>
         <record id="pcg_291000" model="account.account.template">
-            <field name="name">Dépréciations des immobilisations corporelles (même ventilation que celle du compte 21)</field>
+            <field name="name">Dépréciations des immobilisations corporelles (même ventilation que celle du compte 210000)</field>
             <field name="code">291000</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -2009,35 +2024,35 @@
             <field ref="pcg_296000" name="parent_id"/>
         </record>
         <record id="pcg_296700" model="account.account.template">
-            <field name="name">Créances rattachées à des participations (même ventilation que celle du compte 267)</field>
+            <field name="name">Créances rattachées à des participations (même ventilation que celle du compte 267000)</field>
             <field name="code">296700</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_296000" name="parent_id"/>
         </record>
         <record id="pcg_296800" model="account.account.template">
-            <field name="name">Créances rattachées à des sociétés en participation (même ventilation que elle du compte 268)</field>
+            <field name="name">Créances rattachées à des sociétés en participation (même ventilation que elle du compte 268000)</field>
             <field name="code">296800</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_296000" name="parent_id"/>
         </record>
         <record id="pcg_297000" model="account.account.template">
-            <field name="name">Provisions pour dépréciation des autres immobilisations financières</field>
+            <field name="name">Dépréciation des autres immobilisations financières</field>
             <field name="code">297000</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_Comptes_29" name="parent_id"/>
         </record>
         <record id="pcg_297100" model="account.account.template">
-            <field name="name">Titres immobilisés autres que les titres immobilisés de l'activité de portefeuille - droit de propriété </field>
+            <field name="name">Titres immobilisés autres que les titres immobilisés de l'activité de portefeuille - droit de propriété (ventilation : 271000)</field>
             <field name="code">297100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_297000" name="parent_id"/>
         </record>
         <record id="pcg_297200" model="account.account.template">
-            <field name="name">Titres immobilisés - droit de créance (même ventilation que celle du compte 272) </field>
+            <field name="name">Titres immobilisés - droit de créance (même ventilation que celle du compte 272000) </field>
             <field name="code">297200</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -2051,21 +2066,21 @@
             <field ref="pcg_297000" name="parent_id"/>
         </record>
         <record id="pcg_297400" model="account.account.template">
-            <field name="name">Prêts (même ventilation que celle du compte 274)</field>
+            <field name="name">Prêts (même ventilation que celle du compte 274000)</field>
             <field name="code">297400</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_297000" name="parent_id"/>
         </record>
         <record id="pcg_297500" model="account.account.template">
-            <field name="name">Dépôts et cautionnements versés (même ventilation que celle du compte 275)</field>
+            <field name="name">Dépôts et cautionnements versés (même ventilation que celle du compte 275000)</field>
             <field name="code">297500</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
             <field ref="pcg_297000" name="parent_id"/>
         </record>
         <record id="pcg_297600" model="account.account.template">
-            <field name="name">Autres créances immobilisées (même ventilation que celle du compte 276)</field>
+            <field name="name">Autres créances immobilisées (même ventilation que celle du compte 276000)</field>
             <field name="code">297600</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_immobilisations"/>
@@ -2458,21 +2473,21 @@
             <field ref="pcg_Comptes_39" name="parent_id"/>
         </record>
         <record id="pcg_392100" model="account.account.template">
-            <field name="name">Matières consommables (même ventilation que celle du compte 321)</field>
+            <field name="name">Matières consommables (même ventilation que celle du compte 321000)</field>
             <field name="code">392100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
             <field ref="pcg_392000" name="parent_id"/>
         </record>
         <record id="pcg_392200" model="account.account.template">
-            <field name="name">Fournitures consommables (même ventilation que celle du compte 322)</field>
+            <field name="name">Fournitures consommables (même ventilation que celle du compte 322000)</field>
             <field name="code">392200</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
             <field ref="pcg_392000" name="parent_id"/>
         </record>
         <record id="pcg_392600" model="account.account.template">
-            <field name="name">Emballages (même ventilation que celle du compte 326)</field>
+            <field name="name">Emballages (même ventilation que celle du compte 326000)</field>
             <field name="code">392600</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
@@ -2486,14 +2501,14 @@
             <field ref="pcg_Comptes_39" name="parent_id"/>
         </record>
         <record id="pcg_393100" model="account.account.template">
-            <field name="name">Produits en cours (même ventilation que celle du compte 331)</field>
+            <field name="name">Produits en cours (même ventilation que celle du compte 331000)</field>
             <field name="code">393100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
             <field ref="pcg_393000" name="parent_id"/>
         </record>
         <record id="pcg_393500" model="account.account.template">
-            <field name="name">Travaux en cours (même ventilation que celle du compte 335)</field>
+            <field name="name">Travaux en cours (même ventilation que celle du compte 335000)</field>
             <field name="code">393500</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
@@ -2507,14 +2522,14 @@
             <field ref="pcg_Comptes_39" name="parent_id"/>
         </record>
         <record id="pcg_394100" model="account.account.template">
-            <field name="name">Études en cours (même ventilation que celle du compte 341)</field>
+            <field name="name">Études en cours (même ventilation que celle du compte 341000)</field>
             <field name="code">394100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
             <field ref="pcg_394000" name="parent_id"/>
         </record>
         <record id="pcg_394500" model="account.account.template">
-            <field name="name">Prestations de services en cours (même ventilation que celle du compte 345)</field>
+            <field name="name">Prestations de services en cours (même ventilation que celle du compte 345000)</field>
             <field name="code">394500</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
@@ -2528,14 +2543,14 @@
             <field ref="pcg_Comptes_39" name="parent_id"/>
         </record>
         <record id="pcg_395100" model="account.account.template">
-            <field name="name">Produits intermédiaires (même ventilation que celle du compte 351)</field>
+            <field name="name">Produits intermédiaires (même ventilation que celle du compte 351000)</field>
             <field name="code">395100</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
             <field ref="pcg_395000" name="parent_id"/>
         </record>
         <record id="pcg_395500" model="account.account.template">
-            <field name="name">Produits finis (même ventilation que celle du compte 3551</field>
+            <field name="name">Produits finis (même ventilation que celle du compte 355100</field>
             <field name="code">395500</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_stocks"/>
@@ -2966,36 +2981,36 @@
         <record id="pcg_441000" model="account.account.template">
             <field name="name">État - Subventions à recevoir</field>
             <field name="code">441000</field>
-            <field name="type">other</field>
-			<field name="user_type" ref="account_type_tax"/>
+            <field name="type">receivable</field>
+			<field name="user_type" ref="account_type_receivable"/>
             <field ref="pcg_Comptes_44" name="parent_id"/>
         </record>
         <record id="pcg_441100" model="account.account.template">
             <field name="name">Subventions d'investissement</field>
             <field name="code">441100</field>
-            <field name="type">other</field>
-			<field name="user_type" ref="account_type_tax"/>
+            <field name="type">receivable</field>
+			<field name="user_type" ref="account_type_receivable"/>
             <field ref="pcg_441000" name="parent_id"/>
         </record>
         <record id="pcg_441700" model="account.account.template">
             <field name="name">Subventions d'exploitation</field>
             <field name="code">441700</field>
-            <field name="type">other</field>
-			<field name="user_type" ref="account_type_tax"/>
+            <field name="type">receivable</field>
+			<field name="user_type" ref="account_type_receivable"/>
             <field ref="pcg_441000" name="parent_id"/>
         </record>
         <record id="pcg_441800" model="account.account.template">
             <field name="name">Subventions d'équilibre</field>
             <field name="code">441800</field>
-            <field name="type">other</field>
-			<field name="user_type" ref="account_type_tax"/>
+            <field name="type">receivable</field>
+			<field name="user_type" ref="account_type_receivable"/>
             <field ref="pcg_441000" name="parent_id"/>
         </record>
         <record id="pcg_441900" model="account.account.template">
             <field name="name">Avances sur subventions</field>
             <field name="code">441900</field>
-            <field name="type">other</field>
-			<field name="user_type" ref="account_type_tax"/>
+            <field name="type">receivable</field>
+			<field name="user_type" ref="account_type_receivable"/>
             <field ref="pcg_441000" name="parent_id"/>
         </record>
         <record id="pcg_442000" model="account.account.template">
@@ -3034,7 +3049,7 @@
             <field ref="pcg_443000" name="parent_id"/>
         </record>
         <record id="pcg_443800" model="account.account.template">
-            <field name="name">Intérêts courus sur créances figurant au compte 4431</field>
+            <field name="name">Intérêts courus sur créances figurant au compte 443100</field>
             <field name="code">443800</field>
             <field name="type">other</field>
 			<field name="user_type" ref="account_type_tax"/>
@@ -3283,17 +3298,25 @@
         <record id="pcg_448600" model="account.account.template">
             <field name="name">Charges à payer</field>
             <field name="code">448600</field>
-            <field name="type">other</field>
+			<field name="type">other</field>
 			<field name="user_type" ref="account_type_tax"/>
             <field ref="pcg_448000" name="parent_id"/>
         </record>
         <record id="pcg_448700" model="account.account.template">
             <field name="name">Produits à recevoir</field>
             <field name="code">448700</field>
-            <field name="type">other</field>
+ 			<field name="type">other</field>
 			<field name="user_type" ref="account_type_tax"/>
             <field ref="pcg_448000" name="parent_id"/>
         </record>
+        <record id="pcg_449000" model="account.account.template">
+		     <field name="name">Quotas d'émission à restituer à l'État</field>
+		     <field name="code">449000</field>
+			 <field name="type">other</field>
+			 <field name="user_type" ref="account_type_tax"/>
+		     <field ref="pcg_Comptes_44" name="parent_id"/>
+		     <field name="reconcile" eval="True"/>
+		</record>
         <record id="pcg_Comptes_45" model="account.account.template">
             <field name="name">Groupe et associés</field>
             <field name="code">Comptes_45</field>
@@ -3410,8 +3433,8 @@
         <record id="pcg_457000" model="account.account.template">
             <field name="name">Associés - Dividendes à payer</field>
             <field name="code">457000</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_Comptes_45" name="parent_id"/>
         </record>
         <record id="pcg_458000" model="account.account.template">
@@ -3565,36 +3588,36 @@
         <record id="pcg_477000" model="account.account.template">
             <field name="name"> Différences de conversion - PASSIF</field>
             <field name="code">477000</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_Comptes_47" name="parent_id"/>
         </record>
         <record id="pcg_477100" model="account.account.template">
             <field name="name">Augmentation des créances</field>
             <field name="code">477100</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_477000" name="parent_id"/>
         </record>
         <record id="pcg_477200" model="account.account.template">
             <field name="name">Diminution des dettes</field>
             <field name="code">477200</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_477000" name="parent_id"/>
         </record>
         <record id="pcg_477800" model="account.account.template">
             <field name="name">Différences compensées par couverture de change</field>
             <field name="code">477800</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_477000" name="parent_id"/>
         </record>
         <record id="pcg_478000" model="account.account.template">
             <field name="name">Autres comptes transitoires</field>
             <field name="code">478000</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">view</field>
+			<field name="user_type" ref="account_type_view"/>
             <field ref="pcg_Comptes_47" name="parent_id"/>
         </record>
         <record id="pcg_Comptes_48" model="account.account.template">
@@ -3651,24 +3674,24 @@
         <record id="pcg_487000" model="account.account.template">
             <field name="name">Produits constatés d'avance</field>
             <field name="code">487000</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="note">régul fin d'année seulement</field>
-			<field name="user_type" ref="account_type_receivable"/>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_Comptes_48" name="parent_id"/>
         </record>
         <record id="pcg_488000" model="account.account.template">
             <field name="name">Comptes de répartition périodique des charges et des produits</field>
             <field name="code">488000</field>
-            <field name="type">receivable</field>
+            <field name="type">view</field>
             <field name="note">régul fin d'année seulement</field>
-			<field name="user_type" ref="account_type_receivable"/>
+			<field name="user_type" ref="account_type_view"/>
             <field ref="pcg_Comptes_48" name="parent_id"/>
         </record>
         <record id="pcg_488600" model="account.account.template">
             <field name="name">Charges</field>
             <field name="code">488600</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_488000" name="parent_id"/>
         </record>
         <record id="pcg_488700" model="account.account.template">
@@ -3689,36 +3712,36 @@
         <record id="pcg_491000" model="account.account.template">
             <field name="name">Provisions pour dépréciation des comptes de clients</field>
             <field name="code">491000</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_Comptes_49" name="parent_id"/>
         </record>
         <record id="pcg_495000" model="account.account.template">
             <field name="name">Provisions pour dépréciation des comptes du groupe et des associés</field>
             <field name="code">495000</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_Comptes_49" name="parent_id"/>
         </record>
         <record id="pcg_495100" model="account.account.template">
             <field name="name">Comptes du groupe</field>
             <field name="code">495100</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_495000" name="parent_id"/>
         </record>
         <record id="pcg_495500" model="account.account.template">
             <field name="name">Comptes courants des associés</field>
             <field name="code">495500</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_495000" name="parent_id"/>
         </record>
         <record id="pcg_495800" model="account.account.template">
             <field name="name">Opérations faites en commun et en GIE</field>
             <field name="code">495800</field>
-            <field name="type">receivable</field>
-			<field name="user_type" ref="account_type_receivable"/>
+            <field name="type">other</field>
+			<field name="user_type" ref="account_type_dettes"/>
             <field ref="pcg_495000" name="parent_id"/>
         </record>
         <record id="pcg_496000" model="account.account.template">
@@ -6891,6 +6914,10 @@
 			<field name="user_type" ref="account_type_income"/>
             <field ref="pcg_Comptes_79" name="parent_id"/>
         </record>
+		<!--  http://www.crysalead.fr/l10n_fr_v4.tgz
+        See the code below, it has 2 classes 8 and 9:whereas CrysaLEAD has only class 8 in crysaLEAd zip l10n_fr_pcg/pcg.xml.
+        		check for account type 'commitment' too its defined in our types.xml\
+       		Have the taxes also need to be added? check crysaLEAD zip l10n_fr/tax.xml -->
         <record id="pcg_Classes_8_et_9" model="account.account.template">
             <field name="name">Comptes spéciaux</field>
             <field name="code">Classes_8_et_9</field>

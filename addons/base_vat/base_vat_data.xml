@@ -8,11 +8,11 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="property_account_position" position="after">
-                    <field name="vat" nolabel="1" on_change="vat_change(vat)" select="2"/>
                     <group colspan="1" col="2">
                         <label string="VAT :" align="1.0"/>
                         <field name="vat_subjected" nolabel="1"/>
                     </group>
+                    <field name="vat" nolabel="1" on_change="vat_change(vat)" select="2"/>
                 </field>
             </field>
         </record>

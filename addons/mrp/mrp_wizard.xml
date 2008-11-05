@@ -2,7 +2,7 @@
 <openerp>
     <data>
 		<wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
-        <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard"/>
+        <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="100"/>
         
 		<wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
@@ -20,7 +20,7 @@
             <field eval="'ir.actions.wizard,%d'%wizard_price" name="value"/>
             <field eval="True" name="object"/>
         </record>
-       
+
 	<wizard
 		string="Create Procurement"
 		model="product.product"

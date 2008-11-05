@@ -1,4 +1,24 @@
 # -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 from osv import osv, fields
 import time, pooler, copy
@@ -33,7 +53,7 @@ class audittrail_rule(osv.osv):
         for obj_name in pool.obj_list():
             obj=pool.get(obj_name)
             for field in ('read','write','create','unlink'):
-                 setattr(obj, field, self.logging_fct(getattr(obj,field), obj))
+                setattr(obj, field, self.logging_fct(getattr(obj,field), obj))
         super(audittrail_rule, self).__init__(pool,cr)
 
     def subscribe(self, cr, uid, ids, *args):
@@ -72,7 +92,7 @@ class audittrail_rule(osv.osv):
                 if field['ttype']=='many2one':
                     if values:
                         if type(values)==tuple:
-                                values=values[0]
+                            values=values[0]
                         val=self.pool.get(model).read(cr,uid,[values],['name'])
                         if len(val):
                             return val[0]['name']
@@ -131,7 +151,7 @@ class audittrail_rule(osv.osv):
                 self.__functions.setdefault(thisrule.id, [])
                 self.__functions[thisrule.id].append( (obj,field, getattr(obj,field)) )
                 for user in thisrule.user_id:
-                            logged_uids.append(user.id)
+                    logged_uids.append(user.id)
 
             if fct_src.__name__ in ('create'):
                 res_id =fct_src( cr, uid, *args, **args2)

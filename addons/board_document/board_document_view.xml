@@ -1,106 +1,112 @@
 <?xml version="1.0"?>
  <openerp>
- 	<data>
-		<record model="board.note.type" id="note_document_type">
-			<field name="name">Document</field>
- 		</record>
+     <data>
+        <record model="board.note.type" id="note_document_type">
+            <field name="name">Document</field>
+         </record>
 
-		<record model="ir.ui.view" id="board_document_manager_form">
-			<field name="name">board.document.manager.form</field>
- 			<field name="model">board.board</field>
- 			<field name="type">form</field>
- 			<field name="arch" type="xml">
-				<form string="Document board">
- 					<hpaned position="100">
-						<child1>
-							<action
-								string="New Files"
-								name="%(report_document.action_view_all_document_tree)d"
-								view_mode="tree"/>
-	 							
-							<action
-								string="File Size by Month"
-								name="%(report_document.action_view_size_month)d"
-								view_mode="graph,tree"/>
-						</child1>
-						<child2>
-							<action
-								string="Files by Resource Type"
-								name="%(report_document.action_view_document_by_resourcetype_graph)d"
-								view_mode="graph,tree"/>			
-								
-							<action
-								string="Files by Partner"
-								name="%(report_document.action_view_files_by_partner)d"
-								view_mode="graph,tree"/>
-						</child2>
- 					</hpaned>
- 				</form>
- 			</field>
- 		</record>
-
-
-		<record model="ir.actions.act_window" id="open_board_document_manager">
-			<field name="name">Document Dashboard</field>
- 			<field name="res_model">board.board</field>
- 			<field name="view_type">form</field>
- 			<field name="view_mode">form</field>
-
-			<field name="view_id" ref="board_document_manager_form"/>
- 		</record>
-
- 		<menuitem
-			name="Dashboards/Document/Document Manager"
-			action="open_board_document_manager"
- 			sequence="1"
-			id="menu_board_document_manager"
- 			icon="terp-graph"/>
-
-	<record model="ir.ui.view" id="board_document_manager_form1">
-			<field name="name">board.document.manager.form1</field>
- 			<field name="model">board.board</field>
- 			<field name="type">form</field>
- 			<field name="arch" type="xml">
-				<form string="Document board">
- 					<hpaned position="100">
-						<child1>
-							<action
-								string="Wall of Shame"
-								name="%(report_document.action_view_wall)d"
-								view_mode="tree"/>
-								
-						</child1>
-						<child2>
-							<action
-								string="Files by Users"
-								name="%(report_document.action_view_user_graph)d"
-								view_mode="graph,tree"/>
-
-							<action
-								string="Files by Month"
-								name="%(report_document.action_view_files_by_month_graph)d"
-								view_mode="graph,tree"/>
-								
-						</child2>
- 					</hpaned>
- 				</form>
- 			</field>
- 		</record>
+        <record model="ir.ui.view" id="board_document_manager_form">
+            <field name="name">board.document.manager.form</field>
+             <field name="model">board.board</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+                <form string="Document board">
+                     <hpaned position="100">
+                        <child1>
+                            <action
+                                string="New Files"
+                                name="%(report_document.action_view_all_document_tree)d"
+                                view_mode="tree"/>
+                                 
+                            <action
+                                string="File Size by Month"
+                                name="%(report_document.action_view_size_month)d"
+                                view_mode="graph,tree"/>
+                        </child1>
+                        <child2>
+                            <action
+                                string="Files by Resource Type"
+                                name="%(report_document.action_view_document_by_resourcetype_graph)d"
+                                view_mode="graph,tree"/>            
+                                
+                            <action
+                                string="Files by Partner"
+                                name="%(report_document.action_view_files_by_partner)d"
+                                view_mode="graph,tree"/>
+                        </child2>
+                     </hpaned>
+                 </form>
+             </field>
+         </record>
 
 
-		<record model="ir.actions.act_window" id="open_board_document_manager1">
-			<field name="name">Document Dashboard</field>
- 			<field name="res_model">board.board</field>
- 			<field name="view_type">form</field>
- 			<field name="view_mode">form</field>
-			<field name="view_id" ref="board_document_manager_form1"/>
- 		</record>
+        <record model="ir.actions.act_window" id="open_board_document_manager">
+            <field name="name">Document Dashboard</field>
+             <field name="res_model">board.board</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
 
- 		<menuitem
-			name="Dashboards/Document/Wall of Shame"
-			action="open_board_document_manager1"
- 			sequence="1"
-			id="menu_board_document_manager1"
- 			icon="terp-graph"/>
- 	</data>
+            <field name="view_id" ref="board_document_manager_form"/>
+         </record>
+
+         <menuitem
+            name="Document"
+            id="menu_board_document"
+            parent="board.dashboard_menu"
+            groups="document.group_document_manager"/>
+
+
+         <menuitem
+            parent="menu_board_document"
+            action="open_board_document_manager"
+            sequence="1"
+            id="menu_board_document_manager"
+            icon="terp-graph"/>
+
+        <record model="ir.ui.view" id="board_document_manager_form1">
+            <field name="name">board.document.manager.form1</field>
+             <field name="model">board.board</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+                <form string="Document board">
+                     <hpaned position="100">
+                        <child1>
+                            <action
+                                string="Wall of Shame"
+                                name="%(report_document.action_view_wall)d"
+                                view_mode="tree"/>
+                                
+                        </child1>
+                        <child2>
+                            <action
+                                string="Files by Users"
+                                name="%(report_document.action_view_user_graph)d"
+                                view_mode="graph,tree"/>
+
+                            <action
+                                string="Files by Month"
+                                name="%(report_document.action_view_files_by_month_graph)d"
+                                view_mode="graph,tree"/>
+                        </child2>
+                     </hpaned>
+                 </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="open_board_document_manager1">
+            <field name="name">Statistics by User</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="board_document_manager_form1"/>
+        </record>
+
+        <menuitem
+            parent="menu_board_document"
+            action="open_board_document_manager1"
+            sequence="1"
+            id="menu_board_document_manager1"
+            icon="terp-graph"/>
+     </data>
  </openerp>

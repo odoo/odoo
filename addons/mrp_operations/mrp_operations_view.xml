@@ -9,13 +9,13 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <field name="hour" position="after">
-                <button name="button_done" string="Finished" states="startworking"/>
-                <button name="button_start_working" string="Start working" states="draft,pause"/>
-                <field name="uom"/>
-                <field name="qty"/>
-                <field name="product"/>
-                <field name="production_id"/>
                 <field name="state" />
+                <field name="production_id"/>
+                <field name="product"/>
+                <field name="qty"/>
+                <field name="uom"/>
+                <button name="button_start_working" string="Start working" states="draft,pause"/>
+                <button name="button_done" string="Finished" states="startworking"/>
             </field>
         </field>
     </record>
@@ -26,19 +26,19 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view"/>
         <field name="arch" type="xml">
-                <field name="hour" position="after">
-                    <group colspan="8" col="8">
-                            <field name="state" select="2"/>
-                            <button name="button_draft" string="Set Draft" states="cancel"/>
-                            <button name="button_start_working" string="Start working" states="draft"/>
-                            <button name="button_resume" string="Resume" states="pause"/>
-                            <button name="button_done" string="Finished" states="startworking"/>
-                            <button name="button_pause" string="Pause" states="startworking"/>
-                            <button name="button_cancel" string="Cancel" states="draft,startworking"/>
-                    </group>
-                    <field name="delay"/>
-                    <field name="production_id"/>
-                </field>
+            <field name="hour" position="after">
+                <field name="production_id"/>
+                <field name="delay"/>
+                <group colspan="8" col="8">
+                    <field name="state" select="2"/>
+                    <button name="button_draft" string="Set Draft" states="cancel"/>
+                    <button name="button_start_working" string="Start working" states="draft"/>
+                    <button name="button_resume" string="Resume" states="pause"/>
+                    <button name="button_done" string="Finished" states="startworking"/>
+                    <button name="button_pause" string="Pause" states="startworking"/>
+                    <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                </group>
+            </field>
         </field>
     </record>
 
