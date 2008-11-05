@@ -41,6 +41,11 @@ class stock_picking(osv.osv):
         'sale_id': lambda *a: False
     }
 
+    def get_currency_id(self, cursor, user, picking):
+        if picking.sale_id:
+            return picking.sale_id.pricelist_id.currency_id.id
+        return False
+
     def _get_address_invoice(self, cursor, user, picking):
         res = {}
         if picking.sale_id:

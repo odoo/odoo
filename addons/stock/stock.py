@@ -539,6 +539,9 @@ class stock_picking(osv.osv):
                         context=context)
         return True
 
+    def get_currency_id(self, cursor, user, picking):
+        return False
+
     def _get_address_invoice(self, cursor, user, picking):
         '''Return {'contact': address, 'invoice': address} for invoice'''
         partner_obj = self.pool.get('res.partner')
@@ -635,6 +638,9 @@ class stock_picking(osv.osv):
                     'comment': comment,
                     'payment_term': payment_term_id,
                     }
+                cur_id = self.get_currency_id(cursor, user, picking)
+                if cur_id:
+                    invoice_vals['currency_id'] = cur_id
                 if journal_id:
                     invoice_vals['journal_id'] = journal_id
                 invoice_id = invoice_obj.create(cursor, user, invoice_vals,
