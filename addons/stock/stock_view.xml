@@ -234,11 +234,12 @@
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
+                    <field name="prodlot_id" select="1"/>
                     <field name="product_packaging"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="date_planned" select="1"/>
+                    <field name="date_planned" select="1" string="Date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -254,11 +255,12 @@
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
+                    <field name="prodlot_id" select="1"/>
                     <field name="product_packaging"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="date_planned" select="1"/>
+                    <field name="date_planned" select="1" string="Date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -275,8 +277,8 @@
             name="stock.traceability.lot.aval"
             string="Upstream traceability"/>
 
-        <wizard id="action2" model="stock.tracking" name="stock.traceability.amont" string="Upstream traceability"/>
-        <wizard id="action4" model="stock.tracking" name="stock.traceability.aval" string="Downstream traceability"/>
+        <wizard id="action4" model="stock.tracking" name="stock.traceability.amont" string="Upstream traceability"/>
+        <wizard id="action2" model="stock.tracking" name="stock.traceability.aval" string="Downstream traceability"/>
 
         <record id="action3" model="ir.actions.act_window">
             <field name="name">Downstream traceability</field>
