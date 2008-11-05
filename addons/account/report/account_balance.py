@@ -174,7 +174,7 @@ class account_balance(report_sxw.rml_parse):
                 if account.child_id:
                     def _check_rec(account):
                         if not account.child_id:
-                            print"(account.credit or account.debit)",bool(account.credit or account.debit)
+                            
                             return bool(account.credit or account.debit)
                         for c in account.child_id:
                             if _check_rec(c):
@@ -190,7 +190,7 @@ class account_balance(report_sxw.rml_parse):
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
-                print"account.id",account.id
+                
                 res1 = self.moveline(form, account.id,res['level'])
                 if res1:
                     for r in res1:
@@ -206,7 +206,7 @@ class account_balance(report_sxw.rml_parse):
 
         def moveline(self,form,ids,level):
             res={}
-            print"str(ids)",str(ids)
+            
             self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
             self.cr.execute(
                     "SELECT l.id as lid,l.date,j.code as jname, l.ref, l.name as lname, l.debit as debit1, l.credit as credit1 " \
