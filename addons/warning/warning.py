@@ -48,8 +48,10 @@ class sale_order(osv.osv):
         message=False
         partner = self.pool.get('res.partner').browse(cr, uid, part)
         if partner.sale_warn:
-            title= "Message",
-            message=partner.sale_warn_msg
+           warning={
+                'title': "Message",
+                'message': partner.sale_warn_msg
+                }
              
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)['value']
         if result.get('warning',False):
@@ -127,7 +129,7 @@ class product_product(osv.osv):
          'sale_line_warn_msg' : fields.text('Message for Sale Order Line'),
          'purchase_line_warn' : fields.boolean('Purchase Order Line'),
          'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
-    }
+     }
 product_product()
 
 class sale_order_line(osv.osv):
