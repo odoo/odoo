@@ -632,8 +632,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -726,7 +726,7 @@
         <menuitem action="action_picking_tree2_delivery" id="menu_picking_waiting_delivery" parent="menu_action_picking_tree_delivery"/>
 
         <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
-            <field name="name">Waiting Delivery Orders</field>
+            <field name="name">Futur Delivery Orders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -884,7 +884,7 @@
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
 
         <record id="action_picking_tree2" model="ir.actions.act_window">
-            <field name="name">Assigned Packings</field>
+            <field name="name">Available Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -912,7 +912,7 @@
         <menuitem action="action_picking_tree2" id="menu_picking_waiting" parent="menu_action_picking_tree"/>
 
         <record id="action_picking_tree3" model="ir.actions.act_window">
-            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="name">Confirmed Packings Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1132,7 +1132,7 @@
 
 
         <record id="action_picking_tree7" model="ir.actions.act_window">
-            <field name="name">Assigned Packings</field>
+            <field name="name">Available Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1143,7 +1143,7 @@
         <menuitem action="action_picking_tree7" id="menu_action_picking_tree7" parent="menu_action_picking_tree6"/>
 
         <record id="action_picking_tree8" model="ir.actions.act_window">
-            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="name">Confirmed Packings Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1249,7 +1249,7 @@
         <menuitem action="action_move_form3" id="menu_action_move_form3" parent="menu_action_move_form2"/>
 
         <record id="action_move_form4" model="ir.actions.act_window">
-            <field name="name">Assigned Moves</field>
+            <field name="name">Available Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
