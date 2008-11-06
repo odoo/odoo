@@ -48,7 +48,7 @@ _aged_trial_fields = {
         'type':'selection',
         'selection':[('customer','Receivable'),('supplier','Payable'),('all','Receivable and Payable')],
         'required':True,
-        'default': lambda *a: 'customer',
+        'default': lambda *a: 'all',
     },
     'direction_selection':{
         'string':"Analysis Direction",

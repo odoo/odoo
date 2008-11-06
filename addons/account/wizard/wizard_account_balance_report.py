@@ -54,7 +54,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'bydate'
+        'default': lambda *a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year',
@@ -89,6 +89,7 @@ class wizard_report(wizard.interface):
         periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
         data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+        data['form']['fiscalyear'] = False
         data['form']['display_account']='bal_all'
         return data['form']
 
