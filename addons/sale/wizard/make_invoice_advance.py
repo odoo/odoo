@@ -63,15 +63,15 @@ def _createInvoices(self, cr, uid, data, context={}):
                 _('You cannot make an advance on a sale order that is defined as \'Automatic Invoice after delivery\'.'))
         val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id)
         line_id =obj_lines.create(cr, uid, {
-        'name': val['value']['name'],
-        'account_id':val['value']['account_id'],
-        'price_unit': data['form']['amount'],
-        'quantity': data['form']['qtty'],
-        'discount': False,
-        'uos_id': val['value']['uos_id'],
-        'product_id':data['form']['product_id'],
-        'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
-        'note':'',
+            'name': val['value']['name'],
+            'account_id':val['value']['account_id'],
+            'price_unit': data['form']['amount'],
+            'quantity': data['form']['qtty'],
+            'discount': False,
+            'uos_id': val['value']['uos_id'],
+            'product_id':data['form']['product_id'],
+            'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            'note':'',
         })
         create_ids.append(line_id)
         inv = {
@@ -96,6 +96,23 @@ def _createInvoices(self, cr, uid, data, context={}):
         ids_inv.append(inv_id)
         obj_sale.write(cr,uid,sale.id,{'invoice_ids':[(6,0,ids_inv)]})
         list_inv.append(inv_id)
+#
+# If invoice on picking: add the cost on the SO
+# If not, the advance will be deduced when generating the final invoice
+#
+        if sale.order_policy=='picking':
+            pool_obj.get('sale.order.line').create(cr, uid, {
+                'order_id': sale.id,
+                'name': val['value']['name'],
+                'price_unit': -data['form']['amount'],
+                'product_uom_qty': data['form']['qtty'],
+                'product_uos_qty': data['form']['qtty'],
+                'product_uos': val['value']['uos_id'],
+                'product_uom': val['value']['uos_id'],
+                'product_id':data['form']['product_id'],
+                'discount': False,
+                'tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            }, context)
     return {'invoice_ids':list_inv}
 
 class sale_advance_payment(wizard.interface):
