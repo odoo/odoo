@@ -253,6 +253,17 @@ class sale_order(osv.osv):
     _order = 'name desc'
 
     # Form filling
+    def unlink(self, cr, uid, ids):
+        sale_orders = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in sale_orders:
+            if s['state'] in ['draft','canceled']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
+        osv.osv.unlink(self, cr, uid, unlink_ids)
+        return True
+    
     def onchange_shop_id(self, cr, uid, ids, shop_id):
         v={}
         if shop_id:
