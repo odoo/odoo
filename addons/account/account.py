@@ -680,10 +680,21 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2), store=True),
+        'type': fields.selection([
+            ('pay_voucher','Cash Payment'),
+            ('bank_pay_voucher','Bank Payment'),
+            ('rec_voucher','Cash Receipt'),
+            ('bank_rec_voucher','Bank Receipt'),
+            ('cont_voucher','Contra'),
+            ('journal_sale_vou','Journal Sale'),
+            ('journal_pur_voucher','Journal Purchase'),
+            ('journal_voucher','Journal Voucher'),
+        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'state': lambda *a: 'draft',
         'period_id': _get_period,
+        'type' : lambda *a : 'journal_voucher',
     }
 
     def _check_centralisation(self, cursor, user, ids):
