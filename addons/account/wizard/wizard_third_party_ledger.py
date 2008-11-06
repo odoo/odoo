@@ -119,7 +119,7 @@ class wizard_report(wizard.interface):
 	
 	
 	def _check_state(self, cr, uid, data, context):
-		if data['form']['state'] == 'bydate' or data['form']['state'] == 'all':
+		if data['form']['state'] == 'bydate' or data['form']['state'] == 'all' or data['form']['state'] == 'none':
 		   data['form']['fiscalyear'] = False
 		else :
 		   data['form']['fiscalyear'] = True
