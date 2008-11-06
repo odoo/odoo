@@ -410,6 +410,15 @@ class mrp_production(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
     }
     _order = 'date_planned asc, priority desc';
+    def unlink(self, cr, uid, ids):
+        productions = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in productions:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!' % s['state']))
+        return osv.osv.unlink(self, cr, uid, unlink_ids)
 
     def location_id_change(self, cr, uid, ids, src, dest, context={}):
         if dest:
@@ -771,6 +780,17 @@ class mrp_procurement(osv.osv):
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
+     
+    def unlink(self, cr, uid, ids):
+        procurements = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in procurements:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
+    
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         if product_id:
             w=self.pool.get('product.product').browse(cr,uid,product_id, context)

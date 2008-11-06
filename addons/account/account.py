@@ -648,7 +648,7 @@ class account_move(osv.osv):
         data_move = self.pool.get('account.move').browse(cursor,user,ids)
         for move in data_move:
             if move.state=='draft':
-                name = '*' + move.name
+                name = '*' + str(move.id)
             else:
                 name = move.name
             res.append((move.id, name))
@@ -671,7 +671,7 @@ class account_move(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Entry Name', size=64, required=True),
+        'name': fields.char('Entry Number', size=64, required=True),
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
@@ -680,10 +680,22 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2), store=True),
+        'type': fields.selection([
+            ('pay_voucher','Cash Payment'),
+            ('bank_pay_voucher','Bank Payment'),
+            ('rec_voucher','Cash Receipt'),
+            ('bank_rec_voucher','Bank Receipt'),
+            ('cont_voucher','Contra'),
+            ('journal_sale_vou','Journal Sale'),
+            ('journal_pur_voucher','Journal Purchase'),
+            ('journal_voucher','Journal Voucher'),
+        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
+        'name': lambda *a: '/',
         'state': lambda *a: 'draft',
         'period_id': _get_period,
+        'type' : lambda *a : 'journal_voucher',
     }
 
     def _check_centralisation(self, cursor, user, ids):
@@ -716,6 +728,17 @@ class account_move(osv.osv):
     ]
     def post(self, cr, uid, ids, context=None):
         if self.validate(cr, uid, ids, context) and len(ids):
+            for move in self.browse(cr, uid, ids):
+                if move.name =='/':
+                    new_name = False
+                    journal = move.journal_id
+                    if journal.sequence_id:
+                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    else:
+                        raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+                    if new_name:
+                        self.write(cr, uid, [move.id], {'name':new_name})
+
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non balanced entry !'))
@@ -761,12 +784,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        if not 'name' in vals:
-            journal = self.pool.get('account.journal').browse(cr, uid, context.get('journal_id', vals.get('journal_id', False)))
-            if journal.sequence_id:
-                vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-            else:
-                raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
         accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
@@ -776,6 +793,13 @@ class account_move(osv.osv):
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'state':'draft', 'name':'/',})
+        return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context={}, check=True):
         toremove = []

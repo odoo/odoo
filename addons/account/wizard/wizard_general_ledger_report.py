@@ -100,7 +100,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'bydate'
+        'default': lambda *a:'none'
     },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year'},
@@ -168,6 +168,7 @@ class wizard_report(wizard.interface):
         data['form']['sortbydate'] = 'sort_date'
         data['form']['display_account']='bal_all'
         data['form']['landscape']=True
+        data['form']['fiscalyear'] = False
         data['form']['amount_currency'] = True
         return data['form']
 

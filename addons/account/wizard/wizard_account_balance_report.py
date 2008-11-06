@@ -54,7 +54,7 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'bydate'
+        'default': lambda *a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year',
@@ -63,8 +63,8 @@ period_fields = {
         'help':'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With Movements'),('bal_solde','With Balance != 0'),('bal_all','All')]},
-    'date_from': {'string':"          Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
+    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
@@ -89,6 +89,7 @@ class wizard_report(wizard.interface):
         periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
         data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+        data['form']['fiscalyear'] = False
         data['form']['display_account']='bal_all'
         return data['form']
 

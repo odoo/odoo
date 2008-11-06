@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -102,8 +102,16 @@ class account_analytic_plan_instance(osv.osv):
                 'account4_ids':False, 'account5_ids':False, 'account6_ids':False})
         return super(account_analytic_plan_instance, self).copy(cr, uid, id, default, context)
 
+    def _default_journal(self, cr, uid, context={}):
+        if context.has_key('journal_id') and context['journal_id']:
+            journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+            if journal.analytic_journal_id:
+                return journal.analytic_journal_id.id
+        return False
+
     _defaults = {
         'plan_id': lambda *args: False,
+        'journal_id': _default_journal,
     }
     def name_get(self, cr, uid, ids, context={}):
         res = []

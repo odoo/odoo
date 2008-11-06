@@ -54,10 +54,11 @@ period_fields = {
         'string':"Date/Period Filter",
         'type':'selection',
         'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'bydate'
+        'default': lambda *a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+        'default': lambda *a:False,
         'help': 'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
@@ -87,6 +88,7 @@ class wizard_report(wizard.interface):
         data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         data['form']['company_id'] = company_id
         data['form']['soldeinit'] = True
+        data['form']['fiscalyear'] = False
         data['form']['result_selection'] = 'all'
         return data['form']
     
