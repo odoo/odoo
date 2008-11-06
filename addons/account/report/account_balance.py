@@ -39,7 +39,6 @@ class account_balance(report_sxw.rml_parse):
             self.localcontext.update({
                 'time': time,
                 'lines': self.lines,
-                'moveline':self.moveline,
                 'sum_debit': self._sum_debit,
                 'sum_credit': self._sum_credit,
                 'get_fiscalyear':self.get_fiscalyear,
@@ -134,27 +133,16 @@ class account_balance(report_sxw.rml_parse):
                 self.transform_both_into_date_array(form)
             elif form['state'] == 'none' :
                 self.transform_none_into_date_array(form)
-#                ctx['date_from'] = form['date_from']
-#                ctx['date_to'] = form['date_to']
 
             accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
             def cmp_code(x, y):
                 return cmp(x.code, y.code)
             accounts.sort(cmp_code)
             for account in accounts:
-
                 if account.id in done:
                     continue
                 done[account.id] = 1
                 res = {
-#                        'lid' :'',
-#                        'date':'',
-#                        'jname':'',
-#                        'ref':'',
-#                        'lname':'',
-#                        'debit1':'',
-#                        'credit1':'',
-#                        'balance1' :'',
                         'id' : account.id,
                         'type' : account.type,
                         'code': account.code,
@@ -168,9 +156,6 @@ class account_balance(report_sxw.rml_parse):
                     }
                 self.sum_debit += account.debit
                 self.sum_credit += account.credit
-#                if not (res['credit'] or res['debit']) and not account.child_id:
-#                    continue
-
                 if account.child_id:
                     def _check_rec(account):
                         if not account.child_id:
@@ -191,56 +176,16 @@ class account_balance(report_sxw.rml_parse):
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
-
-
-
-                res1 = self.moveline(form, account.id,res['level'])
-                if res1:
-                    for r in res1:
-                        result_acc.append(r)
-#                if account.code=='0':
-#                    result_acc.pop(-1)
                 if account.child_id:
-                    ids2 = [(x.code,x.id) for x in account.child_id]
-                    ids2.sort()
-                    result_acc += self.lines(form, [x[1] for x in ids2], done, level+1)
-
+                    acc_id = [acc.id for acc in account.child_id]
+                    lst_string = ''
+                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
+                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
+                    a_id = self.cr.fetchall()                   
+                    a_id.sort()
+                    ids2 = [x[1] for x in a_id]
+                    result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
-
-        def moveline(self,form,ids,level):
-            res={}
-
-            self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
-            self.cr.execute(
-                    "SELECT l.id as lid,l.date,j.code as jname, l.ref, l.name as lname, l.debit as debit1, l.credit as credit1 " \
-                    "FROM account_move_line l " \
-                    "LEFT JOIN account_journal j " \
-                        "ON (l.journal_id = j.id) " \
-                    "WHERE l.account_id = '"+str(ids)+"' " \
-                    "AND l.date >= '"+self.date_lst[0]+"'   " \
-                     "AND l.date <= '"+self.date_lst[-1]+"'  " \
-                        "ORDER BY l.id")
-
-            res = self.cr.dictfetchall()
-
-            sum = 0.0
-            for r in res:
-                sum = r['debit1'] - r['credit1']
-                r['balance1'] = sum
-                r['type']= ''
-                r['id'] =''
-                r['code']= ''
-                r['name']=''
-                r['level']=level
-                r['debit']=''
-                r['credit']=''
-                r['balance']=''
-                r['leef']=''
-                if sum >= 0.0:
-                    r['bal_type']=" Dr."
-                else:
-                    r['bal_type']=" Cr."
-            return res or ''
 
         def date_range(self,start,end):
             start = datetime.date.fromtimestamp(time.mktime(time.strptime(start,"%Y-%m-%d")))
