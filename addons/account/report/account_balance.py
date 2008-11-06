@@ -161,7 +161,7 @@ class account_balance(report_sxw.rml_parse):
                         if not account.child_id:
                             return bool(account.credit or account.debit)
                         for c in account.child_id:
-                            if not _check_rec(c):
+                            if not _check_rec(c) or _check_rec(c):
                                 return True
                         return False
                     if not _check_rec(account) :
@@ -184,6 +184,7 @@ class account_balance(report_sxw.rml_parse):
                     a_id = self.cr.fetchall()                   
                     a_id.sort()
                     ids2 = [x[1] for x in a_id]
+                    
                     result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
 
