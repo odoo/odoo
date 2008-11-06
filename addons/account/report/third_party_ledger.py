@@ -184,8 +184,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		partner_to_use = []
 
 		if data['form']['soldeinit'] :
-			print"self.date_lst[0]",self.date_lst[0]
-			print"self.date_lst[len(self.date_lst)-1]",self.date_lst[len(self.date_lst)-1]
+			
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
 				"FROM account_move_line AS line, account_account AS account " \
@@ -214,7 +213,7 @@ class third_party_ledger(rml_parse.rml_parse):
 #				(data['form']['company_id']))
 		
 		res = self.cr.dictfetchall()
-		print"=====res====",res
+		
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
@@ -263,7 +262,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"ORDER BY l.id",
 					(partner.id,))
 		res = self.cr.dictfetchall()
-		print":::::res::::::",res
+		
 		sum = 0.0
 		for r in res:
 			sum = r['debit'] - r['credit']
