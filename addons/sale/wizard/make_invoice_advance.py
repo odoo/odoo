@@ -41,7 +41,7 @@ fields = {
 
 form_msg = """<?xml version="1.0"?>
 <form string="Invoices">
-   <label string="Invoice Created"/>
+   <label string="You invoice has been successfully created !"/>
 </form>
 """
 fields_msg = {}
@@ -134,11 +134,11 @@ class sale_advance_payment(wizard.interface):
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'form' ,   'arch' : form,'fields' : fields,'state' : [('end','Cancel'),('create','Make Invoice')]}
+            'result' : {'type' : 'form' ,   'arch' : form,'fields' : fields,'state' : [('end','Cancel','gtk-cancel'),('create','Create Advance Invoice','gtk-ok')]}
         },
         'create': {
             'actions': [_createInvoices],
-            'result': {'type' : 'form' ,'arch' : form_msg,'fields' : fields_msg, 'state':[('end','Ok'),('open','Open Invoice')]}
+            'result': {'type' : 'form' ,'arch' : form_msg,'fields' : fields_msg, 'state':[('end','Close','gtk-close'),('open','Open Advance Invoice','gtk-open')]}
         },
         'open': {
             'actions': [],
