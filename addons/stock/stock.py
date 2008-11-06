@@ -595,7 +595,6 @@ class stock_picking(osv.osv):
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
-        print "WW"*12,context
         '''Return ids of created invoices for the pickings'''
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
@@ -894,7 +893,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -1091,7 +1090,10 @@ class stock_move(osv.osv):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
         if move.move_dest_id and move.move_dest_id.state=='waiting':
-            self.write(cr, uid, [move.move_dest_id.id], {'state':'confirmed'})
+            self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
+            if move.move_dest_id.picking_id:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state':'cancel', 'move_dest_id': False})
 
         #for pick_id in pickings:

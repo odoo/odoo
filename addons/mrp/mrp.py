@@ -475,7 +475,7 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_lines])
-        self.write(cr, uid, ids, {'state':'cancel','move_lines':[(6,0,[])]})
+        self.write(cr, uid, ids, {'state':'cancel'}) #,'move_lines':[(6,0,[])]})
         return True
 
     #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
