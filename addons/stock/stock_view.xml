@@ -542,8 +542,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -555,9 +555,8 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                 <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
@@ -646,10 +645,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Products Sent" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -822,8 +820,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -835,10 +833,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Packing Done" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -1009,8 +1006,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -1022,10 +1019,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object" groups="base.group_extended"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object" groups="base.group_extended"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -1226,7 +1222,7 @@
                     <field name="state" select="1"/>
                     <group col="4" colspan="2">
                         <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                        <button name="action_assign" states="confirmed" string="Set Available" type="object"/>
                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                         <button name="action_done" states="assigned" string="Make Parcel" type="object"/>
                     </group>

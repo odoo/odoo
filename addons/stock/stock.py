@@ -382,7 +382,7 @@ class stock_picking(osv.osv):
             ('draft','Draft'),
             ('auto','Waiting'),
             ('confirmed','Confirmed'),
-            ('assigned','Assigned'),
+            ('assigned','Available'),
             ('done','Done'),
             ('cancel','Cancel'),
             ], 'Status', readonly=True, select=True),
@@ -893,7 +893,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Available'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
