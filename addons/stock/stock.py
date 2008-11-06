@@ -1090,20 +1090,22 @@ class stock_move(osv.osv):
             if move.state in ('confirmed','waiting','assigned','draft'):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
-        self.write(cr, uid, ids, {'state':'cancel'})
+        if move.move_dest_id and move.move_dest_id.state=='waiting':
+            self.write(cr, uid, [move.move_dest_id.id], {'state':'confirmed'})
+        self.write(cr, uid, ids, {'state':'cancel', 'move_dest_id': False})
 
-        for pick_id in pickings:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
-        ids2 = []
-        for res in self.read(cr, uid, ids, ['move_dest_id']):
-            if res['move_dest_id']:
-                ids2.append(res['move_dest_id'][0])
+        #for pick_id in pickings:
+        #    wf_service = netsvc.LocalService("workflow")
+        #    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
+        #ids2 = []
+        #for res in self.read(cr, uid, ids, ['move_dest_id']):
+        #    if res['move_dest_id']:
+        #        ids2.append(res['move_dest_id'][0])
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
-        self.action_cancel(cr,uid, ids2, context)
+        #self.action_cancel(cr,uid, ids2, context)
         return True
 
     def action_done(self, cr, uid, ids, context=None):

@@ -23,6 +23,7 @@
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">cancel</field>
             <field name="kind">function</field>
+            <field name="flow_stop">True</field>
             <field name="action">write({'state':'cancel'})</field>
         </record>
         <record id="act_except_invoice" model="workflow.activity">
