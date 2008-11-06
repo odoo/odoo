@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -414,6 +414,7 @@ class account_invoice(osv.osv):
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
+        acc_obj = self.pool.get('account.account')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -460,7 +461,11 @@ class account_invoice(osv.osv):
             # create one move line for the total and possibly adjust the other lines amount
             total = 0
             total_currency = 0
+            key_line=[]
             for i in iml:
+                if i.has_key('account_id') and i.has_key('taxes'):
+                    if not (i['account_id'],i['taxes']) in key_line:
+                        key_line.append((i['account_id'],i['taxes']))
                 if inv.currency_id.id != company_currency:
                     i['currency_id'] = inv.currency_id.id
                     i['amount_currency'] = i['price']
@@ -481,6 +486,36 @@ class account_invoice(osv.osv):
             acc_id = inv.account_id.id
 
             name = inv['name'] or '/'
+            iml_temp=[]
+            move_list=[]
+
+            for item in key_line:
+                move_temp={}
+                if acc_obj.browse(cr,uid,item[0]).merge_invoice:
+                    repeat=False
+                    for move_line in iml:
+                        if (move_line.has_key('account_id') and move_line['account_id']==item[0]) and (move_line.has_key('taxes') and move_line['taxes']==item[1]):
+                            move_list.append(move_line)
+                            if repeat:
+                                for key in move_line:
+                                    if key in ['name','amount_currency','price_unit','price','quantity']:
+                                        if key=='name':
+                                            move_temp[key]=move_temp[key] + "," +move_line[key]
+                                        else:
+                                            move_temp[key] +=move_line[key]
+                            else:
+                                for key in move_line:
+                                    move_temp[key]=move_line[key]
+                                repeat=True
+                if move_temp:
+                    iml_temp.append(move_temp)
+
+            if len(iml_temp)<len(move_list):
+                for old_elem in move_list:
+                    iml.remove(old_elem)
+                for new_elem in iml_temp:
+                    iml.append(new_elem)
+
             totlines = False
             if inv.payment_term:
                 totlines = self.pool.get('account.payment.term').compute(cr,
@@ -570,7 +605,8 @@ class account_invoice(osv.osv):
             'currency_id':x.get('currency_id', False),
             'tax_code_id': x.get('tax_code_id', False),
             'tax_amount': x.get('tax_amount', False),
-            'ref':x.get('ref',False)
+            'ref':x.get('ref',False),
+            'quantity':x.get('quantity',1.00),
         }
 
     def action_number(self, cr, uid, ids, *args):
@@ -934,6 +970,7 @@ class account_invoice_line(osv.osv):
             'product_id':line.product_id.id,
             'uos_id':line.uos_id.id,
             'account_analytic_id':line.account_analytic_id.id,
+            'taxes':line.invoice_line_tax_id,
         }
     #
     # Set the tax field according to the account and the partner

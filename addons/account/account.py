@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -282,7 +282,9 @@ class account_account(osv.osv):
             required=True),
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
-            "otherwise it will only print its balance.")
+            "otherwise it will only print its balance."),
+         'merge_invoice': fields.boolean('Merge Invoice Entries',help="Check this box if you want that all lines of "\
+            "a customer or supplier invoice using this account are created in one line only"),
     }
 
     def _default_company(self, cr, uid, context={}):
