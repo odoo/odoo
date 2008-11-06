@@ -207,8 +207,7 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
-        return True
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
     
     def button_dummy(self, cr, uid, ids, context={}):
         return True

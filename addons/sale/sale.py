@@ -261,8 +261,7 @@ class sale_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
-        return True
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
     
     def onchange_shop_id(self, cr, uid, ids, shop_id):
         v={}
