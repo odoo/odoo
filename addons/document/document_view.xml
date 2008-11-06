@@ -115,8 +115,6 @@
                     <field name="user_id"/>
                     <field name="create_uid" select="1"/>
                     <field name="create_date" select="1"/>
-                    <field name="write_date"/>
-                    <field name="write_uid"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -124,13 +122,11 @@
                         <separator string="Data" colspan="2"/>
                         <field name="datas" filename="datas_fname"/>
                         <field name="datas_fname" select="1"/>
-                        <field name="file_size" readonly="1"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Attached To" colspan="2"/>
                         <field name="res_model" select="1" readonly="1"/>
                         <field name="res_id" readonly="1"/>
-                        <field name="parent_id" readonly="1"/>
                     </group>
                     <separator string="Preview" colspan="4"/>
                     <field
@@ -146,6 +142,17 @@
                     <field name="index_content" nolabel="1" colspan="4" select="1"/>
                 </page><page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
+                </page><page string="Others Info">
+                    <group colspan="2" col="2">
+                        <separator string="History" colspan="2"/>
+                        <field name="write_date"/>
+                        <field name="write_uid"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="File Information" colspan="2"/>
+                        <field name="file_size" readonly="1"/>
+                        <field name="parent_id" readonly="1"/>
+                    </group>
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>
