@@ -48,7 +48,6 @@
         "hr_expense_workflow.xml",
         "hr_expense_view.xml",
         "hr_expense_report.xml",
-        "process/hr_expense_process.xml"
     ],
     "active": False,
     "installable": True

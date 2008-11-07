@@ -6,12 +6,12 @@
         Process Node
     -->
     
-    	<record id="process_node_procuretasktask0" model="process.node">
+        <record id="process_node_tasks0" model="process.node">
             <field name="menu_id" ref="project.menu_action_view_task"/>
             <field name="model_id" ref="project.model_project_task"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;For each product, on type service and on order&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Tasks&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;In case you sell services on sale order (task subflow)&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="sale.process_process_salesworkflow0"/>
             <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -33,8 +33,8 @@
             <field name="menu_id" ref="project.menu_action_view_task"/>
             <field name="model_id" ref="project.model_project_task"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A task is created to provide the service.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Procure task&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;If Procure method is produce&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
             <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -42,15 +42,26 @@
         </record>
         
     <!--    
+        Process Condition
+    -->
+        
+        <record id="process_condition_conditiontask0" model="process.condition">
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="node_id" ref="process_node_tasks0"/>
+            <field eval="&quot;&quot;&quot;object.type=='service'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;condition_task&quot;&quot;&quot;" name="name"/>
+        </record>
+        
+    <!--    
         Process Transition
     -->
     
-    	<record id="process_transition_procuretask0" model="process.transition">
+        <record id="process_transition_task0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Procure Task&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;if product type is 'service' then it creates the task.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_procuretasktask0"/>
-            <field model="process.node" name="source_node_id" ref="sale.process_node_saleprocurement0"/>
+            <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;When you select any product's type as a 'service' after confiming sale order, it will create a task of product.&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_tasks0"/>
+            <field model="process.node" name="source_node_id" ref="sale.process_node_saleorder0"/>
         </record>
     
         <record id="process_transition_createtask0" model="process.transition">
@@ -68,7 +79,7 @@
             <field eval="&quot;&quot;&quot;Order Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_procuretask0"/>
-            <field model="process.node" name="source_node_id" ref="mrp.process_node_stockablemaketoorder0"/>
+            <field model="process.node" name="source_node_id" ref="mrp.process_node_maketoorder0"/>
             <field eval="[(6,0,[ref('mrp.trans_draft_confirm')])]" name="transition_ids"/>
         </record>
         

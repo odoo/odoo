@@ -25,7 +25,7 @@
     "author" : "Tiny",
     "category" : "Generic Modules/Association",
     "depends" : [
-        "base", "product", "account", "process"
+        "base", "product", "account",
         ],
     "demo_xml" : [
         #"demo_data.xml",
@@ -36,8 +36,7 @@
         ],
     "update_xml" : [
         "security/ir.model.access.csv",
-        "membership_view.xml","membership_wizard.xml",
-        "process/membership_process.xml"
+        "membership_view.xml","membership_wizard.xml"
         ],
     "active" : False,
     "installable" : True,

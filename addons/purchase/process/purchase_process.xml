@@ -21,8 +21,8 @@
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;When controlling invoice from orders&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="account.process_process_supplierinvoiceworkflow0"/>
+            <field eval="&quot;&quot;&quot;After confirming purchase order, it is approved by supplier.&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="account.process_process_invoiceworkflow0"/>
             <field name="subflow_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -32,30 +32,19 @@
             <field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Request for Quotation&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Request for quotation is proposed by the system.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Draft Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Proposed by the system or manually&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
-        </record>
-        
-        <record id="process_node_draftpurchaseorder1" model="process.node">
-            <field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
-            <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Request for Quotation&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Encoded manually by the user.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
-            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-            <field eval="1" name="flow_start"/>
         </record>
     
         <record id="process_node_confirmpurchaseorder0" model="process.node">
             <field name="menu_id" ref="purchase.menu_purchase_form_action3"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Confirmed Purchase&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Purchase order is confirmed by the user.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Confirm Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;The user confirm he wants to purchase&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -65,8 +54,8 @@
             <field name="menu_id" ref="purchase.menu_purchase_form_action4"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Approved Purchase&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Purchase order is approved by supplier.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Approve Purchase Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;The supplier confirms he can deliver&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='approved'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -76,8 +65,8 @@
             <field name="menu_id" ref="account.menu_action_invoice_tree8"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Pre-generated supplier invoice to control based on order&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Invoice Control&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Draft invoices are pre-generated for control.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -88,8 +77,8 @@
             <field name="menu_id" ref="stock.menu_action_picking_tree4"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Incoming Products&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Packing is created for the products reception control.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Packing list&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Pre-generated in draft for control&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='assigned'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -99,32 +88,14 @@
             <field name="menu_id" ref="account.menu_finance_invoice"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Supplier Invoice pre-generated on receptions for control&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Invoice after packing&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;In case you control based on delivery&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>
             <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
-        <!--        
-            Process Condition     
-        -->
-
-        <record id="process_condition_conditionorigin" model="process.condition">
-            <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="node_id" ref="process_node_draftpurchaseorder1"/>
-            <field eval="&quot;&quot;&quot;object.origin==''&quot;&quot;&quot;" name="model_states"/>
-            <field eval="&quot;&quot;&quot;condition_origin&quot;&quot;&quot;" name="name"/>
-        </record>
-    	
-    	<record id="process_condition_conditioninvoicemanual" model="process.condition">
-            <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="node_id" ref="process_node_invoicecontrol0"/>
-            <field eval="&quot;&quot;&quot;object.invoice_method=='manual'&quot;&quot;&quot;" name="model_states"/>
-            <field eval="&quot;&quot;&quot;condition_invoice_manual&quot;&quot;&quot;" name="name"/>
-        </record>
-    	
+    
         <!--        
             Process Transition
         -->
@@ -149,15 +120,6 @@
             <field model="process.node" name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
             <field model="process.node" name="source_node_id" ref="process_node_draftpurchaseorder0"/>
             <field eval="[(6,0,[ref('purchase.trans_draft_confirmed')])]" name="transition_ids"/>
-        </record>
-        
-        <record id="process_transition_confirmingpurchaseorder1" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
-            <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Confirming Purchase&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Confirm Purchase order from Request for quotation without origin&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_draftpurchaseorder1"/>
         </record>
         
         <record id="process_transition_approvingpurchaseorder0" model="process.transition">
@@ -202,7 +164,7 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Purchase Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After Purchase order , Create invoice.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
+            <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_purchaseorder0"/>
         </record>
         
