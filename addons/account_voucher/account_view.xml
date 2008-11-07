@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="account_form1">
+			<field name="name">account.form</field>
+			<field name="inherit_id" ref="account.view_account_form"/>
+			<field name="model">account.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="user_type" position="after">
+					<field name="diff" select="2" />
+					<field name="balance" string="Closing Balance" select="2"/>
+					<field name="type1" select="2" />
+					<field name="open_bal" select="2"/>
+				</field>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="account_form2">
+			<field name="name">account.form</field>
+			<field name="inherit_id" ref="account.view_account_form"/>
+			<field name="model">account.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="user_type" position="replace">
+						<field name="user_type" select="1" on_change="onchange_type(user_type,type1)"/>
+				</field>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="account_form3">
+			<field name="name">account.form</field>
+			<field name="inherit_id" ref="account.view_account_tree"/>
+			<field name="model">account.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+						<field name="open_bal" select="1"/>
+				</field>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="account_form4">
+			<field name="name">account.form</field>
+			<field name="inherit_id" ref="account.view_account_tree"/>
+			<field name="model">account.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="balance" position="replace">
+						<field name="balance" />
+				<field name="type1"/>
+				</field>
+			</field>
+		</record>
+	
+	</data>
+</openerp>

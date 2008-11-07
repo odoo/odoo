@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id: mrp.py 1292 2005-09-08 03:26:33Z pinky $
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -58,7 +50,7 @@ class mrp_production_workcenter_line(osv.osv):
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product'),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty'),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='UOM'),
-       
+
 
     }
     _defaults = {
@@ -70,8 +62,8 @@ class mrp_production_workcenter_line(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         oper_obj=self.browse(cr,uid,ids)[0]
         prod_obj=self.pool.get('mrp.production').browse(cr,uid,[oper_obj.production_id.id])[0]
-        if action=='start': 
-               if prod_obj.state =='ready': 
+        if action=='start':
+               if prod_obj.state =='ready':
                    wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
                elif prod_obj.state =='in_production':
                    return
@@ -87,35 +79,29 @@ class mrp_production_workcenter_line(osv.osv):
             if flag:
                 wf_service.trg_validate(uid, 'mrp.production', oper_obj.production_id.id, 'button_produce_done', cr)
         return
-    
+
     def action_draft(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state':'draft'})
-#       self.write(cr, uid, ids, {'state':'draft','date_start':None})
         return True
 
     def action_start_working(self, cr, uid, ids):
         self.modify_production_order_state(cr,uid,ids,'start')
         self.write(cr, uid, ids, {'state':'startworking'})
-#       self.write(cr, uid, ids, {'state':'confirm','date_start':DateTime.now().strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_done(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state':'done'})
         self.modify_production_order_state(cr,uid,ids,'done')
-#       self.write(cr, uid, ids, {'state':'done','date_finnished':DateTime.now().strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_cancel(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state':'cancel'})
-#       self.write(cr, uid, ids, {'state':'cancel','date_start':None})
         return True
-    
+
     def action_pause(self, cr, uid, ids):
-        print "callled THE ACTUAL PAUSE"
         self.write(cr, uid, ids, {'state':'pause'})
-#       self.write(cr, uid, ids, {'state':'draft','date_start':None})
         return True
-   
+
     def action_resume(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state':'startworking'})
         return True
@@ -127,18 +113,12 @@ class mrp_production(osv.osv):
     _inherit = 'mrp.production'
     _description = 'Production'
 
-#    def action_confirm(self, cr, uid, ids):
-#        obj=self.browse(cr,uid,ids)[0]
-#        for workcenter_line in obj.workcenter_lines:
-#            tmp=self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,[workcenter_line.id])
-#        return super(mrp_production,self).action_confirm(cr,uid,ids)
-
     def action_production_end(self, cr, uid, ids):
         obj=self.browse(cr,uid,ids)[0]
         for workcenter_line in obj.workcenter_lines:
             tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,[workcenter_line.id])
         return super(mrp_production,self).action_production_end(cr,uid,ids)
-#
+
     def action_cancel(self, cr, uid, ids):
         obj=self.browse(cr,uid,ids)[0]
         for workcenter_line in obj.workcenter_lines:
@@ -158,32 +138,32 @@ mrp_operations_operation_code()
 
 class mrp_operations_operation(osv.osv):
     _name="mrp_operations.operation"
-    
+
     def _order_date_search_production(self,cr,uid,ids):
         operation_ids=self.pool.get('mrp_operations.operation').search(cr,uid,[('production_id','=',ids[0])])
         return operation_ids
-        
+
     def _get_order_date(self, cr, uid, ids, field_name, arg, context):
         res={}
         operation_obj=self.browse(cr, uid, ids, context=context)
         for operation in operation_obj:
                 res[operation.id]=operation.production_id.date_planned
         return res
-    
+
     def calc_delay(self,cr,uid,vals):
         code_lst=[]
         time_lst=[]
-        
+
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
         code=self.pool.get('mrp_operations.operation.code').browse(cr,uid,code_ids)[0]
-        
+
         oper_ids=self.search(cr,uid,[('production_id','=',vals['production_id']),('workcenter_id','=',vals['workcenter_id'])])
         oper_objs=self.browse(cr,uid,oper_ids)
-        
+
         for oper in oper_objs:
             code_lst.append(oper.code_id.start_stop)
             time_lst.append(oper.date_start)
-            
+
         code_lst.append(code.start_stop)
         time_lst.append(vals['date_start'])
         h=m=s=days=0
@@ -211,34 +191,34 @@ class mrp_operations_operation(osv.osv):
                     h=0
         delay=str(days) +" Days "+ str(h) + " hrs  and " + str(m)+ " mins"
         return delay
-    
+
     def check_operation(self,cr,uid,vals):
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
         code=self.pool.get('mrp_operations.operation.code').browse(cr,uid,code_ids)[0]
         code_lst = []
         oper_ids=self.search(cr,uid,[('production_id','=',vals['production_id']),('workcenter_id','=',vals['workcenter_id'])])
         oper_objs=self.browse(cr,uid,oper_ids)
-        
+
         if not oper_objs:
             if code.start_stop!='start':
                 raise osv.except_osv(_('Sorry!'),_('Operation is not started yet !'))
                 return False
-        else:    
+        else:
             for oper in oper_objs:
                  code_lst.append(oper.code_id.start_stop)
             if code.start_stop=='start':
-                    if 'start' in code_lst:        
+                    if 'start' in code_lst:
                         raise osv.except_osv(_('Sorry!'),_('Operation has already started !' 'You  can either Pause /Finish/Cancel the operation'))
                         return False
             if code.start_stop=='pause':
-                    if  code_lst[len(code_lst)-1]!='resume' and code_lst[len(code_lst)-1]!='start':        
+                    if  code_lst[len(code_lst)-1]!='resume' and code_lst[len(code_lst)-1]!='start':
                         raise osv.except_osv(_('Error!'),_('You cannot Pause the Operation other then Start/Resume state !'))
                         return False
-            if code.start_stop=='resume':    
-                if code_lst[len(code_lst)-1]!='pause':        
+            if code.start_stop=='resume':
+                if code_lst[len(code_lst)-1]!='pause':
                    raise osv.except_osv(_('Error!'),_(' You cannot Resume the operation other then Pause state !'))
                    return False
-   
+
             if code.start_stop=='done':
                if code_lst[len(code_lst)-1]!='start' and code_lst[len(code_lst)-1]!='resume':
                   raise osv.except_osv(_('Sorry!'),_('You cannot finish the operation without Starting/Resuming it !'))
@@ -254,24 +234,24 @@ class mrp_operations_operation(osv.osv):
                   raise osv.except_osv(_('Error!'),_('Operation is already finished !'))
                   return False
         return True
-        
+
     def write(self, cr, uid, ids, vals, context=None):
         oper_objs=self.browse(cr,uid,ids)[0]
         vals['production_id']=oper_objs.production_id.id
         vals['workcenter_id']=oper_objs.workcenter_id.id
-        
+
         if 'code_id' in vals:
             self.check_operation(cr, uid, vals)
-            
+
         if 'date_start' in vals:
             vals['date_start']=vals['date_start']
             vals['code_id']=oper_objs.code_id.id
             delay=self.calc_delay(cr, uid, vals)
             wc_op_id=self.pool.get('mrp.production.workcenter.line').search(cr,uid,[('workcenter_id','=',vals['workcenter_id']),('production_id','=',vals['production_id'])])
             self.pool.get('mrp.production.workcenter.line').write(cr,uid,wc_op_id,{'delay':delay})
-            
+
         return super(mrp_operations_operation, self).write(cr, uid, ids, vals, context=context)
-        
+
     def create(self, cr, uid, vals, context=None):
         wf_service = netsvc.LocalService('workflow')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
@@ -281,31 +261,34 @@ class mrp_operations_operation(osv.osv):
             if not wc_op_id:
                 production_obj=self.pool.get('mrp.production').browse(cr,uid,vals['production_id'])
                 wc_op_id.append(self.pool.get('mrp.production.workcenter.line').create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
-                
             if code.start_stop=='start':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
-                
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_start_working', cr)
+
             if code.start_stop=='done':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_done', cr)
                 self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finnished':DateTime.now().strftime('%Y-%m-%d %H:%M:%S')})
-                                
+
             if code.start_stop=='pause':
-                print "in PAUSE"
                 tmp=self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
-                
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_pause', cr)
+
             if code.start_stop=='resume':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_resume(cr,uid,wc_op_id)
-            
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_resume', cr)
+
             if code.start_stop=='cancel':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,wc_op_id)
-               
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_cancel', cr)
+
         if not self.check_operation(cr, uid, vals):
             return
         delay=self.calc_delay(cr, uid, vals)
         self.pool.get('mrp.production.workcenter.line').write(cr,uid,wc_op_id,{'delay':delay})
-        
+
         return super(mrp_operations_operation, self).create(cr, uid, vals,  context=context)
-    
+
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),
         'workcenter_id':fields.many2one('mrp.workcenter','Workcenter',required=True),

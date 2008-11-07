@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -109,6 +101,11 @@ class project(osv.osv):
                 res[id] = prog / tot
         return res
 
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for proj in self.browse(cr, uid, ids):
+            if proj.tasks:
+                raise osv.except_osv(_('Operation Not Permited !'), _('You can not delete a project with tasks. I suggest you to desactivate it.'))
+        return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
         'active': fields.boolean('Active'),
@@ -116,23 +113,23 @@ class project(osv.osv):
         'priority': fields.integer('Sequence'),
         'manager': fields.many2one('res.users', 'Project Manager'),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members'),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'parent_id': fields.many2one('project.project', 'Parent Project'),
         'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours'),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent'),
+        'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours', help="Sum of planned hours of all tasks related to this project."),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent', help="Sum of spent hours of all tasks related to this project."),
         'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
         'date_start': fields.date('Starting Date'),
         'date_end': fields.date('Expected End'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
-        'warn_customer': fields.boolean('Warn Partner'),
-        'warn_header': fields.text('Mail header'),
-        'warn_footer': fields.text('Mail footer'),
-        'notes': fields.text('Notes'),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time'),
-        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
+        'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."),
+        'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
+        'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
+        'notes': fields.text('Notes', help="Internal description of the project."),
+        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
      }
 
     _defaults = {
@@ -152,6 +149,22 @@ class project(osv.osv):
     def set_template(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids, value=False, context=context) 
         return res
+
+    def set_done(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True
+
+    def set_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        return True
+
+    def set_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        return True
+
+    def set_open(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True
 
     def reset_project(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids,value=True, context=context)
@@ -176,7 +189,11 @@ class project(osv.osv):
             project_ids = [x[0] for x in res]
             for child in project_ids:
                 self.duplicate_template(cr, uid, [child],context={'parent_id':new_id}) 
-        return True
+
+        # TODO : Improve this to open the new project (using a wizard)
+
+        cr.commit()
+        raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):   
@@ -248,6 +265,11 @@ class task(osv.osv):
     def onchange_planned(self, cr, uid, ids, planned, effective):
         return {'value':{'remaining_hours': planned-effective}}
 
+    def _default_project(self, cr, uid, context={}):
+        if 'project_id' in context and context['project_id']:
+            return context['project_id']
+        return False
+
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
@@ -259,8 +281,8 @@ class task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
-        'date_start': fields.datetime('Date Opened'),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
+        'date_start': fields.datetime('Starting Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
@@ -269,12 +291,12 @@ class task(osv.osv):
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
 
-        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True),
-        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
-        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True),
-        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True),
+        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
+        'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True, help="Computed as: Time Spent + Remaining Time."),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True, help="Computed as: Time Spent / Total Time."),
+        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True, help="Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."),
 
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -288,6 +310,7 @@ class task(osv.osv):
         'sequence': lambda *a: 10,
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'project_id': _default_project,
     }
     _order = "sequence, priority, date_deadline, id"
 
@@ -344,7 +367,7 @@ class task(osv.osv):
             project = task.project_id
             if project and project.warn_manager and project.manager.id and (project.manager.id != uid):
                 request.create(cr, uid, {
-                    'name': "Task '%s' reopened" % task.name,
+                    'name': "Task '%s' set in progress" % task.name,
                     'state': 'waiting',
                     'act_from': uid,
                     'act_to': project.manager.id,

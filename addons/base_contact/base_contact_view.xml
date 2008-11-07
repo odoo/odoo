@@ -13,6 +13,8 @@
                 <field name="first_name"/>
                 <field name="mobile"/>
                 <field name="lang_id"/>
+                <field name="partner_id"/>
+                <field name="function_id"/>
             </tree>
         </field>
     </record>
@@ -34,9 +36,16 @@
                         <field name="website"/>
                         <field name="lang_id"/>
                         <field name="active"/>
+<<<<<<< TREE
                         <separator string="Functions" colspan="4"/>
                         <field name="job_ids" colspan="4" nolabel="1" mode="tree, form">
                             <form string="Functions">
+=======
+                        <field name="partner_id" invisible="1" select="2"/>
+                        <field name="function_id" invisible="1" select="2"/>
+                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
+                            <form string="Functions and Addresses">
+>>>>>>> MERGE-SOURCE
                                 <field name="function_id"/>
                                 <field name="address_id"/>
                                 <field name="name"/>
@@ -47,7 +56,11 @@
                                 <field name="date_stop" />
                                 <field name="state" />
                             </form>
+<<<<<<< TREE
                             <tree string="Functions">
+=======
+                            <tree string="Functions and Addresses">
+>>>>>>> MERGE-SOURCE
                                 <field name="sequence_contact" string="Seq."/>
                                 <field name="function_id"/>
                                 <field name="name"/>
@@ -102,8 +115,9 @@
                         <newline/>
                         <field name="phone"/>
                         <field name="fax"/>
+                        <field name="email"/>
                         <newline/>
-                        <field name="job_ids" mode="tree, form" colspan="4">
+                        <field name="job_ids" mode="tree,form" colspan="4">
                             <tree string="Contacts" editable="top">
                                 <field name="sequence_partner"/>
                                 <field name="contact_id"/>
@@ -112,6 +126,10 @@
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
+<<<<<<< TREE
+=======
+                                <field name="name"/>
+>>>>>>> MERGE-SOURCE
                                 <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
@@ -222,7 +240,7 @@
         <field name='type'>form</field>
         <field name='arch' type='xml'>
             <field name="email" position="replace">
-                <field name="job_ids" mode="tree, form" colspan="4">
+                <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>
                         <field name="function_id"/>
@@ -247,10 +265,10 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Contact Functions">
-                <field name="name"/>
-                <field name="address_id"/>
                 <field name="contact_id"/>
                 <field name="function_id"/>
+                <field name="name"/>
+                <field name="address_id"/>
                 <field name="email"/>
                 <field name="phone"/>
                 <field name="state" />
@@ -272,10 +290,17 @@
                         <field name="function_id" select="1"/>
                         <field name="email" select="2"/>
                         <field name="phone" select="2"/>
+<<<<<<< TREE
                         <field name="sequence_contact" select="2"/>
                         <field name="sequence_partner" select="2"/>
                         <field name="date_start" />
                         <field name="date_stop" />
+=======
+                        <field name="sequence_contact" select="2" groups="base.group_user"/>
+                        <field name="sequence_partner" select="2" groups="base.group_user"/>
+                        <field name="date_start" groups="base.group_user"/>
+                        <field name="date_stop" groups="base.group_user"/>
+>>>>>>> MERGE-SOURCE
                         <field name="state" select="2" />
                     </page>
                 </notebook>
@@ -285,14 +310,31 @@
 
     <!-- Menuitem for res.partner.job -->
     <record model="ir.actions.act_window" id="action_res_partner_job">
+<<<<<<< TREE
         <field name="name">Functions</field>
+=======
+        <field name="name">Contact's Jobs</field>
+>>>>>>> MERGE-SOURCE
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner.job</field>
         <field name="view_type">form</field>
     </record>
+<<<<<<< TREE
     <menuitem name="Partners/Functions" action="action_res_partner_job" id="menu_action_res_partner_job"/>
+=======
+    <menuitem
+        name="Partners/Contact's Jobs" 
+        action="action_res_partner_job" 
+        id="menu_action_res_partner_job"
+        groups="base.group_extended"/>
+
+>>>>>>> MERGE-SOURCE
     <!-- Act window defining a shorcut on partners to open all his contacts -->
+<<<<<<< TREE
     <act_window name="Open all Partner's Function"
+=======
+    <act_window name="Partner Contacts"
+>>>>>>> MERGE-SOURCE
         domain="[('name', '=', active_id)]"
         res_model="res.partner.job"
         src_model="res.partner"

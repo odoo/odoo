@@ -1,28 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,7 +58,8 @@ class MakeProcurement(wizard.interface):
     <label string="Your procurement request has been sent !"/>
 </form>"""
     procurement_form = """<?xml version="1.0"?>
-<form string="Make Procurement">
+<form string="Internal Procurement Request">
+    <label string="This wizard will planify the procurement for this product. This procurement may generate task, production orders or purchase orders." align="0.0" colspan="4"/>
     <field name="product_id"/>
     <field name="warehouse_id"/>
     <field name="qty"/>
@@ -75,7 +70,7 @@ class MakeProcurement(wizard.interface):
         'qty': {'string': 'Quantity', 'type': 'float', 'digits':(16,2), 'required': True},
         'product_id': {'string': 'product', 'type': 'many2one', 'relation': 'product.product', 'required': True, 'readonly':1},
         'uom_id': {'string': 'Unit of Measure', 'type': 'many2one', 'relation': 'product.uom', 'required':True},
-        'warehouse_id': {'string': 'Location', 'type': 'many2one', 'relation':'stock.warehouse', 'required':True},
+        'warehouse_id': {'string': 'Warehouse', 'type': 'many2one', 'relation':'stock.warehouse', 'required':True},
         'date_planned': {'string': 'Planned Date', 'type': 'date', 'required':True, 'default': lambda *args: time.strftime('%Y-%m-%d')}
     }
 

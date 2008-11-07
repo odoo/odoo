@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -191,8 +183,14 @@ class account_bank_statement(osv.osv):
                     continue
 
                 torec = []
+                if move.amount >= 0:
+                    account_id = st.journal_id.default_credit_account_id.id
+                else:
+                    account_id = st.journal_id.default_debit_account_id.id
+                acc_cur = ((move.amount<=0) and st.journal_id.default_debit_account_id) or move.account_id
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                        company_currency_id, move.amount, context=context)
+                        company_currency_id, move.amount, context=context,
+                        account=acc_cur)
                 if move.reconcile_id and move.reconcile_id.line_new_ids:
                     for newline in move.reconcile_id.line_new_ids:
                         amount += newline.amount
@@ -213,7 +211,8 @@ class account_bank_statement(osv.osv):
                 }
 
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                        company_currency_id, move.amount, context=context)
+                        company_currency_id, move.amount, context=context,
+                        account=acc_cur)
 
                 if move.account_id and move.account_id.currency_id:
                     val['currency_id'] = move.account_id.currency_id.id
@@ -221,7 +220,8 @@ class account_bank_statement(osv.osv):
                         amount_cur = move.amount
                     else:
                         amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                                move.account_id.currency_id.id, amount, context=context)
+                                move.account_id.currency_id.id, amount, context=context,
+                                account=acc_cur)
                     val['amount_currency'] = amount_cur
 
                 torec.append(account_move_line_obj.create(cr, uid, val , context=context))
@@ -241,11 +241,6 @@ class account_bank_statement(osv.osv):
                             'journal_id': st.journal_id.id,
                             'period_id': st.period_id.id,
                         }, context=context)
-
-                if amount >= 0:
-                    account_id = st.journal_id.default_credit_account_id.id
-                else:
-                    account_id = st.journal_id.default_debit_account_id.id
 
                 # Fill the secondary amount/currency
                 # if currency is not the same than the company
@@ -370,10 +365,16 @@ class account_bank_statement_reconcile(osv.osv):
                 context=context).company_id.currency_id.id
         currency_id = context.get('currency_id', company_currency_id)
 
+        acc_cur = None
+        if context.get('journal_id', False) and context.get('account_id',False):
+            st =self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
+            acc = self.pool.get('account.account').browse(cursor, user, context['account_id'])
+            acc_cur = (( context.get('amount',0.0)<=0) and st.default_debit_account_id) or acc
+
         for reconcile_id in ids:
             res[reconcile_id] = res_currency_obj.compute(cursor, user,
                     currency_id, company_currency_id,
-                    context.get('amount', 0.0), context=context)
+                    context.get('amount', 0.0), context=context, account=acc_cur)
         return res
 
     def _default_amount(self, cursor, user, context=None):
@@ -386,9 +387,15 @@ class account_bank_statement_reconcile(osv.osv):
                 context=context).company_id.currency_id.id
         currency_id = context.get('currency_id', company_currency_id)
 
+        acc_cur = None
+        if context.get('journal_id', False) and context.get('account_id',False):
+            st =self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
+            acc = self.pool.get('account.account').browse(cursor, user, context['account_id'])
+            acc_cur = (( context.get('amount',0.0)<=0) and st.default_debit_account_id) or acc
+
         return res_currency_obj.compute(cursor, user,
                 currency_id, company_currency_id,
-                context.get('amount', 0.0), context=context)
+                context.get('amount', 0.0), context=context, account=acc_cur)
 
     def _total_currency(self, cursor, user, ids, name, attrs, context=None):
         res = {}
@@ -423,25 +430,11 @@ class account_bank_statement_reconcile(osv.osv):
 
     def name_get(self, cursor, user, ids, context=None):
         res= []
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
         for o in self.browse(cursor, user, ids, context=context):
             td = ''
-            if o.statement_line:
-                currency_id = o.statement_line[0].statement_id.currency.id
-                if abs(o.statement_line[0].amount - (o.total_entry - o.total_new))>0.01:
-                    td = 'P '
-            else:
-                currency_id = company_currency_id
-            res.append((o.id, '%s[%.2f-%.2f]' % (td,
-                res_currency_obj.compute(cursor, user, company_currency_id,
-                    currency_id, o.total_entry, context=context),
-                res_currency_obj.compute(cursor, user, company_currency_id,
-                    currency_id, o.total_new, context=context))))
+            if o.total_amount:
+                td = 'P '
+            res.append((o.id, '%s[%.2f]' % (td, o.total_amount)))
         return res
 
     _columns = {

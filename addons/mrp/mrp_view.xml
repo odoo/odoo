@@ -2,7 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"/>
+        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--
     Property / Property Group
@@ -30,7 +32,8 @@
         <menuitem
             id="menu_mrp_configuration"
             name="Configuration"
-            parent="menu_mrp_root"/>
+            parent="menu_mrp_root"
+            groups="group_mrp_manager"/>
         <menuitem
             id="menu_mrp_property_group_action_prop"
             name="Properties"
@@ -274,7 +277,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="method"/>
-                    <field name="routing_id"/>
+                    <field name="routing_id" groups="base.group_extended"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </tree>
@@ -418,9 +421,11 @@
                         <field name="name" select="1"/>
                         <field name="date_planned" select="1"/>
                         <field name="priority" groups="base.group_extended"/>
+                        <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
+                        <newline/>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -642,12 +647,12 @@
                         <separator colspan="2" string="Planification"/>
                         <field name="date_planned" select="1"/>
                         <field name="procure_method" select="2"/>
-                        <field name="priority"/>
+                        <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" select="1"/>
+                        <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" select="2"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
@@ -689,15 +694,6 @@
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
 
-        <record id="mrp_procurement_action2" model="ir.actions.act_window">
-            <field name="name">Draft procurements</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-        <menuitem action="mrp_procurement_action2" id="menu_mrp_procurement_action2" parent="mrp.menu_mrp_procurement_action"/>
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Unscheduled procurements</field>
             <field name="type">ir.actions.act_window</field>
@@ -709,17 +705,17 @@
         <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action"/>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Exceptions procurements</field>
+            <field name="name">Exceptions Procurements</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="stock.menu_stock_root"/>
+        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Exceptions procurements to fix</field>
+            <field name="name">Exceptions Procurements to Fix</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -789,7 +785,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
         </record>
-        <menuitem id="menu_mrp_reordering" name="Reordering Policy" parent="stock.menu_stock_root" sequence="4"/>
         <menuitem action="action_orderpoint_form" id="menu_action_orderpoint_form" parent="menu_mrp_reordering"/>
 
         <act_window domain="[('warehouse_id', '=', active_id)]" id="act_stock_warehouse_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="stock.warehouse"/>

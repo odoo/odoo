@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +33,7 @@ class product_product(osv.osv):
 
     def get_product_available(self,cr,uid,ids,context=None):
         if not context:
-            context = {}        
+            context = {}
         states=context.get('states',[])
         what=context.get('what',())
         if not ids:
@@ -69,7 +61,7 @@ class product_product(osv.osv):
                 location_ids = context['location']
         else:
             cr.execute("select lot_stock_id from stock_warehouse")
-            location_ids = [id for (id,) in cr.fetchall()]            
+            location_ids = [id for (id,) in cr.fetchall()]
 
         # build the list of ids of children of the location given by id
         child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
@@ -90,11 +82,11 @@ class product_product(osv.osv):
         to_date=context.get('to_date',False)
         date_str=False
         if from_date and to_date:
-            date_str="date>='%s' and date<='%s'"%(from_date,to_date)
+            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
         elif from_date:
-            date_str="date>='%s'"%(from_date)
+            date_str="date_planned>='%s'"%(from_date)
         elif to_date:
-            date_str="date<='%s'"%(to_date)
+            date_str="date_planned<='%s'"%(to_date)
 
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
@@ -131,35 +123,32 @@ class product_product(osv.osv):
             res[prod_id] -= amount
         return res
 
-    def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
-            if not field_names:
-                field_names=[]
-            context.update({
-                'states':states,
-                'what':what
-            })
-            stock=self.get_product_available(cr,uid,ids,context=context)
-            res = {}
+    def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        if not field_names:
+            field_names=[]
+        res = {}
+        for id in ids:
+            res[id] = {}.fromkeys(field_names, 0.0)
+        for f in field_names:
+            c = context.copy()
+            if f=='qty_available':
+                c.update({ 'states':('done',), 'what':('in', 'out') })
+            if f=='virtual_available':
+                c.update({ 'states':('confirmed','waiting','assigned','done'), 'what':('in', 'out') })
+            if f=='incoming_qty':
+                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('in',) })
+            if f=='outgoing_qty':
+                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('out',) })
+            stock=self.get_product_available(cr,uid,ids,context=c)
             for id in ids:
-                res[id] = {}.fromkeys(field_names, 0.0)
-                for a in field_names:
-                    res[id][a] = stock.get(id, 0.0)
-            return res
-
-        return _product_available
-
-    _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
-    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
-    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
-    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
-
+                res[id][f] = stock.get(id, 0.0)
+        return res
 
     _columns = {
-        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock',multi='qty_available', help="Current quantities of products in selected locations or all internal if none have been selected."),
-        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock',multi='qty_available', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."),
-        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming',multi='qty_available', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."),
-        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing',multi='qty_available', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected."),
+        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
+        'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
         'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
         'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
         'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),

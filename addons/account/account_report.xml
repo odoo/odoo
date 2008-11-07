@@ -2,38 +2,38 @@
 <openerp>
     <data>
         <report auto="False" id="account_general_ledger" menu="False" model="account.account" name="account.general.ledger" rml="account/report/general_ledger.rml" string="General Ledger"/>
-        <report auto="False" id="account_3rdparty_ledger" menu="False" model="res.partner" name="account.third_party_ledger" rml="account/report/third_party_ledger.rml" string="Partner ledger"/>
-        <report auto="False" id="account_account_balance" menu="False" model="account.account" name="account.account.balance" rml="account/report/account_balance.rml" string="Account balance"/>
-        <report auto="False" id="account_3rdparty_account_balance" menu="False" model="account.account" name="account.partner.balance" rml="account/report/partner_balance.rml" string="Partner balance"/>
-        <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/central_journal.rml" string="Print Central Journal"/>
-        <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/general_journal.rml" string="Print General Journal"/>
-        <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Print Journal"/>
-        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/overdue.rml" string="Overdue payments"/>
+        <report auto="False" id="account_3rdparty_ledger" menu="False" model="res.partner" name="account.third_party_ledger" rml="account/report/third_party_ledger.rml" string="Partner Ledger"/>
+        <report auto="False" id="account_account_balance" menu="False" model="account.account" name="account.account.balance" rml="account/report/account_balance.rml" string="Account Balance"/>
+        <report auto="False" id="account_3rdparty_account_balance" menu="False" model="account.account" name="account.partner.balance" rml="account/report/partner_balance.rml" string="Partner Balance"/>
+        <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/central_journal.rml" string="Central Journal"/>
+        <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/general_journal.rml" string="General Journal"/>
+        <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Journal"/>
+        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/overdue.rml" string="Overdue Payments"/>
         <report auto="False" id="account_invoices" model="account.invoice" name="account.invoice" rml="account/report/invoice.rml" string="Invoices" attachment="print-"/>
         <report id="account_transfers" model="account.transfer" name="account.transfer" string="Transfers" xml="account/report/transfer.xml" xsl="account/report/transfer.xsl"/>
         <report auto="False" id="account_intracom" menu="False" model="account.move.line" name="account.intracom" string="IntraCom"/>
 
         <report id="account_move_line_list" model="account.tax.code" name="account.tax.code.entries" rml="account/report/account_tax_code.rml" string="All Entries"/>
 
-        <report auto="False" id="account_vat_declaration" menu="False" model="account.tax.code" name="account.vat.declaration" rml="account/report/tax_report.rml" string="Taxes report"/>
+        <report auto="False" id="account_vat_declaration" menu="False" model="account.tax.code" name="account.vat.declaration" rml="account/report/tax_report.rml" string="Taxes Report"/>
 
-		<menuitem
-			id="menu_tax_report"
-			name="Taxes Reports"
-			parent="account.menu_finance_reporting"/>
+        <menuitem
+            id="menu_tax_report"
+            name="Taxes Reports"
+            parent="account.menu_finance_reporting"/>
 
         <wizard
-			id="wizard_vat_declaration"
-			menu="False"
-			model="account.tax.code"
-			name="account.vat.declaration"
-			string="Print Taxes Report"/>
+            id="wizard_vat_declaration"
+            menu="False"
+            model="account.tax.code"
+            name="account.vat.declaration"
+            string="Print Taxes Report"/>
         <menuitem
             icon="STOCK_PRINT"
-			action="wizard_vat_declaration"
-			id="menu_wizard_vat_declaration"
-			parent="menu_tax_report"
-			type="wizard"/>
+            action="wizard_vat_declaration"
+            id="menu_wizard_vat_declaration"
+            parent="menu_tax_report"
+            type="wizard"/>
 
 
         <record id="action_tax_code_tree" model="ir.actions.act_window">
@@ -43,20 +43,20 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_tax_code_tree"/>
         </record>
-		<menuitem
-			action="action_tax_code_tree"
-			id="menu_action_tax_code_tree"
-			parent="menu_tax_report"
-			sequence="12"/>
+        <menuitem
+            action="action_tax_code_tree"
+            id="menu_action_tax_code_tree"
+            parent="menu_tax_report"
+            sequence="12"/>
 
         <!--
 
-		<report id="analytic_journal"
-			string="Analytic journal"
-			model="account.analytic.account"
-			name="account.analytic.journal"
-			xml="account/report/analytic_journal.rml"
-			auto="False" />
-		-->
+        <report id="analytic_journal"
+            string="Analytic journal"
+            model="account.analytic.account"
+            name="account.analytic.journal"
+            xml="account/report/analytic_journal.rml"
+            auto="False" />
+        -->
     </data>
 </openerp>

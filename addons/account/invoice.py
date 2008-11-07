@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -79,8 +71,7 @@ class account_invoice(osv.osv):
     def _get_journal_analytic(self, cr, uid, type_inv, context={}):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         tt = type2journal.get(type_inv, 'sale')
-        cr.execute("select id from account_analytic_journal where type=%s limit 1", (tt,))
-        result = cr.fetchone()
+        result = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
             raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
         return result[0]
@@ -194,12 +185,13 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean', store=True, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True, help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
+        'move_name': fields.char('Account Move', size=64),
     }
     _defaults = {
         'type': _get_type,
@@ -287,7 +279,7 @@ class account_invoice(osv.osv):
         pt_obj= self.pool.get('account.payment.term')
 
         if not date_invoice :
-            date_invoice = self._defaults["date_invoice"](cr,uid,{})
+            date_invoice = time.strftime('%Y-%m-%d')
 
         pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
 
@@ -332,7 +324,7 @@ class account_invoice(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False})
+        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_name':False,})
         if 'date_invoice' not in default:
             default['date_invoice'] = False
         if 'date_due' not in default:
@@ -423,6 +415,7 @@ class account_invoice(osv.osv):
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
+        acc_obj = self.pool.get('account.account')
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -469,7 +462,11 @@ class account_invoice(osv.osv):
             # create one move line for the total and possibly adjust the other lines amount
             total = 0
             total_currency = 0
+            key_line=[]
             for i in iml:
+                if i.has_key('account_id') and i.has_key('taxes'):
+                    if not (i['account_id'],i['taxes']) in key_line:
+                        key_line.append((i['account_id'],i['taxes']))
                 if inv.currency_id.id != company_currency:
                     i['currency_id'] = inv.currency_id.id
                     i['amount_currency'] = i['price']
@@ -490,6 +487,36 @@ class account_invoice(osv.osv):
             acc_id = inv.account_id.id
 
             name = inv['name'] or '/'
+            iml_temp=[]
+            move_list=[]
+
+            for item in key_line:
+                move_temp={}
+                if acc_obj.browse(cr,uid,item[0]).merge_invoice:
+                    repeat=False
+                    for move_line in iml:
+                        if (move_line.has_key('account_id') and move_line['account_id']==item[0]) and (move_line.has_key('taxes') and move_line['taxes']==item[1]):
+                            move_list.append(move_line)
+                            if repeat:
+                                for key in move_line:
+                                    if key in ['name','amount_currency','price_unit','price','quantity']:
+                                        if key=='name':
+                                            move_temp[key]=move_temp[key] + "," +move_line[key]
+                                        else:
+                                            move_temp[key] +=move_line[key]
+                            else:
+                                for key in move_line:
+                                    move_temp[key]=move_line[key]
+                                repeat=True
+                if move_temp:
+                    iml_temp.append(move_temp)
+
+            if len(iml_temp)<len(move_list):
+                for old_elem in move_list:
+                    iml.remove(old_elem)
+                for new_elem in iml_temp:
+                    iml.append(new_elem)
+
             totlines = False
             if inv.payment_term:
                 totlines = self.pool.get('account.payment.term').compute(cr,
@@ -542,8 +569,10 @@ class account_invoice(osv.osv):
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
-            if journal.sequence_id:
+            if journal.sequence_id and not inv.move_name:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+            else:
+                name = inv.move_name
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Can not create invoice move on centralized journal'))
@@ -559,8 +588,9 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
             move_id = self.pool.get('account.move').create(cr, uid, move)
+            new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id})
+            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
         return True
@@ -579,7 +609,8 @@ class account_invoice(osv.osv):
             'currency_id':x.get('currency_id', False),
             'tax_code_id': x.get('tax_code_id', False),
             'tax_amount': x.get('tax_amount', False),
-            'ref':x.get('ref',False)
+            'ref':x.get('ref',False),
+            'quantity':x.get('quantity',1.00),
         }
 
     def action_number(self, cr, uid, ids, *args):
@@ -851,32 +882,16 @@ class account_invoice_line(osv.osv):
                 return {'domain':{'product_uom':[]}}
             else:
                 return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
-        lang=False
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        lang=part.lang
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
-        lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            taxep = part.property_account_position and part.property_account_position.account_tax
-            if not taxep or not taxep.id:
-                tax_id = map(lambda x: x.id, res.taxes_id)
-            else:
-                tax_id = [taxep.id]
-                for t in res.taxes_id:
-                    if not t.tax_group==taxep.tax_group:
-                        tax_id.append(t.id)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.taxes_id)
         else:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            taxep = part.property_account_position and part.property_account_position.account_supplier_tax
-            if not taxep or not taxep.id:
-                tax_id = map(lambda x: x.id, res.supplier_taxes_id)
-            else:
-                tax_id = [taxep.id]
-                for t in res.supplier_taxes_id:
-                    if not t.tax_group==taxep.tax_group:
-                        tax_id.append(t.id)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.supplier_taxes_id)
         if type in ('in_invoice', 'in_refund'):
             result = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
         else:
@@ -959,6 +974,7 @@ class account_invoice_line(osv.osv):
             'product_id':line.product_id.id,
             'uos_id':line.uos_id.id,
             'account_analytic_id':line.account_analytic_id.id,
+            'taxes':line.invoice_line_tax_id,
         }
     #
     # Set the tax field according to the account and the partner
@@ -968,13 +984,8 @@ class account_invoice_line(osv.osv):
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        taxep = partner.property_account_position and partner.property_account_position.account_tax
-        if not taxep.id:
-            return {'value': {'invoice_line_tax_id': map(lambda x: x.id, taxes or []) }}
-        res = [taxep.id]
-        for t in taxes:
-            if not t.tax_group==taxep.tax_group:
-                res.append(t.id)
+
+        res = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, taxes)
         r = {'value':{'invoice_line_tax_id': res}}
         return r
 account_invoice_line()

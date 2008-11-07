@@ -91,7 +91,10 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_account_analytic_planning_form_my" id="menu_report_account_analytic_planning_my2" parent="report_analytic_planning.menu_report_account_analytic_planning"/>
+        <menuitem
+            action="action_account_analytic_planning_form_my"
+            id="menu_report_account_analytic_planning_my2" 
+            parent="planning_main"/>
         
         <record id="action_account_analytic_planning_form_current_my" model="ir.actions.act_window">
             <field name="name">My Current Plannings</field>
@@ -117,7 +120,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="action_account_analytic_planning_form_new" id="menu_report_account_analytic_planning_new" parent="report_analytic_planning.menu_report_account_analytic_planning"/>
+        <menuitem action="action_account_analytic_planning_form_new" id="menu_report_account_analytic_planning_new" parent="planning_main"/>
         
         
         

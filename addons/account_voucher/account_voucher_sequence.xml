@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+
+<data noupdate="1">
+	<record model="res.request.link" id="req_link_voucher">
+		<field name="name">Voucher</field>
+		<field name="object">account.voucher</field>
+	</record>
+	
+	<!--
+	Sequences types for vouchers
+	-->
+	<record model="ir.sequence.type" id="seq_type_cash_rec_voucher">
+		<field name="name">Account Cash Received Voucher</field>
+		<field name="code">account.voucher.rec_voucher</field>
+	</record>
+	
+	<record model="ir.sequence.type" id="seq_type_cash_pay_voucher">
+		<field name="name">Account Cash Payble Voucher</field>
+		<field name="code">account.voucher.pay_voucher</field>
+	</record>
+	<record model="ir.sequence.type" id="seq_type_bank_rec_voucher">
+		<field name="name">Account Bank Received Voucher</field>
+		<field name="code">account.voucher.bank_rec_voucher</field>
+	</record>
+	<record model="ir.sequence.type" id="seq_type_bank_pay_voucher">
+		<field name="name">Account Bank Payble Voucher</field>
+		<field name="code">account.voucher.bank_pay_voucher</field>
+	</record>
+	<record model="ir.sequence.type" id="seq_type_contra_voucher">
+		<field name="name">Account Contra Voucher</field>
+		<field name="code">account.voucher.cont_voucher</field>
+	</record>
+	<record model="ir.sequence.type" id="seq_type_jou_sale_voucher">
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">account.voucher.journal_sale_vou</field>
+	</record>
+	<record model="ir.sequence.type" id="seq_type_jou_pur_voucher">
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">account.voucher.journal_pur_vou</field>
+	</record>
+	
+	<!--
+	Sequences for vouchers
+	-->
+	<record model="ir.sequence" id="seq_cash_rec_voucher">
+		<field name="name">Account Cash Received Voucher</field>
+		<field name="code">account.voucher.rec_voucher</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	
+	<record model="ir.sequence" id="seq_cash_pay_voucher">
+		<field name="name">Account Cash Payble Voucher</field>
+		<field name="code">account.voucher.pay_voucher</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	<record model="ir.sequence" id="seq_bank_rec_voucher">
+		<field name="name">Account Bank Received Voucher</field>
+		<field name="code">account.voucher.bank_rec_voucher</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	<record model="ir.sequence" id="seq_bank_pay_voucher">
+		<field name="name">Account Bank Payble Voucher</field>
+		<field name="code">account.voucher.bank_pay_voucher</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	<record model="ir.sequence" id="seq_contra_voucher">
+		<field name="name">Account Contra Voucher</field>
+		<field name="code">account.voucher.cont_voucher</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	<record model="ir.sequence" id="seq_jou_sale_voucher">
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">account.voucher.journal_sale_vou</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+	<record model="ir.sequence" id="seq_jou_pur_voucher">
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">account.voucher.journal_pur_vou</field>
+		<field name="padding" eval="3"/>
+		<field name="prefix">%(year)s/</field>
+	</record>
+
+	<!--
+	Sequences types for analytic account 
+
+	<record model="ir.sequence.type" id="seq_type_analytic_account">
+		<field name="name">Analytic account</field>
+		<field name="code">account.analytic.account</field>
+	</record>
+
+	
+	Sequence for analytic account 
+	
+	<record model="ir.sequence" id="seq_analytic_account">
+		<field name="name">Analytic account sequence</field>
+		<field name="code">account.analytic.account</field>
+		<field name="padding" eval="3" />
+		<field name="number_next" eval="2708" />
+	</record>
+		-->
+</data>
+</openerp>
+

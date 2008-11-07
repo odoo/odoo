@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -145,7 +137,9 @@ class account_move_line(osv.osv):
         ref_id = False
         move = self.pool.get('account.move').browse(cr, uid, move_id, context)
 
+        acc1 = False
         for l in move.line_id:
+            acc1 = l.account_id
             partner_id = partner_id or l.partner_id.id
             ref_id = ref_id or l.ref
             total += (l.debit or 0.0) - (l.credit or 0.0)
@@ -175,6 +169,17 @@ class account_move_line(osv.osv):
         s = -total
         data['debit'] = s>0  and s or 0.0
         data['credit'] = s<0  and -s or 0.0
+
+        if account.currency_id:
+            data['currency_id'] = account.currency_id.id
+            acc = account
+            if s>0:
+                acc = acc1
+            v = self.pool.get('res.currency').compute(cr, uid,
+                account.company_id.currency_id.id,
+                data['currency_id'],
+                s, account=acc, account_invert=True)
+            data['amount_currency'] = v
         return data
 
     def _on_create_write(self, cr, uid, id, context={}):
@@ -272,7 +277,7 @@ class account_move_line(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
+        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
@@ -325,12 +330,19 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
+    def _get_currency(self, cr, uid, context={}):
+        if not context.get('journal_id', False):
+            return False
+        cur = self.pool.get('account.journal').browse(cr, uid, context['journal_id']).currency
+        return cur and cur.id or False
+
     _defaults = {
         'blocked': lambda *a: False,
         'centralisation': lambda *a: 'normal',
         'date': _get_date,
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
+        'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
     }
@@ -367,6 +379,21 @@ class account_move_line(osv.osv):
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
+
+    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False):
+        if (not currency_id) or (not account_id):
+            return {}
+        result = {}
+        acc =self.pool.get('account.account').browse(cr, uid, account_id)
+        if (amount>0) and journal:
+            x = self.pool.get('account.journal').browse(cr, uid, journal).default_credit_account_id
+            if x: acc = x
+        v = self.pool.get('res.currency').compute(cr, uid, currency_id,acc.company_id.currency_id.id, amount, account=acc)
+        result['value'] = {
+            'debit': v>0 and v or 0.0,
+            'credit': v<0 and -v or 0.0
+        }
+        return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
@@ -603,6 +630,8 @@ class account_move_line(osv.osv):
                     attrs.append('required="1"')
                 else:
                     attrs.append('required="0"')
+                if field.field in ('amount_currency','currency_id'):
+                    attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field == 'partner_id':
                     attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field in widths:
@@ -749,7 +778,9 @@ class account_move_line(osv.osv):
                 ctx = {}
                 if 'date' in vals:
                     ctx['date'] = vals['date']
-                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
+                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
+                    account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0),
+                    context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 

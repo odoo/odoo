@@ -36,8 +36,16 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_mrp_manager_form"/>
         </record>
-        
-        <menuitem id="next_id_87" name="Production" parent="board.dashboard_menu"/><menuitem action="open_board_manufacturing" icon="terp-graph" id="menu_board_manufacturing" parent="next_id_87" sequence="1"/>
-        
+        <menuitem
+            id="next_id_87"
+            name="Production"
+            parent="board.dashboard_menu"
+            groups="mrp.group_mrp_manager"/>
+        <menuitem
+            action="open_board_manufacturing"
+            icon="terp-graph"
+            id="menu_board_manufacturing"
+            parent="next_id_87"
+            sequence="1"/>
     </data>
 </openerp>

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
-        <menuitem id="menu_config_product" name="Configuration" parent="product.menu_main_product" sequence="1"/>
-        
+        <menuitem
+            id="menu_config_product"
+            name="Configuration"
+            parent="product.menu_main_product"
+            sequence="1"
+            groups="group_product_manager"/>
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>
@@ -101,7 +104,7 @@
                             </group>
 
                         </page>
-                        <page string="Prices">
+                        <page string="Prices &amp; Suppliers">
                             <separator string="Base Prices" colspan="4"/>
                             <field name="standard_price"/>
                             <field name="list_price"/>
@@ -233,7 +236,7 @@
             <field name="model">product.uom</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Unit of Measure">
+                <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="factor_inv" on_change="onchange_factor_inv(factor_inv)"/>
@@ -248,7 +251,7 @@
             <field name="model">product.uom</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Unit of Measure">
+                <form string="Units of Measure">
                     <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
                     <field name="factor_inv" select="1"/>
@@ -259,26 +262,26 @@
             </field>
         </record>
         <record id="product_uom_form_action" model="ir.actions.act_window">
-            <field name="name">Unit of Measure</field>
+            <field name="name">Units of Measure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
         </record>
-        <menuitem id="next_id_16" name="Unit of Measure" parent="product.menu_config_product"/><menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="product.menu_config_product"/><menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
         
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
             <field name="model">product.uom.categ</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Unit of Measure categories">
+                <form string="Units of Measure categories">
                     <field colspan="4" name="name" select="1"/>
                 </form>
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">Unit of Measure Categories</field>
+            <field name="name">Units of Measure Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
@@ -291,7 +294,7 @@
             <field name="model">product.ul</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Logistical Unit">
+                <form string="Packagings">
                     <field name="name"/>
                     <field name="type"/>
                 </form>
@@ -302,14 +305,14 @@
             <field name="model">product.ul</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Logistical Unit">
+                <tree string="Packagings">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                 </tree>
             </field>
         </record>
         <record id="product_ul_form_action" model="ir.actions.act_window">
-            <field name="name">Logistical Unit</field>
+            <field name="name">Packagings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>

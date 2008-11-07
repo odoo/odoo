@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id: make_invoice.py 1070 2005-07-29 12:41:24Z nicoe $
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,7 +41,7 @@ fields = {
 
 form_msg = """<?xml version="1.0"?>
 <form string="Invoices">
-   <label string="Invoice Created"/>
+   <label string="You invoice has been successfully created !"/>
 </form>
 """
 fields_msg = {}
@@ -68,18 +60,18 @@ def _createInvoices(self, cr, uid, data, context={}):
         if sale.order_policy == 'postpaid':
             raise osv.except_osv(
                 _('Error'),
-                _('You must cannot make an advance on a sale order that is defined as \'Automatic Invoice after delivery\'.'))
+                _('You cannot make an advance on a sale order that is defined as \'Automatic Invoice after delivery\'.'))
         val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id)
         line_id =obj_lines.create(cr, uid, {
-        'name': val['value']['name'],
-        'account_id':val['value']['account_id'],
-        'price_unit': data['form']['amount'],
-        'quantity': data['form']['qtty'],
-        'discount': False,
-        'uos_id': val['value']['uos_id'],
-        'product_id':data['form']['product_id'],
-        'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
-        'note':'',
+            'name': val['value']['name'],
+            'account_id':val['value']['account_id'],
+            'price_unit': data['form']['amount'],
+            'quantity': data['form']['qtty'],
+            'discount': False,
+            'uos_id': val['value']['uos_id'],
+            'product_id':data['form']['product_id'],
+            'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            'note':'',
         })
         create_ids.append(line_id)
         inv = {
@@ -104,6 +96,23 @@ def _createInvoices(self, cr, uid, data, context={}):
         ids_inv.append(inv_id)
         obj_sale.write(cr,uid,sale.id,{'invoice_ids':[(6,0,ids_inv)]})
         list_inv.append(inv_id)
+#
+# If invoice on picking: add the cost on the SO
+# If not, the advance will be deduced when generating the final invoice
+#
+        if sale.order_policy=='picking':
+            pool_obj.get('sale.order.line').create(cr, uid, {
+                'order_id': sale.id,
+                'name': val['value']['name'],
+                'price_unit': -data['form']['amount'],
+                'product_uom_qty': data['form']['qtty'],
+                'product_uos_qty': data['form']['qtty'],
+                'product_uos': val['value']['uos_id'],
+                'product_uom': val['value']['uos_id'],
+                'product_id':data['form']['product_id'],
+                'discount': False,
+                'tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            }, context)
     return {'invoice_ids':list_inv}
 
 class sale_advance_payment(wizard.interface):
@@ -125,11 +134,11 @@ class sale_advance_payment(wizard.interface):
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'form' ,   'arch' : form,'fields' : fields,'state' : [('end','Cancel'),('create','Make Invoice')]}
+            'result' : {'type' : 'form' ,   'arch' : form,'fields' : fields,'state' : [('end','Cancel','gtk-cancel'),('create','Create Advance Invoice','gtk-ok')]}
         },
         'create': {
             'actions': [_createInvoices],
-            'result': {'type' : 'form' ,'arch' : form_msg,'fields' : fields_msg, 'state':[('end','Ok'),('open','Open Invoice')]}
+            'result': {'type' : 'form' ,'arch' : form_msg,'fields' : fields_msg, 'state':[('end','Close','gtk-close'),('open','Open Advance Invoice','gtk-open')]}
         },
         'open': {
             'actions': [],

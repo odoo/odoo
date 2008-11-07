@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -154,7 +146,7 @@ class purchase_order(osv.osv):
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64, 
+        'origin': fields.char('Origin', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Partner Ref.', size=64),
@@ -173,7 +165,7 @@ class purchase_order(osv.osv):
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
         'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
-        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
@@ -206,7 +198,17 @@ class purchase_order(osv.osv):
     _name = "purchase.order"
     _description = "Purchase order"
     _order = "name desc"
-
+    
+    def unlink(self, cr, uid, ids):
+        purchase_orders = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in purchase_orders:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
+    
     def button_dummy(self, cr, uid, ids, context={}):
         return True
 
@@ -274,6 +276,15 @@ class purchase_order(osv.osv):
             'account_analytic_id': ol.account_analytic_id.id,
         })
 
+    def action_cancel_draft(self, cr, uid, ids, *args):
+        if not len(ids):
+            return False
+        self.write(cr, uid, ids, {'state':'draft','shipped':0})
+        wf_service = netsvc.LocalService("workflow")
+        for p_id in ids:
+            wf_service.trg_create(uid, 'purchase.order', p_id, cr)
+        return True
+
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
         for o in self.browse(cr, uid, ids):
@@ -317,6 +328,29 @@ class purchase_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
+
+    def action_cancel(self, cr, uid, ids, context={}):
+        ok = True
+        purchase_order_line_obj = self.pool.get('purchase.order.line')
+        for purchase in self.browse(cr, uid, ids):
+            for pick in purchase.picking_ids:
+                if pick.state not in ('draft','cancel'):
+                    raise osv.except_osv(
+                        _('Could not cancel purchase order !'),
+                        _('You must first cancel all packings attached to this purchase order.'))
+            for pick in purchase.picking_ids:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
+            inv = purchase.invoice_id
+            if inv and inv.state not in ('cancel','draft'):
+                raise osv.except_osv(
+                    _('Could not cancel this purchase order !'),
+                    _('You must first cancel all invoices attached to this purchase order.'))
+            if inv:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+        self.write(cr,uid,ids,{'state':'cancel'})
+        return True
 
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = False
@@ -437,20 +471,10 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
 
-        
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,prod['supplier_taxes_id'])
-        taxep = None
-        if partner_id:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            taxep = partner.property_account_position and partner.property_account_position.account_supplier_tax
-        if not taxep or not taxep.id:
-            res['value']['taxes_id'] = prod['supplier_taxes_id']
-        else:
-            res5 = [taxep.id]
-            for t in taxes:
-                if not t.tax_group==taxep.tax_group:
-                    res5.append(t.id)
-            res['value']['taxes_id'] = res5
+        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
+      #  res['value']['taxes_id'] = [x.id for x in taxes]
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])

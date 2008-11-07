@@ -8,13 +8,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <field name="quantity_max" position="before">
-                    <separator colspan="4" string="Invoicing Data"/>
-                    <field name="pricelist_id"/>
-                    <field name="to_invoice"/>
-                    <field name="amount_max"/>
-                    <field name="amount_invoiced"/>
-                    <field name="state"/>
+                <field name="user_id" position="after">
+                    <group colspan="4" col="4">
+                        <separator colspan="4" string="Invoicing Data"/>
+                        <field name="pricelist_id"/>
+                        <field name="to_invoice"/>
+                        <field name="amount_max"/>
+                        <field name="amount_invoiced"/>
+                        <separator colspan="4" string="Status"/>
+                        <field name="state"/>
+                    </group>
                 </field>
             </field>
         </record>

@@ -4,7 +4,8 @@
 "access_account_account_type","account.account.type","model_account_account_type","account.group_account_user",1,0,0,0
 "access_account_tax","account.tax","model_account_tax","account.group_account_user",1,0,0,0
 "access_account_account","account.account","model_account_account","account.group_account_user",1,0,0,0
-"access_account_account_partner_manager","account.account partner manager","model_account_account","base.group_user",1,0,0,0
+"access_account_account_user","account.account user","model_account_account","base.group_user",1,0,0,0
+"access_account_account_partner_manager","account.account partner manager","model_account_account","base.group_partner_manager",1,0,0,0
 "access_account_journal_view","account.journal.view","model_account_journal_view","account.group_account_user",1,0,0,0
 "access_account_journal_column","account.journal.column","model_account_journal_column","account.group_account_user",1,0,0,0
 "access_account_journal","account.journal","model_account_journal","account.group_account_user",1,0,0,0
@@ -12,6 +13,7 @@
 "access_account_journal_period_manager","account.journal.period manager","model_account_journal_period","account.group_account_manager",1,1,1,1
 "access_account_journal_period","account.journal.period","model_account_journal_period","account.group_account_user",1,1,1,1
 "access_account_move","account.move","model_account_move","account.group_account_user",1,1,1,1
+"access_account_move_line","account.move.line","model_account_move_line","account.group_account_user",1,1,1,1
 "access_account_move_reconcile","account.move.reconcile","model_account_move_reconcile","account.group_account_user",1,1,1,1
 "access_account_tax_code","account.tax.code","model_account_tax_code",,1,0,0,0
 "access_account_tax","account.tax","model_account_tax",,1,0,0,0
@@ -26,7 +28,6 @@
 "access_account_tax_template","account.tax.template","model_account_tax_template","account.group_account_manager",1,1,1,1
 "access_wizard_multi_charts_accounts","wizard.multi.charts.accounts","model_wizard_multi_charts_accounts","account.group_account_manager",1,1,1,1
 "access_account_bank_accounts_wizard","account.bank.accounts.wizard","model_account_bank_accounts_wizard","account.group_account_manager",1,1,1,1
-"access_account_move_line","account.move.line invoice","model_account_move_line","account.group_account_invoice",1,1,1,1
 "access_account_bank_statement","account.bank.statement","model_account_bank_statement","account.group_account_user",1,1,1,1
 "access_account_bank_statement_reconcile","account.bank.statement.reconcile","model_account_bank_statement_reconcile","account.group_account_user",1,1,1,1
 "access_account_bank_statement_reconcile_line","account.bank.statement.reconcile.line","model_account_bank_statement_reconcile_line","account.group_account_user",1,1,1,1
@@ -40,6 +41,7 @@
 "access_account_invoice_tax_uinvoice","account.invoice.tax","model_account_invoice_tax","account.group_account_invoice",1,1,1,1
 "access_account_analytic_line_uinvoice","account.analytic.line","model_account_analytic_line","account.group_account_user",1,1,1,1
 "access_account_move_uinvoice","account.move","model_account_move","account.group_account_invoice",1,1,1,1
+"access_account_move_line_uinvoice","account.move.line invoice","model_account_move_line","account.group_account_invoice",1,1,1,1
 "access_account_move_reconcile_uinvoice","account.move.reconcile","model_account_move_reconcile","account.group_account_invoice",1,1,1,1
 "access_account_journal_period_uinvoice","account.journal.period","model_account_journal_period","account.group_account_invoice",1,1,1,1
 "access_account_payment_term_manager","account.payment.term","model_account_payment_term","account.group_account_manager",1,1,1,1
@@ -56,9 +58,6 @@
 "access_account_tax_code_manager","account.tax.code","model_account_tax_code","account.group_account_manager",1,1,1,1
 "access_account_tax_manager","account.tax","model_account_tax","account.group_account_manager",1,1,1,1
 "access_account_invoice_group_invoice","account.invoice group invoice","model_account_invoice","account.group_account_invoice",1,1,1,1
-"access_account_invoice_manager","account.invoice","model_account_invoice","account.group_account_manager",1,1,1,1
-"access_account_invoice_line_manager","account.invoice.line","model_account_invoice_line","account.group_account_manager",1,1,1,1
-"access_account_invoice_tax_manager","account.invoice.tax","model_account_invoice_tax","account.group_account_manager",1,1,1,1
 "access_account_analytic_account_manager","account.analytic.account","model_account_analytic_account","account.group_account_manager",1,1,1,1
 "access_account_analytic_journal_manager","account.analytic.journal","model_account_analytic_journal","account.group_account_manager",1,1,1,1
 "access_account_fiscalyear","account.fiscalyear","model_account_fiscalyear","account.group_account_manager",1,1,1,1
@@ -68,14 +67,16 @@
 "access_res_currency_rate_account_manager","res.currency.rate account manager","base.model_res_currency_rate","group_account_manager",1,1,1,1
 "access_account_config_wizard_account_manager","account.config.wizard account manager","model_account_config_wizard","group_account_manager",1,1,1,1
 "access_account_config_wizard_system_manager","account.config.wizard system manager","model_account_config_wizard","base.group_system",1,1,1,1
-"access_account_invoice_partner_manager","account.invoice partner manager","model_account_invoice","base.group_partner_manager",1,0,0,0
-"access_account_invoice_line_partner_manager","account.invoice.line partner manager","model_account_invoice_line","base.group_partner_manager",1,0,0,0
-"access_account_invoice_tax_partner_manager","account.invoice.tax partner manager","model_account_invoice_tax","base.group_partner_manager",1,0,0,0
+"access_account_invoice_user","account.invoice user","model_account_invoice","base.group_user",1,0,0,0
+"access_account_invoice_user","account.invoice.line user","model_account_invoice_line","base.group_user",1,0,0,0
+"access_account_invoice_user","account.invoice.tax user","model_account_invoice_tax","base.group_user",1,0,0,0
 "access_account_payment_term_partner_manager","account.payment.term partner manager","model_account_payment_term","base.group_user",1,0,0,0
 "access_account_payment_term_line_partner_manager","account.payment.term.line partner manager","model_account_payment_term_line","base.group_user",1,0,0,0
 "access_account_account_product_manager","account.account product manager","model_account_account","product.group_product_manager",1,0,0,0
 "access_account_journal_product_manager","account.journal product manager","model_account_journal","product.group_product_manager",1,0,0,0
 "access_account_fiscal_position_product_manager","account.fiscal.position account.manager","model_account_fiscal_position","account.group_account_manager",1,1,1,1
+"access_account_fiscal_position_tax_product_manager","account.fiscal.position.tax account.manager","model_account_fiscal_position_tax","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position_account_product_manager","account.fiscal.position account.manager","model_account_fiscal_position_account","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position","account.fiscal.position all","model_account_fiscal_position","base.group_user",1,0,0,0
+"access_account_fiscal_position_tax","account.fiscal.position.tax all","model_account_fiscal_position_tax","base.group_user",1,0,0,0
 "access_account_fiscal_position_account","account.fiscal.position all","model_account_fiscal_position_account","base.group_user",1,0,0,0

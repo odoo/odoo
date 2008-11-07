@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="purchase_order" model="workflow">
             <field name="name">Purchase Order Basic Workflow</field>
             <field name="osv">purchase.order</field>
             <field name="on_create">True</field>
         </record>
-        
+
         <record id="act_draft" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="flow_start">True</field>
@@ -22,9 +22,9 @@
         <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">cancel</field>
-            <field name="action">write({'state':'cancel'})</field>
-            <field name="kind">stopall</field>
+            <field name="kind">function</field>
             <field name="flow_stop">True</field>
+            <field name="action">write({'state':'cancel'})</field>
         </record>
         <record id="act_except_invoice" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
@@ -55,7 +55,7 @@
         <record id="act_invoice_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice_done</field>
-            <field name="action">write({'invoiced':1})</field>
+            <field name="action">write({'invoiced':1,'state':'approved'})</field>
             <field name="kind">function</field>
         </record>
         <record id="act_invoice_end" model="workflow.activity">
@@ -72,7 +72,7 @@
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
-            <field name="action">write({'shipped':1})</field>
+            <field name="action">write({'shipped':1,'state':'approved'})</field>
             <field name="kind">function</field>
             <field name="signal_send">subflow.delivery_done</field>
         </record>
@@ -84,7 +84,7 @@
             <field name="flow_stop">True</field>
             <field name="join_mode">AND</field>
         </record>
-        
+
         <record id="trans_draft_confirmed" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirmed"/>
@@ -177,6 +177,6 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
         </record>
-        
+
     </data>
 </openerp>

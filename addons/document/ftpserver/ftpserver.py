@@ -1754,6 +1754,7 @@ class FTPHandler(asynchat.async_chat):
          - (file) file: the file[-like] object to send (if any).
         """
         if self.data_channel:
+            print 'DATA', data
             self.respond("125 Data connection already open. Transfer starting.")
             if file:
                 self.data_channel.file_obj = file
@@ -2077,6 +2078,7 @@ class FTPHandler(asynchat.async_chat):
                 print listing
                 listing.sort()
                 data = '\r\n'.join(listing) + '\r\n'
+            print data
             self.log('OK NLST "%s". Transfer starting.' %line)
             self.push_dtp_data(data)
 
@@ -2512,9 +2514,14 @@ class FTPHandler(asynchat.async_chat):
             path = self.fs.ftp2fs(line, datacr)
             self.run_as_current_user(self.fs.chdir, path)
         except OSError, err:
-            why = _strerror(err)
-            self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
-            self.respond('550 %s.' %why)
+            if err.errno==2:
+                why = 'Authentication Required or Failed'
+                self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
+                self.respond('530 %s.' %why)
+            else:
+                why = _strerror(err)
+                self.log('FAIL CWD "%s". %s.' %(self.fs.ftpnorm(line), why))
+                self.respond('550 %s.' %why)
         else:
             self.log('OK CWD "%s".' %self.fs.cwd)
             self.respond('250 "%s" is the current directory.' %self.fs.cwd)

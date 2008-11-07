@@ -37,14 +37,13 @@
 
     <blockTableStyle id="tbl_header">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-
+	 
       <blockValign value="TOP"/>
-      <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
 
     <blockTableStyle id="tbl_content">
 
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
@@ -92,335 +91,110 @@
     <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
-
-
-  	 <blockTable colWidths="55.0,35.0,150.0, 90.0,60.0,345.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
-
+ 	 <blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+       <tr>
+         <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Partner</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Ref</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Mvt</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P3">Entry Label</para></td>
+          <td><para style="P12"><font color="white"> </font> </para><para style="P3">Counterpart</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Debit</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Credit</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Currency</para></td>
+       </tr>
+       
+       <tr>
+       <para>[[ repeatIn(objects, 'a') ]]</para>
+       		<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
+   		  <td>
+	       	<blockTable colWidths="404.0,375.0,69.0,72.0,64.0,59.00" style="Table5">
+	       	
+			<tr>
+			   <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
+			   <td><para style="Standard"></para></td>
+			   <td alignment="right"><para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0' ]]</u></para></td>
+			   <td alignment="right"><para style="P9b"><u>[[ sum_credit_account(o, data['form']) or '0.0' ]]</u></para></td>
+			   <td><para style="P9b"><u>[[ sum_solde_account(o, data['form']) or '0.0' ]]</u></para></td>
+			   <td><para style="P9b"><u> [[ sum_currency_amount_account(o, data['form']) or '0.0' ]]</u></para></td>
+			</tr>
+			<tr>
+				<td> [[ repeatIn(lines(o, data['form']), 'line') ]]
+					<blockTable colWidths="55.0,35.0,150.0, 90.0,60.0,333.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content" >
+						<tr>
+				         
+				          <td><para style="P2_content">[[ line['date'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['code'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['partner'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['ref'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['move'] ]]</para></td>
+				          <td><para style="P3_content">[[ line['name'] ]]</para></td>
+				          <td><para style="P3_content">[[ strip_name(line['line_corresp'],55) ]]</para></td>
+				          <td><para style="P4_content">[[ line['debit'] and line['debit'] or '0.0' ]]</para></td>
+				          <td><para style="P4_content">[[ line['credit'] and line['credit'] or '0.0' ]]</para></td>
+				          <td><para style="P4_content">[[ line['progress'] and line['progress'] or '0.0' ]]</para></td>
+				          <td><para style="P4_content">[[ line['amount_currency'] or '0.0' ]] [[ line['currency_code'] ]]</para></td>
+				       </tr>
+					</blockTable>
+				</td>
+			</tr>
+	      	</blockTable>
+	      </td>
+	      
+       </tr>
+  	 </blockTable>
+        
+     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="date">Date</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="date">JNRL</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P2">Partner</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P2">Ref</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P2">Mvt</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P3">Entry Label</para>
-          </td>
-          <td>
-            <para style="P12"><font color="white"> </font> </para>
-            <para style="P3">Counterpart</para>
-          </td>
-          <td>
-            <para style="P12"><font color="white"> </font></para>
-            <para style="P4">Debit</para>
-          </td>
-          <td>
-           	<para style="P12"><font color="white"> </font></para>
-            <para style="P4">Credit</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P4">Balance</para>
-          </td>
-          <td>
-          	<para style="P12"><font color="white"> </font></para>
-            <para style="P4">Currency</para>
-          </td>
+          <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Partner</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Ref</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P2">Mvt</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P3">Entry Label</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P3">Counterpart</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Debit</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Credit</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
         </tr>
+		
         <tr>
-        		<para>[[ repeatIn(objects, 'a') ]]</para>
-     			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-
-        	<td>
-
-        		<blockTable colWidths="50.0,35.0,150.0, 90.0,60.0,345.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content" >
-      		<tr>
-	        	<td>
-	        		<blockTable colWidths="400.0,374.0,69.0,72.0,64.0,59.00" style="Table5">
-			        <tr>
-			          <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
-			          <td><para style="Standard"></para></td>
-			          <td alignment="right">
-            			<para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0' ]]</u></para>
-			          </td>
-			          <td alignment="right">
-			            <para style="P9b"><u>[[ sum_credit_account(o, data['form']) or '0.0' ]]</u></para>
-			          </td>
-			          <td>
-			            <para style="P9b"><u>[[ sum_solde_account(o, data['form']) or '0.0' ]]</u></para>
-			          </td>
-			          <td>
-
-			            <para style="P9b"><u> [[ sum_currency_amount_account(o, data['form']) or '0.0' ]]</u></para>
-			          </td>
-			        </tr>
-	      			</blockTable>
-	        	</td>
-        	</tr>
-      		<tr>[[ data['form']['soldeinit'] == True or removeParentNode('tr') ]]
+        <para>[[ repeatIn(objects, 'a') ]]</para>
+     	<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
           <td>
-            <para style="P3_content">Balance Initial</para>
-          </td>
-
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-         <td>
-            <para style="P3_content"></para>
-          </td>
-         <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P4_content">[[ o.init_debit or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ o.init_credit or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ (o.init_debit - o.init_credit) or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content"> </para>
-          </td>
-
+	      	<blockTable colWidths="405.0,435.0,69.0,72.0,64.0" style="Table5">
+			<tr>
+			  <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
+			  <td><para style="Standard"></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0']]</u></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[sum_credit_account(o, data['form']) or '0.0']]</u></para></td>
+			  <td><para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para></td>
+			</tr>
+			<tr>
+				<td> [[ repeatIn(lines(o, data['form']), 'line') ]]
+					<blockTable colWidths="55.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">
+						<tr>
+				      	 
+				          <td><para style="P2_content">[[ line['date'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['code'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['partner'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['ref'] ]]</para></td>
+				          <td><para style="P2_content">[[ line['move'] ]]</para></td>
+				          <td><para style="P3_content">[[ line['name'] ]]</para></td>
+				          <td><para style="P3_content">[[ strip_name(line['line_corresp'],55) ]]</para></td>
+				          <td><para style="P4_content">[[ line['debit'] and line['debit'] or '0.0' ]]</para></td>
+				          <td><para style="P4_content">[[ line['credit'] and line['credit'] or '0.0' ]]</para></td>
+				          <td><para style="P4_content">[[ line['progress'] and line['progress'] or '0.0' ]]</para></td>
+				        </tr>
+					</blockTable>
+				</td>
+			</tr>
+			</blockTable>
+	      </td>
         </tr>
-
-        <tr>
-        	[[ repeatIn(lines(o, data['form']), 'line') ]]
-          <td>
-
-            <para style="P2_content">[[ line['date'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['code'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['partner'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['ref'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['move'] ]]</para>
-          </td>
-          <td>
-            <para style="P3_content">[[ line['name'] ]]</para>
-          </td>
-          <td>
-            <para style="P3_content">[[ strip_name(line['line_corresp'],55) ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['debit'] and line['debit'] or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['credit'] and line['credit'] or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['progress'] and line['progress'] or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['amount_currency'] or '0.0' ]] [[ line['currency_code'] ]]</para>
-          </td>
-        </tr>
-
-      	</blockTable>
-        </td>
-        </tr>
-
-
-
-     </blockTable>
-
-
-      <blockTable colWidths="55.0,35.0,166.0,90.0,60.0,390.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
-        <tr>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="date">Date</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="date">JNRL</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P2">Partner</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P2">Ref</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P2">Mvt</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P3">Entry Label</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P3">Counterpart</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P4">Debit</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P4">Credit</para>
-          </td>
-          <td>
-          <para style="P12">
-      <font color="white"> </font>
-    </para>
-            <para style="P4">Balance</para>
-          </td>
-        </tr>
-
-        <tr>
-        	<td>
-        		<para>[[ repeatIn(objects, 'a') ]]</para>
-     			<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-        		<blockTable colWidths="50.0,35.0,196.0, 90.0,30.0,390.0,50.0,69.0,72.0,64.0" style="tbl_content" >[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
-      		<tr>
-	        	<td>
-	        		<blockTable colWidths="400.0,435.0,69.0,72.0,64.0" style="Table5">
-			        <tr>
-			          <td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
-			          <td><para style="Standard"></para></td>
-			          <td alignment="right">
-            			<para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0']]</u></para>
-			          </td>
-			          <td alignment="right">
-			            <para style="P9b"><u>[[sum_credit_account(o, data['form']) or '0.0']]</u></para>
-			          </td>
-			          <td>
-			            <para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para>
-			          </td>
-			        </tr>
-	      			</blockTable>
-	        	</td>
-        	</tr>
-      		 <tr>[[ data['form']['soldeinit'] == True or removeParentNode('tr') ]]
-          <td>
-            <para style="P3_content"></para>
-          </td>
-
-          <td>
-            <para style="P3_content">Solde Initial</para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-          <td>
-            <para style="P3_content"></para>
-          </td>
-        <td>
-            <para style="P3_content"></para>
-          </td>
-
-          <td>
-            <para style="P4_content">[[ o.init_debit or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ o.init_credit or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ o.init_debit - o.init_credit or '0.0' ]]</para>
-          </td>
-
-        </tr>
-        <tr>[[ repeatIn(lines(o, data['form']), 'line') ]]
-          <td>
-            <para style="P2_content">[[ line['date'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['code'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['partner'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['ref'] ]]</para>
-          </td>
-          <td>
-            <para style="P2_content">[[ line['move'] ]]</para>
-          </td>
-          <td>
-            <para style="P3_content">[[ line['name'] ]]</para>
-          </td>
-          <td>
-            <para style="P3_content">[[ strip_name(line['line_corresp'],55) ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['debit'] and line['debit'] or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['credit'] and line['credit'] or '0.0' ]]</para>
-          </td>
-          <td>
-            <para style="P4_content">[[ line['progress'] and line['progress'] or '0.0' ]]</para>
-          </td>
-        </tr>
-
-      	</blockTable>
-        	</td>
-        </tr>
-     </blockTable>
-     <para style="P12">
-      <font color="white"> </font>
-    </para>
-
-
-  </story>
+      	
+  	 </blockTable>
+ </story>
 </document>

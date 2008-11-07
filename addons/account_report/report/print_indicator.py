@@ -1,3 +1,24 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 # -*- encoding: utf-8 -*-
 ##############################################################################
@@ -164,7 +185,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
 
     def test1(self,data,object,intercall=False):
-
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
@@ -233,13 +253,13 @@ class accounting_report_indicator(report_sxw.rml_parse):
 #        drawing.save(formats=['png'],fnRoot=path+str(self.count),title="helo")
 #        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
         import os
-        dirname ='Temp_images'
-        path=os.path.join(tools.config['root_path'],dirname,"Image")
+        path=tools.config['addons_path']+"/account_report/tmp_images/image"
 
-        if not os.path.isdir(tools.config['root_path']+ "/"+dirname + '/'):
-            os.mkdir(tools.config['root_path'] +"/"+ dirname + '/')
-            os.path.join(tools.config['root_path'],dirname,"/")
-        can = canvas.init('Image'+str(self.count)+".png")
+        dirname =tools.config['addons_path']+'/account_report/tmp_images/'
+        if not os.path.isdir(dirname):
+            os.mkdir(dirname)
+
+        can = canvas.init('image'+str(self.count)+".png")
 #        can.clip(0,0,600,400)
 
         data=zip(self.header_name,self.header_val)
@@ -252,8 +272,8 @@ class accounting_report_indicator(report_sxw.rml_parse):
         ar.draw()
 
         can.close()
-        os.system('cp '+'Image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
-        os.system('rm '+'Image'+str(self.count)+'.png')
+        os.system('cp '+'image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
+        os.system('rm '+'image'+str(self.count)+'.png')
 #        can.endclip()
         return path+str(self.count)+'.png'
 

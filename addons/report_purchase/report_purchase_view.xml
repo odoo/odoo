@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
-        <!-- Purchases by products by month -->       
+
+        <!-- Purchases by products by month -->
         <record id="view_order_product_form" model="ir.ui.view">
             <field name="name">report.purchase.order.product.form</field>
             <field name="model">report.purchase.order.product</field>
@@ -19,7 +19,20 @@
                 </form>
             </field>
         </record>
-        
+
+        <record model="ir.ui.view" id="view_product_month_graph">
+            <field name="name">product.month.graph</field>
+            <field name="model">report.purchase.order.product</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchases by products" type="bar">
+                    <field name="product_id"/>
+                    <field name="quantity" operator="+"/>
+                    <field name="price_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_order_product_tree" model="ir.ui.view">
             <field name="name">report.purchase.order.product.tree</field>
             <field name="model">report.purchase.order.product</field>
@@ -36,12 +49,12 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_order_product_tree" model="ir.actions.act_window">
             <field name="name">Purchases by Products (this month)</field>
             <field name="res_model">report.purchase.order.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
         </record>
         <menuitem id="next_id_73" name="Reporting" parent="purchase.menu_purchase_root"/><menuitem id="next_id_74" name="This Month" parent="next_id_73"/><menuitem action="action_order_product_tree" id="menu_report_order_product" parent="next_id_74"/>
@@ -49,12 +62,12 @@
             <field name="name">Purchases by Products</field>
             <field name="res_model">report.purchase.order.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
         </record>
         <menuitem id="next_id_75" name="All Months" parent="report_purchase.next_id_73"/><menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_75"/>
-        
+
         <!-- Purchases by category by month -->
-        
+
         <record id="view_order_category_form" model="ir.ui.view">
             <field name="name">report.purchase.order.category.form</field>
             <field name="model">report.purchase.order.category</field>
@@ -71,7 +84,20 @@
                 </form>
             </field>
         </record>
-        
+
+        <record model="ir.ui.view" id="view_product_category_graph">
+            <field name="name">product.category.graph</field>
+            <field name="model">report.purchase.order.category</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchases by Category of Products" type="bar">
+                    <field name="category_id"/>
+                    <field name="quantity" operator="+"/>
+                    <field name="price_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_order_category_tree" model="ir.ui.view">
             <field name="name">report.purchase.order.category.tree</field>
             <field name="model">report.purchase.order.category</field>
@@ -88,12 +114,12 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_order_category_tree" model="ir.actions.act_window">
             <field name="name">Purchases by Category of Product (this month)</field>
             <field name="res_model">report.purchase.order.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
         </record>
         <menuitem action="action_order_category_tree" id="menu_report_order_category" parent="report_purchase.next_id_74"/>
@@ -101,13 +127,13 @@
             <field name="name">Purchases by Category of Products</field>
             <field name="res_model">report.purchase.order.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
         </record>
         <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_purchase.next_id_75"/>
-        
+
         <act_window domain="[('product_id', '=', active_id)]" id="act_product_product_2_report_purchases_order_product" name="Monthly purchases" res_model="report.purchase.order.product" src_model="product.product"/>
-        
+
         <act_window domain="[('category_id', '=', active_id)]" id="act_product_category_2_report_purchase_order_category" name="Monthly purchases" res_model="report.purchase.order.category" src_model="product.category"/>
-        
+
     </data>
 </openerp>

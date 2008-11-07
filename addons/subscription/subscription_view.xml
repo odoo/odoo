@@ -15,12 +15,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscriptions">
-                    <notebook>
+                    <group colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="active" select="1"/>
+                        <field name="user_id" select="1"/>
+                        <field name="partner_id" select="1"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Subsription Data">
-                            <field name="name" select="1"/>
-                            <field name="active" select="1"/>
-                            <field name="user_id" select="1"/>
-                            <field name="partner_id" select="1"/>
                             <newline/>
                             <field name="interval_number"/>
                             <field name="interval_type"/>

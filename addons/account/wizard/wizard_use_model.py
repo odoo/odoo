@@ -1,4 +1,24 @@
 # -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 import wizard
 import time
 import datetime
@@ -22,7 +42,7 @@ fields = {
           }
 def _create_entries(self, cr, uid, data, context):
     pool_obj = pooler.get_pool(cr.dbname)
-    if data['model']=='ir.ui.menu':
+    if data['model']=='ir.ui.menu' or data['model']=='account.move.line':
         model_ids = data['form']['model'][0][2]
         data_model = pool_obj.get('account.model').browse(cr,uid,model_ids)
     else:
@@ -95,7 +115,7 @@ class use_model(wizard.interface):
         }
 
     def _check(self, cr, uid, data, context):
-        if data['model']=='ir.ui.menu':
+        if data['model']=='ir.ui.menu' or data['model']=='account.move.line':
              return 'init_form'
         return 'create'
 
