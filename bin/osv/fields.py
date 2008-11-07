@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -81,7 +73,6 @@ class _column(object):
         self.ondelete = ondelete
         self.translate = translate
         self._domain = domain or []
-        self.relate = False
         self._context = context
         self.write = False
         self.read = False
@@ -90,8 +81,6 @@ class _column(object):
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
-        if self.relate:
-            warnings.warn("The relate attribute doesn't work anymore, use act_window tag instead", DeprecationWarning)
 
     def restart(self):
         pass
@@ -126,6 +115,12 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
+
+class integer_big(_column):
+    _type = 'integer_big'
+    _symbol_c = '%d'
+    _symbol_f = lambda x: int(x or 0)
+    _symbol_set = (_symbol_c, _symbol_f)
 
 class integer(_column):
     _type = 'integer'
@@ -475,6 +470,9 @@ class many2many(_column):
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
+        if '.' in rel:
+            raise Exception(_('The second argument of the many2many field %s must be a SQL table !'\
+                'You used %s, which is not a valid SQL table name.')% (string,rel))
         self._rel = rel
         self._id1 = id1
         self._id2 = id2
@@ -678,7 +676,7 @@ class related(function):
                     where += " %s.%s %s '%%%s%%' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
                 if field_detail[1] in ('date'):
                     where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-                if field_detail[1] in ['integer', 'long', 'float']:
+                if field_detail[1] in ['integer', 'long', 'float','integer_big']:
                     where += " %s.%s %s '%d' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
         query += where.rstrip('and')
         cr.execute(query)

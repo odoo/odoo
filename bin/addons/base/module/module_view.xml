@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!-- Modules Categories -->
-        
+
         <record id="view_module_category_form" model="ir.ui.view">
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
@@ -16,7 +16,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_module_category_tree" model="ir.ui.view">
             <field name="name">ir.module.category.tree</field>
             <field name="model">ir.module.category</field>
@@ -36,9 +36,9 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_module_category_tree" id="menu_action_module_category_tree" parent="base.menu_management"/>
-        
+
         <!-- Click on a category -->
-        
+
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
@@ -53,10 +53,10 @@
             <field eval="'ir.actions.act_window,%d'%action_module_open_categ" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
-        
+
+
         <!-- Modules -->
-        
+
         <record id="module_form" model="ir.ui.view">
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
@@ -95,6 +95,14 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
+                            <separator string="Created Menus" colspan="4"/>
+                            <field colspan="4" name="menus_by_module" nolabel="1"/>
+                            <separator string="Created Views" colspan="2"/>
+                            <separator string="Defined Reports" colspan="2"/>
+                            <field colspan="2" name="views_by_module" nolabel="1"/>
+                            <field colspan="2" name="reports_by_module" nolabel="1"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -123,7 +131,7 @@
             <field name="domain"/>
         </record>
         <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management"/>
-        
+
         <record id="open_module_tree_install" model="ir.actions.act_window">
             <field name="name">Installed modules</field>
             <field name="res_model">ir.module.module</field>
@@ -148,7 +156,7 @@
             <field name="domain">[('state','in', ['to upgrade', 'to remove', 'to install'])]</field>
         </record>
         <menuitem action="open_module_tree_upgrade" id="menu_module_tree_upgrade" parent="base.menu_module_tree"/>
-        
+
         <record id="repository_form" model="ir.ui.view">
             <field name="name">ir.module.repository.form</field>
             <field name="model">ir.module.repository</field>
@@ -183,7 +191,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem action="open_repository_tree" id="menu_module_repository_tree" parent="base.menu_management"/>       
+        <menuitem action="open_repository_tree" id="menu_module_repository_tree" parent="base.menu_management"/>
 
     </data>
 </openerp>

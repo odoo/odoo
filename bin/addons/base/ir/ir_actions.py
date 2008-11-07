@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -185,7 +177,7 @@ class act_window(osv.osv):
 
                 if 'calendar' not in modes:
                     mobj = self.pool.get(act.res_model)
-                    if mobj._date_name in mobj._columns:
+                    if hasattr(mobj, '_date_name') and mobj._date_name in mobj._columns:
                         res[act.id].append((False, 'calendar'))
         return res
 
@@ -231,7 +223,8 @@ class act_window_view(osv.osv):
             ('tree', 'Tree'),
             ('form', 'Form'),
             ('graph', 'Graph'),
-            ('calendar', 'Calendar')), string='Type of view', required=True),
+            ('calendar', 'Calendar'),
+            ('gantt', 'Gantt')), string='Type of view', required=True),
         'act_window_id': fields.many2one('ir.actions.act_window', 'Action', ondelete='cascade'),
         'multi': fields.boolean('On multiple doc.',
             help="If set to true, the action will not be displayed on the right toolbar of a form views."),
@@ -251,7 +244,8 @@ class act_wizard(osv.osv):
         'type': fields.char('Action type', size=32, required=True),
         'wiz_name': fields.char('Wizard name', size=64, required=True),
         'multi': fields.boolean('Action on multiple doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form views."),
-        'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups')
+        'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups'),
+        'model': fields.char('Object', size=64),
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.wizard',
@@ -296,13 +290,12 @@ def model_get(self, cr, uid, context={}):
 
 class ir_model_fields(osv.osv):
     _inherit = 'ir.model.fields'
-    _rec_name = 'complete_name'
+    _rec_name = 'field_description'
     _columns = {
         'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
     }
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
-
         def get_fields(cr, uid, field, rel):
             result = []
             mobj = self.pool.get('ir.model')
@@ -499,9 +492,11 @@ class actions_server(osv.osv):
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
-
-                address = self.get_field_value(cr, uid, str(action.message), action, context)
-                body = self.merge_message(cr, uid, action, context)
+                address = self.get_field_value(cr, uid, action, context)
+                if not address:
+                    raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
+                
+                body = self.merge_message(cr, uid, str(action.message), action, context)
 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
@@ -520,7 +515,7 @@ class actions_server(osv.osv):
                 # for the sms gateway user / password
                 api_id = ''
                 text = action.sms
-                to = self.get_field_value(cr, uid, str(action.message), action, context)
+                to = self.get_field_value(cr, uid, action, context)
                 #TODO: Apply message mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
@@ -541,6 +536,7 @@ class actions_server(osv.osv):
                     exec code in localdict
                     if 'action' in localdict:
                         return localdict['action']
+            
             if action.state == 'object_write':
                 res = {}
                 for exp in action.fields_lines:
@@ -707,4 +703,6 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                }
         return {'type':'ir.actions.act_window_close' }
 ir_actions_configuration_wizard()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

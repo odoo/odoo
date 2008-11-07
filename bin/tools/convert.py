@@ -1,34 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-#----------------------------------------------------------
-# Convert
-#----------------------------------------------------------
+##############################################################################
 import re
 import StringIO,xml.dom.minidom
 import osv,ir,pooler
@@ -41,7 +31,13 @@ import netsvc
 from config import config
 import logging
 
-from lxml import etree
+import sys
+try:
+    from lxml import etree
+except:
+    sys.stderr.write("ERROR: pythonic binding for the libxml2 and libxslt libraries is missing\n")
+    sys.stderr.write("ERROR: Try to install python-lxml package\n")
+    sys.exit(2)
 import pickle
 
 
@@ -91,12 +87,15 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
             a_eval = node.getAttribute('eval')
             if len(a_eval):
                 import time
-                idref['time'] = time
+                from mx import DateTime
+                idref2 = idref.copy()
+                idref2['time'] = time
+                idref2['DateTime'] = DateTime
                 import release
-                idref['version'] = release.version.rsplit('.', 1)[0]
-                idref['ref'] = lambda x: self.id_get(cr, False, x)
+                idref2['version'] = release.version.rsplit('.', 1)[0]
+                idref2['ref'] = lambda x: self.id_get(cr, False, x)
                 if len(f_model):
-                    idref['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
+                    idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
                 try:
                     import pytz
                 except:
@@ -105,8 +104,8 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     class pytzclass(object):
                         all_timezones=[]
                     pytz=pytzclass()
-                idref['pytz'] = pytz
-                return eval(a_eval, idref)
+                idref2['pytz'] = pytz
+                return eval(a_eval, idref2)
             if t == 'xml':
                 def _process(s, idref):
                     m = re.findall('[^%]%\((.*?)\)[ds]', s)
@@ -202,7 +201,7 @@ class assertion_report(object):
 class xml_import(object):
 
     def isnoupdate(self, data_node = None):
-        return self.noupdate or (data_node and data_node.getAttribute('noupdate'))
+        return self.noupdate or (data_node and data_node.getAttribute('noupdate').strip() not in ('', '0', 'False'))
 
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (data_node and data_node.getAttribute('context').encode('utf8'))
@@ -308,7 +307,7 @@ form: module.record_id""" % (xml_id,)
         xml_id = rec.getAttribute('id').encode('utf8')
         self._test_xml_id(xml_id)
         multi = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
-        res = {'name': string, 'wiz_name': name, 'multi':multi}
+        res = {'name': string, 'wiz_name': name, 'multi': multi, 'model': model}
 
         if rec.hasAttribute('groups'):
             g_names = rec.getAttribute('groups').split(',')
@@ -482,7 +481,7 @@ form: module.record_id""" % (xml_id,)
                         print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
-                    self.logger.notifyChannel("init", netsvc.LOG_INFO, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
+                    self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
         else:
             menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.getAttribute('parent'))
@@ -507,7 +506,10 @@ form: module.record_id""" % (xml_id,)
             if a_type=='act_window':
                 a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
                 cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%d', (int(a_id),))
-                action_type,action_mode,action_name,view_id,target = cr.fetchone()
+                rrres = cr.fetchone()
+                assert rrres, "No window action defined for this id %s !\n" \
+                    "Verify that this is a window action or add a type argument." % (a_action,)
+                action_type,action_mode,action_name,view_id,target = rrres
                 if view_id:
                     cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
                     action_mode, = cr.fetchone()
@@ -580,7 +582,7 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.getAttribute("search").encode('utf8')
         rec_src_count = rec.getAttribute("count")
 
-        severity = rec.getAttribute("severity").encode('ascii') or 'info'
+        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR 
 
         rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
 
@@ -599,7 +601,7 @@ form: module.record_id""" % (xml_id,)
                     self.assert_report.record_assertion(False, severity)
                     self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (search count is incorrect: ' + str(len(ids)) + ')' )
                     sevval = getattr(logging, severity.upper())
-                    if sevval > config['assert_exit_level']:
+                    if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
                     return
@@ -625,7 +627,7 @@ form: module.record_id""" % (xml_id,)
                     self.assert_report.record_assertion(False, severity)
                     self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (tag ' + test.toxml() + ')' )
                     sevval = getattr(logging, severity.upper())
-                    if sevval > config['assert_exit_level']:
+                    if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
                     return
@@ -784,7 +786,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     input = StringIO.StringIO(csvcontent)
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
-
     fname_partial = ""
     if config.get('import_partial'):
         fname_partial = module + '/'+ fname
@@ -807,13 +808,16 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     for line in reader:
         if (not line) or not reduce(lambda x,y: x or y, line) :
             continue
-        datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
+        try:
+            datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
+        except:
+            print "ERROR while importing the line: ", line
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
-
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0
         pickle.dump(data, file(config.get('import_partial'),'wb'))
+        cr.commit()
 
 #
 # xml import/export
@@ -833,7 +837,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = 
         logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
         raise
 
-    if not idref:
+    if idref is None:
         idref={}
     if report is None:
         report=assertion_report()

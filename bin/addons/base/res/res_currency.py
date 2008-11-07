@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -45,6 +37,7 @@ class res_currency(osv.osv):
             date=context['date']
         else:
             date=time.strftime('%Y-%m-%d')
+        date= date or time.strftime('%Y-%m-%d')
         for id in ids:
             cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %d AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
             if cr.rowcount:
@@ -79,7 +72,7 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None, account_invert=False):
         if not from_currency_id:
             from_currency_id = to_currency_id
         xc=self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
@@ -94,6 +87,16 @@ class res_currency(osv.osv):
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (code, date))
+        rate = to_currency.rate/from_currency.rate
+        if account and (account.currency_mode=='average') and account.currency_id:
+            q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+            cr.execute('select sum(debit-credit),sum(amount_currency) from account_move_line l ' \
+              'where l.currency_id=%d and l.account_id=%d and '+q, (account.currency_id.id,account.id,))
+            tot1,tot2 = cr.fetchone()
+            if tot2 and not account_invert:
+                rate = float(tot1)/float(tot2)
+            elif tot1 and account_invert:
+                rate = float(tot2)/float(tot1)
         if to_currency_id==from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
@@ -101,9 +104,10 @@ class res_currency(osv.osv):
                 return from_amount
         else:
             if round:
-                return self.round(cr, uid, to_currency, from_amount * to_currency.rate/from_currency.rate)
+                return self.round(cr, uid, to_currency, from_amount * rate)
             else:
-                return (from_amount * to_currency.rate/from_currency.rate)
+                return (from_amount * rate)
+
     def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
         args2 = args[:]
         if name:

@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be)
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contact a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -142,6 +134,8 @@ def get_module_path(module):
     if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
         return opj(_ad, module)
 
+    logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:%s:module not found' % (module,))
+    return False
     raise IOError, 'Module not found : %s' % module
 
 def get_module_resource(module, *args):
@@ -152,7 +146,8 @@ def get_module_resource(module, *args):
 
     @return: absolute path to the resource
     """
-    return opj(get_module_path(module), *args)
+    a = get_module_path(module)
+    return a and opj(a, *args) or False
 
 def get_modules():
     """Returns the list of module names
@@ -175,9 +170,12 @@ def create_graph(module_list, force=None):
             module = module[:-4]
         try:
             mod_path = get_module_path(module)
+            if not mod_path:
+                continue
         except IOError:
             continue
         terp_file = get_module_resource(module, '__terp__.py')
+        if not terp_file: continue
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
             try:
                 info = eval(tools.file_open(terp_file).read())
@@ -282,9 +280,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             
             # Update translations for all installed languages
             modobj = pool.get('ir.module.module')
-            modobj.update_translations(cr, 1, [mid], None)
-            
-            cr.commit()
+            if modobj:
+                modobj.update_translations(cr, 1, [mid], None)
+                cr.commit()
+
         statusi+=1
 
     cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")

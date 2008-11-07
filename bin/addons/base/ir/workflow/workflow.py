@@ -1,30 +1,22 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -132,10 +124,10 @@ class wkf_transition(osv.osv):
     _table = "wkf_transition"
     _name = "workflow.transition"
     _log_access = False
-    _rec_name = 'signal' #TODO: pas top mais bon...
+    _rec_name = 'signal'
     _columns = {
-        'trigger_model': fields.char('Trigger Type', size=128),
-        'trigger_expr_id': fields.char('Trigger Expr ID', size=128),
+        'trigger_model': fields.char('Trigger Object', size=128),
+        'trigger_expr_id': fields.char('Trigger Expression', size=128),
         'signal': fields.char('Signal (button Name)', size=64),
         'role_id': fields.many2one('res.roles', 'Role Required'),
         'condition': fields.char('Condition', required=True, size=128),
@@ -153,7 +145,7 @@ class wkf_instance(osv.osv):
     _rec_name = 'res_type'
     _log_access = False
     _columns = {
-        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict', select=True),
+        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'uid': fields.integer('User ID'),
         'res_id': fields.integer('Resource ID', select=True),
         'res_type': fields.char('Resource Object', size=64, select=True),

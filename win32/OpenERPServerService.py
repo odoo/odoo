@@ -1,35 +1,24 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
-# $Id$
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ##############################################################################
-#
-# OpenERPServerService.py
-#
-# Script installing OpenERP as Windows service
 
 # Win32 python extensions modules
 import win32serviceutil
@@ -73,15 +62,13 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
 
 
     def StartTERP(self):
-    # The server finds now its configuration automatically on Windows
-    # We start the ERP Server as an independent process, but we keep its handle
-    # The server's binary must be one directory above the service's binary (when py2exe'd the python libraries shouldn' mix)
-    service_dir = os.path.dirname(sys.argv[0])
-    server_dir = os.path.split(service_dir)[0]
-    server_path = os.path.join(server_dir, 'openerp-server.exe')
-    self.terpprocess = subprocess.Popen([server_path], \
-                                            cwd=server_dir,
-                        creationflags=win32process.CREATE_NO_WINDOW)
+        # The server finds now its configuration automatically on Windows
+        # We start the ERP Server as an independent process, but we keep its handle
+        # The server's binary must be one directory above the service's binary (when py2exe'd the python libraries shouldn' mix)
+        service_dir = os.path.dirname(sys.argv[0])
+        server_dir = os.path.split(service_dir)[0]
+        server_path = os.path.join(server_dir, 'openerp-server.exe')
+        self.terpprocess = subprocess.Popen([server_path], cwd=server_dir, creationflags=win32process.CREATE_NO_WINDOW)
 
 
     def StartControl(self,ws):
@@ -90,13 +77,13 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
         self.stopping = True
 
     def SvcDoRun(self):
-    # Start OpenERP Server itself
+        # Start OpenERP Server itself
         self.StartTERP()
         # start the loop waiting for the Service Manager's stop signal
-    thread.start_new_thread(self.StartControl, (self.hWaitStop,))
-    # Log a info message that the server is running
-    servicemanager.LogInfoMsg("OpenERP Server up and running")
-    # verification if the server is really running, else quit with an error
+        thread.start_new_thread(self.StartControl, (self.hWaitStop,))
+        # Log a info message that the server is running
+        servicemanager.LogInfoMsg("OpenERP Server up and running")
+        # verification if the server is really running, else quit with an error
         self.terpprocess.wait()
         if not self.stopping:
             sys.exit("OpenERP Server check: server not running, check the logfile for more info")
