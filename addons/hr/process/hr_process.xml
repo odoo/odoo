@@ -19,7 +19,7 @@
 		<record id="process_node_jobshiring0" model="process.node">
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Jobs hiring&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Jobs hiring to new employees&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Process to search, interview and evaluate new candidates&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
@@ -54,11 +54,20 @@
 			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-	
+		
 		<!--
 			Process Transition
 		-->
-	
+		
+		<record id="process_transition_employeeuser0" model="process.transition">
+			<field eval="[(6,0,[])]" name="role_ids"/>
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Openerp user&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Create openerp user&quot;&quot;&quot;" name="note"/>
+			<field model="process.node" name="target_node_id" ref="process_node_openerpuser0"/>
+			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
+		</record>
+		
 		<record id="process_transition_employeejob0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -76,7 +85,6 @@
 			<field model="process.node" name="target_node_id" ref="process_node_employeecontact0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
-	
 		
 	</data>
 </openerp>
