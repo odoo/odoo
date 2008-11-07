@@ -169,10 +169,10 @@ class account_balance(report_sxw.rml_parse):
 
 
                 if form['display_account'] == 'bal_mouvement':
-                    if res['credit'] >= 0 or res['debit'] >= 0 or res['balance'] >= 0 :
+                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
                         result_acc.append(res)
                 elif form['display_account'] == 'bal_solde':
-                    if  res['balance'] >= 0:
+                    if  res['balance'] > 0:
                         result_acc.append(res)
                 else:
                     result_acc.append(res)

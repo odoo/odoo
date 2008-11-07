@@ -40,14 +40,15 @@
 
     Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
     """,
-    "depends" : ["base"],
+    "depends" : ["base", "process"],
     "init_xml" : [],
     "demo_xml" : [
         "base_contact_demo.xml"
     ],
     "update_xml" : [
         "security/ir.model.access.csv",
-        'base_contact_view.xml'
+        'base_contact_view.xml',
+        "process/base_contact_process.xml"
     ],
     "active": False,
     "installable": True
