@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -176,7 +176,7 @@ def create_graph(module_list, force=None):
             continue
         terp_file = get_module_resource(module, '__terp__.py')
         if not terp_file: continue
-        if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
+        if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
                 info = eval(tools.file_open(terp_file).read())
             except:
@@ -206,7 +206,7 @@ def create_graph(module_list, force=None):
             later.add(package)
             packages.append((package, deps, datas))
         packages.pop(0)
-    
+
     for package in later:
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
 
@@ -236,7 +236,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
         sys.stdout.flush()
         pool = pooler.get_pool(cr.dbname)
         modules = pool.instanciate(m, cr)
-        
+
         cr.execute('select id from ir_module_module where name=%s', (m,))
         mid = int(cr.rowcount and cr.fetchone()[0] or 0)
 
@@ -277,7 +277,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and id=%d", (mid,))
 
             cr.commit()
-            
+
             # Update translations for all installed languages
             modobj = pool.get('ir.module.module')
             if modobj:
@@ -289,7 +289,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
     for (model,name) in cr.fetchall():
         logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:object %s (%s) has no access rules!' % (model,name))
- 
+
     pool = pooler.get_pool(cr.dbname)
     cr.execute('select * from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
