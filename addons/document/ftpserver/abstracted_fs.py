@@ -344,6 +344,7 @@ class abstracted_fs:
             for db in self.db_list():
                 result.append(false_node(db))
             return result
+        print path.children()
         return path.children()
 
     # Ok

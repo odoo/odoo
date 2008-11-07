@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -410,6 +410,15 @@ class mrp_production(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
     }
     _order = 'date_planned asc, priority desc';
+    def unlink(self, cr, uid, ids):
+        productions = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in productions:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!' % s['state']))
+        return osv.osv.unlink(self, cr, uid, unlink_ids)
 
     def location_id_change(self, cr, uid, ids, src, dest, context={}):
         if dest:
@@ -466,7 +475,7 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_lines])
-        self.write(cr, uid, ids, {'state':'cancel','move_lines':[(6,0,[])]})
+        self.write(cr, uid, ids, {'state':'cancel'}) #,'move_lines':[(6,0,[])]})
         return True
 
     #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
@@ -771,6 +780,17 @@ class mrp_procurement(osv.osv):
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
+     
+    def unlink(self, cr, uid, ids):
+        procurements = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for s in procurements:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
+    
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         if product_id:
             w=self.pool.get('product.product').browse(cr,uid,product_id, context)
@@ -1034,10 +1054,10 @@ class mrp_procurement(osv.osv):
     def action_cancel(self, cr, uid, ids):
         todo = []
         for proc in self.browse(cr, uid, ids):
-            if proc.move_id:
+            if proc.move_id and proc.move_id.state=='waiting':
                 todo.append(proc.move_id.id)
         if len(todo):
-            self.pool.get('stock.move').action_cancel(cr, uid, [proc.move_id.id])
+            self.pool.get('stock.move').write(cr, uid, todo, {'state':'assigned'})
         self.write(cr, uid, ids, {'state':'cancel'})
 
         wf_service = netsvc.LocalService("workflow")
@@ -1211,7 +1231,7 @@ class StockPicking(osv.osv):
     # Explode picking by replacing phantom BoMs
     #
     def action_explode(self, cr, uid, picks, *args):
-        for move in picks:
+        for move in self.pool.get('stock.move').browse(cr, uid, picks):
             self.pool.get('stock.move')._action_explode(cr, uid, move)
         return picks
 

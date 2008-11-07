@@ -118,6 +118,7 @@ class general_ledger(rml_parse.rml_parse):
 		
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
+		
 		res = []
 		ctx = self.context.copy()
 		## We will make the test for period or date
@@ -140,6 +141,7 @@ class general_ledger(rml_parse.rml_parse):
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
 			
 			sold_account = self._sum_solde_account(child_account,form)
+			
 			self.sold_accounts[child_account.id] = sold_account
 			
 			if form['display_account'] == 'bal_mouvement':
@@ -159,7 +161,7 @@ class general_ledger(rml_parse.rml_parse):
 			else:		
 				if child_account.type != 'view' \
 				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
+					[('account_id','>=',child_account.id)],
 					context=ctx)) <> 0 :
 					res.append(child_account)
 		
@@ -167,6 +169,7 @@ class general_ledger(rml_parse.rml_parse):
 	
 		
 		## We will now compute solde initiaux
+		
 		if not len(res):
 			return[account]
 		else:
@@ -270,7 +273,6 @@ class general_ledger(rml_parse.rml_parse):
 	
 	
 	def lines(self, account, form):
-		
 		inv_types = {
 				'out_invoice': 'CI: ',
 				'in_invoice': 'SI: ',
@@ -313,7 +315,7 @@ class general_ledger(rml_parse.rml_parse):
 				l['partner'] = line.partner_id.name
 			else :
 				l['partner'] = ''
-			sum += l['debit'] - l ['credit']
+			sum = l['debit'] - l ['credit']
 			c = time.strptime(l['date'],"%Y-%m-%d")
 			l['date'] = time.strftime("%d-%m-%Y",c)
 			l['progress'] = sum

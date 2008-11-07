@@ -382,7 +382,7 @@ class stock_picking(osv.osv):
             ('draft','Draft'),
             ('auto','Waiting'),
             ('confirmed','Confirmed'),
-            ('assigned','Assigned'),
+            ('assigned','Available'),
             ('done','Done'),
             ('cancel','Cancel'),
             ], 'Status', readonly=True, select=True),
@@ -428,7 +428,7 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids):
             for r in picking.move_lines:
                 if r.state=='draft':
-                    todo.append(r)
+                    todo.append(r.id)
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context)
@@ -539,6 +539,15 @@ class stock_picking(osv.osv):
                         context=context)
         return True
 
+    def get_currency_id(self, cursor, user, picking):
+        return False
+
+    def _get_payment_term(self, cursor, user, picking):
+        '''Return {'contact': address, 'invoice': address} for invoice'''
+        partner_obj = self.pool.get('res.partner')
+        partner = picking.address_id.partner_id
+        return partner.property_payment_term and partner.property_payment_term.id or False
+
     def _get_address_invoice(self, cursor, user, picking):
         '''Return {'contact': address, 'invoice': address} for invoice'''
         partner_obj = self.pool.get('res.partner')
@@ -592,13 +601,11 @@ class stock_picking(osv.osv):
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
-        print "WW"*12,context
         '''Return ids of created invoices for the pickings'''
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoices_group = {}
         res = {}
-        sale_line_obj = self.pool.get('sale.order.line')
 
         for picking in self.browse(cursor, user, ids, context=context):
             if picking.invoice_state != '2binvoiced':
@@ -611,8 +618,7 @@ class stock_picking(osv.osv):
 
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                if picking.sale_id and picking.sale_id.payment_term:
-                    payment_term_id= picking.sale_id.payment_term.id
+                payment_term_id=self._get_payment_term(cursor, user, picking)
             else:
                 account_id = partner.property_account_payable.id
 
@@ -635,57 +641,15 @@ class stock_picking(osv.osv):
                     'comment': comment,
                     'payment_term': payment_term_id,
                     }
+                cur_id = self.get_currency_id(cursor, user, picking)
+                if cur_id:
+                    invoice_vals['currency_id'] = cur_id
                 if journal_id:
                     invoice_vals['journal_id'] = journal_id
                 invoice_id = invoice_obj.create(cursor, user, invoice_vals,
                         context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
-            sale_line_ids = sale_line_obj.search(cursor, user, [('order_id','=',picking.sale_id.id)])
-            sale_lines = sale_line_obj.browse(cursor, user, sale_line_ids, context=context)
-            for sale_line in sale_lines:
-                if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
-                    if group:
-                        name = picking.name + '-' + sale_line.name
-                    else:
-                        name = sale_line.name
-                    if type in ('out_invoice', 'out_refund'):
-                        account_id = sale_line.product_id.product_tmpl_id.\
-                                property_account_income.id
-                        if not account_id:
-                            account_id = sale_line.product_id.categ_id.\
-                                    property_account_income_categ.id
-                    else:
-                        account_id = sale_line.product_id.product_tmpl_id.\
-                                property_account_expense.id
-                        if not account_id:
-                            account_id = sale_line.product_id.categ_id.\
-                                    property_account_expense_categ.id
-                    price_unit = self._get_price_unit_invoice(cursor, user,
-                            sale_line, type)
-                    discount = self._get_discount_invoice(cursor, user, sale_line)
-                    tax_ids = self._get_taxes_invoice(cursor, user, sale_line, type)
-
-                    account_analytic_id = self._get_account_analytic_invoice(cursor,
-                            user, picking, sale_line)
-
-                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
-                    invoice_line_id = invoice_line_obj.create(cursor, user, {
-                        'name': name,
-                        'invoice_id': invoice_id,
-                        'uos_id': sale_line.product_uos.id or sale_line.product_uom.id,
-                        'product_id': sale_line.product_id.id,
-                        'account_id': account_id,
-                        'price_unit': price_unit,
-                        'discount': discount,
-                        'quantity': sale_line.product_uos_qty,
-                        'invoice_line_tax_id': [(6, 0, tax_ids)],
-                        'account_analytic_id': account_analytic_id,
-                        }, context=context)
-                    sale_line_obj.write(cursor, user, [sale_line.id], {'invoiced':True,
-                        'invoice_lines': [(6, 0, [invoice_line_id])],
-                        })
-
             for move_line in picking.move_lines:
                 if group:
                     name = picking.name + '-' + move_line.name
@@ -888,7 +852,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Available'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -985,8 +949,9 @@ class stock_move(osv.osv):
                     result[m.picking_id].append( (m, dest) )
         return result
 
-    def action_confirm(self, cr, uid, moves, context={}):
-        ids = map(lambda m: m.id, moves)
+    def action_confirm(self, cr, uid, ids, context={}):
+#        ids = map(lambda m: m.id, moves)
+        moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'confirmed'})
         for picking, todo in self._chain_compute(cr, uid, moves, context).items():
             ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
@@ -1083,20 +1048,25 @@ class stock_move(osv.osv):
             if move.state in ('confirmed','waiting','assigned','draft'):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
-        self.write(cr, uid, ids, {'state':'cancel'})
+        if move.move_dest_id and move.move_dest_id.state=='waiting':
+            self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
+            if move.move_dest_id.picking_id:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+        self.write(cr, uid, ids, {'state':'cancel', 'move_dest_id': False})
 
-        for pick_id in pickings:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
-        ids2 = []
-        for res in self.read(cr, uid, ids, ['move_dest_id']):
-            if res['move_dest_id']:
-                ids2.append(res['move_dest_id'][0])
+        #for pick_id in pickings:
+        #    wf_service = netsvc.LocalService("workflow")
+        #    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
+        #ids2 = []
+        #for res in self.read(cr, uid, ids, ['move_dest_id']):
+        #    if res['move_dest_id']:
+        #        ids2.append(res['move_dest_id'][0])
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
-        self.action_cancel(cr,uid, ids2, context)
+        #self.action_cancel(cr,uid, ids2, context)
         return True
 
     def action_done(self, cr, uid, ids, context=None):
