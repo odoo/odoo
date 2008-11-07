@@ -1072,13 +1072,14 @@ class account_tax_code(osv.osv):
         return res
 
     def _sum_period(self, cr, uid, ids, name, args, context):
-        if not 'period_id' in context:
+        if 'period_id' in context and context['period_id']:
+            period_id = context['period_id']
+        else:
             period_id = self.pool.get('account.period').find(cr, uid)
             if not len(period_id):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
-        else:
-            period_id = context['period_id']
+
         return self._sum(cr, uid, ids, name, args, context,
                 where=' and line.period_id='+str(period_id))
 
