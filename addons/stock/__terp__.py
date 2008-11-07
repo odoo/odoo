@@ -49,6 +49,7 @@
         "report_stock_view.xml",
         "security/stock_security.xml",
         "security/ir.model.access.csv",
+        "process/stock_process.xml"
     ],
     "active": False,
     "installable": True
