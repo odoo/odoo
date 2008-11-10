@@ -15,7 +15,7 @@ import tools
 from report.render import render
 from report.interface import report_int
 import os
-import pdf_ext
+
 
 _tax_form = """<?xml version="1.0"?>
 <form string="VAT Legal Declaration">
@@ -69,7 +69,7 @@ class report_custom(report_int):
             result['info_address'] = partner.address[0].street
             result['info_address2'] = str(partner.address[0].zip) + ' ' + str(partner.address[0].city)
 
-        pdf_ext.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
+        tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
         self.obj = external_pdf(file('/tmp/output.pdf').read())
         self.obj.render()
         return (self.obj.pdf, 'pdf')

@@ -7,9 +7,9 @@
         -->
         
         <record id="process_process_invoiceworkflow0" model="process.process">
-            <field eval="&quot;&quot;&quot;Customer Invoice flow for services companies.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Invoice flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Customer Invoice Workflow&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Invoice Workflow&quot;&quot;&quot;" name="name"/>
         </record>
         
         <!--    
@@ -21,13 +21,13 @@
             <field name="model_id" ref="account.model_account_analytic_account"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Analytic&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Analytic costs to reinvoice purchases, timesheets, ...&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;From analytic accounts, It creates invoice.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
             <field name="subflow_id" ref="process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-        
+    
         <record id="process_node_draftinvoices0" model="process.node">
             <field name="menu_id" ref="account.menu_invoice_draft"/>
             <field name="model_id" ref="account.model_account_invoice"/>
@@ -43,7 +43,7 @@
             <field name="menu_id" ref="account.menu_finance_invoice"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Invoice_invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Have a number and entries are generated&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -67,6 +67,7 @@
             <field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Statement encoding produces payment entries&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
+<!--            <field name="subflow_id" ref="process_process_statementworkflow0"/>-->
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -87,7 +88,7 @@
             <field name="model_id" ref="account.model_account_move_reconcile"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Reconciliation of entries from invoice(s) and payment(s)&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Reconciliation of entries from end of the payment &quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -124,7 +125,7 @@
             <field model="process.node" name="target_node_id" ref="process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_analytic0"/>
         </record>
-        
+    
         <record id="process_transition_customerinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
