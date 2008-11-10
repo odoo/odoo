@@ -811,7 +811,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Entry">
-                    <separator colspan="4" string="General Information"/>
                     <group colspan="4" col="6">
                     <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
@@ -821,7 +820,6 @@
                     <field name="type" select="1" groups="base.group_extended"/>
                     </group>
 
-                    <separator colspan="4" string="Entry Lines"/>
                     <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
@@ -860,6 +858,7 @@
                         </tree>
                     </field>
 
+                    <separator colspan="4" string="State"/>
                     <field name="state" select="1"/>
                     <group col="2" colspan="2">
                         <button name="button_validate" states="draft" string="Validate" type="object"/>
