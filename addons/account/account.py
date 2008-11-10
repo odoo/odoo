@@ -498,6 +498,17 @@ class account_fiscalyear(osv.osv):
         'state': lambda *a: 'draft',
     }
     _order = "date_start"
+
+    def _check_duration(self,cr,uid,ids):
+        obj_fy=self.browse(cr,uid,ids[0])
+        if obj_fy.date_stop < obj_fy.date_start:
+            return False
+        return True
+
+    _constraints = [
+        (_check_duration, 'Error ! The date duration of the Fiscal Year is invalid. ', ['date_stop'])
+    ]
+
     def create_period3(self,cr, uid, ids, context={}):
         return self.create_period(cr, uid, ids, context, 3)
 
@@ -507,6 +518,10 @@ class account_fiscalyear(osv.osv):
             ds = mx.DateTime.strptime(fy.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
                 de = ds + RelativeDateTime(months=interval, days=-1)
+
+                if de.strftime('%Y-%m-%d')>fy.date_stop:
+                    de=mx.DateTime.strptime(fy.date_stop, '%Y-%m-%d')
+
                 self.pool.get('account.period').create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -544,6 +559,24 @@ class account_period(osv.osv):
         'state': lambda *a: 'draft',
     }
     _order = "date_start"
+
+    def _check_duration(self,cr,uid,ids):
+        obj_period=self.browse(cr,uid,ids[0])
+        if obj_period.date_stop < obj_period.date_start:
+            return False
+        return True
+
+    def _check_year_limit(self,cr,uid,ids):
+        obj_period=self.browse(cr,uid,ids[0])
+        if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or obj_period.fiscalyear_id.date_stop < obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_stop:
+            return False
+        return True
+
+    _constraints = [
+        (_check_duration, 'Error ! The date duration of the Period(s) is invalid. ', ['date_stop']),
+        (_check_year_limit, 'Error ! The date duration of the Period(s) should be within the limit of the Fiscal year. ', ['date_stop'])
+    ]
+
     def next(self, cr, uid, period, step, context={}):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
