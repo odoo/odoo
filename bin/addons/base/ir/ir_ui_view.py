@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -76,11 +76,18 @@ class view(osv.osv):
     def create(self, cr, uid, vals, context={}):
        if 'inherit_id' in vals:
            obj=self.browse(cr,uid,vals['inherit_id'])
-           if not obj.model==vals['model']:
-                raise Exception("Inherited view model [%s] and \
+           child=self.pool.get(vals['model'])
+           error="Inherited view model [%s] and \
                                  \n\n base view model [%s] do not match \
                                  \n\n It should be same as base view model " \
-                                 %(vals['model'],obj.model))
+                                 %(vals['model'],obj.model)
+           try:
+               if obj.model==child._inherit:
+                pass
+           except:
+               if not obj.model==vals['model']:
+                raise Exception(error)
+
        return super(view,self).create(cr, uid, vals, context={})
 
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
