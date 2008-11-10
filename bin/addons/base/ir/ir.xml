@@ -485,14 +485,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <field colspan="4" name="name" select="1"/>
-                    <field colspan="4" name="datas"/>
-                    <field name="datas_fname"/>
-                    <newline/>
-                    <field name="res_model" select="1"/>
-                    <field name="res_id"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1" />
+                        <field name="create_uid" select="1"/>
+                        <field name="create_date" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                    <page string="Attachment">
+                        <group col="2" colspan="2">
+                            <separator string="Data" colspan="2"/>
+                            <field name="datas" filename="datas_fname"/>
+                            <field name="datas_fname" select="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator string="Attached To" colspan="2"/>
+                            <field name="res_model" select="1"/>
+                            <field name="res_id"/>
+                        </group>
+                        <separator string="Preview" colspan="4"/>
+                        <field
+                            name="preview"
+                            widget="image" 
+                            readonly="1" 
+                            nolabel="1" 
+                            colspan="4" 
+                            img_height="400" 
+                            img_width="800"/>
+                    </page>
+                    <page string="Notes">
+                        <field colspan="4" name="description" nolabel="1"/>
+                    </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -503,8 +526,9 @@
             <field name="arch" type="xml">
                 <tree string="Attachments">
                     <field name="name"/>
-                    <field name="res_model"/>
-                    <field name="res_id"/>
+                    <field name="datas_fname"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
                 </tree>
             </field>
         </record>
@@ -514,7 +538,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.attachment</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_attachment_tree"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_4"/>
         
