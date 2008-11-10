@@ -69,7 +69,6 @@ class account_report(osv.osv):
                 return key_ids[key]
 
         def _calc_credit(code,year=0):
-            context['fiscalyear']=False
             context['fiscalyear']=_calc_context(year,obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
@@ -78,7 +77,6 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0)
 
         def _calc_debit(code,year=0):
-            context['fiscalyear']=False
             context['fiscalyear']=_calc_context(year,obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
@@ -87,7 +85,6 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0)
 
         def _calc_balance(code,year=0):
-            context['fiscalyear']=False
             context['fiscalyear']=_calc_context(year,obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
@@ -101,7 +98,6 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0)
 
         def _calc_tax_code(code,period=0):
-            context['period_id']=False
             context['period_id']=_calc_context(period,obj_period)
             if not context['period_id']:
                 return 0.00
