@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -359,7 +359,7 @@ class orm_template(object):
                             view_load=%s, select_level=%s, readonly=%s ,required=%s
                         WHERE
                             model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'], 
+                                vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
                             ))
@@ -724,7 +724,7 @@ class orm_template(object):
                         if val:
                             val2 = translation_obj._get_source(cr, user,
                                 self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)			
+                                context.get('lang', False) or 'en_US', val)
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
@@ -838,7 +838,7 @@ class orm_template(object):
                     continue
 
                 ok = True
-            
+
                 if user != 1:   # admin user has all roles
                     serv = netsvc.LocalService('object_proxy')
                     user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
@@ -2365,13 +2365,12 @@ class orm(orm_template):
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
             if args:
-                args.insert(0, ('active', '=', 1))
                 active_in_args = False
                 for a in args:
                     if a[0] == 'active':
                         active_in_args = True
                 if not active_in_args:
-                   args.insert(0, ('active', '=', 1))
+                    args.insert(0, ('active', '=', 1))
             else:
                 args = [('active', '=', 1)]
 
