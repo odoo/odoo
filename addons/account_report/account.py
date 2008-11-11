@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -53,22 +53,58 @@ class account_report(osv.osv):
 #            ]
 
     def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
-        def _calc_credit(*code):
+        obj_fy=self.pool.get('account.fiscalyear')
+        obj_period=self.pool.get('account.period')
+
+        def _calc_context(key,obj):
+            if key==0:
+                return obj.find(cr,uid)
+            else:
+                obj_key=obj.browse(cr,uid,obj.find(cr,uid))
+                if isinstance(obj_key,list):
+                    obj_key=obj_key[0]
+                key_ids=obj.search(cr,uid,[('date_stop','<',obj_key.date_start)])
+                if len(key_ids)<abs(key):
+                    return False
+                return key_ids[key]
+
+        def _calc_credit(code,year=0):
+            context['fiscalyear']=_calc_context(year,obj_fy)
+            if not context['fiscalyear']:
+                del context['fiscalyear']
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0)
-        def _calc_debit(*code):
+
+        def _calc_debit(code,year=0):
+            context['fiscalyear']=_calc_context(year,obj_fy)
+            if not context['fiscalyear']:
+                del context['fiscalyear']
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0)
-        def _calc_balance(*code):
+
+        def _calc_balance(code,year=0):
+            context['fiscalyear']=_calc_context(year,obj_fy)
+            if not context['fiscalyear']:
+                del context['fiscalyear']
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, acc_id, context),0)
+
         def _calc_report(*code):
             acc = self.pool.get('account.report.report')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0)
+
+        def _calc_tax_code(code,period=0):
+            context['period_id']=_calc_context(period,obj_period)
+            if not context['period_id']:
+                return 0.00
+            context['period_id']=context['period_id'][0]
+            acc = self.pool.get('account.tax.code')
+            acc_id = acc.search(cr, uid, [('code','in',code)])
+            return reduce(lambda y,x=0: x.sum_period+y, acc.browse(cr, uid, acc_id, context),0)
         result = {}
         for rep in self.browse(cr, uid, ids, context):
             objdict = {
@@ -76,6 +112,7 @@ class account_report(osv.osv):
                 'credit': _calc_credit,
                 'balance': _calc_balance,
                 'report': _calc_report,
+                'tax_code': _calc_tax_code,
             }
 #            if field_name=='status':
 #                fld_name = 'expression_status'
