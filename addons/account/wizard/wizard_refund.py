@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -19,44 +19,206 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import wizard
 import pooler
+import osv
+import netsvc
+import time
 
 sur_form = '''<?xml version="1.0"?>
 <form string="Credit Note">
-    <label string="Are you sure you want to refund this invoice ?"/>
+    <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
+    <newline />
+    <field name="date" />
+    <field name="period" />
+    <field name="description" width="150" />
 </form>'''
 
 sur_fields = {
-}
+    'date': {'string':'Operation date','type':'date', 'required':'False'},
+    'period':{'string': 'Force period', 'type': 'many2one',
+        'relation': 'account.period', 'required': False},
+    'description':{'string':'Description', 'type':'char', 'required':'True'},
+    }
+
 
 class wiz_refund(wizard.interface):
+
     def _invoice_refund(self, cr, uid, data, context):
+        return self._compute_refund(cr, uid, data, 'refund', context)
+
+    def _invoice_cancel(self, cr, uid, data, context):
+        return self._compute_refund(cr, uid, data, 'cancel', context)
+
+    def _invoice_modify(self, cr, uid, data, context):
+        return self._compute_refund(cr, uid, data, 'modify', context)
+
+    def _compute_refund(self, cr, uid, data, mode, context):
+        form = data['form']
         pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('account.invoice').refund(cr, uid, data['ids'])
-        return {
-            'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
-            'name': 'Invoices',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_refund'}",
-            'type': 'ir.actions.act_window'
-        }
+        reconcile_obj = pool.get('account.move.reconcile')
+        account_m_line_obj = pool.get('account.move.line')
+        created_inv = []
+        date = False
+        period = False
+        description = False
+        for inv in pool.get('account.invoice').browse(cr, uid, data['ids']) :
+            if form['period'] :
+                period = form['period']
+            else:
+                period = inv.period_id.id
+
+            if form['date'] :
+                date = form['date']
+                if not form['period'] :
+                    try :
+                        #we try in multy company mode
+                        cr.execute("""SELECT id
+                                      from account_period where date('%s')
+                                      between date_start AND  date_stop and company_id = %s limit 1 """%(
+                                      form['date'],
+                                      pool.get('res.users').browse(cr,uid,uid).company_id.id
+                                      )
+
+                                   )
+                    except :
+                        #we try in mono company mode
+                        cr.execute("""SELECT id
+                                      from account_period where date('%s')
+                                      between date_start AND  date_stop  limit 1 """%(
+                                        form['date'],
+                                      )
+
+                                   )
+                    res = cr.fetchone()
+                    if res:
+                        period = res[0]
+
+
+            else:
+                date = inv.date_invoice
+
+            if form['description'] :
+                description = form['description']
+            else:
+                description = inv.name
+            refund_id = pool.get('account.invoice').refund(cr, uid, [inv.id],date, period, description)
+            refund = pool.get('account.invoice').browse(cr, uid, refund_id[0])
+            # we compute due date
+            #!!!due date = date inv date on formdate
+            pool.get('account.invoice').write(cr, uid, [refund.id],{'date_due':date})
+
+            created_inv.append(refund_id[0])
+            #if inv is paid we unreconcile
+            if mode in ('cancel','modify'):
+                movelines = inv.move_id.line_id
+                #we unreconcile the lines
+                to_reconcile_ids = {}
+                for line in movelines :
+                    #if the account of the line is the as the one in the invoice
+                    #we reconcile
+                    if line.account_id.id == inv.account_id.id :
+                        to_reconcile_ids[line.account_id.id] =[line.id]
+                    if type(line.reconcile_id) != osv.orm.browse_null :
+                        reconcile_obj.unlink(cr,uid, line.reconcile_id.id)
+                #we advance the workflow of the refund to open
+                wf_service = netsvc.LocalService('workflow')
+                wf_service.trg_validate(uid, 'account.invoice', refund.id, 'invoice_open', cr)
+                #we reload the browse record
+                refund = pool.get('account.invoice').browse(cr, uid, refund_id[0])
+                #we match the line to reconcile
+                for tmpline in  refund.move_id.line_id :
+                    if tmpline.account_id.id == inv.account_id.id :
+                        to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
+                for account in to_reconcile_ids :
+                    account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
+                        writeoff_period_id=period,
+                        writeoff_journal_id=inv.journal_id.id,
+                        writeoff_acc_id=inv.account_id.id
+                    )
+                #we create a new invoice that is the copy of the original
+                if mode == 'modify' :
+                    invoice = pool.get('account.invoice').read(cr, uid, [inv.id],
+                        ['name', 'type', 'number', 'reference',
+                            'comment', 'date_due', 'partner_id', 'address_contact_id',
+                            'address_invoice_id', 'partner_insite','partner_contact',
+                            'partner_ref', 'payment_term', 'account_id', 'currency_id',
+                            'invoice_line', 'tax_line', 'journal_id','period_id'
+                        ]
+                    )
+                    invoice = invoice[0]
+                    del invoice['id']
+                    invoice_lines = pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
+                    invoice_lines = pool.get('account.invoice')._refund_cleanup_lines(invoice_lines)
+                    tax_lines = pool.get('account.invoice.tax').read(
+                        cr, uid, invoice['tax_line'])
+                    tax_lines = pool.get('account.invoice')._refund_cleanup_lines(tax_lines)
+
+                    invoice.update({
+                        'type': inv.type,
+                        'date_invoice': date,
+                        'state': 'draft',
+                        'number': False,
+                        'invoice_line': invoice_lines,
+                        'tax_line': tax_lines,
+                        'period_id': period,
+                        'name':description
+                        })
+
+                    #take the id part of the tuple returned for many2one fields
+                    for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
+                        'account_id', 'currency_id', 'payment_term', 'journal_id'):
+                        invoice[field] = invoice[field] and invoice[field][0]
+
+                    # create the new invoice
+                    inv_id = pool.get('account.invoice').create(cr, uid, invoice,{})
+                    # we compute due date
+                    if inv.payment_term.id:
+                        data = pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [inv_id],inv.payment_term.id,date)
+                        if 'value' in data and data['value']:
+                            pool.get('account.invoice').write(cr, uid, [inv_id],data['value'])
+                    created_inv.append(inv_id)
+
+        #we get the view id
+        mod_obj = pool.get('ir.model.data')
+        act_obj = pool.get('ir.actions.act_window')
+        if inv.type == 'out_invoice':
+            xml_id = 'action_invoice_tree5'
+        elif inv.type == 'in_invoice':
+            xml_id = 'action_invoice_tree8'
+        elif type == 'out_refund':
+            xml_id = 'action_invoice_tree10'
+        else:
+            xml_id = 'action_invoice_tree12'
+        #we get the model
+        result = mod_obj._get_id(cr, uid, 'account', xml_id)
+        id = mod_obj.read(cr, uid, result, ['res_id'])['res_id']
+        # we read the act window
+        result = act_obj.read(cr, uid, id)
+        result['res_id'] = created_inv
+
+        return result
+
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Credit Note')]}
+            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Refund Invoice'),('cancel_invoice','Cancel Invoice'),('modify_invoice','Modify Invoice')]}
         },
         'refund': {
             'actions': [],
-            'result': {'type':'action', 'action':_invoice_refund, 'state':'end'}
-        }
+            'result': {'type':'action', 'action':_invoice_refund, 'state':'end'},
+        },
+        'cancel_invoice': {
+            'actions': [],
+            'result': {'type':'action', 'action':_invoice_cancel, 'state':'end'},
+        },
+        'modify_invoice': {
+            'actions': [],
+            'result': {'type':'action', 'action':_invoice_modify, 'state':'end'},
+        },
+
     }
 wiz_refund('account.invoice.refund')
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
