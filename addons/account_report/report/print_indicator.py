@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -70,6 +70,7 @@ theme.default_font_family = "Helvetica-Bold"
 theme.default_font_size = 18
 theme.default_line_width = 1.0
 import tools
+import os
 
 
 parents = {
@@ -86,11 +87,13 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.ret_list = []
         self.localcontext.update({
             'time': time,
-            'test': self.test1,
+            'getgraph': self.getgraph,
             'lines':self.lines,
             'getarray':self.getarray,
+            'gettree':self.gettree,
         })
         self.count=0
+        self.treecount=0
         self.list=[]
         self.header_name=self.header_val=[]
 
@@ -166,6 +169,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'code':obj_ind.code,
                 'expression':obj_ind.expression,
                 'disp_graph':obj_ind.disp_graph,
+                'disp_tree':obj_ind.disp_tree,
                 'note':obj_ind.note,
                 'type':obj_ind.type,
                 }
@@ -175,7 +179,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
     def getarray(self,data,object):
         res={}
         result=[]
-        self.test1(data,object,intercall=True)
+        self.getgraph(data,object,intercall=True)
         self.header_val=[str(x) for x in self.header_val]
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
@@ -183,8 +187,56 @@ class accounting_report_indicator(report_sxw.rml_parse):
         result.append(res)
         return result
 
+    def gettree(self,data,object):
+        pool_history=self.pool.get('account.report.report')
+        obj_history=pool_history.browse(self.cr,self.uid,object['id'])
+        result=[]
+        self.treecount +=1
+        path=tools.config['addons_path']+"/account_report/tmp_images/tree_image"
 
-    def test1(self,data,object,intercall=False):
+        dirname =tools.config['addons_path']+'/account_report/tmp_images/'
+        if not os.path.isdir(dirname):
+            os.mkdir(dirname)
+
+        can = canvas.init('tree_image'+str(self.treecount)+".png")
+
+        theme.default_font_size = 12
+
+        tb = text_box.T(loc=(0,500),line_style=line_style.darkblue,text=str(obj_history.name))
+        tb.add_arrow((100, 500))
+        tb.draw()
+        base_x=100
+        base_y=500
+
+        if obj_history.child_ids:
+            can.line(line_style.black,base_x-30,base_y,base_x-30,base_y-(50*(len(obj_history.child_ids)-1)))
+        self.base_x=1
+        def draw_tree(obj_his,base_x,base_y):
+            for i in range(len(obj_his.child_ids)):
+#                print obj_his.name,base_x,base_y
+                if i<>0:
+                    a = arrow.T(head_style = 1)
+                    a.draw([(base_x-(30),base_y-(50*(i))), (base_x,base_y-(50*(i)))])
+                tb12 = text_box.T(loc=(base_x,base_y-(50*(i))), text=str(obj_his.child_ids[i].name))
+                tb12.draw()
+#                base_x=base_x+(100*self.base_x)
+#                base_y=base_y-(50*(i))
+                for j in obj_his.child_ids[i].child_ids:
+#                    print j
+#                    tb12.add_arrow((base_x,base_y))
+#                    tb12.draw()
+                    can.line(line_style.black,base_x-30+100,base_y-(50*(i)),base_x-30+100,base_y-(50*(len(obj_his.child_ids)-1)))
+                    draw_tree(j,base_x+100,base_y-(50*(i)))
+
+        draw_tree(obj_history,base_x,base_y)
+        can.close()
+
+        os.system('cp '+'tree_image'+str(self.treecount)+'.png ' +path+str(self.treecount)+'.png')
+        os.system('rm '+'tree_image'+str(self.treecount)+'.png')
+
+        return path+str(self.treecount)+'.png'
+
+    def getgraph(self,data,object,intercall=False):
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
