@@ -202,33 +202,39 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
         theme.default_font_size = 12
 
-        tb = text_box.T(loc=(0,500),line_style=line_style.darkblue,text=str(obj_history.name))
-        tb.add_arrow((100, 500))
-        tb.draw()
+        tb = text_box.T(loc=(0,700),line_style=line_style.darkblue,text=str(obj_history.code))
+
         base_x=100
-        base_y=500
+        base_y=700
 
         if obj_history.child_ids:
+            tb.add_arrow((100, 700))
             can.line(line_style.black,base_x-30,base_y,base_x-30,base_y-(50*(len(obj_history.child_ids)-1)))
-        self.base_x=1
-        def draw_tree(obj_his,base_x,base_y):
+        tb.draw()
+        self.child_dist=0
+        def draw_tree(obj_his,base_x,base_y,level=0):
+            self.child_dist=0
             for i in range(len(obj_his.child_ids)):
-#                print obj_his.name,base_x,base_y
+                can.line(line_style.black,base_x-30,base_y,base_x-30,base_y-(50*(i+len(obj_his.child_ids[i].child_ids))))
                 if i<>0:
                     a = arrow.T(head_style = 1)
-                    a.draw([(base_x-(30),base_y-(50*(i))), (base_x,base_y-(50*(i)))])
-                tb12 = text_box.T(loc=(base_x,base_y-(50*(i))), text=str(obj_his.child_ids[i].name))
-                tb12.draw()
-#                base_x=base_x+(100*self.base_x)
-#                base_y=base_y-(50*(i))
-                for j in obj_his.child_ids[i].child_ids:
-#                    print j
-#                    tb12.add_arrow((base_x,base_y))
-#                    tb12.draw()
-                    can.line(line_style.black,base_x-30+100,base_y-(50*(i)),base_x-30+100,base_y-(50*(len(obj_his.child_ids)-1)))
-                    draw_tree(j,base_x+100,base_y-(50*(i)))
+                    if self.child_dist:
+                        diff=self.child_dist
+                    else:
+                        diff=self.child_dist+i
+                    a.draw([(base_x-(30),base_y-(50*diff)), (base_x,base_y-(50*diff))])
 
-        draw_tree(obj_history,base_x,base_y)
+                if obj_his.child_ids[i].child_ids:
+                    tb12 = text_box.T(loc=(base_x,base_y-(50*(self.child_dist))), text=str(obj_his.child_ids[i].code))
+                    tb12.add_arrow((base_x+(100*(level+1)),base_y-(50*(self.child_dist))))
+                    tb12.draw()
+                    draw_tree(obj_his.child_ids[i],base_x+(100*(level+1)),base_y-(50*(self.child_dist)),level+1)
+                else:
+                    tb12 = text_box.T(loc=(base_x,base_y-(50*(i+self.child_dist))), text=str(obj_his.child_ids[i].code))
+                    tb12.draw()
+                self.child_dist=len(obj_his.child_ids[i].child_ids)
+#
+        draw_tree(obj_history,base_x,base_y,0)
         can.close()
 
         os.system('cp '+'tree_image'+str(self.treecount)+'.png ' +path+str(self.treecount)+'.png')
