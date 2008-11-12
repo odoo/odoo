@@ -62,7 +62,9 @@ class wiz_refund(wizard.interface):
         date = False
         period = False
         description = False
-        for inv in pool.get('account.invoice').browse(cr, uid, data['ids']) :
+        for inv in pool.get('account.invoice').browse(cr, uid, data['ids']):
+            if inv.state == 'draft':
+                raise wizard.except_wizard(_('Error !'), _('Can not %s draft invoice.') % (mode))
             if form['period'] :
                 period = form['period']
             else:
