@@ -68,6 +68,25 @@ class crm_cases(osv.osv):
         'partner_phone': fields.char('Phone', size=16),
         'partner_mobile': fields.char('Mobile', size=16),
     }
+    def stage_next(self, cr, uid, ids, context={}):
+        ok = False
+        sid = self.pool.get('crm.case.stage').search(cr, uid, [], context=context)
+        s = {}
+        previous = {}
+        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
+            section = stage.section_id.id or False
+            s.setdefault(section, {})
+            s[section][previous.get(section, False)] = stage.id
+            previous[section] = stage.id
+
+        for case in self.browse(cr, uid, ids, context):
+            section = (case.section_id.id or False)
+            if section in s:
+                st = case.stage_id.id  or False
+                if st in s[section]:
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+
+        return True
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id: return {}
         case = self.browse(cr, uid, case_id, context=context)

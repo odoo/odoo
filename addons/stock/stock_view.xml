@@ -817,6 +817,7 @@
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <field name="prodlot_id" select="1" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
+                                    <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
@@ -1154,11 +1155,11 @@
         <menuitem action="action_picking_tree8" id="menu_action_picking_tree8" parent="menu_action_picking_tree6"/>
 
         <record id="action_picking_tree9" model="ir.actions.act_window">
-            <field name="name">Draft Internal Packings</field>
+            <field name="name">New Internal Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field name="domain">[('state','=','draft'),('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
