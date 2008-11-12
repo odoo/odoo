@@ -41,7 +41,7 @@
 """,
     "depends" : ["account"],
     "init_xml" : [],
-    "demo_xml" : [],
+    "demo_xml" : ["crossovered_budget_demo.xml"],
     "update_xml" : [
         "security/ir.model.access.csv","account_budget_wizard.xml",
         "crossovered_budget_view.xml","crossovered_budget_report.xml","crossovered_budget_workflow.xml"
