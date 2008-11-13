@@ -925,11 +925,11 @@ class account_move(osv.osv):
                 if not company_id:
                     company_id = line.account_id.company_id.id
                 if not company_id == line.account_id.company_id.id:
-                    raise osv.except_osv(_('Error'), _('Couldn\'t create move between different companies'))
+                    raise osv.except_osv(_('Error'), _("Couldn't create move between different companies"))
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.' % (line.account_id.code, line.account_id.name)))
+                            raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
             if abs(amount) < 0.0001:
                 if not len(line_draft_ids):
