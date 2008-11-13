@@ -484,7 +484,7 @@ class document_file(osv.osv):
                 result[id] = d
             elif m=='fs':
                 try:
-                    path = os.path.join(os.getcwd(), cr.dbname,'filestore')
+                    path = os.path.join(os.getcwd(), 'filestore', cr.dbname)
                     value = file(os.path.join(path,r), 'rb').read()
                     result[id] = base64.encodestring(value)
                 except:
@@ -500,7 +500,7 @@ class document_file(osv.osv):
         if not value:
             return True
         if (not context) or context.get('store_method','fs')=='fs':
-            path = os.path.join(os.getcwd(), cr.dbname, "filestore")
+            path = os.path.join(os.getcwd(), "filestore", cr.dbname)
             if not os.path.isdir(path):
                 os.makedirs(path)
             flag = None
