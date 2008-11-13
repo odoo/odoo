@@ -125,7 +125,11 @@ def data_files():
                     glob.glob(opj(add_path, 'report', '*rml')) +
                     glob.glob(opj(add_path, 'report', '*sxw')) +
                     glob.glob(opj(add_path, 'report', '*xsl'))
-                )
+                ),
+                (   opj(addon_path, 'security'),
+                    glob.glob(opj(add_path, 'security', '*csv')) +
+                    glob.glob(opj(add_path, 'security', '*xml'))
+                ),
             ]
             files.extend(pathfiles)
     files.append(('.', [('bin/import_xml.rng')]))
