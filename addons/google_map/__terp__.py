@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com",
-    "category" : "Generic Modules",
+    "category" : "Generic Modules/Others",
     "description": """The module adds google map field in partner address
 so that we can directly open google map from the
 url widget.""",

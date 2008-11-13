@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -24,16 +24,16 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com",
-    "category" : "Generic Modules/Base Contact",
+    "category" : "Generic Modules/Base",
     "description": """
-        This module allows you to manage entirely your contacts. 
+        This module allows you to manage entirely your contacts.
 
-    It lets you define 
+    It lets you define
         *contacts unrelated to a partner,
-        *contacts working at several adresses (possibly for different partners), 
+        *contacts working at several adresses (possibly for different partners),
         *contacts with possibly different functions for each of its job's addresses
 
-    It also add new menuitems located in 
+    It also add new menuitems located in
         Partners \ Contacts
         Partners \ Functions
 
