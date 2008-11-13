@@ -88,6 +88,7 @@ def data_files():
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
+        files.append(('.', [('bin/import_xml.rng')]))
     else:
         man_directory = opj('share', 'man')
         files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -103,6 +104,8 @@ def data_files():
         files.append((opj(openerp_site_packages, 'i18n'), glob.glob('bin/i18n/*')))
         files.append((opj(openerp_site_packages, 'addons', 'custom'),
             glob.glob('bin/addons/custom/*xml') + glob.glob('bin/addons/custom/*rml') + glob.glob('bin/addons/custom/*xsl')))
+
+        files.append((openerp_site_packages, [('bin/import_xml.rng')]))
 
         for addon in find_addons():
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
@@ -132,7 +135,6 @@ def data_files():
                 ),
             ]
             files.extend(pathfiles)
-    files.append(('.', [('bin/import_xml.rng')]))
     return files
 
 check_modules()
