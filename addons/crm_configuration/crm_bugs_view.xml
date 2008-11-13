@@ -17,7 +17,11 @@
                 <group colspan="4" col="4">
                     <field name="name" string="Title" colspan="2"/>
                     <field name="section_id" colspan="1"/>
-                    <field name="stage_id" string="Resolution" colspan="2"/>
+                        <label string="Resolution: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
                     <field name="date"/>
                     <field name="email_from" colspan="2"/>
                     <field name="user_id" />

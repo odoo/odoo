@@ -492,6 +492,8 @@ class account_move_line(osv.osv):
 #TODO: move this check to a constraint in the account_move_reconcile object
         if len(r) != 1:
             raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
+        if not unrec_lines:
+            raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
         if not account.reconcile:
             raise osv.except_osv(_('Error'), _('The account is not defined to be reconcile !'))

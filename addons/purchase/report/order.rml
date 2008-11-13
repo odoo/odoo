@@ -275,7 +275,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ line.date_planned]]</para>
+            <para style="terp_default_Centre_9">[[ time.strftime('%m/%d/%Y', time.strptime( line.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_qty ]] </para>
