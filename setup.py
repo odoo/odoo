@@ -129,10 +129,15 @@ def data_files():
                     glob.glob(opj(add_path, 'report', '*sxw')) +
                     glob.glob(opj(add_path, 'report', '*xsl'))
                 ),
-                (   opj(addon_path, 'security'),
+                (   
+                    opj(addon_path, 'security'),
                     glob.glob(opj(add_path, 'security', '*csv')) +
                     glob.glob(opj(add_path, 'security', '*xml'))
                 ),
+                (   
+                    opj(addon_path, 'rng'), 
+                    glob.glob(opj(add_path, 'rng', '*rng'))
+                )
             ]
             files.extend(pathfiles)
     return files
