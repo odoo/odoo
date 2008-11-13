@@ -26,6 +26,7 @@ import wizard_schedulers_all
 import wizard_price
 import wizard_workcenter_load
 import wizard_track_prod
+import wizard_change_production_qty
 import make_procurement
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
