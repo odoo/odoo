@@ -54,7 +54,10 @@ required_modules = [
     ('psycopg', 'PostgreSQL module'),
     ('xml', 'XML Tools for python'),
     ('libxml2', 'libxml2 python bindings'),
-    ('libxslt', 'libxslt python bindings')
+    ('libxslt', 'libxslt python bindings'),
+    ('reportlab', 'reportlab module'),
+    ('pychart', 'pychart module'),
+    ('pydot', 'pydot module'),
 ]
 
 def check_modules():
