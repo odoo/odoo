@@ -419,6 +419,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
+        'doc':fields.many2one('base.wiki', 'Wiki'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
