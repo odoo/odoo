@@ -95,13 +95,13 @@ class email_parser(object):
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
         data = {
-                'name': self._decode_header(msg['Subject'][:64]),
+            'name': self._decode_header(msg['Subject']),
             'section_id': self.section_id,
-            'email_from': self._decode_header(msg['From'])[:128],
-            'email_cc': self._decode_header(msg['Cc'] or '')[:252],
+            'email_from': self._decode_header(msg['From']),
+            'email_cc': self._decode_header(msg['Cc'] or ''),
             'canal_id': self.canal_id,
             'user_id': False,
-            'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'][:84] })],
+            'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })],
         }
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -114,9 +114,9 @@ class email_parser(object):
 
         for attach in attachments or []:
             data_attach = {
-                'name': str(attach)[:64],
+                'name': str(attach),
                 'datas':binascii.b2a_base64(str(attachments[attach])),
-                'datas_fname': str(attach)[:64],
+                'datas_fname': str(attach),
                 'description': 'Mail attachment',
                 'res_model': 'crm.case',
                 'res_id': id
@@ -181,7 +181,7 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-                'history_line': [(0, 0, {'description': body['body'], 'email': msg['From'][:84]})],
+            'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
         }
 
         act = 'case_close'
@@ -285,7 +285,7 @@ class email_parser(object):
             if self.email_default:
                 a = self._decode_header(msg['Subject'])
                 del msg['Subject']
-                msg['Subject'] = '[TinyERP-CaseError] ' + a
+                msg['Subject'] = '[OpenERP-CaseError] ' + a
                 self.msg_send(msg, self.email_default.split(','))
         return emails
 
