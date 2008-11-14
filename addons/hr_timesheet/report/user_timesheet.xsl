@@ -15,15 +15,15 @@
 					<frame id="col1" x1="2.0cm" y1="2.5cm" width="24.7cm" height="17cm"/>
 				</pageTemplate>
 			</template>
-			
+
 			<stylesheet>
-				<paraStyle name="normal" fontName="Helvetica" fontSize="6" alignment="center" />
+				<paraStyle name="normal" fontName="Helvetica" fontSize="6" alignment="left" />
 				<paraStyle name="normal-title" fontName="Helvetica" fontSize="6" />
 				<paraStyle name="title" fontName="Helvetica" fontSize="18" alignment="center" />
 				<paraStyle name="employee" fontName="Helvetica-Oblique" fontSize="10" textColor="blue" />
-				<paraStyle name="glande" textColor="red" />
-				<paraStyle name="normal_people" textColor="green" />
-				<paraStyle name="esclave" textColor="purple" />
+				<paraStyle name="glande" textColor="red" fontSize="7" fontName="Helvetica"/>
+				<paraStyle name="normal_people" textColor="green" fontSize="7" fontName="Helvetica"/>
+				<paraStyle name="esclave" textColor="purple" fontSize="7" fontName="Helvetica"/>
 				<blockTableStyle id="month">
 					<blockAlignment value="CENTER" start="1,0" stop="-1,-1" />
 					<blockFont name="Helvetica" size="8" start="0,0" stop="-1,1"/>
@@ -90,7 +90,7 @@
 				<xsl:for-each select="report/days/day">
 					<xsl:variable name="today" select="attribute::number" />
 					<td>
-						<para>
+						<para style="normal">
 							<xsl:choose>
 								<xsl:when test="sum(//time-element[@date=$today]) &lt; 7.5">
 									<xsl:attribute name="style">glande</xsl:attribute>
@@ -102,12 +102,12 @@
 									<xsl:attribute name="style">esclave</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
-							<xsl:value-of select="sum(//time-element[@date=$today])" />
+							<xsl:value-of select="format-number(sum(//time-element[@date=$today]),'##.##')" />
 						</para>
 					</td>
 				</xsl:for-each>
 				<td>
-					<xsl:value-of select="sum(//time-element)" />
+					<xsl:value-of select="format-number(sum(//time-element),'##.##')" />
 				</td>
 			</tr>
         </blockTable>
@@ -115,6 +115,7 @@
 
     <xsl:template match="account">
 		<xsl:variable name="aid" select="attribute::id" />
+
 		<tr>
 			<td>
 				<para style="normal-title"><xsl:value-of select="attribute::name" /></para>
@@ -126,7 +127,7 @@
 				</td>
 			</xsl:for-each>
 			<td>
-				<para style="normal"><xsl:value-of select="sum(//account[@id=$aid]/time-element)" /></para>
+				<para style="normal"><xsl:value-of select="format-number(sum(//account[@id=$aid]/time-element),'##.##')" /></para>
 			</td>
 		</tr>
     </xsl:template>

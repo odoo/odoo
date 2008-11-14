@@ -517,7 +517,7 @@
                         <field name="date"/>
                         <field name="min_date" select="2"/>
                     </group>
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
@@ -542,8 +542,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -555,9 +555,8 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                 <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
@@ -633,8 +632,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -646,10 +645,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Products Sent" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -728,7 +726,7 @@
         <menuitem action="action_picking_tree2_delivery" id="menu_picking_waiting_delivery" parent="menu_action_picking_tree_delivery"/>
 
         <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
-            <field name="name">Waiting Delivery Orders</field>
+            <field name="name">Futur Delivery Orders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -819,11 +817,12 @@
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <field name="prodlot_id" select="1" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
+                                    <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -835,10 +834,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Packing Done" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -887,7 +885,7 @@
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
 
         <record id="action_picking_tree2" model="ir.actions.act_window">
-            <field name="name">Assigned Packings</field>
+            <field name="name">Available Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -915,7 +913,7 @@
         <menuitem action="action_picking_tree2" id="menu_picking_waiting" parent="menu_action_picking_tree"/>
 
         <record id="action_picking_tree3" model="ir.actions.act_window">
-            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="name">Confirmed Packings Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1009,8 +1007,8 @@
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
-                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -1022,10 +1020,9 @@
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
-                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
-                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
-                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
@@ -1136,7 +1133,7 @@
 
 
         <record id="action_picking_tree7" model="ir.actions.act_window">
-            <field name="name">Assigned Packings</field>
+            <field name="name">Available Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1147,7 +1144,7 @@
         <menuitem action="action_picking_tree7" id="menu_action_picking_tree7" parent="menu_action_picking_tree6"/>
 
         <record id="action_picking_tree8" model="ir.actions.act_window">
-            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="name">Confirmed Packings Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1158,11 +1155,11 @@
         <menuitem action="action_picking_tree8" id="menu_action_picking_tree8" parent="menu_action_picking_tree6"/>
 
         <record id="action_picking_tree9" model="ir.actions.act_window">
-            <field name="name">Draft Internal Packings</field>
+            <field name="name">New Internal Packings</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field name="domain">[('state','=','draft'),('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1226,7 +1223,7 @@
                     <field name="state" select="1"/>
                     <group col="4" colspan="2">
                         <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                        <button name="action_assign" states="confirmed" string="Set Available" type="object"/>
                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                         <button name="action_done" states="assigned" string="Make Parcel" type="object"/>
                     </group>
@@ -1253,7 +1250,7 @@
         <menuitem action="action_move_form3" id="menu_action_move_form3" parent="menu_action_move_form2"/>
 
         <record id="action_move_form4" model="ir.actions.act_window">
-            <field name="name">Assigned Moves</field>
+            <field name="name">Available Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

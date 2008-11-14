@@ -191,6 +191,7 @@ class account_invoice(osv.osv):
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True, help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
+        'move_name': fields.char('Account Move', size=64),
     }
     _defaults = {
         'type': _get_type,
@@ -323,7 +324,7 @@ class account_invoice(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False})
+        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_name':False,})
         if 'date_invoice' not in default:
             default['date_invoice'] = False
         if 'date_due' not in default:
@@ -568,8 +569,10 @@ class account_invoice(osv.osv):
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
-            if journal.sequence_id:
+            if journal.sequence_id and not inv.move_name:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+            else:
+                name = inv.move_name
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Can not create invoice move on centralized journal'))
@@ -585,8 +588,9 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
             move_id = self.pool.get('account.move').create(cr, uid, move)
+            new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id})
+            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
         return True
@@ -714,9 +718,15 @@ class account_invoice(osv.osv):
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
             if 'account_analytic_id' in line:
                 line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
+            if 'tax_code_id' in line :
+                if isinstance(line['tax_code_id'],tuple)  and len(line['tax_code_id']) >0 :
+                    line['tax_code_id'] = line['tax_code_id'][0]
+            if 'base_code_id' in line :
+                if isinstance(line['base_code_id'],tuple)  and len(line['base_code_id']) >0 :
+                    line['base_code_id'] = line['base_code_id'][0]
         return map(lambda x: (0,0,x), lines)
 
-    def refund(self, cr, uid, ids):
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
 
         new_ids = []
@@ -737,21 +747,28 @@ class account_invoice(osv.osv):
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(tax_lines)
-
+            if not date :
+                date = time.strftime('%Y-%m-%d')
             invoice.update({
                 'type': type_dict[invoice['type']],
-                'date_invoice': time.strftime('%Y-%m-%d'),
+                'date_invoice': date,
                 'state': 'draft',
                 'number': False,
                 'invoice_line': invoice_lines,
                 'tax_line': tax_lines
             })
-
+            if period_id :
+                invoice.update({
+                    'period_id': period_id,
+                })
+            if description :
+                invoice.update({
+                    'name': description,
+                })
             # take the id part of the tuple returned for many2one fields
             for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
                     'account_id', 'currency_id', 'payment_term', 'journal_id'):
                 invoice[field] = invoice[field] and invoice[field][0]
-
             # create the new invoice
             new_ids.append(self.create(cr, uid, invoice))
         return new_ids
