@@ -164,7 +164,7 @@ options = {
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
                      "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                     "pydot","asyncore","asynchat"],
+                     "pydot","asyncore","asynchat", "reportlab"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
@@ -187,8 +187,6 @@ setup(name             = name,
                           'openerp-server.ssl',
                           'openerp-server.service', 
                           'openerp-server.tools',
-                          'openerp-server.pychart', 
-                          'openerp-server.pychart.afm',
                           'openerp-server.report',
                           'openerp-server.report.printscreen',
                           'openerp-server.report.render',
