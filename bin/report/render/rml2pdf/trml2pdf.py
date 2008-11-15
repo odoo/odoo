@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -769,7 +769,8 @@ class _rml_template(object):
                 drw = _rml_draw(gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
-                self.page_templates.append( platypus.PageTemplate(frames=frames, **utils.attr_get(pt, [], {'id':'str'}) ))
+                drw = _rml_draw(node,self.doc,title=self.title)
+                self.page_templates.append( platypus.PageTemplate(frames=frames,onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
         self.doc_tmpl.addPageTemplates(self.page_templates)
 
     def render(self, node_stories):
