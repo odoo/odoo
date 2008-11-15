@@ -196,6 +196,9 @@ class browse_record(object):
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
                         data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                 self._data[data['id']].update(data)
+	if not name in self._data[self._id]:
+		#how did this happen?
+		raise AttributeError(_('Unknown attribute % in % ') % (name,self._id))
         return self._data[self._id][name]
 
     def __getattr__(self, name):

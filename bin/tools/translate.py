@@ -359,7 +359,11 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'view', obj.model, 0, t)
         elif model=='ir.actions.wizard':
             service_name = 'wizard.'+obj.wiz_name
-            obj2 = netsvc._service[service_name]
+	    try:
+                obj2 = netsvc._service[service_name]
+	    except KeyError, exc:
+	        logger.notifyChannel("db", netsvc.LOG_ERROR, "key error in %s: %s" % (xml_name,str(exc)))
+	        continue
             for state_name, state_def in obj2.states.iteritems():
                 if 'result' in state_def:
                     result = state_def['result']
@@ -389,7 +393,11 @@ def trans_generate(lang, modules, dbname=None):
                         push_translation(module, 'wizard_button', res_name, 0, button_label)
 
         elif model=='ir.model.fields':
-            field_name = obj.name
+	    try:
+                field_name = obj.name
+	    except AttributeError, exc:
+	        logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
+	        continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
                 continue
@@ -446,7 +454,10 @@ def trans_generate(lang, modules, dbname=None):
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
-                trad = getattr(obj, field_name) or ''
+		try:
+                    trad = getattr(obj, field_name) or ''
+		except:
+		    trad = ''
                 push_translation(module, 'model', name, xml_name, trad)
 
     # parse source code for _() calls
