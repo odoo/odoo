@@ -120,7 +120,6 @@ class document_directory_content(osv.osv):
                     if type(value)==type(obj):
                         value=value.name
                     value = value or ''
-                    print value
                     event.add(field.name).value = value and value.decode('utf8') or ''
                 elif ICS_TAGS[field.name]=='date':
                     dt = value or time.strftime('%Y-%m-%d %H:%M:%S')

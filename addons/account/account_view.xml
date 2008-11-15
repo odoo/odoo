@@ -130,6 +130,7 @@
                             <field name="reconcile"/>
                             <field name="active" select="2"/>
                             <field name="check_history"/>
+                            <field name="merge_invoice" select="2"/>
                             <newline/>
                             <newline/>
                             <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
@@ -796,7 +797,8 @@
                     <field name="name"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
-
+                    <field name="partner_id"/>
+                    <field name="amount"/>
                     <field name="line_id"/>
                     <field name="state"/>
                 </tree>
@@ -809,18 +811,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Entry">
-                    <separator colspan="4" string="General Information"/>
                     <group colspan="4" col="6">
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="partner_id" select="2"/>
-                    <field name="amount" select="2"/>
                     <field name="ref" select="1" groups="base.group_extended"/>
                     <field name="to_check" select="2" groups="base.group_extended"/>
+                    <field name="type" select="1" groups="base.group_extended"/>
                     </group>
 
-                    <separator colspan="4" string="Entry Lines"/>
                     <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
@@ -853,12 +852,13 @@
                             <field name="account_id"/>
                             <field name="date_maturity"/>
                             <field name="ref"/>
-                            <field name="debit"/>
-                            <field name="credit"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
                             <field name="state"/>
                         </tree>
                     </field>
 
+                    <separator colspan="4" string="State"/>
                     <field name="state" select="1"/>
                     <group col="2" colspan="2">
                         <button name="button_validate" states="draft" string="Validate" type="object"/>
@@ -988,17 +988,17 @@
 
         <act_window
             domain="[('account_id', '=', active_id)]"
-            id="act_account_acount_move_line_open" 
-            name="" 
+            id="act_account_acount_move_line_open"
+            name="Entries"
             context="{'account_id': active_id}"
-            res_model="account.move.line" 
+            res_model="account.move.line"
             src_model="account.account"/>
 
         <act_window
-            domain="[('account_id', '=', active_id),('reconcile_id','=',False)]" 
-            id="act_account_acount_move_line_open_unreconciled" 
-            name="Unreconciled entries" 
-            res_model="account.move.line" 
+            domain="[('account_id', '=', active_id),('reconcile_id','=',False)]"
+            id="act_account_acount_move_line_open_unreconciled"
+            name="Unreconciled entries"
+            res_model="account.move.line"
             context="{'account_id': active_id}"
             src_model="account.account"/>
 

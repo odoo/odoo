@@ -35,7 +35,11 @@
                     <newline/>
                     <field name="date" string="Date of Claim"/>
                     <field name="categ_id" string="Type of claim" select="1" on_change="onchange_categ_id(categ_id)"/>
-                    <field name="stage_id"/>
+                        <label string="Stage: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
                 </group>
                 <notebook>
                 <page string="Claims Info">

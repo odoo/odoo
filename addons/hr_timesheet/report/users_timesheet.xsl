@@ -15,15 +15,15 @@
 					<frame id="col1" x1="2.0cm" y1="2.5cm" width="24.7cm" height="17cm"/>
 				</pageTemplate>
 			</template>
-			
+
 			<stylesheet>
 				<paraStyle name="normal" fontName="Helvetica" fontSize="6" alignment="center" />
 				<paraStyle name="normal-title" fontName="Helvetica" fontSize="6" />
 				<paraStyle name="title" fontName="Helvetica" fontSize="18" alignment="center" />
 				<paraStyle name="employee" fontName="Helvetica-Oblique" fontSize="10" textColor="blue" />
-				<paraStyle name="glande" textColor="red" />
-				<paraStyle name="normal_people" textColor="green" />
-				<paraStyle name="esclave" textColor="purple" />
+				<paraStyle name="glande" textColor="red" fontSize="7" fontName="Helvetica"/>
+				<paraStyle name="normal_people" textColor="green" fontSize="7" fontName="Helvetica"/>
+				<paraStyle name="esclave" textColor="purple" fontSize="7" fontName="Helvetica"/>
 				<blockTableStyle id="month">
 					<blockAlignment value="CENTER" start="1,0" stop="-1,-1" />
 					<blockFont name="Helvetica" size="8" start="0,0" stop="-1,1"/>
@@ -102,12 +102,12 @@
 										<xsl:attribute name="style">esclave</xsl:attribute>
 									</xsl:otherwise>
 								</xsl:choose>
-								<xsl:value-of select="format-number(//employee[@id=$id]/time-element[@date=$today], '#.#')" />
+								<xsl:value-of select="format-number(//employee[@id=$id]/time-element[@date=$today], '##.##')" />
 							</para>
 						</td>
 					</xsl:for-each>
 					<td>
-						<xsl:value-of select="sum(//employee[@id=$id]/time-element)"/>
+						<xsl:value-of select="format-number(sum(//employee[@id=$id]/time-element),'##.##')"/>
 					</td>
 				</tr>
 			</xsl:for-each>
@@ -115,9 +115,9 @@
 				<td>Total</td>
 				<xsl:for-each select="report/days/day">
 					<xsl:variable name="today" select="attribute::number"/>
-					<td t="1"><xsl:value-of select="sum(//time-element[@date=$today])"/></td>
+					<td t="1"><xsl:value-of select="format-number(sum(//time-element[@date=$today]),'##.##')"/></td>
 				</xsl:for-each>
-				<td t="1"><xsl:value-of select="sum(//time-element)"/></td>
+				<td t="1"><xsl:value-of select="format-number(sum(//time-element),'##.##')"/></td>
 			</tr>
 		</blockTable>
 	</xsl:template>

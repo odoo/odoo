@@ -220,7 +220,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			else:
 				if child_account.type != 'view' \
 				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
+					[('account_id','>=',child_account.id)],
 					context=ctx)) <> 0 :
 					res.append(child_account)
 		##

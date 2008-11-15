@@ -28,11 +28,11 @@ ask_form = """<?xml version="1.0" ?>
 <form string="Delegate this task to a user">
     <separator string="Delegated Task" colspan="4"/>
     <field name="user_id" colspan="4"/>
-    <field name="planned_hours" colspan="4"/>
+    <field name="planned_hours" colspan="4" widget="float_time"/>
     <field name="name" colspan="4"/>
     <field name="include_info"/>
     <separator string="Validation Task" colspan="4"/>
-    <field name="planned_hours_me" colspan="4"/>
+    <field name="planned_hours_me" colspan="4" widget="float_time"/>
     <field name="prefix" colspan="4"/>
     <field name="state" colspan="4"/>
 </form>"""

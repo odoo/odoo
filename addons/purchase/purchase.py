@@ -207,8 +207,7 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
-        return True
+        return osv.osv.unlink(self, cr, uid, unlink_ids)        
     
     def button_dummy(self, cr, uid, ids, context={}):
         return True
@@ -339,19 +338,17 @@ class purchase_order(osv.osv):
                     raise osv.except_osv(
                         _('Could not cancel purchase order !'),
                         _('You must first cancel all packings attached to this purchase order.'))
-            for r in self.read(cr,uid,ids,['picking_ids']):
-                for pick in r['picking_ids']:
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
-            for inv in purchase.invoice_ids:
-                if inv.state not in ('draft','cancel'):
-                    raise osv.except_osv(
-                        _('Could not cancel this purchase order !'),
-                        _('You must first cancel all invoices attached to this purchase order.'))
-            for r in self.read(cr,uid,ids,['invoice_ids']):
-                for inv in r['invoice_ids']:
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+            for pick in purchase.picking_ids:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
+            inv = purchase.invoice_id
+            if inv and inv.state not in ('cancel','draft'):
+                raise osv.except_osv(
+                    _('Could not cancel this purchase order !'),
+                    _('You must first cancel all invoices attached to this purchase order.'))
+            if inv:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
         return True
 

@@ -15,7 +15,11 @@
                 <group colspan="4" col="7">
                     <field name="name" select="1" string="Lead Subject"/>
                     <field name="section_id" colspan="1"/>
-                    <field name="stage_id" select="1"/>
+                        <label string="Stage: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
                     <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
                     <field name="user_id" select="2"/>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>

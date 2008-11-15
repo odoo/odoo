@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -154,6 +154,13 @@ class account_account(osv.osv):
                 args[pos] = ('id','in',ids1)
             pos+=1
 
+        if context and context.has_key('consolidate_childs'): #add concolidated childs of accounts
+            ids = super(account_account,self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+            for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
+                ids.append(consolidate_child.id)
+            return ids
+
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -282,7 +289,9 @@ class account_account(osv.osv):
             required=True),
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
-            "otherwise it will only print its balance.")
+            "otherwise it will only print its balance."),
+         'merge_invoice': fields.boolean('Merge Invoice Entries',help="Check this box if you want that all lines of "\
+            "a customer or supplier invoice using this account are created in one line only"),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -496,6 +505,17 @@ class account_fiscalyear(osv.osv):
         'state': lambda *a: 'draft',
     }
     _order = "date_start"
+
+    def _check_duration(self,cr,uid,ids):
+        obj_fy=self.browse(cr,uid,ids[0])
+        if obj_fy.date_stop < obj_fy.date_start:
+            return False
+        return True
+
+    _constraints = [
+        (_check_duration, 'Error ! The date duration of the Fiscal Year is invalid. ', ['date_stop'])
+    ]
+
     def create_period3(self,cr, uid, ids, context={}):
         return self.create_period(cr, uid, ids, context, 3)
 
@@ -505,6 +525,10 @@ class account_fiscalyear(osv.osv):
             ds = mx.DateTime.strptime(fy.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
                 de = ds + RelativeDateTime(months=interval, days=-1)
+
+                if de.strftime('%Y-%m-%d')>fy.date_stop:
+                    de=mx.DateTime.strptime(fy.date_stop, '%Y-%m-%d')
+
                 self.pool.get('account.period').create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -542,6 +566,24 @@ class account_period(osv.osv):
         'state': lambda *a: 'draft',
     }
     _order = "date_start"
+
+    def _check_duration(self,cr,uid,ids):
+        obj_period=self.browse(cr,uid,ids[0])
+        if obj_period.date_stop < obj_period.date_start:
+            return False
+        return True
+
+    def _check_year_limit(self,cr,uid,ids):
+        obj_period=self.browse(cr,uid,ids[0])
+        if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or obj_period.fiscalyear_id.date_stop < obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_stop:
+            return False
+        return True
+
+    _constraints = [
+        (_check_duration, 'Error ! The date duration of the Period(s) is invalid. ', ['date_stop']),
+        (_check_year_limit, 'Error ! The date duration of the Period(s) should be within the limit of the Fiscal year. ', ['date_stop'])
+    ]
+
     def next(self, cr, uid, period, step, context={}):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
@@ -646,7 +688,7 @@ class account_move(osv.osv):
         data_move = self.pool.get('account.move').browse(cursor,user,ids)
         for move in data_move:
             if move.state=='draft':
-                name = '*' + move.name
+                name = '*' + str(move.id)
             else:
                 name = move.name
             res.append((move.id, name))
@@ -669,7 +711,7 @@ class account_move(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Entry Name', size=64, required=True),
+        'name': fields.char('Entry Number', size=64, required=True),
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
@@ -678,10 +720,22 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2), store=True),
+        'type': fields.selection([
+            ('pay_voucher','Cash Payment'),
+            ('bank_pay_voucher','Bank Payment'),
+            ('rec_voucher','Cash Receipt'),
+            ('bank_rec_voucher','Bank Receipt'),
+            ('cont_voucher','Contra'),
+            ('journal_sale_vou','Journal Sale'),
+            ('journal_pur_voucher','Journal Purchase'),
+            ('journal_voucher','Journal Voucher'),
+        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
+        'name': lambda *a: '/',
         'state': lambda *a: 'draft',
         'period_id': _get_period,
+        'type' : lambda *a : 'journal_voucher',
     }
 
     def _check_centralisation(self, cursor, user, ids):
@@ -714,6 +768,17 @@ class account_move(osv.osv):
     ]
     def post(self, cr, uid, ids, context=None):
         if self.validate(cr, uid, ids, context) and len(ids):
+            for move in self.browse(cr, uid, ids):
+                if move.name =='/':
+                    new_name = False
+                    journal = move.journal_id
+                    if journal.sequence_id:
+                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    else:
+                        raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+                    if new_name:
+                        self.write(cr, uid, [move.id], {'name':new_name})
+
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non balanced entry !'))
@@ -759,12 +824,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        if not 'name' in vals:
-            journal = self.pool.get('account.journal').browse(cr, uid, context.get('journal_id', vals.get('journal_id', False)))
-            if journal.sequence_id:
-                vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-            else:
-                raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
         accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
@@ -774,6 +833,13 @@ class account_move(osv.osv):
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'state':'draft', 'name':'/',})
+        return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context={}, check=True):
         toremove = []
@@ -866,11 +932,11 @@ class account_move(osv.osv):
                 if not company_id:
                     company_id = line.account_id.company_id.id
                 if not company_id == line.account_id.company_id.id:
-                    raise osv.except_osv(_('Error'), _('Couldn\'t create move between different companies'))
+                    raise osv.except_osv(_('Error'), _("Couldn't create move between different companies"))
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                            raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.' % (line.account_id.code, line.account_id.name)))
+                            raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
             if abs(amount) < 0.0001:
                 if not len(line_draft_ids):
@@ -1046,13 +1112,13 @@ class account_tax_code(osv.osv):
         return res
 
     def _sum_period(self, cr, uid, ids, name, args, context):
-        if not 'period_id' in context:
+        if 'period_id' in context and context['period_id']:
+            period_id = context['period_id']
+        else:
             period_id = self.pool.get('account.period').find(cr, uid)
             if not len(period_id):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
-        else:
-            period_id = context['period_id']
         return self._sum(cr, uid, ids, name, args, context,
                 where=' and line.period_id='+str(period_id))
 

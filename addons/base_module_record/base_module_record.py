@@ -26,12 +26,43 @@ import netsvc
 import pooler
 import string
 
+installed = False
+
+def fnct_call(fnct):
+    def execute(*args, **argv):
+        if len(args) >= 6 and isinstance(args[5], dict):
+            _old_args = args[5].copy()
+        else:
+            _old_args = None
+        res = fnct(*args, **argv)
+        pool = pooler.get_pool(args[0])
+        mod = pool.get('ir.module.record')
+        if mod and mod.recording:
+            if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
+                if _old_args is not None:
+                    args[5].update(_old_args)
+                mod.recording_data.append(('query', args, argv,res))
+        return res
+    return execute
+
+def fnct_call_workflow(fnct):
+    def exec_workflow(*args, **argv):
+        res = fnct(*args, **argv)
+        pool = pooler.get_pool(args[0])
+        mod = pool.get('ir.module.record')
+        if mod and mod.recording:
+            mod.recording_data.append(('workflow', args, argv))
+        return res
+    return exec_workflow
+
+
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
 
     }
     def __init__(self, pool, cr=None):
+        global installed
         if super(base_module_record, self).__init__.func_code.co_argcount ==3:
             super(base_module_record, self).__init__(pool,cr)
         else:
@@ -39,6 +70,13 @@ class base_module_record(osv.osv):
         self.recording = 0
         self.recording_data = []
         self.depends = {}
+        if not installed:
+            obj  = netsvc._service['object']
+            obj.execute = fnct_call(obj.execute)
+            obj.exportMethod(obj.execute)
+            obj.exec_workflow = fnct_call_workflow(obj.exec_workflow)
+            obj.exportMethod(obj.exec_workflow)
+            installed = True
 
     # To Be Improved
     def _create_id(self, cr, uid, model, data):
@@ -166,6 +204,7 @@ class base_module_record(osv.osv):
             self.ids[(rec[3],result)] = id
             record_list += record
         return record_list,noupdate
+
     def _generate_assert_xml(self, rec, doc):
         pass
     def generate_xml(self, cr, uid):
@@ -202,39 +241,5 @@ class base_module_record(osv.osv):
         res = doc.toprettyxml(indent="\t")
         return  doc.toprettyxml(indent="\t").encode('utf8')
 base_module_record()
-
-def fnct_call(fnct):
-    def execute(*args, **argv):
-        if len(args) >= 6 and isinstance(args[5], dict):
-            _old_args = args[5].copy()
-        else:
-            _old_args = None
-        res = fnct(*args, **argv)
-        pool = pooler.get_pool(args[0])
-        mod = pool.get('ir.module.record')
-        if mod and mod.recording:
-            if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
-                if _old_args is not None:
-                    args[5].update(_old_args)
-                mod.recording_data.append(('query', args, argv,res))
-        return res
-    return execute
-
-def fnct_call_workflow(fnct):
-    def exec_workflow(*args, **argv):
-        res = fnct(*args, **argv)
-        pool = pooler.get_pool(args[0])
-        mod = pool.get('ir.module.record')
-        if mod and mod.recording:
-            mod.recording_data.append(('workflow', args, argv))
-        return res
-    return exec_workflow
-
-obj  = netsvc._service['object']
-obj.execute = fnct_call(obj.execute)
-obj.exportMethod(obj.execute)
-obj.exec_workflow = fnct_call_workflow(obj.exec_workflow)
-obj.exportMethod(obj.exec_workflow)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

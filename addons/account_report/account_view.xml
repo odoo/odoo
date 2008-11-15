@@ -27,29 +27,37 @@
                             <field name="disp_graph"/>
                            <!-- <field colspan="4" name="expression_status"/>-->
                             <separator colspan="4" string="Legend of operators"/>
-                            <label align="1.0" string="Account debit:"/>
-                            <label align="0.0" string="debit('ACCOUNT_CODE')"/>
-                            <label align="1.0" string="Account credit:"/>
-                            <label align="0.0" string="credit('ACCOUNT_CODE')"/>
-                            <label align="1.0" string="Account balance:"/>
-                            <label align="0.0" string="balance('ACCOUNT_CODE')"/>
-                            <label align="1.0" string="Report amount:"/>
+                            <label align="1.0" string="Account Debit:"/>
+                            <label align="0.0" string="debit(['ACCOUNT_CODE',],fiscalyear)"/>
+                            <label align="1.0" string="Account Credit:"/>
+                            <label align="0.0" string="credit(['ACCOUNT_CODE',],fiscalyear)"/>
+                            <label align="1.0" string="Account Balance:"/>
+                            <label align="0.0" string="balance(['ACCOUNT_CODE',],fiscalyear)"/>
+							<label align="1.0" string="Account Tax Code:"/>
+                            <label align="0.0" string="tax_code(['ACCOUNT_TAX_CODE',],period)"/>
+                            <label align="1.0" string="Report Amount:"/>
                             <label align="0.0" string="report('REPORT_CODE')"/>
+                            <newline/>
                             <label align="1.0" string="Operators:"/>
                             <label align="0.0" string="+ - * / ( )"/>
-                            <label colspan="4" string="Example: (balance('6','45') - credit('7')) / report('RPT1')"/>
+                            <label colspan="4" string="Example: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"/>
+                            <label colspan="4" string="Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."/>
                             <separator colspan="4" string="Return value for status"/>
                             <group col="2" colspan="2">
                                 <label align="1.0" string="&lt; Badness Indicator Limit:"/>
                                 <label align="0.0" string="Very bad"/>
+                                <newline/>
                                 <label align="1.0" string="= Badness Indicator Limit:"/>
                                 <label align="0.0" string="Bad"/>
+                                <newline/>
                                 <!--<label align="1.0" string="0:"/>
                                 <label align="0.0" string="Normal"/>-->
                                 <label align="1.0" string="= Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Good"/>
+                                <newline/>
                                 <label align="1.0" string="&gt; Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Very Good"/>
+                                <newline/>
                             </group>
                             <group col="2" colspan="2">
                             </group>

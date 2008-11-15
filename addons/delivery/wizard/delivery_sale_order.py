@@ -84,7 +84,7 @@ class make_delivery(wizard.interface):
     states = {
         'init' : {
             'actions' : [_delivery_default],
-            'result' : {'type' : 'form', 'arch' : delivery_form, 'fields' : delivery_fields, 'state' : [('end', 'Cancel'),('delivery', 'Create delivery line') ]}
+            'result' : {'type' : 'form', 'arch' : delivery_form, 'fields' : delivery_fields, 'state' : [('end', 'Cancel', 'gtk-cancel'),('delivery', 'Add Delivery Costs', 'gtk-ok') ]}
         },
         'delivery' : {
             'actions' : [_delivery_set],

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -176,7 +176,7 @@ class account_move_line(osv.osv):
             if s>0:
                 acc = acc1
             v = self.pool.get('res.currency').compute(cr, uid,
-                account.company_id.currency_id.id, 
+                account.company_id.currency_id.id,
                 data['currency_id'],
                 s, account=acc, account_invert=True)
             data['amount_currency'] = v
@@ -277,7 +277,7 @@ class account_move_line(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
+        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
@@ -492,6 +492,8 @@ class account_move_line(osv.osv):
 #TODO: move this check to a constraint in the account_move_reconcile object
         if len(r) != 1:
             raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
+        if not unrec_lines:
+            raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
         if not account.reconcile:
             raise osv.except_osv(_('Error'), _('The account is not defined to be reconcile !'))

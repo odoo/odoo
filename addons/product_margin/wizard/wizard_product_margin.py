@@ -25,16 +25,21 @@ import pooler
 import time
 
 def _action_open_window(self, cr, uid, data, context):
+    cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.graph', 'graph'))
+    view_res3 = cr.fetchone()[0]
+    cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.form.inherit', 'form'))
+    view_res2 = cr.fetchone()[0]
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.tree', 'tree'))
-    view_res = cr.fetchone()
+    view_res = cr.fetchone()[0]
     return {
         'name': 'Product Margins',
-         'context':{'date_from':data['form']['from_date'],'date_to':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
+        'context':{'date_from':data['form']['from_date'],'date_to':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
         'view_type': 'form',
         "view_mode": 'tree,form,graph',
         'res_model':'product.product',
         'type': 'ir.actions.act_window',
-        'view_id': view_res,
+        'views': [(view_res,'tree'), (view_res2,'form'), (view_res3,'graph')],
+        'view_id': False
     }
 
 

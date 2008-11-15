@@ -48,7 +48,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view1">
         <field name="sequence" eval="1"/>
@@ -81,7 +81,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">form,tree</field>
         <field name="view_id" ref="crm_case_form_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my3">
         <field name="sequence" eval="2"/>
@@ -106,7 +106,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'in\',(\'pending\',\'open\',\'draft\')),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'in\',(\'pending\',\'open\',\'draft\')),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my3">
         <field name="sequence" eval="1"/>
@@ -139,7 +139,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my2">
         <field name="sequence" eval="1"/>
@@ -176,7 +176,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'pending\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'pending\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my1">
         <field name="sequence" eval="1"/>
@@ -211,7 +211,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_my0">
         <field name="sequence" eval="1"/>
@@ -246,7 +246,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">calendar,tree,form,graph</field>
         <field name="view_id" ref="crm_case_calendar_view11"/>
-        <field name="domain" eval="'[(\'state\',\'=\',\'done\'),(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'=\',\'done\'),(\'user_id\',\'=\',uid),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_myjobs">
         <field name="sequence" eval="1"/>
@@ -285,7 +285,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'state\',\'&lt;&gt;\',\'done\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'&lt;&gt;\',\'done\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all3">
         <field name="sequence" eval="1"/>
@@ -318,7 +318,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'state\',\'=\',\'draft\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'=\',\'draft\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all2">
         <field name="sequence" eval="1"/>
@@ -351,7 +351,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'state\',\'=\',\'pending\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'=\',\'pending\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all1">
         <field name="sequence" eval="1"/>
@@ -384,7 +384,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view11"/>
-        <field name="domain" eval="'[(\'state\',\'=\',\'open\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'=\',\'open\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_all0">
         <field name="sequence" eval="1"/>
@@ -417,7 +417,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">calendar,tree,form,graph</field>
         <field name="view_id" ref="crm_case_calendar_view11"/>
-        <field name="domain" eval="'[(\'state\',\'=\',\'done\'),(\'section_id\',\'=\','+str(section_support2)+')]'"/>
+        <field name="domain" eval="'[(\'state\',\'=\',\'done\'),(\'section_id\',\'=\','+str(section_support0)+')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_alljobs">
         <field name="sequence" eval="1"/>
