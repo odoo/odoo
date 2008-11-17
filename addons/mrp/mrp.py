@@ -499,30 +499,9 @@ class mrp_production(osv.osv):
                             (parent_id, child_id) VALUES (%d,%d)',
                             (res.id, move.id))
                 move_ids.append(res.id)
-            if production.move_created_ids:
-                #TODO There we should handle the residus move creation
-                vals= {'state':'confirmed'}
-                new_moves = [x.id for x in production.move_created_ids]
-                self.pool.get('stock.move').write(cr, uid, new_moves, vals)
-            else:
-                #XXX Why is it there ? Aren't we suppose to already have a created_move ?
-                source = production.product_id.product_tmpl_id.property_stock_production.id
-                vals = {
-                    'name':'PROD:'+production.name,
-                    'date_planned': production.date_planned,
-                    'product_id': production.product_id.id,
-                    'product_qty': production.product_qty,
-                    'product_uom': production.product_uom.id,
-                    'product_uos_qty': production.product_uos and production.product_uos_qty or False,
-                    'product_uos': production.product_uos and production.product_uos.id or False,
-                    'location_id': source,
-                    'location_dest_id': production.location_dest_id.id,
-                    'move_dest_id': production.move_prod_id.id,
-                    'state': 'confirmed'
-                }
-                new_moves = [self.pool.get('stock.move').create(cr, uid, vals)]
-                self.write(cr, uid, [production.id],
-                        {'move_created_ids': [(6, 'WTF', new_moves)]})
+            vals= {'state':'confirmed'}
+            new_moves = [x.id for x in production.move_created_ids]
+            self.pool.get('stock.move').write(cr, uid, new_moves, vals)
             if not production.date_finnished:
                 self.write(cr, uid, [production.id],
                         {'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
@@ -590,6 +569,7 @@ class mrp_production(osv.osv):
 
     def action_confirm(self, cr, uid, ids):
         picking_id=False
+        proc_ids = []
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
                 self.action_compute(cr, uid, [production.id])
@@ -611,7 +591,6 @@ class mrp_production(osv.osv):
                 'address_id': address_id,
                 'auto_picking': self._get_auto_picking(cr, uid, production),
             })
-            toconfirm = True
 
             source = production.product_id.product_tmpl_id.property_stock_production.id
             data = {
@@ -678,9 +657,9 @@ class mrp_production(osv.osv):
                 })
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-            if toconfirm:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                proc_ids.append(proc_id)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id':picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
         return picking_id
 
