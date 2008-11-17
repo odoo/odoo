@@ -3,11 +3,10 @@
     <data>
 
         <!-- Holidays -->
-        <record model="ir.ui.view" id="edit_holiday_inherit_new">
-            <field name="name">hr.holidays.form.inherit</field>
+        <record model="ir.ui.view" id="edit_holiday_new">
+            <field name="name">hr.holidays.form</field>
             <field name="model">hr.holidays</field>
             <field name="type">form</field>
-            <field name="inherit_id" eval="False"/>
             <field name="arch" type="xml">
                 <form string="Employee holidays">
                     <field colspan="4" name="name" select="1"/>
@@ -42,24 +41,13 @@
             <field name="arch" type="xml">
                 <tree string="Employee holidays">
                     <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="number_of_days" string="Number of Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="holiday_status"/>
                     <field name="state"/>
                 </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_holiday_2">
-            <field name="name">hr.holidays.tree</field>
-            <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="view_holiday"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="employee_id"/>
-                    <field name="number_of_days" string="Number of Days"/>
-                </field>
             </field>
         </record>
 
