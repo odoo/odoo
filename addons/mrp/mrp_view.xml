@@ -797,8 +797,28 @@
         <act_window domain="[('warehouse_id', '=', active_id)]" id="act_stock_warehouse_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="stock.warehouse"/>
 
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
-        <act_window context="{'product_uom': locals().has_key('uom_id') and uom_id}" domain="[('product_id', '=', active_id)]" id="act_product_product_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="product.product"/>
+        <act_window
+            context="{'product_uom': locals().has_key('uom_id') and uom_id}"
+            domain="[('product_id', '=', active_id)]" 
+            id="act_product_product_2_stock_warehouse_orderpoint"
+            name="Minimum Stock Rules"
+            res_model="stock.warehouse.orderpoint"
+            src_model="product.product"/>
 
-        <act_window domain="[('product_id', '=', active_id),('bom_id','=',False)]" id="act_product_product_2_mrp_bom" name="Bill of Material" res_model="mrp.bom" src_model="product.product"/>
+        <act_window
+            id="action_product_bom_structure"
+            name="Product BoM Structure"
+            domain="[('product_id', '=', active_id),('bom_id','=',False)]"
+            view_type="tree"
+            view_id="mrp_bom_tree_view"
+            res_model="mrp.bom"
+            src_model="product.product"/>
+
+        <act_window
+            domain="[('product_id', '=', active_id),('bom_id','=',False)]"
+            id="act_product_product_2_mrp_bom"
+            name="Bill of Materials"
+            res_model="mrp.bom"
+            src_model="product.product"/>
     </data>
 </openerp>
