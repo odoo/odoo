@@ -164,21 +164,16 @@ class act_window(osv.osv):
         res={}
         for act in self.browse(cr, uid, ids):
             res[act.id]=[(view.view_id.id, view.view_mode) for view in act.view_ids]
-            if (not act.view_ids):
-                modes = act.view_mode.split(',')
+            modes = act.view_mode.split(',')
+            if len(modes)>len(act.view_ids):
                 find = False
                 if act.view_id:
                     res[act.id].append((act.view_id.id, act.view_id.type))
-                for t in modes:
+                for t in modes[len(act.view_ids):]:
                     if act.view_id and (t == act.view_id.type) and not find:
                         find = True
                         continue
                     res[act.id].append((False, t))
-
-                if 'calendar' not in modes:
-                    mobj = self.pool.get(act.res_model)
-                    if hasattr(mobj, '_date_name') and mobj._date_name in mobj._columns:
-                        res[act.id].append((False, 'calendar'))
         return res
 
     _columns = {
