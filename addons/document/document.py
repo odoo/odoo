@@ -471,7 +471,7 @@ def random_name():
 def create_directory(path):
     dir_name = random_name()
     path = os.path.join(path,dir_name)
-    os.mkdir(path)
+    os.makedirs(path)
     return dir_name
 
 class document_file(osv.osv):
@@ -484,7 +484,7 @@ class document_file(osv.osv):
                 result[id] = d
             elif m=='fs':
                 try:
-                    path = os.path.join(os.getcwd(),'filestore')
+                    path = os.path.join(os.getcwd(), 'filestore', cr.dbname)
                     value = file(os.path.join(path,r), 'rb').read()
                     result[id] = base64.encodestring(value)
                 except:
@@ -500,9 +500,9 @@ class document_file(osv.osv):
         if not value:
             return True
         if (not context) or context.get('store_method','fs')=='fs':
-            path = os.path.join(os.getcwd(), "filestore")
+            path = os.path.join(os.getcwd(), "filestore", cr.dbname)
             if not os.path.isdir(path):
-                os.mkdir(path)
+                os.makedirs(path)
             flag = None
             # This can be improved
             for dirs in os.listdir(path):
@@ -620,7 +620,7 @@ class document_file(osv.osv):
         for f in self.browse(cr, uid, ids, context):
             if f.store_method=='fs':
                 try:
-                    path = os.path.join(os.getcwd(),'filestore',f.store_fname)
+                    path = os.path.join(os.getcwd(), cr.dbname, 'filestore',f.store_fname)
                     os.unlink(path)
                 except:
                     pass

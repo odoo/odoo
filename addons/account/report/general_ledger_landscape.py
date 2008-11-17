@@ -199,8 +199,11 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 		#
 		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-
-		for child_id in self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])]):
+		if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
+			ctx['consolidate_childs'] = True
+			ctx['account_id'] = account.id
+		ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
+		for child_id in ids_acc:
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
 			sold_account = self._sum_solde_account(child_account,form)
 			self.sold_accounts[child_account.id] = sold_account
@@ -294,9 +297,9 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			else :
 				l['partner'] = ''
 
-			
+
 			sum = l['debit'] - l ['credit']
-			
+
 			c = time.strptime(l['date'],"%Y-%m-%d")
 			l['date'] = time.strftime("%d-%m-%Y",c)
 			l['progress'] = sum
