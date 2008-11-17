@@ -506,7 +506,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         if not ids:
             if not lang_name:
                 lang_name=lang
-                languages=tools.get_languages()
+                languages=tools.scan_languages()
                 lang_name = languages.get(lang, lang)
             ids = lang_obj.create(cr, uid, {
                 'code': lang,
