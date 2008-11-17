@@ -129,6 +129,8 @@ class SecureXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     
 
 class SecureXMLRPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer, SecureTCPServer):
+    encoding = None
+    allow_none = False
     def __init__(self, addr,
                  requestHandler=SecureXMLRPCRequestHandler,
                  logRequests=1):
