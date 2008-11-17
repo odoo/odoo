@@ -991,7 +991,7 @@ class mrp_procurement(osv.osv):
                 'location_src_id': procurement.location_id.id,
                 'location_dest_id': procurement.location_id.id,
                 'bom_id': procurement.bom_id and procurement.bom_id.id or False,
-                'date_planned': newdate,
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_prod_id': res_id,
             })
             self.write(cr, uid, [procurement.id], {'state':'running'})
