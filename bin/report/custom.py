@@ -28,6 +28,7 @@ import print_xml
 import render
 from interface import report_int
 import common
+from osv import except_osv
 from osv.orm import browse_null
 from osv.orm import browse_record_list
 import pooler
@@ -564,7 +565,7 @@ class report_custom(report_int):
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(len(results)))
 
         if reduce(lambda x,y : x+y, map(lambda x : x[1],results)) == 0.0:
-            raise(_('The sum of the data (2nd field) is null.\nWe can draw a pie chart !'))
+            raise osv.except_osv('Error', _("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
 
         plot = pie_plot.T(data=results, arc_offsets=[0,10,0,10],
                           shadow = (2, -2, fill_style.gray50),
