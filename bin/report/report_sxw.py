@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-
+import base64
 import xml.dom.minidom
 import os, time
 import ir, netsvc
@@ -668,10 +668,10 @@ class report_sxw(report_rml):
         pdf = create_doc(rml2, logo,title)
 
         if attach:
-            # TODO: save multiple print with symbolic links in attach
+            # TODO: save multiple print with symbolic links in attach            
             pool.get('ir.attachment').create(cr, uid, {
-                'name': title or _('print'),
-                'datas': pdf,
+                'name': (title or _('print'))+':'+time.strftime('%Y-%m-%d %H:%M:%S'),
+                'datas': base64.encodestring(pdf),
                 'datas_fname': attach+time.strftime('%Y-%m-%d')+'.'+report_type,
                 'res_model': self.table,
                 'res_id': ids[0]
