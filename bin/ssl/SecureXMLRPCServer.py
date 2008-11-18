@@ -69,6 +69,19 @@ class SSLBugFix:
 #        """
 #        self.__dict__["conn"].send(data)
 
+    def recv(self, bufsize):
+	""" Another bugfix: SSL's recv() may raise
+	recoverable exceptions, which simply need us to retry
+	the call
+	"""
+	while True:
+	    try:
+		return self.__dict__["conn"].recv(bufsize)
+	    except SSL.WantReadError:
+	        pass
+	    except SSL.WantWriteError:
+		pass
+    
     def shutdown(self, how=1):
         """
         This isn't part of the bugfix. SimpleXMLRpcServer.doPOST
@@ -83,11 +96,9 @@ class SSLBugFix:
         Since servers create new sockets, we have to infect
         them with our magic. :)
         """
-	sys.stderr.write("accept\n")
         c, a = self.__dict__["conn"].accept()
         return (SSLBugFix(c), a)
-    #def close()
-
+    
 
 
 class SecureTCPServer(SocketServer.TCPServer):
@@ -116,13 +127,14 @@ class SecureTCPServer(SocketServer.TCPServer):
                                                                   self.socket_type)))
         self.server_bind()
         self.server_activate()
+
     def handle_error(self, request, client_address):
         """ Override the error handler
         """
         import traceback
-	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Server error in request from %s: %s" %
+	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Server error in request from %s:\n%s" %
 		(client_address,traceback.format_exc()))
-
+    
 
 class SecureXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     def setup(self):
@@ -131,7 +143,6 @@ class SecureXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
         doesn't have a 'dup'. Not exactly sure WHY this is, but
         this is backed up by comments in socket.py and SSL/connection.c
         """
-	sys.stderr.write("rhandler setup\n")
         self.connection = self.request # for doPOST
         self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
         self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
@@ -156,10 +167,10 @@ class SecureXMLRPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer, SecureTCPServer)
     def handle_error(self, request, client_address):
         """ Override the error handler
         """
-        import traceback
-	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Server error in request from %s: %s" %
-		(client_address,traceback.format_exc()))
+	import traceback
+	e_type, e_value, e_traceback = sys.exc_info()
+	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Request handler error in request from %s: %s\n%s" % 
+			(client_address,str(e_type),traceback.format_exc()))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
