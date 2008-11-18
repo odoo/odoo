@@ -852,7 +852,7 @@ class orm_template(object):
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
-        for field in fields_def:
+        for field in fields:
             fields[field].update(fields_def[field])
         return arch, fields
 
