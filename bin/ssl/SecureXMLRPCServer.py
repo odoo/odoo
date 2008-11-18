@@ -83,8 +83,10 @@ class SSLBugFix:
         Since servers create new sockets, we have to infect
         them with our magic. :)
         """
+	sys.stderr.write("accept\n")
         c, a = self.__dict__["conn"].accept()
         return (SSLBugFix(c), a)
+    #def close()
 
 
 
@@ -114,6 +116,12 @@ class SecureTCPServer(SocketServer.TCPServer):
                                                                   self.socket_type)))
         self.server_bind()
         self.server_activate()
+    def handle_error(self, request, client_address):
+        """ Override the error handler
+        """
+        import traceback
+	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Server error in request from %s: %s" %
+		(client_address,traceback.format_exc()))
 
 
 class SecureXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
@@ -123,6 +131,7 @@ class SecureXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
         doesn't have a 'dup'. Not exactly sure WHY this is, but
         this is backed up by comments in socket.py and SSL/connection.c
         """
+	sys.stderr.write("rhandler setup\n")
         self.connection = self.request # for doPOST
         self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
         self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
@@ -143,6 +152,13 @@ class SecureXMLRPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer, SecureTCPServer)
         self.logRequests = logRequests
         self.instance = None
         SecureTCPServer.__init__(self, addr, requestHandler)
+
+    def handle_error(self, request, client_address):
+        """ Override the error handler
+        """
+        import traceback
+	logger.notifyChannel("init", netsvc.LOG_ERROR,"SSL Server error in request from %s: %s" %
+		(client_address,traceback.format_exc()))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
