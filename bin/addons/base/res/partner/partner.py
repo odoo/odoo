@@ -147,9 +147,16 @@ class res_partner(osv.osv):
         'city':fields.related('address','city',type='char', string='City'),
         'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
     }
+
+    def _default_category(self, cr, uid, context={}):
+        if 'category_id' in context and context['category_id']:
+            return [context['category_id']]
+        return []
+
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
+        'category_id': _default_category,
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the partner must be unique !')
