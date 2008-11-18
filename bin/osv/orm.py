@@ -694,6 +694,8 @@ class orm_template(object):
             res.update(self.pool.get(parent).fields_get(cr, user, fields,
                 context))
         for f in self._columns.keys():
+	    if fields and f not in fields:
+		    continue
             res[f] = {'type': self._columns[f]._type}
             for arg in ('string', 'readonly', 'states', 'size', 'required',
                     'change_default', 'translate', 'help', 'select'):
