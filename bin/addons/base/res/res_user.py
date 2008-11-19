@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -92,7 +92,7 @@ def _tz_get(self,cr,uid, context={}):
 
 class users(osv.osv):
     _name = "res.users"
-    _log_access = False
+    #_log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),

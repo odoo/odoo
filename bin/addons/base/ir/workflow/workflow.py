@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -27,7 +27,7 @@ import netsvc
 class workflow(osv.osv):
     _name = "workflow"
     _table = "wkf"
-    _log_access = False
+  #  _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'osv': fields.char('Resource Object', size=64, required=True,select=True),
@@ -49,7 +49,7 @@ class workflow(osv.osv):
     # scale =  (vertical-distance, horizontal-distance, min-node-width(optional), min-node-height(optional), margin(default=20))
     #
 
-    
+
     def graph_get(self, cr, uid, id, scale, context={}):
 
         nodes= []
@@ -67,24 +67,24 @@ class workflow(osv.osv):
             else:
                 if not a.in_transitions:
                     no_ancester.append(a.id)
-                        
+
             for t in a.out_transitions:
                 transitions.append((a.id, t.act_to.id))
                 tres[t.id] = (a.id, t.act_to.id)
-                
-            
+
+
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
         result = g.result_get()
         results = {}
-        
+
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-            
+
         return {'nodes': results, 'transitions': tres}
-    
+
 
     def create(self, cr, user, vals, context=None):
         if not context:
@@ -97,7 +97,7 @@ workflow()
 class wkf_activity(osv.osv):
     _name = "workflow.activity"
     _table = "wkf_activity"
-    _log_access = False
+   # _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'wkf_id': fields.many2one('workflow', 'Workflow', required=True, select=True, ondelete='cascade'),
@@ -123,7 +123,7 @@ wkf_activity()
 class wkf_transition(osv.osv):
     _table = "wkf_transition"
     _name = "workflow.transition"
-    _log_access = False
+   # _log_access = False
     _rec_name = 'signal'
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
