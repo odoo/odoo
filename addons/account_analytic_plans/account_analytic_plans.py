@@ -135,12 +135,14 @@ class account_analytic_plan_instance(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
         wiz_id = self.pool.get('ir.actions.wizard').search(cr, uid, [("wiz_name","=","create.model")])
         res = super(account_analytic_plan_instance,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+
         if (res['type']=='form'):
             plan_id = False
             if context.get('journal_id',False):
                 plan_id = self.pool.get('account.journal').browse(cr, uid, int(context['journal_id']), context).plan_id
             elif context.get('plan_id',False):
-                plan_id = self.pool.get('account.analytic.plan').browse(cr, uid, int(context['plan_id']), context).plan_id
+                plan_id = self.pool.get('account.analytic.plan').browse(cr, uid, int(context['plan_id']), context)
+
             if plan_id:
                 i=1
                 res['arch'] = """<form string="%s">
@@ -324,8 +326,6 @@ account_move_line()
 class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit="account.invoice"
-
-
 
     def line_get_convert(self, cr, uid, x, part, date, context={}):
         res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context)
