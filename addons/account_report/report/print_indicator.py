@@ -208,7 +208,8 @@ class accounting_report_indicator(report_sxw.rml_parse):
         level=0
         self.level=0
         self.child_dist=0
-        def draw_tree2(obj_history,base_x,base_y,level=0,i=0):
+
+        def draw_tree(obj_history,base_x,base_y,level=0,i=0):
             self.line_y=base_y
             if obj_history.child_ids:
                 if self.child_dist:
@@ -235,7 +236,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
 
                 i=0
                 for child in obj_history.child_ids:
-                    draw_tree2(child,base_x+(100),base_y,level,i)
+                    draw_tree(child,base_x+(100),base_y,level,i)
                     i+=1
 
                 child_dist=len(obj_history.child_ids)
@@ -248,7 +249,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 else:
                     base_y=base_y-(50*(i))
 
-                tb12 = text_box.T(loc=(base_x,base_y), text=str(obj_history.code))
+                tb12 = text_box.T(loc=(base_x,base_y), text="/hC"+str(obj_history.code)+":\n"+str(obj_history.amount))
                 tb12.draw()
 
                 if i>0:
@@ -257,7 +258,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
                     a.draw([(base_x-30,base_y), (base_x,base_y)])
                 self.level=base_y
         self.line_y=900
-        draw_tree2(obj_history,0,900,0)
+        draw_tree(obj_history,0,900,0)
         can.close()
 
         os.system('cp '+'tree_image'+str(self.treecount)+'.png ' +path+str(self.treecount)+'.png')
