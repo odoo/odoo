@@ -735,6 +735,7 @@ class sale_order_line(osv.osv):
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, line.order_id.partner_id, a)
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
+                    'origin':line.order_id.name,
                     'account_id': a,
                     'price_unit': pu,
                     'quantity': uosqty,
