@@ -662,7 +662,10 @@ class document_configuration_wizard(osv.osv_memory):
     _rec_name = 'Auto Directory configuration'
     _columns = {
         'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
-            "Keep localhost if you don't know what to write.")
+            "Keep localhost if you don't know what to write.", required=True)
+    }
+    _defaults = {
+        'host': lambda *args: 'localhost'
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
