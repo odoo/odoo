@@ -36,7 +36,7 @@ email_send_form = '''<?xml version="1.0"?>
 email_send_fields = {
     'from': {'string':"Sender's email", 'type':'char', 'size':64, 'required':True},
     'subject': {'string':'Subject', 'type':'char', 'size':64, 'required':True},
-    'text': {'string':'Message', 'type':'text_tag', 'required':True}
+    'text': {'string':'Message', 'type':'text', 'required':True}
 }
 
 # this sends an email to ALL the addresses of the selected partners.
