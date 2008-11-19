@@ -22,7 +22,7 @@
 {
     "name" : "Auction module",
     "version" : "1.0",
-    "category" : "Generic Modules/Others",
+    "category" : "Generic Modules/Auction",
     "depends" : ["base","account","l10n_be","hr_attendance"],
     "update_xml" : [
         # FIXME: review security rules...

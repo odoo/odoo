@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -21,5 +21,6 @@
 ##############################################################################
 
 import wizard_print_indicators
+import wizard_print_indicators_with_pdf
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
