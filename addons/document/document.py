@@ -661,7 +661,7 @@ class document_configuration_wizard(osv.osv_memory):
     _name='document.configuration.wizard'
     _rec_name = 'Auto Directory configuration'
     _columns = {
-        'host': field.char('Server Address', size=64, help="Put here the server address or IP. " \
+        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
             "Keep localhost if you don't know what to write.")
     }
     def action_cancel(self,cr,uid,ids,conect=None):
