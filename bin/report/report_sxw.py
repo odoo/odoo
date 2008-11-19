@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-
+import base64
 import xml.dom.minidom
 import os, time
 import ir, netsvc
@@ -579,6 +579,13 @@ class report_sxw(report_rml):
             rml = report_xml.report_rml_content
             report_type = report_xml.report_type
         else:
+            ir_menu_report_obj = pool.get('ir.ui.menu')
+            report_menu_ids = ir_menu_report_obj.search(cr, uid,
+                [('id', '=', ids)], context=context)
+            if report_menu_ids:
+                report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
+                    context=context)
+                title = report_name.name
             rml = tools.file_open(self.tmpl, subdir=None).read()
             report_type= data.get('report_type', report_type)
 
@@ -661,10 +668,10 @@ class report_sxw(report_rml):
         pdf = create_doc(rml2, logo,title)
 
         if attach:
-            # TODO: save multiple print with symbolic links in attach
+            # TODO: save multiple print with symbolic links in attach            
             pool.get('ir.attachment').create(cr, uid, {
-                'name': title or _('print'),
-                'datas': pdf,
+                'name': (title or _('print'))+':'+time.strftime('%Y-%m-%d %H:%M:%S'),
+                'datas': base64.encodestring(pdf),
                 'datas_fname': attach+time.strftime('%Y-%m-%d')+'.'+report_type,
                 'res_model': self.table,
                 'res_id': ids[0]

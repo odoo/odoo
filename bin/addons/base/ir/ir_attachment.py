@@ -86,6 +86,12 @@ class ir_attachment(osv.osv):
 
     def clear_cache(self):
         self.check()    
+    
+    def action_get(self, cr, uid, context=None):
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
+        res_id = dataobj.browse(cr, uid, data_id, context).res_id
+        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
 
     def __init__(self, *args, **kwargs):
         r = super(ir_attachment, self).__init__(*args, **kwargs)
@@ -98,7 +104,10 @@ class ir_attachment(osv.osv):
 
     def _get_preview(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        for i in self.browse(cr, uid, ids, context=context or {}):
+        if context is None:
+            context = {}
+        context['bin_size'] = False
+        for i in self.browse(cr, uid, ids, context=context):
             result[i.id] = False
             for format in ('png','PNG','jpg','JPG'):
                 if (i.datas_fname or '').endswith(format):

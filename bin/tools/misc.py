@@ -247,7 +247,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             if pathinfo:
                 return fo, i
             return fo
-
+    if os.path.splitext(name)[1] == '.rml':
+        raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
     raise IOError, 'File not found : '+str(name)
 
 
@@ -665,7 +666,6 @@ def scan_languages():
     import glob
     file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
-    r=[(lang, lang_dict.get(lang, lang)) for lang in file_list]
     return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
 

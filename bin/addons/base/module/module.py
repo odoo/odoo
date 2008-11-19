@@ -428,13 +428,15 @@ class module(osv.osv):
                 terp = self.get_module_info(mod_name)
                 if not terp or not terp.get('installable', True):
                     continue
-                if not os.path.isfile(mod_path+'.zip'):
+
+                if not os.path.isfile( mod_path ):
                     import imp
                     # XXX must restrict to only addons paths
-                    imp.load_module(name, *imp.find_module(mod_name))
+                    path = imp.find_module(mod_name)
+                    imp.load_module(name, *path)
                 else:
                     import zipimport
-                    zimp = zipimport.zipimporter(mod_path+'.zip')
+                    zimp = zipimport.zipimporter(mod_path)
                     zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
