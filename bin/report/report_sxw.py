@@ -385,7 +385,7 @@ class rml_parse(object):
     def _eval(self, expr):
         try:
             res = eval(expr, self.localcontext)
-            if not res:
+            if (res is None) or (res=='') or (res is False):
                 res = ''
         except Exception,e:
             import traceback, sys
