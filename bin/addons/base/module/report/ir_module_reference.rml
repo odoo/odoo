@@ -136,7 +136,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="P6">[[ module.description ]]</para>
+      <para style="P6">[[ format(module.description or '') ]]</para>
       <section>
         <para style="Standard">[[ repeatIn(findobj(module.name) ,'object') ]]</para>
         <blockTable colWidths="510.0" repeatRows="1" style="Tableau3">
@@ -144,14 +144,14 @@
             <td>
               <para style="P10">Object: [[ object.model ]]</para>
               <para style="P11">Description : [[ object.name ]]</para>
-              <para style="P5">[[ objdoc(object.model) ]]</para>
+              <para style="P5">[[ format(objdoc(object.model)) ]]</para>
             </td>
           </tr>
         </blockTable>
         <blockTable colWidths="113.0,397.0" repeatRows="1" style="Tableau4">
           <tr>
             <td>
-              <para style="P7">[[ repeatIn(findflds(object.model), 'field') ]] [[ field[0] ]]</para>
+              <para style="P7">[[ repeatIn(findflds(object.model), 'field') ]] <i>[[ field[0] ]]</i></para>
             </td>
             <td>
               <para style="P8">[[ field[1].get('string', 'Unknown') ]], [[ field[1]['type'] ]] [[field[1].get('required',False) and ', required']] [[field[1].get('readonly',False) and ', readonly']] </para>
