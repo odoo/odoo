@@ -790,7 +790,7 @@ class account_move(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         for line in self.browse(cr, uid, ids, context):
             if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !'))
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should mark the journal to allow canceling entries.'))
         if len(ids):
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
         return True
