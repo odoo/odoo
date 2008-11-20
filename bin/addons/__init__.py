@@ -185,8 +185,9 @@ def create_graph(module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-
-    current,later = Set([p for p, dep, data in packages]), Set()
+    
+    dependencies = dict([(p, deps) for p, deps, data in packages])
+    current, later = Set([p for p, dep, data in packages]), Set()
     while packages and current > later:
         package, deps, datas = packages[0]
 
@@ -207,9 +208,10 @@ def create_graph(module_list, force=None):
             later.add(package)
             packages.append((package, deps, datas))
         packages.pop(0)
-
+    
     for package in later:
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
+        unmet_deps = filter(lambda p: p not in graph, dependencies[package])
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
 
     return graph
 
