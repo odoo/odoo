@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -29,6 +29,7 @@ info = '''<?xml version="1.0"?>
     <label string="This distribution model has been saved.\nYou will be able to reuse it later."/>
 </form>'''
 
+
 def activate(self, cr, uid, data, context):
     plan_obj = pooler.get_pool(cr.dbname).get('account.analytic.plan.instance')
     if data['id']:
@@ -43,6 +44,8 @@ def activate(self, cr, uid, data, context):
     else:
         return 'endit'
 
+def _do_nothing(self, cr, uid, data, context):
+    return 1
 
 class create_model(wizard.interface):
 
@@ -57,7 +60,7 @@ class create_model(wizard.interface):
         },
         'endit': {
             'actions': [],
-            'result': {'type':'form', 'arch':'', 'fields':{}, 'state':[('end','OK')]} #FIXME: check
+            'result': {'type':'action','action':_do_nothing , 'state':'end'} #FIXME: check
         },
     }
 create_model('create.model')
