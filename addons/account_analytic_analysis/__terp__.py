@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -29,7 +29,7 @@ Add menu to show relevant information for each manager.""",
     "category" : "Generic Modules/Accounting",
     "module": "",
     "website": "http://www.camptocamp.com/",
-    "depends" : ["account","hr_timesheet","hr_timesheet_invoice"],
+    "depends" : ["account","hr_timesheet","hr_timesheet_invoice","project"],
     "init_xml" : [],
     "update_xml" : [
         "security/ir.model.access.csv",
