@@ -624,6 +624,8 @@ class account_move_line(osv.osv):
                     attrs.append('sum="Total debit"')
                 elif field.field=='credit':
                     attrs.append('sum="Total credit"')
+                elif field.field=='account_tax_id':
+                    attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 elif field.field=='account_id' and journal.id:
                     attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]"')
                 if field.readonly:
