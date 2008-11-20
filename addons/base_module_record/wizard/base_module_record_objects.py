@@ -55,7 +55,7 @@ def _info_default(self, cr, uid, data, context):
         'workflow.activity','workflow.transition','ir.actions.server','ir.server.object.lines')
      data['form']['objects']=mod.search(cr,uid,[('model','in',list)])
      cr.execute('select max(create_date) from ir_model_data')
-     c=(((cr.fetchone())[0]).partition('.'))[0]
+     c=(cr.fetchone())[0].split('.')[0]
      c = time.strptime(c,"%Y-%m-%d %H:%M:%S")
      sec=c.tm_sec + 1
      c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
