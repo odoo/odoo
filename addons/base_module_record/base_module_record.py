@@ -147,7 +147,7 @@ class base_module_record(osv.osv):
                 record.appendChild(field)
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
-                    if valitem[0]==(0,1):
+                    if valitem[0] in (0,1):
                         if key in self.pool.get(model)._columns:
                             fname = self.pool.get(model)._columns[key]._fields_id
                         else:
@@ -196,8 +196,8 @@ class base_module_record(osv.osv):
             data=data[0]
         else:
             del data['id']
-        mod_fields = obj.fields_get(cr, uid)
 
+        mod_fields = obj.fields_get(cr, uid)
         for f in filter(lambda a: isinstance(obj._columns[a], fields.function)\
                     and (not obj._columns[a].store),obj._columns):
             del data[f]
@@ -223,12 +223,12 @@ class base_module_record(osv.osv):
                 else:
                     result[key]=data[key]
 
-            elif fields[key]['type'] == 'many2many':
+            elif mod_fields[key]['type'] == 'many2many':
                 result[key]=[(6,0,data[key])]
 
             else:
                 result[key]=data[key]
-        for k,v in self.pool.get(model)._inherits.items():
+        for k,v in obj._inherits.items():
             del result[v]
         return result
 
@@ -279,30 +279,6 @@ class base_module_record(osv.osv):
                     if not rec_id:
                         continue
                     data = doc.createElement("data")
-        self.ids = {}
-        doc = minidom.Document()
-        terp = doc.createElement("openerp")
-        doc.appendChild(terp)
-        for rec in self.recording_data:
-            if rec[0]=='workflow':
-                rec_id,noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
-                if not rec_id:
-                    continue
-                data = doc.createElement("data")
-                terp.appendChild(data)
-                wkf = doc.createElement('workflow')
-                data.appendChild(wkf)
-                wkf.setAttribute("model", rec[1][3])
-                wkf.setAttribute("action", rec[1][4])
-                if noupdate:
-                    data.setAttribute("noupdate", "1")
-                wkf.setAttribute("ref", rec_id)
-            if rec[0]=='query':
-                res_list,noupdate = self._generate_object_xml(cr, uid, rec[1], rec[2], doc, rec[3])
-                data = doc.createElement("data")
-                if noupdate:
-                    data.setAttribute("noupdate", "1")
-                if res_list:
                     terp.appendChild(data)
                     wkf = doc.createElement('workflow')
                     data.appendChild(wkf)
@@ -321,7 +297,7 @@ class base_module_record(osv.osv):
                     for res in res_list:
                         data.appendChild(res)
                 elif rec[0]=='assert':
-                    pass
+                        pass
             res = doc.toprettyxml(indent="\t")
             return  doc.toprettyxml(indent="\t").encode('utf8')
 base_module_record()
