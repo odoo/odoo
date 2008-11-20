@@ -9,26 +9,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee holidays">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date_from" select="1"/>
-                    <field name="date_to" select="1"/>
-                    <newline/>
+                    <field name="name" select="1"/>
                     <field name="holiday_status" select="1"/>
-                    <group col="12" colspan="2">
-                        <button string="Confirm" name="confirm" states="draft" type="workflow"/>
-                        <button string="Validate" name="validate" states="confirm" type="workflow"/>
-                        <button string="Refuse" name="refuse" states="confirm" type="workflow"/>
-                        <button string="Cancel" name="cancel" states="validate,refuse" type="workflow"/>
-                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object"/>
-                    </group>
-                    <field name="state" select="1" colspan="2"/>
-                    <newline />
-                    <field name="notes" col="12" colspan="4"/>
-                    <newline />
-                    <field name="manager_id" colspan="2"/>
-                    <field name="employee_id" select="1" />
-                    <newline />
-                    <field name="number_of_days" colspan="2"/>
+                    <field name="date_from" select="1"/>
+                    <field name="date_to" select="1" on_change="onchange_date_to(date_from, date_to)"/>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <field name="employee_id" select="1" />
+                            <field name="number_of_days"/>
+                            <field name="notes" col="12" colspan="4"/>
+                            <field name="manager_id"/>
+                            <newline/>
+                            <field name="state" select="1" colspan="2"/>
+                            <group colspan="2">
+                                <button string="Confirm" name="confirm" states="draft" type="workflow"/>
+                                <button string="Validate" name="validate" states="confirm" type="workflow"/>
+                                <button string="Refuse" name="refuse" states="confirm" type="workflow"/>
+                                <button string="Cancel" name="cancel" states="validate,refuse" type="workflow"/>
+                                <button string="Set to Draft" name="set_to_draft" states="cancel" type="object"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -102,11 +103,12 @@
                     <field name="holiday_status" select="1" />
                     <newline/>
                     <field name="max_leaves" select="2"  colspan="2" />
-                    <newline/>
                     <field name="leaves_taken" select="2" colspan="2" />
+                    <newline/>
+                    <field name="remaining_leaves" select="2" colspan="2" />
                     <field name="active" select="2"/>
                     <newline/>
-                    <field name="notes" colspan="4" />
+                    <field name="notes" colspan="4" select="2"/>
                 </form>
             </field>
         </record>
@@ -119,7 +121,7 @@
                     <field name="employee_id"/>
                     <field name="holiday_status"/>
                     <field name="max_leaves"/>
-                    <field name="leaves_taken"/>
+                    <field name="remaining_leaves"/>
                     <field name="active" select="2"/>
                 </tree>
             </field>
