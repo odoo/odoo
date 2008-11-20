@@ -1044,7 +1044,7 @@ class account_invoice_tax(osv.osv):
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
-                val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
+                val['amount'] = tax['amount']
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
                 val['base'] = tax['price_unit'] * line['quantity']
@@ -1071,6 +1071,8 @@ class account_invoice_tax(osv.osv):
                     tax_grouped[key]['base_amount'] += val['base_amount']
                     tax_grouped[key]['tax_amount'] += val['tax_amount']
 
+        for t in tax_grouped.values():
+            t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
         return tax_grouped
 
     def move_line_get(self, cr, uid, invoice_id):
