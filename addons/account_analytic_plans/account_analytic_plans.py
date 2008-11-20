@@ -191,6 +191,9 @@ class account_analytic_plan_instance(osv.osv):
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
                     raise osv.except_osv("Value Error" ,"The Total Should be Between " + str(item.min_required) + " and " + str(item.max_required))
 
+        if not vals['name'] and not vals['code']:
+            raise osv.except_osv('Error', 'Make sure You have entered Name and Code for the model !')
+
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
@@ -207,9 +210,9 @@ class account_analytic_plan_instance(osv.osv):
             #and finally modify the old model to be not a model anymore
             vals['plan_id'] = False
             if not vals.has_key('name'):
-                vals['name'] = this.name+'*'
+                vals['name'] = this.name and (str(this.name)+'*') or "*"
             if not vals.has_key('code'):
-                vals['code'] = this.code+'*'
+                vals['code'] = this.code and (str(this.code)+'*') or "*"
             return self.write(cr, uid, [this.id],vals, context)
         else:
             #this plan instance isn't a model, so a simple write is fine
@@ -311,6 +314,11 @@ class account_move_line(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         self.called=False
+        if ('analytics_id' in vals) and (not vals['analytics_id']):
+            for line in self.browse(cr, uid, ids, context):
+                toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
+                if toremove:
+                    self.pool.get('account.analytic.line').unlink(cr, uid, toremove, context=context)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context, check, update_check)
         self._analytic_update(cr, uid, ids, context)
         return result

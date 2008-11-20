@@ -95,10 +95,10 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Distribution">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="plan_id"/>
-                <field name="journal_id"/>
+                <field name="name" select="1"/>
+                <field name="code" select="1"/>
+                <field name="plan_id" select="2"/>
+                <field name="journal_id" select="2"/>
             </tree>
         </field>
     </record>
