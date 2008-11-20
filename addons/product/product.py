@@ -434,7 +434,7 @@ class product_product(osv.osv):
         for partner in self.browse(cr, uid, ids):
             if not partner.ean13:
                 continue
-            if len(partner.ean13) < 12:
+            if len(partner.ean13) <> 13:
                 return False
             try:
                 int(partner.ean13)
@@ -447,11 +447,7 @@ class product_product(osv.osv):
                 else:
                     sum += 3 * int(partner.ean13[i])
             check = int(math.ceil(sum / 10.0) * 10 - sum)
-            if len(partner.ean13) == 12:
-                self.write(cr, uid, partner.id, {
-                    'ean13': partner.ean13 + str(check)
-                    })
-            elif check != int(partner.ean13[12]):
+            if check != int(partner.ean13[12]):
                 return False
         return True
 
