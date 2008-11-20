@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,7 +23,7 @@
     "name":"Dashboard for CRM Configuration",
     "version":"1.0",
     "author":"Tiny",
-    "category":"Board",
+    "category":"Board/CRM",
     "depends":["board","crm_configuration"],
     "demo_xml":["board_crm_demo.xml"],
     "update_xml":["board_crm_statistical_view.xml",

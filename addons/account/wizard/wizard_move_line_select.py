@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -27,6 +27,7 @@ class wizard_move_line_select(wizard.interface):
     def _open_window(self, cr, uid, data, context):
         mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
         act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        account_obj = pooler.get_pool(cr.dbname).get('account.account')
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 
         if not context.get('fiscalyear', False):
@@ -48,6 +49,10 @@ class wizard_move_line_select(wizard.interface):
             'fiscalyear': context.get('fiscalyear', False),
             'account_id': data['id']
         }
+        if data['id']:
+            acc_data = account_obj.browse(cr, uid, data['id']).child_consol_ids
+            if acc_data:
+                result['context'].update({'consolidate_childs': True})
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 

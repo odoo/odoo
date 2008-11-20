@@ -187,9 +187,6 @@ class base_module_record(osv.osv):
                 record.appendChild(field)
         return record_list, noupdate
 
-
-
-
     def get_copy_data(self, cr, uid,model,id,result):
         res = []
         obj=self.pool.get(model)
@@ -238,7 +235,7 @@ class base_module_record(osv.osv):
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
         record_list = []
         noupdate = False
-        if rec[4]=='write' :
+        if rec[4]=='write':
             for id in rec[5]:
                 id,update = self._get_id(cr, uid, rec[3], id)
                 noupdate = noupdate or update
@@ -282,6 +279,30 @@ class base_module_record(osv.osv):
                     if not rec_id:
                         continue
                     data = doc.createElement("data")
+        self.ids = {}
+        doc = minidom.Document()
+        terp = doc.createElement("openerp")
+        doc.appendChild(terp)
+        for rec in self.recording_data:
+            if rec[0]=='workflow':
+                rec_id,noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
+                if not rec_id:
+                    continue
+                data = doc.createElement("data")
+                terp.appendChild(data)
+                wkf = doc.createElement('workflow')
+                data.appendChild(wkf)
+                wkf.setAttribute("model", rec[1][3])
+                wkf.setAttribute("action", rec[1][4])
+                if noupdate:
+                    data.setAttribute("noupdate", "1")
+                wkf.setAttribute("ref", rec_id)
+            if rec[0]=='query':
+                res_list,noupdate = self._generate_object_xml(cr, uid, rec[1], rec[2], doc, rec[3])
+                data = doc.createElement("data")
+                if noupdate:
+                    data.setAttribute("noupdate", "1")
+                if res_list:
                     terp.appendChild(data)
                     wkf = doc.createElement('workflow')
                     data.appendChild(wkf)
@@ -304,6 +325,5 @@ class base_module_record(osv.osv):
             res = doc.toprettyxml(indent="\t")
             return  doc.toprettyxml(indent="\t").encode('utf8')
 base_module_record()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

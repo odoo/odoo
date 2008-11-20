@@ -861,6 +861,7 @@ class account_invoice_line(osv.osv):
     _description = "Invoice line"
     _columns = {
         'name': fields.char('Description', size=256, required=True),
+        'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),

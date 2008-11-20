@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -22,12 +22,13 @@
 {
     "name" : "Auction module",
     "version" : "1.0",
+    "category" : "Generic Modules/Auction",
     "depends" : ["base","account","l10n_be","hr_attendance"],
     "update_xml" : [
         # FIXME: review security rules...
         "security/ir.model.access.csv",
-        "auction_view.xml", 
-        "auction_report.xml", 
+        "auction_view.xml",
+        "auction_report.xml",
         "auction_wizard.xml",
     ],
     "demo_xml" : [

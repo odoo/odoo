@@ -39,7 +39,7 @@ si_so_fields = {
 
 si_form = '''<?xml version="1.0" ?>
 <form string="Sign in status">
-    <seperator string="This is the status of your sign in request. Check it out maybe you were already signed in." colspan="4" />
+    <separator string="This is the status of your sign in request. Check it out maybe you were already signed in." colspan="4" />
     <field name="success" readonly="True" />
 </form>'''
 
@@ -49,7 +49,7 @@ si_fields = {
 
 so_form = '''<?xml version="1.0" ?>
 <form string="Sign in status">
-    <seperator string="This is the status of your sign out request. Check it out maybe you were already signed out." colspan="4" />
+    <separator string="This is the status of your sign out request. Check it out maybe you were already signed out." colspan="4" />
     <field name="success" readonly="True" />
 </for>'''
 

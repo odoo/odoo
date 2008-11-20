@@ -115,7 +115,7 @@
     <act_window name="Distribution Models"
         domain="[('plan_id', '=', active_id),('plan_id','&lt;&gt;',False)]"
         context="{'plan_id': active_id}"
-        res_model="account.analytic.instance"
+        res_model="account.analytic.plan.instance"
         src_model="account.analytic.plan"
         id="account_analytic_instance_model_open"/>
 
