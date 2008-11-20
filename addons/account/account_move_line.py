@@ -688,11 +688,8 @@ class account_move_line(osv.osv):
         if ('journal_id' in vals):
             journal=self.pool.get('account.journal').browse(cr,uid,vals['journal_id'])
             journal_flag=True
-            if not journal.analytic_journal_id:
-                del_line=True
 
-        if ('analytic_account_id' in vals) and  (not vals['analytic_account_id']):
-            del_line=True
+        del_line=True
 
         if del_line:
             for obj in obj_line.analytic_lines:
@@ -875,6 +872,8 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals['ref'],
                     })]
+            else:
+                raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
         if 'account_tax_id' in vals and vals['account_tax_id']:

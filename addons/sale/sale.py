@@ -962,7 +962,6 @@ class sale_config_picking_policy(osv.osv_memory):
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
-            ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
 
             if o.step=='one':
