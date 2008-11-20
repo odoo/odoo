@@ -41,7 +41,8 @@ def fnct_call(fnct):
             if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
                 if _old_args is not None:
                     args[5].update(_old_args)
-                mod.recording_data.append(('query', args, argv,res))
+                if args[5]:
+                    mod.recording_data.append(('query', args, argv,res))
         return res
     return execute
 
@@ -105,12 +106,10 @@ class base_module_record(osv.osv):
         return obj.module+'.'+obj.name, obj.noupdate
 
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
-        record_list=[]
-        if record_id not in self.ids.values():
-            record = doc.createElement('record')
-            record.setAttribute("id", record_id)
-            record.setAttribute("model", model)
-            record_list = [record]
+        record = doc.createElement('record')
+        record.setAttribute("id", record_id)
+        record.setAttribute("model", model)
+        record_list = [record]
         lids  = self.pool.get('ir.model.data').search(cr, uid, [('model','=',model)])
         res = self.pool.get('ir.model.data').read(cr, uid, lids[:1], ['module'])
         if res:
@@ -148,7 +147,7 @@ class base_module_record(osv.osv):
                 record.appendChild(field)
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
-                    if valitem[0]==0:
+                    if valitem[0]==(0,1):
                         if key in self.pool.get(model)._columns:
                             fname = self.pool.get(model)._columns[key]._fields_id
                         else:
@@ -183,47 +182,47 @@ class base_module_record(osv.osv):
 
                 val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
                 if isinstance(val, basestring):
-                    val=val.encode('utf8')
                     val = val.decode('utf8')
                 field.setAttribute(u"eval",  val)
                 record.appendChild(field)
         return record_list, noupdate
 
-    def get_o2m_list(self,cr,uid,model,id):
-        result={}
-        data=self.pool.get(model).read(cr, uid,id)
-        del data['id']
-        fields = self.pool.get(model).fields_get(cr, uid)
-        res=[0,0]
-        for key,val in data.items():
-            if fields[key]['type'] == 'many2one':
-                result[key]=data[key][0]
-            else:
-                result[key]=data[key]
-        res.append(result)
-        return res
 
 
-    def get_copy_data(self, cr, uid,model,id):
-        result={}
+
+    def get_copy_data(self, cr, uid,model,id,result):
         res = []
-        data=self.pool.get(model).read(cr, uid,id)
-        del data['id']
-        fields = self.pool.get(model).fields_get(cr, uid)
+        obj=self.pool.get(model)
+        data=obj.read(cr, uid,[id])
+        if type(data)==type([]):
+            del data[0]['id']
+            data=data[0]
+        else:
+            del data['id']
+        mod_fields = obj.fields_get(cr, uid)
+
+        for f in filter(lambda a: isinstance(obj._columns[a], fields.function)\
+                    and (not obj._columns[a].store),obj._columns):
+            del data[f]
 
         for key,val in data.items():
-            if fields[key]['type'] == 'many2one':
-                if type(data[key])==type(True):
+            if result.has_key(key):
+                continue
+            if mod_fields[key]['type'] == 'many2one':
+                if type(data[key])==type(True) or type(data[key])==type(1):
                     result[key]=data[key]
                 else:
                     result[key]=data[key][0]
 
-            elif fields[key]['type'] in ('one2many',):
-                rel = fields[key]['relation']
+            elif mod_fields[key]['type'] in ('one2many',):
+                rel = mod_fields[key]['relation']
                 if len(data[key]):
+                    res1=[]
                     for rel_id in data[key]:
-                        res.append((self.get_o2m_list(cr, uid,rel,rel_id)))
-                    result[key]=res
+                        res=[0,0]
+                        res.append(self.get_copy_data(cr, uid,rel,rel_id,{}))
+                        res1.append(res)
+                    result[key]=res1
                 else:
                     result[key]=data[key]
 
@@ -256,7 +255,7 @@ class base_module_record(osv.osv):
             record_list += record
 
         elif rec[4]=='copy':
-            data=self.get_copy_data(cr,uid,rec[3],rec[5])
+            data=self.get_copy_data(cr,uid,rec[3],rec[5],rec[6])
             copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],rec[5],data,rec[7])
             rec=copy_rec
             rec_data=[(self.recording_data[0][0],rec,self.recording_data[0][2],self.recording_data[0][3])]
