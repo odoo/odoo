@@ -101,42 +101,5 @@
 
 			<menuitem name="Wiki System/History" id="menu_action_history" action="action_history"/>
 
-			<record model="ir.ui.view" id="action_base_index_line_form">
-				<field name="name">wiki.index.line.form</field>
-				<field name="model">wiki.index.line</field>
-				<field name="type">form</field>
-				<field name="arch" type="xml">
-					<form srting="Index Line">
-						<field name="model" select="1"/>
-						<field name="res_id" select="1"/>
-						<field name="name" colspan="4"/>
-						<label string=""/>
-						<button string="Create Index" name="createIndex" type="object"/>
-					</form>
-				</field>
-			</record>
-			
-			<record model="ir.ui.view" id="action_base_index_line_tree">
-				<field name="name">wiki.index.line.tree</field>
-				<field name="model">wiki.index.line</field>
-				<field name="type">form</field>
-				<field name="arch" type="xml">
-					<tree srting="Index Lines">
-						<field name="model" select="1"/>
-						<field name="res_id" select="1"/>
-					</tree>
-				</field>
-			</record>
-
-			<record model="ir.actions.act_window" id="action_base_index_line">
-				<field name="name">Index Server</field>
-				<field name="res_model">wiki.index.line</field>
-				<field name="view_type">form</field>
-				<field name="view_mode">tree,form</field>
-				<field name="view_id" ref="action_base_index_line_form"/>
-			</record>
-
-			<menuitem name="Wiki System/Configuration/Index Lines" id="menu_action_base_index_line" sequence="0" action="action_base_index_line"/>
-			
 		</data>
 	</terp>
