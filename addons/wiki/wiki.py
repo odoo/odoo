@@ -38,8 +38,11 @@ class WikiGroup(osv.osv):
     _columns={
        'name':fields.char('Wiki Group', size=256, select=True, required=True),
        'parent_id':fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
+       'child_ids':fields.one2many('wiki.groups', 'parent_id', 'Child Groups'),
+       'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created on", select=True),
+       'template': fields.text('Wiki Template')
     }
 WikiGroup()
 
@@ -59,9 +62,23 @@ class Wiki(osv.osv):
         'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
         'summary':fields.char('Summary',size=256, select=True),
-        'section': fields.char('Section', size=32)
+        'section': fields.char('Section', size=32),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
     }
+    def onchange_group_id(self, cr, uid, ids, group, content, context={}):
+        if (not group) or content:
+            return {}
+        group = self.pool.get('wiki.groups').browse(cr, uid, group, context)
+        section = '0'
+        for page in group.page_ids:
+            section = page.section
+        return {
+            'value':{
+                'text_area': group.template,
+                'section': section
+            }
+        }
+
     def read(self, cr, uid, cids, fields=None, context=None, load='_classic_read'):
         ids = []
         for id in cids:
