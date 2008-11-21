@@ -1,0 +1,645 @@
+# Slovenian translation for openobject-addons
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-09-05 13:26+0000\n"
+"PO-Revision-Date: 2008-10-16 08:17+0000\n"
+"Last-Translator: vezjakv <Unknown>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: purchase
+#: field:purchase.order,invoiced:0
+msgid "Invoiced & Paid"
+msgstr "Zaračunano in plačano"
+
+#. module: purchase
+#: field:purchase.order,partner_id:0
+msgid "Supplier"
+msgstr "Dobavitelj"
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+msgid ""
+"Please note that orders will only be merged if they are to the same partner "
+"and going to the same location, and lines will only be merged if they are "
+"exactly the same except for the quantity and unit."
+msgstr ""
+"Prosim, vedite, da bodo nalogi združeni samo, če so namenjeni istemu "
+"partnerju in lokaciji. Postavke bodo združene samo, če so popolnoma enake, "
+"razen v količini in enoti."
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Your order reference :"
+msgstr "Vaš sklic naročila"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order
+msgid "Purchase order"
+msgstr "Nabavni nalog"
+
+#. module: purchase
+#: model:product.pricelist,name:purchase.list0
+msgid "Default Purchase Pricelist"
+msgstr "Privzeti nabavni cenik"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Thanks,"
+msgstr "Hvala,"
+
+#. module: purchase
+#: help:res.partner,property_product_pricelist_purchase:0
+msgid ""
+"This pricelist will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr ""
+"Za nabavo pri trenutnem partnerju se bo uporablja ta cenik namesto "
+"privzetega."
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Fax :"
+msgstr "Faks :"
+
+#. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+"Ta cenik nastavi valuto, ki se uporablja za ta nabavni nalog. Izračuna tudi "
+"dobaviteljevo ceno za izbrane proizvode/količine."
+
+#. module: purchase
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Delni seštevek"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Approved"
+msgstr "Odobreno"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action4
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action4
+msgid "Purchase Orders in Progress"
+msgstr "Nabavni nalogi v teku"
+
+#. module: purchase
+#: field:purchase.order,minimum_planned_date:0
+msgid "Minimum Planned Date"
+msgstr "Minimal"
+
+#. module: purchase
+#: field:purchase.order,amount_tax:0
+#: field:purchase.order.line,taxes_id:0
+msgid "Taxes"
+msgstr "Davki"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_order
+#: field:stock.picking,purchase_id:0
+#: view:purchase.order:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+msgid "Purchase Order"
+msgstr "Nabavni nalog"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Cancelled"
+msgstr "Preklicano"
+
+#. module: purchase
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
+"Stanje nabavnega naloga ali zahtevka za ponudbo. Ponudba je nabavni nalog v "
+"stanju priprave. Nalog mora biti nato potrjen s strani uporabnika, stanje se "
+"preklopi v 'Potrjeno'. Dobavitelj mora nato potrditi naročilo, da gre nalog "
+"v stanje 'Odobreno'. Ko je nabavni nalog plačan in prejet, je v stanju "
+"'Opravljeno'. Če pride do preklica pri računu ali sprejetju blaga, gre "
+"stanje v izjemo."
+
+#. module: purchase
+#: field:purchase.order,origin:0
+msgid "Origin"
+msgstr "Izvor"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "TVA :"
+msgstr "DDV ID :"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Invoice Done"
+msgstr "Zaračunano"
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Stroškovno mesto"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+msgid "Purchase Order lines"
+msgstr "Postavke nabavnega naloga"
+
+#. module: purchase
+#: field:purchase.order,validator:0
+msgid "Validated by"
+msgstr "Preveril"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Price"
+msgstr "Neto cena"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Order Line"
+msgstr "Postavka naloga"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Confirmed"
+msgstr "Potrjeno"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Invoice Control"
+msgstr "Nadzor izdaje računov"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Please find hereby a request for quotation."
+msgstr "Tule Vam dostavljam zahtevo za ponudbo"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Waiting"
+msgstr "Čakajoče"
+
+#. module: purchase
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "Prevzemni list"
+
+#. module: purchase
+#: field:purchase.order,warehouse_id:0
+msgid "Warehouse"
+msgstr "Skladišče"
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr "Postavke naloga"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Untaxed amount"
+msgstr "Neobdavčen znesek"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Shipping address :"
+msgstr "Naslov za odpremo:"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Printed:"
+msgstr "Tiskano:"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved by Supplier"
+msgstr "Odobril dobavitelj"
+
+#. module: purchase
+#: model:ir.actions.wizard,name:purchase.purchase_order_merge
+msgid "Merge purchases"
+msgstr "Združi naloge"
+
+#. module: purchase
+#: field:purchase.order.line,move_dest_id:0
+msgid "Reservation Destination"
+msgstr "Cilj rezervacije"
+
+#. module: purchase
+#: field:purchase.order,name:0
+msgid "Order Reference"
+msgstr "Sklic naloga"
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0
+msgid "Pricelist"
+msgstr "Cenik"
+
+#. module: purchase
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date ordered :"
+msgstr "Datum naloga:"
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid "Minimum schedule date of all products."
+msgstr "Minimalen planiran datum za vse proizvode"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Manual"
+msgstr "Ročno"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Our order reference :"
+msgstr "Naš sklic naloga:"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "N° :"
+msgstr "Št.:"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Nabavni nalogi"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "TOTAL :"
+msgstr "SKUPAJ :"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From picking"
+msgstr "Med prevzemom"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action3
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
+msgid "Purchase Order Waiting Approval"
+msgstr "Nabavni nalogi, čakajoči na odobritev"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Tel. :"
+msgstr "Tel. :"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Confirm Purchase Order"
+msgstr "Potrdi nabavni nalog"
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this purchase"
+msgstr "To je seznam prevzemnih listov, ki so bili ustvarjeni za ta nalog"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Sklic partnerja"
+
+#. module: purchase
+#: field:purchase.order,invoiced_rate:0
+msgid "Invoiced"
+msgstr "Zaračunano"
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Destination Address"
+msgstr "Ciljni naslov"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Applicable Taxes"
+msgstr "Ustrezni davki"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Shipping Exception"
+msgstr "Izjema pri odpremi"
+
+#. module: purchase
+#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Line"
+msgstr "Postavka nabavnega naloga"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Calendar View"
+msgstr "Pogled koledarja"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Invoice Exception"
+msgstr "Izjema računa"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Taxes :"
+msgstr "Davki :"
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Prodaja in nabava"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery & Invoices"
+msgstr "Odprema in računi"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: purchase
+#: field:purchase.order,location_id:0
+msgid "Delivery destination"
+msgstr "Mesto dostave"
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled date"
+msgstr "Planiran datum"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Compute"
+msgstr "Izračunaj"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Purchase Order"
+msgstr "Prekliči nabavni nalog"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Validated by :"
+msgstr "Preveril:"
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Purchases"
+msgstr "Nabave"
+
+#. module: purchase
+#: field:purchase.order,state:0
+msgid "Order Status"
+msgstr "Stanje naloga"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approve Purchase"
+msgstr "Odobri nalog"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Qty"
+msgstr "Kol."
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Done"
+msgstr "Opravljeno"
+
+#. module: purchase
+#: field:purchase.order,invoice_id:0
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: purchase
+#: wizard_button:purchase.order.merge,init,end:0
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: purchase
+#: field:purchase.order.line,order_id:0
+msgid "Order Ref"
+msgstr "Sklic naloga"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+msgid "Purchase Orders"
+msgstr "Nabavni nalogi"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Other reference :"
+msgstr "Ostali sklic:"
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+#: wizard_button:purchase.order.merge,init,merge:0
+msgid "Merge orders"
+msgstr "Združi naloge"
+
+#. module: purchase
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action_new
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
+msgid "New Purchase Order"
+msgstr "Nov nabavni nalog"
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+#: field:purchase.order,shipped_rate:0
+msgid "Received"
+msgstr "Prejeto"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: selection:purchase.order,state:0
+msgid "Request for Quotation"
+msgstr "Zahtevek za ponudbo"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Tél. :"
+msgstr "Tel. :"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From order"
+msgstr "Iz naloga"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Cena enote"
+
+#. module: purchase
+#: field:purchase.order,date_approve:0
+msgid "Date Approved"
+msgstr "Odobreno dne"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+#: field:purchase.order.line,product_id:0
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: purchase
+#: field:purchase.order.line,name:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Product Description"
+msgstr "Opis proizvoda"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date Requested"
+msgstr "Zahtevano dne"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "-"
+msgstr "-"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery"
+msgstr "Odprema"
+
+#. module: purchase
+#: field:purchase.order.line,product_uom:0
+msgid "Product UOM"
+msgstr "ME proizvoda"
+
+#. module: purchase
+#: field:purchase.order,partner_address_id:0
+msgid "Address"
+msgstr "Naslov"
+
+#. module: purchase
+#: field:purchase.order.line,move_id:0
+msgid "Reservation"
+msgstr "Rezervacija"
+
+#. module: purchase
+#: field:purchase.order.line,notes:0
+#: field:purchase.order,notes:0
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Notes"
+msgstr "Opombe"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Shipping Done"
+msgstr "Odpremljeno"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total amount"
+msgstr "Skupni znesek"
+
+#. module: purchase
+#: field:purchase.order,date_order:0
+msgid "Date Ordered"
+msgstr "Datum naročila"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Total :"
+msgstr "Neto skupaj  :"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase Control"
+msgstr "Nadzor nabave"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
+msgid "Request For Quotations"
+msgstr "Zahtevek za ponudbo"
+
+#. module: purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Nabavni cenik"
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr "Nadzor zaračunavanja"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Order"
+msgstr "Nalog"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+msgid "Purchase Management"
+msgstr "Upravljanje nabave"
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Skupaj"
+
+#. module: purchase
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
+msgstr "Ne morete imeti 2 različic cenika, ki se prekrivata."
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+msgid "Are you sure you want to merge these orders ?"
+msgstr "Ali res želite združiti te naloge?"
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Neobdavčen znesek"

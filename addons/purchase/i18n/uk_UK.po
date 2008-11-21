@@ -1,0 +1,646 @@
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 4.3.99Report-Msgid-Bugs-To: "
+"support@openerp.comPOT-Creation-Date: 2008-09-25 20:42:54+0000PO-Revision-"
+"Date: 2008-09-25 20:42:54+0000Last-Translator: <>Language-Team: MIME-"
+"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
+"Encoding: Plural-Forms:\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-05 13:26+0000\n"
+"PO-Revision-Date: 2008-11-18 19:46+0000\n"
+"Last-Translator: Yuriy Tkachenko <Unknown>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: purchase
+#: field:purchase.order,invoiced:0
+msgid "Invoiced & Paid"
+msgstr "Виписано інвойс і оплачено"
+
+#. module: purchase
+#: field:purchase.order,partner_id:0
+msgid "Supplier"
+msgstr ""
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+msgid ""
+"Please note that orders will only be merged if they are to the same partner "
+"and going to the same location, and lines will only be merged if they are "
+"exactly the same except for the quantity and unit."
+msgstr ""
+"Зауваження. Замовлення будуть об'єднані лище тоді, коли вони відносяться до "
+"одного партнера і направляються до одного пункту призначення. Рядки будуть "
+"об'єднані лише тоді, коли вони співпадають у всьому, крім кількості та "
+"одиниці виміру."
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Your order reference :"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order
+msgid "Purchase order"
+msgstr "Заявка на придбання"
+
+#. module: purchase
+#: model:product.pricelist,name:purchase.list0
+msgid "Default Purchase Pricelist"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Thanks,"
+msgstr "Дякуємо,"
+
+#. module: purchase
+#: help:res.partner,property_product_pricelist_purchase:0
+msgid ""
+"This pricelist will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr ""
+"Цей прейскурант буде використовуватись замість типового для закупівель від "
+"цього Партнера"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Fax :"
+msgstr "Факс :"
+
+#. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Попередня сума"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Approved"
+msgstr "Ухвалений"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action4
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action4
+msgid "Purchase Orders in Progress"
+msgstr "Заявка на придбання в обробці"
+
+#. module: purchase
+#: field:purchase.order,minimum_planned_date:0
+msgid "Minimum Planned Date"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_tax:0
+#: field:purchase.order.line,taxes_id:0
+msgid "Taxes"
+msgstr "Податки"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_order
+#: field:stock.picking,purchase_id:0
+#: view:purchase.order:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+msgid "Purchase Order"
+msgstr "Заявка на придбання"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Cancelled"
+msgstr "Скасовано"
+
+#. module: purchase
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
+"Стан заявки на придбання або запиту на комерційну пропозицію. Комерційна "
+"пропозиція - це заявка на придбання у стані 'Чорновик'. Потім заявка має "
+"бути підтверджена користувачем і стан перейде в 'Підтверджений'. Потім "
+"постачальник має затвердети заявку і стан перейде в 'Ухвалений'. Коли заявка "
+"на придбання оплачена і отримана, стан стає 'Виконаний'. Якщо трапилася дія "
+"скасування в інвойсі або в прийомі товарів, стан стає виключним."
+
+#. module: purchase
+#: field:purchase.order,origin:0
+msgid "Origin"
+msgstr "Походження"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "TVA :"
+msgstr "Код платника ПДВ :"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Invoice Done"
+msgstr "Інвойс виконано"
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Аналітичний рахунок"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+msgid "Purchase Order lines"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,validator:0
+msgid "Validated by"
+msgstr "Затверджено"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Price"
+msgstr "Внутрішня ціна"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Order Line"
+msgstr "Рядок заявки"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Confirmed"
+msgstr "Прийнятий"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Invoice Control"
+msgstr "Контроль інвойса"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Please find hereby a request for quotation."
+msgstr "Будь ласка, прийміть запит на комерційну пропозицію."
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Waiting"
+msgstr "Очікування"
+
+#. module: purchase
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "Відбірний лист"
+
+#. module: purchase
+#: field:purchase.order,warehouse_id:0
+msgid "Warehouse"
+msgstr "Склад"
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Untaxed amount"
+msgstr "Сума без податку"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Shipping address :"
+msgstr "Адреса доставки :"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Printed:"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved by Supplier"
+msgstr "Ухвалено постачальником"
+
+#. module: purchase
+#: model:ir.actions.wizard,name:purchase.purchase_order_merge
+msgid "Merge purchases"
+msgstr "Об'єднати придбання"
+
+#. module: purchase
+#: field:purchase.order.line,move_dest_id:0
+msgid "Reservation Destination"
+msgstr "Ціль резервування"
+
+#. module: purchase
+#: field:purchase.order,name:0
+msgid "Order Reference"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0
+msgid "Pricelist"
+msgstr "Прейскурант"
+
+#. module: purchase
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date ordered :"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid "Minimum schedule date of all products."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Manual"
+msgstr "Ручний"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Our order reference :"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "N° :"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Заявка на придбання"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "TOTAL :"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From picking"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action3
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
+msgid "Purchase Order Waiting Approval"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Tel. :"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Confirm Purchase Order"
+msgstr "Затвердити заявку"
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this purchase"
+msgstr "Список відбірних листів, згенерований для цього придбання"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Пос. на партнера"
+
+#. module: purchase
+#: field:purchase.order,invoiced_rate:0
+msgid "Invoiced"
+msgstr "Заінвойсовано"
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Destination Address"
+msgstr "Адреса куди"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Applicable Taxes"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Shipping Exception"
+msgstr "Виключення з доставки"
+
+#. module: purchase
+#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Line"
+msgstr "Рядок заявки на придбання"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Calendar View"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Invoice Exception"
+msgstr "Виключення інвойса"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Taxes :"
+msgstr ""
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery & Invoices"
+msgstr "Доставка та інвойси"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Date"
+msgstr "Дата"
+
+#. module: purchase
+#: field:purchase.order,location_id:0
+msgid "Delivery destination"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled date"
+msgstr "Дата поставки"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Compute"
+msgstr "Розрахувати"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Purchase Order"
+msgstr "Скасувати заявку"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Validated by :"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "Кількість"
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Purchases"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,state:0
+msgid "Order Status"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approve Purchase"
+msgstr "Ухвалити придбання"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Qty"
+msgstr "К-сть"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Done"
+msgstr "Виконано"
+
+#. module: purchase
+#: field:purchase.order,invoice_id:0
+msgid "Invoice"
+msgstr "Інвойс"
+
+#. module: purchase
+#: wizard_button:purchase.order.merge,init,end:0
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: purchase
+#: field:purchase.order.line,order_id:0
+msgid "Order Ref"
+msgstr "Ордер"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+msgid "Purchase Orders"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Other reference :"
+msgstr ""
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+#: wizard_button:purchase.order.merge,init,merge:0
+msgid "Merge orders"
+msgstr "Об'єднати замовлення"
+
+#. module: purchase
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action_new
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
+msgid "New Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+#: field:purchase.order,shipped_rate:0
+msgid "Received"
+msgstr "Отримано"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: selection:purchase.order,state:0
+msgid "Request for Quotation"
+msgstr "Запит на комерційну пропозицію"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Tél. :"
+msgstr "Тел. :"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From order"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Ціна одиниці"
+
+#. module: purchase
+#: field:purchase.order,date_approve:0
+msgid "Date Approved"
+msgstr "Затверджена дата"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+#: field:purchase.order.line,product_id:0
+msgid "Product"
+msgstr "Продукт"
+
+#. module: purchase
+#: field:purchase.order.line,name:0
+msgid "Description"
+msgstr "Опис"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Product Description"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date Requested"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "-"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_uom:0
+msgid "Product UOM"
+msgstr "ОВ продукту"
+
+#. module: purchase
+#: field:purchase.order,partner_address_id:0
+msgid "Address"
+msgstr "Адреса"
+
+#. module: purchase
+#: field:purchase.order.line,move_id:0
+msgid "Reservation"
+msgstr "Резервування"
+
+#. module: purchase
+#: field:purchase.order.line,notes:0
+#: field:purchase.order,notes:0
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Notes"
+msgstr "Примітки"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Shipping Done"
+msgstr "Доставку виконано"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total amount"
+msgstr "Загальна сума"
+
+#. module: purchase
+#: field:purchase.order,date_order:0
+msgid "Date Ordered"
+msgstr "Дата заявки"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Total :"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase Control"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
+msgid "Request For Quotations"
+msgstr ""
+
+#. module: purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Прейскурант придбання"
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr "Контроль інвойсування"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Order"
+msgstr "Заявка"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+msgid "Purchase Management"
+msgstr "Закупівлі"
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Разом"
+
+#. module: purchase
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
+msgstr ""
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+msgid "Are you sure you want to merge these orders ?"
+msgstr "Ви впевнені"
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Сума без ПДВ"

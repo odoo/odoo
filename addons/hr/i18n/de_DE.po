@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:38:50+0000"
-"PO-Revision-Date: 2008-09-11 15:38:50+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 4.3.0Report-Msgid-Bugs-To: "
+"support@openerp.comPOT-Creation-Date: 2008-09-10 15:03:49+0000PO-Revision-"
+"Date: 2008-09-10 15:03:49+0000Last-Translator: <>Language-Team: MIME-"
+"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
+"Encoding: Plural-Forms:\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-05 16:32+0000\n"
+"PO-Revision-Date: 2008-09-25 01:19+0000\n"
+"Last-Translator: Fabien Pinckaers <Unknown>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:06+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.edit_workgroup
@@ -55,11 +60,6 @@ msgid "Department"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Hierarchical view of this employee"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
 msgstr ""
@@ -95,12 +95,6 @@ msgstr ""
 #: field:hr.action.reason,name:0
 msgid "Reason"
 msgstr "Begründung"
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "The sign-out date must be in the past"
-msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -147,29 +141,19 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,hour_from:0
 msgid "Work from"
-msgstr "Arbeitszeit von "
+msgstr "Arbeitszeit von"
 
 #. module: hr
 #: wizard_view:hr.si_so,so_ask_si:0
-msgid "You did not signed in the last time. Please enter the date and time you signed in."
+msgid ""
+"You did not signed in the last time. Please enter the date and time you "
+"signed in."
 msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "UserError"
 msgstr ""
 
 #. module: hr
@@ -194,12 +178,6 @@ msgid "Sunday"
 msgstr ""
 
 #. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "Warning"
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr ""
@@ -210,14 +188,8 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "A sign-in must be right after a sign-out !"
+#: rml:hr.timesheet.attendance.error:0
+msgid "Date Printed:"
 msgstr ""
 
 #. module: hr
@@ -301,8 +273,15 @@ msgid "Action's type"
 msgstr "Art der Aktion"
 
 #. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Report"
+msgstr ""
+
+#. module: hr
 #: wizard_view:hr.si_so,si_ask_so:0
-msgid "You did not signed out the last time. Please enter the date and time you signed out."
+msgid ""
+"You did not signed out the last time. Please enter the date and time you "
+"signed out."
 msgstr ""
 
 #. module: hr
@@ -324,11 +303,6 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr ""
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Min Delay"
 msgstr ""
 
 #. module: hr
@@ -358,7 +332,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,tgroup_id:0
 msgid "Employee's timesheet group"
-msgstr " Timesheet Mitarbeiter"
+msgstr "Timesheet Mitarbeiter"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -366,14 +340,9 @@ msgid "Male"
 msgstr ""
 
 #. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "The Sign-in date must be in the past"
-msgstr ""
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
 msgstr ""
 
 #. module: hr
@@ -404,7 +373,8 @@ msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
-msgid "(*) A negative delay means that the employee worked more than encoded."
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 
 #. module: hr
@@ -428,12 +398,6 @@ msgid "Note"
 msgstr ""
 
 #. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_attendance
 #: field:hr.employee,state:0
 msgid "Attendance"
@@ -450,6 +414,11 @@ msgid "Print Timesheet by week"
 msgstr ""
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Other"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr ""
@@ -458,6 +427,11 @@ msgstr ""
 #: field:hr.employee,address_id:0
 msgid "Contact address"
 msgstr "Kontakt-Adresse"
+
+#. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Avg Delay"
+msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -476,12 +450,6 @@ msgid "Job Information"
 msgstr ""
 
 #. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "A sign-out must be right after a sign-in !"
-msgstr ""
-
-#. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
 msgstr "Wochentage"
@@ -495,6 +463,11 @@ msgstr ""
 #: field:hr.attendance,name:0
 msgid "Date"
 msgstr "Datum"
+
+#. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "To:"
+msgstr ""
 
 #. module: hr
 #: wizard_button:hr.si_so,si_ask_so,si:0
@@ -519,9 +492,8 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
 msgstr ""
 
 #. module: hr
@@ -541,12 +513,6 @@ msgid "Starting date"
 msgstr "Anfangsdatum"
 
 #. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr
 #: wizard_view:hr.print_week,init:0
 msgid "Select a starting and a end date"
 msgstr ""
@@ -562,8 +528,8 @@ msgid "Marital Status"
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Hierarchical view of this employee"
 msgstr ""
 
 #. module: hr
@@ -588,12 +554,14 @@ msgstr ""
 
 #. module: hr
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
-msgid "(*) A positive delay means that the employee worked less than recorded."
+msgid ""
+"(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 
 #. module: hr
@@ -689,8 +657,18 @@ msgid "Define attendance reason"
 msgstr ""
 
 #. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "From:"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other ID"
+msgstr ""
+
+#. module: hr
+#: view:hr.timesheet.group:0
+msgid "Working Time Category"
 msgstr ""
 
 #. module: hr
@@ -757,4 +735,3 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_new
 msgid "New Employee"
 msgstr ""
-

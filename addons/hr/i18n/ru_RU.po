@@ -1,30 +1,32 @@
-# Translation of OpenERP Server.
-# This file containt the translation of the following modules:
-#	* hr
+# Russian translation for openobject-addons
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:42:52+0000"
-"PO-Revision-Date: 2008-09-11 15:42:52+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-09-05 16:32+0000\n"
+"PO-Revision-Date: 2008-11-01 08:58+0000\n"
+"Last-Translator: Sergei Kostigoff <sergei.kostigoff@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:06+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.edit_workgroup
 #: model:ir.ui.menu,name:hr.menu_edit_workgroup
 msgid "Working Time Categories"
-msgstr ""
+msgstr "Категории рабочего времени"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "Ошибка! Невозможно создать рекурсивные отделы."
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -34,41 +36,36 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
-msgstr ""
+msgstr "Кадры"
 
 #. module: hr
 #: wizard_field:hr.si_so,si_ask_so,name:0
 #: wizard_field:hr.si_so,so_ask_si,name:0
 #: wizard_field:hr.si_so,init,name:0
 msgid "Employee's name"
-msgstr ""
+msgstr "Имя сотрудника"
 
 #. module: hr
 #: wizard_button:hr.print_month,init,print:0
 #: wizard_button:hr.print_week,init,print:0
 msgid "Print Timesheet"
-msgstr ""
+msgstr "Распечатать табель"
 
 #. module: hr
 #: view:hr.department:0
 msgid "Department"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Hierarchical view of this employee"
-msgstr ""
+msgstr "Отдел"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr ""
+msgstr "Рабочая эл. почта"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 msgid "My Employees"
-msgstr ""
+msgstr "Мои сотрудники"
 
 #. module: hr
 #: field:hr.timesheet.group,name:0
@@ -79,7 +76,7 @@ msgstr "Название группы"
 #: field:hr.department,company_id:0
 #: field:hr.employee,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компания"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -89,28 +86,22 @@ msgstr "Пятница"
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Total period:"
-msgstr ""
+msgstr "Всего за период:"
 
 #. module: hr
 #: field:hr.action.reason,name:0
 msgid "Reason"
-msgstr "Основание"
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "Причина"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr ""
+msgstr "Дата подписания"
 
 #. module: hr
 #: view:hr.action.reason:0
 msgid "Attendance reasons"
-msgstr "Основания посещения"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,state:0
@@ -125,7 +116,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.si_so,si_ask_so,last_time:0
 msgid "Your last sign out"
-msgstr ""
+msgstr "Ваша последняя регистрация"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
@@ -142,17 +133,21 @@ msgstr "Примечания"
 #. module: hr
 #: wizard_field:hr.si_so,init,state:0
 msgid "Current state"
-msgstr ""
+msgstr "Текущее состояние"
 
 #. module: hr
 #: field:hr.timesheet,hour_from:0
 msgid "Work from"
-msgstr "Работать с"
+msgstr "Работа с"
 
 #. module: hr
 #: wizard_view:hr.si_so,so_ask_si:0
-msgid "You did not signed in the last time. Please enter the date and time you signed in."
+msgid ""
+"You did not signed in the last time. Please enter the date and time you "
+"signed in."
 msgstr ""
+"Вы не зарегистрировались в прошлый раз. Укажите дату и время вашей "
+"регистрации."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_attendance_reason
@@ -161,32 +156,20 @@ msgid "Attendance Reasons"
 msgstr ""
 
 #. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "UserError"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Настройки"
 
 #. module: hr
 #: wizard_field:hr.print_week,init,end_date:0
 #: wizard_field:hr.timesheet.attendance.report,init,end_date:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: hr
 #: view:hr.attendance:0
 msgid "Employee attendance"
-msgstr "Присутствие сотрудника"
+msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -194,37 +177,25 @@ msgid "Sunday"
 msgstr "Воскресенье"
 
 #. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "Warning"
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Женский"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Operation"
-msgstr ""
+msgstr "Действие"
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "A sign-in must be right after a sign-out !"
-msgstr ""
+#: rml:hr.timesheet.attendance.error:0
+msgid "Date Printed:"
+msgstr "Распечатано:"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "Структура сотрудников"
 
 #. module: hr
 #: view:hr.employee:0
@@ -244,22 +215,22 @@ msgstr "Отсутствует"
 #. module: hr
 #: view:hr.department:0
 msgid "Companies"
-msgstr ""
+msgstr "Компании"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr ""
+msgstr "Раб. тел."
 
 #. module: hr
 #: wizard_field:hr.timesheet.attendance.report,init,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr ""
+msgstr "Макс. задержка (мин)"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Местоположение офиса"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -278,22 +249,22 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet.group,manager:0
 msgid "Workgroup manager"
-msgstr ""
+msgstr "Руководитель группы"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "Подчиненные"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Подчиняется"
 
 #. module: hr
 #: field:hr.department,member_ids:0
 msgid "Members"
-msgstr ""
+msgstr "Участники"
 
 #. module: hr
 #: field:hr.action.reason,action_type:0
@@ -301,9 +272,16 @@ msgid "Action's type"
 msgstr "Тип действия"
 
 #. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Report"
+msgstr "Отчет"
+
+#. module: hr
 #: wizard_view:hr.si_so,si_ask_so:0
-msgid "You did not signed out the last time. Please enter the date and time you signed out."
-msgstr ""
+msgid ""
+"You did not signed out the last time. Please enter the date and time you "
+"signed out."
+msgstr "Вы не отметили выход в прошлый раз. Укажите дату и время выхода."
 
 #. module: hr
 #: model:ir.actions.report.xml,name:hr.attendance_error_report
@@ -314,27 +292,22 @@ msgstr ""
 #: wizard_field:hr.print_week,init,init_date:0
 #: wizard_field:hr.timesheet.attendance.report,init,init_date:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: hr
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr ""
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr ""
+msgstr "В разводе"
 
 #. module: hr
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr "Присутствие сотрудника"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
@@ -342,45 +315,40 @@ msgstr "Присутствие сотрудника"
 #: model:ir.ui.menu,name:hr.menu_department_def
 #: model:ir.ui.menu,name:hr.menu_department_tree
 msgid "Departments"
-msgstr ""
+msgstr "Отделы"
 
 #. module: hr
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign In"
-msgstr "Пришел"
+msgstr "Зарегистрироваться"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Maried"
-msgstr ""
+msgstr "В браке"
 
 #. module: hr
 #: field:hr.timesheet,tgroup_id:0
 msgid "Employee's timesheet group"
-msgstr "Тип расписания"
+msgstr "Табельная группа сотрудника"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
+msgstr "Мужской"
 
 #. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "The Sign-in date must be in the past"
-msgstr ""
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr ""
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Категории сотрудника"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 #: view:hr.employee.category:0
 msgid "Employee Category"
-msgstr ""
+msgstr "Категория сотрудника"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -390,7 +358,7 @@ msgstr "Вторник"
 #. module: hr
 #: wizard_view:hr.print_month,init:0
 msgid "Select a month"
-msgstr ""
+msgstr "Выбрать месяц"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -400,18 +368,21 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,user_id:0
 msgid "Related User"
-msgstr ""
+msgstr "Относится к пользователю"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
-msgid "(*) A negative delay means that the employee worked more than encoded."
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
+"(*) Отрицательныя задержка означает, что сотрудник работал больше времени, "
+"чем исходно указано."
 
 #. module: hr
 #: field:hr.employee,category_id:0
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #. module: hr
 #: wizard_view:hr.si_so,si_ask_so:0
@@ -420,44 +391,48 @@ msgstr ""
 #: model:ir.actions.wizard,name:hr.si_so
 #: model:ir.ui.menu,name:hr.menu_si_so
 msgid "Sign in / Sign out"
-msgstr ""
+msgstr "Регистрация / выход"
 
 #. module: hr
 #: field:hr.department,note:0
 msgid "Note"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
+msgstr "Примечание"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_attendance
 #: field:hr.employee,state:0
 msgid "Attendance"
-msgstr "Присутствие"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
-msgstr ""
+msgstr "Контактная информация"
 
 #. module: hr
 #: model:ir.actions.wizard,name:hr.print_week
 msgid "Print Timesheet by week"
-msgstr ""
+msgstr "Распечатать табель по неделям"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Other"
+msgstr "Прочие"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Contact address"
-msgstr "Адрес"
+msgstr "Контактный адрес"
+
+#. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Avg Delay"
+msgstr "Средн. задержка"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -468,17 +443,11 @@ msgstr "Понедельник"
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
 msgid "Categories structure"
-msgstr ""
+msgstr "Структура категорий"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Job Information"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/wizard/sign_in_out.py:0
-msgid "A sign-out must be right after a sign-in !"
 msgstr ""
 
 #. module: hr
@@ -497,16 +466,21 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "To:"
+msgstr "Кому:"
+
+#. module: hr
 #: wizard_button:hr.si_so,si_ask_so,si:0
 #: wizard_button:hr.si_so,init,si_test:0
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr ""
+msgstr "Вход"
 
 #. module: hr
 #: wizard_view:hr.timesheet.attendance.report,init:0
 msgid "Analysis Information"
-msgstr ""
+msgstr "Данные анализа"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -519,10 +493,9 @@ msgid "Active"
 msgstr "Активен"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr ""
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
+msgstr "Не в браке"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -538,33 +511,27 @@ msgstr "Действие"
 #. module: hr
 #: field:hr.timesheet,date_from:0
 msgid "Starting date"
-msgstr ""
-
-#. module: hr
-#, python-format
-#: code:addons/hr/hr.py:0
-msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
-msgstr ""
+msgstr "Дата начала"
 
 #. module: hr
 #: wizard_view:hr.print_week,init:0
 msgid "Select a starting and a end date"
-msgstr ""
+msgstr "Укажите дату начала и окончания"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent category"
-msgstr ""
+msgstr "Родительская категория"
 
 #. module: hr
 #: field:hr.employee,marital:0
 msgid "Marital Status"
-msgstr ""
+msgstr "Семейное положение"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr ""
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Hierarchical view of this employee"
+msgstr "Иерархический вид данного сотрудника"
 
 #. module: hr
 #: wizard_button:hr.print_month,init,end:0
@@ -574,34 +541,40 @@ msgstr ""
 #: wizard_button:hr.si_so,init,end:0
 #: wizard_button:hr.timesheet.attendance.report,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet
 msgid "Timesheet Line"
-msgstr "Строка расписания"
+msgstr "Строка табеля"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr ""
+msgstr "Персональная информация"
 
 #. module: hr
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Название объекта должно начинаться с x_  и не должно содержать специальных "
+"символов !"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
-msgid "(*) A positive delay means that the employee worked less than recorded."
+msgid ""
+"(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
+"(*) Положительная задержка означает, что сотрудник работал меньше времени, "
+"чем исходно указано."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet_group
 #: field:hr.timesheet.group,timesheet_id:0
 #: view:hr.timesheet:0
 msgid "Working Time"
-msgstr ""
+msgstr "Рабочее время"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -613,17 +586,17 @@ msgstr "Четверг"
 #: wizard_button:hr.si_so,init,so_test:0
 #: selection:hr.action.reason,action_type:0
 msgid "Sign out"
-msgstr ""
+msgstr "Выход"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr ""
+msgstr "Задержка"
 
 #. module: hr
 #: field:hr.timesheet,hour_to:0
 msgid "Work to"
-msgstr "Работать до"
+msgstr "Работа до"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -633,17 +606,17 @@ msgstr ""
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "Категории сотрудников"
 
 #. module: hr
 #: wizard_field:hr.print_month,init,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месяц"
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Date Recorded"
-msgstr ""
+msgstr "Дата записи"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -660,38 +633,48 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
-msgstr ""
+msgstr "Ваш послежний вход"
 
 #. module: hr
 #: model:ir.actions.wizard,name:hr.print_month
 msgid "Print Timesheet by month"
-msgstr ""
+msgstr "Распечатать табель по месяцам"
 
 #. module: hr
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
-msgstr "Ушел"
+msgstr "Выйти"
 
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "отдел"
 
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "Национальность"
 
 #. module: hr
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr "Определить обоснование посещения"
+msgstr ""
+
+#. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "From:"
+msgstr "От:"
 
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other ID"
-msgstr ""
+msgstr "Прочие ID"
+
+#. module: hr
+#: view:hr.timesheet.group:0
+msgid "Working Time Category"
+msgstr "Категория рабочего времени"
 
 #. module: hr
 #: field:hr.timesheet,name:0
@@ -701,30 +684,30 @@ msgstr "Название"
 #. module: hr
 #: field:hr.employee,gender:0
 msgid "Gender"
-msgstr ""
+msgstr "Пол"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list
 #: view:hr.employee:0
 msgid "Employees"
-msgstr ""
+msgstr "Сотрудники"
 
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Название отдела"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_action_reason
 #: field:hr.attendance,action_desc:0
 msgid "Action reason"
-msgstr "Основание"
+msgstr "Причина действия"
 
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Started on"
-msgstr ""
+msgstr "Начало в"
 
 #. module: hr
 #: wizard_view:hr.timesheet.attendance.report,init:0
@@ -735,7 +718,7 @@ msgstr ""
 #: field:hr.department,manager_id:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Менеджер"
 
 #. module: hr
 #: wizard_button:hr.timesheet.attendance.report,init,print:0
@@ -745,7 +728,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.print_month,init,year:0
 msgid "Year"
-msgstr ""
+msgstr "Год"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -756,5 +739,4 @@ msgstr "Суббота"
 #: model:ir.actions.act_window,name:hr.open_view_employee_new
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_new
 msgid "New Employee"
-msgstr ""
-
+msgstr "Новый сотрудник"
