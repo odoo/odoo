@@ -109,6 +109,9 @@ class hr_analytic_timesheet(osv.osv):
         'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
         'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
     }
+    def on_change_account_id(self, cr, uid, ids, account_id):
+        return {'value':{}}
+
     def create(self, cr, uid, vals, context={}):
         try:
             res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)

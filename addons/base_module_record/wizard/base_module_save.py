@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,6 +23,11 @@
 import wizard
 import osv
 import pooler
+
+info = '''<?xml version="1.0"?>
+<form string="Module Recording">
+    <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
+</form>'''
 
 info_start_form = '''<?xml version="1.0"?>
 <form string="Module Recording">
@@ -88,6 +93,7 @@ def _info_default(self, cr, uid, data, context):
     mod = pool.get('ir.module.record')
     result = {}
     info = "Details of "+str(len(mod.recording_data))+" Operation(s):\n\n"
+
     for line in mod.recording_data:
         result.setdefault(line[0],{})
         result[line[0]].setdefault(line[1][3], {})
@@ -144,6 +150,13 @@ def _create_module(self, cr, uid, data, context):
         'module_file': base64.encodestring(s.getvalue()),
         'module_filename': data['form']['directory_name']+'-'+data['form']['version']+'.zip'
     }
+def _check(self, cr, uid, data, context):
+     pool = pooler.get_pool(cr.dbname)
+     mod = pool.get('ir.module.record')
+     if len(mod.recording_data):
+         return 'info'
+     else:
+         return 'end'
 
 class base_module_publish(wizard.interface):
     states = {
@@ -155,9 +168,13 @@ class base_module_publish(wizard.interface):
                 'fields': info_start_fields,
                 'state':[
                     ('end', 'Cancel', 'gtk-cancel'),
-                    ('info', 'Continue', 'gtk-ok'),
+                    ('check', 'Continue', 'gtk-ok'),
                 ]
             }
+        },
+        'check': {
+            'actions': [],
+            'result': {'type':'choice','next_state':_check}
         },
         'info': {
             'actions': [],
@@ -181,7 +198,11 @@ class base_module_publish(wizard.interface):
                     ('end', 'Close', 'gtk-ok'),
                 ]
             }
-        }
+        },
+        'end': {
+            'actions': [],
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
+        },
     }
 base_module_publish('base_module_record.module_save')
 

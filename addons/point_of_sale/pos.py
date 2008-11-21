@@ -677,7 +677,7 @@ class pos_order(osv.osv):
 
                 # Create one entry for the payment
                 payment_move_id = account_move_obj.create(cr, uid, {
-                    'journal_id': order.sale_journal.id,
+                    'journal_id': payment.journal_id.id,
                     'period_id': period,
                 }, context=context)
                 account_move_line_obj.create(cr, uid, {
@@ -688,7 +688,7 @@ class pos_order(osv.osv):
                     'account_id': payment_account,
                     'credit': ((payment.amount<0) and -payment.amount) or 0.0,
                     'debit': ((payment.amount>0) and payment.amount) or 0.0,
-                    'journal_id': order.sale_journal.id,
+                    'journal_id': payment.journal_id.id,
                     'period_id': period,
                 }, context=context)
                 to_reconcile.append(account_move_line_obj.create(cr, uid, {
@@ -699,7 +699,7 @@ class pos_order(osv.osv):
                     'account_id': order_account,
                     'credit': ((payment.amount>0) and payment.amount) or 0.0,
                     'debit': ((payment.amount<0) and -payment.amount) or 0.0,
-                    'journal_id': order.sale_journal.id,
+                    'journal_id': payment.journal_id.id,
                     'period_id': period,
                 }, context=context))
 

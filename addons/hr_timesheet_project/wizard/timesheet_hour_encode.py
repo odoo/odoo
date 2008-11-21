@@ -51,7 +51,7 @@ def _action_line_create(self, cr, uid, data, context):
                 'product_uom_id': unit_id,
                 'product_id': product_id,
                 'amount': work.hours or 0.0,
-                'account_id': aa.id
+                'account_id': aa.id,
             }
             res2 = ts.on_change_unit_amount(cr, uid, False, product_id, work.hours or 0.0,unit_id, context)
             if res2:

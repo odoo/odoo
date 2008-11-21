@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Multiple-plans management in analytic accounting",
+    "name" : "Multiple-plans management in Analytic Accounting",
     "version" : "1.0",
     "depends" : ["account", "account_analytic_default"],
     "author" : "Tiny",

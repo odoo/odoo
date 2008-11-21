@@ -37,7 +37,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
         # TODO: reorder ! with dependencies
         if not task.planned_hours:
             continue
-        if task.state in ('open','progress') and task.user_id:
+        if task.state in ('draft','open','progress') and task.user_id:
 
             # Find the starting date of the task
             if task.user_id.id in users:
@@ -61,7 +61,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
             tasks[task.id] = []
             res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.planned_hours)
             for (d1,d2) in res:
-                tasks[task.id].append((d1, d2, task.name, task.user_id.login))
+                tasks[task.id].append((d1, d2, task.name.decode('utf8'), task.user_id.login))
             date_close = tasks[task.id][-1][1]
 
             # Store result

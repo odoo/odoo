@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com",
-    "category" : "Generic Modules/HR",
+    "category" : "Generic Modules/Human Resources",
     "description": """
         This module lets you transfer the entries under tasks defined for Project Management to
         the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.

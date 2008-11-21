@@ -55,7 +55,7 @@ class crm_case_section(osv.osv):
     _name = "crm.case.section"
     _description = "Case Section"
     _columns = {
-        'name': fields.char('Case Section',size=64, required=True),
+        'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active'),
         'sequence': fields.integer('Sequence'),
@@ -198,7 +198,7 @@ class crm_case_categ(osv.osv):
     _name = "crm.case.categ"
     _description = "Category of case"
     _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True),
+        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
         'probability': fields.float('Probability (%)', required=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
     }

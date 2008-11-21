@@ -12,7 +12,7 @@
         <!--
     Budgets
     -->
-        
+
         <record id="view_budget_post_tree" model="ir.ui.view">
             <field name="name">account.budget.post.tree</field>
             <field name="model">account.budget.post</field>
@@ -80,7 +80,7 @@
 							<field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
 								<graph type="bar" string="Lines">
 									<field name="analytic_account_id" />
-									<field name="general_budget_id" operator="+" />
+									<!--<field name="general_budget_id" operator="+" />-->
 									<field name="planned_amount" operator="+"/>
 									<field group="True" name="general_budget_id"/>
 								</graph>
@@ -270,7 +270,7 @@
 								</form>
 								<graph type="bar" string="Lines">
 									<field name="general_budget_id" />
-									<field name="analytic_account_id" operator="+"/>
+									<!--<field name="analytic_account_id" operator="+"/>-->
 									<field name="planned_amount" operator="+"/>
 									<field group="True" name="analytic_account_id"/>
 								</graph>

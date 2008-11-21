@@ -625,10 +625,16 @@ class stock_picking(osv.osv):
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
 
-            comment = self._get_comment_invoice(cursor, user, picking)
-
+            comment = self._get_comment_invoice(cursor, user, picking)            
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
+                invoice=invoice_obj.browse(cursor, user,invoice_id)      
+                invoice_vals = {
+                    'name': invoice.name +', '+picking.name,
+                    'origin': invoice.origin+', '+picking.name+(picking.origin and (':' + picking.origin) or ''),    
+                    'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
+                }                 
+                invoice_obj.write(cursor, user, [invoice_id],invoice_vals,context=context)
             else:
                 invoice_vals = {
                     'name': picking.name,
@@ -651,6 +657,9 @@ class stock_picking(osv.osv):
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
+                origin=move_line.picking_id.name
+                if move_line.picking_id.origin:
+                    origin+=':' + move_line.picking_id.origin
                 if group:
                     name = picking.name + '-' + move_line.name
                 else:
@@ -679,6 +688,7 @@ class stock_picking(osv.osv):
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
+                    'origin':origin,
                     'invoice_id': invoice_id,
                     'uos_id': move_line.product_uos.id,
                     'product_id': move_line.product_id.id,

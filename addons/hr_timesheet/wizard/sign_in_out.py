@@ -112,6 +112,8 @@ def _write(self, cr, uid, data, emp_id, context):
     res['account_id'] = data['form']['account_id']
     res['unit_amount'] = hour
     res.update(up)
+    up = timesheet_obj.on_change_account_id(cr, uid, [], res['account_id']).get('value', {})
+    res.update(up)
     return timesheet_obj.create(cr, uid, res, context)
 
 def _sign_out_result_end(self, cr, uid, data, context):

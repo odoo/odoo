@@ -172,7 +172,6 @@
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">tree</field>
-            <field name="view_mode">form</field>
             <field name="view_id" ref="view_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
@@ -717,10 +716,10 @@
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
-                        <page string="Move Lines">
+                        <!--<page string="Move Lines">
                             <field colspan="4" name="reconcile_implicit"/>
                             <field colspan="4" name="parent_move_lines" nolabel="0"/>
-                           </page>
+                           </page>-->
                     </notebook>
                 </form>
             </field>

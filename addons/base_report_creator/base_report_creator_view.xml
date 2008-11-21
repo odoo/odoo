@@ -54,7 +54,7 @@
                     <field name="field_ids" nolabel="1" colspan="4">
                         <form string="Fields">
                             <field name="sequence"/>
-                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2])] or []">
+                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []">
                                 <tree string="Field List">
                                     <field name="model_id"/>
                                     <field name="name"/>
@@ -67,7 +67,7 @@
                         </form>
                         <tree editable="bottom" string="Fields to Display">
                             <field name="sequence"/>
-                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2])] or []"/>
+                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []"/>
                             <field name="group_method"/>
                             <field name="graph_mode"/>
                             <field name="calendar_mode"/>

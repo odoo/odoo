@@ -102,7 +102,7 @@
 										<xsl:attribute name="style">esclave</xsl:attribute>
 									</xsl:otherwise>
 								</xsl:choose>
-								<xsl:value-of select="format-number(//employee[@id=$id]/time-element[@date=$today], '##.##')" />
+								<xsl:value-of select="format-number(sum(//employee[@id=$id]/time-element[@date=$today]), '##.##')" />
 							</para>
 						</td>
 					</xsl:for-each>

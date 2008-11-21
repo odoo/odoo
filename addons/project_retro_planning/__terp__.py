@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,7 +23,7 @@
     "name" : "Project Retro planning",
     "version" : "0.1",
     "author" : "Tiny",
-    "category" : "Generic Modules/Project Retro Planning",
+    "category" : "Generic Modules/Projects & Services",
     "description": """
         - Stop date of project is change will change all the tasks of that project to same number of days """,
     "depends" : [

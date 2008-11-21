@@ -95,10 +95,10 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Distribution">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="plan_id"/>
-                <field name="journal_id"/>
+                <field name="name" select="1"/>
+                <field name="code" select="1"/>
+                <field name="plan_id" select="2"/>
+                <field name="journal_id" select="2"/>
             </tree>
         </field>
     </record>
@@ -115,7 +115,7 @@
     <act_window name="Distribution Models"
         domain="[('plan_id', '=', active_id),('plan_id','&lt;&gt;',False)]"
         context="{'plan_id': active_id}"
-        res_model="account.analytic.instance"
+        res_model="account.analytic.plan.instance"
         src_model="account.analytic.plan"
         id="account_analytic_instance_model_open"/>
 

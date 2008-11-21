@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -237,7 +237,8 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': lambda *a: 1,
         'tobe_invoiced' : lambda *a: True,
-        'name': lambda *a: 'Registration'
+        'name': lambda *a: 'Registration',
+        'state': lambda *b: 'draft'
     }
 
     def onchange_badge_name(self, cr, uid, ids, badge_name):

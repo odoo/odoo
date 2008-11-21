@@ -442,6 +442,7 @@ class account_journal(osv.osv):
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
+        'refund_journal': fields.boolean('Refund Journal'),
 
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -790,7 +791,7 @@ class account_move(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         for line in self.browse(cr, uid, ids, context):
             if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !'))
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should mark the journal to allow canceling entries.'))
         if len(ids):
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
         return True
