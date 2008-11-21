@@ -28,47 +28,36 @@
 
 from osv import fields, osv
 import time
-from Wiki2Html import Wiki2Html
-import xmlrpclib
-import base64
-import os
+#from core.Wiki2Html import Wiki2Html
 from StringIO import StringIO
-import popen2
 
 class Tag(osv.osv):
-    _name="base.wiki.tag"
+    _name="wiki.wiki.tag"
     _description="Wiki"
-    _rec_name="title"
+
     _columns={
-       'title':fields.char('Title',size=128),
+       'name':fields.char('Title',size=128),
     }
 Tag()
 
 class Wiki(osv.osv):
-    _name="base.wiki"
+    _name="wiki.wiki"
     _description="Wiki"
-    _rec_name="title"
     _order = 'model_id'
     _columns={
-       'title':fields.char('Title', size=128, select=True),
-       'last_modify_by':fields.many2one('res.users',"Last Modify By"),
+       'name':fields.char('Title', size=128, select=True, required=True),
+       'write_uid':fields.many2one('res.users',"Last Modify By"),
        'text_area':fields.text("Content", select=True),
-       'wiki_create_uid':fields.many2one('res.users','Authour', select=True),
-       'wiki_create_date':fields.datetime("Created on", select=True),
-       'wiki_write_date':fields.datetime("Last modified", select=True),
-       'tags':fields.many2many("base.wiki.tag","wiki_tag_many_id","wiki_id","tag_id","Tags", select=True),
-       #'forum_id':fields.one2many('base.wiki.forum','wiki_id','Forum Lines'),
-       'history_id':fields.one2many('base.wiki.history','history_wiki_id','History Lines'),
-       'html':fields.text("Html Data", select=True),
+       'create_uid':fields.many2one('res.users','Authour', select=True),
+       'create_date':fields.datetime("Created on", select=True),
+       'write_date':fields.datetime("Last modified", select=True),
+       'tags':fields.char('Tags', size=1024), # many2many("wiki.wiki.tag","wiki_tag_many_id","wiki_id","tag_id","Tags", select=True),
+       'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
        'path':fields.char('Page Path',size=128),
        'model_id': fields.many2one('ir.model', 'Model id', select=True, ondelete='cascade'),
        'res_id': fields.integer("Record Id"),
        'minor_edit':fields.boolean('Thisd is a minor edit', select=True),
        'summary':fields.char('Summary',size=256, select=True),
-    }
-    _defaults = {
-        'wiki_create_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'wiki_create_uid': lambda obj,cr,uid,context: uid,
     }
 
     def __init__(self, cr, pool):
@@ -76,63 +65,26 @@ class Wiki(osv.osv):
         self.oldmodel = None
 
     def read(self, cr, uid, cids, fields=None, context=None, load='_classic_read'):
-        result = super(Wiki, self).read(cr, uid, cids, {}, load='_classic_read')
-
-        if context and context.get('index'):
-            ids = self.search(cr, uid, [('model_id','!=',False), ('id','in',cids)])
-            res = self.read(cr, uid, ids)
-
-            buffer = ''
-            for rs in res:
-                if self.oldmodel != rs['model_id'][1] or self.oldmodel == None:
-                    self.oldmodel = rs['model_id'][1]
-                    buffer+= '\n==' + self.pool.get('ir.model').browse(cr, uid, rs['model_id'][0]).name + '==\n'
-
-                rec_url = '/form/view?model=' + rs['model_id'][1] + "&id=" + str(rs['res_id'])
-                edit_url = '/form/edit?model=' + rs['model_id'][1] + "&id=" + str(rs['res_id'])
-                buffer+= '#Row\n'
-                buffer+= '| # | ' + rs['title'] + ' | [' +  rs['path'] + ' -  wiki]' + ' | [' +  rec_url + ' - Browse ] | [' +  edit_url + ' - Edit ]\n'
-
-            ids = self.search(cr, uid, [('model_id','=',False), ('id','in',cids)])
-            res = self.read(cr, uid, ids)
-
-            if res:
-                buffer+= '\n==Other Pages==\n'
-                for rs in res:
-
-                    buffer+= '* [' +  rs['path'] + ' - ' + rs['title'] + ']\n'
-
-            return [{'html':self.Wiki2Html(buffer)}]
-        else:
-            return result
-
-    def Wiki2Html(self, wiki):
-        fileName = 'data.txt'
-        file = open(fileName, 'w')
-        file.write(wiki+'\n\n')
-        file.close()
-
-        parser = Wiki2Html()
-        parser.read(fileName)
-        return parser.html
+        ids = []
+        for id in cids:
+            if type(id) == type(1):
+                ids.append(id)
+            elif type(id) == type(u''):
+                ids.append(10)
+                
+        result = super(Wiki, self).read(cr, uid, ids, fields, None, load='_classic_read')
+        return result
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('text_area'):
-            vals['html'] = self.Wiki2Html(vals['text_area'])
-        else:
-            vals['text_area'] = 'Your text goes here'
-            vals['html'] = 'You have not create the page.'
         if not vals.has_key('minor_edit'):
             return super(Wiki,self).create(cr, uid, vals, context)
-        vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':vals['summary']}]]
+        vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'summary':vals['summary']}]]
         return super(Wiki,self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        vals['wiki_write_date']=time.strftime('%Y-%m-%d %H:%M:%S')
-        vals['last_modify_by']=uid
-        wiki_data=self.read(cr,uid,ids,['minor_edit','summary'])[0]
+#        wiki_data=self.read(cr,uid,ids,['minor_edit','summary'])[0]
         if vals.get('text_area'):
-            vals['html'] = self.Wiki2Html(vals['text_area'])
+#            vals['html'] = self.Wiki2Html(vals['text_area'])
             if vals.has_key('minor_edit') and vals.has_key('summary'):
                 vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':vals['summary']}]]
             elif vals.has_key('minor_edit'):
@@ -144,35 +96,8 @@ class Wiki(osv.osv):
         return super(Wiki,self).write(cr, uid, ids, vals, context)
 Wiki()
 
-#class Forum(osv.osv):
-#    _name="base.wiki.forum"
-#    _description="Wiki Forum"
-#    _rec_name="title"
-#    _columns={
-#        'title':fields.char('Title',size=128),
-#        'replies':fields.integer('Replies'),
-#        'wiki_authour':fields.many2one('res.users','Created By'),
-#        'last_post':fields.datetime("Last Post",readonly=True),
-#        'by':fields.many2one('res.users','By',readonly=True),
-#        'discussion_lines':fields.one2many('base.wiki.discussion','forum_id','Discussion Lines'),
-#        'wiki_id':fields.many2one('base.wiki','Wiki Id')
-#    }
-#Forum()
-#
-#class Discussion(osv.osv):
-#    _name="base.wiki.discussion"
-#    _description="Wiki Discussion"
-#    _rec_name="wiki_authour"
-#    _columns={
-#        'wiki_authour':fields.many2one('res.users','Authour',readonly=True),
-#        'posted_date':fields.datetime("Posted Date",readonly=True),
-#        'message':fields.text('Message'),
-#        'forum_id':fields.many2one('base.wiki.forum','Forum Id')
-#    }
-#Discussion()
-
 class History(osv.osv):
-    _name="base.wiki.history"
+    _name="wiki.wiki.history"
     _description="Wiki History"
     _rec_name="date_time"
     _order = 'id DESC'
@@ -183,7 +108,7 @@ class History(osv.osv):
       'summary':fields.char('Summary',size=256, select=True),
       'modify_by':fields.many2one('res.users',"Modify By", select=True),
       'hist_write_date':fields.datetime("Last modified", select=True),
-      'history_wiki_id':fields.many2one('base.wiki','Wiki Id', select=True)
+      'history_wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
     }
     _defaults = {
         'hist_write_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -193,7 +118,7 @@ class History(osv.osv):
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib
         
-        history_pool = self.pool.get('base.wiki.history')
+        history_pool = self.pool.get('wiki.wiki.history')
         
         text1 = history_pool.read(cr, uid, [v1], ['text_area'])[0]['text_area']
         text2 = history_pool.read(cr, uid, [v2], ['text_area'])[0]['text_area']
@@ -211,7 +136,7 @@ from StringIO import StringIO
 from HTMLParser import HTMLParser
 
 class IndexLine(osv.osv):
-    _name="base.index.line"
+    _name="wiki.index.line"
     _description="Index Lines"
     _columns={
       'name':fields.text('Content', select=True),
@@ -238,15 +163,13 @@ class IndexLine(osv.osv):
     
     def Index(self, cr, uid, ids, context={}):
         
-        entry_pool = self.pool.get('base.index.line')
+        entry_pool = self.pool.get('wiki.index.line')
         eids = entry_pool.search(cr, uid, [])
-#        entry_pool.unlink(cr, uid, eids)
-#        cr.commit()
         
         model_pool = self.pool.get('ir.model')
         field_pool = self.pool.get('ir.model.fields')
         
-        ids = model_pool.search(cr, uid, [('model','!=','base.index.line')])
+        ids = model_pool.search(cr, uid, [('model','!=','wiki.index.line')])
         models = model_pool.read(cr, uid, ids, ['id', 'model'])
         
         for mod in models:
@@ -258,13 +181,13 @@ class IndexLine(osv.osv):
             if str(mod['model']).startswith('ir'):
                 continue
             
-            if str(mod['model']).startswith('base.index.line'):
+            if str(mod['model']).startswith('wiki.index.line'):
                 continue
             
             if str(mod['model']).startswith('res.currency'):
                 continue
             
-            if str(mod['model']).startswith('base.wiki'):
+            if str(mod['model']).startswith('wiki.wiki'):
                 continue
             
             if str(mod['model']).startswith('report'):
@@ -281,12 +204,6 @@ class IndexLine(osv.osv):
                 fdata = field_pool.read(cr, uid, fids, ['name','relation', 'ttype'])
             except Exception, e:
                 continue
-#            
-#            fkeys = {}
-#            tkeys = {}
-#            for fd in fdata:
-#                fkeys[fd['name']] = fd['relation']
-#                tkeys[fd['name']] = fd['ttype']
         
             res_pool = None
             res_ids = None
@@ -298,8 +215,6 @@ class IndexLine(osv.osv):
             try:
                 res_ids = res_pool.search(cr, 1, [])
                 res_datas = res_pool.read(cr, 1, res_ids)
-                #cr.execute("select * from %s" % ( mod['model'].replace('.','_')))
-                #res_datas = cr.dictfetchall()
             except Exception, e:
                 print e
                 continue
@@ -314,22 +229,6 @@ class IndexLine(osv.osv):
                         continue
 
                     final_res = ''
-#                    
-#                    for col in res_data:
-#                        if fkeys.has_key(col) and fkeys[col] != 'NULL':
-#                            if tkeys.has_key(col) and tkeys[col] == 'one2many':
-#                                rel_pool = self.pool.get(fkeys.get(col))
-#                                try:
-#                                    foreign_key = res_pool._columns[col]._fields_id
-#                                except Exception, e:
-#                                    print e
-#                                    continue
-#                                fkids = rel_pool.search(cr, 1, [(foreign_key, '=', res_data['id'])])
-#                                if fkids.__len__() > 0:
-#                                    fkdata = rel_pool.read(cr, 1, fkids)
-#                                    for fkd in fkdata:
-#                                        final_res += ' '.join(map(str,fkd.values()))
-
                     final_res += ' '.join(map(str,res_data.values()))
                     
                     entry_pool.create(cr, uid, {
@@ -346,12 +245,8 @@ class IndexLine(osv.osv):
     
     def getResult(self, cr, uid, key, reSearch=True, context = {}):
         
-#        password = self.pool.get('res.users').browse(cr, uid, uid).password
-#        self.server.init(cr.dbname, uid, password, True)
-        
         if context and context.get('read_all') and key:
             try:
-                #res = self.server.search(key)
                 ids = self.search(cr, uid, [('name','ilike',key)])
                 res = self.read(cr, uid, ids, ['model', 'res_id'])
             except Exception, e:
@@ -399,25 +294,11 @@ class IndexLine(osv.osv):
                         sbuff = '\n==' + mod_data + '==\n' + sbuff
                         
                     buffer += sbuff
-                html = self.pool.get('base.wiki').Wiki2Html(buffer)
+                html = self.pool.get('wiki.wiki').Wiki2Html(buffer)
                 html = html.replace('$s', '<strike>')
                 html = html.replace('$es', '</strike>')
                 return [{'html':html}]
-#            else:
-#                #TODO: need to create an index on the new records
-#                if reSearch:
-#                    self.Index(cr, uid, context)
-#                    self.getResult(cr, uid, key, False, context)
 
         return None
 
 IndexLine()
-
-class Project(osv.osv):
-    _inherit = 'project.project'
-    _name = 'project.project'
-    _columns = {
-        'wiki':fields.many2one('base.wiki', 'Wiki'),
-        'dwiki':fields.many2one('base.wiki', 'Developer Wiki'),
-    }    
-Project()
