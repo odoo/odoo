@@ -81,6 +81,7 @@
             <field name="supplier">1</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
+            <field name="website">http://www.syleam.fr</field>
             <field name="name">Syleam</field>
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
         </record>
@@ -270,6 +271,18 @@
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_2"/>
+        </record>
+        <record id="res_partner_address_11" model="res.partner.address">
+            <field name="city">Alencon</field>
+            <field name="name">Sebastien LANGE</field>
+            <field name="zip">61000</field>
+            <field name="title">M.</field>
+            <field name="email">contact@syleam.fr</field>
+            <field name="street">1 place de l'Église</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_sednacom"/>
         </record>
         <record id="res_partner_address_10" model="res.partner.address">
             <field name="city">Liege</field>
