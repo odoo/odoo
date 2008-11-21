@@ -1,12 +1,14 @@
 {
-    "name" : "Wiki Base System",
+    "name" : "Wiki System",
     "version" : "1.0",
-    "author" : "Axelor Sarl",
+    "author" : "Tiny ERP",
     "category" : "Generic Modules/Others",
-    "depends" : ["base", "project"],
+    "depends" : ["base"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["wiki_view.xml","wiki_data.xml"],
+    "update_xml" : [
+        "wiki_view.xml",
+    ],
     "active": False,
     "installable": True
 }
