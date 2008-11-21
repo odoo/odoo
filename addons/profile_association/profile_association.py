@@ -32,7 +32,10 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
         'board_document':fields.boolean('Document Management', help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
         'segmentation':fields.boolean('Segmentation'),
         'crm_configuration' : fields.boolean('Partner Relation & Calendars'),
-        'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
+        'project_gtd':fields.boolean('Getting Things Done',
+            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
+        'wiki': fields.boolean('Wiki', 
+            help="An integrated wiki content management system. This is really usefull to manage FAQ, quality manuals, etc.")
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
