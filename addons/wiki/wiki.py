@@ -31,27 +31,37 @@ import time
 from StringIO import StringIO
 from HTMLParser import HTMLParser
 
-class Wiki(osv.osv):
-    _name="wiki.wiki"
-    _description="Wiki"
+class WikiGroup(osv.osv):
+    _name = "wiki.groups"
+    _description="Wiki Groups"
     _order = 'name'
     _columns={
-       'name':fields.char('Title', size=128, select=True, required=True),
-       'write_uid':fields.many2one('res.users',"Last Modify By"),
-       'text_area':fields.text("Content", select=True),
-       'create_uid':fields.many2one('res.users','Authour', select=True),
+       'name':fields.char('Wiki Group', size=256, select=True, required=True),
+       'parent_id':fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
+       'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created on", select=True),
-       'write_date':fields.datetime("Last modified", select=True),
-       'tags':fields.char('Tags', size=1024),
-       'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
-       'minor_edit':fields.boolean('Thisd is a minor edit', select=True),
-       'summary':fields.char('Summary',size=256, select=True),
     }
+WikiGroup()
 
-    def __init__(self, cr, pool):
-        super(Wiki, self).__init__(cr, pool)
-        self.oldmodel = None
 
+class Wiki(osv.osv):
+    _name="wiki.wiki"
+    _description="Wiki Page"
+    _order = 'section,name'
+    _columns={
+        'name':fields.char('Title', size=256, select=True, required=True),
+        'write_uid':fields.many2one('res.users',"Last Modified By"),
+        'text_area':fields.text("Content", select=True),
+        'create_uid':fields.many2one('res.users','Author', select=True),
+        'create_date':fields.datetime("Created on", select=True),
+        'write_date':fields.datetime("Last modified", select=True),
+        'tags':fields.char('Tags', size=1024),
+        'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
+        'minor_edit':fields.boolean('Minor edit', select=True),
+        'summary':fields.char('Summary',size=256, select=True),
+        'section': fields.char('Section', size=32)
+        'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
+    }
     def read(self, cr, uid, cids, fields=None, context=None, load='_classic_read'):
         ids = []
         for id in cids:
@@ -59,26 +69,17 @@ class Wiki(osv.osv):
                 ids.append(id)
             elif type(id) == type(u''):
                 ids.append(10)
-                
         result = super(Wiki, self).read(cr, uid, ids, fields, None, load='_classic_read')
         return result
 
-    def create(self, cr, uid, vals, context=None):
-        if not vals.has_key('minor_edit'):
-            return super(Wiki,self).create(cr, uid, vals, context)
-        vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'summary':vals['summary']}]]
-        return super(Wiki,self).create(cr, uid, vals, context)
-
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('text_area'):
-            if vals.has_key('minor_edit') and vals.has_key('summary'):
-                vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':vals['summary']}]]
-            elif vals.has_key('minor_edit'):
-                vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':wiki_data['summary']}]]
-            elif vals.has_key('summary'):
-                vals['history_id']=[[0,0,{'minor_edit':wiki_data['summary'],'text_area':vals['text_area'],'modify_by':uid,'summary':vals['summary']}]]
-            else:
-                vals['history_id']=[[0,0,{'minor_edit':wiki_data['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':wiki_data['summary']}]]
+            vals['history_id']=[(0,0,{
+                'minor_edit':vals.get('minor_edit', False),
+                'text_area':vals['text_area'],
+                'modify_by':uid,
+                'summary':vals.get('summary','')
+            })]
         return super(Wiki,self).write(cr, uid, ids, vals, context)
 Wiki()
 
@@ -100,19 +101,13 @@ class History(osv.osv):
         'hist_write_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'modify_by': lambda obj,cr,uid,context: uid,
     }
-    
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib
-        
         history_pool = self.pool.get('wiki.wiki.history')
-        
         text1 = history_pool.read(cr, uid, [v1], ['text_area'])[0]['text_area']
         text2 = history_pool.read(cr, uid, [v2], ['text_area'])[0]['text_area']
-        
         line1 = text1.splitlines(1)
         line2 = text2.splitlines(1)
-        
         diff = difflib.HtmlDiff()
-        
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 History()
