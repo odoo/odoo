@@ -72,6 +72,8 @@ class Wiki(osv.osv):
         section = '0'
         for page in group.page_ids:
             section = page.section
+        s = section.split('.')
+        section = '.'.join(s)
         return {
             'value':{
                 'text_area': group.template,
