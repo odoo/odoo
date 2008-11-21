@@ -114,9 +114,14 @@ class hr_analytic_timesheet(osv.osv):
         if not account_id:
             return res
         res.setdefault('value',{})
-        st = self.pool.get('account.analytic.account').browse(cr, uid,
-                account_id).to_invoice.id
+        acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+        st = acc.to_invoice.id
         res['value']['to_invoice'] = st or False
+        if acc.state=='pending':
+            res['warning'] = {
+                'title': 'Warning',
+                'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+            }
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):

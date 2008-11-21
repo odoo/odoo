@@ -140,18 +140,18 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Shipping address :</para>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ o.partner_shipping_id.title or '' ]] [[ o.partner_shipping_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.title or '' ]][[ o.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_shipping_id.title or '' ]][[ o.partner_shipping_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_shipping_id.street ]]</para>
-          <para style="terp_default_9">[[ o.partner_shipping_id.street2 or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_shipping_id.city or '' ]] [[ o.partner_shipping_id.zip or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_shipping_id.state_id and o.partner_shipping_id.state_id.name or '' ]] [[ o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_shipping_id.street2 or ''  ]]</para>
+          <para style="terp_default_9">[[ o.partner_shipping_id.city or '' ]][[ o.partner_shipping_id.zip or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_shipping_id.state_id and o.partner_shipping_id.state_id.name or '' ]][[ o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_Bold_9">Invoice address :[[ o.partner_id.property_payment_term and o.partner_id.property_payment_term.name or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_invoice_id.street ]] [[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
-          <para style="terp_default_9">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para>
+          <para style="terp_default_Bold_9">Invoice address :[[ o.partner_id.property_payment_term.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_invoice_id.street ]][[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
+          <para style="terp_default_9">[[ o.partner_invoice_id.zip or ''  ]][[ o.partner_invoice_id.city or ''  ]][[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para>
         </td>
         <td>
           <para style="terp_default_8">
@@ -159,17 +159,17 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ o.partner_order_id.title or '' ]] [[ o.partner_order_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.title or ''  ]][[  o.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ o.partner_order_id.title or '' ]][[ o.partner_order_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_order_id.street ]]</para>
           <para style="terp_default_9">[[ o.partner_order_id.street2 or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_order_id.zip or '' ]] [[ o.partner_order_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_order_id.state_id and o.partner_order_id.state_id.name or '' ]] [[ o.partner_order_id.country_id and o.partner_order_id.country_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_order_id.zip or '' ]][[ o.partner_order_id.city or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_order_id.state_id and o.partner_order_id.state_id.name or '' ]][[ o.partner_order_id.country_id and o.partner_order_id.country_id.name or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
           <para style="terp_default_9">Tel. : [[ o.partner_order_id.phone or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax : [[ o.partner_order_id.fax or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax : [[ o.partner_order_id.fax or removeParentNode('para')  ]]</para>
           <para style="terp_default_9">TVA : [[ o.partner_id.vat or removeParentNode('para') ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
@@ -191,7 +191,7 @@
           <para style="terp_tblheader_General_Centre">Your Reference </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Date </para>
+          <para style="terp_tblheader_General_Centre">Date Ordered </para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Our Salesman </para>
@@ -204,7 +204,7 @@
     <blockTable colWidths="132.0,134.0,135.0,135.0" style="OrderTable">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ o.client_order_ref or '' ]]</para>
+          <para style="terp_default_Centre_8">[[ o.name ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.date_order ]]</para>
@@ -213,7 +213,7 @@
           <para style="terp_default_Centre_8">[[ o.user_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.partner_id.property_payment_term['name'] or o.payment_term and o.payment_term.name or '' ]]</para>
+          <para style="terp_default_Centre_8">[[ o.partner_id and o.partner_id.property_payment_term and o.partner_id.property_payment_term['name'] or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -244,28 +244,28 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[ repeatIn(o.order_line,'line') ]]</para>
-      <blockTable colWidths="208.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Order_Desc_Table">
+      <blockTable colWidths="207.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Order_Desc_Table">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ ', '.join(map(lambda x: x.name, line.tax_id)) ]]</para>
+            <para style="terp_default_Centre_9">[[ ', '.join(map(lambda x: x.name, line.tax_id)) or '0.00' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty ]] </para>
+            <para style="terp_default_Right_9">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty  or '0.00']]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_unit ]]</para>
+            <para style="terp_default_Right_9">[[ line.price_unit or '0.00' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.discount and str(line.discount) or '' ]]</para>
+            <para style="terp_default_Right_9">[[ line.discount and str(line.discount) or '0.00' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_subtotal ]]</para>
+            <para style="terp_default_Right_9">[[ line.price_subtotal or '0.00' ]]</para>
           </td>
         </tr>
         <tr>
@@ -316,7 +316,7 @@
           <para style="P6">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.amount_untaxed ]]</para>
+          <para style="terp_default_Right_9">[[ o.amount_untaxed or '0.00' ]]</para>
         </td>
         <td>
           <para style="P2">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -332,7 +332,7 @@
           <para style="P5">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.amount_tax ]]</para>
+          <para style="terp_default_Right_9">[[ o.amount_tax or '0.00' ]]</para>
         </td>
         <td>
           <para style="P2">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -348,7 +348,7 @@
           <para style="P4">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ o.amount_total ]] </para>
+          <para style="terp_default_Right_9_Bold">[[ o.amount_total or  '0.00' ]] </para>
         </td>
         <td>
           <para style="P3">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -358,7 +358,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="534.0" style="Partner_Note_Table">
+    <blockTable colWidths="533.0" style="Partner_Note_Table">
       <tr>
         <td>
           <para style="terp_default_9">[[ format(o.note or '') ]]</para>
