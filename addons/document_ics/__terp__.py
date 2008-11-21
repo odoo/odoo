@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Suport for iCal based on Document Management System",
+    "name" : "Support for iCal based on Document Management System",
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
