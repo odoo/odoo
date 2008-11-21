@@ -42,6 +42,7 @@ class WikiGroup(osv.osv):
     }
 WikiGroup()
 
+
 class Wiki(osv.osv):
     _name="wiki.wiki"
     _description="Wiki"
