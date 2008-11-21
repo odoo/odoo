@@ -919,6 +919,11 @@ class account_move(osv.osv):
     def validate(self, cr, uid, ids, context={}):
         ok = True
         for move in self.browse(cr, uid, ids, context):
+            #unlink analytic lines on move_lines
+            for obj_line in move.line_id:
+                for obj in obj_line.analytic_lines: 
+                    self.pool.get('account.analytic.line').unlink(cr,uid,obj.id)
+
             journal = move.journal_id
             amount = 0
             line_ids = []
@@ -1026,6 +1031,24 @@ class account_move(osv.osv):
                     'state': 'draft'
                 }, context, check=False)
                 ok = False
+        if ok:
+            obj_line=self.browse(cr, uid, ids[0])
+            for move in self.browse(cr, uid, ids, context):
+                for obj_line in move.line_id:
+                    #create analytic lines
+                    if obj_line.analytic_account_id:
+                        vals_lines={
+                            'name': obj_line.name,
+                            'date': obj_line.date,
+                            'account_id': obj_line.analytic_account_id.id,
+                            'unit_amount':obj_line.quantity,
+                            'amount': obj_line.debit or obj_line.credit,
+                            'general_account_id': obj_line.account_id.id,
+                            'journal_id': obj_line.journal_id.analytic_journal_id.id,
+                            'ref': obj_line.ref,
+                            'move_id':obj_line.id
+                        }
+                        self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return ok
 account_move()
 
