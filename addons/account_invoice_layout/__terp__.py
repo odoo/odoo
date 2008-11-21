@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -31,12 +31,12 @@
         * order all the lines of an invoice
         * add titles, comment lines, sub total lines
         * draw horizontal lines and put page breaks
-    
+
     Moreover, there is one option which allow you to print all the selected invoices with a given special message at the bottom of it. This feature can be very useful for printing your invoices with end-of-year wishes, special punctual conditions...
 
     """,
     "website" : "http://tinyerp.com/",
-    "category" : "Generic Modules/Project & Services",
+    "category" : "Generic Modules/Projects & Services",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
