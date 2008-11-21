@@ -1,2 +1,3 @@
 
 import wiki
+import wizard

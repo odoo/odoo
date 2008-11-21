@@ -31,21 +31,34 @@ import time
 from StringIO import StringIO
 from HTMLParser import HTMLParser
 
+class WikiGroup(osv.osv):
+    _name = "wiki.groups"
+    _description="Wiki Groups"
+    _order = 'name'
+    _columns={
+       'name':fields.char('Name', size=256, select=True, required=True),
+       'notes':fields.text("Description", select=True),
+       'create_date':fields.datetime("Created on", select=True),
+    }
+WikiGroup()
+
+
 class Wiki(osv.osv):
     _name="wiki.wiki"
     _description="Wiki"
     _order = 'name'
     _columns={
-       'name':fields.char('Title', size=128, select=True, required=True),
-       'write_uid':fields.many2one('res.users',"Last Modify By"),
-       'text_area':fields.text("Content", select=True),
-       'create_uid':fields.many2one('res.users','Authour', select=True),
-       'create_date':fields.datetime("Created on", select=True),
-       'write_date':fields.datetime("Last modified", select=True),
-       'tags':fields.char('Tags', size=1024),
-       'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
-       'minor_edit':fields.boolean('Thisd is a minor edit', select=True),
-       'summary':fields.char('Summary',size=256, select=True),
+        'group_id':fields.many2one('wiki.groups', 'Group'),
+        'name':fields.char('Title', size=256, select=True, required=True),
+        'write_uid':fields.many2one('res.users',"Last Modify By"),
+        'text_area':fields.text("Content", select=True),
+        'create_uid':fields.many2one('res.users','Authour', select=True),
+        'create_date':fields.datetime("Created on", select=True),
+        'write_date':fields.datetime("Last modified", select=True),
+        'tags':fields.char('Tags', size=1024),
+        'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
+        'minor_edit':fields.boolean('Thisd is a minor edit', select=True),
+        'summary':fields.char('Summary',size=256, select=True),
     }
 
     def __init__(self, cr, pool):
