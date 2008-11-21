@@ -9,7 +9,7 @@ msgstr ""
 "POT-Creation-Date: 2008-11-02 20:23:25+0000\n"
 "PO-Revision-Date: 2008-11-02 20:23:25+0000\n"
 "Last-Translator: <>\n"
-"Language-Team: \n"
+"Language-Team: OpenERP Language Team <support@openerp.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -48,7 +48,7 @@ msgstr "Auteur"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity. For integer only values, put 1.0"
-msgstr ""
+msgstr "Arrondi appliqué sur la quantité de produit. Pour les valeurs entières, mettre 1.0"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -58,7 +58,7 @@ msgstr "Coût par cycle"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Jours de sécurité pour chaque opération de production."
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
@@ -79,7 +79,7 @@ msgstr "Nomenclature"
 #. module: mrp
 #: wizard_field:product.product.procurement,init,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unité de Mesure"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -90,6 +90,7 @@ msgstr "Révision"
 #: help:mrp.bom,type:0
 msgid "Use a phantom bill of material in raw materials lines that have to be automatically computed in on eproduction order and not one per level.If you put \"Phantom/Set\" at the root level of a bill of material it is considered as a set or pack: the products are replaced by the components between the sale order to the picking without going through the production order.The normal BoM will generate one production order per BoM level."
 msgstr ""
+""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -116,7 +117,7 @@ msgstr "Indices Numériques"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr ""
+msgstr "Approvisionements en Exceptions"
 
 #. module: mrp
 #: field:mrp.procurement,product_uos_qty:0
@@ -141,7 +142,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finnished products."
-msgstr ""
+msgstr "Emplacement où le système stockera les produits finis."
 
 #. module: mrp
 #: wizard_button:mrp.procurement.compute.all,init,compute:0
@@ -165,6 +166,8 @@ msgstr ""
 msgid "Reference of the document that created this procurement.\n"
 "This is automatically completed by Open ERP."
 msgstr ""
+"Référence du document qui a créé cet approvisionnement.\n"
+"Est automatiquement complété par Open ERP."
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -184,7 +187,7 @@ msgstr "Produits Finis"
 #. module: mrp
 #: wizard_view:product.product.procurement,done:0
 msgid "Your procurement request has been sent !"
-msgstr ""
+msgstr "Votre demande d'approvisionement a été envoyée !"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -211,7 +214,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Pas utilisé dans les calculs, pour information seulement."
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
@@ -221,7 +224,7 @@ msgstr "Délai avant production"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production order"
-msgstr ""
+msgstr "Ordre de Production"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockableorderproduction0
@@ -327,7 +330,7 @@ msgstr "Référence"
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Valide jusqu'au"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action11
@@ -338,7 +341,7 @@ msgstr "Approvisionnement en Exception Temporaire"
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Valide du"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -348,7 +351,7 @@ msgstr "UdM Standard"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Analytic Check"
-msgstr ""
+msgstr "Vérification Analytique"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
@@ -377,7 +380,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
 msgid "Minimum stock rule"
-msgstr ""
+msgstr "Règle de stock minimum"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -387,7 +390,7 @@ msgstr "Opérations par postes"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurementservice0
 msgid "In procurement order, if product type is service"
-msgstr ""
+msgstr "Dans l'ordre d'approvisionnement, si le produit est de type Service"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -442,7 +445,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,sale_ref:0
 msgid "Sale Ref"
-msgstr ""
+msgstr "Réf. Vente"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -457,7 +460,7 @@ msgstr ""
 #. module: mrp
 #: wizard_field:product.product.procurement,init,product_id:0
 msgid "product"
-msgstr ""
+msgstr "produit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -483,7 +486,7 @@ msgstr "Utilisation des postes de charge"
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."
-msgstr ""
+msgstr "Efficacité de la production. Un facteur de 0.9 veut dire une perte de 10% dans la production."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -532,7 +535,7 @@ msgstr "Nouvel Approvisionnement"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr ""
+msgstr "Ordre de Production N° :"
 
 #. module: mrp
 #: view:res.company:0
@@ -548,6 +551,8 @@ msgstr "Recréer le coli"
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid "Number of operation this workcenter can do in parallel. If this workcenter represent a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Nombre d'opération que ce centre de production peut effectuer en parallèle. Si "
+"ce centre de production représente une équipe de 5 ouvriers, la capacité par cycle est de 5."
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
@@ -586,7 +591,7 @@ msgstr "Qté de Produit"
 #. module: mrp
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "Jours de Sécurité"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -623,7 +628,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Printing date"
-msgstr ""
+msgstr "Date d'Impression"
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,qty_multiple:0
@@ -658,7 +663,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Nombre d'Heures"
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -668,7 +673,7 @@ msgstr "Quantité Max"
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycle"
-msgstr ""
+msgstr "Nombre de Cycle"
 
 #. module: mrp
 #: field:mrp.bom,revision_type:0
@@ -897,7 +902,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "........."
-msgstr ""
+msgstr "........."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -917,7 +922,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,method:0
 msgid "Method"
-msgstr ""
+msgstr "Méthode"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -1199,7 +1204,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Qty"
-msgstr ""
+msgstr "Qté"
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
@@ -1264,7 +1269,7 @@ msgstr "Annuler"
 #. module: mrp
 #: wizard_button:product.product.procurement,done,end:0
 msgid "Close"
-msgstr ""
+msgstr "Terminé"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stockableproduct0
@@ -1568,7 +1573,7 @@ msgstr "Révisions"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Create Procurement"
-msgstr ""
+msgstr "Créer un Approvisionement"
 
 #. module: mrp
 #: field:mrp.procurement,product_uos:0
@@ -1598,7 +1603,7 @@ msgstr "UdM du Produit"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "If Product type is service"
-msgstr ""
+msgstr "Si Produit est de type Service"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -1684,12 +1689,12 @@ msgstr "min"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Create minimum stock rules"
-msgstr ""
+msgstr "Créer les règles de stock minimum"
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "1cm 27.7cm 20cm 27.7cm"
-msgstr ""
+msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -1721,12 +1726,12 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Partner Ref"
-msgstr ""
+msgstr "Réf. Partenaire"
 
 #. module: mrp
 #: model:process.transition.action,name:mrp.process_transition_action_procurementpurchaseorder0
 msgid "Purchase"
-msgstr ""
+msgstr "Achat"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockableorderrequest0

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -30,17 +30,45 @@ class shipping(report_sxw.rml_parse):
         super(shipping, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
-#            'sum_total': self._sum_total,
+            'get_address': self._get_address,
+            'get_address_ship':self._get_address_ship
         })
-        
+
+    def _get_address(self,data):
+
+         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_invoice_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
+                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
+                         "where sp.origin=so.name " \
+                         "and so.partner_id=rp.id " \
+                         "and so.partner_invoice_id=rpa.id  " \
+                         "and rpa.country_id=rc.id " \
+                         "and sp.id=%d "%(data.id))
+
+         add=self.cr.dictfetchall()
+         return add
+
+    def _get_address_ship(self,data):
+
+         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_shipping_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
+                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
+                         "where sp.origin=so.name " \
+                         "and so.partner_id=rp.id " \
+                         "and so.partner_shipping_id=rpa.id  " \
+                         "and rpa.country_id=rc.id " \
+                         "and sp.id=%d "%(data.id))
+
+         ship=self.cr.dictfetchall()
+         return ship
+
 #    def _sum_total(self,data):
-#        print "======data=======",data['id']
+#        print "======data=======",data
+
 #        self.cr.execute("SELECT sum(pt.list_price*sm.product_qty) FROM stock_picking as sp "\
 #                        "LEFT JOIN  stock_move sm ON (sp.id = sm.picking_id) "\
 #                        "LEFT JOIN  product_product pp ON (sm.product_id = pp.id) "\
 #                        "LEFT JOIN  product_template pt ON (pp.product_tmpl_id = pt.id) "\
 #                        "WHERE sm.picking_id = %d "%(data['id']))
 #        sum_total = self.cr.fetchone()[0] or 0.00
-#        return sum_total
+#        return True
 
 report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/sale/report/shipping.rml',parser=shipping)

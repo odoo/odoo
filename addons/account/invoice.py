@@ -611,6 +611,7 @@ class account_invoice(osv.osv):
             'tax_amount': x.get('tax_amount', False),
             'ref':x.get('ref',False),
             'quantity':x.get('quantity',1.00),
+            'analytic_account_id':x.get('account_analytic_id',False),
         }
 
     def action_number(self, cr, uid, ids, *args):
@@ -861,6 +862,7 @@ class account_invoice_line(osv.osv):
     _description = "Invoice line"
     _columns = {
         'name': fields.char('Description', size=256, required=True),
+        'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
@@ -1043,7 +1045,7 @@ class account_invoice_tax(osv.osv):
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
-                val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
+                val['amount'] = tax['amount']
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
                 val['base'] = tax['price_unit'] * line['quantity']
@@ -1070,6 +1072,8 @@ class account_invoice_tax(osv.osv):
                     tax_grouped[key]['base_amount'] += val['base_amount']
                     tax_grouped[key]['tax_amount'] += val['tax_amount']
 
+        for t in tax_grouped.values():
+            t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
         return tax_grouped
 
     def move_line_get(self, cr, uid, invoice_id):

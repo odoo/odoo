@@ -48,7 +48,6 @@ def strToDate(dt):
 
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
-#    _inherit = 'hr.holidays.status'
     _description = "Holidays Status"
     _columns = {
         'name' : fields.char('Holiday Status', size=64, required=True, translate=True),
@@ -65,22 +64,8 @@ hr_holidays_status()
 
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
-#    _inherit = 'hr.holidays'
     _description = "Holidays"
-    
-    def _get_days(self,cr, uid,ids, name, *args):
-        res = {}
-        for val in self.browse(cr, uid, ids):
-            date_from = val.date_from
-            date_to = val.date_to
-            if date_from:
-               if date_to:
-                   from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
-                   to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
-                   diff_day = (to_dt-from_dt)/(3600*24)
-                   res[val.id] = round(diff_day)+1
-        return res
-    
+
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'draft'), ('confirm', 'Confirmed'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
@@ -91,15 +76,33 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'manager_id' : fields.many2one('hr.employee', 'Holiday manager', invisible=False, readonly=True),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
-        'number_of_days': fields.function(_get_days, method=True,store=True, type='float', string='Number of Days in this Holiday Request'),
+        'number_of_days': fields.float('Number of Days in this Holiday Request',required=True),
         'case_id':fields.many2one('crm.case', 'Case'),
     }
+
     _defaults = {
         'employee_id' : _employee_get ,
         'state' : lambda *a: 'draft',
-        'user_id': lambda obj, cr, uid, context: uid
+        'user_id': lambda obj, cr, uid, context: uid,
     }
     _order = 'date_from desc'
+
+    def onchange_date_to(self, cr, uid, ids, date_from, date_to):
+        result = {}
+        if date_from:
+            if date_to:
+                from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
+                to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
+                diff_day = (to_dt-from_dt)/(3600*24)
+                result['value'] = {
+                    'number_of_days': round(diff_day)+1
+                }
+                return result
+        result['value'] = {
+            'number_of_days': 0
+        }
+        return result
+
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft',
@@ -207,6 +210,13 @@ hr_holidays()
 class hr_holidays_per_user(osv.osv):
     _name = "hr.holidays.per.user"
     _description = "Holidays Per User"
+
+    def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
+        result = {}
+        for r in self.read(cr, uid, ids, ['max_leaves','leaves_taken']):
+            result[r['id']] = r['max_leaves'] - r['leaves_taken']
+        return result
+
     _columns = {
         'employee_id' : fields.many2one('hr.employee', 'Employee',required=True),
         'user_id' : fields.many2one('res.users','User'),
@@ -215,12 +225,13 @@ class hr_holidays_per_user(osv.osv):
         'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
         'active' : fields.boolean('Active'),
         'notes' : fields.text('Notes'),
+        'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
     }
     _defaults = {
         'active' : lambda *a: True,
     }
-    def create(self, cr, uid, vals, *args, **kwargs):
 
+    def create(self, cr, uid, vals, *args, **kwargs):
         if vals['employee_id']:
             obj_emp=self.pool.get('hr.employee').browse(cr,uid,vals['employee_id'])
             vals.update({'user_id': obj_emp.user_id.id})

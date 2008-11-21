@@ -16,14 +16,14 @@
                 <page string="Definition">
                     <separator string="Directory Type" colspan="4"/>
                     <field name="type"/>
-                    <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"/>
+                    <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <newline/>
-                    <field name="domain"/>
+                    <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <field name="ressource_tree"/>
-                    <field name="ressource_id" select="2"/>
+                    <field name="ressource_id" select="2" readonly="1"/>
                     <field name="ressource_parent_type_id"/>
 
-                    <separator string="Contents" colspan="4"/>
+                    <separator string="Auto-Generated Files" colspan="4"/>
                     <field name="content_ids" nolabel="1" colspan="4">
                         <form string="Contents">
                             <field name="name"/>
@@ -251,6 +251,7 @@
                 <form string="Auto Configure">
                     <separator string="Document Management System." colspan="4"/>
                     <label string="This wizard will automatically configure the document management system according to modules installed on your system." align="0.0" colspan="4"/>
+                    <field name="host" colspan="4"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
                     <group col="4" colspan="2">

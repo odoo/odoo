@@ -735,6 +735,7 @@ class sale_order_line(osv.osv):
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, line.order_id.partner_id, a)
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
+                    'origin':line.order_id.name,
                     'account_id': a,
                     'price_unit': pu,
                     'quantity': uosqty,
@@ -961,7 +962,6 @@ class sale_config_picking_policy(osv.osv_memory):
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],o.picking_policy)
-            ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr,uid,'default',False,'order_policy',['sale.order'],o.order_policy)
 
             if o.step=='one':

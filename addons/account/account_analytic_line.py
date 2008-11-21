@@ -55,7 +55,7 @@ class account_analytic_line(osv.osv):
                 return False
         return True
     _constraints = [
-        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
+#        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
     
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,

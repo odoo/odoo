@@ -95,8 +95,7 @@ class node_class(object):
             where.append( ('parent_id','=',self.object.id) )
             where.append( ('res_id','=',False) )
         if nodename:
-            where.append( (fobj._rec_name,'=',nodename) )
-        print where+[ ('parent_id','=',self.object and self.object.id or False) ]
+            where.append( (fobj._rec_name,'=',nodename) )        
         ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ], context=self.context)
         if self.object and self.root and (self.object.type=='ressource'):
             ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ], context=self.context)
@@ -205,7 +204,7 @@ class document_directory(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'file_type': fields.char('Content Type', size=32),
-        'domain': fields.char('Domain', size=128),
+        'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible ressources."),
         'user_id': fields.many2one('res.users', 'Owner'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'parent_id': fields.many2one('document.directory', 'Parent Item'),
@@ -213,10 +212,15 @@ class document_directory(osv.osv):
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
         'type': fields.selection([('directory','Static Directory'),('ressource','Other Ressources')], 'Type', required=True),
-        'ressource_type_id': fields.many2one('ir.model', 'Childs Model'),
-        'ressource_parent_type_id': fields.many2one('ir.model', 'Linked Model'),
+        'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
+            help="Select an object here and Open ERP will create a mapping for each of these " \
+                 "objects, using the given domain, when browsing through FTP."),
+        'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
+            help="If you put an object here, this directory template will appear bellow all of these objects. " \
+                 "Don't put a parent directory if you select a parent model."),
         'ressource_id': fields.integer('Ressource ID'),
-        'ressource_tree': fields.boolean('Tree Structure'),
+        'ressource_tree': fields.boolean('Tree Structure',
+            help="Check this if you want to use the same tree structure than the selected object in the system."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
@@ -248,27 +252,7 @@ class document_directory(osv.osv):
             path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
             user=self.pool.get('res.users').browse(cr,uid,uid)
             return "ftp://%s:%s@localhost:8021/%s/%s"%(user.login,user.password,cr.dbname,'/'.join(path))
-        return False
-    def _check_duplication(self, cr, uid,vals):
-        if 'name' in vals:
-            where=" name='%s'"% (vals['name'])
-            if not 'parent_id' in vals or not vals['parent_id']:
-                where+=' and parent_id is null'
-            else:
-                where+=' and parent_id=%d'%(vals['parent_id'])
-            if not 'ressource_parent_type_id' in vals or not vals['ressource_parent_type_id']:
-                where+= ' and ressource_parent_type_id is null'
-            else:
-                where+=" and ressource_parent_type_id='%s'"%(vals['ressource_parent_type_id'])
-#            if not 'ressource_id' in vals or not vals['ressource_id']:
-#                where+= ' and ressource_id is null'
-#            else:
-#                where+=" and ressource_id=%d"%(vals['ressource_id'])
-            cr.execute("select id from document_directory where" + where)
-            res = cr.fetchall()
-            if len(res):
-                return False
-        return True
+        return False    
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -344,13 +328,7 @@ class document_directory(osv.osv):
         result = map(lambda node: node.path_get(), children)
         #childs,object2 = self._get_childs(cr, uid, object, False, context)
         #result = map(lambda x: urlparse.urljoin(path+'/',x.name), childs)
-        return result
-
-    def write(self, cr, uid, ids, vals, context=None):
-        # need to make constraints to checking duplicate
-        #if not self._check_duplication(cr,uid,vals):
-        #    raise except_orm('ValidateError', 'Directory name must be unique!')
-        return super(document_directory,self).write(cr,uid,ids,vals,context=context)
+        return result   
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -359,9 +337,37 @@ class document_directory(osv.osv):
         default.update({'name': name+ " (copy)"})
         return super(document_directory,self).copy(cr,uid,id,default,context)
 
+    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):        
+        name=vals.get('name',False)
+        parent_id=vals.get('parent_id',False)
+        ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
+        ressource_id=vals.get('ressource_id',0)
+        if op=='write':
+           for directory in self.browse(cr,uid,ids):
+                if not name:
+                    name=directory.name
+                if not parent_id:
+                    parent_id=directory.parent_id and directory.parent_id.id or False
+                if not ressource_parent_type_id:
+                    ressource_parent_type_id=directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
+                if not ressource_id:
+                    ressource_id=directory.ressource_id and directory.ressource_id.id or 0                
+                res=self.search(cr,uid,[('id','<>',directory.id),('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+                if len(res):
+	                return False
+        if op=='create':
+            res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+            if len(res):
+                return False        
+        return True
+    def write(self, cr, uid, ids, vals, context=None):        
+        if not self._check_duplication(cr,uid,vals,ids,op='write'):
+            raise except_orm('ValidateError', 'Directory name must be unique!')
+        return super(document_directory,self).write(cr,uid,ids,vals,context=context)
+
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr,uid,vals):
-            raise except_orm('ValidateError', 'Directory name must be unique!')
+            raise except_orm('ValidateError', 'Directory name must be unique!')          
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
             raise 'Error'
         return super(document_directory,self).create(cr, uid, vals, context)
@@ -402,7 +408,7 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', help="Check if you cant that the name of the file start by the record name."),
+        'include_name': fields.boolean('Include Record Name', help="Check this field if you want that the name of the file start by the record name."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
     _defaults = {
@@ -548,18 +554,39 @@ class document_file(osv.osv):
     }
     _sql_constraints = [
         ('filename_uniq', 'unique (name,parent_id,res_id,res_model)', 'The file name must be unique !')
-    ]
-
-    def _check_duplication(self, cr, uid,vals):
-        if 'name' in vals:
-            res=self.search(cr,uid,[('name','=',vals['name']),('parent_id','=','parent_id' in vals and vals['parent_id'] or False),('res_id','=','res_id' in vals and vals['res_id'] or False),('res_model','=','res_model' in vals and vals['res_model']) or False])
+    ]   
+    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):
+        name=vals.get('name',False)
+        parent_id=vals.get('parent_id',False)
+        res_model=vals.get('res_model',False)
+        res_id=vals.get('res_id',0)
+        if op=='write':
+           for file in self.browse(cr,uid,ids):
+                if not name:
+                    name=file.name
+                if not parent_id:
+                    parent_id=file.parent_id and file.parent_id.id or False
+                if not res_model:
+                    res_model=file.res_model and file.res_model or False
+                if not res_id:
+                    res_id=file.res_id and file.res_id or 0                
+                res=self.search(cr,uid,[('id','<>',file.id),('name','=',name),('parent_id','=',parent_id),('res_model','=',res_model),('res_id','=',res_id)])
+                if len(res):
+	                return False      
+        if op=='create':
+            res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('res_id','=',res_id),('res_model','=',res_model)])
             if len(res):
                 return False
         return True
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if not self._check_duplication(cr,uid,vals):
-            raise except_orm('ValidateError', 'File name must be unique!')
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default ={}
+        name = self.read(cr, uid, [id])[0]['name']
+        default.update({'name': name+ " (copy)"})
+        return super(document_file,self).copy(cr,uid,id,default,context)
+    def write(self, cr, uid, ids, vals, context=None):     
+        if not self._check_duplication(cr,uid,vals,ids,'write'):
+            raise except_orm('ValidateError', 'File name must be unique!')   
         result = super(document_file,self).write(cr,uid,ids,vals,context=context)
         cr.commit()
         try:
@@ -575,8 +602,12 @@ class document_file(osv.osv):
             pass
         return result
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context={}):        
         vals['title']=vals['name']
+        if not vals.get('res_id', False) and context.get('default_res_id',False):
+            vals['res_id']=context.get('default_res_id',False)
+        if not vals.get('res_model', False) and context.get('default_res_model',False):
+            vals['res_model']=context.get('default_res_model',False)            
         if vals.get('res_id', False) and vals.get('res_model',False):
             obj_model=self.pool.get(vals['res_model'])
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
@@ -585,18 +616,22 @@ class document_file(osv.osv):
                 vals['title'] = (obj['name'] or '')[:60]
                 if obj_model._name=='res.partner':
                     vals['partner_id']=obj['id']
-                elif 'address_id' in obj:
-                    address=self.pool.get('res.partner.address').read(cr,uid,[obj['address_id']],context=context)
+                elif obj.get('address_id',False):                    
+                    if isinstance(obj['address_id'],tuple) or isinstance(obj['address_id'],list):
+                        address_id=obj['address_id'][0]
+                    else:
+                        address_id=obj['address_id']
+                    address=self.pool.get('res.partner.address').read(cr,uid,[address_id],context=context)
                     if len(address):
-                        vals['partner_id']=address[0]['partner_id'] or False
-                elif 'partner_id' in obj:
+                        vals['partner_id']=address[0]['partner_id'][0] or False
+                elif obj.get('partner_id',False):
                     if isinstance(obj['partner_id'],tuple) or isinstance(obj['partner_id'],list):
                         vals['partner_id']=obj['partner_id'][0]
                     else:
                         vals['partner_id']=obj['partner_id']
 
         datas=None
-        if 'datas' not in vals:
+        if vals.get('datas',False) and vals.get('link',False) :
             import urllib
             datas=base64.encodestring(urllib.urlopen(vals['link']).read())
         else:
@@ -631,7 +666,12 @@ class document_configuration_wizard(osv.osv_memory):
     _name='document.configuration.wizard'
     _rec_name = 'Auto Directory configuration'
     _columns = {
-                 }
+        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
+            "Keep localhost if you don't know what to write.", required=True)
+    }
+    _defaults = {
+        'host': lambda *args: 'localhost'
+    }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
@@ -642,6 +682,7 @@ class document_configuration_wizard(osv.osv_memory):
          }
 
     def action_config(self, cr, uid, ids, context=None):
+        conf = self.browse(cr, uid, ids[0], context)
         obj=self.pool.get('document.directory')
         objid=self.pool.get('ir.model.data')
 
@@ -705,6 +746,10 @@ class document_configuration_wizard(osv.osv_memory):
                 'domain': '[]',
                 'ressource_tree': 1
         })
+
+        aid = objid._get_id(cr, uid, 'document', 'action_document_browse')
+        aid = objid.browse(cr, uid, aid, context=context).res_id
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
 
         return {
                 'view_type': 'form',

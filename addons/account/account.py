@@ -154,6 +154,13 @@ class account_account(osv.osv):
                 args[pos] = ('id','in',ids1)
             pos+=1
 
+        if context and context.has_key('consolidate_childs'): #add concolidated childs of accounts
+            ids = super(account_account,self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+            for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
+                ids.append(consolidate_child.id)
+            return ids
+
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -435,6 +442,7 @@ class account_journal(osv.osv):
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
+        'refund_journal': fields.boolean('Refund Journal'),
 
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -783,7 +791,7 @@ class account_move(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         for line in self.browse(cr, uid, ids, context):
             if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !'))
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should mark the journal to allow canceling entries.'))
         if len(ids):
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
         return True
@@ -911,6 +919,11 @@ class account_move(osv.osv):
     def validate(self, cr, uid, ids, context={}):
         ok = True
         for move in self.browse(cr, uid, ids, context):
+            #unlink analytic lines on move_lines
+            for obj_line in move.line_id:
+                for obj in obj_line.analytic_lines: 
+                    self.pool.get('account.analytic.line').unlink(cr,uid,obj.id)
+
             journal = move.journal_id
             amount = 0
             line_ids = []
@@ -1018,6 +1031,24 @@ class account_move(osv.osv):
                     'state': 'draft'
                 }, context, check=False)
                 ok = False
+        if ok:
+            obj_line=self.browse(cr, uid, ids[0])
+            for move in self.browse(cr, uid, ids, context):
+                for obj_line in move.line_id:
+                    #create analytic lines
+                    if obj_line.analytic_account_id:
+                        vals_lines={
+                            'name': obj_line.name,
+                            'date': obj_line.date,
+                            'account_id': obj_line.analytic_account_id.id,
+                            'unit_amount':obj_line.quantity,
+                            'amount': obj_line.debit or obj_line.credit,
+                            'general_account_id': obj_line.account_id.id,
+                            'journal_id': obj_line.journal_id.analytic_journal_id.id,
+                            'ref': obj_line.ref,
+                            'move_id':obj_line.id
+                        }
+                        self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return ok
 account_move()
 

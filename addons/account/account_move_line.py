@@ -624,6 +624,8 @@ class account_move_line(osv.osv):
                     attrs.append('sum="Total debit"')
                 elif field.field=='credit':
                     attrs.append('sum="Total credit"')
+                elif field.field=='account_tax_id':
+                    attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 elif field.field=='account_id' and journal.id:
                     attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]"')
                 if field.readonly:
@@ -676,7 +678,9 @@ class account_move_line(osv.osv):
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check(cr, uid, ids, context)
-        result = super(osv.osv, self).write(cr, uid, ids, vals, context)
+
+        result = super(account_move_line, self).write(cr, uid, ids, vals, context)
+
         if check:
             done = []
             for line in self.browse(cr, uid, ids):
@@ -719,7 +723,6 @@ class account_move_line(osv.osv):
             context={}
         account_obj = self.pool.get('account.account')
         tax_obj=self.pool.get('account.tax')
-
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if 'journal_id' in vals and 'journal_id' not in context:
@@ -786,29 +789,69 @@ class account_move_line(osv.osv):
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 
-        result = super(osv.osv, self).create(cr, uid, vals, context)
+#        result = super(osv.osv, self).create(cr, uid, vals, context)
         if 'analytic_account_id' in vals and vals['analytic_account_id']:
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
                         'name': vals['name'],
                         'date': vals['date'],
                         'account_id': vals['analytic_account_id'],
-                        'unit_amount': vals['quantity'],
+                        'unit_amount':'quantity' in vals and vals['quantity'] or 1.0,
                         'amount': vals['debit'] or vals['credit'],
                         'general_account_id': vals['account_id'],
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals['ref'],
                     })]
-
+            else:
+                raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
+        result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
         if 'account_tax_id' in vals and vals['account_tax_id']:
             tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
-            total = vals['credit'] or (-vals['debit'])
+            total = vals['debit'] - vals['credit']
+            if journal.refund_journal:
+                base_code = 'ref_base_code_id'
+                tax_code = 'ref_tax_code_id'
+                account_id = 'account_paid_id'
+                base_sign = 'ref_base_sign'
+                tax_sign = 'ref_tax_sign'
+            else:
+                base_code = 'base_code_id'
+                tax_code = 'tax_code_id'
+                account_id = 'account_collected_id'
+                base_sign = 'base_sign'
+                tax_sign = 'tax_sign'
+
+            tmp_cnt = 0
             for tax in tax_obj.compute(cr,uid,[tax_id],total,1.00):
-                self.write(cr, uid,[result], {
-                    'tax_code_id': tax['base_code_id'],
-                    'tax_amount': tax['base_sign'] * total
-                })
+                #create the base movement
+                if tmp_cnt == 0:
+                    if tax[base_code]:
+                        tmp_cnt += 1
+                        self.write(cr, uid,[result], {
+                            'tax_code_id': tax[base_code],
+                            'tax_amount': tax[base_sign] * abs(total)
+                        })
+                else:
+                    data = {
+                        'move_id': vals['move_id'],
+                        'journal_id': vals['journal_id'],
+                        'period_id': vals['period_id'],
+                        'name': vals['name']+' '+tax['name'],
+                        'date': vals['date'],
+                        'partner_id': vals.get('partner_id',False),
+                        'ref': vals.get('ref',False),
+                        'account_tax_id': False,
+                        'tax_code_id': tax[base_code],
+                        'tax_amount': tax[base_sign] * abs(total),
+                        'account_id': vals['account_id'],
+                        'credit': 0.0,
+                        'debit': 0.0,
+                    }
+                    if data['tax_code_id']:
+                        self.create(cr, uid, data, context)
+
+                #create the VAT movement
                 data = {
                     'move_id': vals['move_id'],
                     'journal_id': vals['journal_id'],
@@ -818,13 +861,15 @@ class account_move_line(osv.osv):
                     'partner_id': vals.get('partner_id',False),
                     'ref': vals.get('ref',False),
                     'account_tax_id': False,
-                    'tax_code_id': tax['tax_code_id'],
-                    'tax_amount': tax['tax_sign'] * tax['amount'],
-                    'account_id': tax['account_paid_id'], # or collected ?
-                    'credit': tax['amount']>0 and tax['amount'] or 0.0,
-                    'debit': tax['amount']<0 and -tax['amount'] or 0.0,
+                    'tax_code_id': tax[tax_code],
+                    'tax_amount': tax[tax_sign] * abs(tax['amount']),
+                    'account_id': tax[account_id],
+                    'credit': tax['amount']<0 and -tax['amount'] or 0.0,
+                    'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }
-                self.create(cr, uid, data, context)
+                if data['tax_code_id']:
+                    self.create(cr, uid, data, context)
+
         if check:
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

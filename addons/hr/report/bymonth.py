@@ -94,14 +94,14 @@ class report_custom(report_rml):
                      inner join (hr_timesheet_group as g inner join hr_timesheet_employee_rel as rel
                                  on rel.tgroup_id = g.id and rel.emp_id = %s)
                      on t.tgroup_id = g.id
-                where dayofweek = %s 
+                where dayofweek = '%s'
                       and date_from = (select max(date_from) 
                                        from hr_timesheet inner join (hr_timesheet_employee_rel 
                                                                         inner join hr_timesheet_group 
                                                                         on hr_timesheet_group.id = hr_timesheet_employee_rel.tgroup_id
                                                                             and hr_timesheet_employee_rel.emp_id = %s)
                                                          on hr_timesheet.tgroup_id = hr_timesheet_group.id
-                                       where dayofweek = %s and date_from <= '%s') 
+                                       where dayofweek = '%s' and date_from <= '%s') 
                 order by date_from desc
                 '''
                 isPH = False

@@ -142,13 +142,15 @@ def _do_split(self, cr, uid, data, context):
 
     for move in too_few:
         if not new_picking:
+
             new_picking = pick_obj.copy(cr, uid, pick.id,
                     {
                         'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
                         'move_lines' : [],
                         'state':'draft',
                     })
-        new_obj = move_obj.copy(cr, uid, move.id,
+        if data['form']['move%s' % move.id] <> 0:
+            new_obj = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],
                     'product_uos_qty':data['form']['move%s' % move.id],

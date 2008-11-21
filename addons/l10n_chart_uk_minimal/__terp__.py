@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -24,7 +24,7 @@
 # This module provides a minimal UK chart of accounts for building upon further
 # Tiny ERP's default currency and accounts are remapped to this chart
 #
-# This module works for TinyERP 4.1.0 (and, assumed, onwards). 
+# This module works for TinyERP 4.1.0 (and, assumed, onwards).
 # This module does not work for TinyERP 4.0.2 and before.
 #
 # VAT is structured thus:
@@ -52,7 +52,7 @@
 #
 # Status beta 0.92 - tested on TinyERP 4.1.0
 # Status beta 0.93 - tested on TinyERP 4.1.0
-# - trivial change to depend only on 'account' 
+# - trivial change to depend only on 'account'
 #   (seemed to be important for importing with no demo data)
 # Status 1.0 - tested on TinyERP 4.1.0, 4.0.3
 # - COGS account type fixed
@@ -62,7 +62,7 @@
     "version" : "1.1",
     "author" : "Seath Solutions Ltd",
     "website": "http://www.seathsolutions.com",
-    "category" : "Localisation/Account charts",
+    "category" : "Localisation/Account Charts",
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],
