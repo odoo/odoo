@@ -68,10 +68,8 @@
 					<field name="group_id" search="1"/>
 					<field name="write_date" readonly="1" search="1"/>
 					<field name="write_uid" readonly="1" search="1"/>
-					<separator string="Wiki Content" colspan="4"/>
 					<field name="text_area" nolabel="1" colspan="4" search="1" widget="text_wiki"/>
-					<separator string="Tags" colspan="4" />
-					<field name="tags" nolabel="1" colspan="4" search="1"/>
+					<field name="tags" colspan="4" search="1"/>
 					<field name="minor_edit" search="1" groups="base.group_extended"/>
 					<field name="summary" search="1" groups="base.group_extended"/>
 				</form>
@@ -126,6 +124,10 @@
 		</record>
 
 		<menuitem name="Document Management/History" id="menu_action_history" action="action_history"/>
-	
+		
+		<act_window domain="[('history_wiki_id', '=', active_id)]"
+            id="act_wiki_wiki_History" name="History"
+            res_model="wiki.wiki.history"
+            src_model="wiki.wiki"/>
 	</data>
 </openerp>
