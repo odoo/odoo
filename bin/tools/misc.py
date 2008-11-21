@@ -642,24 +642,34 @@ def to_xml(s):
 
 def get_languages():
     languages={
-        'zh_CN': 'Chinese (CN)',
-        'zh_TW': 'Chinese (TW)',
-        'cs_CZ': 'Czech',
-        'de_DE': 'Deutsch',
-        'es_AR': 'Español (Argentina)',
-        'es_ES': 'Español (España)',
-        'fr_FR': 'Français',
-        'fr_CH': 'Français (Suisse)',
-        'en_EN': 'English (default)',
-        'hu_HU': 'Hungarian',
-        'it_IT': 'Italiano',
-        'pt_BR': 'Portugese (Brasil)',
-        'pt_PT': 'Portugese (Portugal)',
-        'nl_NL': 'Nederlands',
-        'ro_RO': 'Romanian',
-        'ru_RU': 'Russian',
-        'sv_SE': 'Swedish',
-        'ca_ES': 'Català',
+        'bg_BG': u'Bulgarian / български',
+        'ca_ES': u'Catalan / Català',
+        'cs_CZ': u'Czech / Čeština',
+        'de_DE': u'German / Deutsch',
+        'en_CA': u'English (Canada)',
+        'en_EN': u'English (default)',
+        'en_GB': u'English (United Kingdom)',
+        'en_US': u'English (Unites States)',
+        'es_AR': u'Spanish (Argentina) / Español (República Argentina)',
+        'es_ES': u'Spanish / Español',
+        'et_ET': u'Estonian / Eesti keel',
+        'fr_BE': u'French (Belgium) / Français (Belgique)',
+        'fr_CH': u'French (Switzerland) / Français (Suisse)',
+        'fr_FR': u'French / Français',
+        'hr_HR': u'Croatian / hrvatski jezik',
+        'hu_HU': u'Hungarian / Magyar',
+        'it_IT': u'Italian / Italiano',
+        'lt_LT': u'Lithuanian / Lietuvių kalba',
+        'nl_NL': u'Dutch / Nederlands',
+        'pt_BR': u'Portugese (Federative Republic of Brazil) / português (República Federativa do Brasil)',
+        'pt_PT': u'Portugese / português',
+        'ro_RO': u'Romanian / limba română',
+        'ru_RU': u'Russian / русский язык',
+        'sl_SL': u'Slovenian / slovenščina',
+        'sv_SE': u'Swedish / svenska',
+        'uk_UK': u'Ukrainian / украї́нська мо́ва',
+        'zh_CN': u'Chinese (Simplified) / 简体中文' ,
+        'zh_TW': u'Chinese (Traditional) / 正體字',
     }
     return languages
 
@@ -667,7 +677,9 @@ def scan_languages():
     import glob
     file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
-    return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    ret = [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    ret.sort(key=lambda k:k[1])
+    return ret
 
 
 def get_user_companies(cr, user):
