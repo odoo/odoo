@@ -8,7 +8,6 @@
     "demo_xml" : [],
     "update_xml" : [
         "wiki_view.xml",
-        "wiki_data.xml"
     ],
     "active": False,
     "installable": True
