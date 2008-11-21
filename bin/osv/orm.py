@@ -116,7 +116,7 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id and type(id)==type(1), _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
+        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
