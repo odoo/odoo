@@ -1,146 +1,133 @@
-# Translation of OpenERP Server.
-# This file containt the translation of the following modules:
-#	* hr_timesheet
+# Russian translation for openobject-addons
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:42:52+0000"
-"PO-Revision-Date: 2008-09-11 15:42:52+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-09-05 16:28+0000\n"
+"PO-Revision-Date: 2008-11-01 10:46+0000\n"
+"Last-Translator: Sergei Kostigoff <sergei.kostigoff@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:05+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
 #: wizard_view:hr.analytical.timesheet,init:0
 #: wizard_view:hr.analytical.timesheet.my,init:0
 msgid "Choose your month"
-msgstr ""
+msgstr "Выберите месяц"
 
 #. module: hr_timesheet
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Название объекта должно начинаться с x_  и не должно содержать специальных "
+"символов !"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet
 msgid "Employee timesheet"
-msgstr ""
+msgstr "Табель сотрудника"
 
 #. module: hr_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.si_so
 #: model:ir.ui.menu,name:hr_timesheet.menu_si_so
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "Регистрация / выход по проектам"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
 msgid "Sum"
-msgstr ""
+msgstr "Сумма"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "Sign in / Sign out"
-msgstr ""
-
-#. module: hr_timesheet
-#, python-format
-#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
-msgid "No employee defined for your user !"
-msgstr ""
+msgstr "Регистрация / выход"
 
 #. module: hr_timesheet
 #: wizard_button:hr.analytical.timesheet,init,report:0
 #: wizard_button:hr.analytical.timesheet.my,init,report:0
 #: wizard_button:hr.analytical.timesheet_users,init,report:0
 msgid "Print"
-msgstr ""
+msgstr "Распечатать"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(Оставьте пустым для текущего времени)"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
 msgid "Current Date"
-msgstr ""
+msgstr "Текущая дата"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "Sign in status"
-msgstr ""
+msgstr "Статус регистрации"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
 msgid "Current Server Date"
-msgstr ""
-
-#. module: hr_timesheet
-#, python-format
-#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
-msgid "No cost unit defined for this employee !"
-msgstr ""
-
-#. module: hr_timesheet
-#, python-format
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
-msgstr ""
+msgstr "Текущая дата сервера"
 
 #. module: hr_timesheet
 #: field:hr.employee,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Продукция"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "Книга аналитики"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form_my
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form_my
 msgid "My Working Hours of The Day"
-msgstr ""
+msgstr "Мои рабочие часы в день"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Work done stats"
-msgstr ""
+msgstr "Статистика выпрлненных работ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet line"
-msgstr ""
+msgstr "Строка табеля"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Lines"
-msgstr ""
+msgstr "Строки табеля"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total time"
-msgstr ""
+msgstr "Суммарное время"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet_users:0
 #: xsl:hr.analytical.timesheet:0
 #: model:ir.ui.menu,name:hr_timesheet.next_id_48
 msgid "Timesheet"
-msgstr ""
+msgstr "Табель"
 
 #. module: hr_timesheet
 #: constraint:product.product:0
@@ -151,44 +138,44 @@ msgstr ""
 #: wizard_field:hr.analytical.timesheet,init,user_id:0
 #: wizard_field:hr.analytical.timesheet.my,init,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "Sign in"
-msgstr ""
+msgstr "Вход"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form
 msgid "Working Hours of The Day"
-msgstr ""
+msgstr "Рабочих часов в день"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "(local time on the server side)"
-msgstr ""
+msgstr "(локальное время на стороне сервера)"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total cost"
-msgstr ""
+msgstr "Общая стоимость"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,date:0
 #: wizard_field:hr_timesheet.si_so,sign_in,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,date:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Дата закрытия"
 
 #. module: hr_timesheet
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,analytic_amount:0
@@ -198,7 +185,7 @@ msgstr ""
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis summary"
-msgstr ""
+msgstr "Резюме анализа"
 
 #. module: hr_timesheet
 #: constraint:product.template:0
@@ -208,33 +195,34 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_view:hr.analytical.timesheet_users,init:0
 msgid "Choose Users"
-msgstr ""
+msgstr "Выбрать пользователей"
 
 #. module: hr_timesheet
 #: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "Work done in the last period"
-msgstr ""
+msgstr "Работы, выполненные в последнем периоде"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Key dates"
-msgstr ""
+msgstr "Ключевые даты"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,state:0
 #: wizard_field:hr_timesheet.si_so,sign_in,state:0
 msgid "Current state"
-msgstr ""
+msgstr "Текущее состояние"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis stats"
-msgstr ""
+msgstr "Анализ статистики"
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet,init,month:0
@@ -242,67 +230,61 @@ msgstr ""
 #: wizard_field:hr.analytical.timesheet_users,init,month:0
 #: view:account.analytic.account:0
 msgid "Month"
-msgstr ""
+msgstr "Месяц"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,name:0
 #: wizard_field:hr_timesheet.si_so,sign_in,name:0
 msgid "Employee's name"
-msgstr ""
+msgstr "Имя сотрудника"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_me_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_me_all_form
 msgid "My Working Hours"
-msgstr ""
+msgstr "Мои рабочие часы"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_users
 msgid "Employees timesheet"
-msgstr ""
+msgstr "Табели сотрудников"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
 msgid "Stop Working"
-msgstr ""
-
-#. module: hr_timesheet
-#, python-format
-#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
-msgid "UserError"
-msgstr ""
+msgstr "Прекращение работ"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "(Keep empty for current_time)"
-msgstr ""
+msgstr "(Оставьте пустым для текщуго времени)"
 
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Табели"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_out,si_result:0
 msgid "Start Working"
-msgstr ""
+msgstr "Начало работ"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Строка табеля"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Consultancy - Senior Developper"
-msgstr ""
+msgstr "Консультация - старший разработчик"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by month"
-msgstr ""
+msgstr "Статистика по месяцам"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -310,41 +292,41 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_today_form
 msgid "Working Hours"
-msgstr ""
+msgstr "Рабочие часы"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Счет аналитики"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "General Information"
-msgstr ""
+msgstr "Общая информация"
 
 #. module: hr_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_my
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_my
 msgid "Print my timesheet"
-msgstr ""
+msgstr "Расчечатать мой табель"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
-msgstr ""
+msgstr "Статистика по пользователям"
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet_users,init,user_ids:0
 #: view:account.analytic.account:0
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet,init,year:0
 #: wizard_field:hr.analytical.timesheet.my,init,year:0
 #: wizard_field:hr.analytical.timesheet_users,init,year:0
 msgid "Year"
-msgstr ""
+msgstr "Год"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_out,end:0
@@ -353,32 +335,25 @@ msgstr ""
 #: wizard_button:hr.analytical.timesheet.my,init,end:0
 #: wizard_button:hr.analytical.timesheet_users,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,info:0
 msgid "Work Description"
-msgstr ""
+msgstr "Описание работ"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet_users:0
 #: xsl:hr.analytical.timesheet:0
 msgid "Total"
-msgstr ""
+msgstr "Всего"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
 msgid "Change Work"
-msgstr ""
-
-#. module: hr_timesheet
-#, python-format
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-msgid "ValidateError"
-msgstr ""
+msgstr "Изменить неделю"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "To be invoiced"
-msgstr ""
-
+msgstr "Выставить счет"

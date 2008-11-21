@@ -1,50 +1,54 @@
-# Translation of OpenERP Server.
-# This file containt the translation of the following modules:
-#	* subscription
+# Portuguese translation for openobject-addons
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:42:18+0000"
-"PO-Revision-Date: 2008-09-11 15:42:18+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-09-05 13:23+0000\n"
+"PO-Revision-Date: 2008-11-04 10:28+0000\n"
+"Last-Translator: Adérito (Primeconsulting.cv) <yongzox@hotmail.com>\n"
+"Language-Team: Portuguese <pt@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr "Documento de Origem"
+msgstr "Documento fonte"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
 msgid "Interval Qty"
-msgstr "Qt Intervalo"
+msgstr "Quantidade do intervalo"
 
 #. module: subscription
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
 msgid "First Date"
-msgstr "Primeira Data"
+msgstr "1ª data"
 
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr "Nome do Campo"
+msgstr "Campo"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
 msgid "Subscription history"
-msgstr "Histórico da subscrição"
+msgstr "Histórico de subscrição"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -54,13 +58,7 @@ msgstr "Rascunho"
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "Current Date"
-msgstr "Data de Hoje"
-
-#. module: subscription
-#, python-format
-#: code:addons/subscription/subscription.py:0
-msgid "Please provide another source document.\nThis one does not exist !"
-msgstr ""
+msgstr "Data actual"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -70,7 +68,7 @@ msgstr "Semanas"
 #. module: subscription
 #: field:subscription.subscription,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.next_id_45
@@ -81,7 +79,7 @@ msgstr "Subscrições"
 #. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
-msgstr ""
+msgstr "Objecto"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -91,12 +89,12 @@ msgstr "Parar"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr "Marcado como Rascunho"
+msgstr "Definido como rascunho"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 msgid "Subscription document fields"
-msgstr "Subscrever campos do documento"
+msgstr "Campo do documento de subscrição"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -106,7 +104,7 @@ msgstr "Em execução"
 #. module: subscription
 #: view:subscription.subscription.history:0
 msgid "Subscription History"
-msgstr "Histórico de Subscrições"
+msgstr "Histórico de Subscrição"
 
 #. module: subscription
 #: field:subscription.subscription,user_id:0
@@ -116,7 +114,7 @@ msgstr "Utilizador"
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr "Unidade do Intervalo"
+msgstr "Unidade do intervalo"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -126,7 +124,7 @@ msgstr "Data"
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_subscription_config
 msgid "Configuration"
-msgstr ""
+msgstr "Configuração"
 
 #. module: subscription
 #: field:subscription.subscription,exec_init:0
@@ -136,7 +134,7 @@ msgstr "Número de documentos"
 #. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML inválido para a arquitectura de vista"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -162,7 +160,7 @@ msgstr "Notas"
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Sale Order"
-msgstr "Encomenda"
+msgstr "Ordem de Venda"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
@@ -184,23 +182,23 @@ msgstr "Activo"
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
-msgstr "Cron Job"
+msgstr "Cron job"
 
 #. module: subscription
 #: field:subscription.subscription,partner_id:0
 msgid "Partner"
-msgstr "Parceiro"
+msgstr "Terceiro"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr "Data da Subscrição"
+msgstr "Data de subscrição"
 
 #. module: subscription
 #: field:subscription.document.fields,document_id:0
 #: view:subscription.document:0
 msgid "Subscription Document"
-msgstr "Subscrever Documento"
+msgstr "Documento de Subscrição"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -210,39 +208,33 @@ msgstr "Processo"
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 msgid "Subscription document"
-msgstr "Subscrevar documento"
+msgstr "Documento de subscrição"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "All Subscriptions"
-msgstr ""
+msgstr "Todas as subscrições"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr "Tipos de Documentos"
-
-#. module: subscription
-#, python-format
-#: code:addons/subscription/subscription.py:0
-msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Tipos de documentos"
 
 #. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr "Subscrever Campos do Documento"
+msgstr "Campos de subscrições do documento"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr "Concluída"
+msgstr "Concluído"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -252,7 +244,7 @@ msgstr "Factura"
 #. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
-msgstr "Valor Pré-definido"
+msgstr "Valor por defeito"
 
 #. module: subscription
 #: field:subscription.subscription,doc_lines:0
@@ -264,4 +256,3 @@ msgstr "Documentos criados"
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
 msgstr "Ferramentas"
-

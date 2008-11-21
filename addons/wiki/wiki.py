@@ -62,7 +62,7 @@ class Wiki(osv.osv):
         'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
         'summary':fields.char('Summary',size=256, select=True),
-        'section': fields.char('Section', size=32),
+        'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
     }
     def onchange_group_id(self, cr, uid, ids, group, content, context={}):
@@ -73,7 +73,13 @@ class Wiki(osv.osv):
         for page in group.page_ids:
             section = page.section
         s = section.split('.')
+        try:
+            s[-1] = str(int(s[-1])+1)
+        except:
+            pass
         section = '.'.join(s)
+        print 'SECTION', section, group, group.name
+        print group.template
         return {
             'value':{
                 'text_area': group.template,

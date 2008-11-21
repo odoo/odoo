@@ -93,8 +93,8 @@
                 <form string="Wiki">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
+                        <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
                         <field name="section" select="2"/>
-                        <field name="group_id" select="1" onchange="onchange_group_id(group_id, text_area)"/>
 
                         <field name="write_date" readonly="1" select="2"/>
                         <field name="write_uid" readonly="1" select="2"/>
