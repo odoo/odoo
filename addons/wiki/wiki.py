@@ -41,7 +41,7 @@ class WikiGroup(osv.osv):
        'child_ids':fields.one2many('wiki.groups', 'parent_id', 'Child Groups'),
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description", select=True),
-       'create_date':fields.datetime("Created on", select=True),
+       'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template')
     }
 WikiGroup()
@@ -50,7 +50,7 @@ WikiGroup()
 class Wiki(osv.osv):
     _name="wiki.wiki"
     _description="Wiki Page"
-    _order = 'section,name'
+    _order = 'section,create_date desc'
     _columns={
         'name':fields.char('Title', size=256, select=True, required=True),
         'write_uid':fields.many2one('res.users',"Last Modified By"),
@@ -65,24 +65,23 @@ class Wiki(osv.osv):
         'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
     }
-    def onchange_group_id(self, cr, uid, ids, group, content, context={}):
-        if (not group) or content:
+    def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
+        if (not group_id) or content:
             return {}
-        group = self.pool.get('wiki.groups').browse(cr, uid, group, context)
+        grp = self.pool.get('wiki.groups').browse(cr, uid, group_id)
         section = '0'
-        for page in group.page_ids:
-            section = page.section
+        for page in grp.page_ids:
+            if page.section: section = page.section
         s = section.split('.')
+        template = grp.template
         try:
             s[-1] = str(int(s[-1])+1)
         except:
             pass
         section = '.'.join(s)
-        print 'SECTION', section, group, group.name
-        print group.template
         return {
             'value':{
-                'text_area': group.template,
+                'text_area': template,
                 'section': section
             }
         }
