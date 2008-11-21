@@ -28,22 +28,13 @@
 
 from osv import fields, osv
 import time
-#from core.Wiki2Html import Wiki2Html
 from StringIO import StringIO
-
-class Tag(osv.osv):
-    _name="wiki.wiki.tag"
-    _description="Wiki"
-
-    _columns={
-       'name':fields.char('Title',size=128),
-    }
-Tag()
+from HTMLParser import HTMLParser
 
 class Wiki(osv.osv):
     _name="wiki.wiki"
     _description="Wiki"
-    _order = 'model_id'
+    _order = 'name'
     _columns={
        'name':fields.char('Title', size=128, select=True, required=True),
        'write_uid':fields.many2one('res.users',"Last Modify By"),
@@ -51,11 +42,8 @@ class Wiki(osv.osv):
        'create_uid':fields.many2one('res.users','Authour', select=True),
        'create_date':fields.datetime("Created on", select=True),
        'write_date':fields.datetime("Last modified", select=True),
-       'tags':fields.char('Tags', size=1024), # many2many("wiki.wiki.tag","wiki_tag_many_id","wiki_id","tag_id","Tags", select=True),
+       'tags':fields.char('Tags', size=1024),
        'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
-       'path':fields.char('Page Path',size=128),
-       'model_id': fields.many2one('ir.model', 'Model id', select=True, ondelete='cascade'),
-       'res_id': fields.integer("Record Id"),
        'minor_edit':fields.boolean('Thisd is a minor edit', select=True),
        'summary':fields.char('Summary',size=256, select=True),
     }
@@ -82,9 +70,7 @@ class Wiki(osv.osv):
         return super(Wiki,self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
-#        wiki_data=self.read(cr,uid,ids,['minor_edit','summary'])[0]
         if vals.get('text_area'):
-#            vals['html'] = self.Wiki2Html(vals['text_area'])
             if vals.has_key('minor_edit') and vals.has_key('summary'):
                 vals['history_id']=[[0,0,{'minor_edit':vals['minor_edit'],'text_area':vals['text_area'],'modify_by':uid,'summary':vals['summary']}]]
             elif vals.has_key('minor_edit'):
@@ -131,9 +117,6 @@ class History(osv.osv):
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
     
 History()
-
-from StringIO import StringIO
-from HTMLParser import HTMLParser
 
 class IndexLine(osv.osv):
     _name="wiki.index.line"
