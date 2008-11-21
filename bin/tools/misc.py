@@ -659,6 +659,7 @@ def get_languages():
         'ro_RO': 'Romanian',
         'ru_RU': 'Russian',
         'sv_SE': 'Swedish',
+        'ca_ES': 'Català',
     }
     return languages
 

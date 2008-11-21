@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -96,7 +96,7 @@ class users(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),
-        'password': fields.char('Password', size=64, invisible=True),
+        'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
@@ -138,6 +138,10 @@ class users(osv.osv):
         ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
         return ids and ids[0] or False
 
+    def _get_group(self,cr, uid, context={}):
+        ids = self.pool.get('res.groups').search(cr, uid, [('name','=','Employee')])
+        return ids or False
+
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
         'context_lang': lambda *args: 'en_US',
@@ -145,6 +149,7 @@ class users(osv.osv):
         'menu_id': _get_menu,
         'action_id': _get_menu,
         'company_id': _get_company,
+        'groups_id': _get_group,
     }
     def company_get(self, cr, uid, uid2):
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id

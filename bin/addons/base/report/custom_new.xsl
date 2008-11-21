@@ -14,19 +14,21 @@
 
 	<xsl:template name="stylesheet">
 		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
-		
+
 		<blockTableStyle id="products">
-			<blockBackground colorName="grey" start="0,0" stop="-1,0"/>
+			<!--<blockBackground colorName="grey" start="0,0" stop="-1,0"/> -->
+			<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
 			<blockValign value="TOP"/>
 			 <blockAlignment value="RIGHT"/>
-			 <lineStyle kind="GRID" colorName="black"/>
+			 <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
+			<!-- <lineStyle kind="GRID" colorName="black"/> -->
 		</blockTableStyle>
 	</xsl:template>
 
 	<xsl:template name="story">
 		<xsl:apply-templates select="report"/>
 	</xsl:template>
-	
+
 	<xsl:template match="report">
 		<xsl:apply-templates select="config"/>
 		<!--<setNextTemplate name="other_pages"/>-->
@@ -36,7 +38,7 @@
 				 <xsl:value-of select="./config/tableSize"/>
 			</xsl:attribute>
 		</xsl:if>
-		
+
 		<xsl:apply-templates select="header"/>
 		<xsl:apply-templates select="lines"/>
 		</blockTable>
@@ -53,8 +55,8 @@
 		<tr>
 		<xsl:for-each select="field">
 			<td>
-			<para>
-			<xsl:value-of select="."/>
+			<para><font fontName="Helvetica-Bold" fontSize="9">
+			<xsl:value-of select="."/></font>
 			</para>
 			</td>
 		</xsl:for-each>
@@ -79,12 +81,16 @@
 						<xsl:when test="@tree='yes'">
 							<para>
 								<xsl:attribute name="leftIndent"><xsl:value-of select="@space"/></xsl:attribute>
+								<font fontName="Helvetica" fontSize="9">
 								<xsl:value-of select="."/>
+								</font>
 							</para>
 						</xsl:when>
 						<xsl:otherwise>
 							<para>
+								<font fontName="Helvetica" fontSize="9">
 								<xsl:value-of select="."/>
+								</font>
 							</para>
 						</xsl:otherwise>
 					</xsl:choose>

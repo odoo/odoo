@@ -152,12 +152,15 @@ def get_module_resource(module, *args):
 def get_modules():
     """Returns the list of module names
     """
+    def listdir(dir):
+        def clean(name):
+            name = os.path.basename(name)
+            if name[-4:] == '.zip':
+                name = name[:-4]
+            return name
+        return map(clean, os.listdir(dir))
 
-    module_list = os.listdir(ad)
-    module_names = [os.path.basename(m) for m in module_list]
-    module_list += [m for m in os.listdir(_ad) if m not in module_names]
-
-    return module_list
+    return list(set(listdir(ad) + listdir(_ad)))
 
 def create_graph(module_list, force=None):
     if not force:
@@ -166,8 +169,6 @@ def create_graph(module_list, force=None):
     packages = []
 
     for module in module_list:
-        if module[-4:]=='.zip':
-            module = module[:-4]
         try:
             mod_path = get_module_path(module)
             if not mod_path:
@@ -184,8 +185,9 @@ def create_graph(module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-
-    current,later = Set([p for p, dep, data in packages]), Set()
+    
+    dependencies = dict([(p, deps) for p, deps, data in packages])
+    current, later = Set([p for p, dep, data in packages]), Set()
     while packages and current > later:
         package, deps, datas = packages[0]
 
@@ -206,9 +208,10 @@ def create_graph(module_list, force=None):
             later.add(package)
             packages.append((package, deps, datas))
         packages.pop(0)
-
+    
     for package in later:
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
+        unmet_deps = filter(lambda p: p not in graph, dependencies[package])
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
 
     return graph
 
