@@ -429,6 +429,7 @@ class one2many(_column):
         for act in values:
             if act[0] == 0:
                 act[2][self._fields_id] = id
+                print 'CREATE', self._obj, act[2], context
                 obj.create(cr, user, act[2], context=context)
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)

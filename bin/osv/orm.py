@@ -116,7 +116,7 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id, _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
+        assert id and type(id)==type(1), _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -128,9 +128,12 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
         if not id in self._data:
             self._data[id] = {'id': id}
+
         self._cache = cache
+        pass
 
     def __getitem__(self, name):
         if name == 'id':
@@ -183,7 +186,7 @@ class browse_record(object):
                         if data[n]:
                             obj = self._table.pool.get(f._obj)
                             compids = False
-                            if not f._classic_write:
+                            if type(data[n]) in (type([]),type( (1,) )):
                                 ids2 = data[n][0]
                             else:
                                 ids2 = data[n]
