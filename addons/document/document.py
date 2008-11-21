@@ -204,7 +204,7 @@ class document_directory(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'file_type': fields.char('Content Type', size=32),
-        'domain': fields.char('Domain', size=128),
+        'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible ressources."),
         'user_id': fields.many2one('res.users', 'Owner'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'parent_id': fields.many2one('document.directory', 'Parent Item'),
@@ -212,10 +212,15 @@ class document_directory(osv.osv):
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
         'type': fields.selection([('directory','Static Directory'),('ressource','Other Ressources')], 'Type', required=True),
-        'ressource_type_id': fields.many2one('ir.model', 'Childs Model'),
-        'ressource_parent_type_id': fields.many2one('ir.model', 'Linked Model'),
+        'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
+            help="Select an object here and Open ERP will create a mapping for each of these " \
+                 "objects, using the given domain, when browsing through FTP."),
+        'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
+            help="If you put an object here, this directory template will appear bellow all of these objects. " \
+                 "Don't put a parent directory if you select a parent model."),
         'ressource_id': fields.integer('Ressource ID'),
-        'ressource_tree': fields.boolean('Tree Structure'),
+        'ressource_tree': fields.boolean('Tree Structure',
+            help="Check this if you want to use the same tree structure than the selected object in the system."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
@@ -403,7 +408,7 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', help="Check if you cant that the name of the file start by the record name."),
+        'include_name': fields.boolean('Include Record Name', help="Check this field if you want that the name of the file start by the record name."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
     _defaults = {
