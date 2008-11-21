@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -375,6 +375,14 @@ form: module.record_id""" % (xml_id,)
                 and rec.getAttribute('auto_refresh').encode('utf-8')
 #        groups_id = rec.hasAttribute('groups') and rec.getAttribute('groups').encode('utf-8')
 
+        # def ref() added because , if context has ref('id') eval wil use this ref
+
+#        active_id='active_id' # for further reference in client/bin/tools/__init__.py,not implemented yet.
+
+        def ref(str_id):
+            return self.id_get(cr, None, str_id)
+        context=eval(context)
+
         res = {
             'name': name,
             'type': type,
@@ -582,7 +590,7 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.getAttribute("search").encode('utf8')
         rec_src_count = rec.getAttribute("count")
 
-        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR 
+        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR
 
         rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
 
