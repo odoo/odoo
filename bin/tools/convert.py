@@ -377,7 +377,7 @@ form: module.record_id""" % (xml_id,)
 
         # def ref() added because , if context has ref('id') eval wil use this ref
 
-#        active_id='active_id' # for further reference in client/bin/tools/__init__.py,not implemented yet.
+        active_id=str("active_id") # for further reference in client/bin/tools/__init__.py
 
         def ref(str_id):
             return self.id_get(cr, None, str_id)
