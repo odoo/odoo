@@ -611,6 +611,7 @@ class account_invoice(osv.osv):
             'tax_amount': x.get('tax_amount', False),
             'ref':x.get('ref',False),
             'quantity':x.get('quantity',1.00),
+            'analytic_account_id':x.get('account_analytic_id',False),
         }
 
     def action_number(self, cr, uid, ids, *args):

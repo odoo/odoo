@@ -679,78 +679,7 @@ class account_move_line(osv.osv):
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check(cr, uid, ids, context)
 
-        obj_line=self.browse(cr, uid, ids[0])
-        lines={}
-
-        obj_analytic_line=self.pool.get('account.analytic.line')
-        analytic=True
-        journal_flag=False
-        del_line=False
-
-        if ('journal_id' in vals):
-            journal=self.pool.get('account.journal').browse(cr,uid,vals['journal_id'])
-            journal_flag=True
-
-        del_line=True
-
-        if del_line:
-            for obj in obj_line.analytic_lines:
-                obj_analytic_line.unlink(cr,uid,obj.id)
-            analytic=False
-
-        if obj_line.analytic_lines:
-            mode='write'
-        else:
-            mode='create'
-
-        if obj_line.analytic_lines and analytic:
-            if ('analytic_account_id' in vals):
-                lines['account_id'] = vals['analytic_account_id']
-
-            if ('account_id' in vals):
-                lines['general_account_id'] = vals['account_id']
-
-            if ('name' in vals):
-               lines['name'] = vals['name']
-
-            if ('date' in vals):
-               lines['date'] = vals['date']
-
-            if ('ref' in vals and vals['ref']):
-               lines['ref'] = vals['ref']
-
-            if ('quantity' in vals and vals['quantity']):
-               lines['unit_amount'] = vals['quantity']
-
-            if ('credit' in vals and vals['credit']):
-               lines['amount'] = vals['credit']
-
-            if ('debit' in vals and vals['debit']):
-               lines['amount'] = vals['debit']
-
-            if journal_flag:
-               lines['journal_id']=journal.analytic_journal_id.id
-
-        if lines:
-           if mode=='write':
-               obj_analytic_line.write(cr,uid,obj_line.analytic_lines[0].id,lines,context)
-
-        result = super(osv.osv, self).write(cr, uid, ids, vals, context)
-
-        if mode=='create' and analytic and obj_line.analytic_account_id:
-            if obj_line.journal_id.analytic_journal_id:
-                vals_lines={
-                        'name': obj_line.name,
-                        'date': obj_line.date,
-                        'account_id': obj_line.analytic_account_id.id,
-                        'unit_amount':obj_line.quantity,
-                        'amount': obj_line.debit or obj_line.credit,
-                        'general_account_id': obj_line.account_id.id,
-                        'journal_id': obj_line.journal_id.analytic_journal_id.id,
-                        'ref': obj_line.ref,
-                        'move_id':obj_line.id
-                }
-                obj_analytic_line.create(cr,uid,vals_lines)
+        result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
             done = []
