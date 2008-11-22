@@ -264,8 +264,10 @@ def _upload(self, cr, uid, datas, context):
         'auto_password': datas['form']['password']
     }
     name = mod.name
+    print 'ICI'
     a = urllib.urlopen('http://www.openerp.com/mtree_interface.php?module=%s' % (name,))
     aa = a.read()
+    print aa
     if aa[0]<>'0':
         updata['link_id']=aa.split('\n')[0]
         updata['option'] = 'mtree'
