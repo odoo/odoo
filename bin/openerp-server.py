@@ -81,8 +81,6 @@ dispatcher.monitor(signal.SIGINT)
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
-logger.notifyChannel("init", netsvc.LOG_INFO, 'connecting to database')
-
 import psycopg
 import pooler
 
