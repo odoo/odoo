@@ -219,6 +219,7 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                             lines.append(line)
                     create_log_line(cr,uid,id,model_object,lines)
                 cr.commit()
+                cr.close()
                 return res_id
 
             if method in ('write'):
@@ -247,6 +248,7 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                                     lines.append(line)
                             cr.commit()
                             create_log_line(cr,uid,id,model_object,lines)
+                    cr.close()
                     return res
 
             if method in ('read'):
@@ -273,6 +275,7 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                                 lines.append(line)
                     cr.commit()
                     create_log_line(cr,uid,id,model_object,lines)
+                cr.close()
                 return res
             
             if method in ('unlink'):
@@ -296,12 +299,15 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                         cr.commit()
                         create_log_line(cr,uid,id,model_object,lines)
                 res =fct_src( db, uid, passwd, object, method, *args)
+                cr.close()
                 return res
+            cr.close()
 
 def tmp_fct(fct_src):
     def execute( db, uid, passwd, object, method, *args):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
+        cr.autocommit(True)
         obj=pool.get(object)
         logged_uids = []
         object_name=obj._name
@@ -330,12 +336,14 @@ def tmp_fct(fct_src):
                     if getattr(thisrule, 'log_'+field):
                         return log_fct(db, uid, passwd, object, method, fct_src , *args)
                 return fct_src(  db, uid, passwd, object, method, *args)
-        cr.commit()
-        return  my_fct( db, uid, passwd, object, method, *args)
+        res = my_fct( db, uid, passwd, object, method, *args)
         cr.close()
+        return res
     return execute
 
 obj  = netsvc._service['object']
 obj.execute = tmp_fct(obj.execute)
 obj.exportMethod(obj.execute)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
