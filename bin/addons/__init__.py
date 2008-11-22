@@ -232,10 +232,10 @@ def init_module_objects(cr, module_name, obj_list):
 # 
 def register_class(m):
     global loaded
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
-    sys.stdout.flush()
     if m in loaded:
         return
+    logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
+    sys.stdout.flush()
     loaded.append(m)
     mod_path = get_module_path(m)
     if not os.path.isfile(mod_path+'.zip'):
