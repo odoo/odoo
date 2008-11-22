@@ -70,9 +70,26 @@
                     <field name="number_increment"/>
                     <field name="number_next"/>
                     <separator colspan="4" string="Legend (for prefix, suffix)"/>
-                    <label colspan="4" string="Year: %%(year)s"/>
-                    <label colspan="4" string="Month: %%(month)s"/>
-                    <label colspan="4" string="Day: %%(day)s"/>
+                    <group col="8" colspan="4">
+                        <group>
+                            <label colspan="4" string="Year with century: %%(year)s"/>
+                            <label colspan="4" string="Year without century: %%(y)s"/>
+                            <label colspan="4" string="Month: %%(month)s"/>
+                            <label colspan="4" string="Day: %%(day)s"/>
+                        </group>
+                        <group>
+                            <label colspan="4" string="Day of the year: %%(doy)s"/>
+                            <label colspan="4" string="Week of the year: %%(woy)s"/> 
+                            <label colspan="4" string="Day of the week (0:Monday): %%(weekday)s"/>
+                        </group>
+                        <group>
+                            <label colspan="4" string="Hour 00->24: %%(h24)s"/>
+                            <label colspan="4" string="Hour 00->12: %%(h12)s"/>
+                            <label colspan="4" string="Minute: %%(min)s"/>
+                            <label colspan="4" string="Seconde: %%(sec)s"/>
+                        </group>
+                    </group>
+                    <separator colspan="4" string=""/>
                 </form>
             </field>
         </record>
