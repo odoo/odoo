@@ -385,16 +385,12 @@ class document_directory(osv.osv):
 
 document_directory()
 
-print '1'
-
 class document_directory_node(osv.osv):
     _inherit = 'process.node'
     _columns = {
         'directory_id':  fields.many2one('document.directory', 'Document directory', ondelete="set null"),
     }
 document_directory_node()
-
-print '2'
 
 class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
@@ -408,7 +404,6 @@ class document_directory_content_type(osv.osv):
         'active': lambda *args: 1
     }
 document_directory_content_type()
-print '3'
 
 class document_directory_content(osv.osv):
     _name = 'document.directory.content'
@@ -442,7 +437,6 @@ class document_directory_content(osv.osv):
         s.name = node
         return s
 document_directory_content()
-print '4'
 
 class ir_action_report_xml(osv.osv):
     _name="ir.actions.report.xml"
@@ -478,9 +472,6 @@ class ir_action_report_xml(osv.osv):
     }
 
 ir_action_report_xml()
-
-print '5'
-
 
 def create_directory(path):
     dir_name = random_name()
@@ -670,8 +661,6 @@ class document_file(osv.osv):
         return super(document_file, self).unlink(cr, uid, ids, context)
 document_file()
 
-print '5'
-
 class document_configuration_wizard(osv.osv_memory):
     _name='document.configuration.wizard'
     _rec_name = 'Auto Directory configuration'
@@ -769,5 +758,3 @@ class document_configuration_wizard(osv.osv_memory):
                 'target':'new',
         }
 document_configuration_wizard()
-
-print '6'
