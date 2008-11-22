@@ -52,7 +52,7 @@ class wiz_journal(wizard.interface):
             'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
         }
     }
-wiz_journal('stock.traceability.aval')
+wiz_journal('stock.traceability.downstream')
 
 class wiz_journal2(wizard.interface):
     states = {
@@ -61,7 +61,7 @@ class wiz_journal2(wizard.interface):
             'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
         }
     }
-wiz_journal2('stock.traceability.amont')
+wiz_journal2('stock.traceability.upstream')
 
 class wiz_journal3(wizard.interface):
     states = {
@@ -70,7 +70,7 @@ class wiz_journal3(wizard.interface):
             'result': {'type': 'action', 'action': action_traceability(field='prodlot_id'), 'state':'end'}
         }
     }
-wiz_journal3('stock.traceability.lot.amont')
+wiz_journal3('stock.traceability.lot.upstream')
 
 class wiz_journal4(wizard.interface):
     states = {
@@ -79,7 +79,7 @@ class wiz_journal4(wizard.interface):
             'result': {'type': 'action', 'action': action_traceability('move_history_ids2', 'prodlot_id'), 'state':'end'}
         }
     }
-wiz_journal4('stock.traceability.lot.aval')
+wiz_journal4('stock.traceability.lot.downstream')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
