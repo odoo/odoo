@@ -45,6 +45,9 @@ sys.path.insert(1, _ad)
 if ad != _ad:
     sys.path.insert(1, ad)
 
+# Modules already loaded
+loaded = []
+
 class Graph(dict):
 
     def addNode(self, name, deps):
@@ -224,6 +227,36 @@ def init_module_objects(cr, module_name, obj_list):
         obj._auto_init(cr, {'module': module_name})
         cr.commit()
 
+#
+# Register module named m, if not already registered
+# 
+def register_class(m):
+    global loaded
+    logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
+    sys.stdout.flush()
+    if m in loaded:
+        return
+    loaded.append(m)
+    mod_path = get_module_path(m)
+    if not os.path.isfile(mod_path+'.zip'):
+        imp.load_module(m, *imp.find_module(m))
+    else:
+        import zipimport
+        try:
+            zimp = zipimport.zipimporter(mod_path+'.zip')
+            zimp.load_module(m)
+        except zipimport.ZipImportError:
+            logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
+
+def register_classes():
+    return 
+    module_list = get_modules()
+    for package in create_graph(module_list):
+        m = package.name
+        register_class(m)
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
+        sys.stdout.flush()
+
 def load_module_graph(cr, graph, status=None, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
@@ -235,6 +268,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
         m = package.name
+        register_class(m)
         logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s' % m)
         sys.stdout.flush()
         pool = pooler.get_pool(cr.dbname)
@@ -300,25 +334,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 
     pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
-
-def register_classes():
-    module_list = get_modules()
-    for package in create_graph(module_list):
-        m = package.name
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
-        sys.stdout.flush()
-
-        mod_path = get_module_path(m)
-        if not os.path.isfile(mod_path+'.zip'):
-            # XXX must restrict to only addons paths
-            imp.load_module(m, *imp.find_module(m))
-        else:
-            import zipimport
-            try:
-                zimp = zipimport.zipimporter(mod_path+'.zip')
-                zimp.load_module(m)
-            except zipimport.ZipImportError:
-                logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:

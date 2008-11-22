@@ -129,7 +129,6 @@ import osv, workflow, report, service
 #----------------------------------------------------------
 import addons
 
-addons.register_classes()
 if tools.config['init'] or tools.config['update']:
     pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
 
