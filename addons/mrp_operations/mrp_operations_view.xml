@@ -42,6 +42,33 @@
         </field>
     </record>
 
+    <record id="workcenter_line_calendar" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.calendar</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">calendar</field>
+        <field name="arch" type="xml">
+            <calendar color="product" date_stop="date_finnished" date_start="date_start" string="Operations">
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="workcenter_line_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.gantt</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">gantt</field>
+        <field name="arch" type="xml">
+            <gantt type="gantt" color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
+                <level object="product.product" link="product" domain="[]">
+                    <field name="production_id"/>
+                </level>
+            </gantt>
+        </field>
+    </record>
+
+
     <!-- Action for tree view of workcenter line   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
@@ -49,7 +76,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,gantt,calendar,graph</field>
         <field name="domain">[('id','=',active_id)]</field>
     </record>
 
@@ -60,7 +87,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph</field>
+        <field name="view_mode">tree,form,graph,calendar,gantt</field>
     </record>
 
     <!-- Action for Confirm Operations   -->
@@ -70,7 +97,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph</field>
+        <field name="view_mode">tree,form,graph,gantt,calendar</field>
         <field name="domain">[('state','=','confirm')]</field>
     </record>
 
