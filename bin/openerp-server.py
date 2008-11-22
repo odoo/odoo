@@ -200,7 +200,7 @@ if tools.config['netrpc']:
     netinterface = tools.config["netinterface"]
 
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting NET-RPC service, port "+str(netport))
 
 
 def handler(signum, frame):
