@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -588,26 +588,26 @@ act_window_close()
 #                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
 #                - if start_type="manual", it will start and stop on manually 
 class ir_actions_todo(osv.osv):
-    _name = 'ir.actions.todo'	
+    _name = 'ir.actions.todo'    
     _columns={
         'name':fields.char('Name',size=64,required=True, select=True),
         'note':fields.text('Text'),
-		'start_date': fields.datetime('Start Date'),
-		'end_date': fields.datetime('End Date'),
+        'start_date': fields.datetime('Start Date'),
+        'end_date': fields.datetime('End Date'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-		'active': fields.boolean('Active'),
-		'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
-		'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
-		'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
-		'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
+        'active': fields.boolean('Active'),
+        'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
+        'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
+        'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
+        'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
         'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-		'active':lambda *a:True,
-		'type':lambda *a:'configure'
+        'active':lambda *a:True,
+        'type':lambda *a:'configure'
     }
     _order="sequence"
 ir_actions_todo()

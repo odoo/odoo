@@ -146,5 +146,99 @@ class wizard_info_get(wizard.interface):
 wizard_info_get('module.upgrade')
 
 
+class wizard_info_get_simple(wizard.interface):
+    def _get_install(self, cr, uid, data, context):
+        pool=pooler.get_pool(cr.dbname)
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        res = mod_obj.read(cr, uid, ids, ['name','state'], context)
+        url = mod_obj.download(cr, uid, ids, download=False, context=context)
+        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
+                'module_download': '\n'.join(url)}
+
+    def _check_upgrade_module(self,cr,uid,data,context):
+        db, pool = pooler.get_db_and_pool(cr.dbname)
+        cr = db.cursor()
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        if ids and len(ids):
+            return 'next'
+        else:
+            return 'end'
+
+    def _upgrade_module(self, cr, uid, data, context):
+        db, pool = pooler.get_db_and_pool(cr.dbname)
+        cr = db.cursor()
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        unmet_packages = []
+        mod_dep_obj = pool.get('ir.module.module.dependency')
+        for mod in mod_obj.browse(cr, uid, ids):
+            depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])            
+            for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):                
+                if dep_mod.state in ('unknown','uninstalled'):
+                    unmet_packages.append(dep_mod.name)        
+        if len(unmet_packages):
+            raise wizard.except_wizard('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
+        mod_obj.download(cr, uid, ids, context=context)
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        return {}
+
+    def _config(self, cr, uid, data, context=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+         }
+
+    states = {
+        'init': {
+            'actions': [],
+            'result' : {'type': 'choice', 'next_state': _check_upgrade_module }
+        },
+        'next': {
+            'actions': [_get_install],
+            'result': {'type':'form', 'arch':view_form, 'fields': view_field,
+                'state':[
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('start', 'Start Upgrade', 'gtk-ok', True)
+                ]
+            }
+        },
+        'start': {
+            'actions': [_upgrade_module],
+            'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+                'state':[
+                    ('end', 'Close', 'gtk-close', True),
+                    ('config', 'Start configuration', 'gtk-ok', True)
+                ]
+            }
+        },
+        'end': {
+            'actions': [],
+            'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+                'state':[
+                    ('end', 'Close', 'gtk-close', True),
+                    ('config', 'Start configuration', 'gtk-ok', True)
+                ]
+            }
+        },
+        'config':{
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+        }
+    }
+wizard_info_get_simple('module.upgrade.simple')
+
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
