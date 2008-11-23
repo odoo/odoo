@@ -31,46 +31,6 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
 
-    def _calc_effective(self, cr, uid, ids, name, args, context):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        res_sum = {}
-        if ids2:
-            cr.execute('SELECT t.project_id, COALESCE(SUM(w.hours),0) \
-                    FROM project_task t \
-                        LEFT JOIN project_task_work w \
-                            ON (w.task_id = t.id) \
-                    WHERE t.project_id in (' + ','.join([str(x) for x in ids2]) + ') \
-                        AND active \
-                    GROUP BY project_id')
-            for project_id, sum in cr.fetchall():
-                res_sum[project_id] = sum
-        res={}
-        for id in ids:
-            ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            res.setdefault(id, 0.0)
-            for idx in ids3:
-                res[id] += res_sum.get(idx, 0.0)
-        return res
-
-    def _calc_planned(self, cr, uid, ids, name, args, context):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        res_sum = {}
-        if ids2:
-            cr.execute('SELECT project_id, COALESCE(SUM(total_hours),0) \
-                    FROM project_task \
-                    WHERE project_id IN (' + ','.join([str(x) for x in ids2]) + ') \
-                        AND active \
-                    GROUP BY project_id')
-            for project_id, sum in cr.fetchall():
-                res_sum[project_id] = sum
-        res = {}
-        for id in ids:
-            ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            res.setdefault(id, 0.0)
-            for idx in ids3:
-                res[id] += res_sum.get(idx, 0.0)
-        return res
-
     def check_recursion(self, cursor, user, ids, parent=None):
         return super(project, self).check_recursion(cursor, user, ids,
                 parent=parent)
@@ -83,22 +43,35 @@ class project(osv.osv):
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
 
-    def _progress_rate(self, cr, uid, ids, name, arg, context=None):
+    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
+        ids2 = self.search(cr, uid, [('parent_id','child_of',ids)])
         cr.execute('''SELECT
-                project_id, sum(progress*total_hours), sum(total_hours) 
+                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
             FROM
                 project_task 
             WHERE
-                project_id in ('''+','.join(map(str,ids))+''') AND
+                project_id in ('''+','.join(map(str,ids2))+''') AND
                 state<>'cancelled'
             GROUP BY
                 project_id''')
-        for id,prog,tot in cr.fetchall():
-            if tot:
-                res[id] = prog / tot
+        progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
+        for project in self.browse(cr, uid, ids, context=context):
+            s = [0.0,0.0,0.0]
+            tocompute = [project]
+            while tocompute:
+                p = tocompute.pop()
+                tocompute += p.child_id
+                for i in range(3):
+                    s[i] += progress.get(p.id, (0.0,0.0,0.0))[i]
+            res[project.id] = {
+                'planned_hours': s[0],
+                'effective_hours': s[2],
+                'total_hours': s[1],
+                'progress_rate': s[1] and (100.0 * s[2] / s[1]) or 0.0
+            }
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -117,9 +90,10 @@ class project(osv.osv):
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'parent_id': fields.many2one('project.project', 'Parent Project'),
         'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours', help="Sum of planned hours of all tasks related to this project."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent', help="Sum of spent hours of all tasks related to this project."),
-        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
+        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project."),
+        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project."),
+        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project."),
+        'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
         'date_start': fields.date('Starting Date'),
         'date_end': fields.date('Expected End'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
