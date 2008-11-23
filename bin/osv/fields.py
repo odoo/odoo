@@ -678,7 +678,8 @@ class related(function):
                     where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
                 if field_detail[1] in ['integer', 'long', 'float','integer_big']:
                     where += " %s.%s %s '%d' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-        query += where.rstrip('and')
+        if len(where)>10:
+            query += where.rstrip('and')
         cr.execute(query)
         ids = []
         for id in cr.fetchall():
@@ -718,6 +719,7 @@ class related(function):
 
     # TODO: call field_get on the object, not in the DB
     def _field_get(self, cr, uid, obj, model_name, prop):
+        print model_name, prop
         fields = obj.pool.get(model_name).fields_get(cr, uid,)
         if fields.get(prop, False):
             return(fields[prop].get('relation', False), fields[prop].get('type', False), fields)

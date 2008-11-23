@@ -109,7 +109,7 @@ class TinyPoFile(object):
                 if line.startswith('#:'):
                     tmp_tnrs.append( line[2:].strip().split(':') )
                 line = self.lines.pop(0).strip()
-            while not line:
+            while (not line) and self.lines:
                 # allow empty lines between comments and msgid
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
