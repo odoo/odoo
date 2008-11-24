@@ -300,7 +300,7 @@ class orm_template(object):
     _description = None
     _inherits = {}
     _table = None
-    _invalids=[]
+    _invalids = set()
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model_data WHERE name='%s'" % ('model_'+self._name.replace('.','_'),))
@@ -653,7 +653,7 @@ class orm_template(object):
         raise _('The read method is not implemented on this object !')
 
     def get_invalid_fields(self,cr,uid):
-        return self._invalids.__str__()
+        return list(self._invalids)
 
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
@@ -667,12 +667,12 @@ class orm_template(object):
                 error_msgs.append(
                         _("Error occured while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
-                self._invalids.extend(fields)
+                self._invalids.update(fields)
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
         else:
-            self._invalids=[]
+            self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
