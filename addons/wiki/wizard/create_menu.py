@@ -38,7 +38,7 @@ section_fields = {
     'menu_parent_id': {'string':'Parent Menu', 'type':'many2one', 'relation':'ir.ui.menu', 'required':True},
 }
 
-def report_menu_create(self, cr, uid, data, context):
+def wiki_menu_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     group = pool.get('wiki.groups').browse(cr, uid, data['id'])
 
@@ -46,8 +46,8 @@ def report_menu_create(self, cr, uid, data, context):
         'name': group.name,
         'view_type':'form',
         'view_mode':"tree,form",
-        'context': "{'group_id':%d}" % (group.id,),
-        'domain': "[('group_id','child_of',%d)]" % (group.id,),
+        'context': "{'group_id':%d, 'section':%d}" % (group.id, group.section),
+        'domain': "[('group_id','child_of',[%d])]" % (group.id,),
         'res_model': 'wiki.wiki'
     })
     pool.get('ir.ui.menu').create(cr, uid, {
@@ -65,7 +65,7 @@ class wizard_create_menu(wizard.interface):
             'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
         },
         'create_menu': {
-            'actions': [report_menu_create], 
+            'actions': [wiki_menu_create], 
             'result': {
                 'type':'state', 
                 'state':'end'

@@ -27,10 +27,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form srting="Wiki Groups">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="4">
                         <field name="name" select="1"/>
                         <field name="parent_id" select="2"/>
                         <field name="create_date" readonly="2"/>
+                        <field name="section"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
@@ -94,8 +95,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" select="2"/>
-
+                        <field name="section" select="2" invisible="not context.get('section',False)"/>
                         <field name="write_date" readonly="1" select="2"/>
                         <field name="write_uid" readonly="1" select="2"/>
                         <field name="tags" select="2" groups="base.group_extended"/>
@@ -126,8 +126,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree srting="Wiki History">
-                    <field name="date_time"/>
-                    <field name="modify_by"/>
+                    <field name="create_date"/>
+                    <field name="write_uid"/>
                     <field name="minor_edit"/>
                     <field name="summary"/>
                 </tree>
@@ -140,12 +140,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form srting="Wiki History">
-                    <field name="history_wiki_id" select="1" colspan="4"/>
+                    <field name="wiki_id" select="1" colspan="4"/>
                     <field name="summary" select="1" colspan="4"/>
                     <field name="text_area" select="1" colspan="4" widget="text_wiki"/>
-                    <field name="date_time" select="1"/>
+                    <field name="create_date" select="1"/>
                     <field name="minor_edit" select="1"/>
-                    <field name="history_wiki_id"/>
                 </form>
             </field>
         </record>
@@ -161,7 +160,7 @@
             id="menu_action_history"
             action="action_history"/>
 
-        <act_window domain="[('history_wiki_id', '=', active_id)]"
+        <act_window domain="[('wiki_id', '=', active_id)]"
             id="act_wiki_wiki_history"
             name="History"
             res_model="wiki.wiki.history"
@@ -174,11 +173,11 @@
             res_model="wiki.wiki"
             src_model="wiki.groups"/>
 
-        <record id="ir_open_journal_period" model="ir.values">
+        <record id="ir_open_wiki_pages" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">wiki.groups</field>
             <field name="name">Wiki Pages</field>
-            <field eval="'ir.actions.wizard,%d'%act_wiki_group_open" name="value"/>
+            <field eval="'ir.actions.act_window,%d'%act_wiki_group_open" name="value"/>
             <field eval="True" name="object"/>
         </record>
 
