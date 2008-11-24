@@ -118,7 +118,7 @@ class res_partner_job(osv.osv):
         'name': fields.related('address_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
         'address_id':fields.many2one('res.partner.address','Address', required=True),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True),
-        'function_id': fields.many2one('res.partner.function','Job Title', required=True),
+        'function_id': fields.many2one('res.partner.function','Job Title'),
         'sequence_contact':fields.integer('Sequence (Contact)',help='order of importance of this address in the list of addresses of the linked contact'),
         'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this job title in the list of job title of the linked partner'),
         'email': fields.char('E-Mail', size=240),
