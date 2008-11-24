@@ -86,16 +86,6 @@ class Wiki(osv.osv):
             }
         }
 
-    def read(self, cr, uid, cids, fields=None, context=None, load='_classic_read'):
-        ids = []
-        for id in cids:
-            if type(id) == type(1):
-                ids.append(id)
-            elif type(id) == type(u''):
-                ids.append(10)
-        result = super(Wiki, self).read(cr, uid, ids, fields, None, load='_classic_read')
-        return result
-
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('text_area'):
             vals['history_id']=[(0,0,{

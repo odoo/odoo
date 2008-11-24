@@ -174,11 +174,11 @@
             res_model="wiki.wiki"
             src_model="wiki.groups"/>
 
-        <record id="ir_open_journal_period" model="ir.values">
+        <record id="ir_open_wiki_pages" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">wiki.groups</field>
             <field name="name">Wiki Pages</field>
-            <field eval="'ir.actions.wizard,%d'%act_wiki_group_open" name="value"/>
+            <field eval="'ir.actions.act_window,%d'%act_wiki_group_open" name="value"/>
             <field eval="True" name="object"/>
         </record>
 
