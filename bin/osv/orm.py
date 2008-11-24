@@ -671,6 +671,8 @@ class orm_template(object):
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
+        else:
+            self._invalids=[]
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
