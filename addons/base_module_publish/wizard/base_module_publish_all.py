@@ -101,6 +101,9 @@ def _upload(self, cr, uid, datas, context):
                 ], [('module', res['module_filename'],
                     res['module_file'])
                 ])
+        print '-'*50
+        print result
+        print '-'*50
         if result[0] == "1":
             raise wizard.except_wizard('Error', 'Login failed!')
         elif result[0] == "0":
@@ -126,13 +129,18 @@ def _upload(self, cr, uid, datas, context):
             'auto_login': datas['form']['login'],
             'auto_password': datas['form']['password']
         }
+        print updata
         a = urlopen('http://www.openerp.com/mtree_interface.php?module=%s' % (mod.name,))
         aa = a.read()
+        print '='*40
+        print aa
         if aa[0]<>'0':
             updata['link_id']=aa.split('\n')[0]
             updata['cat_id']=aa.split('\n')[1]
             updata['option'] = 'mtree'
         result = post_multipart('www.openerp.com', '/index.php', updata.items(), [])
+        print '.'*50
+        print result
     return {'update': '\n'.join(log[0]), 'already': '\n'.join(log[1]),
         'error': '\n'.join(log[2])}
 

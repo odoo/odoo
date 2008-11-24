@@ -685,8 +685,8 @@ class mrp_production_workcenter_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
-        'cycle': fields.float('Nbr of cycle'),
-        'hour': fields.float('Nbr of hour'),
+        'cycle': fields.float('Nbr of cycle', digits=(16,2)),
+        'hour': fields.float('Nbr of hour', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }

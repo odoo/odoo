@@ -44,14 +44,13 @@ class mrp_production_workcenter_line(osv.osv):
     _description = 'Production workcenters used'
     _columns = {
        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'Status', readonly=True),
+       'date_planned': fields.related('production_id', 'date_planned', type='datetime', string='Date Planned'),
        'date_start': fields.datetime('Start Date'),
        'date_finnished': fields.datetime('End Date'),
-       'delay': fields.char('Delay',size=128,help="This is delay between operation start and stop in this workcenter",readonly=True),
+       'delay': fields.float('Delay',size=128,help="This is delay between operation start and stop in this workcenter",readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product'),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty'),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='UOM'),
-
-
     }
     _defaults = {
         'state': lambda *a: 'draft',

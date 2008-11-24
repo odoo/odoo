@@ -115,30 +115,5 @@
 		<field name="mail_confirm">Thanks for registrering. The conference will begin at 2 PM and will be given by Mister Pinckaers.</field>
 	</record>
 
-<!-- Demo data for Registration -->
-	<record id="event_registration_0" model="event.registration">
-		<field name="name">Registration for "Conference on Environment"</field>
-		<field name="partner_id" ref="base.res_partner_asus"/>
-		<field name="event_id" ref="event_2"/>
-		<field name="unit_price">15.50</field>
-		<field name="invoice_label">Ticket for Conference</field>
-	</record>
-	<record id="event_registration_1" model="event.registration">
-		<field name="name">Registration for "Opera of Verdi"</field>
-		<field name="partner_id" ref="base.res_partner_agrolait"/>
-		<field name="event_id" ref="event_1"/>
-		<field name="invoice_label">Ticket for Opera</field>
-		<field name="unit_price">24.00</field>
-		<field name="nb_register">5</field>
-	</record>
-	<record id="event_registration_2" model="event.registration">
-		<field name="name">Registration for "Concert of Bon Jovi"</field>
-		<field name="partner_id" ref="base.res_partner_c2c"/>
-		<field name="event_id" ref="event_0"/>
-		<field name="invoice_label">Ticket for Concert</field>
-		<field name="unit_price">68.00</field>
-		<field name="nb_register">2</field>
-	</record>
-
 	</data>
 </openerp>

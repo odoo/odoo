@@ -33,6 +33,17 @@ from content_index import content_index
 import netsvc
 import StringIO
 
+import random
+import string
+
+
+def random_name():
+    random.seed()
+    d = [random.choice(string.letters) for x in xrange(10) ]
+    name = "".join(d)
+    return name
+
+
 # Unsupported WebDAV Commands:
 #     label
 #     search
@@ -461,18 +472,6 @@ class ir_action_report_xml(osv.osv):
     }
 
 ir_action_report_xml()
-
-
-import random
-import string
-
-
-def random_name():
-    random.seed()
-    d = [random.choice(string.letters) for x in xrange(10) ]
-    name = "".join(d)
-    return name
-
 
 def create_directory(path):
     dir_name = random_name()

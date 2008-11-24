@@ -63,7 +63,7 @@ class purchase_order(osv.osv):
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
                 for c in self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id):
-                    val+= cur_obj.round(cr, uid, cur, c['amount'])
+                    val+= c['amount']
             res[order.id]=cur_obj.round(cr, uid, cur, val)
         return res
 
