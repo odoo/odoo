@@ -7,5 +7,12 @@
             <field eval="False" name="active"/>
             <field eval="'href=&quot;([a-zA-Z0-9_]+)-('+version+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)&quot;'" name="filter"/>
         </record>
+
+        <record id="ir_ui_view_sc_modules0" model="ir.ui.view_sc">
+            <field name="name">Modules</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="res_id" ref="base.menu_module_tree"/>
+        </record>
     </data>
 </openerp>

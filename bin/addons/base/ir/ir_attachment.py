@@ -86,6 +86,12 @@ class ir_attachment(osv.osv):
 
     def clear_cache(self):
         self.check()    
+    
+    def action_get(self, cr, uid, context=None):
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
+        res_id = dataobj.browse(cr, uid, data_id, context).res_id
+        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
 
     def __init__(self, *args, **kwargs):
         r = super(ir_attachment, self).__init__(*args, **kwargs)
@@ -96,16 +102,32 @@ class ir_attachment(osv.osv):
         self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
         return super(ir_attachment, self).__del__()
 
+    def _get_preview(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        if context is None:
+            context = {}
+        context['bin_size'] = False
+        for i in self.browse(cr, uid, ids, context=context):
+            result[i.id] = False
+            for format in ('png','PNG','jpg','JPG'):
+                if (i.datas_fname or '').endswith(format):
+                    result[i.id]= i.datas
+        return result
+
     _name = 'ir.attachment'
     _columns = {
         'name': fields.char('Attachment Name',size=64, required=True),
         'datas': fields.binary('Data'),
-        'datas_fname': fields.char('Data Filename',size=64),
+        'preview': fields.function(_get_preview, type='binary', string='Image Preview', method=True),
+        'datas_fname': fields.char('Filename',size=64),
         'description': fields.text('Description'),
         # Not required due to the document module !
         'res_model': fields.char('Resource Object',size=64, readonly=True),
         'res_id': fields.integer('Resource ID', readonly=True),
-        'link': fields.char('Link', size=256)
+        'link': fields.char('Link', size=256),
+
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
     }
 ir_attachment()
 

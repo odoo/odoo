@@ -55,7 +55,19 @@ class ir_sequence(osv.osv):
     }
 
     def _process(self, s):
-        return (s or '') % {'year':time.strftime('%Y'), 'month': time.strftime('%m'), 'day':time.strftime('%d')}
+        return (s or '') % {
+            'year':time.strftime('%Y'), 
+            'month': time.strftime('%m'), 
+            'day':time.strftime('%d'),
+            'y': time.strftime('%y'),
+            'doy': time.strftime('%j'),
+            'woy': time.strftime('%W'),
+            'weekday': time.strftime('%w'),
+            'h24': time.strftime('%H'),
+            'h12': time.strftime('%I'),
+            'min': time.strftime('%M'),
+            'sec': time.strftime('%S'),
+        }
 
     def get_id(self, cr, uid, sequence_id, test='id=%d'):
         cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True FOR UPDATE', (sequence_id,))

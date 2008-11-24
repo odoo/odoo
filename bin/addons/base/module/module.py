@@ -428,13 +428,15 @@ class module(osv.osv):
                 terp = self.get_module_info(mod_name)
                 if not terp or not terp.get('installable', True):
                     continue
-                if not os.path.isfile(mod_path+'.zip'):
+
+                if not os.path.isfile( mod_path ):
                     import imp
                     # XXX must restrict to only addons paths
-                    imp.load_module(name, *imp.find_module(mod_name))
+                    path = imp.find_module(mod_name)
+                    imp.load_module(name, *path)
                 else:
                     import zipimport
-                    zimp = zipimport.zipimporter(mod_path+'.zip')
+                    zimp = zipimport.zipimporter(mod_path)
                     zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
@@ -570,17 +572,6 @@ class module(osv.osv):
             p_id = c_id
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
-
-    def action_install(self,cr,uid,ids,context=None):
-        for module in self.browse(cr, uid, ids, context):
-            if module.state <> 'uninstalled':
-                continue
-            self.write(cr , uid, [module.id] ,{'state' : 'to install'})
-            self.download(cr, uid, [module.id], context=context)
-            cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(module.id,))
-            dep_ids = map(lambda x:x[0],cr.fetchall())
-            if len(dep_ids):
-                self.action_install(cr,uid,dep_ids,context=context)
 
     def update_translations(self, cr, uid, ids, filter_lang=None):
         logger = netsvc.Logger()

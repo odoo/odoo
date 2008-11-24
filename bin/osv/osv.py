@@ -229,7 +229,18 @@ class osv(orm.orm):
                 if hasattr(new, 'update'):
                     new.update(cls.__dict__.get(s, {}))
                 else:
-                    new.extend(cls.__dict__.get(s, []))
+                    if s=='_constraints':
+                        for c in cls.__dict__.get(s, []):
+                            exist = False
+                            for c2 in range(len(new)):
+                                if new[c2][2]==c[2]:
+                                    new[c2] = c
+                                    exist = True
+                                    break
+                            if not exist:
+                                new.append(c)
+                    else:
+                        new.extend(cls.__dict__.get(s, []))
                 nattr[s] = new
             name = hasattr(cls, '_name') and cls._name or cls._inherit
             cls = type(name, (cls, parent_class), nattr)

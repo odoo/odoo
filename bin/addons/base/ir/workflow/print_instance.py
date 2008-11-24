@@ -38,7 +38,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
         if n['subflow_id'] and nested:
             cr.execute('select * from wkf where id=%d', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
-            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize=12, label = "Subflow: "+n['name']+'\\nOSV: '+wkfinfo['osv'])
+            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = "Subflow: "+n['name']+'\\nOSV: '+wkfinfo['osv'])
             (s1,s2) = graph_get(cr, graph2, n['subflow_id'], nested,workitem)
             graph.add_subgraph(graph2)
             actfrom[n['id']] = s2
@@ -76,7 +76,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
 
         activity_from = actfrom[t['act_from']][1].get(t['signal'], actfrom[t['act_from']][0])
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
-        graph.add_edge(pydot.Edge( activity_from ,activity_to, fontsize=10, **args))
+        graph.add_edge(pydot.Edge( str(activity_from) ,str(activity_to), fontsize='10', **args))
     nodes = cr.dictfetchall()
     cr.execute('select id from wkf_activity where flow_start=True and wkf_id=%d limit 1', (wkf_id,))
     start = cr.fetchone()[0]
@@ -143,14 +143,14 @@ showpage'''
 showpage'''
                 else:
                     inst_id = inst_id[0]
-                    graph = pydot.Dot(fontsize=16, label="\\n\\nWorkflow: %s\\n OSV: %s" % (wkfinfo['name'],wkfinfo['osv']))
+                    graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']))
                     graph.set('size', '10.7,7.3')
                     graph.set('center', '1')
                     graph.set('ratio', 'auto')
                     graph.set('rotate', '90')
                     graph.set('rankdir', 'LR')
                     graph_instance_get(cr, graph, inst_id, data.get('nested', False))
-                    ps_string = graph.create_ps(prog='dot')
+                    ps_string = graph.create(prog='dot', format='ps')
         except Exception, e:
             import traceback, sys
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))

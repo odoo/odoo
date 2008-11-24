@@ -81,8 +81,6 @@ dispatcher.monitor(signal.SIGINT)
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
-logger.notifyChannel("init", netsvc.LOG_INFO, 'connecting to database')
-
 import psycopg
 import pooler
 
@@ -129,7 +127,6 @@ import osv, workflow, report, service
 #----------------------------------------------------------
 import addons
 
-addons.register_classes()
 if tools.config['init'] or tools.config['update']:
     pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
 
@@ -203,7 +200,7 @@ if tools.config['netrpc']:
     netinterface = tools.config["netinterface"]
 
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting NET-RPC service, port "+str(netport))
 
 
 def handler(signum, frame):

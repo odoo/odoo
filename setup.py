@@ -50,10 +50,15 @@ execfile(opj('bin', 'release.py'))
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
 
-required_modules = [('psycopg', 'PostgreSQL module'),
-                    ('xml', 'XML Tools for python'),
-                    ('libxml2', 'libxml2 python bindings'),
-                    ('libxslt', 'libxslt python bindings')]
+required_modules = [
+    ('psycopg', 'PostgreSQL module'),
+    ('xml', 'XML Tools for python'),
+    ('libxml2', 'libxml2 python bindings'),
+    ('libxslt', 'libxslt python bindings'),
+    ('reportlab', 'reportlab module'),
+    ('pychart', 'pychart module'),
+    ('pydot', 'pydot module'),
+]
 
 def check_modules():
     ok = True
@@ -69,8 +74,6 @@ def check_modules():
 
 def find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
-        if '.bzr' in dn:
-            dn.remove('.bzr')
         for dirpath, dirnames, filenames in os.walk(dp):
             if '__init__.py' in filenames:
                 modname = dirpath.replace(os.path.sep, '.')
@@ -82,55 +85,64 @@ def data_files():
     if os.name == 'nt':
         os.chdir('bin')
         for (dp,dn,names) in os.walk('addons'):
-            if '.bzr' in dn:
-                dn.remove('.bzr')
-            files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
+            files.append((dp, map(lambda x: opj('bin', dp, x), names)))
         for (dp,dn,names) in os.walk('i18n'):
-            if '.bzr' in dn:
-                dn.remove('.bzr')
-            files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
+            files.append((dp, map(lambda x: opj('bin', dp, x), names)))
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
-            if '.bzr' in dn:
-                dn.remove('.bzr')
-            files.append((dp, map(lambda x: os.path.join(dp,x), names)))
+            files.append((dp, map(lambda x: opj(dp, x), names)))
+        files.append(('.', [('bin/import_xml.rng')]))
     else:
-        files.append((opj('share', 'man', 'man1'), ['man/openerp-server.1']))
-        files.append((opj('share', 'man', 'man5'), ['man/openerp_serverrc.5']))
-        files.append((opj('share','doc', 'openerp-server-%s' % version), [f for
-            f in glob.glob('doc/*') if os.path.isfile(f)]))
-        files.append((opj('share','doc', 'openerp-server-%s' % version,
-            'migrate', '3.3.0-3.4.0'), [f for f in
-                glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
-        files.append((opj('share','doc', 'openerp-server-%s' % version,
-            'migrate', '3.4.0-4.0.0'), [f for f in
-                glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
-        files.append((opj('lib','python%s' % py_short_version, 'site-packages',
-            'openerp-server', 'i18n'), glob.glob('bin/i18n/*')))
-        files.append((opj('lib', 'python%s' % py_short_version, 'site-packages',
-            'openerp-server', 'addons', 'custom'),
-            glob.glob('bin/addons/custom/*xml') +
-            glob.glob('bin/addons/custom/*rml') +
-            glob.glob('bin/addons/custom/*xsl')))
+        man_directory = opj('share', 'man')
+        files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
+        files.append((opj(man_directory, 'man5'), ['man/openerp_serverrc.5']))
+
+        doc_directory = opj('share', 'doc', 'openerp-server-%s' % version)
+        files.append((doc_directory, [f for f in glob.glob('doc/*') if os.path.isfile(f)]))
+        files.append((opj(doc_directory, 'migrate', '3.3.0-3.4.0'), [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
+        files.append((opj(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
+
+        openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+
+        files.append((opj(openerp_site_packages, 'i18n'), glob.glob('bin/i18n/*')))
+        files.append((opj(openerp_site_packages, 'addons', 'custom'),
+            glob.glob('bin/addons/custom/*xml') + glob.glob('bin/addons/custom/*rml') + glob.glob('bin/addons/custom/*xsl')))
+
+        files.append((openerp_site_packages, [('bin/import_xml.rng')]))
+
         for addon in find_addons():
-            add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin',
-                                                               1)
-            pathfiles = [(opj('lib', 'python%s' % py_short_version, 'site-packages', 
-                              add_path.replace('bin', 'openerp-server', 1)),
-                          glob.glob(opj(add_path, '*xml')) +
-                          glob.glob(opj(add_path, '*csv')) +
-                          glob.glob(opj(add_path, '*sql'))),
-                         (opj('lib', 'python%s' % py_short_version, 'site-packages',
-                              add_path.replace('bin', 'openerp-server', 1), 'data'),
-                          glob.glob(opj(add_path, 'data', '*xml'))), 
-                         (opj('lib', 'python%s' % py_short_version, 'site-packages',
-                              add_path.replace('bin', 'openerp-server', 1), 'report'),
-                          glob.glob(opj(add_path, 'report', '*xml')) +
-                          glob.glob(opj(add_path, 'report', '*rml')) +
-                          glob.glob(opj(add_path, 'report', '*sxw')) +
-                          glob.glob(opj(add_path, 'report', '*xsl')))]
+            add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
+            addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
+
+            pathfiles = [
+                (
+                    addon_path, 
+                    glob.glob(opj(add_path, '*xml')) + 
+                    glob.glob(opj(add_path, '*csv')) + 
+                    glob.glob(opj(add_path, '*sql'))
+                ),
+                (
+                    opj(addon_path, 'data'), 
+                    glob.glob(opj(add_path, 'data', '*xml'))
+                ), 
+                (
+                    opj(addon_path, 'report'),
+                    glob.glob(opj(add_path, 'report', '*xml')) +
+                    glob.glob(opj(add_path, 'report', '*rml')) +
+                    glob.glob(opj(add_path, 'report', '*sxw')) +
+                    glob.glob(opj(add_path, 'report', '*xsl'))
+                ),
+                (   
+                    opj(addon_path, 'security'),
+                    glob.glob(opj(add_path, 'security', '*csv')) +
+                    glob.glob(opj(add_path, 'security', '*xml'))
+                ),
+                (   
+                    opj(addon_path, 'rng'), 
+                    glob.glob(opj(add_path, 'rng', '*rng'))
+                )
+            ]
             files.extend(pathfiles)
-    files.append(('.', [('bin/import_xml.rng')]))
     return files
 
 check_modules()
@@ -139,21 +151,23 @@ check_modules()
 start_script = \
 "#!/bin/sh\n\
 cd %s/lib/python%s/site-packages/openerp-server\n\
-exec %s ./openerp-server.py $@" % (sys.prefix, py_short_version, sys.executable)
+exec %s ./openerp-server.py $@\n" % (sys.prefix, py_short_version, sys.executable)
 # write script
 f = open('openerp-server', 'w')
 f.write(start_script)
 f.close()
 
-options = {"py2exe": {
-    "compressed": 0,
-    "optimize": 2, 
-    "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
-                 "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
-                 "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                 "pydot","asyncore","asynchat"],
-    "excludes" : ["Tkconstants","Tkinter","tcl"],
-    }}
+options = {
+    "py2exe": {
+        "compressed": 1,
+        "optimize": 2, 
+        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
+                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
+                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
+                     "pydot","asyncore","asynchat", "reportlab", "vobject", "HTMLParser"],
+        "excludes" : ["Tkconstants","Tkinter","tcl"],
+    }
+}
 
 setup(name             = name,
       version          = version,
@@ -166,21 +180,29 @@ setup(name             = name,
       license          = license,
       data_files       = data_files(),
       scripts          = ['openerp-server'],
-      packages         = ['openerp-server', 'openerp-server.addons',
+      packages         = ['openerp-server', 
+                          'openerp-server.addons',
                           'openerp-server.ir',
                           'openerp-server.osv',
                           'openerp-server.ssl',
-                          'openerp-server.service', 'openerp-server.tools',
-                          'openerp-server.pychart', 'openerp-server.pychart.afm',
+                          'openerp-server.service', 
+                          'openerp-server.tools',
                           'openerp-server.report',
                           'openerp-server.report.printscreen',
                           'openerp-server.report.render',
                           'openerp-server.report.render.rml2pdf',
                           'openerp-server.report.render.rml2html',
-                          'openerp-server.wizard', 'openerp-server.workflow'] + \
+                          'openerp-server.wizard', 
+                          'openerp-server.workflow'] + \
                          list(find_addons()),
       package_dir      = {'openerp-server': 'bin'},
-      console = [{"script":"bin\\openerp-server.py", "icon_resources":[(1,"pixmaps\\openerp-icon.ico")]}],
+      console = [ 
+          { "script" : "bin\\openerp-server.py", 
+            "icon_resources" : [
+                (1,"pixmaps\\openerp-icon.ico")
+            ]
+          }
+      ],
       options = options,
       )
 

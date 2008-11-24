@@ -48,7 +48,7 @@ class ir_translation(osv.osv, Cacheable):
         lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
                 context=context)
         langs = lang_obj.browse(cr, uid, lang_ids, context=context)
-        res = [(lang.code, lang.name) for lang in langs]
+        res = [(lang.code, unicode(lang.name,'utf-8')) for lang in langs]
         for lang_dict in tools.scan_languages():
             if lang_dict not in res:
                 res.append(lang_dict)

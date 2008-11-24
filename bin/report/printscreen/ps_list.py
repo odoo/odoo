@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -129,6 +129,7 @@ class report_printscreen_list(report_int):
         new_doc.childNodes[0].appendChild(config)
         header = new_doc.createElement("header")
 
+
         for f in fields_order:
             field = new_doc.createElement("field")
             field_txt = new_doc.createTextNode(str(fields[f]['string'] or ''))
@@ -143,25 +144,31 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
+
+
         for line in results:
             node_line = new_doc.createElement("row")
             count = -1
             for f in fields_order:
+
                 count += 1
+
                 if fields[f]['type']=='many2one' and line[f]:
-                    line[f] = line[f][1]
+                    line[f]= line[f][1]
+
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
                 if fields[f]['type'] == 'float':
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
-                    line[f]=round(line[f],precision)
+                    line[f]='%.2f'%(line[f])
+
                 col = new_doc.createElement("col")
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
                 if line[f] != None:
                     txt = new_doc.createTextNode(str(line[f] or ''))
                     if temp[count] == 1:
-                        tsum[count] = tsum[count] + line[f];
+                        tsum[count] = float(tsum[count])  + float(line[f]);
 
                 else:
                     txt = new_doc.createTextNode('/')
@@ -177,7 +184,11 @@ class report_printscreen_list(report_int):
             col.setAttribute('para','yes')
             col.setAttribute('tree','no')
             if tsum[f] != None:
-                txt = new_doc.createTextNode(str(tsum[f] or ''))
+               if tsum[f] >= 0.01 :
+                  total = '%.2f'%(tsum[f])
+                  txt = new_doc.createTextNode(str(total or ''))
+               else :
+                   txt = new_doc.createTextNode(str(tsum[f] or ''))
             else:
                 txt = new_doc.createTextNode('/')
             if f == 0:
@@ -185,7 +196,9 @@ class report_printscreen_list(report_int):
 
             col.appendChild(txt)
             node_line.appendChild(col)
+
         lines.appendChild(node_line)
+
 
         new_doc.childNodes[0].appendChild(lines)
 
@@ -201,4 +214,3 @@ report_printscreen_list('report.printscreen.list')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -164,21 +164,16 @@ class act_window(osv.osv):
         res={}
         for act in self.browse(cr, uid, ids):
             res[act.id]=[(view.view_id.id, view.view_mode) for view in act.view_ids]
-            if (not act.view_ids):
-                modes = act.view_mode.split(',')
+            modes = act.view_mode.split(',')
+            if len(modes)>len(act.view_ids):
                 find = False
                 if act.view_id:
                     res[act.id].append((act.view_id.id, act.view_id.type))
-                for t in modes:
+                for t in modes[len(act.view_ids):]:
                     if act.view_id and (t == act.view_id.type) and not find:
                         find = True
                         continue
                     res[act.id].append((False, t))
-
-                if 'calendar' not in modes:
-                    mobj = self.pool.get(act.res_model)
-                    if hasattr(mobj, '_date_name') and mobj._date_name in mobj._columns:
-                        res[act.id].append((False, 'calendar'))
         return res
 
     _columns = {
@@ -593,26 +588,26 @@ act_window_close()
 #                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
 #                - if start_type="manual", it will start and stop on manually 
 class ir_actions_todo(osv.osv):
-    _name = 'ir.actions.todo'	
+    _name = 'ir.actions.todo'    
     _columns={
         'name':fields.char('Name',size=64,required=True, select=True),
         'note':fields.text('Text'),
-		'start_date': fields.datetime('Start Date'),
-		'end_date': fields.datetime('End Date'),
+        'start_date': fields.datetime('Start Date'),
+        'end_date': fields.datetime('End Date'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-		'active': fields.boolean('Active'),
-		'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
-		'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
-		'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
-		'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
+        'active': fields.boolean('Active'),
+        'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
+        'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
+        'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
+        'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
         'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-		'active':lambda *a:True,
-		'type':lambda *a:'configure'
+        'active':lambda *a:True,
+        'type':lambda *a:'configure'
     }
     _order="sequence"
 ir_actions_todo()

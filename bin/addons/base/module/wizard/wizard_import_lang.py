@@ -31,11 +31,14 @@ view_form="""<?xml version="1.0"?>
     <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
         <separator string="Import new language" colspan="4"/>
-        <field name="name"/>
+        <field name="name" width="200"/>
         <field name="code"/>
-        <field name="data" colspan="3"/>
-        <label string="You have to import a .CSV file wich is encoded in UTF-8.\nPlease check that the first line of your file is:" colspan="4" align="0.0"/>
+        <field name="data" colspan="4"/>
+        <label string="You have to import a .CSV file wich is encoded in UTF-8.\n
+Please check that the first line of your file is one of the following:" colspan="4" align="0.0"/>
         <label string="type,name,res_id,src,value" colspan="4"/>
+        <label string="module,type,name,res_id,src,value" colspan="4"/>
+        <label string="You can also import .po files." colspan="4" align="0.0"/>
     </group>
 </form>"""
 
@@ -54,7 +57,7 @@ class wizard_import_lang(wizard.interface):
 
         # now we determine the file format
         fileobj.seek(0)
-        first_line = fileobj.readline().strip()
+        first_line = fileobj.readline().strip().replace('"', '').replace(' ', '')
         fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
         fileobj.seek(0)
 

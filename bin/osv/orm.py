@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -116,7 +116,7 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id, _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
+        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -128,9 +128,12 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
         if not id in self._data:
             self._data[id] = {'id': id}
+
         self._cache = cache
+        pass
 
     def __getitem__(self, name):
         if name == 'id':
@@ -183,7 +186,7 @@ class browse_record(object):
                         if data[n]:
                             obj = self._table.pool.get(f._obj)
                             compids = False
-                            if not f._classic_write:
+                            if type(data[n]) in (type([]),type( (1,) )):
                                 ids2 = data[n][0]
                             else:
                                 ids2 = data[n]
@@ -300,6 +303,7 @@ class orm_template(object):
     _description = None
     _inherits = {}
     _table = None
+    _invalids=[]
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model_data WHERE name='%s'" % ('model_'+self._name.replace('.','_'),))
@@ -362,7 +366,7 @@ class orm_template(object):
                             view_load=%s, select_level=%s, readonly=%s ,required=%s
                         WHERE
                             model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'], 
+                                vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
                                 vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
                             ))
@@ -651,6 +655,9 @@ class orm_template(object):
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         raise _('The read method is not implemented on this object !')
 
+    def get_invalid_fields(self,cr,uid):
+        return self._invalids.__str__()
+
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
         lng = context.get('lang', False) or 'en_US'
@@ -663,9 +670,12 @@ class orm_template(object):
                 error_msgs.append(
                         _("Error occured while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
+                self._invalids.extend(fields)
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
+        else:
+            self._invalids=[]
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
@@ -729,7 +739,7 @@ class orm_template(object):
                         if val:
                             val2 = translation_obj._get_source(cr, user,
                                 self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)			
+                                context.get('lang', False) or 'en_US', val)
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
@@ -797,6 +807,12 @@ class orm_template(object):
             result = self.view_header_get(cr, user, False, node.localName, context)
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
+
+        elif node.nodeType==node.ELEMENT_NODE and node.localName == 'calendar':
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+                if node.hasAttribute(additional_field) and node.getAttribute(additional_field):
+                    fields[node.getAttribute(additional_field)] = {}
+
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
             if node.getAttribute('groups'):
                 groups = node.getAttribute('groups').split(',')
@@ -837,7 +853,7 @@ class orm_template(object):
                     continue
 
                 ok = True
-            
+
                 if user != 1:   # admin user has all roles
                     serv = netsvc.LocalService('object_proxy')
                     user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
@@ -2364,7 +2380,12 @@ class orm(orm_template):
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
             if args:
-                args.insert(0, ('active', '=', 1))
+                active_in_args = False
+                for a in args:
+                    if a[0] == 'active':
+                        active_in_args = True
+                if not active_in_args:
+                    args.insert(0, ('active', '=', 1))
             else:
                 args = [('active', '=', 1)]
 

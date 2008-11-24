@@ -104,7 +104,7 @@ class TinyPoFile(object):
             tmp_tnrs = []
             line = None
 	    fuzzy = False
-            while not line:
+            while (not line):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()

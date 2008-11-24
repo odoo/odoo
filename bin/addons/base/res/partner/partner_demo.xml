@@ -1,52 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
-        <!--
-		Resource: res.partner.title
-		-->
-        <record id="res_partner_title_pvt_ltd" model="res.partner.title">
-            <field name="domain">partner</field>
-            <field name="name">Corp.</field>
-            <field name="shortcut">Corp.</field>
-        </record>
-        
-        <record id="res_partner_title_ltd" model="res.partner.title">
-            <field name="domain">partner</field>
-            <field name="name">Ltd</field>
-            <field name="shortcut">ltd</field>
-        </record>
-        
-        <record id="res_partner_title_madam" model="res.partner.title">
-            <field name="domain">contact</field>
-            <field name="name">Madam</field>
-            <field name="shortcut">Ms.</field>
-        </record>
-        <record id="res_partner_title_miss" model="res.partner.title">
-            <field name="domain">contact</field>
-            <field name="name">Miss</field>
-            <field name="shortcut">Mss</field>
-        </record>
-        <record id="res_partner_title_sir" model="res.partner.title">
-            <field name="domain">contact</field>
-            <field name="name">Sir</field>
-            <field name="shortcut">M.</field>
-        </record>
-        
-        <record id="function_director" model="res.partner.function">
-            <field name="name">Director</field>
-            <field name="code">CEO</field>
-        </record>
-        <record id="function_it" model="res.partner.function">
-            <field name="name">Chief Technical Officer</field>
-            <field name="code">CTO</field>
-        </record>
-        <record id="function_sale" model="res.partner.function">
-            <field name="name">Salesman</field>
-        </record>
-        
-        
-        
         <!--
 		Resource: res.partner.category
 		-->
@@ -127,6 +81,7 @@
             <field name="supplier">1</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
+            <field name="website">http://www.syleam.fr</field>
             <field name="name">Syleam</field>
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
         </record>
@@ -316,6 +271,18 @@
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_2"/>
+        </record>
+        <record id="res_partner_address_11" model="res.partner.address">
+            <field name="city">Alencon</field>
+            <field name="name">Sebastien LANGE</field>
+            <field name="zip">61000</field>
+            <field name="title">M.</field>
+            <field name="email">contact@syleam.fr</field>
+            <field name="street">1 place de l'Église</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_sednacom"/>
         </record>
         <record id="res_partner_address_10" model="res.partner.address">
             <field name="city">Liege</field>
