@@ -38,7 +38,7 @@ section_fields = {
     'menu_parent_id': {'string':'Parent Menu', 'type':'many2one', 'relation':'ir.ui.menu', 'required':True},
 }
 
-def report_menu_create(self, cr, uid, data, context):
+def wiki_menu_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     group = pool.get('wiki.groups').browse(cr, uid, data['id'])
 
@@ -65,7 +65,7 @@ class wizard_create_menu(wizard.interface):
             'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
         },
         'create_menu': {
-            'actions': [report_menu_create], 
+            'actions': [wiki_menu_create], 
             'result': {
                 'type':'state', 
                 'state':'end'
