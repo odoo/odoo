@@ -87,14 +87,21 @@ class Wiki(osv.osv):
         }
 
     def write(self, cr, uid, ids, vals, context=None):
+        result = super(Wiki,self).write(cr, uid, ids, vals, context)
+        history = self.pool.get('wiki.wiki.history')
+        
         if vals.get('text_area'):
-            vals['history_id']=[(0,0,{
-                'minor_edit':vals.get('minor_edit', False),
-                'text_area':vals['text_area'],
-                'modify_by':uid,
-                'summary':vals.get('summary','')
-            })]
-        return super(Wiki,self).write(cr, uid, ids, vals, context)
+            for id in ids:
+                res = {
+                    'minor_edit':vals.get('minor_edit', True),
+                    'text_area':vals.get('text_area',''),
+                    'write_uid':uid,
+                    'wiki_id' : id,
+                    'summary':vals.get('summary','')
+                }
+                history.create(cr, uid, res)
+        return result
+
 Wiki()
 
 class History(osv.osv):
@@ -103,17 +110,15 @@ class History(osv.osv):
     _rec_name="date_time"
     _order = 'id DESC'
     _columns={
-      'date_time':fields.datetime("Date",select=True),
+      'create_date':fields.datetime("Date",select=True),
       'text_area':fields.text("Text area",select=True),
       'minor_edit':fields.boolean('This is a major edit ?',select=True),
       'summary':fields.char('Summary',size=256, select=True),
-      'modify_by':fields.many2one('res.users',"Modify By", select=True),
-      'hist_write_date':fields.datetime("Last modified", select=True),
-      'history_wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
+      'write_uid':fields.many2one('res.users',"Modify By", select=True),
+      'wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
     }
     _defaults = {
-        'hist_write_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'modify_by': lambda obj,cr,uid,context: uid,
+        'write_uid': lambda obj,cr,uid,context: uid,
     }
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib

@@ -126,8 +126,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree srting="Wiki History">
-                    <field name="date_time"/>
-                    <field name="modify_by"/>
+                    <field name="create_date"/>
+                    <field name="write_uid"/>
                     <field name="minor_edit"/>
                     <field name="summary"/>
                 </tree>
@@ -140,12 +140,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form srting="Wiki History">
-                    <field name="history_wiki_id" select="1" colspan="4"/>
+                    <field name="wiki_id" select="1" colspan="4"/>
                     <field name="summary" select="1" colspan="4"/>
                     <field name="text_area" select="1" colspan="4" widget="text_wiki"/>
-                    <field name="date_time" select="1"/>
+                    <field name="create_date" select="1"/>
                     <field name="minor_edit" select="1"/>
-                    <field name="history_wiki_id"/>
                 </form>
             </field>
         </record>
@@ -161,7 +160,7 @@
             id="menu_action_history"
             action="action_history"/>
 
-        <act_window domain="[('history_wiki_id', '=', active_id)]"
+        <act_window domain="[('wiki_id', '=', active_id)]"
             id="act_wiki_wiki_history"
             name="History"
             res_model="wiki.wiki.history"

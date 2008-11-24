@@ -47,7 +47,7 @@ def report_menu_create(self, cr, uid, data, context):
         'view_type':'form',
         'view_mode':"tree,form",
         'context': "{'group_id':%d}" % (group.id,),
-        'domain': "[('group_id','child_of',%d)]" % (group.id,),
+        'domain': "[('group_id','child_of',[%d])]" % (group.id,),
         'res_model': 'wiki.wiki'
     })
     pool.get('ir.ui.menu').create(cr, uid, {
