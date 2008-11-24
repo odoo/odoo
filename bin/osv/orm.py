@@ -958,7 +958,7 @@ class orm_template(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (node2.localName, attrs)
-                    raise AttributeError(_("Couldn't find tag '%s' in parent view !") % tag)
+                    raise AttributeError(_("Couldn't find tag '%s' in parent view !\n%s") % (tag,src))
             return doc_src.toxml(encoding="utf-8").replace('\t', '')
 
         result = {'type': view_type, 'model': self._name}
