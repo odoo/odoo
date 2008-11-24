@@ -58,6 +58,24 @@ class account_move_line(osv.osv):
                 del data[f]
         return data
 
+    def create_analytic_lines(self, cr, uid, ids, context={}):
+        for obj_line in self.browse(cr, uid, ids, context):
+            if obj_line.analytic_account_id:
+                amt = (obj_line.credit or  0.0) - (obj_line.debit or 0.0)
+                vals_lines={
+                    'name': obj_line.name,
+                    'date': obj_line.date,
+                    'account_id': obj_line.analytic_account_id.id,
+                    'unit_amount':obj_line.quantity,
+                    'amount': amt,
+                    'general_account_id': obj_line.account_id.id,
+                    'journal_id': obj_line.journal_id.analytic_journal_id.id,
+                    'ref': obj_line.ref,
+                    'move_id':obj_line.id
+                }
+                new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
+        return True
+
     def _default_get(self, cr, uid, fields, context={}):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
