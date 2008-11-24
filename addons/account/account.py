@@ -1032,23 +1032,10 @@ class account_move(osv.osv):
                 }, context, check=False)
                 ok = False
         if ok:
-            obj_line=self.browse(cr, uid, ids[0])
-            for move in self.browse(cr, uid, ids, context):
-                for obj_line in move.line_id:
-                    #create analytic lines
-                    if obj_line.analytic_account_id:
-                        vals_lines={
-                            'name': obj_line.name,
-                            'date': obj_line.date,
-                            'account_id': obj_line.analytic_account_id.id,
-                            'unit_amount':obj_line.quantity,
-                            'amount': obj_line.debit or obj_line.credit,
-                            'general_account_id': obj_line.account_id.id,
-                            'journal_id': obj_line.journal_id.analytic_journal_id.id,
-                            'ref': obj_line.ref,
-                            'move_id':obj_line.id
-                        }
-                        self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
+            list_ids = []
+            for tmp in move.line_id:
+                list_ids.append(tmp.id)
+            self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
         return ok
 account_move()
 

@@ -280,21 +280,15 @@ class account_move_line(osv.osv):
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
     }
 
-    def _analytic_update(self, cr, uid, ids, context):
-       if self.called:
-           self.called=False
-           return False
-
-       obj_line=self.pool.get('account.analytic.line')
-
-       for line in self.browse(cr, uid, ids, context):
+    def create_analytic_lines(self, cr, uid, ids, context={}):
+        super(account_move_line, self).create_analytic_lines(cr, uid, ids, context)
+        for line in self.browse(cr, uid, ids, context):
            if line.analytics_id:
-               toremove = obj_line.search(cr, uid, [('move_id','=',line.id)], context=context)
+               toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
-                   obj_line.unlink(cr, uid, toremove, context=context)
-
+                    obj_line.unlink(cr, uid, toremove, context=context)
                for line2 in line.analytics_id.account_ids:
-                   val = (line.debit or 0.0) - (line.credit or  0.0)
+                   val = (line.credit or  0.0) - (line.debit or 0.0)
                    amt=val * (line2.rate/100)
                    al_vals={
                        'name': line.name,
@@ -309,25 +303,7 @@ class account_move_line(osv.osv):
                        'ref': line.ref,
                    }
                    ali_id=self.pool.get('account.analytic.line').create(cr,uid,al_vals)
-       self.called=True
-       return True
-
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        self.called=False
-        if ('analytics_id' in vals) and (not vals['analytics_id']):
-            for line in self.browse(cr, uid, ids, context):
-                toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
-                if toremove:
-                    self.pool.get('account.analytic.line').unlink(cr, uid, toremove, context=context)
-        result = super(account_move_line, self).write(cr, uid, ids, vals, context, check, update_check)
-        self._analytic_update(cr, uid, ids, context)
-        return result
-
-    def create(self, cr, uid, vals, context=None, check=True):
-        self.called=False
-        result = super(account_move_line, self).create(cr, uid, vals, context, check)
-        self._analytic_update(cr, uid, [result], context)
-        return result
+        return True
 
 account_move_line()
 
