@@ -152,8 +152,10 @@ class report_printscreen_list(report_int):
             for f in fields_order:
 
                 count += 1
+
                 if fields[f]['type']=='many2one' and line[f]:
-                    line[f] = line[f][1]
+                    line[f]= line[f][1]
+
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+str(len(line[f])) + ' )'
                 if fields[f]['type'] == 'float':
@@ -181,8 +183,11 @@ class report_printscreen_list(report_int):
             col.setAttribute('para','yes')
             col.setAttribute('tree','no')
             if tsum[f] != None:
-                total = '%.2f'%(tsum[f])
-                txt = new_doc.createTextNode(str(total or ''))
+               if tsum[f] >= 0.01 :
+                  total = '%.2f'%(tsum[f])
+                  txt = new_doc.createTextNode(str(total or ''))
+               else :
+                   txt = new_doc.createTextNode(str(tsum[f] or ''))
             else:
                 txt = new_doc.createTextNode('/')
             if f == 0:
