@@ -46,7 +46,7 @@ def wiki_menu_create(self, cr, uid, data, context):
         'name': group.name,
         'view_type':'form',
         'view_mode':"tree,form",
-        'context': "{'group_id':%d}" % (group.id,),
+        'context': "{'group_id':%d, 'section':%d}" % (group.id, group.section),
         'domain': "[('group_id','child_of',[%d])]" % (group.id,),
         'res_model': 'wiki.wiki'
     })

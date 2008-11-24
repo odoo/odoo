@@ -22,29 +22,32 @@
 
 from osv import fields,osv
 
-
-
 class showdiff(osv.osv_memory):
     _name = 'wizard.wiki.history.show_diff'
     
     def _get_diff(self, cr, uid, ctx):
-        print 'XXXXXXXXXXXXXXXXXX : ', ctx
         history = self.pool.get('wiki.wiki.history')
-        res = {}
-#        if lan(ids) == 2:
-#            diff = history.getDiff(cr, uid, ids[0]. ids[1])
-#            res = {
-#                ids[0] : diff,
-#                ids[1] : diff,
-#            }
-        return res
+        ids = ctx.get('active_ids')
+        diff = ""
+        if len(ids) == 2:
+            if ids[0] > ids[1]:
+                diff = history.getDiff(cr, uid, ids[1], ids[0])
+            else:
+                diff = history.getDiff(cr, uid, ids[0], ids[1])
+
+        elif len(ids) == 1:
+            old = history.browse(cr, uid, ids[0])
+            nids = history.search(cr, uid, [('wiki_id','=',old.wiki_id.id)])
+            nids.sort()
+            if ids[0] != nids[-1]:
+                diff = history.getDiff(cr, uid, ids[0], nids[-1])
+
+        return diff
 
     _columns = {
-        'diff': fields.function(_get_diff, method=True, type='char', string='Diff'),
+        'diff': fields.text('Diff'),
     }
     _defaults = {
         'diff': _get_diff
     }
 showdiff()
-
-    

@@ -42,10 +42,10 @@ class WikiGroup(osv.osv):
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created Date", select=True),
-       'template': fields.text('Wiki Template')
+       'template': fields.text('Wiki Template'),
+       'section': fields.boolean("Make Section?")
     }
 WikiGroup()
-
 
 class Wiki(osv.osv):
     _name="wiki.wiki"

@@ -27,10 +27,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form srting="Wiki Groups">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="4">
                         <field name="name" select="1"/>
                         <field name="parent_id" select="2"/>
                         <field name="create_date" readonly="2"/>
+                        <field name="section"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
@@ -94,8 +95,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" select="2"/>
-
+                        <field name="section" select="2" invisible="not context.get('section',False)"/>
                         <field name="write_date" readonly="1" select="2"/>
                         <field name="write_uid" readonly="1" select="2"/>
                         <field name="tags" select="2" groups="base.group_extended"/>
