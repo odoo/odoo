@@ -275,23 +275,18 @@ class GenericXMLRPCRequestHandler:
             raise xmlrpclib.Fault(s, tb_s)
 
 
-class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
-        SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
 
-
-class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
-        SimpleXMLRPCServer.SimpleXMLRPCServer):
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
 
     def server_bind(self):
         try:
-            self.socket.setsockopt(socket.SOL_SOCKET,
-                    socket.SO_REUSEADDR, 1)
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
         except:
-            sys.stderr.write("ERROR: address already in use\n")
+            Logger().notifyChannel('init', LOG_ERROR, 'Address already in use')
             sys.exit(1)
-
 
 class HttpDaemon(threading.Thread):
 
@@ -302,21 +297,18 @@ class HttpDaemon(threading.Thread):
         self.secure = secure
         if secure:
             from ssl import SecureXMLRPCServer
-            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
-                    SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
-                    SecureXMLRPCServer.SecureXMLRPCServer):
 
+            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
+                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
+
+            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
                 def server_bind(self):
                     try:
-                        self.socket.setsockopt(socket.SOL_SOCKET,
-                                socket.SO_REUSEADDR, 1)
+                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                         SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
                     except:
                         sys.stderr.write("ERROR: address already in use\n")
                         sys.exit(1)
-
 
             self.server = SecureThreadedXMLRPCServer((interface, port),
                     SecureXMLRPCRequestHandler, 0)
