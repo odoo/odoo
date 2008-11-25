@@ -28,6 +28,7 @@ import SimpleXMLRPCServer, signal, sys, xmlrpclib
 import SocketServer
 import socket
 import logging
+import logging.handlers
 import os
 
 _service = {}
@@ -153,6 +154,9 @@ def init_logger():
         logf = config['logfile']
         # test if the directories exist, else create them
         try:
+            dirname = os.path.dirname(logf)
+            if not os.path.isdir(dirname):
+                res = os.makedirs(dirname)
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except:
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
