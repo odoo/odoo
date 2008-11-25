@@ -285,7 +285,7 @@ class mrp_bom(osv.osv):
                         'workcenter_id': wc.id,
                         'sequence': level,
                         'cycle': cycle,
-                        'hour': wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0),
+                        'hour': float(wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)

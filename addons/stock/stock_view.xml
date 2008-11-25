@@ -804,8 +804,8 @@
                 <form string="Packing list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="2"/>
-                        <field name="name" select="1" readonly="1"/>
                         <field name="min_date" select="2"/>
+                        <field name="name" select="1" readonly="1"/>
                         <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
@@ -1217,16 +1217,16 @@
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
                     <field colspan="4" name="product_id" select="1"/>
-                    <field name="product_qty" select="1"/>
-                    <field name="product_uom" select="1"/>
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="product_qty" select="2"/>
+                    <field name="product_uom" select="2"/>
+                    <field colspan="4" name="name" select="2"/>
                     <field name="date"/>
                     <field name="date_planned"/>
                     <field name="priority"/>
-                    <field name="address_id" select="1" context="{'context_display':'partner'}"/>
+                    <field name="address_id" select="2" context="{'context_display':'partner'}"/>
                     <newline/>
-                    <field name="prodlot_id" select="1" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
-                    <field name="tracking_id" select="1"/>
+                    <field name="prodlot_id" select="2" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                    <field name="tracking_id" select="2"/>
                     <field name="picking_id"/>
                     <newline/>
                     <label/>

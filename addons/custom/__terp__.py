@@ -20,15 +20,15 @@
 #
 ##############################################################################
 {
-    "name" : "Module for custom developments",
+    "name" : "CRM for House Building",
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
     "website": "http://www.tinyerp.com",
-    "description": "Sample custom module where you can put your customer specific developments.",
-    "depends" : ["base"],
+    "description": "CRM",
+    "depends" : ["crm_configuration"],
     "init_xml" : [],
-    "update_xml" : ["custom_view.xml"],
+    "update_xml" : ["crm_build_view.xml"],
     "active": False,
     "installable": True
 }
