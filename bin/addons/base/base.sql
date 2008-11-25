@@ -27,6 +27,7 @@ CREATE TABLE ir_model (
   id serial,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   name varchar(64),
+  state varchar(16),
   info text,
   primary key(id)
 );

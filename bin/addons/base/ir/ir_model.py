@@ -75,7 +75,10 @@ class ir_model(osv.osv):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
-            pooler.restart_pool(cr.dbname)
+            self.instanciate(cr, user, vals['model'], context)
+            self.pool.get(vals['model']).__init__(self.pool, cr)
+            self.pool.get(vals['model'])._auto_init(cr,{})
+            #pooler.restart_pool(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context={}):
@@ -84,10 +87,7 @@ class ir_model(osv.osv):
         x_custom_model._name = model
         x_custom_model._module = False
         x_custom_model.createInstance(self.pool, '', cr)
-        if 'x_name' in x_custom_model._columns:
-            x_custom_model._rec_name = 'x_name'
-        else:
-            x_custom_model._rec_name = x_custom_model._columns.keys()[0]
+        x_custom_model._rec_name = 'x_name'
 ir_model()
 
 
