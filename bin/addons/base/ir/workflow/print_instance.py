@@ -38,7 +38,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
         if n['subflow_id'] and nested:
             cr.execute('select * from wkf where id=%d', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
-            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = "Subflow: "+n['name']+'\\nOSV: '+wkfinfo['osv'])
+            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = """\"Subflow: %s\\nOSV: %s\"""" % ( n['name'], wkfinfo['osv']) )
             (s1,s2) = graph_get(cr, graph2, n['subflow_id'], nested,workitem)
             graph.add_subgraph(graph2)
             actfrom[n['id']] = s2
