@@ -12,6 +12,10 @@ import netsvc
 import os
 from service import security
 
+def log(message):
+    logger = netsvc.Logger()
+    logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
+			
 class file_wrapper(StringIO.StringIO):
     def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
         StringIO.StringIO.__init__(self, sstr)
@@ -220,7 +224,7 @@ class abstracted_fs:
             s = file_wrapper('', cid, cr.dbname, uid, )
             return s
         except Exception,e:
-            print e
+            log(e)
             raise OSError(1, 'Operation not permited.')
 
     # Ok
@@ -315,7 +319,7 @@ class abstracted_fs:
             pool.get('document.directory').create(cr, uid, val)
             cr.commit()
         except Exception,e:
-            print e
+            log(e)
             raise OSError(1, 'Operation not permited.')
 
 
@@ -354,7 +358,6 @@ class abstracted_fs:
             for db in self.db_list():
                 result.append(false_node(db))
             return result
-        print path.children()
         return path.children()
 
     # Ok
@@ -505,7 +508,7 @@ class abstracted_fs:
             else:
                 raise OSError(1, 'Operation not permited.')
         except Exception,err:
-            print err
+            log(err)
             raise OSError(1,'Operation not permited.')
 
 

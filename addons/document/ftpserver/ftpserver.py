@@ -1754,7 +1754,6 @@ class FTPHandler(asynchat.async_chat):
          - (file) file: the file[-like] object to send (if any).
         """
         if self.data_channel:
-            print 'DATA', data
             self.respond("125 Data connection already open. Transfer starting.")
             if file:
                 self.data_channel.file_obj = file
@@ -2075,10 +2074,8 @@ class FTPHandler(asynchat.async_chat):
             self.fs.close_cr(data)
             data = ''
             if listing:
-                print listing
                 listing.sort()
                 data = '\r\n'.join(listing) + '\r\n'
-            print data
             self.log('OK NLST "%s". Transfer starting.' %line)
             self.push_dtp_data(data)
 
