@@ -25,7 +25,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_mrp.html",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product", "process"],
+    "depends" : ["stock", "hr", "purchase", "product"],
     "description": """
     This is the base module to manage the manufacturing process in Tiny ERP.
 

@@ -36,7 +36,8 @@
         ],
     "update_xml" : [
         "security/ir.model.access.csv",
-        "membership_view.xml","membership_wizard.xml"
+        "membership_view.xml","membership_wizard.xml",
+        "process/membership_process.xml"
         ],
     "active" : False,
     "installable" : True,
