@@ -101,7 +101,7 @@ class stock_location(osv.osv):
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
-        'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')],
+        'chained_location_type': fields.selection([('none','None'),('customer', 'Customer'),('fixed','Fixed Location')],
             'Chained Location Type', required=True),
         'chained_auto_packing': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
@@ -128,7 +128,7 @@ class stock_location(osv.osv):
         'active': lambda *a: 1,
         'usage': lambda *a: 'internal',
         'allocation_method': lambda *a: 'fifo',
-        'chained_location_type': lambda *a: '',
+        'chained_location_type': lambda *a: 'none',
         'chained_auto_packing': lambda *a: 'manual',
         'posx': lambda *a: 0,
         'posy': lambda *a: 0,
