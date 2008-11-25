@@ -104,6 +104,8 @@ class account_move_line(osv.osv):
             s = -total_new
             data['debit'] = s>0  and s or 0.0
             data['credit'] = s<0  and -s or 0.0
+            del(data['analytic_account_id'])
+            del(data['account_tax_id'])
             return data
         # Ends: Manual entry from account.move form
 
