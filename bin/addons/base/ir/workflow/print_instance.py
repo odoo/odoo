@@ -143,12 +143,9 @@ showpage'''
 showpage'''
                 else:
                     inst_id = inst_id[0]
-                    graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']))
-                    graph.set('size', '10.7,7.3')
-                    graph.set('center', '1')
-                    graph.set('ratio', 'auto')
-                    graph.set('rotate', '90')
-                    graph.set('rankdir', 'LR')
+                    graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
+                                      size='10.7, 7.3', center='1', ratio='auto', rotate='90', rankdir='LR'
+                                     )
                     graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
         except Exception, e:
