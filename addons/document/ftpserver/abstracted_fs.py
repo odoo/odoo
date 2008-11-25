@@ -68,15 +68,25 @@ class abstracted_fs:
     def db_list(self):
         s = netsvc.LocalService('db')
         result = s.list()
-        self.db_name_list=[]
+        self.db_name_list = []
         for db_name in result:
-            db = pooler.get_db_only(db_name)
-            cr = db.cursor()
-            cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
-            res=cr.fetchone()
-            if res and len(res):
-                self.db_name_list.append(db_name)
-            cr.close()
+            db, cr = None, None
+            try:
+                db = pooler.get_db_only(db_name)
+                cr = db.cursor()
+                cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
+                if not cr.fetchone():
+                    continue
+
+                cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
+                res = cr.fetchone()
+                if res and len(res):
+                    self.db_name_list.append(db_name)
+            finally:
+                if cr is not None:
+                    cr.close()
+                if db is not None:
+                    pooler.close_db(db_name)
         return self.db_name_list
 
     # Ok
