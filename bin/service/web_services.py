@@ -163,11 +163,6 @@ class db(netsvc.Service):
         security.check_super(password)
         logger = netsvc.Logger()
 
-        if tools.config['db_password']:
-            logger.notifyChannel("web-service", netsvc.LOG_ERROR,
-                    'DUMP DB: %s doesn\'t work with password' % (db_name,))
-            raise Exception, "Couldn't dump database with password"
-
         cmd = ['pg_dump', '--format=c']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
@@ -197,11 +192,6 @@ class db(netsvc.Service):
             logger.notifyChannel("web-service", netsvc.LOG_WARNING,
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
-
-        if tools.config['db_password']:
-            logger.notifyChannel("web-service", netsvc.LOG_ERROR,
-                    'RESTORE DB: %s doesn\'t work with password' % (db_name,))
-            raise Exception, "Couldn't restore database with password"
 
         db = sql_db.db_connect('template1', serialize=1)
         db.truedb.autocommit()
