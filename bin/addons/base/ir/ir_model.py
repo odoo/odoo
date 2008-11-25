@@ -27,6 +27,7 @@ from osv.orm import except_orm, browse_record
 
 import time
 import tools
+from tools import config
 import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
@@ -561,18 +562,19 @@ class ir_model_data(osv.osv):
             wf_service.trg_write(uid, model, id, cr)
 
         cr.commit()
-        for (model,id) in self.unlink_mark.keys():
-            if self.pool.get(model):
-                logger = netsvc.Logger()
-                logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
-                try:
-                    self.pool.get(model).unlink(cr, uid, [id])
-                    if self.unlink_mark[(model,id)]:
-                        self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
-                        cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
-                    cr.commit()
-                except:
-                    logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
+        if not config.get('import_partial', False):
+            for (model,id) in self.unlink_mark.keys():
+                if self.pool.get(model):
+                    logger = netsvc.Logger()
+                    logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
+                    try:
+                        self.pool.get(model).unlink(cr, uid, [id])
+                        if self.unlink_mark[(model,id)]:
+                            self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
+                            cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
+                        cr.commit()
+                    except:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
         return True
 ir_model_data()
 
