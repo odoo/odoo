@@ -504,8 +504,8 @@
                 <form string="Attachments">
                     <group colspan="4" col="6">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="1"/>
-                        <field name="create_date" select="1"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
@@ -516,7 +516,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
-                            <field name="res_model" select="1"/>
+                            <field name="res_model" select="2"/>
                             <field name="res_id"/>
                         </group>
                         <separator string="Preview" colspan="4"/>
