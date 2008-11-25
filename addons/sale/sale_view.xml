@@ -204,7 +204,7 @@
                             <field name="user_id"/>
                             <field name="order_policy"/>
                             <field groups="base.group_extended" name="origin"/>
-                            <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','picking')]}"/>
+                            <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid')]}"/>
                             <field name="payment_term"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
