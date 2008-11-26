@@ -76,6 +76,14 @@ class account_move_line(osv.osv):
                 new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return True
 
+    def _default_get_move_form_hook(self, cursor, user, data):
+        '''Called in the end of default_get method for manual entry in account_move form'''
+        if data.has_key('analytic_account_id'):
+            del(data['analytic_account_id'])
+        if data.has_key('account_tax_id'):
+            del(data['account_tax_id'])
+        return data
+
     def _default_get(self, cr, uid, fields, context={}):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
@@ -104,8 +112,7 @@ class account_move_line(osv.osv):
             s = -total_new
             data['debit'] = s>0  and s or 0.0
             data['credit'] = s<0  and -s or 0.0
-            del(data['analytic_account_id'])
-            del(data['account_tax_id'])
+            data = self._default_get_move_form_hook(cr, uid, data)
             return data
         # Ends: Manual entry from account.move form
 
@@ -883,7 +890,7 @@ class account_move_line(osv.osv):
                     'account_tax_id': False,
                     'tax_code_id': tax[tax_code],
                     'tax_amount': tax[tax_sign] * abs(tax['amount']),
-                    'account_id': tax[account_id],
+                    'account_id': tax[account_id] or vals['account_id'],
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }
