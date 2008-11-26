@@ -40,15 +40,15 @@ class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
     _description = "Maintenance Contract"
     _columns = {
-    'name' : fields.char('Name', size=256),
-    'contract_date' : fields.date('Date'),
-    'password' : fields.char('password', size=64, invisible=True),
-        }
-
+        'name' : fields.char('Contract ID', size=256, required=True),
+        'password' : fields.char('password', size=64, invisible=True, required=True),
+        'date_start' : fields.date('Starting Date', readonly=True),
+        'date_stop' : fields.date('Ending Date', readonly=True),
+        'modules': fields.text('Covered Modules')
+    }
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
-        'contract_date':lambda *a: time.strftime('%Y-%m-%d'),
-              }
+    }
     def _test_maintenance(self, cr, uid, ids, context):
         remote_db='trunk'
         remote_server='localhost'
