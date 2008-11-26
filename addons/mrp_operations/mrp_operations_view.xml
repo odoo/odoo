@@ -60,7 +60,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt type="gantt" color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
+            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
                 <level object="product.product" link="product" domain="[]">
                     <field name="production_id"/>
                 </level>

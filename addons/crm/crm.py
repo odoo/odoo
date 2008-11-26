@@ -594,30 +594,25 @@ class crm_case(osv.osv):
                     if case.user_id.signature:
                         body += '\n\n%s' % (case.user_id.signature)
                 dest = [dest]
-                if not attach:
-                    tools.email_send(
-                        src,
-                        dest,
-                        'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-                        body,
-                        reply_to=case.section_id.reply_to, tinycrm=str(case.id)
-                        )
-                else:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid,
-                            [('res_model', '=', 'crm.case'),
-                                ('res_id', '=', case.id)])
-                    res = self.pool.get('ir.attachment').read(cr, uid,
-                            attach_ids, ['datas_fname','datas'])
-                    res = map(lambda x: (x['datas_fname'],
-                        base64.decodestring(x['datas'])), res)
-                    tools.email_send_attach(
-                        src,
-                        dest,
-                        'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-                        body,
-                        reply_to=case.section_id.reply_to,
-                        attach=res, tinycrm=str(case.id)
-                        )
+
+                attach_to_send = None
+
+                if attach:
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+
+                # Send an email
+                tools.email_send(
+                    src, 
+                    dest, 
+                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    body, 
+                    reply_to=case.section_id.reply_to, 
+                    tinycrm=str(case.id),
+                    attach=attach_to_send
+                )
+
         return True
 
     def add_reply(self, cursor, user, ids, context=None):
@@ -653,9 +648,14 @@ class crm_case(osv.osv):
             body = case.description
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
-            tools.email_send(case.user_id.address_id.email, emails,
-                    '['+str(case.id)+'] '+case.name, body,
-                    reply_to=case.section_id.reply_to, tinycrm=str(case.id))
+            tools.email_send(
+                case.user_id.address_id.email, 
+                emails,
+                '['+str(case.id)+'] '+case.name, 
+                body,
+                reply_to=case.section_id.reply_to, 
+                tinycrm=str(case.id)
+            )
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
