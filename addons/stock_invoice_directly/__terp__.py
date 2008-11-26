@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_sale.html",
-    "depends" : ["delivery"],
+    "depends" : ["delivery", "stock"],
     "category" : "Generic Modules/Sales & Purchases",
     "description": """
         When you send or deliver goods, this module automatically launch
