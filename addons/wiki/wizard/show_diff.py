@@ -41,7 +41,8 @@ class showdiff(osv.osv_memory):
             nids.sort()
             if ids[0] != nids[-1]:
                 diff = history.getDiff(cr, uid, ids[0], nids[-1])
-
+        else:
+            raise osv.except_osv('Warning', "You need to select minimum 1 or maximum 2 history revision!")
         return diff
 
     _columns = {
