@@ -67,6 +67,8 @@ class account_move_line(osv.osv):
                     'date': obj_line.date,
                     'account_id': obj_line.analytic_account_id.id,
                     'unit_amount':obj_line.quantity,
+                    'product_id': obj_line.product_id and obj_line.product_id.id or False,
+                    'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
                     'amount': amt,
                     'general_account_id': obj_line.account_id.id,
                     'journal_id': obj_line.journal_id.analytic_journal_id.id,
@@ -305,6 +307,8 @@ class account_move_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
+        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_id': fields.many2one('product.product', 'Product'),
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
