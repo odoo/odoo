@@ -5,7 +5,8 @@
  		<wizard id="si_so" model="hr.employee" name="hr.si_so" string="Sign in / Sign out"/>
 		<wizard id="wizard_attendance_error" keyword="client_print_multi" model="hr.employee" name="hr.timesheet.attendance.report" string="Print Attendance Error Report"/>
 
-        <menuitem action="si_so" id="menu_si_so" parent="menu_hr_attendance" type="wizard"/>
+        <menuitem action="si_so" id="menu_si_so" parent="menu_hr_attendance" type="wizard"
+            groups="group_hr_attendance"/>
         
     </data>
 </openerp>

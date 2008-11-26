@@ -518,7 +518,11 @@
             <field name="view_mode">gantt,tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
         </record>
-        <menuitem action="mrp_production_action2_gantt" id="menu_production_orders_start_gantt" parent="menu_mrp_production_action"/>
+        <menuitem
+            action="mrp_production_action2_gantt"
+            id="menu_production_orders_start_gantt"
+            parent="menu_mrp_production_action"
+            sequence="20"/>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
             <field name="name">Production Orders To Start</field>

@@ -22,16 +22,15 @@
 
 from osv import osv, fields
 
-#class custom_material(osv.osv):
-#   _name = 'network.material'
-#   _inherit = 'network.material'
-#   _columns = {
-#   }
-#   _defaults = {
-#   }
-#custom_material()
+class metalfut_quality(osv.osv):
+    _name = 'metalfut.quality'
+    _columns = {
+        'name': fields.char('Name', size=32),
+        'agr_nbr': fields.char('Agregation Ref', size=16),
+        'fut_nbr': fields.integer('Fut number')
 
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    }
+    _defaults = {
+    }
+ metalfut_quality()
 
