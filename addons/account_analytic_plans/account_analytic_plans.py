@@ -280,6 +280,12 @@ class account_move_line(osv.osv):
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
     }
 
+    def _default_get_move_form_hook(self, cursor, user, data):
+        data = super(account_move_line, self)._default_get_move_form_hook(cursor, user, data)
+        if data.has_key('analytics_id'):
+            del(data['analytics_id'])
+        return data
+
     def create_analytic_lines(self, cr, uid, ids, context={}):
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context)
         for line in self.browse(cr, uid, ids, context):
@@ -293,9 +299,10 @@ class account_move_line(osv.osv):
                    al_vals={
                        'name': line.name,
                        'date': line.date,
-                       'unit_amount':1,
-                       'product_id':12,
                        'account_id': line2.analytic_account_id.id,
+                       'unit_amount': line.quantity,
+                       'product_id': line.product_id and line.product_id.id or False,
+                       'product_uom_id': line.product_uom_id and line.product_uom_id.id or False,
                        'amount': amt,
                        'general_account_id': line.account_id.id,
                        'move_id': line.id,
