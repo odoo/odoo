@@ -438,26 +438,12 @@ class actions_server(osv.osv):
     def merge_message(self, cr, uid, keystr, action, context):
         logger = netsvc.Logger()
         def merge(match):
-
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
+            return eval(match[2:-2], {'object':obj, 'context': context,'time':time})
 
-            field = match.group()
-            field = field.replace('[','')
-            field = field.replace(']','')
-            field = field.strip()
-
-            fields = field.split('.')
-            for field in fields:
-                try:
-                    obj = getattr(obj, field)
-                except Exception,e :
-                    logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
-
-            return str(obj)
-
-        com = re.compile('\[\[(.+?)\]\]')
+        com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
         return message
 
@@ -490,9 +476,7 @@ class actions_server(osv.osv):
                 address = self.get_field_value(cr, uid, action, context)
                 if not address:
                     raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
-                
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -537,8 +521,9 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        expr = self.merge_message(cr, uid, euq, action, context)
-                        expr = eval(expr)
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        expr = eval(euq, {'context':context, 'object': obj})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -550,8 +535,9 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        expr = self.merge_message(cr, uid, euq, action, context)
-                        expr = eval(expr)
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        expr = eval(euq, {'context':context, 'object': obj})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr

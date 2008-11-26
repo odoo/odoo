@@ -1160,7 +1160,7 @@
                             <field name="sms" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','email'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
                             <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','sms'), ('state','=','client_action'), ('state','=','other')]}" />
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
                         </page>
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
@@ -1179,6 +1179,7 @@
                                     <field name="value" colsapan="4"/>
                                 </form>
                             </field>
+                            <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
                         <page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
