@@ -100,6 +100,7 @@
                         <field name="write_uid" readonly="1" select="2"/>
                         <field name="tags" select="2" groups="base.group_extended"/>
                         <field name="minor_edit" select="2" groups="base.group_extended"/>
+                        <field name="toc"/>
                         <field name="summary" colspan="4" select="2" groups="base.group_extended"/>
                     </group>
                     <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
@@ -129,7 +130,7 @@
                 <tree srting="Wiki History">
                     <field name="create_date"/>
                     <field name="write_uid"/>
-                    <field name="minor_edit"/>
+                    <field name="minor_edit" groups="base.group_extended"/>
                     <field name="summary"/>
                 </tree>
             </field>
@@ -143,9 +144,9 @@
                 <form srting="Wiki History">
                     <field name="wiki_id" select="1" colspan="4"/>
                     <field name="summary" select="1" colspan="4"/>
-                    <field name="text_area" select="1" colspan="4" widget="text_wiki"/>
+                    <field name="text_area" select="1" colspan="4" nolabel="1" widget="text_wiki"/>
                     <field name="create_date" select="1"/>
-                    <field name="minor_edit" select="1"/>
+                    <field name="minor_edit" select="1" groups="base.group_extended"/>
                 </form>
             </field>
         </record>
@@ -168,7 +169,7 @@
             src_model="wiki.wiki"/>
 
         <act_window
-            domain="[('group_id', '=', active_id)]"
+            domain="[('group_id', 'child_of', active_ids)]"
             id="act_wiki_group_open"
             name="Wiki Pages"
             res_model="wiki.wiki"
