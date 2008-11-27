@@ -44,7 +44,7 @@ crm_configuration modules.
     "update_xml" : [
         "sale_crm_wizard.xml",
         "sale_crm_view.xml",
-        "process/sale_crm_process.xml"
+#        "process/sale_crm_process.xml"
     ],
     "active": False,
     "installable": True
