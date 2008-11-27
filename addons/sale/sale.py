@@ -262,6 +262,7 @@ class sale_order(osv.osv):
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
         return osv.osv.unlink(self, cr, uid, unlink_ids)        
+            
     
     def onchange_shop_id(self, cr, uid, ids, shop_id):
         v={}
@@ -565,9 +566,9 @@ class sale_order(osv.osv):
                         'procure_method': line.type,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                     })
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                 else:
                     #
                     # No procurement because no product in the sale.order.line.

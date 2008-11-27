@@ -31,7 +31,7 @@ OpenOffice.
     "website" : "http://tinyerp.com",
     "category" : "Generic Modules/Base",
     "init_xml" : [ ],
-    "demo_xml" : [ ],
+    "demo_xml" : ["base_report_user_data.xml"],
     "update_xml" : [ "base_report_designer_wizard.xml" ],
     "active": False,
     "installable": True

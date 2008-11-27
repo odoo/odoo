@@ -25,7 +25,7 @@
     "author" : "Tiny",
     "website" : "http://tinyerp.com/module_project.html",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project", 'mrp', "sale"],
+    "depends" : ["project", 'mrp', "sale", "mrp_jit"],
     "description": """
 This module is used to automatically create tasks base on different
 procurements: sales order, manufacturing order, ...
