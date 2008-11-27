@@ -59,7 +59,7 @@ class Wiki(osv.osv):
         'create_date':fields.datetime("Created on", select=True),
         'write_date':fields.datetime("Last modified", select=True),
         'tags':fields.char('Tags', size=1024),
-        'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
+        'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
         'summary':fields.char('Summary',size=256, select=True),
         'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
@@ -85,7 +85,10 @@ class Wiki(osv.osv):
                 'section': section
             }
         }
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        return super(Wiki, self).copy(cr, uid, id, {'wiki_id':False}, context)
+        
     def write(self, cr, uid, ids, vals, context=None):
         result = super(Wiki,self).write(cr, uid, ids, vals, context)
         history = self.pool.get('wiki.wiki.history')

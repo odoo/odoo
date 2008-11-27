@@ -4,7 +4,7 @@
         <menuitem name="Document Management" icon="terp-stock" id="menu_document2"/>
         <menuitem name="Wiki Configuration" id="menu_document_configuration" parent="menu_document2"/>
         <menuitem parent="menu_document2" name="Wiki" id="menu_document"/>
-    
+
         <wizard
             id="wizard_group_menu_create"
             string="Create Menu"
@@ -113,6 +113,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
+            <field name="context">{'section':'1'}</field>
         </record>
         <menuitem
             parent="menu_document"
