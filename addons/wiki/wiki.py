@@ -43,7 +43,7 @@ class WikiGroup(osv.osv):
        'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
-       'section': fields.boolean("Make Section?")
+       'section': fields.boolean("Make Section ?"),
     }
 WikiGroup()
 
@@ -64,6 +64,7 @@ class Wiki(osv.osv):
         'summary':fields.char('Summary',size=256, select=True),
         'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
+        'toc':fields.boolean('Table of Contents ?'),
     }
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
         if (not group_id) or content:

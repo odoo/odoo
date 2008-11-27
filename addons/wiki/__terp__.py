@@ -14,7 +14,8 @@
     "demo_xml" : [],
     "update_xml" : [
         "wiki_view.xml",
-        #"wiki_data.xml",
+        "data/wiki_main.xml",
+        "data/wiki_quickstart.xml",
         "wizard/wizard_view.xml",
         "security/ir.model.access.csv"
     ],
