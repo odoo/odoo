@@ -637,6 +637,21 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         'item_id':_get_action,
         'name':_get_action_name,
     }
+    def button_next(self,cr,uid,ids,context=None):
+        user_action=self.pool.get('res.users').browse(cr,uid,uid)
+        act_obj=self.pool.get(user_action.menu_id.type)
+        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
+        action_open=act_obj.browse(cr,uid,action_ids)[0]
+        if context.get('menu',False):
+            return{
+                'view_type': action_open.view_type,
+                'view_id':action_open.view_id and [action_open.view_id.id] or False,
+                'res_model': action_open.res_model,
+                'type': action_open.type,
+                'domain':action_open.domain
+            }
+        return {'type':'ir.actions.act_window_close'}
+
     def button_skip(self,cr,uid,ids,context=None):
         item_obj = self.pool.get('ir.actions.todo')
         item_id=self.read(cr,uid,ids)[0]['item_id']
@@ -652,7 +667,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-        return {'type':'ir.actions.act_window_close'}
+        return self.button_next(cr, uid, ids, context)
 
     def button_continue(self, cr, uid, ids, context=None):
         item_obj = self.pool.get('ir.actions.todo')
@@ -670,19 +685,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                   'type': item.action_id.type,
                   'target':item.action_id.target,
             }
-        user_action=self.pool.get('res.users').browse(cr,uid,uid)
-        act_obj=self.pool.get(user_action.menu_id.type)
-        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
-        action_open=act_obj.browse(cr,uid,action_ids)[0]
-        if context.get('menu',False):
-            return{
-              'view_type': action_open.view_type,
-              'view_id':action_open.view_id and [action_open.view_id.id] or False,
-              'res_model': action_open.res_model,
-              'type': action_open.type,
-              'domain':action_open.domain
-               }
-        return {'type':'ir.actions.act_window_close' }
+        return self.button_next(cr, uid, ids, context)
 ir_actions_configuration_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
