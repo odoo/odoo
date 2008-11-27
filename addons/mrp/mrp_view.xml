@@ -377,9 +377,11 @@
                 <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel')" string="Production orders">
                     <field name="name"/>
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_qty" sum="Total Qty"/>
                     <field name="date_planned"/>
-                    <field name="date_finnished"/>
+                    <field name="routing_id" groups="base.group_extended"/>
+                    <field name="hour_total" sum="Total Hours" groups="base.group_extended"/>
+                    <field name="cycle_total" sum="Total Cycles" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="state"/>
                 </tree>
@@ -392,12 +394,29 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="product_id" date_start="date_planned" string="Production Orders">
+                <calendar color="routing_id" date_start="date_planned" string="Production Orders">
                     <field name="origin"/>
-                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
                 </calendar>
             </field>
         </record>
+
+
+        <record id="view_production_gantt" model="ir.ui.view">
+            <field name="name">mrp.production.gantt</field>
+            <field name="model">mrp.production</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+                <gantt color="product_id" date_delay="hour_total" date_start="date_planned" string="Productions">
+                    <level object="mrp.routing" link="routing_id" domain="[]">
+                        <field name="product_id"/>
+                        <field name="origin"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="view_production_graph">
             <field name="name">mrp.production.graph</field>
@@ -405,18 +424,19 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Production orders" type="bar">
-                    <field name="product_id"/>
-                    <field name="product_qty" operator="+"/>
+                    <field name="date_planned_date"/>
+                    <field name="hour_total" operator="+"/>
+                    <field name="cycle_total" operator="+"/>
                 </graph>
             </field>
         </record>
-		<wizard
-			string="Change Product Qty."
-			model="mrp.production"
-			name="change_production_qty"
-			id="mrp.wizard_change_production_qty"
-			keyword="client_action_multi"
-			multi="True"/>
+        <wizard
+            string="Change Product Qty."
+            model="mrp.production"
+            name="change_production_qty"
+            id="mrp.wizard_change_production_qty"
+            keyword="client_action_multi"
+            multi="True"/>
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
@@ -426,7 +446,7 @@
                     <group colspan="4" col="7">
                         <field name="name" select="1"/>
                         <field name="date_planned" select="1"/>
-                        <field name="priority" groups="base.group_extended"/>
+                        <field name="origin" select="1"/>
                         <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                         <field name="product_qty"/>
@@ -443,7 +463,7 @@
                             <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
-                            <field name="origin" select="1"/>
+                            <field name="routing_id" groups="base.group_extended" select="1"/>
                             <newline/>
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
                             <group col="9" colspan="4">
@@ -467,6 +487,8 @@
                             <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
+                            <field name="priority" groups="base.group_extended"/>
+                            <newline/>
                             <field name="date_start" select="2"/>
                             <field name="date_finnished"/>
                             <field name="picking_id"/>
@@ -483,17 +505,31 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
+
+        <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
+            <field name="name">Production Orders Planning</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">gantt,tree,form,calendar,graph</field>
+            <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
+        </record>
+        <menuitem
+            action="mrp_production_action2_gantt"
+            id="menu_production_orders_start_gantt"
+            parent="menu_mrp_production_action"
+            sequence="20"/>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
             <field name="name">Production Orders To Start</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','ready')]</field>
         </record>
         <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action"/>
@@ -502,7 +538,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','in_production')]</field>
         </record>
         <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action"/>
@@ -511,7 +547,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action"/>
@@ -521,7 +557,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar,graph</field>
+            <field name="view_mode">form,tree,calendar,graph,gantt</field>
         </record>
         <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
 

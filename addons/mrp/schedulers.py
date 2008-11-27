@@ -188,41 +188,40 @@ class mrp_procurement(osv.osv):
         while ids:
             ids=orderpoint_obj.search(cr,uid,[],offset=offset,limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids):
-                try:
-                    prods = location_obj._product_virtual_get(cr, uid,
-                            op.location_id.id, [op.product_id.id],
-                            {'uom': op.product_uom.id})[op.product_id.id]
-                    if prods < op.product_min_qty:
-                        qty = max(op.product_min_qty, op.product_max_qty)-prods
-                        reste = qty % op.qty_multiple
-                        if reste>0:
-                            qty += op.qty_multiple-reste
-                        newdate = DateTime.now() + DateTime.RelativeDateTime(
-                                days=op.product_id.seller_delay)
-                        if op.product_id.supply_method == 'buy':
-                            location_id = op.warehouse_id.lot_input_id
-                        elif op.product_id.supply_method == 'produce':
-                            location_id = op.warehouse_id.lot_stock_id
-                        else:
-                            continue
-                        proc_id = procurement_obj.create(cr, uid, {
-                            'name': 'OP:'+str(op.id),
-                            'date_planned': newdate.strftime('%Y-%m-%d'),
-                            'product_id': op.product_id.id,
-                            'product_qty': qty,
-                            'product_uom': op.product_uom.id,
-                            'location_id': op.warehouse_id.lot_input_id.id,
-                            'procure_method': 'make_to_order',
-                            'origin': op.name
-                        })
-                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
-                                'button_confirm', cr)
-                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
-                                'button_check', cr)
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id})
-                except Exception, e:
-                    report.append('OP %d:\n%s\n' % (op.id, str(e)))
+                if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft','confirmed'):
+                    continue
+                prods = location_obj._product_virtual_get(cr, uid,
+                        op.location_id.id, [op.product_id.id],
+                        {'uom': op.product_uom.id})[op.product_id.id]
+                if prods < op.product_min_qty:
+                    qty = max(op.product_min_qty, op.product_max_qty)-prods
+                    reste = qty % op.qty_multiple
+                    if reste>0:
+                        qty += op.qty_multiple-reste
+                    newdate = DateTime.now() + DateTime.RelativeDateTime(
+                            days=op.product_id.seller_delay)
+                    if op.product_id.supply_method == 'buy':
+                        location_id = op.warehouse_id.lot_input_id
+                    elif op.product_id.supply_method == 'produce':
+                        location_id = op.warehouse_id.lot_stock_id
+                    else:
+                        continue
+                    proc_id = procurement_obj.create(cr, uid, {
+                        'name': 'OP:'+str(op.id),
+                        'date_planned': newdate.strftime('%Y-%m-%d'),
+                        'product_id': op.product_id.id,
+                        'product_qty': qty,
+                        'product_uom': op.product_uom.id,
+                        'location_id': op.warehouse_id.lot_input_id.id,
+                        'procure_method': 'make_to_order',
+                        'origin': op.name
+                    })
+                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                            'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                            'button_check', cr)
+                    orderpoint_obj.write(cr, uid, [op.id],
+                            {'procurement_id': proc_id})
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

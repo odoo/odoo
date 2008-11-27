@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 import time
 import wizard
 import osv
@@ -29,48 +28,38 @@ import pooler
 section_form = '''<?xml version="1.0"?>
 <form string="Create Menu">
     <separator string="Menu Information" colspan="4"/>
-    <field name="menu_name"/>
-    <field name="menu_parent_id"/>
+    <label string="Want to create a Index on Selected Pages ? "/>
 </form>'''
 
-section_fields = {
-    'menu_name': {'string':'Menu Name', 'type':'char', 'required':True, 'size':64},
-    'menu_parent_id': {'string':'Parent Menu', 'type':'many2one', 'relation':'ir.ui.menu', 'required':True},
-}
-
-def wiki_menu_create(self, cr, uid, data, context):
+def wiki_do_index(self, cr, uid, data, context):
+    ids = data['ids']
     pool = pooler.get_pool(cr.dbname)
-    group = pool.get('wiki.groups').browse(cr, uid, data['id'])
-
-    action_id = pool.get('ir.actions.act_window').create(cr, uid, {
-        'name': group.name,
-        'view_type':'form',
-        'view_mode':"tree,form",
-        'context': "{'group_id':%d, 'section':%d}" % (group.id, group.section),
-        'domain': "[('group_id','child_of',[%d])]" % (group.id,),
-        'res_model': 'wiki.wiki'
-    })
-    pool.get('ir.ui.menu').create(cr, uid, {
-        'name': data['form']['menu_name'],
-        'parent_id': data['form']['menu_parent_id'],
-        'icon': 'STOCK_JUSTIFY_FILL',
-        'action': 'ir.actions.act_window,'+str(action_id)
-    }, context)
+    wiki_pool = pool.get('wiki.wiki')
+    
+    iid = ','.join([str(x) for x in ids])
+    sSQL = "Select id, section from wiki_wiki where id in (%s) order by section " % (iid)
+    cr.execute(sSQL)
+    wiki = cr.fetchall()
+    i = 1
+    for wk in wiki:
+        wiki_pool.write(cr, uid, [wk[0]], {'section':i})
+        i+=1
+        
     return {}
 
-class wizard_create_menu(wizard.interface):
+class make_index(wizard.interface):
     states = {
         'init': {
             'actions': [], 
-            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
+            'result': {'type':'form', 'arch':section_form, 'fields':{}, 'state':[('end','Cancel'),('yes','Create Index')]}
         },
-        'create_menu': {
-            'actions': [wiki_menu_create], 
+        'yes': {
+            'actions': [wiki_do_index], 
             'result': {
                 'type':'state', 
                 'state':'end'
             }
         }
     }
-wizard_create_menu('wiki.create.menu')
+make_index('wiki.make.index')
 

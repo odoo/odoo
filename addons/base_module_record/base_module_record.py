@@ -232,6 +232,21 @@ class base_module_record(osv.osv):
             del result[v]
         return result
 
+    def _create_function(self, cr, uid, doc, model, name, record_id):
+        print 'Create Function', model, name, record_id
+
+        record = doc.createElement('function')
+        record.setAttribute("name", name)
+        record.setAttribute("model", model)
+        record_list = [record]
+
+        value = doc.createElement('value')
+        value.setAttribute('eval', '[ref(\'%s\')]' % (record_id, ))
+        value.setAttribute('model', model)
+
+        record.appendChild(value)
+        return record_list, False
+
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
         record_list = []
         noupdate = False
@@ -242,6 +257,16 @@ class base_module_record(osv.osv):
                 if not id:
                     continue
                 record,update = self._create_record(cr, uid, doc, rec[3], rec[6], id)
+                noupdate = noupdate or update
+                record_list += record
+
+        elif rec[4] in ('menu_create',):
+            for id in rec[5]:
+                id,update = self._get_id(cr, uid, rec[3], id)
+                noupdate = noupdate or update
+                if not id:
+                    continue
+                record,update = self._create_function(cr, uid, doc, rec[3], rec[4], id)
                 noupdate = noupdate or update
                 record_list += record
 

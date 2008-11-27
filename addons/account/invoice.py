@@ -419,6 +419,7 @@ class account_invoice(osv.osv):
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
+            self.button_compute(cr, uid, ids, context={},set_total=True)
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
             if not inv.date_invoice:
@@ -611,6 +612,8 @@ class account_invoice(osv.osv):
             'tax_amount': x.get('tax_amount', False),
             'ref':x.get('ref',False),
             'quantity':x.get('quantity',1.00),
+            'product_id':x.get('product_id', False),
+            'product_uom_id':x.get('uos_id',False),
             'analytic_account_id':x.get('account_analytic_id',False),
         }
 

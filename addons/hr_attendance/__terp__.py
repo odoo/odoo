@@ -28,10 +28,11 @@
     "depends" : ["base","hr",],
     "demo_xml" : ["hr_attendance_demo.xml"],
     "update_xml" : [
+       "security/hr_security.xml",
        "hr_attendance_view.xml",
        "hr_attendance_wizard.xml",
        "hr_attendance_report.xml",
-	   "security/ir.model.access.csv",
+       "security/ir.model.access.csv"
     ],
     "active": False,
     "installable": True,
