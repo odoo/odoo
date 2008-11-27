@@ -122,10 +122,15 @@ class Service(object):
 class LocalService(Service):
     def __init__(self, name):
         self.__name = name
-        s = _service[name]
-        self._service = s
-        for m in s._method:
-            setattr(self, m, s._method[m])
+        try:
+            s = _service[name]
+            self._service = s
+            for m in s._method:
+                setattr(self, m, s._method[m])
+        except KeyError, keyError:
+            Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
+            raise
+
 
 
 class ServiceUnavailable(Exception):
