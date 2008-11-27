@@ -90,16 +90,14 @@ class osv_pool(netsvc.Service):
         except psycopg.IntegrityError, inst:
             for key in self._sql_error.keys():
                 if key in inst[0]:
-                    self.abortResponse(1, 'Constraint Error', 'warning',
-                            self._sql_error[key])
+                    self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
             self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
         except Exception, e:
             import traceback
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                sys.exc_type, sys.exc_value, sys.exc_traceback))
+            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
             logger = Logger()
-            logger.notifyChannel("web-services", LOG_ERROR,
-                    'Exception in call: ' + tb_s)
+            for idx, s in enumerate(tb_s.split('\n')):
+                logger.notifyChannel("web-services", LOG_ERROR, '[%2d]: %s' % (idx, s,))
             raise
 
     def execute(self, db, uid, obj, method, *args, **kw):
