@@ -11,7 +11,9 @@
     "depends" : ["base"],
     "website" : "http://openerp.com",
     "init_xml" : [],
-    "demo_xml" : [],
+    "demo_xml" : [
+        "data/wiki_faq.xml",
+    ],
     "update_xml" : [
         "wiki_view.xml",
         "data/wiki_main.xml",

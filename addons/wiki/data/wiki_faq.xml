@@ -1,1 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="wiki_groups_faq" model="wiki.groups">
+            <field name="name">Internal FAQ</field>
+            <field eval="2" name="section"/>
+            <field name="template">
+== Question ==
+
+What's the Document Management System ?
+
+== Answer ==
+
+== External Links ==
+
+            </field>
+        </record>
+        <record id="wiki_wiki_quickstart0" model="wiki.wiki">
+            <field name="name">Document Management System</field>
+            <field name="tags">dms, document</field>
+            <field name="group_id" ref="wiki_groups_faq"/>
+            <field name="minor_edit">0</field>
+            <field name="toc">1</field>
+            <field name="section">1</field>
+            <field name="summary">Initial Page</field>
+            <field name="text_area">
+== Question ==
+
+What's the Document Management System ?
+
+== Answer ==
+
+The document management system allows you to store, classify, and search your
+enterprise's documents. This module (called '''document''') provides an FTP access to all your ERP's
+ressources.  For a dynamic and efficient classification, the folders structure
+is provided by others objects.  It is very usefull to track documents related
+to projects, products, sales, contracts, etc.
+
+Keypoints:
+
+* FTP Access
+* Indexation of PDF, DOC, ODT.
+* Virtual files and folders
+
+Integration Benefits:
+
+* Stores automatically ERP reports
+* Automatic classification of ressources
+* Shared access rights for DMS and ERP
+* Store emails with outlook Plugin
+
+== External Links ==
+
+* http://openerp.com
+            </field>
+        </record>
+    </data>
+</openerp>
