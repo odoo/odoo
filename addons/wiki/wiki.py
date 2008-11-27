@@ -42,10 +42,10 @@ class WikiGroup(osv.osv):
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created Date", select=True),
-       'template': fields.text('Wiki Template')
+       'template': fields.text('Wiki Template'),
+       'section': fields.boolean("Make Section?")
     }
 WikiGroup()
-
 
 class Wiki(osv.osv):
     _name="wiki.wiki"
@@ -59,7 +59,7 @@ class Wiki(osv.osv):
         'create_date':fields.datetime("Created on", select=True),
         'write_date':fields.datetime("Last modified", select=True),
         'tags':fields.char('Tags', size=1024),
-        'history_id':fields.one2many('wiki.wiki.history','history_wiki_id','History Lines'),
+        'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
         'summary':fields.char('Summary',size=256, select=True),
         'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
@@ -85,26 +85,26 @@ class Wiki(osv.osv):
                 'section': section
             }
         }
-
-    def read(self, cr, uid, cids, fields=None, context=None, load='_classic_read'):
-        ids = []
-        for id in cids:
-            if type(id) == type(1):
-                ids.append(id)
-            elif type(id) == type(u''):
-                ids.append(10)
-        result = super(Wiki, self).read(cr, uid, ids, fields, None, load='_classic_read')
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        return super(Wiki, self).copy(cr, uid, id, {'wiki_id':False}, context)
+        
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(Wiki,self).write(cr, uid, ids, vals, context)
+        history = self.pool.get('wiki.wiki.history')
+        
+        if vals.get('text_area'):
+            for id in ids:
+                res = {
+                    'minor_edit':vals.get('minor_edit', True),
+                    'text_area':vals.get('text_area',''),
+                    'write_uid':uid,
+                    'wiki_id' : id,
+                    'summary':vals.get('summary','')
+                }
+                history.create(cr, uid, res)
         return result
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('text_area'):
-            vals['history_id']=[(0,0,{
-                'minor_edit':vals.get('minor_edit', False),
-                'text_area':vals['text_area'],
-                'modify_by':uid,
-                'summary':vals.get('summary','')
-            })]
-        return super(Wiki,self).write(cr, uid, ids, vals, context)
 Wiki()
 
 class History(osv.osv):
@@ -113,17 +113,15 @@ class History(osv.osv):
     _rec_name="date_time"
     _order = 'id DESC'
     _columns={
-      'date_time':fields.datetime("Date",select=True),
+      'create_date':fields.datetime("Date",select=True),
       'text_area':fields.text("Text area",select=True),
       'minor_edit':fields.boolean('This is a major edit ?',select=True),
       'summary':fields.char('Summary',size=256, select=True),
-      'modify_by':fields.many2one('res.users',"Modify By", select=True),
-      'hist_write_date':fields.datetime("Last modified", select=True),
-      'history_wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
+      'write_uid':fields.many2one('res.users',"Modify By", select=True),
+      'wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
     }
     _defaults = {
-        'hist_write_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'modify_by': lambda obj,cr,uid,context: uid,
+        'write_uid': lambda obj,cr,uid,context: uid,
     }
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib
