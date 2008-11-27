@@ -117,27 +117,24 @@
             <field name="group_id" ref="mrp_property_group_psu"/>
             <field name="name">PSU LC Power LC6550</field>
         </record>
-        
+
         <!--
 	Resource: mrp.routing
 	-->
-        
+
         <record id="mrp_routing_0" model="mrp.routing">
             <field name="workcenter_lines">[1]</field>
-            <field name="name">Assembly of pre-defined PC</field>
-            <field model="stock.location" name="location_id" search="[('name','=','Stock')]"/>
+            <field name="name">Assembly Line 1</field>
         </record>
         <record id="mrp_routing_1" model="mrp.routing">
             <field name="workcenter_lines">[2]</field>
-            <field name="name">Assembly of made to measure PC</field>
-            <field model="stock.location" name="location_id" search="[('name','=','Stock')]"/>
+            <field name="name">Custom Assembly Line</field>
         </record>
         <record id="mrp_routing_2" model="mrp.routing">
             <field name="workcenter_lines">[3]</field>
-            <field name="name">Assembly main board + processor</field>
-            <field model="stock.location" name="location_id" search="[('name','=','Stock')]"/>
+            <field name="name">Component Manufacturing</field>
         </record>
-        
+
         <!--
 	Resource: mrp.routing.workcenter
 	-->

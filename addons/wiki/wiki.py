@@ -53,11 +53,11 @@ class Wiki(osv.osv):
     _order = 'section,create_date desc'
     _columns={
         'name':fields.char('Title', size=256, select=True, required=True),
-        'write_uid':fields.many2one('res.users',"Last Modified By"),
+        'write_uid':fields.many2one('res.users',"Last Author"),
         'text_area':fields.text("Content", select=True),
         'create_uid':fields.many2one('res.users','Author', select=True),
         'create_date':fields.datetime("Created on", select=True),
-        'write_date':fields.datetime("Last modified", select=True),
+        'write_date':fields.datetime("Modification Date", select=True),
         'tags':fields.char('Tags', size=1024),
         'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
@@ -85,14 +85,12 @@ class Wiki(osv.osv):
                 'section': section
             }
         }
-    
     def copy(self, cr, uid, id, default=None, context=None):
         return super(Wiki, self).copy(cr, uid, id, {'wiki_id':False}, context)
-        
+
     def write(self, cr, uid, ids, vals, context=None):
         result = super(Wiki,self).write(cr, uid, ids, vals, context)
         history = self.pool.get('wiki.wiki.history')
-        
         if vals.get('text_area'):
             for id in ids:
                 res = {
