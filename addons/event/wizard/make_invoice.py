@@ -89,15 +89,10 @@ def _makeInvoices(self, cr, uid, data, context):
 
             data_product=pool_obj.get('product.product').browse(cr,uid,[reg.event_id.product_id.id])
             a = reg.partner_invoice_id.property_account_receivable.id
-
-            result_analytic = obj_lines.product_id_change(cr, uid, ids=[] , product = reg.event_id.product_id.id, uom =False ,partner_id=reg.partner_invoice_id.id)
-            analytic_id = False
-            if result_analytic['value'].has_key('account_analytic_id') and result_analytic['value']['account_analytic_id']:
-                analytic_id = result_analytic['value']['account_analyitic_id']
-
             for tax in data_product[0].taxes_id:
                 tax_ids.append(tax.id)
-            inv_id =pool_obj.get('account.invoice.line').create(cr, uid, {
+
+            vals = {
                     'name': reg.name,
                     'account_id':value['value']['account_id'],
                     'price_unit': reg.unit_price,
@@ -107,8 +102,18 @@ def _makeInvoices(self, cr, uid, data, context):
                     'product_id':reg.event_id.product_id.id,
                     'invoice_line_tax_id': [(6,0,tax_ids)],
                     'note':False,
-                    'account_analytic_id' : analytic_id
-            })
+            }
+
+            result_analytic = obj_lines.product_id_change(cr, uid, ids=[] , product = reg.event_id.product_id.id, uom =False ,partner_id=reg.partner_invoice_id.id)
+            analytic_id = False
+            if result_analytic['value'].has_key('account_analytic_id') and result_analytic['value']['account_analytic_id']:
+                analytic_id = result_analytic['value']['account_analyitic_id']
+                vals.update({'account_analyitic_id':analytic_id})
+            if result_analytic['value'].has_key('analytics_id') and result_analytic['value']['analytics_id']:
+                analytic_id = result_analytic['value']['analytics_id']
+                vals.update({'analytics_id':analytic_id})
+            
+            inv_id =pool_obj.get('account.invoice.line').create(cr, uid,vals )
 
             inv = {
                 'name': reg.invoice_label,
