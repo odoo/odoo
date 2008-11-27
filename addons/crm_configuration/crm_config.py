@@ -142,8 +142,6 @@ class crm_menu_config_wizard(osv.osv_memory):
                     fp = None
                 if fp:
                     tools.convert_xml_import(cr, 'crm_configuration', fp,  idref, 'init', noupdate=True)
-        for name in idref.keys():
-            cr.execute('delete from ir_model_data where name=%s and module=%s', (name, 'crm_configuration'))
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
