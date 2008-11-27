@@ -16,8 +16,9 @@
     ],
     "update_xml" : [
         "wiki_view.xml",
-        "data/wiki_main.xml",
         "data/wiki_quickstart.xml",
+        "data/wiki_main.xml",
+        "data/wiki_faq.xml",
         "wizard/wizard_view.xml",
         "security/ir.model.access.csv"
     ],
