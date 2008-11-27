@@ -78,8 +78,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wiki">
-                    <field name="section"/>
                     <field name="name"/>
+                    <field name="section"/>
+                    <field name="review"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
                 </tree>
@@ -98,10 +99,11 @@
                         <field name="section" select="2" invisible="not context.get('section',False)"/>
                         <field name="write_date" readonly="1" select="2"/>
                         <field name="write_uid" readonly="1" select="2"/>
-                        <field name="tags" select="2" groups="base.group_extended"/>
+                        <field name="review" select="1"/>
                         <field name="minor_edit" select="2" groups="base.group_extended"/>
                         <field name="toc"/>
                         <field name="summary" colspan="4" select="2" groups="base.group_extended"/>
+                        <field name="tags" select="2" groups="base.group_extended"/>
                     </group>
                     <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                 </form>
