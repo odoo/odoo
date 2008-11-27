@@ -1,19 +1,10 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-		<record id="wiki_groups_help0" model="wiki.groups">
-			<field name="name">Help</field>
-			<field eval="1" name="section"/>
-		</record>
-	</data>
-	<data>
 		<record id="wiki_groups_wikiformatting0" model="wiki.groups">
-			<field name="name">Wiki Formatting</field>
-			<field name="parent_id" ref="wiki_groups_help0"/>
+			<field name="name">Help - Using The Wiki</field>
 			<field eval="1" name="section"/>
 		</record>
-	</data>
-	<data>
 		<record id="wiki_wiki_quickstart0" model="wiki.wiki">
 			<field name="name">Basic Wiki Editing</field>
 			<field name="tags">help, quick start, wiki, formatting</field>
