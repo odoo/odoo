@@ -32,9 +32,12 @@ class mrp_procurement(osv.osv):
             sale_ids = sline.search(cr, uid, [('procurement_id','=',procurement.id)], context)
             content = ''
             l = None
+            project_id = None
             for line in sline.browse(cr, uid, sale_ids, context=context):
                 content += (line.notes or '')
                 l = line
+                if line.order_id.project_id:
+                    content+="\n\n"+line.order_id.project_id.complete_name
 
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
@@ -43,7 +46,7 @@ class mrp_procurement(osv.osv):
                 'planned_hours': procurement.product_qty,
                 'remaining_hours': procurement.product_qty,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': l and l.order_id.note or '',
+                'notes': "b"+(l and l.order_id.note or ''),
                 'procurement_id': procurement.id,
                 'description': content,
                 'date_deadline': procurement.date_planned,

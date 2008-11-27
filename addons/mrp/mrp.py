@@ -769,6 +769,7 @@ class mrp_procurement(osv.osv):
             " a make to order method."),
 
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
+        'note': fields.text('Note'),
 
         'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
