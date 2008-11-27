@@ -300,7 +300,7 @@ class product_template(osv.osv):
 
     def _check_uom(self, cursor, user, ids):
         for product in self.browse(cursor, user, ids):
-            if product.uom_id.id <> product.uom_po_id.id:
+            if product.uom_id.category_id.id <> product.uom_po_id.category_id.id:
                 return False
         return True
 

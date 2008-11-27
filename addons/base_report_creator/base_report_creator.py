@@ -306,7 +306,7 @@ from
     
     def _aggregation_error(self, cr, uid, ids):
         aggregate_columns = ('int','float')
-        apply_functions = ('sum','min','max','avg')
+        apply_functions = ('sum','min','max','avg','count')
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:
             for fld in obj.field_ids:
@@ -349,7 +349,7 @@ class report_creator_field(osv.osv):
         'sequence': fields.integer('Sequence'),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
-        'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),
+        'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('count','Count'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),
         'graph_mode': fields.selection([('','/'),('x','X Axis'),('y','Y Axis')], 'Graph Mode'),
         'calendar_mode': fields.selection([('','/'),('date_start','Starting Date'),('date_end','Ending Date'),('date_delay','Delay'),('color','Uniq Colors')], 'Calendar Mode'),
     }

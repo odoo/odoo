@@ -41,7 +41,7 @@ form = '''<?xml version="1.0"?>
 </form>'''
 
 fields = {
-    'file': {'string':'Select a PDF File', 'type':'binary','required':True,'filters':['*.pdf']},
+    'file': {'string':'Select a PDF File', 'type':'binary','required':True,'filters':'*.pdf'},
 }
 
 
@@ -82,6 +82,7 @@ class report_custom(report_int):
         obj_user=pool.get('res.users').browse(cr,uid,uid)
         self.list['printing_user']=obj_user.name
         self.list['company_name']=obj_user.company_id.name
+        self.list['company_country']=obj_user.company_id.partner_id.country
         self.list['company_vat']=obj_user.company_id.partner_id.vat
         self.list['printing_time']=time.strftime('%H:%M:%S')
         self.list['printing_date']=time.strftime('%D')

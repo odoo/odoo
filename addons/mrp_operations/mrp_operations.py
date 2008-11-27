@@ -54,7 +54,7 @@ class mrp_production_workcenter_line(osv.osv):
     }
     _defaults = {
         'state': lambda *a: 'draft',
-        'delay': lambda *a: '0 Days 00 hrs and 00 mins'
+        'delay': lambda *a: 0.0
     }
 
     def modify_production_order_state(self,cr,uid,ids,action):

@@ -247,10 +247,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Journal">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="type"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="active" select="1"/>
+                        <field name="type"/>
+                        <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
+                    </group>
+
                     <notebook colspan="4">
                         <page string="General Information">
                             <field name="view_id"/>
@@ -853,6 +857,7 @@
                             <field name="ref"/>
                             <field name="debit" sum="Total Debit"/>
                             <field name="credit" sum="Total Credit"/>
+                            <field name="analytic_account_id"/>
                             <field name="state"/>
                         </tree>
                     </field>

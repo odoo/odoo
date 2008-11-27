@@ -113,8 +113,8 @@
                     <field name="title" select="1"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="create_uid" select="1"/>
-                    <field name="create_date" select="1"/>
+                    <field name="create_uid" select="2"/>
+                    <field name="create_date" select="2"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -125,7 +125,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Attached To" colspan="2"/>
-                        <field name="res_model" select="1" readonly="1"/>
+                        <field name="res_model" select="2" readonly="1"/>
                         <field name="res_id" readonly="1"/>
                     </group>
                     <separator string="Preview" colspan="4"/>
@@ -151,7 +151,7 @@
                     <group colspan="2" col="2">
                         <separator string="File Information" colspan="2"/>
                         <field name="file_size" readonly="1"/>
-                        <field name="parent_id" readonly="1"/>
+                        <field name="parent_id" readonly="1" select="2"/>
                     </group>
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
