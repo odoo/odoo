@@ -2,25 +2,26 @@
 <openerp>
 	<data>
 		<record id="wiki_groups_help0" model="wiki.groups">
-			<field eval="&quot;&quot;&quot;Help&quot;&quot;&quot;" name="name"/>
+			<field name="name">Help</field>
 			<field eval="1" name="section"/>
 		</record>
 	</data>
 	<data>
 		<record id="wiki_groups_wikiformatting0" model="wiki.groups">
-			<field eval="&quot;&quot;&quot;Wiki Formatting&quot;&quot;&quot;" name="name"/>
+			<field name="name">Wiki Formatting</field>
 			<field name="parent_id" ref="wiki_groups_help0"/>
 			<field eval="1" name="section"/>
 		</record>
 	</data>
 	<data>
 		<record id="wiki_wiki_quickstart0" model="wiki.wiki">
-			<field eval="&quot;&quot;&quot;Quick Start&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;help, quick start, wiki, formatting&quot;&quot;&quot;" name="tags"/>
-			<field eval="0" name="minor_edit"/>
-			<field eval="&quot;&quot;&quot;1&quot;&quot;&quot;" name="section"/>
-			<field eval="&quot;&quot;&quot;quick start help for the wiki formating&quot;&quot;&quot;" name="summary"/>
-			<field  name="text_area">==Basic Fromatting==
+			<field name="name">Basic Wiki Editing</field>
+			<field name="tags">help, quick start, wiki, formatting</field>
+			<field name="minor_edit">0</field>
+			<field name="toc">1</field>
+			<field name="section">1.1</field>
+			<field name="summary">Initial Page</field>
+			<field  name="text_area">==Basic Wiki Editing==
 You can ''italicize text'' by putting 2 
 apostrophes on each side. 
 3 apostrophes will embolden '''the text'''. 
@@ -43,19 +44,23 @@ apostrophes on each side.
 ==Links==
 ===Internal===
 You give the link as same as the wiki Page Title
-<br/>
-See also : [[Complete Help]]
+
+Go back to Main Page : [[The Open ERP wiki]]
 ===External===
 You can give link to the other Web page over the Internet easily  [http://google.com Visit Google]
 ==Attachments==
 ===Images===
-You can get the External links easily <br/>
+You can get the External links easily
+
 img:http://images.google.co.in/intl/en_ALL/images/images_hp.gif
 
-==Headings==
-=1st Level Heading=
-==2nd Level Heading==
-===3rd Level Heading===
+==Play with Open ERP Records==
+* edit:res.partner|False|Create New Partner
+* edit:res.partner|China Export|Edit China Export
+* edit:res.country|India|Edit Country - India
+
+==Working with Attachments==
+* Download File : attach:document.doc
 
 ==Unnumbered List==
 * ''Unordered lists'' are easy to do:
@@ -83,7 +88,7 @@ A newline starts a new paragraph.
 ::: 3 colons to indent 3 times, and so on.
 
 ==Table==
-<nowiki>
+&lt;nowiki&gt;
 {| border="1" cellspacing="0" cellpadding="5" align="left"
 ! Web site
 ! Link
@@ -93,7 +98,8 @@ A newline starts a new paragraph.
 | [http://openerp.com]
 | [[ mailto:fp@tinyerp.com ]]
 |}
-</nowiki>
+&lt;/nowiki&gt;
+
 {| border="1" cellspacing="0" cellpadding="5" align="left"
 ! Web site
 ! Link
@@ -103,8 +109,15 @@ A newline starts a new paragraph.
 | [http://openerp.com]
 | [[ mailto:fp@tinyerp.com ]]
 |}
-<br/><br/>]]&gt;
-            </field>
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+==Headings==
+=1st Level Heading=
+==2nd Level Heading==
+===3rd Level Heading===
+</field>
 			<field name="group_id" ref="wiki_groups_wikiformatting0"/>
 		</record>
 	</data>
