@@ -58,6 +58,34 @@ class account_move_line(osv.osv):
                 del data[f]
         return data
 
+    def create_analytic_lines(self, cr, uid, ids, context={}):
+        for obj_line in self.browse(cr, uid, ids, context):
+            if obj_line.analytic_account_id:
+                amt = (obj_line.credit or  0.0) - (obj_line.debit or 0.0)
+                vals_lines={
+                    'name': obj_line.name,
+                    'date': obj_line.date,
+                    'account_id': obj_line.analytic_account_id.id,
+                    'unit_amount':obj_line.quantity,
+                    'product_id': obj_line.product_id and obj_line.product_id.id or False,
+                    'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
+                    'amount': amt,
+                    'general_account_id': obj_line.account_id.id,
+                    'journal_id': obj_line.journal_id.analytic_journal_id.id,
+                    'ref': obj_line.ref,
+                    'move_id':obj_line.id
+                }
+                new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
+        return True
+
+    def _default_get_move_form_hook(self, cursor, user, data):
+        '''Called in the end of default_get method for manual entry in account_move form'''
+        if data.has_key('analytic_account_id'):
+            del(data['analytic_account_id'])
+        if data.has_key('account_tax_id'):
+            del(data['account_tax_id'])
+        return data
+
     def _default_get(self, cr, uid, fields, context={}):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
@@ -86,6 +114,7 @@ class account_move_line(osv.osv):
             s = -total_new
             data['debit'] = s>0  and s or 0.0
             data['credit'] = s<0  and -s or 0.0
+            data = self._default_get_move_form_hook(cr, uid, data)
             return data
         # Ends: Manual entry from account.move form
 
@@ -278,6 +307,8 @@ class account_move_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
+        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_id': fields.many2one('product.product', 'Product'),
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
@@ -863,7 +894,7 @@ class account_move_line(osv.osv):
                     'account_tax_id': False,
                     'tax_code_id': tax[tax_code],
                     'tax_amount': tax[tax_sign] * abs(tax['amount']),
-                    'account_id': tax[account_id],
+                    'account_id': tax[account_id] or vals['account_id'],
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }

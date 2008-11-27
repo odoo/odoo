@@ -30,6 +30,9 @@
 from osv import osv
 from osv import fields
 
+def mult_add(i, j):
+    """Sum each digits of the multiplication of i and j."""
+    return reduce(lambda x, y: x + int(y), str(i*j), 0)
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'

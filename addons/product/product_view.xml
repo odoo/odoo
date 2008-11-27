@@ -455,37 +455,83 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Template">
-                    <notebook>
+                    <group colspan="2" col="4">
+                        <separator string="Product Description" colspan="4"/>
+                        <field name="name" select="1"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Product Type" colspan="2"/>
+                        <field name="sale_ok" select="2"/>
+                        <field name="purchase_ok" select="2"/>
+                        <field groups="base.group_extended" name="rental" select="2"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Information">
-                            <field colspan="4" name="name" select="1"/>
-                            <field name="categ_id" select="1"/>
-                            <field name="type" select="1"/>
-                            <field digits="(14, 3)" name="volume"/>
-                            <newline/>
-                            <field digits="(14, 3)" name="weight"/>
-                            <field digits="(14, 3)" name="weight_net"/>
-                            <field name="procure_method"/>
-                            <field name="state"/>
-                            <field name="uom_id"/>
-                            <field name="uom_po_id"/>
-                            <field colspan="4" name="description"/>
-                            <newline/>
-                            <field name="list_price"/>
-                            <field name="standard_price"/>
-                            <field name="product_manager"/>
-                            <field name="cost_method"/>
+                            <group colspan="2" col="2">
+                                <separator string="Procurement" colspan="2"/>
+                                <field name="type" select="2"/>
+                                <field name="procure_method"/>
+                                <field name="supply_method"/>
+                            </group>
+
+                            <group colspan="2" col="2" groups="base.group_extended">
+                                <separator string="Weigths" colspan="2"/>
+                                <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="status">
+                                <separator string="Status" colspan="2"/>
+                                <field name="categ_id" select="1"/>
+                                <field name="state" select="2"/>
+                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="uom">
+                                <separator string="UOM" colspan="2"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
+                                <separator string="Second UoM" colspan="2"/>
+                                <field name="uos_id"/>
+                                <field name="uos_coeff"/>
+                                <field name="mes_type"/>
+                            </group>
+
                         </page>
-                        <page string="Procurement">
-                            <field name="supply_method" select="2"/>
-                            <field name="rental" select="2"/>
+                        <page string="Procurement &amp; Locations">
+                            <group colspan="2" col="2" name="delay">
+                                <separator string="Delays" colspan="2"/>
+                                <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                                <field name="produce_delay"/>
+                                <field name="warranty"/>
+                            </group>
+                            <group colspan="2" col="2" name="store">
+                                <separator string="Storage Localisation" colspan="2"/>
+                                <field name="loc_rack"/>
+                                <field name="loc_row"/>
+                                <field name="loc_case"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="misc">
+                                <separator string="Miscelleanous" colspan="2"/>
+                            </group>
+
+                        </page>
+                        <page string="Prices &amp; Suppliers">
+                            <separator string="Base Prices" colspan="4"/>
+                            <field name="standard_price"/>
+                            <field name="list_price"/>
+                            <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
-                            <field name="sale_delay" select="2"/>
-                            <field name="sale_ok" select="2"/>
-                            <field name="purchase_ok" select="2"/>
-                            <field name="produce_delay" select="2"/>
-                            <field name="warranty"/>
+                            <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
+                            <separator string="Description"/>
+                            <field colspan="4" name="description" nolabel="1"/>
                             <separator string="Sale Description"/>
                             <field colspan="4" name="description_sale" nolabel="1"/>
                             <separator string="Purchase Description"/>

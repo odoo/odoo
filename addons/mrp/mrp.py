@@ -285,7 +285,7 @@ class mrp_bom(osv.osv):
                         'workcenter_id': wc.id,
                         'sequence': level,
                         'cycle': cycle,
-                        'hour': wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0),
+                        'hour': float(wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
@@ -361,6 +361,24 @@ class mrp_production(osv.osv):
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
         return res
 
+    def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
+        result = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            result[prod.id] = {
+                'hour_total': 0.0,
+                'cycle_total': 0.0,
+            }
+            for wc in prod.workcenter_lines:
+                result[prod.id]['hour_total'] += wc.hour
+                result[prod.id]['cycle_total'] += wc.cycle
+        return result
+
+    def _production_date(self, cr, uid, ids, prop, unknow_none, context={}):
+        result = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            result[prod.id] = prod.date_planned[:10]
+        return result
+
     def _sale_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         return self._get_sale_order(cr,uid,ids,field_name='name')
 
@@ -383,11 +401,13 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True,
             help="Location where the system will stock the finnished products."),
 
+        'date_planned_date': fields.function(_production_date, method=True, type='date', string='Planned Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
         'date_finnished': fields.datetime('End Date'),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
+        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null'),
 
         'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True,
             help="This is the internal picking list take bring the raw materials to the production plan."),
@@ -399,6 +419,9 @@ class mrp_production(osv.osv):
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
         'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'Status', readonly=True),
+        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
+        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
+
         'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
         'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
     }
@@ -449,8 +472,9 @@ class mrp_production(osv.osv):
             if not bom_point:
                 bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
                 if bom_id:
-                    self.write(cr, uid, [production.id], {'bom_id': bom_id})
-                    bom_point = self.pool.get('mrp.bom').browse(cr, uid, [bom_id])[0]
+                    bom_point = self.pool.get('mrp.bom').browse(cr, uid, bom_id)
+                    routing_id = bom_point.routing_id.id or False
+                    self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
 
             if not bom_id:
                 raise osv.except_osv('Error', "Couldn't find bill of material for product")

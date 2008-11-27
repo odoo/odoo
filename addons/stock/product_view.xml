@@ -27,14 +27,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Counter-Part Locations Properties" colspan="4"/>
-                    <field name="property_stock_procurement"/>
-                    <field name="property_stock_production"/>
-                    <field name="property_stock_inventory"/>
-                    <separator string="Accounting Entries" colspan="4"/>
-                    <field name="property_stock_account_input"/>
-                    <field name="property_stock_account_output"/>
+                 <page position="after" string="Information">
+                    <page string="Properties">
+                        <separator string="Counter-Part Locations Properties" colspan="4"/>
+                        <field name="property_stock_procurement"/>
+                        <field name="property_stock_production"/>
+                        <field name="property_stock_inventory"/>
+                        <separator string="Accounting Entries" colspan="4"/>
+                        <field name="property_stock_account_input"/>
+                        <field name="property_stock_account_output"/>
+                    </page>
                 </page>
             </field>
         </record>
