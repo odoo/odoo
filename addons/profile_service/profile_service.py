@@ -32,6 +32,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
         'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shippings, ... Install this module if you plan to invoice your customers based on time spent on projects."),
         'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
+        'project_mrp':fields.boolean('Sales Management', help="Manages quotation and sales orders. It allows you to automatically create and invoice tasks on fixes prices from quotations."),
         'account_budget_crossover':fields.boolean('Analytic Budgets', help="Allows you to manage analytic budgets by journals. This module is used to manage budgets of your projects."),
         'board_document':fields.boolean('Document Management',
                     help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),

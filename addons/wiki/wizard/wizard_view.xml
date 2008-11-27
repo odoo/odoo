@@ -2,30 +2,28 @@
 <openerp>
     <data>
         <record id="view_wiki_history_diff" model="ir.ui.view">
-            <field name="name">Wiki Differance</field>
+            <field name="name">Differences</field>
             <field name="model">wizard.wiki.history.show_diff</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="History Differance">
-                	<separator string="Wiki Differance" colspan="4"/>
+                    <separator string="Wiki Differance" colspan="4"/>
                     <field name="diff" widget="html_tag" nolabel="1" colspan="4"/>
                 </form>
             </field>
         </record>
-        
         <act_window
-        	id="act_view_diff" 
-        	name="View Differance" 
-        	res_model="wizard.wiki.history.show_diff" 
-        	src_model="wiki.wiki.history"
-        	target="new"
-        	view_mode="form"
+            id="act_view_diff" 
+            name="Differences" 
+            res_model="wizard.wiki.history.show_diff" 
+            src_model="wiki.wiki.history"
+            target="new"
+            view_mode="form"
         />
-        
         <wizard
             id="wizard_make_index"
             string="Create Index"
             name="wiki.make.index"
             model="wiki.wiki"/>
-	</data>
+    </data>
 </openerp>
