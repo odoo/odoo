@@ -41,7 +41,7 @@ class maintenance_contract(osv.osv):
     _description = "Maintenance Contract"
     _columns = {
         'name' : fields.char('Contract ID', size=256, required=True),
-        'password' : fields.char('password', size=64, invisible=True, required=True),
+        'password' : fields.char('Password', size=64, invisible=True, required=True),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'modules': fields.text('Covered Modules')
