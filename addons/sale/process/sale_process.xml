@@ -8,7 +8,6 @@
     
         <record id="process_process_salesworkflow0" model="process.process">
             <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Sales flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Sales Workflow&quot;&quot;&quot;" name="name"/>
         </record>
         
@@ -35,7 +34,6 @@
             <field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement for each line&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="mrp.process_process_procurementworkflow0"/>
-            <field name="subflow_id" ref="process_process_salesworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -65,7 +63,7 @@
         <record id="process_node_saleprocurement0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;One procurement for each product.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>

@@ -7,7 +7,6 @@
         -->
         
         <record id="process_process_invoiceworkflow0" model="process.process">
-            <field eval="&quot;&quot;&quot;Customer Invoice flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Customer Invoice Workflow&quot;&quot;&quot;" name="name"/>
         </record>
@@ -43,7 +42,7 @@
             <field name="menu_id" ref="account.menu_finance_invoice"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Have a number and entries are generated&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
