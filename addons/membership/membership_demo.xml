@@ -8,6 +8,7 @@
 		<field name="membership_date_from">2008-01-01</field>
 		<field name="membership_date_to">2009-06-01</field>
 		<field name="name">Membership Product - 1</field>
+		<field name="list_price">80</field>
 		<field name="categ_id" ref="product.cat1"/>
 		<field name="type">service</field>
 	</record>
@@ -17,28 +18,29 @@
 		<field name="membership_date_to">2009-08-01</field>
 		<field name="name">Membership Product - 2</field>
 		<field name="categ_id" ref="product.cat1"/>
+		<field name="list_price">80</field>
 		<field name="type">service</field>
 	</record>
 
 <!-- Demo data for paid member -->
 	<record id="paid_member_0" model="res.partner">
-		<field name="name">Member Partner - Paid</field>
+		<field name="name">Milieu Defensie - Member</field>
 	</record>
 
 <!-- Demo data for invoiced member -->
 	<record id="inv_member_0" model="res.partner">
-		<field name="name">Member Partner - Invoice</field>
+		<field name="name">MSF - PI</field>
 	</record>
 
 <!-- Demo data for cancel member -->
 	<record id="cancel_member_0" model="res.partner">
-		<field name="name">Member Partner - Cancel</field>
+		<field name="name">WWF - C</field>
 		<field name="membership_cancel">2008-01-01</field>
 	</record>
 
 <!-- Demo data for waiting member -->
 	<record id="waiting_member_0" model="res.partner">
-		<field name="name">Member Partner - Waiting</field>
+		<field name="name">Organisation A</field>
 	</record>
 
 <!-- Demo data for res.partner.address -->
@@ -175,13 +177,13 @@
 
 <!-- Demo data for free member -->
 	<record id="free_member_0" model="res.partner">
-		<field name="name">Member Partner - Free</field>
+		<field name="name">Oasis - Free</field>
 		<field name="free_member">True</field>
 	</record>
 
 <!-- Demo data for associate member -->
 	<record id="associate_member_0" model="res.partner">
-		<field name="name">Member Partner - Associate</field>
+		<field name="name">Silicium NGO - Associate</field>
 		<field name="associate_member" ref="paid_member_0"/>
 	</record>
 	<record id="associate_member_1" model="res.partner">
@@ -191,7 +193,7 @@
 
 <!-- Demo data for non member -->
 	<record id="non_member_0" model="res.partner">
-		<field name="name">Member Partner - None</field>
+		<field name="name">MSF - Switzerland</field>
 	</record>
 
 	</data>
