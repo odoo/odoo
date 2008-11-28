@@ -134,9 +134,9 @@
             <rng:optional><rng:attribute name="id" /> </rng:optional>
             <rng:attribute name="model" />
             <rng:optional><rng:attribute name="forcecreate" /></rng:optional>
-            <rng:oneOrMore>
+            <rng:zeroOrMore>
                 <rng:ref name="field" />
-            </rng:oneOrMore>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
