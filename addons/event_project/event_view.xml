@@ -10,7 +10,7 @@
 			<field name="inherit_id" ref="event.view_event_form"/>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="budget_id" position="after">
+				<field name="register_max" position="after">
 					<separator string="Tasks management" colspan="4"/>
 					<field name="project_id"/>
 					<button string="Create Retro-Planning" name="%(event_wiz)d" type="action"/>

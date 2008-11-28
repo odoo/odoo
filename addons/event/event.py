@@ -135,7 +135,6 @@ class event(osv.osv):
         'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='Check this box if you want ot use the automatic confirmation emailing or the reminder'),
         'mail_registr':fields.text('Registration Email',help='This email will be sent when someone subscribes to the event.'),
         'mail_confirm': fields.text('Confirmation Email', help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."),
-        'budget_id':fields.many2one('account.budget.post','Budget'),
         'product_id':fields.many2one('product.product','Product', required=True),
     }
     _defaults = {
@@ -216,6 +215,9 @@ class event_registration(osv.osv):
                 if not src:
                     raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
+
+    def _create_invoice_lines(self, cr, uid, ids, vals):
+        return self.pool.get('account.invoice.line').create(cr, uid,vals )
 
     _name= 'event.registration'
     _description = 'Event Registration'
