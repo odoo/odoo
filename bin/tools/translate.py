@@ -483,7 +483,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) # FIXME translate message
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
@@ -604,7 +604,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             logger.notifyChannel("init", netsvc.LOG_INFO,
                     "translation file loaded succesfully")
     except IOError:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+        filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
+        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
