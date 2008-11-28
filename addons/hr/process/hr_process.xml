@@ -7,7 +7,6 @@
 		-->
     
 		<record id="process_process_employeecontractworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Employee Contract flow for services companies.&quot;&quot;&quot;" name="note"/>
 			<field eval="1" name="active"/>
 			<field eval="&quot;&quot;&quot;Employee Contract Workflow&quot;&quot;&quot;" name="name"/>
 		</record>
@@ -17,8 +16,6 @@
 		-->
 	
 		<record id="process_node_jobshiring0" model="process.node">
-			<!--<field name="menu_id" ref="crm_configuration.menu_crm_case_categ0_act11"/>
-			<field name="model_id" ref="crm.model_crm_case"/> -->
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Jobs hiring&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Process to search, interview and evaluate new candidates&quot;&quot;&quot;" name="note"/>

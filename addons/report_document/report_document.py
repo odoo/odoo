@@ -153,8 +153,8 @@ class report_document_wall(osv.osv):
                f.user_id as user_id, f.user_id as user,
                to_char(f.create_date,'Month') as month 
                from ir_attachment f 
-               where create_date in (
-                   select max(create_date) 
+               where f.create_date in (
+                   select max(i.create_date) 
                    from ir_attachment i 
                    inner join res_users u on (i.user_id=u.id) 
                    group by i.user_id) group by f.user_id,f.create_date 

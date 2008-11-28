@@ -1,21 +1,19 @@
-# Bulgarian translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* account_followup
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 16:26+0000\n"
-"PO-Revision-Date: 2008-11-05 19:47+0000\n"
-"Last-Translator: lem0na <nickyk@gmx.net>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:50:20+0000\n"
+"PO-Revision-Date: 2008-11-28 16:50:20+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_ids:0
@@ -32,6 +30,12 @@ msgstr "Вид на условие"
 #: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
 msgid "All payable entries"
 msgstr "Всички платими записи"
+
+#. module: account_followup
+#, python-format
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+msgid "No Follow up Defined"
+msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -134,11 +138,8 @@ msgstr "Отчет за клиентска сметка"
 
 #. module: account_followup
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-"символи!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -157,14 +158,8 @@ msgstr "Платено"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid ""
-"Exception made if there was a mistake of ours, it seems that the following "
-"bills staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days."
-msgstr ""
-"Грешка предизвикана от нас, изглежда следните сметки остават неплатени. "
-"Моля,  в следващите 8 дена предприемете необходимите мерки да се погрижите "
-"за тези плащания."
+msgid "Exception made if there was a mistake of ours, it seems that the following bills staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days."
+msgstr "Грешка предизвикана от нас, изглежда следните сметки остават неплатени. Моля,  в следващите 8 дена предприемете необходимите мерки да се погрижите за тези плащания."
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,sendmail,end:0
@@ -239,14 +234,8 @@ msgstr "Невалиден XML за преглед на архитектурат
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"departement at (+32).10.68.94.39."
-msgstr ""
-"Вашето плащане бе изпълнено след като този e-mail бе изпратен, моля считайте "
-"сегашното като празно. Не се притеснявайте да се обадите на нашия търговски "
-"отдел на тел. ......"
+msgid "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39."
+msgstr "Вашето плащане бе изпълнено след като този e-mail бе изпратен, моля считайте сегашното като празно. Не се притеснявайте да се обадите на нашия търговски отдел на тел. ......"
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -288,6 +277,12 @@ msgstr "Уважаеми г-н/г-жо,"
 #: wizard_view:account_followup.followup.print.all,sendmail:0
 msgid "Mail not sent to following Partners , Email not available !"
 msgstr "Не е изпратен e-mail на следните партньори, не е даден e-mail !"
+
+#. module: account_followup
+#, python-format
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+msgid "You must define at least one follow up for your company !"
+msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -456,3 +451,4 @@ msgstr "Фирма"
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
 msgstr "Ниво на следствие"
+

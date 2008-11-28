@@ -1,21 +1,19 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* project
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:19+0000\n"
-"PO-Revision-Date: 2008-11-18 21:19+0000\n"
-"Last-Translator: LucaSub <subluca@gmail.com>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:00:06+0000\n"
+"PO-Revision-Date: 2008-11-28 17:00:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:01+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -23,19 +21,15 @@ msgid "Assigned tasks"
 msgstr "Attività Assegnate"
 
 #. module: project
-#: field:project.project,members:0
-msgid "Project members"
-msgstr "Membri Progetto"
-
-#. module: project
 #: model:ir.actions.report.xml,name:project.report_project_desc
 msgid "Project Description"
 msgstr "Descrizione Progetto"
 
 #. module: project
-#: wizard_field:project.task.delegate,init,name:0
-msgid "Title"
-msgstr "Titolo"
+#, python-format
+#: code:addons/project/wizard/close_task.py:0
+msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_close_task
@@ -43,19 +37,14 @@ msgid "Close Task"
 msgstr "Chiudi Attività"
 
 #. module: project
-#: view:project.project:0
-msgid "Toggle activity"
-msgstr "Passa a Attività"
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr ""
 
 #. module: project
-#: field:project.task,effective_hours:0
-msgid "Eff. Hours"
-msgstr "Ore Effettive"
-
-#. module: project
-#: view:project.task:0
-msgid "Delegations"
-msgstr "Deleghe"
+#: selection:project.project,state:0
+msgid "Template"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -64,9 +53,13 @@ msgstr "Ore da Confermare"
 
 #. module: project
 #: field:project.project,progress_rate:0
-#: field:project.task,progress_rate:0
 msgid "Progress"
 msgstr "Avanzamento"
+
+#. module: project
+#: help:project.task,remaining_hours:0
+msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
+msgstr ""
 
 #. module: project
 #: field:project.project,child_id:0
@@ -74,19 +67,31 @@ msgid "Subproject"
 msgstr "Sottoprogetto"
 
 #. module: project
-#: field:project.task,history:0
-msgid "Task Details"
-msgstr "Dettagli Attività"
+#: field:project.project,members:0
+msgid "Project Members"
+msgstr ""
 
 #. module: project
-#: field:project.project,tax_ids:0
-msgid "Applicable taxes"
-msgstr "Tasse applicabili"
+#: model:process.node,name:project.process_node_taskbydelegate0
+msgid "Task by delegate"
+msgstr ""
 
 #. module: project
-#: field:project.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Attività delegate"
+#: model:ir.actions.act_window,name:project.open_view_my_project_my_run
+#: model:ir.ui.menu,name:project.menu_open_view_my_project_my_run
+msgid "My Running Projects"
+msgstr ""
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_my_project_open
+#: model:ir.ui.menu,name:project.menu_open_view_my_project_open
+msgid "Projects Structure"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task4
@@ -95,24 +100,34 @@ msgid "My Tasks"
 msgstr "Le Mie Attività"
 
 #. module: project
-#: field:project.project,tariff:0
-msgid "Sales price"
-msgstr "Prezzo di Vendita"
+#: wizard_field:project.task.delegate,init,prefix:0
+msgid "Your Task Title"
+msgstr ""
 
 #. module: project
-#: view:project.project:0
+#: help:project.project,members:0
+msgid "Project's member. Not used in any computation, just for information purpose."
+msgstr ""
+
+#. module: project
+#: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "Imposta a Sospeso"
+msgstr ""
+
+#. module: project
+#: model:process.node,note:project.process_node_drafttask0
+msgid "Define the Requirements and Set Planned Hours."
+msgstr ""
+
+#. module: project
+#: model:process.node,name:project.process_node_donetask0
+msgid "Done task"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
-msgid "Open task"
-msgstr "Apri Attività"
-
-#. module: project
-#: model:ir.actions.wizard,name:project.wizard_billing
-msgid "Bill tasks"
-msgstr "Fattura Attività"
+msgid "New Project Based on Template"
+msgstr ""
 
 #. module: project
 #: selection:project.task,priority:0
@@ -125,20 +140,20 @@ msgid "Validate"
 msgstr "Convalida"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task5_prog
-#: model:ir.ui.menu,name:project.menu_tasks_yours_prog
+#: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
+#: model:ir.ui.menu,name:project.menu_tasks_yours_prog_prog
 msgid "My Tasks in Progress"
 msgstr "Le Mie Attività in corso"
 
 #. module: project
-#: field:project.task,start_sequence:0
-msgid "Wait for previous sequences"
-msgstr "Attendi sequenze precedenti"
+#: view:project.project:0
+msgid "Set as Template"
+msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Task Information"
-msgstr "Informazioni Attività"
+#: model:process.node,name:project.process_node_drafttask0
+msgid "Draft task"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -147,9 +162,9 @@ msgid "Task"
 msgstr "Attività"
 
 #. module: project
-#: wizard_button:project.wiz_bill,init,bill:0
-msgid "Ok"
-msgstr "Ok"
+#: view:project.task:0
+msgid "Reactivate"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -165,9 +180,14 @@ msgid "Notes"
 msgstr "Note"
 
 #. module: project
-#: view:project.project:0
-msgid "Taxes"
-msgstr "Tasse"
+#: selection:res.company,project_time_mode:0
+msgid "Days"
+msgstr ""
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_analysis
+msgid "Analysis"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -178,21 +198,33 @@ msgid "Project"
 msgstr "Progetto"
 
 #. module: project
+#: view:project.task:0
+msgid "Start Task"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task5_prog_draft
+#: model:ir.ui.menu,name:project.menu_tasks_yours_prog_draft
+msgid "My Draft Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_project_open
+#: model:ir.ui.menu,name:project.menu_open_view_project_open
+msgid "Running projects"
+msgstr ""
+
+#. module: project
 #: selection:project.project,state:0
 #: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task5
-#: model:ir.ui.menu,name:project.menu_tasks_yours
-msgid "My Open Tasks"
-msgstr "Le Mie Attività aperte"
-
-#. module: project
-#: field:project.project,warn_footer:0
-msgid "Mail footer"
-msgstr "Piè di Pagina della Mail"
+#: field:project.project,warn_header:0
+#: view:project.project:0
+msgid "Mail Header"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -201,30 +233,30 @@ msgid "Task Types"
 msgstr "Tipi Attività"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions
-msgid "Configuration"
-msgstr "Configurazione"
+#: model:process.node,note:project.process_node_donetask0
+msgid "Task is Completed"
+msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn customer"
-msgstr "Avvisa Cliente"
+#: model:process.transition,note:project.process_transition_delegate0
+msgid "Delegates tasks to the other user"
+msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task2
-#: model:ir.ui.menu,name:project.menu_action_view_task2
-msgid "Unbilled closed tasks"
-msgstr "Attività Chiuse e Non Fatturate"
+#, python-format
+#: code:addons/project/project.py:0
+msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
+msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Set Pending"
-msgstr "Imposta a Sospeso"
+#: help:project.task,effective_hours:0
+msgid "Computed using the sum of the task work done."
+msgstr ""
 
 #. module: project
-#: field:project.task,invoice_id:0
-msgid "Generated Invoice"
-msgstr "Fattura generata"
+#: help:project.project,warn_customer:0
+msgid "If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."
+msgstr ""
 
 #. module: project
 #: field:project.project,category_id:0
@@ -237,9 +269,15 @@ msgid "Done by"
 msgstr "Completato da"
 
 #. module: project
-#: field:project.project,mode:0
-msgid "Price setting mode"
-msgstr "Modalità di Definizione del Prezzo"
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.ui.menu,name:project.menu_action_view_task
+msgid "All Tasks"
+msgstr "Tutte le attività"
+
+#. module: project
+#: view:project.task:0
+msgid "Planning"
+msgstr ""
 
 #. module: project
 #: field:project.task,date_deadline:0
@@ -247,22 +285,20 @@ msgid "Deadline"
 msgstr "Scadenza"
 
 #. module: project
-#: field:project.project,warn_manager:0
-msgid "Warn manager"
-msgstr "Avvisa Responsabile"
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
+msgid "Partner"
+msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Mail texts"
-msgstr "Testi Mail"
-
-#. module: project
-#: selection:project.task,state:0
-msgid "Draft"
-msgstr "Bozza"
+#, python-format
+#: code:addons/project/project.py:0
+msgid " (copy)"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours:0
+#: field:project.task,planned_hours:0
 msgid "Planned Hours"
 msgstr "Ore Pianificate"
 
@@ -272,31 +308,64 @@ msgid "Task: %(name)s"
 msgstr "Attività: %(name)s"
 
 #. module: project
+#: view:project.project:0
+msgid "Reset as Project"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Delegations"
+msgstr "Deleghe"
+
+#. module: project
 #: wizard_button:project.task.close,mail_ask,mail_send:0
 msgid "Send Message"
 msgstr "Invia messaggio"
 
 #. module: project
-#: field:project.project,name:0
-msgid "Project name"
-msgstr "Nome Progetto"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_view_my_project
-#: model:ir.ui.menu,name:project.menu_open_view_my_project
 #: view:project.project:0
 msgid "My projects"
 msgstr "I Miei Progetti"
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
+#: view:project.task:0
+msgid "Dates"
+msgstr ""
 
 #. module: project
-#: wizard_field:project.wiz_bill,init,sale_account_id:0
-msgid "Income account"
-msgstr "Contabilità Entrate"
+#: model:process.transition,note:project.process_transition_draftopentask0
+msgid "From draft state, it will come into the open state."
+msgstr ""
+
+#. module: project
+#: field:project.project,state:0
+msgid "State"
+msgstr ""
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_bug
+msgid "Bug"
+msgstr ""
+
+#. module: project
+#: help:project.project,progress_rate:0
+msgid "Percent of tasks closed according to the total of tasks todo."
+msgstr ""
+
+#. module: project
+#: help:project.project,notes:0
+msgid "Internal description of the project."
+msgstr ""
+
+#. module: project
+#: field:project.project,parent_id:0
+msgid "Parent Project"
+msgstr ""
+
+#. module: project
+#: field:project.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Attività delegate"
 
 #. module: project
 #: field:project.task,type:0
@@ -305,9 +374,21 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: project
-#: wizard_field:project.wiz_bill,init,total:0
-msgid "Total Price"
-msgstr "Prezzo Totale"
+#: selection:res.company,project_time_mode:0
+msgid "Weeks"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task5_prog
+#: model:ir.ui.menu,name:project.menu_tasks_yours_prog
+msgid "My Current Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_project
+#: model:ir.ui.menu,name:project.menu_open_view_project
+msgid "New Project"
+msgstr ""
 
 #. module: project
 #: selection:project.task,priority:0
@@ -315,21 +396,25 @@ msgid "Medium"
 msgstr "Medio"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work
-#: view:project.task.work:0
-msgid "Task Work"
-msgstr "Esecuzione Attività"
+#: model:ir.model,name:project.model_project_task_type
+msgid "Project task type"
+msgstr "Tipo Attività di Progetto"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_action_view_task
-msgid "All Tasks"
-msgstr "Tutte le attività"
+#: field:project.project,planned_hours:0
+msgid "Planned Time"
+msgstr ""
+
+#. module: project
+#: selection:res.company,project_time_mode:0
+msgid "Hours"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_pending
 #: model:ir.ui.menu,name:project.menu_tasks_yours_pending
 msgid "My Pending Tasks"
-msgstr "Le Mie Attività in sospeso"
+msgstr "Le Mie Attività in attesa"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task7
@@ -338,38 +423,63 @@ msgid "Unassigned Tasks"
 msgstr "Attività Non Assegnate"
 
 #. module: project
+#: wizard_field:project.task.delegate,init,name:0
+msgid "Delegated Title"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_my_project
+#: model:ir.ui.menu,name:project.menu_open_view_my_project
+msgid "My Projects"
+msgstr ""
+
+#. module: project
 #: view:project.task:0
 msgid "Extra Info"
 msgstr "Informazioni Aggiuntive"
 
 #. module: project
-#: field:project.project,pricelist_id:0
-msgid "Pricelist"
-msgstr "Listino Prezzi"
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Configurazione"
 
 #. module: project
-#: field:project.project,warn_header:0
-msgid "Mail header"
-msgstr "Intestazione Mail"
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
+msgid "Starting Date"
+msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_type
-msgid "Project task type"
-msgstr "Tipo Attività di Progetto"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_view_project
-#: model:ir.ui.menu,name:project.menu_open_view_project
-#: model:ir.ui.menu,name:project.next_id_54
+#: model:ir.ui.menu,name:project.menu_all_project
 #: view:project.project:0
 msgid "Projects"
 msgstr "Progetti"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task3
-#: model:ir.ui.menu,name:project.menu_action_view_task3
-msgid "Unbilled open tasks"
-msgstr "Attività Aperte Non Fatturate"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valido per Visualizzazione Architettura!"
+
+#. module: project
+#: model:process.process,name:project.process_process_tasksworkflow0
+msgid "Tasks workflow"
+msgstr ""
+
+#. module: project
+#: field:project.task,history:0
+msgid "Task Details"
+msgstr "Dettagli Attività"
+
+#. module: project
+#: model:process.node,name:project.process_node_triggerinvoice0
+msgid "Trigger Invoice"
+msgstr ""
+
+#. module: project
+#: wizard_view:project.task.delegate,init:0
+msgid "Validation Task"
+msgstr "Attività di Convalida"
 
 #. module: project
 #: view:project.project:0
@@ -377,10 +487,9 @@ msgid "User: %(user_id)s"
 msgstr "Utente: %(user_id)s"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_view_my_project_open
-#: model:ir.ui.menu,name:project.menu_open_view_my_project_open
-msgid "My open projects"
-msgstr "I Miei Progetti Aperti"
+#: field:project.task,delay_hours:0
+msgid "Delay Hours"
+msgstr ""
 
 #. module: project
 #: field:project.project,contact_id:0
@@ -388,18 +497,39 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: project
-#: view:project.project:0
 #: view:project.task:0
+#: model:process.transition,name:project.process_transition_delegate0
 msgid "Delegate"
 msgstr "Delega"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_main
-msgid "Project Management"
-msgstr "Gestione Progetti"
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_new
+msgid "Create a Task"
+msgstr ""
 
 #. module: project
-#: view:project.project:0
+#: view:project.task:0
+msgid "Project Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
+msgid "Project Management"
+msgstr "Gestione progetti"
+
+#. module: project
+#: field:res.company,project_time_mode:0
+msgid "Project Time Unit"
+msgstr ""
+
+#. module: project
+#: model:process.node,note:project.process_node_opentask0
+msgid "Encode your working hours."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_tasks
 #: view:project.task:0
 msgid "Tasks"
 msgstr "Attività"
@@ -421,20 +551,19 @@ msgid "Project's members"
 msgstr "Membri di Progetto"
 
 #. module: project
+#: help:project.project,warn_header:0
+msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr ""
+
+#. module: project
+#: help:project.task,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "Attività di Progetto"
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "Re-open"
-msgstr "Riapri"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_opened
-msgid "Opened tasks"
-msgstr "Attività Aperte"
 
 #. module: project
 #: view:project.project:0
@@ -442,30 +571,29 @@ msgid "Status: %(state)s"
 msgstr "Stato: %(state)s"
 
 #. module: project
-#: field:project.task,billable:0
-msgid "To be invoiced"
-msgstr "Da Fatturare"
+#: view:project.task:0
+msgid "Planned"
+msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_action_billable
-msgid "Billable Tasks"
-msgstr "Attività Fatturabili"
+#: help:project.project,total_hours:0
+msgid "Sum of total hours of all tasks related to this project."
+msgstr ""
 
 #. module: project
-#: view:project.project:0
 #: view:project.task:0
 msgid "Delegated tasks"
 msgstr "Attività Delegate"
 
 #. module: project
+#: view:project.task:0
+msgid "Information"
+msgstr "Informazioni"
+
+#. module: project
 #: view:project.project:0
 msgid "Administration"
 msgstr "Amministrazione"
-
-#. module: project
-#: selection:project.project,mode:0
-msgid "By Task"
-msgstr "Per Attività"
 
 #. module: project
 #: wizard_field:project.task.close,mail_ask,email:0
@@ -478,9 +606,11 @@ msgid "Partner Info"
 msgstr "Informazioni Partner"
 
 #. module: project
-#: wizard_view:project.wiz_bill,init:0
-msgid "Billing wizard"
-msgstr "Wizard Fatturazione"
+#: selection:project.task,state:0
+#: view:project.task:0
+#: model:process.transition.action,name:project.process_transition_action_opendrafttask0
+msgid "Draft"
+msgstr "Bozza"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -488,30 +618,43 @@ msgid "Low"
 msgstr "Basso"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "Set Draft"
-msgstr "Imposta a Bozza"
+#: field:project.project,manager:0
+msgid "Project Manager"
+msgstr ""
 
 #. module: project
 #: selection:project.project,state:0
 #: selection:project.task,state:0
+#: view:project.project:0
+#: view:project.task:0
 msgid "Pending"
 msgstr "In sospeso"
 
 #. module: project
-#: field:project.project,state:0
 #: field:project.task,state:0
 msgid "Status"
 msgstr "Stato"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_view_all_project_unclosed_open
-#: model:ir.actions.act_window,name:project.open_view_project_open
-#: model:ir.ui.menu,name:project.menu_all_project_unclosed_open
-#: model:ir.ui.menu,name:project.menu_open_view_project_open
-msgid "Open projects"
-msgstr "Progetti Aperti"
+#: model:process.transition,name:project.process_transition_draftopentask0
+msgid "Draft Open task"
+msgstr ""
+
+#. module: project
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
+msgid "Time Spent"
+msgstr ""
+
+#. module: project
+#: field:project.project,name:0
+msgid "Project Name"
+msgstr ""
+
+#. module: project
+#: field:project.project,total_hours:0
+msgid "Total Time"
+msgstr ""
 
 #. module: project
 #: field:project.project,active:0
@@ -521,36 +664,62 @@ msgstr "Attivo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task6_prog
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_opened
 #: model:ir.ui.menu,name:project.menu_action_view_task6_prog
 msgid "Tasks in Progress"
 msgstr "Attività in corso"
 
 #. module: project
-#: view:project.project:0
+#: model:project.task.type,name:project.project_tt_quote
+msgid "Quotation"
+msgstr ""
+
+#. module: project
 #: view:project.task:0
 msgid "Task edition"
 msgstr "Modifica Attività"
 
 #. module: project
-#: view:project.project:0
-msgid "Others"
-msgstr "Altri"
+#: help:project.project,timesheet_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr ""
 
 #. module: project
-#: wizard_field:project.task.delegate,init,prefix:0
-msgid "Prefix of Task"
-msgstr "Prefisso Attività"
+#: model:process.node,name:project.process_node_opentask0
+msgid "Open task"
+msgstr ""
 
 #. module: project
-#: field:project.task,date_start:0
+#: field:project.task,parent_id:0
+msgid "Parent Task"
+msgstr "Attività Superiore"
+
+#. module: project
+#: selection:res.company,project_time_mode:0
+msgid "Months"
+msgstr ""
+
+#. module: project
+#: model:process.transition,note:project.process_transition_opendonetask0
+msgid "When task is completed, it will come into the done state."
+msgstr ""
+
+#. module: project
 #: field:project.task.work,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: project
-#: wizard_field:project.wiz_bill,init,task_total:0
-msgid "Number of tasks"
-msgstr "Numero di Attività"
+#: help:res.company,project_time_mode:0
+msgid "This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr ""
+
+#. module: project
+#, python-format
+#: code:addons/project/wizard/close_task.py:0
+msgid "Error"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -558,15 +727,20 @@ msgid "User's projects"
 msgstr "Utenti dei progetti"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Urgent"
-msgstr "Urgente"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_view_all_project_unclosed
-#: model:ir.ui.menu,name:project.menu_all_project_unclosed
-msgid "Unclosed projects"
-msgstr "Progetti Non Chiusi"
+#: help:project.task,delay_hours:0
+msgid "Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."
+msgstr ""
+
+#. module: project
+#, python-format
+#: code:addons/project/wizard/close_task.py:0
+msgid "Couldn't send mail because your email address is not configured!"
+msgstr ""
 
 #. module: project
 #: wizard_view:project.task.delegate,init:0
@@ -584,6 +758,21 @@ msgid "Assigned to"
 msgstr "Assegnato a"
 
 #. module: project
+#: help:project.task,planned_hours:0
+msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
+msgstr ""
+
+#. module: project
+#: help:project.project,effective_hours:0
+msgid "Sum of spent hours of all tasks related to this project."
+msgstr ""
+
+#. module: project
+#: help:project.project,planned_hours:0
+msgid "Sum of planned hours of all tasks related to this project."
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
 msgid "Month works"
 msgstr "Lavoro Mensile"
@@ -593,11 +782,6 @@ msgstr "Lavoro Mensile"
 #: model:ir.actions.report.xml,name:project.report_project_task_gantt
 msgid "Gantt Representation"
 msgstr "Grafico di Gantt"
-
-#. module: project
-#: view:project.project:0
-msgid "All tasks"
-msgstr "Tutte le Attività"
 
 #. module: project
 #: field:project.task,name:0
@@ -610,6 +794,12 @@ msgid "Date Start: %(date_start)s"
 msgstr "Data Inizio: %(date_start)s"
 
 #. module: project
+#, python-format
+#: code:addons/project/project.py:0
+msgid "Operation Done"
+msgstr ""
+
+#. module: project
 #: selection:project.project,state:0
 #: selection:project.task,state:0
 #: view:project.project:0
@@ -618,25 +808,30 @@ msgid "Done"
 msgstr "Completato"
 
 #. module: project
-#: wizard_button:project.wiz_bill,init,end:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 #: view:project.project:0
 #: view:project.task:0
+#: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
+#: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 msgid "Cancel"
 msgstr "Annulla"
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,state:0
-#: view:project.task:0
-msgid "Open"
-msgstr "Aperto"
+#: help:project.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
+msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Effective hours"
-msgstr "Ore Effettive"
+#: model:process.transition.action,name:project.process_transition_action_draftopentask0
+msgid "Open"
+msgstr ""
+
+#. module: project
+#, python-format
+#: code:addons/project/project.py:0
+msgid "You can not delete a project with tasks. I suggest you to desactivate it."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -644,32 +839,34 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
 
 #. module: project
-#: view:project.task:0
-msgid "Information"
-msgstr "Informazioni"
+#: selection:project.task,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_view_my_project_open_unclosed
-#: model:ir.ui.menu,name:project.menu_open_view_my_project_open_unclosed
-msgid "My unclosed projects"
-msgstr "I Miei Progetti Non Chiusi"
+#: model:process.transition,note:project.process_transition_taskinvoice0
+msgid "After task is completed, Create its invoice."
+msgstr ""
 
 #. module: project
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
+
+#. module: project
+#: field:project.task,remaining_hours:0
+msgid "Remaining Hours"
 msgstr ""
-"Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
 
 #. module: project
-#: field:project.task,parent_id:0
-msgid "Parent Task"
-msgstr "Attività Superiore"
+#: model:process.node,note:project.process_node_triggerinvoice0
+msgid "Trigger invoices from sale order lines (sale subflow)"
+msgstr ""
 
 #. module: project
-#: field:project.project,date_start:0
-msgid "Project started on"
-msgstr "Progetto avviato il"
+#: field:project.project,timesheet_id:0
+msgid "Working Time"
+msgstr ""
 
 #. module: project
 #: wizard_view:project.task.delegate,init:0
@@ -687,56 +884,51 @@ msgid "Send mail to customer"
 msgstr "Invia Mail a Cliente"
 
 #. module: project
-#: field:project.project,timesheet_id:0
-msgid "Working hours"
-msgstr "Ore di Lavoro"
+#: field:project.project,warn_manager:0
+msgid "Warn Manager"
+msgstr ""
 
 #. module: project
-#: field:project.project,planned_hours:0
-#: view:project.task:0
-msgid "Planned hours"
-msgstr "Ore Pianificate"
+#: constraint:project.project:0
+msgid "Error ! You can not create recursive projects."
+msgstr ""
+
+#. module: project
+#: help:project.task,total_hours:0
+msgid "Computed as: Time Spent + Remaining Time."
+msgstr ""
+
+#. module: project
+#: field:project.task,total_hours:0
+msgid "Total Hours"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.close,mail_ask,description:0
 #: field:project.task,description:0
 #: field:project.task.type,description:0
-#: view:project.project:0
-#: view:project.task:0
 msgid "Description"
 msgstr "Descrizione"
 
 #. module: project
-#: field:project.project,date_end:0
-msgid "Project should end on"
-msgstr "Il Progetto dovrebbe concludersi il"
+#: model:process.transition,name:project.process_transition_taskinvoice0
+msgid "Task invoice"
+msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Task definition"
-msgstr "Definizione Attività"
-
-#. module: project
-#: wizard_field:project.wiz_bill,init,journal_id:0
-msgid "Journal"
-msgstr "Registro"
+#: selection:project.task,priority:0
+msgid "Urgent"
+msgstr "Urgente"
 
 #. module: project
 #: field:project.task,work_ids:0
-#: view:project.project:0
 msgid "Work done"
 msgstr "Lavoro Eseguito"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
-msgid "Hours spent"
-msgstr "Ore spese"
-
-#. module: project
-#: field:project.task,progress:0
-msgid "Progress (0-100)"
-msgstr "Progresso (0-100)"
+#: selection:project.project,state:0
+msgid "Running"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,include_info:0
@@ -749,20 +941,25 @@ msgid "Project tasks"
 msgstr "Attività dei Progetti"
 
 #. module: project
-#: field:project.project,parent_id:0
-msgid "Parent project"
-msgstr "Progetto Superiore"
+#: help:project.project,warn_manager:0
+msgid "If you check this field, the project manager will receive a request each time a task is completed by his team."
+msgstr ""
 
 #. module: project
-#: field:project.project,partner_id:0
-#: field:project.task,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
+#, python-format
+#: code:addons/project/project.py:0
+msgid "Operation Not Permited !"
+msgstr ""
 
 #. module: project
-#: field:project.task,planned_hours:0
-msgid "Plan. hours"
-msgstr "Ore Pianificate"
+#: model:project.task.type,name:project.project_tt_feature
+msgid "New Feature"
+msgstr ""
+
+#. module: project
+#: field:project.task,progress:0
+msgid "Progress (%)"
+msgstr ""
 
 #. module: project
 #: field:project.task.work,name:0
@@ -775,20 +972,15 @@ msgid "Project task"
 msgstr "Attività del Progetto"
 
 #. module: project
-#: selection:project.project,mode:0
-msgid "By Effective Hour"
-msgstr "Per Ore Effettive"
+#: field:project.task,effective_hours:0
+msgid "Hours Spent"
+msgstr ""
 
 #. module: project
-#: selection:project.project,mode:0
-msgid "By Hour"
-msgstr "Per Ora"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task6
-#: model:ir.ui.menu,name:project.menu_action_view_task6
-msgid "Open Tasks"
-msgstr "Attività Aperte"
+#: model:ir.actions.act_window,name:project.open_view_template_project
+#: model:ir.ui.menu,name:project.menu_template_project
+msgid "Template of Projects"
+msgstr ""
 
 #. module: project
 #: field:project.project,priority:0
@@ -797,15 +989,15 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #. module: project
-#: wizard_view:project.task.delegate,init:0
-msgid "Validation Task"
-msgstr "Attività di Convalida"
+#: help:project.project,warn_footer:0
+msgid "Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_view_all_project
-#: model:ir.ui.menu,name:project.menu_all_project
-msgid "All Projects"
-msgstr "Tutti i Progetti"
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task.work:0
+msgid "Task Work"
+msgstr "Esecuzione Attività"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,state:0
@@ -816,6 +1008,11 @@ msgstr "Stato Convalida"
 #: wizard_button:project.task.close,mail_ask,close:0
 msgid "Quiet close"
 msgstr "Chiudura Riservata"
+
+#. module: project
+#: view:project.task:0
+msgid "Delay"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,user_id:0
@@ -833,16 +1030,23 @@ msgid "Date Stop: %(date_stop)s"
 msgstr "Data di Fine: %(date_stop)s"
 
 #. module: project
-#: wizard_field:project.wiz_bill,init,invoice_num:0
-msgid "Generated invoices"
-msgstr "Fatture Generate"
+#: field:project.project,date_end:0
+msgid "Expected End"
+msgstr ""
 
 #. module: project
-#: wizard_field:project.wiz_bill,init,task_invoice:0
-msgid "Tasks to invoice"
-msgstr "Attività da Fatturare"
+#: model:process.node,note:project.process_node_taskbydelegate0
+msgid "Delegate your task to the other user"
+msgstr ""
 
 #. module: project
-#: field:project.project,manager:0
-msgid "Project manager"
-msgstr "Responsabile del progetto"
+#: field:project.project,warn_footer:0
+#: view:project.project:0
+msgid "Mail Footer"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Automatic variables for headers and footer. Use exactly the same notation."
+msgstr ""
+

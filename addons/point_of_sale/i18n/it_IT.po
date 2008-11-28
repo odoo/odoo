@@ -1,26 +1,19 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* point_of_sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:32+0000\n"
-"PO-Revision-Date: 2008-10-12 23:36+0000\n"
-"Last-Translator: Marius Marolla <mariusmarolla@areablu.net>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:00:06+0000\n"
+"PO-Revision-Date: 2008-11-28 17:00:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Invoice Date:"
-msgstr "Data della fattura:"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: point_of_sale
 #: rml:pos.details_summary:0
@@ -75,6 +68,11 @@ msgid "Select an Open Sale Order"
 msgstr "Seleziona un ordine di vendita aperto"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Invoice Date"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid ","
 msgstr ","
@@ -90,14 +88,14 @@ msgid "Base"
 msgstr "Base"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Fax :"
-msgstr "Fax :"
-
-#. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Subtotale"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Partner Ref."
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_view:pos.payment,ask_pay:0
@@ -215,6 +213,11 @@ msgstr ""
 #: rml:pos.lines:0
 msgid "Journal:"
 msgstr "Registro:"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Fax :"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,partner_id:0
@@ -379,19 +382,9 @@ msgid "Order Ref"
 msgstr "Rif. Ordine"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Draft Invoice"
-msgstr "Bozza Fattura"
-
-#. module: point_of_sale
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Sconto (%)"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "VAT :"
-msgstr "IVA :"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
@@ -404,9 +397,9 @@ msgid "Total qty"
 msgstr "Quantità Totale"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "(incl. taxes):"
-msgstr "(incl.tasse):"
+#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
+msgid "POS Lines"
+msgstr "Righe Punto Vendita"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -417,11 +410,6 @@ msgstr "Ordini di Vendita Punto Vendita"
 #: wizard_button:pos.config.journal,init,set_default_journal:0
 msgid "Define default journals"
 msgstr "Definisci Registri Predefiniti"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Tel. :"
-msgstr "Tel. :"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
@@ -448,11 +436,6 @@ msgstr "Fatturato"
 #: rml:pos.receipt:0
 msgid "Date :"
 msgstr "Data:"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Partner Code:"
-msgstr "Codice Partner"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -488,6 +471,11 @@ msgstr "Riga Ordine Punto Vendita"
 #: rml:pos.lines:0
 msgid "Total Taxes"
 msgstr "Tasse Totali"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "VAT :"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -572,6 +560,11 @@ msgid "Compute"
 msgstr "Calcola"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Total:"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,pickings:0
 msgid "Picking"
 msgstr "Presa"
@@ -621,7 +614,6 @@ msgid "Ma_ke payment"
 msgstr "Produci Pagamento"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: rml:pos.receipt:0
 msgid ":"
 msgstr ":"
@@ -656,6 +648,11 @@ msgstr "Ordine Rimborso:"
 #: rml:pos.receipt:0
 msgid "Qty"
 msgstr "Qta'"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Net Total:"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -710,10 +707,8 @@ msgstr "Descrizione Riga"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -796,6 +791,11 @@ msgid "Pos Lines"
 msgstr "Righe Punto Vendita"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Tel. :"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Operation N° :"
 msgstr "Operazione N°:"
@@ -805,11 +805,6 @@ msgstr "Operazione N°:"
 #: view:pos.order:0
 msgid "Payment"
 msgstr "Pagamento"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
-msgid "POS Lines"
-msgstr "Righe Punto Vendita"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree3
@@ -845,11 +840,6 @@ msgstr "Ordinato per data"
 #: rml:pos.receipt:0
 msgid "Ce bon est valide jusqu'au"
 msgstr "Buono valido fino a"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Total (excl. taxes):"
-msgstr "Totale (tasse escluse):"
 
 #. module: point_of_sale
 #: wizard_button:pos.add_product,init,add:0
@@ -899,7 +889,6 @@ msgid "Supplier Refund"
 msgstr "Rimborso Fornitore"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: field:pos.order,amount_total:0
 msgid "Total"
 msgstr "Totale"
@@ -912,3 +901,4 @@ msgstr "Totale"
 #: field:report.transaction.pos,journal_id:0
 msgid "Journal"
 msgstr "Registro"
+
