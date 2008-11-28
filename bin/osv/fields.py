@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -160,7 +160,7 @@ class char(_column):
             u_symb = symb
         else:
             u_symb = unicode(symb)
-        return u_symb.encode('utf8')[:self.size]
+        return u_symb[:self.size].encode('utf8')
 
 
 class text(_column):
@@ -678,7 +678,8 @@ class related(function):
                     where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
                 if field_detail[1] in ['integer', 'long', 'float','integer_big']:
                     where += " %s.%s %s '%d' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-        query += where.rstrip('and')
+        if len(where)>10:
+            query += where.rstrip('and')
         cr.execute(query)
         ids = []
         for id in cr.fetchall():
@@ -707,7 +708,7 @@ class related(function):
                 else:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
-                res[data.id] = t_data.id
+                res[data.id] = (t_data.id,t_data.name)
             else:
                 res[data.id] = t_data
         return res

@@ -28,6 +28,7 @@ import SimpleXMLRPCServer, signal, sys, xmlrpclib
 import SocketServer
 import socket
 import logging
+import logging.handlers
 import os
 
 _service = {}
@@ -121,10 +122,15 @@ class Service(object):
 class LocalService(Service):
     def __init__(self, name):
         self.__name = name
-        s = _service[name]
-        self._service = s
-        for m in s._method:
-            setattr(self, m, s._method[m])
+        try:
+            s = _service[name]
+            self._service = s
+            for m in s._method:
+                setattr(self, m, s._method[m])
+        except KeyError, keyError:
+            Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
+            raise
+
 
 
 class ServiceUnavailable(Exception):
@@ -153,6 +159,9 @@ def init_logger():
         logf = config['logfile']
         # test if the directories exist, else create them
         try:
+            dirname = os.path.dirname(logf)
+            if not os.path.isdir(dirname):
+                res = os.makedirs(dirname)
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except:
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
@@ -271,23 +280,18 @@ class GenericXMLRPCRequestHandler:
             raise xmlrpclib.Fault(s, tb_s)
 
 
-class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
-        SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
 
-
-class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
-        SimpleXMLRPCServer.SimpleXMLRPCServer):
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
 
     def server_bind(self):
         try:
-            self.socket.setsockopt(socket.SOL_SOCKET,
-                    socket.SO_REUSEADDR, 1)
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
         except:
-            sys.stderr.write("ERROR: address already in use\n")
+            Logger().notifyChannel('init', LOG_ERROR, 'Address already in use')
             sys.exit(1)
-
 
 class HttpDaemon(threading.Thread):
 
@@ -298,21 +302,18 @@ class HttpDaemon(threading.Thread):
         self.secure = secure
         if secure:
             from ssl import SecureXMLRPCServer
-            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
-                    SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
-                    SecureXMLRPCServer.SecureXMLRPCServer):
 
+            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
+                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
+
+            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
                 def server_bind(self):
                     try:
-                        self.socket.setsockopt(socket.SOL_SOCKET,
-                                socket.SO_REUSEADDR, 1)
+                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                         SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
                     except:
                         sys.stderr.write("ERROR: address already in use\n")
                         sys.exit(1)
-
 
             self.server = SecureThreadedXMLRPCServer((interface, port),
                     SecureXMLRPCRequestHandler, 0)

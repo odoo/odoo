@@ -116,7 +116,7 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id, _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
+        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -128,9 +128,12 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
         if not id in self._data:
             self._data[id] = {'id': id}
+
         self._cache = cache
+        pass
 
     def __getitem__(self, name):
         if name == 'id':
@@ -183,7 +186,7 @@ class browse_record(object):
                         if data[n]:
                             obj = self._table.pool.get(f._obj)
                             compids = False
-                            if not f._classic_write:
+                            if type(data[n]) in (type([]),type( (1,) )):
                                 ids2 = data[n][0]
                             else:
                                 ids2 = data[n]
@@ -297,26 +300,26 @@ class orm_template(object):
     _description = None
     _inherits = {}
     _table = None
+    _invalids = set()
 
     def _field_create(self, cr, context={}):
-        cr.execute("SELECT id FROM ir_model_data WHERE name='%s'" % ('model_'+self._name.replace('.','_'),))
+        cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
-            id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id,model, name, info) VALUES (%s, %s, %s, %s)", (id, self._name, self._description, self.__doc__))
+            model_id = cr.fetchone()[0]
+            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s,%s)", (model_id, self._name, self._description, self.__doc__, 'base'))
             if 'module' in context:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                    ('model_'+self._name.replace('.','_'), context['module'], 'ir.model', id)
+                    ('model_'+self._name.replace('.','_'), context['module'], 'ir.model', model_id)
                 )
+        else:
+            model_id = cr.fetchone()[0]
         cr.commit()
 
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
         cols = {}
         for rec in cr.dictfetchall():
             cols[rec['name']] = rec
-
-        cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
-        model_id = cr.fetchone()[0]
 
         for (k, f) in self._columns.items():
             vals = {
@@ -648,6 +651,9 @@ class orm_template(object):
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         raise _('The read method is not implemented on this object !')
 
+    def get_invalid_fields(self,cr,uid):
+        return list(self._invalids)
+
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
         lng = context.get('lang', False) or 'en_US'
@@ -660,9 +666,12 @@ class orm_template(object):
                 error_msgs.append(
                         _("Error occured while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
+                self._invalids.update(fields)
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
+        else:
+            self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
@@ -1020,6 +1029,9 @@ class orm_template(object):
                             xml += "<newline/>"
                 xml += "</form>"
             elif view_type == 'tree':
+                _rec_name = self._rec_name
+                if _rec_name not in self._columns:
+                    _rec_name = self._columns.keys()[0]
                 xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
                 '''<tree string="%s"><field name="%s"/></tree>''' \
                 % (self._description, self._rec_name)
@@ -1094,6 +1106,47 @@ class orm_template(object):
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise _('The copy method is not implemented on this object !')
+
+    def read_string(self, cr, uid, id, langs, fields=None, context=None):
+        if not context:
+            context = {}
+        res = {}
+        res2 = {}
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
+        if not fields:
+            fields = self._columns.keys() + self._inherit_fields.keys()
+        for lang in langs:
+            res[lang] = {'code': lang}
+            for f in fields:
+                if f in self._columns:
+                    res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
+                    if res_trans:
+                        res[lang][f] = res_trans
+                    else:
+                        res[lang][f] = self._columns[f].string
+        for table in self._inherits:
+            cols = intersect(self._inherit_fields.keys(), fields)
+            res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
+        for lang in res2:
+            if lang in res:
+                res[lang] = {'code': lang}
+            for f in res2[lang]:
+                res[lang][f] = res2[lang][f]
+        return res
+
+    def write_string(self, cr, uid, id, langs, vals, context=None):
+        if not context:
+            context = {}
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+        for lang in langs:
+            for field in vals:
+                if field in self._columns:
+                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field])
+        for table in self._inherits:
+            cols = intersect(self._inherit_fields.keys(), vals)
+            if cols:
+                self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
+        return True
 
 
 class orm_memory(orm_template):
@@ -2530,47 +2583,6 @@ class orm(orm_template):
             trans_obj.create(cr,uid,record)
 
         return new_id
-
-    def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        if not context:
-            context = {}
-        res = {}
-        res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
-        if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
-        for lang in langs:
-            res[lang] = {'code': lang}
-            for f in fields:
-                if f in self._columns:
-                    res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
-                    if res_trans:
-                        res[lang][f] = res_trans
-                    else:
-                        res[lang][f] = self._columns[f].string
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
-            res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
-        for lang in res2:
-            if lang in res:
-                res[lang] = {'code': lang}
-            for f in res2[lang]:
-                res[lang][f] = res2[lang][f]
-        return res
-
-    def write_string(self, cr, uid, id, langs, vals, context=None):
-        if not context:
-            context = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
-        for lang in langs:
-            for field in vals:
-                if field in self._columns:
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field])
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
-            if cols:
-                self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
-        return True
 
     def check_recursion(self, cr, uid, ids, parent=None):
         if not parent:

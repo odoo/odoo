@@ -323,19 +323,30 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False, ssl=False, debug=False,subtype='plain'):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False,subtype='plain'):
     """Send an email."""
-    if not email_cc:
-        email_cc=[]
-    if not email_bcc:
-        email_bcc=[]
     import smtplib
     from email.MIMEText import MIMEText
+    from email.MIMEBase import MIMEBase
     from email.MIMEMultipart import MIMEMultipart
     from email.Header import Header
     from email.Utils import formatdate, COMMASPACE
+    from email.Utils import formatdate, COMMASPACE
+    from email import Encoders
 
-    msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
+    if not ssl:
+        ssl = config.get('smtp_ssl', False)
+
+    if not email_cc:
+        email_cc = []
+    if not email_bcc:
+        email_bcc = []
+
+    if not attach:
+        msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
+    else:
+        msg = MIMEMultipart()
+
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
@@ -347,8 +358,19 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if email_bcc:
         msg['Bcc'] = COMMASPACE.join(email_bcc)
     msg['Date'] = formatdate(localtime=True)
+
     if tinycrm:
-        msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
+        msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
+
+    if attach:
+        msg.attach( MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
+
+        for (fname,fcontent) in attach:
+            part = MIMEBase('application', "octet-stream")
+            part.set_payload( fcontent )
+            Encoders.encode_base64(part)
+            part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
+            msg.attach(part)
     try:
         s = smtplib.SMTP()
 
@@ -362,78 +384,16 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
-        s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
-        s.quit()
-    except Exception, e:
-        import logging
-        logging.getLogger().error(str(e))
-    return True
 
-
-#----------------------------------------------------------
-# Emails
-#----------------------------------------------------------
-def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False):
-    """Send an email."""
-    if not email_cc:
-        email_cc=[]
-    if not email_bcc:
-        email_bcc=[]
-    if not attach:
-        attach=[]
-    import smtplib
-    from email.MIMEText import MIMEText
-    from email.MIMEBase import MIMEBase
-    from email.MIMEMultipart import MIMEMultipart
-    from email.Header import Header
-    from email.Utils import formatdate, COMMASPACE
-    from email import Encoders
-
-    msg = MIMEMultipart()
-
-    if not ssl:
-        ssl = config.get('smtp_ssl', False)
-
-    msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
-    msg['From'] = email_from
-    del msg['Reply-To']
-    if reply_to:
-        msg['Reply-To'] = reply_to
-    msg['To'] = COMMASPACE.join(email_to)
-    if email_cc:
-        msg['Cc'] = COMMASPACE.join(email_cc)
-    if email_bcc:
-        msg['Bcc'] = COMMASPACE.join(email_bcc)
-    if tinycrm:
-        msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
-    msg['Date'] = formatdate(localtime=True)
-    msg.attach( MIMEText(body or '', _charset='utf-8', _subtype="html"))
-    for (fname,fcontent) in attach:
-        part = MIMEBase('application', "octet-stream")
-        part.set_payload( fcontent )
-        Encoders.encode_base64(part)
-        part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
-        msg.attach(part)
-    try:
-        s = smtplib.SMTP()
-
-        if debug:
-            s.debuglevel = 5
-        s.connect(config['smtp_server'], config['smtp_port'])
-        if ssl:
-            s.ehlo()
-            s.starttls()
-            s.ehlo()
-
-        if config['smtp_user'] or config['smtp_password']:
-            s.login(config['smtp_user'], config['smtp_password'])
-        s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
+        s.sendmail(email_from, 
+                   flatten([email_to, email_cc, email_bcc]), 
+                   msg.as_string()
+                  )
         s.quit()
     except Exception, e:
         import logging
         logging.getLogger().error(str(e))
         return False
-
     return True
 
 #----------------------------------------------------------
@@ -642,23 +602,34 @@ def to_xml(s):
 
 def get_languages():
     languages={
-        'zh_CN': 'Chinese (CN)',
-        'zh_TW': 'Chinese (TW)',
-        'cs_CZ': 'Czech',
-        'de_DE': 'Deutsch',
-        'es_AR': 'Español (Argentina)',
-        'es_ES': 'Español (España)',
-        'fr_FR': 'Français',
-        'fr_CH': 'Français (Suisse)',
-        'en_EN': 'English (default)',
-        'hu_HU': 'Hungarian',
-        'it_IT': 'Italiano',
-        'pt_BR': 'Portugese (Brasil)',
-        'pt_PT': 'Portugese (Portugal)',
-        'nl_NL': 'Nederlands',
-        'ro_RO': 'Romanian',
-        'ru_RU': 'Russian',
-        'sv_SE': 'Swedish',
+        'bg_BG': u'Bulgarian / български',
+        'ca_ES': u'Catalan / Català',
+        'cs_CZ': u'Czech / Čeština',
+        'de_DE': u'German / Deutsch',
+        'en_CA': u'English (CA)',
+        'en_EN': u'English (default)',
+        'en_GB': u'English (UK)',
+        'en_US': u'English (US)',
+        'es_AR': u'Spanish (AR) / Español (AR)',
+        'es_ES': u'Spanish / Español',
+        'et_ET': u'Estonian / Eesti keel',
+        'fr_BE': u'French (BE) / Français (BE)',
+        'fr_CH': u'French (CH) / Français (CH)',
+        'fr_FR': u'French / Français',
+        'hr_HR': u'Croatian / hrvatski jezik',
+        'hu_HU': u'Hungarian / Magyar',
+        'it_IT': u'Italian / Italiano',
+        'lt_LT': u'Lithuanian / Lietuvių kalba',
+        'nl_NL': u'Dutch / Nederlands',
+        'pt_BR': u'Portugese (BR) / português (BR)',
+        'pt_PT': u'Portugese / português',
+        'ro_RO': u'Romanian / limba română',
+        'ru_RU': u'Russian / русский язык',
+        'sl_SL': u'Slovenian / slovenščina',
+        'sv_SE': u'Swedish / svenska',
+        'uk_UK': u'Ukrainian / украї́нська мо́ва',
+        'zh_CN': u'Chinese (CN) / 简体中文' ,
+        'zh_TW': u'Chinese (TW) / 正體字',
     }
     return languages
 
@@ -666,7 +637,9 @@ def scan_languages():
     import glob
     file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
-    return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    ret = [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    ret.sort(key=lambda k:k[1])
+    return ret
 
 
 def get_user_companies(cr, user):

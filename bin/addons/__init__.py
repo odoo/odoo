@@ -45,6 +45,9 @@ sys.path.insert(1, _ad)
 if ad != _ad:
     sys.path.insert(1, ad)
 
+# Modules already loaded
+loaded = []
+
 class Graph(dict):
 
     def addNode(self, name, deps):
@@ -152,12 +155,15 @@ def get_module_resource(module, *args):
 def get_modules():
     """Returns the list of module names
     """
+    def listdir(dir):
+        def clean(name):
+            name = os.path.basename(name)
+            if name[-4:] == '.zip':
+                name = name[:-4]
+            return name
+        return map(clean, os.listdir(dir))
 
-    module_list = os.listdir(ad)
-    module_names = [os.path.basename(m) for m in module_list]
-    module_list += [m for m in os.listdir(_ad) if m not in module_names]
-
-    return module_list
+    return list(set(listdir(ad) + listdir(_ad)))
 
 def create_graph(module_list, force=None):
     if not force:
@@ -166,8 +172,6 @@ def create_graph(module_list, force=None):
     packages = []
 
     for module in module_list:
-        if module[-4:]=='.zip':
-            module = module[:-4]
         try:
             mod_path = get_module_path(module)
             if not mod_path:
@@ -184,8 +188,9 @@ def create_graph(module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-
-    current,later = Set([p for p, dep, data in packages]), Set()
+    
+    dependencies = dict([(p, deps) for p, deps, data in packages])
+    current, later = Set([p for p, dep, data in packages]), Set()
     while packages and current > later:
         package, deps, datas = packages[0]
 
@@ -206,9 +211,10 @@ def create_graph(module_list, force=None):
             later.add(package)
             packages.append((package, deps, datas))
         packages.pop(0)
-
+    
     for package in later:
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
+        unmet_deps = filter(lambda p: p not in graph, dependencies[package])
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
 
     return graph
 
@@ -221,6 +227,36 @@ def init_module_objects(cr, module_name, obj_list):
         obj._auto_init(cr, {'module': module_name})
         cr.commit()
 
+#
+# Register module named m, if not already registered
+# 
+def register_class(m):
+    global loaded
+    if m in loaded:
+        return
+    logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
+    sys.stdout.flush()
+    loaded.append(m)
+    mod_path = get_module_path(m)
+    if not os.path.isfile(mod_path+'.zip'):
+        imp.load_module(m, *imp.find_module(m))
+    else:
+        import zipimport
+        try:
+            zimp = zipimport.zipimporter(mod_path+'.zip')
+            zimp.load_module(m)
+        except zipimport.ZipImportError:
+            logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
+
+def register_classes():
+    return 
+    module_list = get_modules()
+    for package in create_graph(module_list):
+        m = package.name
+        register_class(m)
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
+        sys.stdout.flush()
+
 def load_module_graph(cr, graph, status=None, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
@@ -232,6 +268,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
         m = package.name
+        register_class(m)
         logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s' % m)
         sys.stdout.flush()
         pool = pooler.get_pool(cr.dbname)
@@ -297,25 +334,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 
     pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
-
-def register_classes():
-    module_list = get_modules()
-    for package in create_graph(module_list):
-        m = package.name
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
-        sys.stdout.flush()
-
-        mod_path = get_module_path(m)
-        if not os.path.isfile(mod_path+'.zip'):
-            # XXX must restrict to only addons paths
-            imp.load_module(m, *imp.find_module(m))
-        else:
-            import zipimport
-            try:
-                zimp = zipimport.zipimporter(mod_path+'.zip')
-                zimp.load_module(m)
-            except zipimport.ZipImportError:
-                logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:

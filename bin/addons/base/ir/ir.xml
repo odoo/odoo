@@ -70,9 +70,26 @@
                     <field name="number_increment"/>
                     <field name="number_next"/>
                     <separator colspan="4" string="Legend (for prefix, suffix)"/>
-                    <label colspan="4" string="Year: %%(year)s"/>
-                    <label colspan="4" string="Month: %%(month)s"/>
-                    <label colspan="4" string="Day: %%(day)s"/>
+                    <group col="8" colspan="4">
+                        <group>
+                            <label colspan="4" string="Year with century: %%(year)s"/>
+                            <label colspan="4" string="Year without century: %%(y)s"/>
+                            <label colspan="4" string="Month: %%(month)s"/>
+                            <label colspan="4" string="Day: %%(day)s"/>
+                        </group>
+                        <group>
+                            <label colspan="4" string="Day of the year: %%(doy)s"/>
+                            <label colspan="4" string="Week of the year: %%(woy)s"/> 
+                            <label colspan="4" string="Day of the week (0:Monday): %%(weekday)s"/>
+                        </group>
+                        <group>
+                            <label colspan="4" string="Hour 00->24: %%(h24)s"/>
+                            <label colspan="4" string="Hour 00->12: %%(h12)s"/>
+                            <label colspan="4" string="Minute: %%(min)s"/>
+                            <label colspan="4" string="Seconde: %%(sec)s"/>
+                        </group>
+                    </group>
+                    <separator colspan="4" string=""/>
                 </form>
             </field>
         </record>
@@ -487,8 +504,8 @@
                 <form string="Attachments">
                     <group colspan="4" col="6">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="1"/>
-                        <field name="create_date" select="1"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
@@ -499,7 +516,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
-                            <field name="res_model" select="1"/>
+                            <field name="res_model" select="2"/>
                             <field name="res_id"/>
                         </group>
                         <separator string="Preview" colspan="4"/>
@@ -1143,7 +1160,7 @@
                             <field name="sms" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','email'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
                             <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','sms'), ('state','=','client_action'), ('state','=','other')]}" />
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
                         </page>
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
@@ -1162,6 +1179,7 @@
                                     <field name="value" colsapan="4"/>
                                 </form>
                             </field>
+                            <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
                         <page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
@@ -1272,7 +1290,7 @@
                         <separator colspan="4" string=""/>
                         <label string="" colspan="2"/>
                         <group colspan="2" col="2">
-                            <button icon="gtk-cancel" special="cancel" string="Skip Step"/>
+                            <button icon="gtk-cancel" name="button_skip" string="Skip Step" type="object"/>
                             <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
                         </group>
                     </group>

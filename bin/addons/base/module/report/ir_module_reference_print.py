@@ -37,12 +37,11 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return modobj.__doc__
 
     def _object_find(self, module):
+        ids2 = self.pool.get('ir.model.data').search(self.cr, self.uid, [('module','=',module), ('model','=','ir.model')])
+        ids = []
+        for mod in self.pool.get('ir.model.data').browse(self.cr, self.uid, ids2):
+            ids.append(mod.res_id)
         modobj = self.pool.get('ir.model')
-        if module=='base':
-            ids = modobj.search(self.cr, self.uid, [('model','=like','res%')])
-            ids += modobj.search(self.cr, self.uid, [('model','=like','ir%')])
-        else:
-            ids = modobj.search(self.cr, self.uid, [('model','=like',module+'%')])
         return modobj.browse(self.cr, self.uid, ids)
 
     def _fields_find(self, obj):

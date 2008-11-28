@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -32,6 +32,7 @@
         "base_menu.xml",
         "security/base_security.xml",
         "res/res_security.xml",
+        "maintenance/maintenance_security.xml",
     ],
     "demo_xml" : [
         "base_demo.xml",
@@ -43,9 +44,9 @@
         "ir/wizard/wizard_menu_view.xml",
         "ir/ir.xml",
         "ir/workflow/workflow_view.xml",
-        "module/module_data.xml",
         "module/module_wizard.xml",
         "module/module_view.xml",
+        "module/module_data.xml",
         "module/module_report.xml",
         "res/res_request_view.xml",
         "res/res_lang_view.xml",
@@ -59,6 +60,7 @@
         "res/partner/partner_data.xml",
         "res/ir_property_view.xml",
         "security/base_security.xml",
+        "maintenance/maintenance_view.xml",
         "security/ir.model.access.csv",
     ],
     "active": True,

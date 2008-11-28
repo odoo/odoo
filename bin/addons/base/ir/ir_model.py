@@ -27,6 +27,7 @@ from osv.orm import except_orm, browse_record
 
 import time
 import tools
+from tools import config
 import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
@@ -74,7 +75,10 @@ class ir_model(osv.osv):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
-            pooler.restart_pool(cr.dbname)
+            self.instanciate(cr, user, vals['model'], context)
+            self.pool.get(vals['model']).__init__(self.pool, cr)
+            self.pool.get(vals['model'])._auto_init(cr,{})
+            #pooler.restart_pool(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context={}):
@@ -83,10 +87,7 @@ class ir_model(osv.osv):
         x_custom_model._name = model
         x_custom_model._module = False
         x_custom_model.createInstance(self.pool, '', cr)
-        if 'x_name' in x_custom_model._columns:
-            x_custom_model._rec_name = 'x_name'
-        else:
-            x_custom_model._rec_name = x_custom_model._columns.keys()[0]
+        x_custom_model._rec_name = 'x_name'
 ir_model()
 
 
@@ -561,18 +562,19 @@ class ir_model_data(osv.osv):
             wf_service.trg_write(uid, model, id, cr)
 
         cr.commit()
-        for (model,id) in self.unlink_mark.keys():
-            if self.pool.get(model):
-                logger = netsvc.Logger()
-                logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
-                try:
-                    self.pool.get(model).unlink(cr, uid, [id])
-                    if self.unlink_mark[(model,id)]:
-                        self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
-                        cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
-                    cr.commit()
-                except:
-                    logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
+        if not config.get('import_partial', False):
+            for (model,id) in self.unlink_mark.keys():
+                if self.pool.get(model):
+                    logger = netsvc.Logger()
+                    logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
+                    try:
+                        self.pool.get(model).unlink(cr, uid, [id])
+                        if self.unlink_mark[(model,id)]:
+                            self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
+                            cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
+                        cr.commit()
+                    except:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
         return True
 ir_model_data()
 

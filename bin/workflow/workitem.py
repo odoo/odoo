@@ -96,6 +96,12 @@ def _execute(cr, workitem, activity, ident, stack):
     if activity['kind']=='dummy':
         if workitem['state']=='active':
             _state_set(cr, workitem, activity, 'complete', ident)
+            if activity['action_id']:
+                print 'ICI'
+                res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
+                if res2:
+                    stack.append(res2)
+                    result=res2
     elif activity['kind']=='function':
         if workitem['state']=='active':
             _state_set(cr, workitem, activity, 'running', ident)

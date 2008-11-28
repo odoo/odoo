@@ -90,16 +90,14 @@ class osv_pool(netsvc.Service):
         except psycopg.IntegrityError, inst:
             for key in self._sql_error.keys():
                 if key in inst[0]:
-                    self.abortResponse(1, 'Constraint Error', 'warning',
-                            self._sql_error[key])
+                    self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
             self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
         except Exception, e:
             import traceback
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                sys.exc_type, sys.exc_value, sys.exc_traceback))
+            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
             logger = Logger()
-            logger.notifyChannel("web-services", LOG_ERROR,
-                    'Exception in call: ' + tb_s)
+            for idx, s in enumerate(tb_s.split('\n')):
+                logger.notifyChannel("web-services", LOG_ERROR, '[%2d]: %s' % (idx, s,))
             raise
 
     def execute(self, db, uid, obj, method, *args, **kw):
@@ -229,7 +227,18 @@ class osv(orm.orm):
                 if hasattr(new, 'update'):
                     new.update(cls.__dict__.get(s, {}))
                 else:
-                    new.extend(cls.__dict__.get(s, []))
+                    if s=='_constraints':
+                        for c in cls.__dict__.get(s, []):
+                            exist = False
+                            for c2 in range(len(new)):
+                                if new[c2][2]==c[2]:
+                                    new[c2] = c
+                                    exist = True
+                                    break
+                            if not exist:
+                                new.append(c)
+                    else:
+                        new.extend(cls.__dict__.get(s, []))
                 nattr[s] = new
             name = hasattr(cls, '_name') and cls._name or cls._inherit
             cls = type(name, (cls, parent_class), nattr)

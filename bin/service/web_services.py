@@ -149,7 +149,7 @@ class db(netsvc.Service):
             try:
                 cr.execute('DROP DATABASE ' + db_name)
             except:
-                logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
                     'DROP DB: %s failed' % (db_name,))
                 raise
             else:
@@ -162,11 +162,6 @@ class db(netsvc.Service):
     def dump(self, password, db_name):
         security.check_super(password)
         logger = netsvc.Logger()
-
-        if tools.config['db_password']:
-            logger.notifyChannel("web-service", netsvc.LOG_ERROR,
-                    'DUMP DB: %s doesn\'t work with password' % (db_name,))
-            raise Exception, "Couldn't dump database with password"
 
         cmd = ['pg_dump', '--format=c']
         if tools.config['db_user']:
@@ -182,7 +177,7 @@ class db(netsvc.Service):
         data = stdout.read()
         res = stdout.close()
         if res:
-            logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+            logger.notifyChannel("web-services", netsvc.LOG_ERROR,
                     'DUMP DB: %s failed\n%s' % (db_name, data))
             raise Exception, "Couldn't dump database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
@@ -194,14 +189,9 @@ class db(netsvc.Service):
         logger = netsvc.Logger()
 
         if self.db_exist(db_name):
-            logger.notifyChannel("web-service", netsvc.LOG_WARNING,
+            logger.notifyChannel("web-services", netsvc.LOG_WARNING,
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
-
-        if tools.config['db_password']:
-            logger.notifyChannel("web-service", netsvc.LOG_ERROR,
-                    'RESTORE DB: %s doesn\'t work with password' % (db_name,))
-            raise Exception, "Couldn't restore database with password"
 
         db = sql_db.db_connect('template1', serialize=1)
         db.truedb.autocommit()
@@ -328,7 +318,7 @@ class common(netsvc.Service):
         res = security.login(db, login, password)
         logger = netsvc.Logger()
         msg = res and 'successful login' or 'bad login or password'
-        logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
         return res or False
 
     def about(self, extended=False):
@@ -480,7 +470,7 @@ class report_spool(netsvc.Service):
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
                     sys.exc_type, sys.exc_value, sys.exc_traceback))
                 logger = netsvc.Logger()
-                logger.notifyChannel('web-service', netsvc.LOG_ERROR,
+                logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = exception
                 self._reports[id]['state'] = True

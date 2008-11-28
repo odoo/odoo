@@ -81,6 +81,7 @@
             <field name="supplier">1</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
+            <field name="website">http://www.syleam.fr</field>
             <field name="name">Syleam</field>
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
         </record>
@@ -201,6 +202,16 @@
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_10"/>
         </record>
+        <record id="res_partner_address_3000" model="res.partner.address">
+            <field name="city">Champs sur Marne</field>
+            <field name="name">Laith Jubair</field>
+            <field name="zip">77420</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="email">info@axelor.com</field>
+            <field name="phone">+33 1 64 61 04 01</field>
+            <field name="street">12 rue Albert Einstein</field>
+            <field name="partner_id" ref="res_partner_desertic_hispafuentes"/>
+        </record>
         <record id="res_partner_address_3" model="res.partner.address">
             <field name="city">Louvain-la-Neuve</field>
             <field name="name">Thomas Passot</field>
@@ -270,6 +281,18 @@
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_2"/>
+        </record>
+        <record id="res_partner_address_11" model="res.partner.address">
+            <field name="city">Alencon</field>
+            <field name="name">Sebastien LANGE</field>
+            <field name="zip">61000</field>
+            <field name="title">M.</field>
+            <field name="email">contact@syleam.fr</field>
+            <field name="street">1 place de l'Église</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_sednacom"/>
         </record>
         <record id="res_partner_address_10" model="res.partner.address">
             <field name="city">Liege</field>

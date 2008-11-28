@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -438,26 +438,12 @@ class actions_server(osv.osv):
     def merge_message(self, cr, uid, keystr, action, context):
         logger = netsvc.Logger()
         def merge(match):
-
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
+            return eval(match[2:-2], {'object':obj, 'context': context,'time':time})
 
-            field = match.group()
-            field = field.replace('[','')
-            field = field.replace(']','')
-            field = field.strip()
-
-            fields = field.split('.')
-            for field in fields:
-                try:
-                    obj = getattr(obj, field)
-                except Exception,e :
-                    logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
-
-            return str(obj)
-
-        com = re.compile('\[\[(.+?)\]\]')
+        com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
         return message
 
@@ -490,9 +476,7 @@ class actions_server(osv.osv):
                 address = self.get_field_value(cr, uid, action, context)
                 if not address:
                     raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
-                
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -537,8 +521,9 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        expr = self.merge_message(cr, uid, euq, action, context)
-                        expr = eval(expr)
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        expr = eval(euq, {'context':context, 'object': obj})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -550,8 +535,9 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        expr = self.merge_message(cr, uid, euq, action, context)
-                        expr = eval(expr)
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        expr = eval(euq, {'context':context, 'object': obj})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -588,26 +574,26 @@ act_window_close()
 #                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
 #                - if start_type="manual", it will start and stop on manually 
 class ir_actions_todo(osv.osv):
-    _name = 'ir.actions.todo'	
+    _name = 'ir.actions.todo'    
     _columns={
         'name':fields.char('Name',size=64,required=True, select=True),
         'note':fields.text('Text'),
-		'start_date': fields.datetime('Start Date'),
-		'end_date': fields.datetime('End Date'),
+        'start_date': fields.datetime('Start Date'),
+        'end_date': fields.datetime('End Date'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-		'active': fields.boolean('Active'),
-		'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
-		'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
-		'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
-		'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
+        'active': fields.boolean('Active'),
+        'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
+        'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
+        'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
+        'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
         'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-		'active':lambda *a:True,
-		'type':lambda *a:'configure'
+        'active':lambda *a:True,
+        'type':lambda *a:'configure'
     }
     _order="sequence"
 ir_actions_todo()
@@ -651,6 +637,21 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         'item_id':_get_action,
         'name':_get_action_name,
     }
+    def button_next(self,cr,uid,ids,context=None):
+        user_action=self.pool.get('res.users').browse(cr,uid,uid)
+        act_obj=self.pool.get(user_action.menu_id.type)
+        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
+        action_open=act_obj.browse(cr,uid,action_ids)[0]
+        if context.get('menu',False):
+            return{
+                'view_type': action_open.view_type,
+                'view_id':action_open.view_id and [action_open.view_id.id] or False,
+                'res_model': action_open.res_model,
+                'type': action_open.type,
+                'domain':action_open.domain
+            }
+        return {'type':'ir.actions.act_window_close'}
+
     def button_skip(self,cr,uid,ids,context=None):
         item_obj = self.pool.get('ir.actions.todo')
         item_id=self.read(cr,uid,ids)[0]['item_id']
@@ -666,7 +667,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-        return {'type':'ir.actions.act_window_close'}
+        return self.button_next(cr, uid, ids, context)
 
     def button_continue(self, cr, uid, ids, context=None):
         item_obj = self.pool.get('ir.actions.todo')
@@ -684,19 +685,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
                   'type': item.action_id.type,
                   'target':item.action_id.target,
             }
-        user_action=self.pool.get('res.users').browse(cr,uid,uid)
-        act_obj=self.pool.get(user_action.menu_id.type)
-        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
-        action_open=act_obj.browse(cr,uid,action_ids)[0]
-        if context.get('menu',False):
-            return{
-              'view_type': action_open.view_type,
-              'view_id':action_open.view_id and [action_open.view_id.id] or False,
-              'res_model': action_open.res_model,
-              'type': action_open.type,
-              'domain':action_open.domain
-               }
-        return {'type':'ir.actions.act_window_close' }
+        return self.button_next(cr, uid, ids, context)
 ir_actions_configuration_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

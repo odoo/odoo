@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="maintenance_contract_tree_view" model="ir.ui.view">
+            <field name="name">maintenance.contract.tree</field>
+            <field name="model">maintenance.contract</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Maintenance Contract">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="maintenance_contract_form_view" model="ir.ui.view">
+            <field name="name">maintenance.contract.form</field>
+            <field name="model">maintenance.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Maintenance Contract">
+                    <separator string="Information" colspan="4"/>
+                    <field name="name" select="1"/>
+                    <field name="password" password="True"/>
+                    <field name="date_start" select="1"/>
+                    <field name="date_stop" select="1"/>
+                    <button name="_test_maintenance" string="Check Maintenance" type="object" colspan="2"/>
+                    <separator string="Covered Modules" colspan="4"/>
+                    <field name="modules" nolabel="1" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_maintenance_contract_form" model="ir.actions.act_window">
+            <field name="name">Your Maintenance Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">maintenance.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="action_maintenance_contract_form" model="ir.actions.act_window">
+            <field name="name">Encode a New Maintenance Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">maintenance.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem
+            name="Maintenance"
+            id="maintenance"
+            parent="base.menu_administration"/>
+
+        <menuitem
+            action="action_maintenance_contract_form"
+            id="menu_maintenance_contract"
+            parent="maintenance"/>
+
+    </data>
+</openerp>

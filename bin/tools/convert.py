@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -282,7 +282,7 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
             keyword = str(rec.getAttribute('keyword') or 'client_print_multi')
@@ -322,7 +322,7 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
         if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
@@ -343,7 +343,7 @@ form: module.record_id""" % (xml_id,)
 
         res = {'name': name, 'url': url, 'target':target}
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
         if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
@@ -374,6 +374,14 @@ form: module.record_id""" % (xml_id,)
         auto_refresh = rec.hasAttribute('auto_refresh') \
                 and rec.getAttribute('auto_refresh').encode('utf-8')
 #        groups_id = rec.hasAttribute('groups') and rec.getAttribute('groups').encode('utf-8')
+
+        # def ref() added because , if context has ref('id') eval wil use this ref
+
+        active_id=str("active_id") # for further reference in client/bin/tools/__init__.py
+
+        def ref(str_id):
+            return self.id_get(cr, None, str_id)
+        context=eval(context)
 
         res = {
             'name': name,
@@ -406,7 +414,7 @@ form: module.record_id""" % (xml_id,)
 
         if rec.hasAttribute('target'):
             res['target'] = rec.getAttribute('target')
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if src_model:
@@ -554,7 +562,7 @@ form: module.record_id""" % (xml_id,)
 
         xml_id = rec.getAttribute('id').encode('utf8')
         self._test_xml_id(xml_id)
-        pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, True, mode=self.mode, res_id=res and res[0] or False)
+        pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
@@ -582,7 +590,7 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.getAttribute("search").encode('utf8')
         rec_src_count = rec.getAttribute("count")
 
-        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR 
+        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR
 
         rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
 
@@ -744,15 +752,17 @@ form: module.record_id""" % (xml_id,)
                             raise
         return True
 
-    def __init__(self, cr, module, idref, mode, report=assertion_report(), noupdate = False):
+    def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
+
         self.logger = netsvc.Logger()
         self.mode = mode
         self.module = module
         self.cr = cr
         self.idref = idref
         self.pool = pooler.get_pool(cr.dbname)
-#       self.pool = osv.osv.FakePool(module)
         self.uid = 1
+        if report is None:
+            report = assertion_report()
         self.assert_report = report
         self.noupdate = noupdate
         self._tags = {
@@ -822,7 +832,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 #
 # xml import/export
 #
-def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = False, report=None):
+def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     xmlstr = xmlfile.read()
     xmlfile.seek(0)
     relaxng_doc = etree.parse(file(os.path.join( config['root_path'], 'import_xml.rng' )))
@@ -839,9 +849,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = 
 
     if idref is None:
         idref={}
-    if report is None:
-        report=assertion_report()
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate = noupdate)
+    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
     obj.parse(xmlstr)
     del obj
     return True

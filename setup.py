@@ -35,7 +35,8 @@ import glob
 from stat import ST_MODE
 
 from distutils.core import setup, Command
-from distutils.command.install_scripts import install_scripts
+from distutils.command.install import install
+#from distutils.command.install_scripts import install_scripts
 from distutils.file_util import copy_file
 
 if os.name == 'nt':
@@ -147,24 +148,26 @@ def data_files():
 
 check_modules()
 
-# create startup script
-start_script = \
-"#!/bin/sh\n\
-cd %s/lib/python%s/site-packages/openerp-server\n\
-exec %s ./openerp-server.py $@\n" % (sys.prefix, py_short_version, sys.executable)
-# write script
-f = open('openerp-server', 'w')
-f.write(start_script)
-f.close()
+
+class openerp_server_install(install):
+    def run(self):
+        # create startup script
+        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (opj(self.install_libbase, "openerp-server"), sys.executable)
+        # write script
+        f = open('openerp-server', 'w')
+        f.write(start_script)
+        f.close()
+
+        install.run(self)
 
 options = {
     "py2exe": {
-        "compressed": 0,
+        "compressed": 1,
         "optimize": 2, 
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
                      "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                     "pydot","asyncore","asynchat", "reportlab"],
+                     "pydot","asyncore","asynchat", "reportlab", "vobject", "HTMLParser"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
@@ -179,6 +182,7 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
+      cmdclass         = { 'install' : openerp_server_install },
       scripts          = ['openerp-server'],
       packages         = ['openerp-server', 
                           'openerp-server.addons',
