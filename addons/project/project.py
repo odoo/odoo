@@ -146,7 +146,6 @@ class project(osv.osv):
 
     def copy(self, cr, uid, id, default={},context={}):
         default = default or {}
-        default['tasks'] = []
         default['child_id'] = []
         return super(project, self).copy(cr, uid, id, default, context)
 
@@ -247,6 +246,11 @@ class task(osv.osv):
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
+
+    def copy(self, cr, uid, id, default={},context={}):
+        default = default or {}
+        default['work_ids'] = []
+        return super(task, self).copy(cr, uid, id, default, context)
 
     _columns = {
         'active': fields.boolean('Active'),
