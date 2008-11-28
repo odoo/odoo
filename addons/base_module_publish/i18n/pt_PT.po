@@ -1,21 +1,19 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* base_module_publish
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:22+0000\n"
-"PO-Revision-Date: 2008-10-16 16:25+0000\n"
-"Last-Translator: Adérito (Primeconsulting.cv) <yongzox@hotmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:02:43+0000\n"
+"PO-Revision-Date: 2008-11-28 17:02:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:01+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,category:0
@@ -87,6 +85,12 @@ msgid "Finish"
 msgstr "Terminar"
 
 #. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+msgid "Could not find the module to export!"
+msgstr ""
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,description:0
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Description"
@@ -95,17 +99,14 @@ msgstr "Descrição"
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
-msgid ""
-"If you don't have an access, you can create one http://www.openerp.com/"
-msgstr ""
-"Se você não tem um acesso, você pode criar um em http://www.openerp.com/"
+msgid "If you don't have an access, you can create one http://www.openerp.com/"
+msgstr "Se você não tem um acesso, você pode criar um em http://www.openerp.com/"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "Please provide here your login on the Tiny ERP website."
-msgstr ""
-"Por favor forneça aqui seu dados para se autenticar no Web site  do Tiny ERP."
+msgstr "Por favor forneça aqui seu dados para se autenticar no Web site  do Tiny ERP."
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
@@ -116,6 +117,13 @@ msgstr "Autor"
 #: wizard_view:base_module_publish.module_publish,publish:0
 msgid "Information"
 msgstr "Informação"
+
+#. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+msgid "Error"
+msgstr ""
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,image:0
@@ -134,6 +142,12 @@ msgid "Module publication"
 msgstr "Publicação do modulo"
 
 #. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+msgid "Failed to upload the file"
+msgstr ""
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,license:0
 msgid "Licence"
 msgstr "Licença"
@@ -143,6 +157,12 @@ msgstr "Licença"
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Palavra passe"
+
+#. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+msgid "Login failed!"
+msgstr ""
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -181,6 +201,12 @@ msgid "Documentation URL"
 msgstr "URL da documentação"
 
 #. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+msgid "This version of the module is already exist on the server"
+msgstr ""
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,publish,text_end:0
 msgid "Summary"
 msgstr "Sumário"
@@ -209,6 +235,12 @@ msgid "Login"
 msgstr "Iniciar Sessão"
 
 #. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+msgid "You could not publish a module that is not installed!"
+msgstr ""
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
 msgstr "Carregar informação"
@@ -228,6 +260,12 @@ msgstr "Icluir fonte"
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "General"
 msgstr "Geral"
+
+#. module: base_module_publish
+#, python-format
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+msgid "Can not export module that is not installed!"
+msgstr ""
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,url_download:0
@@ -277,3 +315,4 @@ msgstr "Publicar módulo"
 #: wizard_button:base_module_publish.module_publish,step1,init:0
 msgid "Previous"
 msgstr "Anterior"
+

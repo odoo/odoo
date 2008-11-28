@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:44:35+0000"
-"PO-Revision-Date: 2008-09-11 15:44:35+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:59:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:59:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: point_of_sale
 #: rml:pos.details_summary:0
@@ -73,11 +73,6 @@ msgid "Invoice Date"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Total (inclu. taxes):"
-msgstr ""
-
-#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid ","
 msgstr ""
@@ -95,6 +90,11 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal"
+msgstr ""
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Partner Ref."
 msgstr ""
 
 #. module: point_of_sale
@@ -175,8 +175,8 @@ msgid "Validity Date"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Partner Code"
+#: wizard_field:pos.config.journal,init,default_journal_gift:0
+msgid "Default gift journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -289,11 +289,6 @@ msgid "Order Lines"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_field:pos.config.journal,init,default_journal_gift:0
-msgid "Default gift journal"
-msgstr ""
-
-#. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total Sold"
 msgstr ""
@@ -384,11 +379,6 @@ msgstr ""
 #: field:pos.order.line,order_id:0
 #: field:pos.payment,order_id:0
 msgid "Order Ref"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Draft Invoice"
 msgstr ""
 
 #. module: point_of_sale
@@ -549,8 +539,8 @@ msgid "Sales by user"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ":"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
 msgstr ""
 
 #. module: point_of_sale
@@ -567,6 +557,11 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Compute"
+msgstr ""
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Total:"
 msgstr ""
 
 #. module: point_of_sale
@@ -619,8 +614,8 @@ msgid "Ma_ke payment"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
+#: rml:pos.receipt:0
+msgid ":"
 msgstr ""
 
 #. module: point_of_sale
@@ -652,6 +647,11 @@ msgstr ""
 #: rml:pos.details:0
 #: rml:pos.receipt:0
 msgid "Qty"
+msgstr ""
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Net Total:"
 msgstr ""
 
 #. module: point_of_sale
@@ -839,11 +839,6 @@ msgstr ""
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Ce bon est valide jusqu'au"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Total (excl. taxes):"
 msgstr ""
 
 #. module: point_of_sale

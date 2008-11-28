@@ -4,31 +4,176 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.99Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-25 20:42:54+0000PO-Revision-"
-"Date: 2008-09-25 20:42:54+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 16:24+0000\n"
-"PO-Revision-Date: 2008-09-26 15:13+0000\n"
-"Last-Translator: Fabien Pinckaers <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:08:47+0000\n"
+"PO-Revision-Date: 2008-11-28 17:08:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: l10n_be
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
+#: model:account.account.type,name:l10n_be.user_type_tiers_receiv
+msgid "Tiers - Recevable"
 msgstr ""
 
 #. module: l10n_be
+#: wizard_view:list.vat.detail,go:0
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "Notification"
+msgstr "Сповіщення"
+
+#. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
 #: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
-msgid "VAT Declaration"
+msgid "Taxes Statement"
 msgstr ""
 
-#~ msgid "Tax"
-#~ msgstr "Податки"
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_charge
+msgid "Charge"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_button:list.vat.detail,init,go:0
+#: wizard_button:wizard.account.xml.vat.declaration,init,go:0
+msgid "Create XML"
+msgstr "Створити XML"
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_capitaux
+msgid "Capital"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,go,msg:0
+#: wizard_field:wizard.account.xml.vat.declaration,go,msg:0
+msgid "File created"
+msgstr "Файл створено"
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_stock
+msgid "Stock et Encours"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_immo
+msgid "Immobilisation"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,go,file_save:0
+#: wizard_field:wizard.account.xml.vat.declaration,go,file_save:0
+msgid "Save File"
+msgstr "Зберегти файл"
+
+#. module: l10n_be
+#: wizard_view:list.vat.detail,init:0
+msgid "Select Fiscal Year"
+msgstr "Вибрати фінансовий рік"
+
+#. module: l10n_be
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_tiers_payable
+msgid "Tiers - Payable"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_view:wizard.account.xml.vat.declaration,init:0
+msgid "Select Period"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_produit
+msgid "Produit"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_tiers
+msgid "Tiers"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_view
+msgid "Vue"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_button:list.vat.detail,go,end:0
+#: wizard_button:wizard.account.xml.vat.declaration,go,end:0
+msgid "Ok"
+msgstr "Ок"
+
+#. module: l10n_be
+#: wizard_view:list.vat.detail,init:0
+msgid "This wizard will create an XML file for Vat details and total invoiced amounts per partner."
+msgstr "Цей майстер створить файл XML для деталізації ПДВ і загальних заінвойсованих сум за партнерами."
+
+#. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
+msgid "Enlist Vat Details"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,init,limit_amount:0
+msgid "Limit Amount"
+msgstr "Обмежити суму"
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,init,fyear:0
+msgid "Fiscal Year"
+msgstr "Фінансовий рік"
+
+#. module: l10n_be
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "XML Flie has been Created."
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
+msgid "Listing of VAT Customers"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,init,test_xml:0
+msgid "Test XML file"
+msgstr "Тест файлу XML"
+
+#. module: l10n_be
+#: wizard_field:list.vat.detail,init,mand_id:0
+msgid "MandataireId"
+msgstr "Агент"
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,period:0
+msgid "Period"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_view:list.vat.detail,go:0
+msgid "XML File has been Created."
+msgstr "Файл XML створено."
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_financiers
+msgid "Financier"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_button:list.vat.detail,init,end:0
+#: wizard_button:wizard.account.xml.vat.declaration,init,end:0
+msgid "Cancel"
+msgstr "Скасувати"
+

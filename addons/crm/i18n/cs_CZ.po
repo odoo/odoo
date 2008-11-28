@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:40:34+0000"
-"PO-Revision-Date: 2008-09-11 15:40:34+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:54:49+0000\n"
+"PO-Revision-Date: 2008-11-28 16:54:49+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Delay After Trigger Date:"
+msgstr ""
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu7_option:0
@@ -34,7 +39,13 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
+#: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,act_remind_partner:0
+msgid "Remind Partner"
 msgstr ""
 
 #. module: crm
@@ -65,15 +76,31 @@ msgid "Default state of mind for period preceeding the 'Max Interval' computatio
 msgstr ""
 
 #. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.wizard,name:crm.wizard_case_section_menu
 #: model:ir.ui.menu,name:crm.menu_wizard_case_section_menu
 msgid "Create menus for a case section"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "Template of Email to Send"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_rule-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_rule-act
 msgid "Rules"
+msgstr ""
+
+#. module: crm
+#, python-format
+#: code:addons/crm/crm.py:0
+msgid "Warning !"
 msgstr ""
 
 #. module: crm
@@ -109,7 +136,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.next_id_51
-#: model:ir.ui.menu,name:crm.next_id_52
 #: view:crm.case:0
 #: view:crm.case.history:0
 msgid "Cases"
@@ -124,7 +150,6 @@ msgid "Highest"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.act_crm_case_categ_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_crm_case_section_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_partner_2_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_partner_canal_2_crm_case_opened
@@ -135,11 +160,6 @@ msgstr ""
 #. module: crm
 #: help:crm.segmentation,categ_id:0
 msgid "The partner category that will be added to partners that match the segmentation criterions after computation."
-msgstr ""
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "%(partner)s = Partner name"
 msgstr ""
 
 #. module: crm
@@ -156,7 +176,6 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.log,user_id:0
-#: field:crm.case,user_id:0
 msgid "User Responsible"
 msgstr ""
 
@@ -207,19 +226,9 @@ msgid "Minutes"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Email to send"
-msgstr ""
-
-#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu16_option:0
 #: wizard_field:crm.case.section.menu,design_menu,menu16:0
 msgid "All Unclosed and Unassigned "
-msgstr ""
-
-#. module: crm
-#: field:crm.case.rule,trg_priority_from:0
-msgid "Priority min"
 msgstr ""
 
 #. module: crm
@@ -234,9 +243,9 @@ msgid "Cases Histories"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.menu_crm_configuration
-msgid "Configuration"
-msgstr "Konfigurace"
+#: help:crm.case.rule,act_remind_partner:0
+msgid "Check this if you want the rule to send a reminder by email to the partner."
+msgstr ""
 
 #. module: crm
 #: field:crm.case,ref:0
@@ -251,11 +260,6 @@ msgstr ""
 #. module: crm
 #: view:res.partner.events:0
 msgid "Partner Events"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.rule,trg_priority_to:0
-msgid "Priority max"
 msgstr ""
 
 #. module: crm
@@ -291,13 +295,18 @@ msgid "Partner"
 msgstr ""
 
 #. module: crm
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
+#: model:ir.model,name:crm.model_crm_case_log
+msgid "Case Communication History"
 msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of case"
+msgstr ""
+
+#. module: crm
+#: view:crm.case:0
+msgid "Estimates"
 msgstr ""
 
 #. module: crm
@@ -317,19 +326,15 @@ msgid "My Open "
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "Estimates"
+#: field:crm.case.rule,trg_state_from:0
+msgid "Case State"
 msgstr ""
 
 #. module: crm
+#: field:crm.case.log,section_id:0
 #: field:crm.case.rule,trg_section_id:0
 #: field:crm.case,section_id:0
 msgid "Section"
-msgstr ""
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "Special Keywords"
 msgstr ""
 
 #. module: crm
@@ -338,8 +343,13 @@ msgid "Mail to these emails"
 msgstr ""
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.ui.menu,name:crm.menu_crm_configuration
+msgid "Configuration"
+msgstr "Konfigurace"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Special Keywords to Be Used in The Body"
 msgstr ""
 
 #. module: crm
@@ -411,6 +421,11 @@ msgid "Lowest"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "E-Mail Reminders (includes the content of the case)"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
 msgstr ""
@@ -422,8 +437,13 @@ msgid "Error !"
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "Send Reminder"
+#: view:crm.case.rule:0
+msgid "Fields to Change"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,trg_priority_to:0
+msgid "Maximim Priority"
 msgstr ""
 
 #. module: crm
@@ -464,13 +484,13 @@ msgid "Last Action Date"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.rule,trg_state_to:0
-msgid "Case state to"
+#: selection:crm.case.rule,trg_date_range_type:0
+msgid "Hours"
 msgstr ""
 
 #. module: crm
-#: selection:crm.case.rule,trg_date_range_type:0
-msgid "Hours"
+#: view:crm.case.rule:0
+msgid "E-Mail Actions"
 msgstr ""
 
 #. module: crm
@@ -539,8 +559,13 @@ msgid "Mail to responsible"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Rule Information"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
 msgstr ""
 
 #. module: crm
@@ -555,6 +580,11 @@ msgid "%(case_date)s = Creation date"
 msgstr ""
 
 #. module: crm
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr ""
+
+#. module: crm
 #: view:crm.case:0
 msgid "References"
 msgstr ""
@@ -565,8 +595,8 @@ msgid "Set responsible to"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.categ,probability:0
-msgid "Probability"
+#: view:crm.case.rule:0
+msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
 msgstr ""
 
 #. module: crm
@@ -599,6 +629,11 @@ msgid "Case Section"
 msgstr ""
 
 #. module: crm
+#: field:crm.case.rule,trg_state_to:0
+msgid "Button Pressed"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.rule,act_method:0
 msgid "Call Object Method"
 msgstr ""
@@ -610,8 +645,14 @@ msgid "Segmentation"
 msgstr ""
 
 #. module: crm
-#: field:crm.segmentation,som_interval:0
-msgid "Days per Periode"
+#, python-format
+#: code:addons/crm/crm.py:0
+msgid "You can not delete this case. You should better cancel it."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,trg_priority_from:0
+msgid "Minimum Priority"
 msgstr ""
 
 #. module: crm
@@ -631,8 +672,8 @@ msgid "Category"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.rule,trg_state_from:0
-msgid "Case state from"
+#: view:crm.case.rule:0
+msgid "Conditions on States"
 msgstr ""
 
 #. module: crm
@@ -652,7 +693,7 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case.rule:0
-msgid "Actions to execute"
+msgid "%(partner)s = Partner name"
 msgstr ""
 
 #. module: crm
@@ -666,13 +707,13 @@ msgid "Not Running"
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "Action Information"
+#: view:crm.case.rule:0
+msgid "Note"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "E-Mail Information"
+#: view:crm.case:0
+msgid "Action Information"
 msgstr ""
 
 #. module: crm
@@ -706,6 +747,11 @@ msgstr ""
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
 msgid "Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions"
 msgstr ""
 
 #. module: crm
@@ -789,6 +835,11 @@ msgid "All Unassigned "
 msgstr ""
 
 #. module: crm
+#: help:crm.case.rule,act_remind_attach:0
+msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
+msgstr ""
+
+#. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
 msgstr ""
@@ -806,6 +857,11 @@ msgstr ""
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,menu_parent_id:0
 msgid "Parent Menu"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Timing"
 msgstr ""
 
 #. module: crm
@@ -870,16 +926,6 @@ msgid "History"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Delay after trigger date:"
-msgstr ""
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling Options"
-msgstr ""
-
-#. module: crm
 #: field:crm.case,partner_address_id:0
 msgid "Partner Contact"
 msgstr ""
@@ -901,8 +947,8 @@ msgid "<"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "General Information"
+#: view:crm.case:0
+msgid "Send Reminder"
 msgstr ""
 
 #. module: crm
@@ -961,6 +1007,11 @@ msgid "Planned revenue"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Case Partner"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.section,code:0
 msgid "Section Code"
 msgstr ""
@@ -978,6 +1029,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,trg_user_id:0
 #: field:crm.case.section,user_id:0
+#: field:crm.case,user_id:0
 msgid "Responsible"
 msgstr ""
 
@@ -989,11 +1041,6 @@ msgstr ""
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(email_from)s = Partner email"
-msgstr ""
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "Criterions to be checked"
 msgstr ""
 
 #. module: crm
@@ -1043,6 +1090,11 @@ msgid "All Canceled "
 msgstr ""
 
 #. module: crm
+#: field:crm.segmentation,som_interval:0
+msgid "Days per Periode"
+msgstr ""
+
+#. module: crm
 #: help:crm.segmentation,name:0
 msgid "The name of the segmentation."
 msgstr ""
@@ -1053,13 +1105,14 @@ msgid "Mail body"
 msgstr ""
 
 #. module: crm
-#: field:crm.case,probability:0
-msgid "Probability (0.50)"
+#: help:crm.case.rule,act_remind_user:0
+msgid "Check this if you want the rule to send a reminder by email to the user."
 msgstr ""
 
 #. module: crm
-#: selection:crm.segmentation.line,expr_name:0
-msgid "Purchase Amount"
+#: field:crm.case.categ,probability:0
+#: field:crm.case,probability:0
+msgid "Probability (%)"
 msgstr ""
 
 #. module: crm
@@ -1087,11 +1140,6 @@ msgid "Case Rule"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_case_log
-msgid "Case communication history"
-msgstr ""
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
 msgid "="
 msgstr ""
@@ -1101,6 +1149,11 @@ msgstr ""
 #: field:crm.case.log,case_id:0
 #: model:res.request.link,name:crm.req_link_case
 msgid "Case"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Priority Range"
 msgstr ""
 
 #. module: crm
@@ -1157,8 +1210,18 @@ msgid "All Histories"
 msgstr ""
 
 #. module: crm
+#: help:crm.case.rule,act_email_cc:0
+msgid "These people will receive a copy of the futur communication between partner and users by email"
+msgstr ""
+
+#. module: crm
 #: field:crm.case,email_last:0
 msgid "Latest E-Mail"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Case Fields"
 msgstr ""
 
 #. module: crm
@@ -1213,13 +1276,9 @@ msgid "crm.case.section.open"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
 #: view:crm.case:0
 msgid "Actions"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.rule,act_remind_partner:0
-msgid "Remind partner"
 msgstr ""
 
 #. module: crm

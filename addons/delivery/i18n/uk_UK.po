@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.99Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-25 20:42:54+0000PO-Revision-"
-"Date: 2008-09-25 20:42:54+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 13:24+0000\n"
-"PO-Revision-Date: 2008-11-18 18:46+0000\n"
-"Last-Translator: Yuriy Tkachenko <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:08:47+0000\n"
+"PO-Revision-Date: 2008-11-28 17:08:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -27,10 +22,8 @@ msgstr "Назва сітки"
 
 #. module: delivery
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -38,9 +31,19 @@ msgid "Delivery Grid"
 msgstr "План Доставок"
 
 #. module: delivery
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Збут та постачання"
+
+#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
+
+#. module: delivery
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
 
 #. module: delivery
 #: constraint:ir.ui.view:0
@@ -48,14 +51,15 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Неправильний XML для Архітектури Вигляду!"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries"
-msgstr "Доставки"
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "ПДВ здається некоректним"
 
 #. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Create delivery line"
-msgstr "Створити лінію доставки"
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid avaible !"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -63,24 +67,36 @@ msgid "Carrier Partner"
 msgstr "Партнер Перевізник"
 
 #. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "Стани"
 
 #. module: delivery
-#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
-msgid "Add delivery line"
-msgstr "Додати запис доставки"
+#: selection:delivery.grid.line,price_type:0
+msgid "Fixed"
+msgstr "Фіксована"
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "Доставка"
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
 msgstr "Лінія сітки"
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No price avaible !"
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -93,6 +109,12 @@ msgstr "Прейскурант доставки"
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
 msgstr "Зформувати Чорнові Інвойси по Отриманнях"
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid matching for this carrier !"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -113,9 +135,19 @@ msgid "Packings to be invoiced"
 msgstr "Пакети до виписки"
 
 #. module: delivery
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
 msgstr "Сітка"
+
+#. module: delivery
+#: view:res.partner:0
+msgid "Deliveries Properties"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -124,15 +156,14 @@ msgid "Active"
 msgstr "Активний"
 
 #. module: delivery
-#: wizard_view:delivery.sale.order,init:0
-msgid "Create deliveries"
-msgstr "Створити доставки"
+#: view:delivery.grid:0
+msgid "Grid definition"
+msgstr "Визначення сітки"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packings."
-msgstr ""
-"Цей метод доставки буде використано при виставленні інвойсів по партіях."
+msgstr "Цей метод доставки буде використано при виставленні інвойсів по партіях."
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -156,6 +187,11 @@ msgid "Condition"
 msgstr "Умова"
 
 #. module: delivery
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
+msgstr "Доставка"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
 msgstr "Сітки перевізників і доставки"
@@ -174,6 +210,11 @@ msgstr "Напрямок"
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "Назва"
+
+#. module: delivery
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
@@ -210,14 +251,9 @@ msgid "Carrier"
 msgstr "Перевізник"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Properties"
+#: wizard_button:delivery.sale.order,init,delivery:0
+msgid "Add Delivery Costs"
 msgstr ""
-
-#. module: delivery
-#: selection:delivery.grid.line,price_type:0
-msgid "Fixed"
-msgstr "Фіксована"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -225,9 +261,20 @@ msgid "Maximum Value"
 msgstr "Макс. значення"
 
 #. module: delivery
+#: field:sale.order,id:0
+msgid "ID"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
 msgstr "Від"
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "Order not in draft state !"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -252,6 +299,12 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "До"
@@ -262,29 +315,16 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: view:delivery.grid:0
-msgid "Grid definition"
-msgstr "Визначення сітки"
-
-#. module: delivery
 #: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packings "
-"made."
+msgid "Complete this field if you plan to invoice the shipping based on packings made."
+msgstr "Заповніть це поле, якщо плануєте інвойсувати доставку на зроблених пакуваннях."
+
+#. module: delivery
+#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
+msgid "Delivery Costs"
 msgstr ""
-"Заповніть це поле, якщо плануєте інвойсувати доставку на зроблених "
-"пакуваннях."
 
 #. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: wizard_view:delivery.sale.order,init:0
-#: field:res.partner,property_delivery_carrier:0
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-msgid "Delivery Method"
-msgstr "Метод доставки"
-
-#. module: delivery
-#: view:delivery.grid:0
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
 msgstr "Рядки сітки"
@@ -295,9 +335,28 @@ msgid "Delivery grids"
 msgstr "Сітки доставки"
 
 #. module: delivery
+#: wizard_field:delivery.sale.order,init,carrier_id:0
+#: field:res.partner,property_delivery_carrier:0
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Method"
+msgstr "Метод доставки"
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr ""
+
+#. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
 msgstr "Скасувати"
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "Warning"
+msgstr ""
 
 #. module: delivery
 #: field:sale.order,carrier_id:0
@@ -305,6 +364,7 @@ msgid "Delivery method"
 msgstr "Спосіб доставки"
 
 #. module: delivery
+#: field:delivery.carrier,price:0
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
@@ -314,3 +374,4 @@ msgstr "Ціна"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Тип ціни"
+

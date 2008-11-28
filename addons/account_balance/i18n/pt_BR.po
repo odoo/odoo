@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:38:15+0000"
-"PO-Revision-Date: 2008-09-11 15:38:15+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:01:48+0000\n"
+"PO-Revision-Date: 2008-11-28 17:01:48+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,show_columns:0
@@ -21,8 +21,8 @@ msgid "Show Debit/Credit Information"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,init:0
-msgid "(If you do not select Fiscal year it will take all open fiscal year)"
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
 msgstr ""
 
 #. module: account_balance
@@ -83,23 +83,23 @@ msgid "Select Fiscal Year(s)(Maximum Three Years)"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "3. You have selected 'Percentage' option with more than 2 years,but you have not selected landscape format."
-msgstr ""
-
-#. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "You can select maximum 3 years.Please check again."
-msgstr ""
-
-#. module: account_balance
 #: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
 msgid "Account balance-Compare Years"
 msgstr ""
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,landscape:0
 msgid "Show Report in Landscape Form"
+msgstr ""
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
 msgstr ""
 
 #. module: account_balance
@@ -130,18 +130,13 @@ msgid "Total:"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "You have to select 'Landscape' option.Please Check it."
-msgstr ""
-
-#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,account_choice:0
 msgid "Show Accounts"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "You might have done following mistakes.Please correct them and try again."
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
 msgstr ""
 
 #. module: account_balance
@@ -150,13 +145,13 @@ msgid "1. You have selected more than 3 years in any case."
 msgstr ""
 
 #. module: account_balance
-#: wizard_field:account.balance.account.balance.report,init,select_periods:0
-msgid "Select Invoices Based on Their"
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "2. You have not selected 'Percentage' option,but you have selected more than 2 years."
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "(If you do not select Fiscal year it will take all open fiscal year)"
 msgstr ""
 
 #. module: account_balance
@@ -165,9 +160,19 @@ msgid "Select Reference Account(for  % comparision)"
 msgstr ""
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "3. You have selected 'Percentage' option with more than 2 years, but you have not selected landscape format."
+msgstr ""
+
+#. module: account_balance
 #: rml:account.balance.account.balance:0
 #: rml:account.account.balance.landscape:0
 msgid "Code"
+msgstr ""
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You might have done following mistakes. Please correct them and try again."
 msgstr ""
 
 #. module: account_balance
@@ -182,8 +187,8 @@ msgid "Fiscal year"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "You have to select atleast 1 Fiscal Year. Try again."
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "2. You have not selected 'Percentage' option, but you have selected more than 2 years."
 msgstr ""
 
 #. module: account_balance
@@ -194,11 +199,6 @@ msgstr ""
 #. module: account_balance
 #: wizard_button:account.balance.account.balance.report,init,end:0
 msgid "Cancel"
-msgstr ""
-
-#. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "You may have selected the compare opions with more than 1 years with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
 msgstr ""
 
 #. module: account_balance

@@ -1,26 +1,19 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* point_of_sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:32+0000\n"
-"PO-Revision-Date: 2008-09-27 21:07+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Invoice Date:"
-msgstr "Data factura:"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: point_of_sale
 #: rml:pos.details_summary:0
@@ -75,6 +68,11 @@ msgid "Select an Open Sale Order"
 msgstr "Seleccioneu una ordre de venda oberta"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Invoice Date"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid ","
 msgstr ","
@@ -90,14 +88,14 @@ msgid "Base"
 msgstr "Base"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Fax :"
-msgstr "Fax :"
-
-#. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Subtotal"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Partner Ref."
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_view:pos.payment,ask_pay:0
@@ -215,6 +213,11 @@ msgstr "Desc."
 #: rml:pos.lines:0
 msgid "Journal:"
 msgstr "Diari:"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Fax :"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,partner_id:0
@@ -379,19 +382,9 @@ msgid "Order Ref"
 msgstr "Ref. ordre"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Draft Invoice"
-msgstr "Factura esborrany"
-
-#. module: point_of_sale
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Descompte (%)"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "VAT :"
-msgstr "IVA :"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
@@ -404,9 +397,9 @@ msgid "Total qty"
 msgstr "Qtat. total"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "(incl. taxes):"
-msgstr "(impostos inclo.):"
+#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
+msgid "POS Lines"
+msgstr "Línies TPV"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -417,11 +410,6 @@ msgstr "Vendes TPV"
 #: wizard_button:pos.config.journal,init,set_default_journal:0
 msgid "Define default journals"
 msgstr "Defineix diaris per defecte"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Tel. :"
-msgstr "Tel. :"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
@@ -448,11 +436,6 @@ msgstr "Facturat"
 #: rml:pos.receipt:0
 msgid "Date :"
 msgstr "Data :"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Partner Code:"
-msgstr "Codi empresa:"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -488,6 +471,11 @@ msgstr "Línia venda TPV"
 #: rml:pos.lines:0
 msgid "Total Taxes"
 msgstr "Total impostos"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "VAT :"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -572,6 +560,11 @@ msgid "Compute"
 msgstr "Calcula"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Total:"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,pickings:0
 msgid "Picking"
 msgstr "Albarà"
@@ -621,7 +614,6 @@ msgid "Ma_ke payment"
 msgstr "_Realitza pagament"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: rml:pos.receipt:0
 msgid ":"
 msgstr ":"
@@ -656,6 +648,11 @@ msgstr "Devolució :"
 #: rml:pos.receipt:0
 msgid "Qty"
 msgstr "Qtat"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Net Total:"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -710,11 +707,8 @@ msgstr "Descipció línia"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -797,6 +791,11 @@ msgid "Pos Lines"
 msgstr "Línies TPV"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Tel. :"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Operation N° :"
 msgstr "Operació Num. :"
@@ -806,11 +805,6 @@ msgstr "Operació Num. :"
 #: view:pos.order:0
 msgid "Payment"
 msgstr "Pagament"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
-msgid "POS Lines"
-msgstr "Línies TPV"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree3
@@ -846,11 +840,6 @@ msgstr "Data ordenada"
 #: rml:pos.receipt:0
 msgid "Ce bon est valide jusqu'au"
 msgstr "Aquest bitllet és vàlid fins"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Total (excl. taxes):"
-msgstr "Total (impostos excl.):"
 
 #. module: point_of_sale
 #: wizard_button:pos.add_product,init,add:0
@@ -900,7 +889,6 @@ msgid "Supplier Refund"
 msgstr "Factura d'abonament de proveïdor"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: field:pos.order,amount_total:0
 msgid "Total"
 msgstr "Total"
@@ -913,3 +901,4 @@ msgstr "Total"
 #: field:report.transaction.pos,journal_id:0
 msgid "Journal"
 msgstr "Diari"
+

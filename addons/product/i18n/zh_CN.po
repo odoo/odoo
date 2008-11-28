@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:37:41+0000"
-"PO-Revision-Date: 2008-09-11 15:37:41+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
+"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -41,8 +41,8 @@ msgid "Determine if the product is visible in the list of products within a sele
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-msgid "Lots"
+#: help:product.supplierinfo,name:0
+msgid "Supplier of this product"
 msgstr ""
 
 #. module: product
@@ -56,14 +56,24 @@ msgid "Onsite Senior Intervention"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,qty:0
+msgid "The minimal quantity to purchase for this supplier, expressed in the default unit of measure."
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net weight"
 msgstr "净重"
 
 #. module: product
-#: model:ir.model,name:product.model_product_packaging
-msgid "Conditionnement"
-msgstr "条件"
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr ""
+
+#. module: product
+#: help:product.product,virtual_available:0
+msgid "Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."
+msgstr ""
 
 #. module: product
 #: field:product.packaging,width:0
@@ -71,18 +81,23 @@ msgid "Width"
 msgstr "宽度"
 
 #. module: product
+#: help:product.pricelist.item,product_tmpl_id:0
+msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
+msgstr ""
+
+#. module: product
 #: field:product.template,procure_method:0
 msgid "Procure Method"
 msgstr "采购方式"
 
 #. module: product
-#: field:product.product,packaging:0
-msgid "Palettization"
-msgstr "托盘盛放"
+#: selection:product.template,type:0
+msgid "Consumable"
+msgstr ""
 
 #. module: product
-#: help:product.template,uos_id:0
-msgid "Keep empty to use the default UOM"
+#: wizard_field:product.price_list,init,price_list:0
+msgid "PriceList"
 msgstr ""
 
 #. module: product
@@ -91,22 +106,14 @@ msgid "Dello Computer"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "标准价"
-
-#. module: product
 #, python-format
 #: code:addons/product/product.py:0
 msgid "Products: "
+msgstr ""
+
+#. module: product
+#: help:product.packaging,height:0
+msgid "The height of the package"
 msgstr ""
 
 #. module: product
@@ -120,14 +127,19 @@ msgid "Sellable"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,weight:0
-msgid "Palette Weight"
-msgstr "托盘重量"
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Kit Keyboard + Mouse"
+msgstr ""
 
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "价格名称"
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "The mode of computation of the price for this rule."
+msgstr ""
 
 #. module: product
 #: field:product.product,price:0
@@ -146,8 +158,13 @@ msgid "Prices Types"
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_delay:0
-msgid "Supplier Lead Time"
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_hdd1_product_template
+msgid "HDD Seagate 7200.8 80GB"
 msgstr ""
 
 #. module: product
@@ -156,8 +173,18 @@ msgid "Services"
 msgstr ""
 
 #. module: product
-#: selection:product.template,type:0
-msgid "Consumable"
+#: help:product.template,list_price:0
+msgid "Base price for computing the customer price. Sometimes called the catalog price."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "Starting date for validity of this pricelist version."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Computer Stuff"
 msgstr ""
 
 #. module: product
@@ -166,6 +193,7 @@ msgid "Processor AMD Athlon XP 2200+"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.wizard,name:product.report_wizard_price
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
 msgstr "价格表"
@@ -181,9 +209,9 @@ msgid "Incoming"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_surcharge:0
-msgid "Price Surcharge"
-msgstr "其他费用"
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "标准价"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -192,6 +220,7 @@ msgstr "子项分类"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Weigths"
 msgstr ""
 
@@ -201,24 +230,24 @@ msgid "Silent fan"
 msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,qty:0
-msgid "Minimal quantity"
-msgstr "最小数量"
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-msgid "Prices"
+#: help:product.packaging,rows:0
+msgid "The number of layer on a palet or box"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,base_pricelist_id:0
-msgid "If Other Pricelist"
-msgstr "基础价格表"
+#: view:product.pricelist.item:0
+msgid "Rules Test Match"
+msgstr "定价规则"
+
+#. module: product
+#: field:product.packaging,length:0
+msgid "Length"
+msgstr "长度"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -258,7 +287,18 @@ msgstr "价格表类型"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Base Prices"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.menu,name:product.menu_price
+msgid "Prices Computations"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
 msgstr ""
 
 #. module: product
@@ -272,20 +312,20 @@ msgid "Configuration"
 msgstr "设置"
 
 #. module: product
-#: field:product.template,tracking:0
-msgid "Track Lots"
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 #: view:product.packaging:0
 msgid "Palette Dimension"
 msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Rules Test Match"
-msgstr "定价规则"
+#: field:product.packaging,rows:0
+msgid "Number of Layer"
+msgstr ""
+
+#. module: product
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
 
 #. module: product
 #: field:product.template,uom_id:0
@@ -300,6 +340,11 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
 msgid "Supplier Pricelist"
+msgstr ""
+
+#. module: product
+#: help:product.template,procure_method:0
+msgid "'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."
 msgstr ""
 
 #. module: product
@@ -318,6 +363,11 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: product
+#: model:product.template,name:product.product_product_hdd3_product_template
+msgid "HDD Seagate 7200.8 160GB"
+msgstr ""
+
+#. module: product
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
 msgstr ""
@@ -328,8 +378,8 @@ msgid "Mouse"
 msgstr ""
 
 #. module: product
-#: help:product.template,supply_method:0
-msgid "Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
 msgstr ""
 
 #. module: product
@@ -343,31 +393,25 @@ msgid "Partners"
 msgstr "业务伙伴"
 
 #. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the transport unit."
+#: help:product.pricelist.version,date_end:0
+msgid "Ending date for validity of this pricelist version."
 msgstr ""
 
 #. module: product
-#: selection:product.template,cost_method:0
-msgid "Average Price"
-msgstr "平均价"
+#: model:process.node,note:product.process_node_product0
+msgid "Create new Product"
+msgstr ""
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "UL Weight"
-msgstr "单元货载重量"
+#: help:product.pricelist.item,name:0
+msgid "Explicit rule name for this pricelist line."
+msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist.version:0
-#: view:product.pricelist:0
-msgid "Pricelist Version"
-msgstr "价格表版本"
-
-#. module: product
-#: model:ir.ui.menu,name:product.menu_product_category_action
-msgid "Products by Category"
-msgstr "分类的产品"
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -375,9 +419,9 @@ msgid "End of Lifecycle"
 msgstr "周期结束"
 
 #. module: product
-#: view:product.uom.categ:0
-msgid "Unit of Measure categories"
-msgstr "计量单位分类"
+#: model:product.template,name:product.product_product_cpu1_product_template
+msgid "Processor AMD Athlon XP 1800+"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -385,13 +429,13 @@ msgid "In Production"
 msgstr "生产中"
 
 #. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: view:product.pricelist.item:0
+msgid "Rounding Method"
+msgstr "舍入方法"
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales"
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of Product"
 msgstr ""
 
 #. module: product
@@ -411,6 +455,11 @@ msgid "Factor"
 msgstr ""
 
 #. module: product
+#: wizard_button:product.price_list,init,price:0
+msgid "Print"
+msgstr ""
+
+#. module: product
 #: selection:product.ul,type:0
 msgid "Palet"
 msgstr ""
@@ -421,9 +470,20 @@ msgid "Type"
 msgstr "类型"
 
 #. module: product
+#: help:product.price.type,field:0
+msgid "Associated field in the product form."
+msgstr ""
+
+#. module: product
 #: view:product.product:0
-msgid "Product Variant"
-msgstr "产品系列"
+#: view:product.template:0
+msgid "UOM"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid "The rule only apply if the partner buys/sells more than this quantity."
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -433,10 +493,33 @@ msgid "Pricelists"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_pc4_product_template
+msgid "Customizable PC"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
 msgstr "产品类别"
+
+#. module: product
+#: selection:product.template,cost_method:0
+msgid "Average Price"
+msgstr "平均价"
+
+#. module: product
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
+msgstr ""
 
 #. module: product
 #: field:product.product,partner_ref:0
@@ -444,9 +527,15 @@ msgid "Customer ref"
 msgstr "客户参考号"
 
 #. module: product
-#: help:product.packaging,length:0
-msgid "The length of the palette"
+#: field:product.supplierinfo,qty:0
+msgid "Minimal Quantity"
 msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Information"
+msgstr "信息"
 
 #. module: product
 #: model:product.category,name:product.product_category_pc
@@ -459,9 +548,9 @@ msgid "This is the average delay in days between the purchase order confirmation
 msgstr ""
 
 #. module: product
-#: field:product.packaging,qty:0
-msgid "Quantity by UL"
-msgstr "单元货载数量"
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -492,17 +581,13 @@ msgstr "价格表"
 #. module: product
 #: field:product.template,type:0
 #: view:product.product:0
+#: view:product.template:0
 msgid "Product Type"
 msgstr "产品类型"
 
 #. module: product
-#: help:product.template,tracking:0
-msgid "Force to use a Production Lot number during stock operations for traceability."
-msgstr ""
-
-#. module: product
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
@@ -513,15 +598,19 @@ msgstr "盒"
 #. module: product
 #: field:product.template,state:0
 #: view:product.product:0
+#: view:product.template:0
 msgid "Status"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.ul:0
-msgid "Logistical Unit"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
+
+#. module: product
+#: view:product.pricelist:0
+msgid "Products Price List"
+msgstr "产品价格表"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -529,8 +618,13 @@ msgid "Determine if the product can be visible in the list of product within a s
 msgstr ""
 
 #. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr ""
+
+#. module: product
+#: model:process.process,name:product.process_process_productworkflow0
+msgid "Product Workflow"
 msgstr ""
 
 #. module: product
@@ -544,14 +638,19 @@ msgid "In Development"
 msgstr "开发中"
 
 #. module: product
-#: model:product.category,name:product.cat0
-msgid "All products"
+#: help:product.pricelist.type,key:0
+msgid "Used in the code to select specific prices based on the context. Keep unchanged."
 msgstr ""
 
 #. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "产品价格表"
+#: help:product.product,outgoing_qty:0
+msgid "Quantities of products that are planned to leave in selected locations or all internal if none have been selected."
+msgstr ""
+
+#. module: product
+#: field:product.product,outgoing_qty:0
+msgid "Outgoing"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -560,13 +659,33 @@ msgid "Procurement"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_hdd1_product_template
-msgid "HDD Seagate 7200.8 80GB"
+#: model:ir.ui.menu,name:product.menu_product_category_action
+msgid "Products by Category"
+msgstr "分类的产品"
+
+#. module: product
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid "You can see the list of supplier for that product."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_hdd3_product_template
-msgid "HDD Seagate 7200.8 160GB"
+#: field:product.uom,category_id:0
+msgid "UoM Category"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "产品价格表明细"
+
+#. module: product
+#: view:product.product:0
+msgid "Product Variant"
+msgstr "产品系列"
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Type of Package"
 msgstr ""
 
 #. module: product
@@ -575,9 +694,9 @@ msgid "Rack"
 msgstr ""
 
 #. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "装箱"
+#: wizard_view:product.price_list,init:0
+msgid "Price list"
+msgstr ""
 
 #. module: product
 #: field:product.product,ean13:0
@@ -591,6 +710,7 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Miscelleanous"
 msgstr ""
 
@@ -600,19 +720,24 @@ msgid "Processor on demand"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,product_name:0
+msgid "Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "采购方式"
 
 #. module: product
-#: help:product.template,uom_id:0
-msgid "This is the default Unit of Measure used for all stock operation."
+#: model:product.category,name:product.product_category_11
+msgid "IT components kits"
 msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Partner product reference"
-msgstr "业务伙伴产品参照"
+#: view:product.uom.categ:0
+msgid "Units of Measure categories"
+msgstr ""
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -620,14 +745,11 @@ msgid "Supplier Information"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "RAM on demand"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Partner product name"
-msgstr "业务伙伴产品名称"
+#: model:ir.model,name:product.model_product_packaging
+#: view:product.product:0
+#: view:product.packaging:0
+msgid "Packaging"
+msgstr "装箱"
 
 #. module: product
 #: field:product.pricelist,currency_id:0
@@ -641,14 +763,8 @@ msgid "Regular processor config"
 msgstr ""
 
 #. module: product
-#: selection:product.ul,type:0
-msgid "Unit"
-msgstr "个"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Unit of Measure Categories"
+#: help:product.template,supply_method:0
+msgid "Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."
 msgstr ""
 
 #. module: product
@@ -657,18 +773,13 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: product
-#: help:product.template,produce_delay:0
-msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
+#: help:product.product,qty_available:0
+msgid "Current quantities of products in selected locations or all internal if none have been selected."
 msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
-msgstr ""
-
-#. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Computer Stuff"
 msgstr ""
 
 #. module: product
@@ -685,11 +796,6 @@ msgstr "分类"
 #: model:product.template,name:product.product_product_ram_product_template
 msgid "DDR 256MB PC400"
 msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery delay"
-msgstr "货运延期"
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -722,18 +828,20 @@ msgid "Rentable product"
 msgstr "可出租产品"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by UL."
-msgstr ""
-
-#. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
 msgid "Mainboard ASUStek A7V8X-X"
 msgstr ""
 
 #. module: product
-#: help:product.template,procure_method:0
-msgid "'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."
+#: field:product.uom,factor:0
+msgid "Rate"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that ends by 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 
 #. module: product
@@ -742,34 +850,48 @@ msgid "Rounding Precision"
 msgstr "舍入精度"
 
 #. module: product
-#: model:product.template,name:product.product_product_cpu1_product_template
-msgid "Processor AMD Athlon XP 1800+"
+#: view:product.product:0
+#: view:product.template:0
+msgid "Prices & Suppliers"
 msgstr ""
 
 #. module: product
-#: help:product.packaging,height:0
-msgid "The height of the palette"
+#: field:product.packaging,qty:0
+msgid "Quantity by Package"
+msgstr ""
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid "Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Procurement & Locations"
 msgstr ""
 
 #. module: product
-#: help:product.packaging,width:0
-msgid "The width of the palette"
+#: help:product.template,standard_price:0
+msgid "The cost of the product for accounting stock valorisation. It can serves as a base price for supplier price."
 msgstr ""
 
 #. module: product
-#: field:product.product,outgoing_qty:0
-msgid "Outgoing"
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
 msgstr ""
 
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Buy"
 msgstr "购买"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist.version:0
+#: view:product.pricelist:0
+msgid "Pricelist Version"
+msgstr "价格表版本"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -847,9 +969,20 @@ msgid "Active"
 msgstr "有效"
 
 #. module: product
+#: model:product.category,name:product.product_category_7
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Onsite Intervention"
+msgstr ""
+
+#. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "装箱"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
@@ -878,13 +1011,19 @@ msgstr "销售说明"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Storage Localisation"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,rows:0
-msgid "Number of layer"
-msgstr "层数"
+#: help:product.packaging,length:0
+msgid "The length of the package"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr ""
 
 #. module: product
 #: field:product.template,weight:0
@@ -892,13 +1031,15 @@ msgid "Gross weight"
 msgstr "毛重"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
 msgstr ""
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
+#: model:ir.actions.act_window,name:product.product_ul_form_action
+#: model:ir.ui.menu,name:product.menu_product_ul_form_action
+#: view:product.ul:0
+msgid "Packagings"
 msgstr ""
 
 #. module: product
@@ -918,8 +1059,8 @@ msgid "Tells the user if he can use the product or not."
 msgstr ""
 
 #. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
+#: field:product.supplierinfo,product_code:0
+msgid "Partner Product Code"
 msgstr ""
 
 #. module: product
@@ -945,9 +1086,16 @@ msgid "Phone Help"
 msgstr ""
 
 #. module: product
-#: help:product.packaging,rows:0
-msgid "The number of layer on palette"
+#: selection:product.template,mes_type:0
+msgid "Variable"
 msgstr ""
+
+#. module: product
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "序号"
 
 #. module: product
 #: constraint:product.template:0
@@ -965,8 +1113,8 @@ msgid "Height"
 msgstr "高度"
 
 #. module: product
-#: model:product.template,name:product.product_product_pc4_product_template
-msgid "Customizable PC"
+#: field:product.supplierinfo,product_name:0
+msgid "Partner Product Name"
 msgstr ""
 
 #. module: product
@@ -975,15 +1123,24 @@ msgid "Partner Information"
 msgstr "业务伙伴信息"
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
+#: help:product.uom,category_id:0
+msgid "Unit of Measure of the same category can be converted between each others."
 msgstr ""
 
 #. module: product
-#: field:product.uom,category_id:0
-msgid "UOM Category"
-msgstr "计量单位分类"
+#: model:product.category,name:product.cat0
+msgid "All products"
+msgstr ""
+
+#. module: product
+#: wizard_button:product.price_list,init,end:0
+msgid "Cancel"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by palet or box."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -991,13 +1148,18 @@ msgid "Pricelist item"
 msgstr "价格表内容"
 
 #. module: product
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr ""
+
+#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_11
-msgid "IT components kits"
+#: model:product.template,name:product.product_product_21_product_template
+msgid "RAM on demand"
 msgstr ""
 
 #. module: product
@@ -1006,20 +1168,24 @@ msgid "pricelist.partnerinfo"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_hdd2_product_template
-msgid "HDD Seagate 7200.8 120GB"
+#: view:res.partner:0
+msgid "Sales Properties"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "信息"
+#: wizard_field:product.price_list,init,qty2:0
+msgid "Quantity-2"
+msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "产品价格表明细"
+#: wizard_field:product.price_list,init,qty3:0
+msgid "Quantity-3"
+msgstr ""
+
+#. module: product
+#: wizard_field:product.price_list,init,qty1:0
+msgid "Quantity-1"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -1027,8 +1193,13 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
+#: wizard_field:product.price_list,init,qty4:0
+msgid "Quantity-4"
+msgstr ""
+
+#. module: product
+#: wizard_field:product.price_list,init,qty5:0
+msgid "Quantity-5"
 msgstr ""
 
 #. module: product
@@ -1038,6 +1209,7 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Delays"
 msgstr ""
 
@@ -1045,6 +1217,11 @@ msgstr ""
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
 msgstr "价格表项"
+
+#. module: product
+#: help:product.supplierinfo,product_code:0
+msgid "Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -1063,8 +1240,23 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.cat2
-msgid "Private"
+#: field:product.template,warranty:0
+msgid "Warranty (months)"
+msgstr "保证期（月）"
+
+#. module: product
+#: model:process.node,name:product.process_node_supplier0
+msgid "Supplier Info"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ul_qty:0
+msgid "Package by layer"
+msgstr ""
+
+#. module: product
+#: model:process.node,note:product.process_node_supplier0
+msgid "Product suppliers, with their product name, price, etc."
 msgstr ""
 
 #. module: product
@@ -1073,17 +1265,12 @@ msgid "Price type"
 msgstr "价格类型"
 
 #. module: product
-#: view:product.product:0
-#: view:product.packaging:0
-msgid "Packaging"
-msgstr "装箱"
-
-#. module: product
 #: model:ir.model,name:product.model_product_product
 #: field:product.packaging,product_id:0
 #: field:product.pricelist.item,product_id:0
 #: field:product.supplierinfo,product_id:0
 #: view:product.product:0
+#: model:process.node,name:product.process_node_product0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
 msgstr "产品"
@@ -1093,6 +1280,7 @@ msgstr "产品"
 #: field:product.packaging,name:0
 #: field:product.template,description:0
 #: view:product.product:0
+#: view:product.template:0
 msgid "Description"
 msgstr "说明"
 
@@ -1103,6 +1291,7 @@ msgstr "条码"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Product Description"
 msgstr ""
 
@@ -1133,11 +1322,6 @@ msgid "Volume"
 msgstr "体积"
 
 #. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Kit Keyboard + Mouse"
-msgstr ""
-
-#. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
 msgstr "生产"
@@ -1148,14 +1332,14 @@ msgid "Make to Order"
 msgstr "来单生产"
 
 #. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of the empty palette"
-msgstr ""
+#: field:product.pricelist.item,price_surcharge:0
+msgid "Price Surcharge"
+msgstr "其他费用"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "舍入方法"
+#: help:product.template,cost_method:0
+msgid "Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."
+msgstr ""
 
 #. module: product
 #: field:product.product,variants:0
@@ -1163,9 +1347,9 @@ msgid "Variants"
 msgstr "变动"
 
 #. module: product
-#: field:product.template,warranty:0
-msgid "Warranty (months)"
-msgstr "保证期（月）"
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -1200,10 +1384,13 @@ msgid "Products Categories"
 msgstr ""
 
 #. module: product
+#: field:product.product,packaging:0
+msgid "Logistical Units"
+msgstr ""
+
+#. module: product
 #: field:product.category,complete_name:0
 #: field:product.category,name:0
-#: field:product.pricelist.item,name:0
-#: field:product.pricelist,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
 #: field:product.template,name:0
@@ -1223,6 +1410,11 @@ msgstr ""
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "可采购"
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid "The computed quantity will be a multiple of this value. Use 1.0 for products that can not be splitted."
+msgstr ""
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1249,7 +1441,13 @@ msgstr "成本计算方法"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
 msgid "Second UoM"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_hdd2_product_template
+msgid "HDD Seagate 7200.8 120GB"
 msgstr ""
 
 #. module: product
@@ -1259,13 +1457,33 @@ msgid "Paletization"
 msgstr ""
 
 #. module: product
+#: help:product.packaging,width:0
+msgid "The width of the package"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,weight:0
+msgid "The weight of a full of products palet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
 msgstr "虚拟库存"
 
 #. module: product
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Delay"
 msgstr ""
 
 #. module: product
@@ -1276,14 +1494,23 @@ msgid "Pricelist Versions"
 msgstr ""
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "序号"
+#: selection:product.ul,type:0
+msgid "Unit"
+msgstr "个"
+
+#. module: product
+#: help:product.pricelist.item,product_id:0
+msgid "Set a product if this rule only apply to one product. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
+msgstr ""
+
+#. module: product
+#: help:product.template,produce_delay:0
+msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
 msgstr ""
 
 #. module: product
@@ -1292,23 +1519,23 @@ msgid "Accessories"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,ul:0
-msgid "Type of UL"
-msgstr "单元货载类型"
+#: field:product.pricelist.item,base_pricelist_id:0
+msgid "If Other Pricelist"
+msgstr "基础价格表"
 
 #. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "长度"
+#: model:product.category,name:product.cat2
+msgid "Private"
+msgstr ""
 
 #. module: product
-#: field:product.packaging,ul_qty:0
-msgid "UL by layer"
-msgstr "每层单元货载数"
+#: help:product.supplierinfo,delay:0
+msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
+msgstr ""
 
 #. module: product
-#: field:product.uom,factor:0
-msgid "Rate"
+#: help:product.template,uom_po_id:0
+msgid "Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."
 msgstr ""
 
 #. module: product
@@ -1320,6 +1547,11 @@ msgstr ""
 #: field:product.pricelist.item,min_quantity:0
 msgid "Min. Quantity"
 msgstr "最小数量"
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid "Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label

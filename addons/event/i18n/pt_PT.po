@@ -1,21 +1,19 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* event
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:31+0000\n"
-"PO-Revision-Date: 2008-11-06 17:05+0000\n"
-"Last-Translator: Adérito (Primeconsulting.cv) <yongzox@hotmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:02:42+0000\n"
+"PO-Revision-Date: 2008-11-28 17:02:42+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: event
 #: field:event.event,date_end:0
@@ -27,6 +25,21 @@ msgstr "Data de fim"
 #: field:event.event,register_min:0
 msgid "Minimum Registrations"
 msgstr "Registos mínimos"
+
+#. module: event
+#: field:event.event,mail_registr:0
+msgid "Registration Email"
+msgstr ""
+
+#. module: event
+#: model:crm.case.section,name:event.event_0_crm_case_section
+msgid "Concert of Bon Jovi"
+msgstr ""
+
+#. module: event
+#: field:event.event,mail_confirm:0
+msgid "Confirmation Email"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -50,28 +63,18 @@ msgstr "Evento sobre registos"
 
 #. module: event
 #: wizard_button:event.reg_make_invoice,init,end:0
-#: wizard_button:event.project,init,done:0
 msgid "Ok"
 msgstr "Ok"
 
 #. module: event
-#: field:event.registration,partner_invoice_id:0
-msgid "Partner Invoice"
-msgstr "Factura do Terceiro"
+#: field:event.event,mail_auto_confirm:0
+msgid "Mail Auto Confirm"
+msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.actions.wizard,name:event.wizard_event_registration
-#: view:event.event:0
-msgid "Registrations"
-msgstr "Registos"
-
-#. module: event
-#: wizard_field:event.project,init,project_id:0
-#: model:ir.actions.wizard,name:event.event_wiz
-#: field:event.event,project_id:0
-msgid "Project"
-msgstr "Projecto"
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Bilhetes para oprea"
 
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_rejected:0
@@ -84,14 +87,14 @@ msgid "Confirm Event"
 msgstr "Confirmar evento"
 
 #. module: event
+#: model:crm.case.section,name:event.event_1_crm_case_section
+msgid "Opera of Verdi"
+msgstr ""
+
+#. module: event
 #: field:report.event.registration,draft_state:0
 msgid "Draft Registration"
 msgstr "Rascunho de registos"
-
-#. module: event
-#: field:event.registration,tobe_invoiced:0
-msgid "To be Invoice"
-msgstr "Para serem facturados"
 
 #. module: event
 #: wizard_view:event.reg_make_invoice,init:0
@@ -115,7 +118,6 @@ msgid "Event type"
 msgstr "Tipo de evento"
 
 #. module: event
-#: wizard_view:event.project,init:0
 #: model:ir.model,name:event.model_event_event
 #: field:report.event.registration,name:0
 #: view:event.event:0
@@ -128,14 +130,14 @@ msgid "Invoice Created"
 msgstr "Factura criada"
 
 #. module: event
-#: view:event.event:0
-msgid "Statistics"
-msgstr "Estatísticas"
+#: wizard_view:event.confirm_registration,split:0
+msgid "Registration Confirmation"
+msgstr ""
 
 #. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura do ecrã"
+msgstr "XML inválido para a arquitectura de vista"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_registration_confirm
@@ -160,9 +162,14 @@ msgid "Case section"
 msgstr "Secção do processo"
 
 #. module: event
-#: field:event.event,mail_confirm:0
-msgid "Mail Confirm"
-msgstr "Confirmar Endereço"
+#: field:event.registration,tobe_invoiced:0
+msgid "To be Invoiced"
+msgstr ""
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -175,11 +182,6 @@ msgid "Reporting"
 msgstr "Relatório"
 
 #. module: event
-#: view:event.event:0
-msgid "Remaining Tasks"
-msgstr "Tarefas restantes"
-
-#. module: event
 #: view:event.registration:0
 msgid "Cancel Registration"
 msgstr "Cancelar registo"
@@ -188,6 +190,11 @@ msgstr "Cancelar registo"
 #: model:ir.ui.menu,name:event.menu_action_event_categories
 msgid "Events by Categories"
 msgstr "Eventos por categorias"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "The event limit is reached. What do you want to do?"
+msgstr ""
 
 #. module: event
 #: field:report.event.type.registration,confirm_state:0
@@ -212,24 +219,35 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: event
+#, python-format
+#: code:addons/event/event.py:0
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
 msgid "Dates"
 msgstr "Datas"
 
 #. module: event
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
+#: wizard_button:event.confirm_registration,split,confirm:0
+msgid "Confirm Anyway"
+msgstr ""
+
+#. module: event
+#: field:event.registration,badge_partner:0
+msgid "Badge Partner"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Parent Category"
+msgstr ""
 
 #. module: event
 #: view:event.registration:0
 msgid "Registration Invoiced"
 msgstr "Registo facturado"
-
-#. module: event
-#: field:event.event,budget_id:0
-msgid "Budget"
-msgstr "Orçamento"
 
 #. module: event
 #: field:report.event.type.registration,nbevent:0
@@ -264,24 +282,14 @@ msgid "Unconfirmed Registrations"
 msgstr "Registos não confirmados"
 
 #. module: event
-#: model:ir.actions.wizard,name:event.wizard_event_task
-msgid "Tasks"
-msgstr "Tarefas"
+#: field:event.registration,partner_invoice_id:0
+msgid "Partner Invoiced"
+msgstr ""
 
 #. module: event
 #: view:event.registration:0
 msgid "Communication history"
 msgstr "Histórico de comunicação"
-
-#. module: event
-#: help:event.event,mail_auto_registr:0
-msgid "A mail is send when the registration is confirmed"
-msgstr "É enviado um email quando o registo for confirmado"
-
-#. module: event
-#: help:event.event,mail_auto_confirm:0
-msgid "A mail is send when the event is confimed"
-msgstr "É enviado um email quando o evento for confirmado"
 
 #. module: event
 #: selection:event.event,state:0
@@ -305,21 +313,9 @@ msgid "Events On Registrations"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "Tasks management"
-msgstr "Gestão de tarefas"
-
-#. module: event
-#: view:event.event:0
-msgid "Category"
-msgstr "Categoria"
-
-#. module: event
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
 
 #. module: event
 #: selection:event.event,state:0
@@ -330,6 +326,11 @@ msgstr "Confirmado"
 #: view:event.registration:0
 msgid "Action Information"
 msgstr "Informação de acção"
+
+#. module: event
+#: view:event.event:0
+msgid "Statistics"
+msgstr "Estatísticas"
 
 #. module: event
 #: selection:event.event,state:0
@@ -357,6 +358,7 @@ msgid "Event Related"
 msgstr "Evento relacionado"
 
 #. module: event
+#: model:crm.case.section,name:event.case_section_event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: view:event.event:0
 msgid "Events"
@@ -369,6 +371,7 @@ msgstr "Numero de registo"
 
 #. module: event
 #: field:event.event,state:0
+#: view:event.registration:0
 #: view:event.event:0
 msgid "Status"
 msgstr "Estado"
@@ -384,14 +387,9 @@ msgid "All Registrations"
 msgstr "Todos os registos"
 
 #. module: event
-#: field:event.registration,partner_order_id:0
-msgid "Partner Order"
-msgstr "Pedidos do terceiro"
-
-#. module: event
-#: field:event.event,mail_registr:0
-msgid "Mail Register"
-msgstr "Resgistrador de e-mail"
+#: help:event.event,mail_auto_registr:0
+msgid "Check this box if you want to use the automatic mailing for new registration"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -399,6 +397,7 @@ msgid "Set To Draft"
 msgstr "Enviar como rascunho"
 
 #. module: event
+#: model:ir.actions.wizard,name:event.event_confirm_registration
 #: field:report.event.registration,confirm_state:0
 #: view:event.registration:0
 msgid "Confirm Registration"
@@ -415,7 +414,18 @@ msgid "Types of Events"
 msgstr "Tipo de eventos"
 
 #. module: event
+#: field:event.registration,contact_id:0
+msgid "Partner Contact"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Confirmation Email"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
+#: view:event.event:0
 msgid "General"
 msgstr "Geral"
 
@@ -446,9 +456,9 @@ msgid "Events on registrations"
 msgstr ""
 
 #. module: event
-#: wizard_button:event.project,init,end:0
+#: wizard_button:event.confirm_registration,split,end:0
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #. module: event
 #: wizard_button:event.reg_make_invoice,init,open:0
@@ -456,16 +466,9 @@ msgid "Open"
 msgstr "Abrir"
 
 #. module: event
-#: view:event.event:0
-msgid "Information"
-msgstr "Informação"
-
-#. module: event
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_new_event_form
@@ -474,23 +477,18 @@ msgid "New event"
 msgstr "Novo evento"
 
 #. module: event
-#: view:event.event:0
-msgid "All tasks"
-msgstr "Todas as tarefas"
-
-#. module: event
 #: field:event.registration,unit_price:0
 msgid "Unit Price"
 msgstr "Preço de unidade"
 
 #. module: event
-#: view:event.event:0
-msgid "Create Retro-Planning"
+#: model:crm.case.section,name:event.event_2_crm_case_section
+msgid "Conference on ERP Buisness"
 msgstr ""
 
 #. module: event
-#: field:event.registration,badge_partner:0
-msgid "Badge Partner"
+#: help:event.event,mail_registr:0
+msgid "This email will be sent when someone subscribes to the event."
 msgstr ""
 
 #. module: event
@@ -516,11 +514,6 @@ msgid "Ticket for Conference"
 msgstr "Bilhete para a conferecia"
 
 #. module: event
-#: field:event.event,task_ids:0
-msgid "Project tasks"
-msgstr "Tarefas do projecto"
-
-#. module: event
 #: field:event.registration,case_id:0
 msgid "Case"
 msgstr "Processo"
@@ -529,6 +522,16 @@ msgstr "Processo"
 #: view:event.event:0
 msgid "Name"
 msgstr "Nome"
+
+#. module: event
+#: help:event.event,mail_auto_confirm:0
+msgid "Check this box if you want ot use the automatic confirmation emailing or the reminder"
+msgstr ""
+
+#. module: event
+#: help:event.event,mail_confirm:0
+msgid "This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."
+msgstr ""
 
 #. module: event
 #: field:event.event,product_id:0
@@ -552,9 +555,11 @@ msgid "Event Type"
 msgstr "Tipo de Evento"
 
 #. module: event
-#: field:event.event,mail_auto_confirm:0
-msgid "Mail Auto Confirm"
-msgstr ""
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.actions.wizard,name:event.wizard_event_registration
+#: view:event.event:0
+msgid "Registrations"
+msgstr "Registos"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view_draft
@@ -563,9 +568,10 @@ msgid "Draft Events"
 msgstr "Eventos em rascunhos"
 
 #. module: event
-#: model:product.template,name:event.event_product_1_product_template
-msgid "Ticket for Opera"
-msgstr "Bilhetes para oprea"
+#, python-format
+#: code:addons/event/event.py:0
+msgid "Error!"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_main
@@ -588,7 +594,7 @@ msgid "Error: Invalid ean code"
 msgstr "Erro: Código ean inválido"
 
 #. module: event
-#: help:event.event,mail_confirm:0
-#: help:event.event,mail_registr:0
-msgid "Template for the mail"
-msgstr "Modelo para o e-mail"
+#: view:event.event:0
+msgid "Auto Registration Email"
+msgstr ""
+

@@ -1,32 +1,31 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* hr
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 16:32+0000\n"
-"PO-Revision-Date: 2008-09-21 12:10+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_openerpuser0
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Openerp user"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.edit_workgroup
 #: model:ir.ui.menu,name:hr.menu_edit_workgroup
 msgid "Working Time Categories"
 msgstr "Categories horaris de treball"
-
-#. module: hr
-#: constraint:hr.department:0
-msgid "Error! You can not create recursive departments."
-msgstr "Error! No es pot crear departaments recursius."
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -39,17 +38,9 @@ msgid "Human Resources"
 msgstr "Recursos humans"
 
 #. module: hr
-#: wizard_field:hr.si_so,si_ask_so,name:0
-#: wizard_field:hr.si_so,so_ask_si,name:0
-#: wizard_field:hr.si_so,init,name:0
-msgid "Employee's name"
-msgstr "Nom d'empleat"
-
-#. module: hr
-#: wizard_button:hr.print_month,init,print:0
-#: wizard_button:hr.print_week,init,print:0
-msgid "Print Timesheet"
-msgstr "Imprimeix horari"
+#: selection:hr.timesheet,dayofweek:0
+msgid "Sunday"
+msgstr "Diumenge"
 
 #. module: hr
 #: view:hr.department:0
@@ -57,20 +48,14 @@ msgid "Department"
 msgstr "Departament"
 
 #. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Contact  of employee"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
 msgstr "Adreça electrònica feina"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-msgid "My Employees"
-msgstr "Els meus empleats"
-
-#. module: hr
-#: field:hr.timesheet.group,name:0
-msgid "Group name"
-msgstr "Nom grup"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -84,39 +69,15 @@ msgid "Friday"
 msgstr "Divendres"
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Període total:"
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The sign-out date must be in the past"
+msgstr ""
 
 #. module: hr
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Motiu"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Data registre"
-
-#. module: hr
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Motius d'absència"
-
-#. module: hr
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Actual"
-
-#. module: hr
-#: model:ir.actions.wizard,name:hr.wizard_attendance_error
-msgid "Print Attendance Error Report"
-msgstr "Imprimeix informe d'errors d'assistència"
-
-#. module: hr
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr "El seu últim registre sortida"
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "Departament pare"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
@@ -131,50 +92,25 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: hr
-#: wizard_field:hr.si_so,init,state:0
-msgid "Current state"
-msgstr "Estat actual"
-
-#. module: hr
 #: field:hr.timesheet,hour_from:0
 msgid "Work from"
 msgstr "Treballa des de"
 
 #. module: hr
-#: wizard_view:hr.si_so,so_ask_si:0
-msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
 msgstr ""
-"No ha registrat l'entrada l'última vegada. , Si us plau introdueixi la data "
-"i hora en que va entrar."
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Motius absència"
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "UserError"
+msgstr ""
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "Configuració"
-
-#. module: hr
-#: wizard_field:hr.print_week,init,end_date:0
-#: wizard_field:hr.timesheet.attendance.report,init,end_date:0
-msgid "Ending Date"
-msgstr "Data final"
-
-#. module: hr
-#: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr "Assistència d'empleat"
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Sunday"
-msgstr "Diumenge"
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Employee Hierarchy"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -182,14 +118,26 @@ msgid "Female"
 msgstr "Dona"
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Operació"
+#: model:process.node,note:hr.process_node_jobshiring0
+msgid "Process to search, interview and evaluate new candidates"
+msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Date Printed:"
-msgstr "Data impresa:"
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The Sign-in date must be in the past"
+msgstr ""
+
+#. module: hr
+#: view:hr.timesheet.group:0
+msgid "Working Time Category"
+msgstr "Categoria horari treball"
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-in must be right after a sign-out !"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -203,49 +151,22 @@ msgid "Social IDs"
 msgstr "Núm. DNI/passaport"
 
 #. module: hr
-#: wizard_view:hr.si_so,init:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Està llest per registrar les entrades i sortides en el control de assistència"
-
-#. module: hr
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Absent"
-
-#. module: hr
-#: view:hr.department:0
-msgid "Companies"
-msgstr "Empreses"
-
-#. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
 msgstr "Telèfon feina"
 
 #. module: hr
-#: wizard_field:hr.timesheet.attendance.report,init,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Máx. retard (minuts)"
-
-#. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "Direcció oficina"
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
-#: field:hr.attendance,employee_id:0
 #: field:hr.employee,name:0
 #: view:hr.employee:0
+#: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Empleat"
-
-#. module: hr
-#: wizard_view:hr.print_week,init:0
-#: wizard_view:hr.timesheet.attendance.report,init:0
-msgid "Select a time span"
-msgstr "Seleccioni un període de temps"
 
 #. module: hr
 #: field:hr.timesheet.group,manager:0
@@ -268,34 +189,9 @@ msgid "Members"
 msgstr "Membres"
 
 #. module: hr
-#: field:hr.action.reason,action_type:0
-msgid "Action's type"
-msgstr "Tipus d'acció"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Report"
-msgstr "Informe"
-
-#. module: hr
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"No ha registrat la sortida l'última vegada. , Si us plau introdueixi la data "
-"i hora en que va sortir."
-
-#. module: hr
-#: model:ir.actions.report.xml,name:hr.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Informe errors d'assistència"
-
-#. module: hr
-#: wizard_field:hr.print_week,init,init_date:0
-#: wizard_field:hr.timesheet.attendance.report,init,init_date:0
-msgid "Starting Date"
-msgstr "Data d'inici"
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Configuració"
 
 #. module: hr
 #: constraint:ir.ui.view:0
@@ -308,11 +204,6 @@ msgid "Divorced"
 msgstr "Divorciat/da"
 
 #. module: hr
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Assistència d'empleat"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
 #: model:ir.ui.menu,name:hr.menu_department_def
@@ -321,10 +212,9 @@ msgid "Departments"
 msgstr "Departaments"
 
 #. module: hr
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign In"
-msgstr "Registra entrada"
+#: model:process.node,name:hr.process_node_employeecontact0
+msgid "Employee Contact"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -342,10 +232,9 @@ msgid "Male"
 msgstr "Home"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Categories d'empleat"
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
+msgstr "Solter"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
@@ -359,11 +248,6 @@ msgid "Tuesday"
 msgstr "Dimarts"
 
 #. module: hr
-#: wizard_view:hr.print_month,init:0
-msgid "Select a month"
-msgstr "Seleccioneu un mes"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
 msgstr "hr.department"
@@ -374,26 +258,10 @@ msgid "Related User"
 msgstr "Usuari OpenERP"
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Un valor negatiu significa que l'empleat ha treballat més del programat."
-
-#. module: hr
 #: field:hr.employee,category_id:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Categoria"
-
-#. module: hr
-#: wizard_view:hr.si_so,si_ask_so:0
-#: wizard_view:hr.si_so,so_ask_si:0
-#: wizard_view:hr.si_so,init:0
-#: model:ir.actions.wizard,name:hr.si_so
-#: model:ir.ui.menu,name:hr.menu_si_so
-msgid "Sign in / Sign out"
-msgstr "Registra entrada/sortida"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -401,10 +269,9 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_attendance
-#: field:hr.employee,state:0
-msgid "Attendance"
-msgstr "Assistència"
+#: model:process.transition,note:hr.process_transition_employeejob0
+msgid "After confirming job, he will be a employee"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -412,29 +279,9 @@ msgid "Contact Information"
 msgstr "Informació de contacte"
 
 #. module: hr
-#: model:ir.actions.wizard,name:hr.print_week
-msgid "Print Timesheet by week"
-msgstr "Imprimeix horaris per setmana"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr "Altre"
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Estat"
-
-#. module: hr
-#: field:hr.employee,address_id:0
-msgid "Contact address"
-msgstr "Adreça contacte"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Avg Delay"
-msgstr "Retard mig"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -448,9 +295,15 @@ msgid "Categories structure"
 msgstr "Arbre de les categories"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Job Information"
-msgstr "Informació de la tasca"
+#: field:hr.employee,birthday:0
+msgid "Started on"
+msgstr "Va començar el"
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-out must be right after a sign-in !"
+msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,dayofweek:0
@@ -458,36 +311,14 @@ msgid "Day of week"
 msgstr "Dia de la setmana"
 
 #. module: hr
+#: model:process.transition,name:hr.process_transition_employeejob0
+msgid "Employee Job"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
 msgstr "Núm. Seg. Social"
-
-#. module: hr
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Data"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "To:"
-msgstr "Per a:"
-
-#. module: hr
-#: wizard_button:hr.si_so,si_ask_so,si:0
-#: wizard_button:hr.si_so,init,si_test:0
-#: selection:hr.action.reason,action_type:0
-msgid "Sign in"
-msgstr "Registra entrada"
-
-#. module: hr
-#: wizard_view:hr.timesheet.attendance.report,init:0
-msgid "Analysis Information"
-msgstr "Anàlisi"
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Wednesday"
-msgstr "Dimecres"
 
 #. module: hr
 #: field:hr.employee,active:0
@@ -495,20 +326,35 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr "Solter"
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Create OpenERP User"
+msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Errors d'assistència"
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee Complete Form"
+msgstr ""
 
 #. module: hr
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Acció"
+#: view:hr.department:0
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: hr
+#: selection:hr.timesheet,dayofweek:0
+msgid "Wednesday"
+msgstr "Dimecres"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Categories d'empleat"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_jobshiring0
+msgid "Jobs hiring"
+msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
@@ -516,14 +362,14 @@ msgid "Starting date"
 msgstr "Data d'inici"
 
 #. module: hr
-#: wizard_view:hr.print_week,init:0
-msgid "Select a starting and a end date"
-msgstr "Seleccioni una data inicial i final"
-
-#. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent category"
 msgstr "Categoria pare"
+
+#. module: hr
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "Direcció oficina"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -531,24 +377,9 @@ msgid "Marital Status"
 msgstr "Estat civil"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Hierarchical view of this employee"
-msgstr "Vista jeràrquica d'aquest empleat"
-
-#. module: hr
-#: wizard_button:hr.print_month,init,end:0
-#: wizard_button:hr.print_week,init,end:0
-#: wizard_button:hr.si_so,si_ask_so,end:0
-#: wizard_button:hr.si_so,so_ask_si,end:0
-#: wizard_button:hr.si_so,init,end:0
-#: wizard_button:hr.timesheet.attendance.report,init,end:0
-msgid "Cancel"
-msgstr "Cancel·la"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet
-msgid "Timesheet Line"
-msgstr "Línia de full d'assistència"
+#: field:hr.timesheet.group,name:0
+msgid "Group name"
+msgstr "Nom grup"
 
 #. module: hr
 #: view:hr.employee:0
@@ -557,19 +388,8 @@ msgstr "Informació personal"
 
 #. module: hr
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial !"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Un valor positiu significa que l'empleat ha treballat menys del "
-"programat."
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet_group
@@ -584,26 +404,19 @@ msgid "Thursday"
 msgstr "Dijous"
 
 #. module: hr
-#: wizard_button:hr.si_so,so_ask_si,so:0
-#: wizard_button:hr.si_so,init,so_test:0
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Registra sortida"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr "Retard"
-
-#. module: hr
 #: field:hr.timesheet,hour_to:0
 msgid "Work to"
 msgstr "Treballa fins"
 
 #. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "Departament pare"
+#: selection:hr.employee,marital:0
+msgid "Other"
+msgstr "Altre"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid "Fill up contact information"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -611,42 +424,14 @@ msgid "Employees Categories"
 msgstr "Categories d'empleats"
 
 #. module: hr
-#: wizard_field:hr.print_month,init,month:0
-msgid "Month"
-msgstr "Mes"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr "Data registrada"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Childs Departments"
 msgstr "Departaments fills"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_attendance
-#: model:ir.ui.menu,name:hr.menu_hr_attendance
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance
-msgid "Attendances"
-msgstr "Assistència"
-
-#. module: hr
-#: wizard_field:hr.si_so,so_ask_si,last_time:0
-msgid "Your last sign in"
-msgstr "El seu últim registre entrada"
-
-#. module: hr
-#: model:ir.actions.wizard,name:hr.print_month
-msgid "Print Timesheet by month"
-msgstr "Imprimeix horaris per mes"
-
-#. module: hr
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr "Registra sortida"
+#: model:ir.model,name:hr.model_hr_timesheet
+msgid "Timesheet Line"
+msgstr "Línia de full d'assistència"
 
 #. module: hr
 #: view:hr.department:0
@@ -659,24 +444,9 @@ msgid "Nationality"
 msgstr "Nacionalitat"
 
 #. module: hr
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Defineix motiu absència"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "From:"
-msgstr "Des de:"
-
-#. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other ID"
 msgstr "Altre ID"
-
-#. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr "Categoria horari treball"
 
 #. module: hr
 #: field:hr.timesheet,name:0
@@ -701,20 +471,19 @@ msgid "Department Name"
 msgstr "Nom de departament"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_action_reason
-#: field:hr.attendance,action_desc:0
-msgid "Action reason"
-msgstr "Motiu d'acció"
+#: view:hr.employee:0
+msgid "Job Information"
+msgstr "Informació de la tasca"
 
 #. module: hr
-#: field:hr.employee,birthday:0
-msgid "Started on"
-msgstr "Va començar el"
+#: model:process.process,name:hr.process_process_employeecontractworkflow0
+msgid "Employee Contract Workflow"
+msgstr ""
 
 #. module: hr
-#: wizard_view:hr.timesheet.attendance.report,init:0
-msgid "Bellow this delay, the error is considered as volunteer"
-msgstr "Malgrat aquest retrad, l'error és considerat com voluntari"
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Fill up employee's contact information"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -723,14 +492,10 @@ msgid "Manager"
 msgstr "Director"
 
 #. module: hr
-#: wizard_button:hr.timesheet.attendance.report,init,print:0
-msgid "Print Attendance Report"
-msgstr "Imprimeix informe assistència"
-
-#. module: hr
-#: wizard_field:hr.print_month,init,year:0
-msgid "Year"
-msgstr "Any"
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+msgid "All Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -742,3 +507,4 @@ msgstr "Dissabte"
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_new
 msgid "New Employee"
 msgstr "Nou empleat"
+

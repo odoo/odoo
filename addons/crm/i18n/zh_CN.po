@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:37:41+0000"
-"PO-Revision-Date: 2008-09-11 15:37:41+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
+"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Delay After Trigger Date:"
+msgstr ""
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu7_option:0
@@ -34,7 +39,13 @@ msgstr "满意度 计算"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
+#: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,act_remind_partner:0
+msgid "Remind Partner"
 msgstr ""
 
 #. module: crm
@@ -65,15 +76,31 @@ msgid "Default state of mind for period preceeding the 'Max Interval' computatio
 msgstr ""
 
 #. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr "采购金额"
+
+#. module: crm
 #: model:ir.actions.wizard,name:crm.wizard_case_section_menu
 #: model:ir.ui.menu,name:crm.menu_wizard_case_section_menu
 msgid "Create menus for a case section"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "Template of Email to Send"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_rule-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_rule-act
 msgid "Rules"
+msgstr ""
+
+#. module: crm
+#, python-format
+#: code:addons/crm/crm.py:0
+msgid "Warning !"
 msgstr ""
 
 #. module: crm
@@ -109,7 +136,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.next_id_51
-#: model:ir.ui.menu,name:crm.next_id_52
 #: view:crm.case:0
 #: view:crm.case.history:0
 msgid "Cases"
@@ -124,7 +150,6 @@ msgid "Highest"
 msgstr "最高"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.act_crm_case_categ_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_crm_case_section_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_partner_2_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_partner_canal_2_crm_case_opened
@@ -136,11 +161,6 @@ msgstr "待结事务"
 #: help:crm.segmentation,categ_id:0
 msgid "The partner category that will be added to partners that match the segmentation criterions after computation."
 msgstr ""
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "%(partner)s = Partner name"
-msgstr "%(partner)s = Partner name"
 
 #. module: crm
 #, python-format
@@ -156,7 +176,6 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.log,user_id:0
-#: field:crm.case,user_id:0
 msgid "User Responsible"
 msgstr "负责用户"
 
@@ -207,20 +226,10 @@ msgid "Minutes"
 msgstr "分钟"
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Email to send"
-msgstr "要发送的email"
-
-#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu16_option:0
 #: wizard_field:crm.case.section.menu,design_menu,menu16:0
 msgid "All Unclosed and Unassigned "
 msgstr ""
-
-#. module: crm
-#: field:crm.case.rule,trg_priority_from:0
-msgid "Priority min"
-msgstr "优先级最小值"
 
 #. module: crm
 #: field:crm.case.rule,name:0
@@ -234,9 +243,9 @@ msgid "Cases Histories"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.menu_crm_configuration
-msgid "Configuration"
-msgstr "设置"
+#: help:crm.case.rule,act_remind_partner:0
+msgid "Check this if you want the rule to send a reminder by email to the partner."
+msgstr ""
 
 #. module: crm
 #: field:crm.case,ref:0
@@ -252,11 +261,6 @@ msgstr "子属性"
 #: view:res.partner.events:0
 msgid "Partner Events"
 msgstr "业务伙伴活动"
-
-#. module: crm
-#: field:crm.case.rule,trg_priority_to:0
-msgid "Priority max"
-msgstr "优先级最大值"
 
 #. module: crm
 #: field:crm.case.rule,act_mail_to_watchers:0
@@ -291,14 +295,19 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: crm
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "业务伙伴分类"
+#: model:ir.model,name:crm.model_crm_case_log
+msgid "Case Communication History"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of case"
 msgstr "事务分类"
+
+#. module: crm
+#: view:crm.case:0
+msgid "Estimates"
+msgstr "估计"
 
 #. module: crm
 #: view:crm.case:0
@@ -317,20 +326,16 @@ msgid "My Open "
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "Estimates"
-msgstr "估计"
+#: field:crm.case.rule,trg_state_from:0
+msgid "Case State"
+msgstr ""
 
 #. module: crm
+#: field:crm.case.log,section_id:0
 #: field:crm.case.rule,trg_section_id:0
 #: field:crm.case,section_id:0
 msgid "Section"
 msgstr "事务属性"
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "Special Keywords"
-msgstr "特殊关键字"
 
 #. module: crm
 #: field:crm.case.rule,act_mail_to_email:0
@@ -338,8 +343,13 @@ msgid "Mail to these emails"
 msgstr "发送email"
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.ui.menu,name:crm.menu_crm_configuration
+msgid "Configuration"
+msgstr "设置"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Special Keywords to Be Used in The Body"
 msgstr ""
 
 #. module: crm
@@ -411,6 +421,11 @@ msgid "Lowest"
 msgstr "最低"
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "E-Mail Reminders (includes the content of the case)"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
 msgstr ""
@@ -422,9 +437,14 @@ msgid "Error !"
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "Send Reminder"
-msgstr "发送提醒"
+#: view:crm.case.rule:0
+msgid "Fields to Change"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,trg_priority_to:0
+msgid "Maximim Priority"
+msgstr ""
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
@@ -464,14 +484,14 @@ msgid "Last Action Date"
 msgstr "最后行动日期"
 
 #. module: crm
-#: field:crm.case.rule,trg_state_to:0
-msgid "Case state to"
-msgstr "事务状态至"
-
-#. module: crm
 #: selection:crm.case.rule,trg_date_range_type:0
 msgid "Hours"
 msgstr "小时"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "E-Mail Actions"
+msgstr ""
 
 #. module: crm
 #: selection:crm.case.rule,act_state:0
@@ -539,9 +559,14 @@ msgid "Mail to responsible"
 msgstr "发送邮件至负责人"
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Rule Information"
-msgstr "规则"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr ""
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu6_option:0
@@ -555,6 +580,11 @@ msgid "%(case_date)s = Creation date"
 msgstr "%(case_date)s = Creation date"
 
 #. module: crm
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "业务伙伴分类"
+
+#. module: crm
 #: view:crm.case:0
 msgid "References"
 msgstr "参考"
@@ -565,9 +595,9 @@ msgid "Set responsible to"
 msgstr "设置负责人"
 
 #. module: crm
-#: field:crm.case.categ,probability:0
-msgid "Probability"
-msgstr "可能性"
+#: view:crm.case.rule:0
+msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
+msgstr ""
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,design_menu:0
@@ -599,6 +629,11 @@ msgid "Case Section"
 msgstr "事务属性"
 
 #. module: crm
+#: field:crm.case.rule,trg_state_to:0
+msgid "Button Pressed"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.rule,act_method:0
 msgid "Call Object Method"
 msgstr "调用对象方法"
@@ -610,9 +645,15 @@ msgid "Segmentation"
 msgstr "分类"
 
 #. module: crm
-#: field:crm.segmentation,som_interval:0
-msgid "Days per Periode"
-msgstr "计算间隔天数"
+#, python-format
+#: code:addons/crm/crm.py:0
+msgid "You can not delete this case. You should better cancel it."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.rule,trg_priority_from:0
+msgid "Minimum Priority"
+msgstr ""
 
 #. module: crm
 #: field:crm.case,ref2:0
@@ -631,9 +672,9 @@ msgid "Category"
 msgstr "分类"
 
 #. module: crm
-#: field:crm.case.rule,trg_state_from:0
-msgid "Case state from"
-msgstr "事务状态从"
+#: view:crm.case.rule:0
+msgid "Conditions on States"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.history,log_id:0
@@ -652,8 +693,8 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case.rule:0
-msgid "Actions to execute"
-msgstr "执行操作"
+msgid "%(partner)s = Partner name"
+msgstr "%(partner)s = Partner name"
 
 #. module: crm
 #: field:crm.case,planned_cost:0
@@ -666,14 +707,14 @@ msgid "Not Running"
 msgstr "未运行"
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "Note"
+msgstr ""
+
+#. module: crm
 #: view:crm.case:0
 msgid "Action Information"
 msgstr "操作信息"
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "E-Mail Information"
-msgstr "Email"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,view_calendar:0
@@ -706,6 +747,11 @@ msgstr "启动日期后的延迟"
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
 msgid "Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions"
 msgstr ""
 
 #. module: crm
@@ -789,6 +835,11 @@ msgid "All Unassigned "
 msgstr ""
 
 #. module: crm
+#: help:crm.case.rule,act_remind_attach:0
+msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
+msgstr ""
+
+#. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
 msgstr "必填表达"
@@ -806,6 +857,11 @@ msgstr "上级单元"
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,menu_parent_id:0
 msgid "Parent Menu"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Timing"
 msgstr ""
 
 #. module: crm
@@ -870,16 +926,6 @@ msgid "History"
 msgstr "记录"
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Delay after trigger date:"
-msgstr "启动日期后的延迟："
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling Options"
-msgstr ""
-
-#. module: crm
 #: field:crm.case,partner_address_id:0
 msgid "Partner Contact"
 msgstr "业务伙伴联系人"
@@ -901,9 +947,9 @@ msgid "<"
 msgstr "<"
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "General Information"
-msgstr "一般信息"
+#: view:crm.case:0
+msgid "Send Reminder"
+msgstr "发送提醒"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu10_option:0
@@ -961,6 +1007,11 @@ msgid "Planned revenue"
 msgstr "计划收入"
 
 #. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Case Partner"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.section,code:0
 msgid "Section Code"
 msgstr ""
@@ -978,6 +1029,7 @@ msgstr "一般说明"
 #. module: crm
 #: field:crm.case.rule,trg_user_id:0
 #: field:crm.case.section,user_id:0
+#: field:crm.case,user_id:0
 msgid "Responsible"
 msgstr "负责人"
 
@@ -990,11 +1042,6 @@ msgstr ""
 #: view:crm.case.rule:0
 msgid "%(email_from)s = Partner email"
 msgstr "%(email_from)s = Partner email"
-
-#. module: crm
-#: view:crm.case.rule:0
-msgid "Criterions to be checked"
-msgstr "要检查的条件"
 
 #. module: crm
 #: field:crm.case,email_from:0
@@ -1043,6 +1090,11 @@ msgid "All Canceled "
 msgstr ""
 
 #. module: crm
+#: field:crm.segmentation,som_interval:0
+msgid "Days per Periode"
+msgstr "计算间隔天数"
+
+#. module: crm
 #: help:crm.segmentation,name:0
 msgid "The name of the segmentation."
 msgstr ""
@@ -1053,14 +1105,15 @@ msgid "Mail body"
 msgstr "邮件内容"
 
 #. module: crm
-#: field:crm.case,probability:0
-msgid "Probability (0.50)"
-msgstr "概率(0.50)"
+#: help:crm.case.rule,act_remind_user:0
+msgid "Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
 
 #. module: crm
-#: selection:crm.segmentation.line,expr_name:0
-msgid "Purchase Amount"
-msgstr "采购金额"
+#: field:crm.case.categ,probability:0
+#: field:crm.case,probability:0
+msgid "Probability (%)"
+msgstr ""
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -1087,11 +1140,6 @@ msgid "Case Rule"
 msgstr "事务规则"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_case_log
-msgid "Case communication history"
-msgstr "事务交互记录"
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
 msgid "="
 msgstr "="
@@ -1102,6 +1150,11 @@ msgstr "="
 #: model:res.request.link,name:crm.req_link_case
 msgid "Case"
 msgstr "事务"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Priority Range"
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,name:0
@@ -1157,9 +1210,19 @@ msgid "All Histories"
 msgstr ""
 
 #. module: crm
+#: help:crm.case.rule,act_email_cc:0
+msgid "These people will receive a copy of the futur communication between partner and users by email"
+msgstr ""
+
+#. module: crm
 #: field:crm.case,email_last:0
 msgid "Latest E-Mail"
 msgstr "最近的Email"
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Conditions on Case Fields"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.log:0
@@ -1213,14 +1276,10 @@ msgid "crm.case.section.open"
 msgstr ""
 
 #. module: crm
+#: view:crm.case.rule:0
 #: view:crm.case:0
 msgid "Actions"
 msgstr "操作"
-
-#. module: crm
-#: field:crm.case.rule,act_remind_partner:0
-msgid "Remind partner"
-msgstr "提醒业务伙伴"
 
 #. module: crm
 #: selection:crm.case,priority:0

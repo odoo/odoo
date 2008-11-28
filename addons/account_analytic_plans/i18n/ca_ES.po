@@ -1,21 +1,19 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* account_analytic_plans
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 16:29+0000\n"
-"PO-Revision-Date: 2008-10-21 21:59+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -24,11 +22,8 @@ msgstr "Id compte4"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -43,6 +38,11 @@ msgid "Account5 Id"
 msgstr "Id compte5"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
 msgstr "Taxa (%)"
@@ -51,6 +51,11 @@ msgstr "Taxa (%)"
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
 msgstr "Línia de distribució analítica"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -137,10 +142,10 @@ msgid "Analytic Account Ref."
 msgstr "Ref. compte analítica"
 
 #. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
 #: field:account.analytic.plan.instance,name:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
-#: field:product.product,property_account_distribution:0
 #: view:account.analytic.plan.instance:0
 msgid "Analytic Distribution"
 msgstr "Distribució analítica"
@@ -204,14 +209,6 @@ msgid "Invalid XML for View Architecture!"
 msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: account_analytic_plans
-#: help:product.product,property_account_distribution:0
-msgid ""
-"This Analytic Distribution will be use in sale order line and invoice lines"
-msgstr ""
-"Aquesta distribució analítica s'utilitzarà en línies de comandes de venda i "
-"línies de factura"
-
-#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
@@ -254,12 +251,6 @@ msgid "Analytic Journal"
 msgstr "Diari analític"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
-msgid "Object for create analytic entries from invoice lines"
-msgstr "Objecte per crear assentaments analítics des de línies de factura"
-
-#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Quantitat"
@@ -276,7 +267,6 @@ msgstr "Codi"
 
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
-#: wizard_button:create.model,endit,end:0
 msgid "OK"
 msgstr "OK"
 
@@ -287,10 +277,8 @@ msgstr "Compte principal"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
-"Aquest model de distribució s'ha desat. Més tard podrà reutilitzar-lo."
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "Aquest model de distribució s'ha desat. Més tard podrà reutilitzar-lo."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -331,3 +319,4 @@ msgstr "Data inicial"
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
 msgstr "a les"
+

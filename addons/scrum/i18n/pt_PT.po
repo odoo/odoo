@@ -1,31 +1,19 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* scrum
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 13:28+0000\n"
-"PO-Revision-Date: 2008-11-04 11:52+0000\n"
-"Last-Translator: Adérito (Primeconsulting.cv) <yongzox@hotmail.com>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:02:43+0000\n"
+"PO-Revision-Date: 2008-11-28 17:02:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: scrum
-#: field:scrum.project,members:0
-msgid "Project members"
-msgstr "Membrs do projecto"
-
-#. module: scrum
-#: field:scrum.task,effective_hours:0
-msgid "Eff. Hours"
-msgstr "Horas efectivas"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: scrum
 #: view:scrum.product.backlog:0
@@ -38,9 +26,9 @@ msgid "Meeting Name"
 msgstr "Nome do encontro"
 
 #. module: scrum
-#: field:scrum.project,warn_customer:0
-msgid "Warn customer"
-msgstr "Alertar clientes"
+#: model:process.transition,note:scrum.process_transition_backlogtask0
+msgid "From backlog create task."
+msgstr ""
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_view_task4
@@ -55,10 +43,24 @@ msgid "My opened sprints (Product Owner)"
 msgstr "Meus sprints abertos (Dono do producto)"
 
 #. module: scrum
+#: model:process.node,note:scrum.process_node_productbacklog0
+msgid "Create task from backlogs"
+msgstr ""
+
+#. module: scrum
+#: selection:scrum.project,state:0
+msgid "Template"
+msgstr ""
+
+#. module: scrum
 #: field:scrum.project,progress_rate:0
-#: field:scrum.task,progress_rate:0
 msgid "Progress"
 msgstr "Progresso"
+
+#. module: scrum
+#: help:scrum.task,remaining_hours:0
+msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,child_id:0
@@ -76,9 +78,9 @@ msgid "Are your Sprint Backlog estimate accurate ?"
 msgstr "Sua estimativa da reserva de Sprint exata?"
 
 #. module: scrum
-#: field:scrum.task,history:0
-msgid "Task Details"
-msgstr "Detalhes da tarefa"
+#: field:scrum.project,members:0
+msgid "Project Members"
+msgstr ""
 
 #. module: scrum
 #: view:scrum.project:0
@@ -86,14 +88,14 @@ msgid "Scrum Projects"
 msgstr "Projectos scrum"
 
 #. module: scrum
-#: field:scrum.project,tax_ids:0
-msgid "Applicable taxes"
-msgstr "Taxas aplicáveis"
+#: field:scrum.project,warn_customer:0
+msgid "Warn Partner"
+msgstr ""
 
 #. module: scrum
-#: field:scrum.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Tarefas apagadas"
+#: help:scrum.project,warn_header:0
+msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr ""
 
 #. module: scrum
 #: field:scrum.task,priority:0
@@ -106,13 +108,13 @@ msgid "Scrum Task"
 msgstr "Tarefas scrum"
 
 #. module: scrum
-#: field:scrum.project,tariff:0
-msgid "Sales price"
-msgstr "Preços de venda"
-
-#. module: scrum
 #: model:ir.actions.act_window,name:scrum.dblc_proj
 msgid "View project's backlog"
+msgstr ""
+
+#. module: scrum
+#: help:scrum.project,members:0
+msgid "Project's member. Not used in any computation, just for information purpose."
 msgstr ""
 
 #. module: scrum
@@ -120,11 +122,6 @@ msgstr ""
 #: selection:scrum.product.backlog,priority:0
 msgid "Very urgent"
 msgstr "Muito urgente"
-
-#. module: scrum
-#: field:scrum.task,start_sequence:0
-msgid "Wait for previous sequences"
-msgstr "Esperar por sequências anteriores"
 
 #. module: scrum
 #: field:scrum.sprint,retrospective:0
@@ -135,6 +132,11 @@ msgstr "Retrospectiva do sprint"
 #: field:scrum.sprint,name:0
 msgid "Sprint Name"
 msgstr "Nome do sprint"
+
+#. module: scrum
+#: field:scrum.meeting,question_backlog:0
+msgid "Backlog Accurate"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,notes:0
@@ -155,6 +157,11 @@ msgid "Project"
 msgstr "Projecto"
 
 #. module: scrum
+#: help:scrum.project,warn_manager:0
+msgid "If you check this field, the project manager will receive a request each time a task is completed by his team."
+msgstr ""
+
+#. module: scrum
 #: selection:scrum.project,state:0
 #: selection:scrum.task,state:0
 msgid "Cancelled"
@@ -166,9 +173,9 @@ msgid "Team Name"
 msgstr "Nome da equipa"
 
 #. module: scrum
-#: field:scrum.project,warn_footer:0
-msgid "Mail footer"
-msgstr "Rodapé da carta"
+#: field:scrum.project,warn_header:0
+msgid "Mail Header"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,sprint_size:0
@@ -181,14 +188,19 @@ msgid "Ending Date"
 msgstr "Data final"
 
 #. module: scrum
+#: help:scrum.task,effective_hours:0
+msgid "Computed using the sum of the task work done."
+msgstr ""
+
+#. module: scrum
+#: help:scrum.project,warn_customer:0
+msgid "If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."
+msgstr ""
+
+#. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_task_open
 msgid "View sprint Tasks"
 msgstr "Ver tarefas de sprint"
-
-#. module: scrum
-#: field:scrum.task,invoice_id:0
-msgid "Generated Invoice"
-msgstr "Facturas geradas"
 
 #. module: scrum
 #: field:scrum.project,category_id:0
@@ -196,9 +208,10 @@ msgid "Analytic Account"
 msgstr "Conta da contabilidade analítica"
 
 #. module: scrum
-#: field:scrum.project,mode:0
-msgid "Price setting mode"
-msgstr "Modo de configuração do preço"
+#: model:ir.actions.act_window,name:scrum.action_view_task
+#: model:ir.ui.menu,name:scrum.menu_action_view_task
+msgid "All Tasks"
+msgstr "Todas as tarefas"
 
 #. module: scrum
 #: field:scrum.task,date_deadline:0
@@ -206,20 +219,17 @@ msgid "Deadline"
 msgstr "Prazo limite"
 
 #. module: scrum
-#: field:scrum.project,warn_manager:0
-msgid "Warn manager"
-msgstr "Alertar gerente"
+#: field:scrum.project,partner_id:0
+#: field:scrum.task,partner_id:0
+msgid "Partner"
+msgstr ""
 
 #. module: scrum
+#: field:scrum.task,planned_hours:0
 #: field:scrum.product.backlog,planned_hours:0
 #: field:scrum.sprint,planned_hours:0
 msgid "Planned Hours"
 msgstr "Horas planeadas"
-
-#. module: scrum
-#: field:scrum.project,name:0
-msgid "Project name"
-msgstr "Nome do projecto"
 
 #. module: scrum
 #: field:scrum.product.backlog,priority:0
@@ -227,14 +237,30 @@ msgid "Priority"
 msgstr "Prioridade"
 
 #. module: scrum
+#: field:scrum.project,state:0
 #: view:scrum.sprint:0
 msgid "State"
 msgstr "Estado"
 
 #. module: scrum
+#: help:scrum.project,progress_rate:0
+msgid "Percent of tasks closed according to the total of tasks todo."
+msgstr ""
+
+#. module: scrum
+#: help:scrum.project,notes:0
+msgid "Internal description of the project."
+msgstr ""
+
+#. module: scrum
 #: field:scrum.sprint,meetings_id:0
 msgid "Daily Scrum"
 msgstr "Srum diário"
+
+#. module: scrum
+#: help:scrum.task,total_hours:0
+msgid "Computed as: Time Spent + Remaining Time."
+msgstr ""
 
 #. module: scrum
 #: field:scrum.task,type:0
@@ -253,15 +279,19 @@ msgid "Medium"
 msgstr "Médio"
 
 #. module: scrum
+#: field:scrum.project,total_hours:0
+msgid "Total Time"
+msgstr ""
+
+#. module: scrum
 #: model:ir.ui.menu,name:scrum.next_id_67
 msgid "Scrum"
 msgstr "Scrum"
 
 #. module: scrum
-#: model:ir.actions.act_window,name:scrum.action_view_task
-#: model:ir.ui.menu,name:scrum.menu_action_view_task
-msgid "All Tasks"
-msgstr "Todas as tarefas"
+#: field:scrum.project,planned_hours:0
+msgid "Planned Time"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.meeting,question_today:0
@@ -274,16 +304,8 @@ msgid "Tasks since yesterday"
 msgstr "Tarefas desde ontem"
 
 #. module: scrum
-#: field:scrum.project,pricelist_id:0
-msgid "Pricelist"
-msgstr "Lista de preços"
-
-#. module: scrum
-#: field:scrum.project,warn_header:0
-msgid "Mail header"
-msgstr "Cabeçalho da carta"
-
-#. module: scrum
+#: field:scrum.project,date_start:0
+#: field:scrum.task,date_start:0
 #: field:scrum.sprint,date_start:0
 msgid "Starting Date"
 msgstr "Data de início"
@@ -300,9 +322,19 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: scrum
+#: field:scrum.task,history:0
+msgid "Task Details"
+msgstr "Detalhes da tarefa"
+
+#. module: scrum
 #: model:ir.actions.act_window,name:scrum.dblc_proj2
 msgid "View project's tasks"
 msgstr "Ver tarefas do projecto"
+
+#. module: scrum
+#: field:scrum.task,delay_hours:0
+msgid "Delay Hours"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,contact_id:0
@@ -311,7 +343,6 @@ msgstr "Contacto"
 
 #. module: scrum
 #: field:scrum.project,tasks:0
-#: view:scrum.task:0
 msgid "Scrum Tasks"
 msgstr "Tarefas scrum"
 
@@ -326,15 +357,25 @@ msgid "Tasks"
 msgstr "Tarefas"
 
 #. module: scrum
-#: view:scrum.sprint:0
-msgid "Retrospective"
-msgstr "Retrospectiva"
+#: field:scrum.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Tarefas apagadas"
 
 #. module: scrum
 #: wizard_view:scrum.product.backlog.task.create,init:0
 #: wizard_button:scrum.product.backlog.task.create,init,create:0
 msgid "Create Tasks"
 msgstr "Criar tarefas"
+
+#. module: scrum
+#: field:scrum.task,progress:0
+msgid "Progress (%)"
+msgstr ""
+
+#. module: scrum
+#: help:scrum.task,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,scrum:0
@@ -370,9 +411,9 @@ msgid "Optionnal Info"
 msgstr "Informação opcional"
 
 #. module: scrum
-#: field:scrum.task,billable:0
-msgid "To be invoiced"
-msgstr "Para facturação"
+#: help:scrum.project,total_hours:0
+msgid "Sum of total hours of all tasks related to this project."
+msgstr ""
 
 #. module: scrum
 #: model:ir.model,name:scrum.model_scrum_sprint
@@ -391,11 +432,6 @@ msgstr ""
 #: model:ir.ui.menu,name:scrum.menu_action_sprint_open_tree7
 msgid "My opened sprints (Scrum Master)"
 msgstr ""
-
-#. module: scrum
-#: selection:scrum.project,mode:0
-msgid "By Task"
-msgstr "Por tarefas"
 
 #. module: scrum
 #: field:scrum.product.backlog,note:0
@@ -422,6 +458,11 @@ msgid "My opened tasks"
 msgstr "Minhas tarefas abertas"
 
 #. module: scrum
+#: field:scrum.project,manager:0
+msgid "Project Manager"
+msgstr ""
+
+#. module: scrum
 #: selection:scrum.project,state:0
 #: selection:scrum.task,state:0
 msgid "Pending"
@@ -433,7 +474,6 @@ msgid "Is there anything blocking you ?"
 msgstr "Há algo impedindo você ?"
 
 #. module: scrum
-#: field:scrum.project,state:0
 #: field:scrum.task,state:0
 #: field:scrum.product.backlog,state:0
 #: field:scrum.sprint,state:0
@@ -447,8 +487,13 @@ msgid "Opened Sprints"
 msgstr ""
 
 #. module: scrum
-#: model:ir.ui.menu,name:scrum.menu_action_meeting_form
-msgid "scrum.meeting.form"
+#: field:scrum.project,effective_hours:0
+msgid "Time Spent"
+msgstr ""
+
+#. module: scrum
+#: field:scrum.project,name:0
+msgid "Project Name"
 msgstr ""
 
 #. module: scrum
@@ -465,6 +510,7 @@ msgstr ""
 
 #. module: scrum
 #: view:scrum.product.backlog:0
+#: model:process.node,name:scrum.process_node_productbacklog0
 msgid "Product backlog"
 msgstr ""
 
@@ -487,6 +533,11 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: scrum
+#: help:scrum.task,delay_hours:0
+msgid "Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."
+msgstr ""
+
+#. module: scrum
 #: field:scrum.task,timebox_id:0
 msgid "Timebox"
 msgstr "Timebox"
@@ -498,20 +549,14 @@ msgid "Draft Sprints"
 msgstr ""
 
 #. module: scrum
-#: field:scrum.product.backlog,name:0
-msgid "Feature"
-msgstr ""
+#: field:scrum.task,parent_id:0
+msgid "Parent Task"
+msgstr "Tarefas ascendente"
 
 #. module: scrum
-#: selection:scrum.task,priority:0
-#: selection:scrum.product.backlog,priority:0
-msgid "Urgent"
-msgstr "Urgente"
-
-#. module: scrum
-#: field:scrum.task,date_start:0
-msgid "Date"
-msgstr "Data"
+#: field:scrum.task,work_ids:0
+msgid "Work done"
+msgstr "Trabalho concluído"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_backlog_open
@@ -529,8 +574,18 @@ msgid "Assigned to"
 msgstr "Atribuído a"
 
 #. module: scrum
-#: field:scrum.meeting,question_backlog:0
-msgid "Backlog Accurate"
+#: help:scrum.task,planned_hours:0
+msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
+msgstr ""
+
+#. module: scrum
+#: help:scrum.project,effective_hours:0
+msgid "Sum of spent hours of all tasks related to this project."
+msgstr ""
+
+#. module: scrum
+#: help:scrum.project,planned_hours:0
+msgid "Sum of planned hours of all tasks related to this project."
 msgstr ""
 
 #. module: scrum
@@ -558,8 +613,11 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: scrum
-#: selection:scrum.project,state:0
-#: selection:scrum.task,state:0
+#: help:scrum.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
+msgstr ""
+
+#. module: scrum
 #: selection:scrum.product.backlog,state:0
 #: selection:scrum.sprint,state:0
 msgid "Open"
@@ -571,26 +629,38 @@ msgstr "Aberto"
 #: view:scrum.product.backlog:0
 #: view:scrum.project:0
 #: view:scrum.sprint:0
-#: view:scrum.task:0
 msgid "Effective hours"
 msgstr "Horas efectivo"
 
 #. module: scrum
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:scrum.project,warn_manager:0
+msgid "Warn Manager"
 msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: scrum
-#: field:scrum.task,parent_id:0
-msgid "Parent Task"
-msgstr "Tarefas ascendente"
+#: selection:scrum.task,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: scrum
-#: field:scrum.project,date_start:0
-msgid "Project started on"
-msgstr "Projecto iniciado em"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+
+#. module: scrum
+#: field:scrum.task,remaining_hours:0
+msgid "Remaining Hours"
+msgstr ""
+
+#. module: scrum
+#: field:scrum.project,timesheet_id:0
+msgid "Working Time"
+msgstr ""
+
+#. module: scrum
+#: field:scrum.product.backlog,name:0
+msgid "Feature"
+msgstr ""
 
 #. module: scrum
 #: selection:scrum.task,priority:0
@@ -599,22 +669,30 @@ msgid "Very Low"
 msgstr "Muito Baixa"
 
 #. module: scrum
+#: help:scrum.project,timesheet_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr ""
+
+#. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_open_tree3
 #: model:ir.ui.menu,name:scrum.menu_action_sprint_open_tree3
 msgid "Sprints Done"
 msgstr ""
 
 #. module: scrum
-#: field:scrum.project,timesheet_id:0
-msgid "Working hours"
-msgstr "Horas trabalhando"
+#: constraint:scrum.project:0
+msgid "Error ! You can not create recursive projects."
+msgstr ""
 
 #. module: scrum
-#: field:scrum.project,planned_hours:0
+#: model:process.transition,name:scrum.process_transition_backlogtask0
+msgid "Backlog Task"
+msgstr ""
+
+#. module: scrum
 #: view:scrum.product.backlog:0
 #: view:scrum.project:0
 #: view:scrum.sprint:0
-#: view:scrum.task:0
 msgid "Planned hours"
 msgstr "Horas planeadas"
 
@@ -626,6 +704,7 @@ msgstr "Editar projectos"
 
 #. module: scrum
 #: model:ir.model,name:scrum.model_scrum_meeting
+#: model:ir.ui.menu,name:scrum.menu_action_meeting_form
 #: view:scrum.meeting:0
 msgid "Scrum Meeting"
 msgstr "Reunião scrum"
@@ -636,9 +715,10 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: scrum
-#: field:scrum.project,date_end:0
-msgid "Project should end on"
-msgstr "Projecto deveria terminar em"
+#: selection:scrum.task,priority:0
+#: selection:scrum.product.backlog,priority:0
+msgid "Urgent"
+msgstr "Urgente"
 
 #. module: scrum
 #: view:scrum.sprint:0
@@ -646,22 +726,16 @@ msgid "Daily Meetings"
 msgstr "Mensagens diárias"
 
 #. module: scrum
-#: field:scrum.task,work_ids:0
-msgid "Work done"
-msgstr "Trabalho concluído"
-
-#. module: scrum
 #: view:scrum.meeting:0
 msgid "What are you working on today ?"
 msgstr "Em quê estas a trabalhar hoje ?"
 
 #. module: scrum
-#: field:scrum.project,effective_hours:0
-msgid "Hours spent"
-msgstr "Horas gastadas"
+#: selection:scrum.project,state:0
+msgid "Running"
+msgstr ""
 
 #. module: scrum
-#: field:scrum.task,progress:0
 #: field:scrum.product.backlog,progress:0
 #: field:scrum.sprint,progress:0
 msgid "Progress (0-100)"
@@ -689,15 +763,9 @@ msgid "Sprint Info"
 msgstr ""
 
 #. module: scrum
-#: field:scrum.project,partner_id:0
-#: field:scrum.task,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
-
-#. module: scrum
-#: field:scrum.task,planned_hours:0
-msgid "Plan. hours"
-msgstr "Horas planeadas"
+#: view:scrum.project:0
+msgid "Scrum Data"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.product.backlog,tasks_id:0
@@ -705,9 +773,14 @@ msgid "Tasks Details"
 msgstr "Detalhes das tarefas"
 
 #. module: scrum
-#: selection:scrum.project,mode:0
-msgid "By Effective Hour"
-msgstr "Por horas efectivas"
+#: view:scrum.sprint:0
+msgid "Retrospective"
+msgstr "Retrospectiva"
+
+#. module: scrum
+#: field:scrum.task,effective_hours:0
+msgid "Hours Spent"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.task,context_id:0
@@ -715,9 +788,9 @@ msgid "Context"
 msgstr "Contexto"
 
 #. module: scrum
-#: selection:scrum.project,mode:0
-msgid "By Hour"
-msgstr "Por hora"
+#: field:scrum.task,total_hours:0
+msgid "Total Hours"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.team,users_id:0
@@ -730,6 +803,11 @@ msgstr "Utilizadores"
 #: field:scrum.product.backlog,sequence:0
 msgid "Sequence"
 msgstr "Sequência"
+
+#. module: scrum
+#: help:scrum.project,warn_footer:0
+msgid "Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr ""
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_product_backlog_form_open
@@ -761,6 +839,12 @@ msgid "Sprint"
 msgstr "Sprint"
 
 #. module: scrum
-#: field:scrum.project,manager:0
-msgid "Project manager"
-msgstr "Gestor do projecto"
+#: field:scrum.project,date_end:0
+msgid "Expected End"
+msgstr ""
+
+#. module: scrum
+#: field:scrum.project,warn_footer:0
+msgid "Mail Footer"
+msgstr ""
+

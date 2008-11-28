@@ -4,21 +4,20 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:37:41+0000"
-"PO-Revision-Date: 2008-09-11 15:37:41+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
+"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,city:0
 #: wizard_field:base_setup.base_setup,update,city:0
-#: wizard_field:base_setup.base_setup,charts,city:0
 #: wizard_field:base_setup.base_setup,init,city:0
 msgid "City"
 msgstr "城市"
@@ -55,15 +54,13 @@ msgstr ""
 
 #. module: base_setup
 #: wizard_button:base_setup.base_setup,company,update:0
-#: wizard_button:base_setup.base_setup,charts,company:0
-#: wizard_button:base_setup.base_setup,init,next:0
+#: wizard_button:base_setup.base_setup,init,company:0
 msgid "Next"
 msgstr "下一个"
 
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,email:0
 #: wizard_field:base_setup.base_setup,update,email:0
-#: wizard_field:base_setup.base_setup,charts,email:0
 #: wizard_field:base_setup.base_setup,init,email:0
 msgid "E-mail"
 msgstr "Email"
@@ -71,7 +68,6 @@ msgstr "Email"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,state_id:0
 #: wizard_field:base_setup.base_setup,update,state_id:0
-#: wizard_field:base_setup.base_setup,charts,state_id:0
 #: wizard_field:base_setup.base_setup,init,state_id:0
 msgid "State"
 msgstr "省/ 州"
@@ -84,7 +80,6 @@ msgstr "新帐套已安装完毕。"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,profile:0
 #: wizard_field:base_setup.base_setup,update,profile:0
-#: wizard_field:base_setup.base_setup,charts,profile:0
 #: wizard_field:base_setup.base_setup,init,profile:0
 msgid "Profile"
 msgstr "行业属性"
@@ -92,7 +87,6 @@ msgstr "行业属性"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,rml_footer1:0
 #: wizard_field:base_setup.base_setup,update,rml_footer1:0
-#: wizard_field:base_setup.base_setup,charts,rml_footer1:0
 #: wizard_field:base_setup.base_setup,init,rml_footer1:0
 msgid "Report Footer 1"
 msgstr "报告脚注1"
@@ -100,23 +94,30 @@ msgstr "报告脚注1"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,rml_footer2:0
 #: wizard_field:base_setup.base_setup,update,rml_footer2:0
-#: wizard_field:base_setup.base_setup,charts,rml_footer2:0
 #: wizard_field:base_setup.base_setup,init,rml_footer2:0
 msgid "Report Footer 2"
 msgstr "报告脚注2"
 
 #. module: base_setup
+#: wizard_view:base_setup.base_setup,company:0
+msgid "General Information"
+msgstr ""
+
+#. module: base_setup
 #: wizard_field:base_setup.base_setup,company,street2:0
 #: wizard_field:base_setup.base_setup,update,street2:0
-#: wizard_field:base_setup.base_setup,charts,street2:0
 #: wizard_field:base_setup.base_setup,init,street2:0
 msgid "Street2"
 msgstr "街区地址5"
 
 #. module: base_setup
+#: wizard_view:base_setup.base_setup,company:0
+msgid "Report Information"
+msgstr ""
+
+#. module: base_setup
 #: wizard_field:base_setup.base_setup,company,phone:0
 #: wizard_field:base_setup.base_setup,update,phone:0
-#: wizard_field:base_setup.base_setup,charts,phone:0
 #: wizard_field:base_setup.base_setup,init,phone:0
 msgid "Phone"
 msgstr "电话"
@@ -127,22 +128,8 @@ msgid "Define Main Company"
 msgstr ""
 
 #. module: base_setup
-#: wizard_view:base_setup.base_setup,charts:0
-msgid "If you don't select one now, you'll be able to install another one through the Administration menu."
-msgstr ""
-
-#. module: base_setup
-#: wizard_field:base_setup.base_setup,company,charts:0
-#: wizard_field:base_setup.base_setup,update,charts:0
-#: wizard_field:base_setup.base_setup,charts,charts:0
-#: wizard_field:base_setup.base_setup,init,charts:0
-msgid "Chart of accounts"
-msgstr "科目体系"
-
-#. module: base_setup
 #: wizard_field:base_setup.base_setup,company,name:0
 #: wizard_field:base_setup.base_setup,update,name:0
-#: wizard_field:base_setup.base_setup,charts,name:0
 #: wizard_field:base_setup.base_setup,init,name:0
 msgid "Company Name"
 msgstr "公司名称"
@@ -150,7 +137,6 @@ msgstr "公司名称"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,country_id:0
 #: wizard_field:base_setup.base_setup,update,country_id:0
-#: wizard_field:base_setup.base_setup,charts,country_id:0
 #: wizard_field:base_setup.base_setup,init,country_id:0
 msgid "Country"
 msgstr "国家"
@@ -158,7 +144,6 @@ msgstr "国家"
 #. module: base_setup
 #: wizard_view:base_setup.base_setup,company:0
 #: wizard_view:base_setup.base_setup,update:0
-#: wizard_view:base_setup.base_setup,charts:0
 #: wizard_view:base_setup.base_setup,init:0
 #: model:ir.actions.wizard,name:base_setup.action_wizard_setup
 #: model:ir.actions.wizard,name:base_setup.wizard_base_setup
@@ -168,15 +153,9 @@ msgstr "设置"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,zip:0
 #: wizard_field:base_setup.base_setup,update,zip:0
-#: wizard_field:base_setup.base_setup,charts,zip:0
 #: wizard_field:base_setup.base_setup,init,zip:0
 msgid "Zip code"
 msgstr "邮编"
-
-#. module: base_setup
-#: wizard_view:base_setup.base_setup,charts:0
-msgid "Select a Chart of Accounts"
-msgstr ""
 
 #. module: base_setup
 #: wizard_view:base_setup.base_setup,update:0
@@ -194,22 +173,27 @@ msgid "Installation Done"
 msgstr ""
 
 #. module: base_setup
-#: wizard_view:base_setup.base_setup,charts:0
-msgid "There are much more charts of accounts available on the OpenERP website."
+#: wizard_field:base_setup.base_setup,company,logo:0
+#: wizard_field:base_setup.base_setup,update,logo:0
+#: wizard_field:base_setup.base_setup,init,logo:0
+msgid "Logo"
 msgstr ""
 
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,rml_header1:0
 #: wizard_field:base_setup.base_setup,update,rml_header1:0
-#: wizard_field:base_setup.base_setup,charts,rml_header1:0
 #: wizard_field:base_setup.base_setup,init,rml_header1:0
 msgid "Report Header"
 msgstr "报表头"
 
 #. module: base_setup
+#: wizard_view:base_setup.base_setup,company:0
+msgid "Your Logo - Use a size of about 450x150 pixels."
+msgstr ""
+
+#. module: base_setup
 #: wizard_field:base_setup.base_setup,company,currency:0
 #: wizard_field:base_setup.base_setup,update,currency:0
-#: wizard_field:base_setup.base_setup,charts,currency:0
 #: wizard_field:base_setup.base_setup,init,currency:0
 msgid "Currency"
 msgstr "货币"
@@ -217,7 +201,6 @@ msgstr "货币"
 #. module: base_setup
 #: wizard_field:base_setup.base_setup,company,street:0
 #: wizard_field:base_setup.base_setup,update,street:0
-#: wizard_field:base_setup.base_setup,charts,street:0
 #: wizard_field:base_setup.base_setup,init,street:0
 msgid "Street"
 msgstr "街区地址"
@@ -233,9 +216,8 @@ msgid "Use Directly"
 msgstr ""
 
 #. module: base_setup
-#: wizard_button:base_setup.base_setup,company,previous:0
+#: wizard_button:base_setup.base_setup,company,init:0
 #: wizard_button:base_setup.base_setup,update,company:0
-#: wizard_button:base_setup.base_setup,charts,init:0
 msgid "Previous"
 msgstr "向前"
 

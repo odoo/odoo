@@ -1,21 +1,200 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* hr_holidays
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 16:30+0000\n"
-"PO-Revision-Date: 2008-09-21 15:30+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
+msgid "New Holidays Request"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
+msgid "All Holidays Requests"
+msgstr "Totes les peticions de vacances"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,remaining_leaves:0
+msgid "Remaining Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
+msgid "Requests Awaiting for Validation"
+msgstr "Peticions esperant validació"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
+msgid "My Holidays Request Draft"
+msgstr "Les meves peticions de vacances esborrany"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Brown"
+msgstr "Marró"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "of the"
+msgstr ""
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Off-Days' Summary"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
+msgid "Employee Holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Set to Draft"
+msgstr "Canvia esborrany"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidays0
+msgid "Holidays"
+msgstr "Vacances"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "to"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Cyan"
+msgstr "Cian clar"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Green"
+msgstr "Verd clar"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_employeedeclaration0
+msgid "Employee Declaration"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+#: view:hr.holidays:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
+msgid "Validate"
+msgstr "Validada"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
+msgid "Refused Request"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_approved0
+msgid "Approved"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Refuse"
+msgstr "Rebutja"
+
+#. module: hr_holidays
+#: wizard_button:hr.holidays.summary,notify,end:0
+#: wizard_button:hr.holidays.summary.employee,notify,end:0
+msgid "Ok"
+msgstr "D'acord"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
+msgid "My Holidays Requests"
+msgstr "Les meves peticions de vacances"
+
+#. module: hr_holidays
+#: field:hr.holidays,notes:0
+#: field:hr.holidays.per.user,notes:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: hr_holidays
+#: field:hr.holidays,holiday_status:0
+#: field:hr.holidays.per.user,holiday_status:0
+msgid "Holiday's Status"
+msgstr "Tipus de vacances"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_refusedrequest0
+msgid "Request is refused."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
+msgid "Holidays Management"
+msgstr ""
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
+msgid "Summary Of Holidays"
+msgstr "Resum de vacances"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_setholiday0
+msgid "Holiday is set in the calendar."
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Holiday status"
+msgstr "Tipus de vacances"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_status
+msgid "Holidays Status"
+msgstr "Tipus de vacances"
+
+#. module: hr_holidays
+#: field:hr.holidays,date_to:0
+msgid "Vacation end day"
+msgstr "Dia fi vacances"
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+msgid "Holidays Allowed"
+msgstr "Vacances permeses"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_legaldeclaration0
+msgid "Legal Declaration Document to declare new employee"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Magenta"
+msgstr "Magenta"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
+msgid "Holidays Per User"
+msgstr "Vacances per usuari"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -23,14 +202,14 @@ msgid "Define holiday status"
 msgstr "Defineix tipus de vacances"
 
 #. module: hr_holidays
-#: wizard_view:hr.holidays.summary,notify:0
-msgid "You have to select atleast 1 Department. Try again."
-msgstr "Selecciona com a mínim un departament. Prova una altra vegada."
-
-#. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "Confirmed"
 msgstr "Confirmada"
+
+#. module: hr_holidays
+#: model:process.process,name:hr_holidays.process_process_holidaysworkflow0
+msgid "Holidays Workflow"
+msgstr ""
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,date_from:0
@@ -40,19 +219,9 @@ msgstr "Des de"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Employee holidays"
-msgstr "Vacances de l'empleat"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Confirma"
-
-#. module: hr_holidays
-#: wizard_view:hr.holidays.summary,notify:0
-#: wizard_view:hr.holidays.summary.employee,notify:0
-msgid "Notification"
-msgstr "Notifica"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,section_id:0
@@ -60,14 +229,14 @@ msgid "Section"
 msgstr "Secció"
 
 #. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: model:process.node,note:hr_holidays.process_node_approved0
+msgid "His manager approves the request"
+msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Coral"
-msgstr "Corall clar"
+#: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
+msgid "Encoding of annual available holidays."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
@@ -76,85 +245,9 @@ msgid "Employee"
 msgstr "Empleat"
 
 #. module: hr_holidays
-#: model:ir.actions.wizard,name:hr_holidays.holidays_summary
-#: model:ir.ui.menu,name:hr_holidays.menu_holidays_summary
-msgid "Print Summary of Holidays"
-msgstr "Imprimeix el resum de vacances"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_available
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_available
-msgid "My Available Holidays"
-msgstr "Les meves vacances disponibles"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Black"
-msgstr "Negre"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
-msgid "My Refused Holidays Requests"
-msgstr "Les meves peticions de vacances refusades"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
-msgid "My Awaiting Confirmation Holidays Requests"
-msgstr "Les meves peticions de vacances esperant confirmació"
-
-#. module: hr_holidays
-#: wizard_button:hr.holidays.summary,init,checkdept:0
-#: wizard_button:hr.holidays.summary.employee,init,checkemp:0
-msgid "Print"
-msgstr "Imprimeix"
-
-#. module: hr_holidays
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial !"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
-msgid "Requests Awaiting for Validation"
-msgstr "Peticions esperant validació"
-
-#. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "Refused"
-msgstr "Rebutjada"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,max_leaves:0
-msgid "Maximum Leaves Allowed"
-msgstr "Màxim vacances permeses"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Blue"
-msgstr "Blau clar"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Red"
 msgstr "Vermell"
-
-#. module: hr_holidays
-#: wizard_field:hr.holidays.summary,init,depts:0
-msgid "Department(s)"
-msgstr "Departaments"
-
-#. module: hr_holidays
-#: field:hr.holidays,state:0
-msgid "Status"
-msgstr "Estat"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Brown"
-msgstr "Marró"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -162,91 +255,14 @@ msgid "Light Salmon"
 msgstr "Salmó clar"
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-msgid "Holidays Allowed"
-msgstr "Vacances permeses"
-
-#. module: hr_holidays
-#: xsl:hr.holidays.holidays_summary:0
-msgid "of the"
-msgstr "del"
-
-#. module: hr_holidays
-#: xsl:hr.holidays.holidays_summary:0
-msgid "Off-Days' Summary"
-msgstr "Resum dies d'absència"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,leaves_taken:0
-msgid "Leaves Already Taken"
-msgstr "Vacances ja sol·licitades"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
-msgid "My Holidays Request"
-msgstr "Les meves peticions de vacances"
-
-#. module: hr_holidays
-#: field:hr.holidays.status,color_name:0
-msgid "Color of the status"
-msgstr "Color del tipus"
+#: selection:hr.holidays.status,color_name:0
+msgid "Wheat"
+msgstr "Groc palla"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Number of Days"
 msgstr "Número de dies"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Set to Draft"
-msgstr "Canvia esborrany"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Holidays"
-msgstr "Vacances"
-
-#. module: hr_holidays
-#: xsl:hr.holidays.holidays_summary:0
-msgid "to"
-msgstr "fins"
-
-#. module: hr_holidays
-#: xsl:hr.holidays.holidays_summary:0
-msgid "holidays."
-msgstr "vacances."
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Cyan"
-msgstr "Cian clar"
-
-#. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "draft"
-msgstr "Esborrany"
-
-#. module: hr_holidays
-#: field:hr.holidays.per.user,user_id:0
-msgid "User"
-msgstr "Usuari"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Green"
-msgstr "Verd clar"
-
-#. module: hr_holidays
-#: wizard_field:hr.holidays.summary,init,holiday_type:0
-#: wizard_field:hr.holidays.summary.employee,init,holiday_type:0
-msgid "Select Holiday Type"
-msgstr "Selecciona tipus de vacances"
-
-#. module: hr_holidays
-#: selection:hr.holidays,state:0
-#: view:hr.holidays:0
-msgid "Validate"
-msgstr "Validada"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -256,26 +272,15 @@ msgid "Holiday Status"
 msgstr "Tipus de vacances"
 
 #. module: hr_holidays
-#: field:hr.holidays,notes:0
-#: field:hr.holidays.per.user,notes:0
-msgid "Notes"
-msgstr "Notes"
-
-#. module: hr_holidays
 #: wizard_view:hr.holidays.summary,init:0
 #: wizard_view:hr.holidays.summary.employee,init:0
 msgid "Report Options"
 msgstr "Opcions de l'informe"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-msgid "Case"
-msgstr "Cas"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Refuse"
-msgstr "Rebutja"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -283,56 +288,19 @@ msgid "Employee_id"
 msgstr "Id empleat"
 
 #. module: hr_holidays
-#: wizard_button:hr.holidays.summary,notify,end:0
-#: wizard_button:hr.holidays.summary.employee,notify,end:0
-msgid "Ok"
-msgstr "D'acord"
+#: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
+msgid "If holidays available, employee can take it and fill it."
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
-msgid "My Draft Holidays Requests"
-msgstr "Les meves peticions de vacances esborrany"
+#: wizard_view:hr.holidays.summary.employee,notify:0
+msgid "You have to select at least 1 Employee. Try again."
+msgstr "Selecciona com a mínim un empleat. Prova una altra vegada."
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
-msgid "My Holidays Requests"
-msgstr "Les meves peticions de vacances"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
-msgid "My Holidays Request Waiting confirmation"
-msgstr "Les meves peticions de vacances esperant confirmació"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Violet"
-msgstr "Lila"
-
-#. module: hr_holidays
-#: field:hr.holidays,holiday_status:0
-#: field:hr.holidays.per.user,holiday_status:0
-msgid "Holiday's Status"
-msgstr "Tipus de vacances"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Ivory"
-msgstr "Vori"
-
-#. module: hr_holidays
-#: field:hr.holidays,manager_id:0
-msgid "Holiday manager"
-msgstr "Gestor de vacances"
-
-#. module: hr_holidays
-#: xsl:hr.holidays.holidays_summary:0
-msgid "Analyze from"
-msgstr "Anàlisi des de"
-
-#. module: hr_holidays
-#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
-msgid "Summary Of Holidays"
-msgstr "Resum de vacances"
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
+msgid "My Validated Holidays Requests"
+msgstr "Les meves peticions de vacances validades"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary.employee,init,emp:0
@@ -352,69 +320,9 @@ msgid "Holidays Per Employee"
 msgstr "Vacances per empleat"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Wheat"
-msgstr "Groc palla"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
-msgid "My Holidays Request Draft"
-msgstr "Les meves peticions de vacances esborrany"
-
-#. module: hr_holidays
-#: view:hr.holidays.status:0
-msgid "Holiday status"
-msgstr "Tipus de vacances"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
-msgid "My Holidays Request Validated"
-msgstr "Les meves peticions de vacances validades"
-
-#. module: hr_holidays
-#: field:hr.holidays,name:0
-msgid "Description"
-msgstr "Descripció"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
-msgid "Holidays Request"
-msgstr "Petició de vacances"
-
-#. module: hr_holidays
-#: wizard_view:hr.holidays.summary.employee,notify:0
-msgid "You have to select at least 1 Employee. Try again."
-msgstr "Selecciona com a mínim un empleat. Prova una altra vegada."
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
-msgid "Holidays Requests Awaiting for Validation"
-msgstr "Peticions esperant validació"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
-msgid "My Validated Holidays Requests"
-msgstr "Les meves peticions de vacances validades"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Yellow"
-msgstr "Groc clar"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays_status
-msgid "Holidays Status"
-msgstr "Tipus de vacances"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Pink"
-msgstr "Rosa clar"
-
-#. module: hr_holidays
-#: field:hr.holidays,date_to:0
-msgid "Vacation end day"
-msgstr "Dia fi vacances"
+#: field:hr.holidays.status,limit:0
+msgid "Allow to override Limit"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -422,19 +330,177 @@ msgid "Lavender"
 msgstr "Lavanda"
 
 #. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Violet"
+msgstr "Lila"
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_calendar0
+msgid "Calendar"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays,date_from:0
 msgid "Vacation start day"
 msgstr "Dia inici vacances"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
-msgid "All Holidays Requests"
-msgstr "Totes les peticions de vacances"
+#: wizard_view:hr.holidays.summary,notify:0
+#: wizard_view:hr.holidays.summary.employee,notify:0
+msgid "Notification"
+msgstr "Notifica"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_holidaysrequest0
+msgid "Employee fills in a request for holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
+msgid "Employee get holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_calendar0
+msgid "The holiday is set in the calendar"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Coral"
+msgstr "Corall clar"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_available
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_available
+msgid "My Available Holidays"
+msgstr "Les meves vacances disponibles"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Black"
+msgstr "Negre"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
+msgid "My Refused Holidays Requests"
+msgstr "Les meves peticions de vacances refusades"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_setholiday0
+msgid "Set Holiday"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
+msgid "My Draft Holidays Requests"
+msgstr "Les meves peticions de vacances esborrany"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,max_leaves:0
+msgid "Maximum Leaves Allowed"
+msgstr "Màxim vacances permeses"
+
+#. module: hr_holidays
+#: field:hr.holidays,state:0
+msgid "Status"
+msgstr "Estat"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Ivory"
+msgstr "Vori"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
+msgid "My Holidays Request"
+msgstr "Les meves peticions de vacances"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,color_name:0
+msgid "Color of the status"
+msgstr "Color del tipus"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,leaves_taken:0
+msgid "Leaves Already Taken"
+msgstr "Vacances ja sol·licitades"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "holidays."
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+msgid "draft"
+msgstr "Esborrany"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,user_id:0
+msgid "User"
+msgstr "Usuari"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
+msgid "Document for employee"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,active:0
+#: field:hr.holidays.status,active:0
+msgid "Active"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
+msgid "Reufse"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
+msgid "My Awaiting Confirmation Holidays Requests"
+msgstr "Les meves peticions de vacances esperant confirmació"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
+msgid "My Holidays Request Waiting confirmation"
+msgstr "Les meves peticions de vacances esperant confirmació"
 
 #. module: hr_holidays
 #: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
 msgid "Print Summary of Employee's Holidays"
 msgstr "Imprimeix el resum de vacances de l'empleat"
+
+#. module: hr_holidays
+#: field:hr.holidays,manager_id:0
+msgid "Holiday manager"
+msgstr "Gestor de vacances"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Blue"
+msgstr "Blau clar"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
+msgid "Approved Request"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidaysrequest0
+msgid "Holidays Request"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
+msgid "Holidays Requests Awaiting for Validation"
+msgstr "Peticions esperant validació"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "General"
+msgstr ""
 
 #. module: hr_holidays
 #: wizard_button:hr.holidays.summary,init,end:0
@@ -445,9 +511,9 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Magenta"
-msgstr "Magenta"
+#: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
+msgid "Holidays def Request"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
@@ -455,6 +521,96 @@ msgid "My Holidays Request Refused"
 msgstr "Les meves peticions de vacances rebutjades"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
-msgid "Holidays Per User"
-msgstr "Vacances per usuari"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Employee holidays"
+msgstr "Vacances de l'empleat"
+
+#. module: hr_holidays
+#: wizard_button:hr.holidays.summary,init,checkdept:0
+#: wizard_button:hr.holidays.summary.employee,init,checkemp:0
+msgid "Print"
+msgstr "Imprimeix"
+
+#. module: hr_holidays
+#: model:ir.actions.wizard,name:hr_holidays.holidays_summary
+#: model:ir.ui.menu,name:hr_holidays.menu_holidays_summary
+msgid "Print Summary of Holidays"
+msgstr "Imprimeix el resum de vacances"
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary,init,depts:0
+msgid "Department(s)"
+msgstr "Departaments"
+
+#. module: hr_holidays
+#: field:hr.holidays,name:0
+msgid "Description"
+msgstr "Descripció"
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+#: model:process.node,name:hr_holidays.process_node_refused0
+msgid "Refused"
+msgstr "Rebutjada"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_approvedrequest0
+msgid "Request is approved."
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidaysdefinition0
+msgid "Holidays Definition"
+msgstr ""
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary,init,holiday_type:0
+#: wizard_field:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Select Holiday Type"
+msgstr "Selecciona tipus de vacances"
+
+#. module: hr_holidays
+#: field:hr.holidays,case_id:0
+msgid "Case"
+msgstr "Cas"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_holidays0
+msgid "Encode number of available holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_legaldeclaration0
+msgid "Secretariat Social"
+msgstr ""
+
+#. module: hr_holidays
+#: wizard_view:hr.holidays.summary,notify:0
+msgid "You have to select at least 1 Department. Try again."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
+msgid "My Holidays Request Validated"
+msgstr "Les meves peticions de vacances validades"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Yellow"
+msgstr "Groc clar"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Pink"
+msgstr "Rosa clar"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_refused0
+msgid "His manager refuses the request"
+msgstr ""
+

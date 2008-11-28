@@ -4,19 +4,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:43:25+0000"
-"PO-Revision-Date: 2008-09-11 15:43:25+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-alpha\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:03:35+0000\n"
+"PO-Revision-Date: 2008-11-28 17:03:35+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,mrp_operation:0
+#: field:profile.manufacturing.config.install_modules_wizard,mrp_operation:0
 msgid "Manufacturing Operations"
 msgstr ""
 
@@ -26,12 +26,12 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,mrp_jit:0
+#: field:profile.manufacturing.config.install_modules_wizard,mrp_jit:0
 msgid "Just in Time Scheduling"
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,sale_journal:0
+#: field:profile.manufacturing.config.install_modules_wizard,sale_journal:0
 msgid "Manage by Journals"
 msgstr ""
 
@@ -41,18 +41,43 @@ msgid "Relationship Management"
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,sale_journal:0
+#: help:profile.manufacturing.config.install_modules_wizard,portal:0
+msgid "This module allows you to manage a Portal system."
+msgstr ""
+
+#. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,board_document:0
+msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
+msgstr ""
+
+#. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,sale_journal:0
 msgid "This module  allows you to manage your sales, invoicing and picking by journals. You can define journals for trucks, salesman, departments, invoicing date delivery period, etc."
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,mrp_jit:0
+#: view:profile.manufacturing.config.install_modules_wizard:0
+msgid "Manufacturing Profile: Install Extra Modules"
+msgstr ""
+
+#. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,mrp_jit:0
 msgid "The JIT module allows you to not run the scheduler periodically. It's easier and faster for real time stock computation but, in counter-part, it manages less efficiently priorities in procurements."
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,mrp_operation:0
+#: help:profile.manufacturing.config.install_modules_wizard,mrp_operation:0
 msgid "This module allows you to not only manage by production order but also by work order/operation. You will be able to planify, analyse the cost, check times, ... on all operations of each manufacturing order"
+msgstr ""
+
+#. module: profile_manufacturing
+#: field:profile.manufacturing.config.install_modules_wizard,board_document:0
+msgid "Document Management"
+msgstr ""
+
+#. module: profile_manufacturing
+#: field:profile.manufacturing.config.install_modules_wizard,portal:0
+msgid "Portal"
 msgstr ""
 
 #. module: profile_manufacturing
@@ -61,18 +86,33 @@ msgid "Stock & Manufacturing"
 msgstr ""
 
 #. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,mrp_repair:0
+msgid "Allow to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."
+msgstr ""
+
+#. module: profile_manufacturing
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: profile_manufacturing
-#: view:profile.manufacturing.config.install_modules_wizard:0
-msgid "Cancel"
+#: help:profile.manufacturing.config.install_modules_wizard,mrp_subproduct:0
+msgid "This module allows you to add sub poducts in mrp bom."
 msgstr ""
 
 #. module: profile_manufacturing
-#: model:ir.model,name:profile_manufacturing.model_config_install_extra_modules_mrp
-msgid "config.install_extra_modules.mrp"
+#: help:profile.manufacturing.config.install_modules_wizard,warning:0
+msgid "Able you to set warnings on products and partners."
+msgstr ""
+
+#. module: profile_manufacturing
+#: model:ir.model,name:profile_manufacturing.model_profile_manufacturing_config_install_modules_wizard
+msgid "profile.manufacturing.config.install_modules_wizard"
+msgstr ""
+
+#. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,sale_crm:0
+msgid "This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."
 msgstr ""
 
 #. module: profile_manufacturing
@@ -81,18 +121,28 @@ msgid "Install"
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,crm_configuration:0
+#: field:profile.manufacturing.config.install_modules_wizard,sale_crm:0
 msgid "CRM and Calendars"
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,point_of_sale:0
-msgid "Point of Sale"
+#: field:profile.manufacturing.config.install_modules_wizard,mrp_repair:0
+msgid "Repair"
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,point_of_sale:0
+#: help:profile.manufacturing.config.install_modules_wizard,sale_margin:0
+msgid "Display margins on the sale order form."
+msgstr ""
+
+#. module: profile_manufacturing
+#: help:profile.manufacturing.config.install_modules_wizard,point_of_sale:0
 msgid "This module allows you to manage a point of sale system. It offers a basic form for pos operations. You must also check our frontend point of sale for a perfect ergonomy with touchscreen materials and payment processing hardware."
+msgstr ""
+
+#. module: profile_manufacturing
+#: field:profile.manufacturing.config.install_modules_wizard,mrp_subproduct:0
+msgid "Mrp Sub Product"
 msgstr ""
 
 #. module: profile_manufacturing
@@ -101,32 +151,32 @@ msgid "Sales Management"
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,sale_margin:0
+#: field:profile.manufacturing.config.install_modules_wizard,warning:0
+msgid "Warning"
+msgstr ""
+
+#. module: profile_manufacturing
+#: field:profile.manufacturing.config.install_modules_wizard,sale_margin:0
 msgid "Margins on Sales Order"
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,stock_location:0
+#: help:profile.manufacturing.config.install_modules_wizard,stock_location:0
 msgid "Allows you to manage an advanced logistic with different locations. You can define, by product: default locations, path of locations for different operations, etc. This module is often used for: localisation of products, managing a manufacturing chain, a quality control location, product that you rent, etc."
 msgstr ""
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
-msgid "Manufacturing Profile : Install Extra Module"
+msgid "Cancel"
 msgstr ""
 
 #. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,sale_margin:0
-msgid "Display margins on the sale order form."
+#: field:profile.manufacturing.config.install_modules_wizard,point_of_sale:0
+msgid "Point of Sale"
 msgstr ""
 
 #. module: profile_manufacturing
-#: field:config.install_extra_modules.mrp,stock_location:0
+#: field:profile.manufacturing.config.install_modules_wizard,stock_location:0
 msgid "Advanced Locations"
-msgstr ""
-
-#. module: profile_manufacturing
-#: help:config.install_extra_modules.mrp,crm_configuration:0
-msgid "This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."
 msgstr ""
 
