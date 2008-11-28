@@ -784,7 +784,9 @@ class orm_template(object):
                     for f in node.childNodes:
                         if f.nodeType == f.ELEMENT_NODE and f.localName in ('form', 'tree', 'graph'):
                             node.removeChild(f)
-                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, context)
+                            ctx = context.copy()
+                            ctx['base_model_name'] = self._name
+                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, ctx)
                             views[str(f.localName)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -823,6 +825,8 @@ class orm_template(object):
             if ('lang' in context) and not result:
                 if node.hasAttribute('string') and node.getAttribute('string'):
                     trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+                    if not trans and ('base_model_name' in context):
+                        trans = tools.translate(cr, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if trans:
                         node.setAttribute('string', trans.decode('utf8'))
                 if node.hasAttribute('sum') and node.getAttribute('sum'):
@@ -836,8 +840,6 @@ class orm_template(object):
         return fields
 
     def __view_look_dom_arch(self, cr, user, node, context=None):
-        if not context:
-            context = {}
         fields_def = self.__view_look_dom(cr, user, node, context=context)
 
         buttons = xpath.Evaluate('//button', node)
