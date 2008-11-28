@@ -36,6 +36,7 @@ from stat import ST_MODE
 
 from distutils.core import setup, Command
 from distutils.command.install import install
+from distutils.command.build import build
 #from distutils.command.install_scripts import install_scripts
 from distutils.file_util import copy_file
 
@@ -149,6 +150,12 @@ def data_files():
 check_modules()
 
 
+class openerp_server_build(build):
+    def run(self):
+        open('openerp-server', 'w').close()
+
+        build.run(self)
+
 class openerp_server_install(install):
     def run(self):
         # create startup script
@@ -182,7 +189,7 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
-      cmdclass         = { 'install' : openerp_server_install },
+      cmdclass         = { 'install' : openerp_server_install, 'build' : openerp_server_build },
       scripts          = ['openerp-server'],
       packages         = ['openerp-server', 
                           'openerp-server.addons',
