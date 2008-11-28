@@ -78,7 +78,7 @@ meetings, eso.
 #         "crm_phonecall_data.xml",
 #         "crm_phonecall_menu.xml",
          "security/ir.model.access.csv",
-#         "process/crm_configuration_process.xml",
+         "process/crm_configuration_process.xml",
     ],
     "active": False,
     "installable": True

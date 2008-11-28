@@ -7,7 +7,6 @@
         -->
         
         <record id="process_process_purchaseworkflow0" model="process.process">
-            <field eval="&quot;&quot;&quot;Purchase flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Purchase Workflow&quot;&quot;&quot;" name="name"/>
         </record>
@@ -42,7 +41,7 @@
         <record id="process_node_draftpurchaseorder1" model="process.node">
             <field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Request for Quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encoded manually by the user.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_purchaseworkflow0"/>

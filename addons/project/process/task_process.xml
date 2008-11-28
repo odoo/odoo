@@ -7,7 +7,6 @@
     -->
     
         <record id="process_process_tasksworkflow0" model="process.process">
-            <field eval="&quot;&quot;&quot;Tasks flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Tasks workflow&quot;&quot;&quot;" name="name"/>
         </record>
@@ -39,7 +38,7 @@
         </record>
     
         <record id="process_node_opentask0" model="process.node">
-            <!-- <field name="menu_id" ref="project.menu_action_view_task6"/> -->
+            <field name="menu_id" ref="project.menu_action_view_task6_prog"/>
             <field name="model_id" ref="project.model_project_task"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Open task&quot;&quot;&quot;" name="name"/>

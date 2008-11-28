@@ -7,7 +7,6 @@
         -->
         
         <record id="process_process_supplierinvoiceworkflow0" model="process.process">
-            <field eval="&quot;&quot;&quot;Supplier Invoice flow for services companies.&quot;&quot;&quot;" name="note"/>
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Supplier Invoice Workflow&quot;&quot;&quot;" name="name"/>
         </record>
@@ -15,17 +14,6 @@
         <!--    
             Process Node
         -->
-        
-        <record id="process_node_supplieranalytic0" model="process.node">
-            <field name="menu_id" ref="account.account_analytic_def_account"/>
-            <field name="model_id" ref="account.model_account_analytic_account"/>
-            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Analytic&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Analytic costs to reinvoice purchases, timesheets, ...&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
-            <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
-            <field eval="1" name="flow_start"/>
-        </record>
         
         <record id="process_node_supplierdraftinvoices0" model="process.node">
             <field name="menu_id" ref="account.menu_invoice_draft"/>
@@ -42,7 +30,7 @@
             <field name="menu_id" ref="account.menu_finance_invoice"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Control Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Have a number and entries are generated&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -106,15 +94,6 @@
         <!--    
             Process Transition
         -->
-        
-         <record id="process_transition_supplieranalyticinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
-            <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;analytic Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;From analytic accounts, Create invoice.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_supplierdraftinvoices0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_supplieranalytic0"/>
-        </record>
         
         <record id="process_transition_suppliercustomerinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
