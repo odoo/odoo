@@ -1227,7 +1227,6 @@
                     <newline/>
                     <field name="prodlot_id" select="2" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                     <field name="tracking_id" select="2"/>
-                    <field name="picking_id"/>
                     <newline/>
                     <label/>
                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
@@ -1332,6 +1331,13 @@
             name="All Stock Moves"
             res_model="stock.move" 
             src_model="product.product"/>
+
+        <act_window
+            domain="[('move_lines','in',[active_id])]"
+            id="act_relate_picking"
+            name="Related Picking"
+            res_model="stock.picking" 
+            src_model="stock.move"/>
 
         <act_window
             context="{'location': active_id}"
