@@ -37,7 +37,8 @@ from stat import ST_MODE
 from distutils.core import setup, Command
 from distutils.command.install import install
 from distutils.command.build import build
-#from distutils.command.install_scripts import install_scripts
+from distutils.command.build_scripts import build_scripts
+from distutils.command.install_scripts import install_scripts
 from distutils.file_util import copy_file
 
 if os.name == 'nt':
@@ -149,15 +150,15 @@ def data_files():
 
 check_modules()
 
-
-class openerp_server_build(build):
-    def run(self):
-        open('openerp-server', 'w').close()
-
-        build.run(self)
+f = file('openerp-server','w')
+start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage" """
+f.write(start_script)
+f.close()
 
 class openerp_server_install(install):
     def run(self):
+        from pprint import pprint as pp
+        pp(self.__dict__)
         # create startup script
         start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (opj(self.install_libbase, "openerp-server"), sys.executable)
         # write script
@@ -189,7 +190,9 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
-      cmdclass         = { 'install' : openerp_server_install, 'build' : openerp_server_build },
+      cmdclass         = { 
+            'install' : openerp_server_install,
+      },
       scripts          = ['openerp-server'],
       packages         = ['openerp-server', 
                           'openerp-server.addons',
