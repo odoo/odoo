@@ -191,9 +191,6 @@ class account_analytic_plan_instance(osv.osv):
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
                     raise osv.except_osv("Value Error" ,"The Total Should be Between " + str(item.min_required) + " and " + str(item.max_required))
 
-        if not vals['name'] and not vals['code']:
-            raise osv.except_osv('Error', 'Make sure You have entered Name and Code for the model !')
-
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
@@ -213,10 +210,7 @@ class account_analytic_plan_instance(osv.osv):
                 vals['name'] = this.name and (str(this.name)+'*') or "*"
             if not vals.has_key('code'):
                 vals['code'] = this.code and (str(this.code)+'*') or "*"
-            return self.write(cr, uid, [this.id],vals, context)
-        else:
-            #this plan instance isn't a model, so a simple write is fine
-            return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context)
+        return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context)
 
 account_analytic_plan_instance()
 
