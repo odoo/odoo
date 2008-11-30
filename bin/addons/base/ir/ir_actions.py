@@ -577,7 +577,7 @@ class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'    
     _columns={
         'name':fields.char('Name',size=64,required=True, select=True),
-        'note':fields.text('Text'),
+        'note':fields.text('Text', translate=True),
         'start_date': fields.datetime('Start Date'),
         'end_date': fields.datetime('End Date'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
