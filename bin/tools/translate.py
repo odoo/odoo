@@ -178,13 +178,16 @@ class TinyPoFile(object):
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
 
-        if "code" in map(lambda e: e[0], tnrs):
-            # only strings in python code are python formated
-            self.buffer.write("#, python-format\n")
 
-
+        code = False
         for typy, name, res_id in tnrs:
             self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
+            if typy == 'code':
+                code = True
+
+        if code:
+            # only strings in python code are python formated
+            self.buffer.write("#, python-format\n")
 
         if not isinstance(trad, unicode):
             trad = unicode(trad, 'utf8')
