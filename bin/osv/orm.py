@@ -1773,6 +1773,7 @@ class orm(orm_template):
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        print 'READ', self._name, ids
         if not context:
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read')

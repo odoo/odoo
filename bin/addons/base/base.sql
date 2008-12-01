@@ -197,7 +197,7 @@ create table wkf_activity
     signal_send varchar(32) default null,
     flow_start boolean default False,
     flow_stop boolean default False,
-    action varchar(64) default null,
+    action text default null,
     primary key(id)
 );
 
