@@ -499,7 +499,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                     }
             }
         stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Default Production')])[0]
+        produc_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
         to_invoice=False
         if guarantee_limit and today() > mx.DateTime.strptime(guarantee_limit, '%Y-%m-%d'):
             to_invoice=True
