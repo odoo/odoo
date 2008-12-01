@@ -32,7 +32,7 @@
         "base_menu.xml",
         "security/base_security.xml",
         "res/res_security.xml",
-        #"maintenance/maintenance_security.xml",
+        "maintenance/maintenance_security.xml",
     ],
     "demo_xml" : [
         "base_demo.xml",
@@ -60,7 +60,7 @@
         "res/partner/partner_data.xml",
         "res/ir_property_view.xml",
         "security/base_security.xml",
-        #"maintenance/maintenance_view.xml",
+        "maintenance/maintenance_view.xml",
         "security/ir.model.access.csv",
     ],
     "active": True,

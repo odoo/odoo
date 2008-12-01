@@ -105,7 +105,7 @@ your installed modules.
                 raise osv.except_osv(_('Valid Maintenance Contract !'),('''Your Maintenance Contract is up to date'''))
         return result
 
-#maintenance_contract()
+maintenance_contract()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
