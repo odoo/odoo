@@ -1,21 +1,19 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* base
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-05 16:28+0000\n"
-"PO-Revision-Date: 2008-11-17 20:11+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
+"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -45,18 +43,9 @@ msgid "Unknown"
 msgstr "Desconegut"
 
 #. module: base
-#: field:ir.model.fields,relate:0
-msgid "Click and Relate"
-msgstr "Clica i relaciona"
-
-#. module: base
 #: view:wizard.module.update_translations:0
-msgid ""
-"This wizard will detect new terms in the application so that you can update "
-"them manually."
-msgstr ""
-"Aquest assistent detectarà nous termes en l'aplicació per que pugueu "
-"actualitzar-los manualment."
+msgid "This wizard will detect new terms in the application so that you can update them manually."
+msgstr "Aquest assistent detectarà nous termes en l'aplicació per que pugueu actualitzar-los manualment."
 
 #. module: base
 #: field:workflow.activity,out_transitions:0
@@ -73,6 +62,11 @@ msgstr "STOCK_SAVE"
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
 msgstr "Canvia les preferències"
+
+#. module: base
+#: view:ir.actions.act_window:0
+msgid "Open Window"
+msgstr "Obre finestra"
 
 #. module: base
 #: field:res.partner.function,name:0
@@ -114,6 +108,7 @@ msgstr "STOCK_SORT_ASCENDING"
 
 #. module: base
 #: view:res.groups:0
+#: view:ir.model:0
 msgid "Access Rules"
 msgstr "Regles d'accés"
 
@@ -129,13 +124,13 @@ msgid "STOCK_MEDIA_FORWARD"
 msgstr "STOCK_MEDIA_FORWARD"
 
 #. module: base
-#: selection:ir.module.module.configuration.step,state:0
+#: selection:ir.actions.todo,state:0
 msgid "Skipped"
-msgstr "Omès"
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "You can not create this kind of document! (%s)"
 msgstr "No podeu crear aquest tipus de document! (%s)"
 
@@ -161,6 +156,7 @@ msgstr "Fluxe de treball"
 #: field:ir.actions.report.xml,model:0
 #: field:ir.actions.server,model_id:0
 #: field:ir.actions.act_window,res_model:0
+#: field:ir.actions.wizard,model:0
 #: field:ir.cron,model:0
 #: field:ir.default,field_tbl:0
 #: field:ir.model.access,model_id:0
@@ -179,15 +175,15 @@ msgid "Object"
 msgstr "Objecte"
 
 #. module: base
+#: view:wizard.module.lang.export:0
+msgid "To browse official translations, you can visit this link: "
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_module_category_tree
 #: model:ir.ui.menu,name:base.menu_action_module_category_tree
 msgid "Categories of Modules"
 msgstr "Categories de mòduls"
-
-#. module: base
-#: view:res.users:0
-msgid "Add New User"
-msgstr "Crea un usuari/ària nou"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_default
@@ -195,9 +191,14 @@ msgid "ir.default"
 msgstr "ir.per_defecte"
 
 #. module: base
-#: selection:ir.module.module.configuration.step,state:0
+#: selection:ir.actions.todo,state:0
 msgid "Not Started"
-msgstr "No s'ha iniciat"
+msgstr ""
+
+#. module: base
+#: view:ir.sequence:0
+msgid "Minute: %(min)s"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -230,9 +231,13 @@ msgid "Key"
 msgstr "Clau"
 
 #. module: base
-#: field:ir.exports.line,export_id:0
-msgid "Exportation"
-msgstr "Exportació"
+#: model:ir.actions.act_window,name:base.action_res_roles_form
+#: field:res.users,roles_id:0
+#: model:ir.ui.menu,name:base.menu_action_res_roles_form
+#: view:res.roles:0
+#: view:res.users:0
+msgid "Roles"
+msgstr "Rols"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -244,6 +249,16 @@ msgstr "Països"
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_HELP"
 msgstr "STOCK_HELP"
+
+#. module: base
+#: selection:ir.report.custom.fields,operation:0
+msgid "Get Max"
+msgstr "Consegueix màxim"
+
+#. module: base
+#: view:ir.module.module:0
+msgid "Created Views"
+msgstr ""
 
 #. module: base
 #: selection:res.request,priority:0
@@ -267,18 +282,17 @@ msgid "Import new language"
 msgstr "Importa nou idioma"
 
 #. module: base
+#: wizard_field:server.action.create,step_1,report:0
+#: wizard_view:server.action.create,step_1:0
+msgid "Select Report"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,fc1_condition:0
 #: field:ir.report.custom.fields,fc2_condition:0
 #: field:ir.report.custom.fields,fc3_condition:0
 msgid "condition"
 msgstr "condició"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_attachment
-#: model:ir.ui.menu,name:base.menu_action_attachment
-#: view:ir.attachment:0
-msgid "Attachments"
-msgstr "Adjunts"
 
 #. module: base
 #: selection:ir.report.custom,frequency:0
@@ -296,8 +310,8 @@ msgid "Suffix"
 msgstr "Sufix"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The unlink method is not implemented on this object !"
 msgstr "El mètode unlink (elimina) no està implementat en aquest objecte!"
 
@@ -333,9 +347,9 @@ msgid "Activites"
 msgstr "Activitats"
 
 #. module: base
-#: field:ir.module.module.configuration.step,note:0
-msgid "Text"
-msgstr "Text"
+#: field:ir.actions.todo,start_on:0
+msgid "Start On"
+msgstr ""
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -363,6 +377,11 @@ msgstr "Transicions"
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "ir.ui.view.custom"
 msgstr "ir.ui.view.custom"
+
+#. module: base
+#: selection:ir.module.module,license:0
+msgid "GPL-2 or later version"
+msgstr ""
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -409,7 +428,7 @@ msgid "Report Type"
 msgstr "Tipus d'informe"
 
 #. module: base
-#: field:ir.module.module.configuration.step,state:0
+#: field:ir.actions.todo,state:0
 #: field:ir.module.module.dependency,state:0
 #: field:ir.module.module,state:0
 #: field:ir.report.custom,state:0
@@ -435,13 +454,15 @@ msgid "Other proprietary"
 msgstr "Altre propietari"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-administration"
-msgstr "terp-administració"
+#: field:ir.actions.server,address:0
+msgid "Email / Mobile"
+msgstr ""
 
 #. module: base
 #: field:res.partner,comment:0
+#: view:ir.attachment:0
 #: view:res.groups:0
+#: view:ir.model:0
 #: view:res.partner:0
 msgid "Notes"
 msgstr "Notes"
@@ -451,6 +472,11 @@ msgstr "Notes"
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "All terms"
 msgstr "Tots els termes"
+
+#. module: base
+#: field:res.partner.address,email:0
+msgid "Default Email"
+msgstr ""
 
 #. module: base
 #: view:res.partner:0
@@ -476,15 +502,25 @@ msgid "Form"
 msgstr "Formulari"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "Can not define a column %s. Reserved keyword !"
 msgstr "No s'ha pogut definir la columna %s. Paraula reservada !"
+
+#. module: base
+#: help:ir.ui.menu,groups_id:0
+msgid "If you put groups, the visibility of this menu will be based on these groups. If this field is empty, Open ERP will compute visibility based on the related object's read access."
+msgstr ""
 
 #. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr "Activitat destí"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_10
+msgid "Open Source Service Company"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -497,8 +533,8 @@ msgid "STOCK_QUIT"
 msgstr "STOCK_QUIT"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The name_search method is not implemented on this object !"
 msgstr "El método name_search no esta implementado en este objeto !"
 
@@ -523,8 +559,8 @@ msgid "Web:"
 msgstr "Web:"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
+#: code:addons/base/module/wizard/wizard_export_lang.py:0
 msgid "new"
 msgstr "nou"
 
@@ -589,14 +625,10 @@ msgid "Contact Name"
 msgstr "Nom"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid ""
-"Save this document to a %s file and edit it with a specific software or a "
-"text editor. The file encoding is UTF-8."
-msgstr ""
-"Deseu aquest document en un fitxer %s i editeu-lo amb un programa específic "
-"o un editor de text. La codificació del fitxer és UTF-8."
+#: code:addons/base/module/wizard/wizard_export_lang.py:0
+msgid "Save this document to a %s file and edit it with a specific software or a text editor. The file encoding is UTF-8."
+msgstr "Deseu aquest document en un fitxer %s i editeu-lo amb un programa específic o un editor de text. La codificació del fitxer és UTF-8."
 
 #. module: base
 #: view:ir.module.module:0
@@ -609,30 +641,8 @@ msgid "Repositories"
 msgstr "Biblioteques"
 
 #. module: base
-#: view:wizard.module.lang.export:0
-msgid ""
-"The official translations pack of all OpenERP/OpenObjects module are managed "
-"through launchpad. We use their online interface to synchronize all "
-"translations efforts.  To improve some terms of the official translations of "
-"OpenERP, you should modify the terms directly on the launchpad interface. If "
-"you made lots of translations for your own module, you can also publish all "
-"your translation at once. To do this, you must:  If you created a new "
-"module, you must send the generated .pot file by email to the translation "
-"group: ...  They will review and integrate."
-msgstr ""
-"Les traduccions oficials per tots els mòduls d'OpenERP/OpenObjects estan "
-"gestionades mitjançant launchpad. Utilitzem la seva interfície en línia per "
-"sincronitzar tots els esforços de traducció. Per millorar alguns termes de "
-"les traduccions oficials d'OpenERP, s'ha de modificar els termes directament "
-"en la interfície de launchpad. Si heu creat un fitxer amb les traduccions "
-"del vostre propi mòdul, també podeu publicar tota la vostra traducció a la "
-"vegada. Per aconseguir-ho heu de: Si heu creat un nou mòdul, heu d'enviar el "
-"fitxer .pot generat pel correu electrònic al grup de traducció: ... Ells ho "
-"revisaran i ho integraran."
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "Password mismatch !"
 msgstr "La contrasenya no coincideix !"
 
@@ -643,11 +653,10 @@ msgid "Contact"
 msgstr "Contacte"
 
 #. module: base
-#: code:addons/base/module/module.py:0
 #, python-format
+#: code:addons/base/module/module.py:0
 msgid "This url '%s' must provide an html file with links to zip modules"
-msgstr ""
-"Aquesta url '%s' ha d'apuntar a un fitxer html amb enllaços a mòduls zip"
+msgstr "Aquesta url '%s' ha d'apuntar a un fitxer html amb enllaços a mòduls zip"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_15
@@ -668,8 +677,8 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menú"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "ConcurrencyException"
 msgstr "Excepció de concurrència"
 
@@ -679,9 +688,9 @@ msgid "View Ref."
 msgstr "Ref. vista"
 
 #. module: base
-#: field:ir.default,ref_table:0
-msgid "Table Ref."
-msgstr "Ref. taula"
+#: model:ir.model,name:base.model_workflow_transition
+msgid "workflow.transition"
+msgstr "workflow.transition"
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -708,13 +717,17 @@ msgstr "Capçalera dels informes"
 #. module: base
 #: view:ir.rule:0
 msgid "If you don't force the domain, it will use the simple domain setup"
-msgstr ""
-"Si no forceu el domini, s'utilitzarà la configuració de domini simple"
+msgstr "Si no forceu el domini, s'utilitzarà la configuració de domini simple"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "S.A."
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_16
+msgid "Telecom sector"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window_close,type:0
@@ -730,9 +743,9 @@ msgid "Default limit for the list view"
 msgstr "Límit per defecte per la vista de llista"
 
 #. module: base
-#: field:ir.model.data,date_update:0
-msgid "Update Date"
-msgstr "Data revisió"
+#: model:ir.model,name:base.model_ir_server_object_lines
+msgid "ir.server.object.lines"
+msgstr "ir.server.objecte.línias"
 
 #. module: base
 #: field:ir.actions.act_window,src_model:0
@@ -745,8 +758,9 @@ msgid "Type fields"
 msgstr "Camps de tipus"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_config_wizard_step_form
-#: view:ir.module.module.configuration.step:0
+#: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
+#: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
+#: view:ir.actions.todo:0
 msgid "Config Wizard Steps"
 msgstr "Configura passos dels wizard"
 
@@ -762,11 +776,22 @@ msgid "Group"
 msgstr "Grup"
 
 #. module: base
+#: help:res.partner,customer:0
+msgid "Check this box if the partner is a customer."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_FLOPPY"
 msgstr "STOCK_FLOPPY"
 
 #. module: base
+#: field:res.users,signature:0
+msgid "Signature"
+msgstr "Signatura"
+
+#. module: base
+#: field:ir.actions.server,sms:0
 #: selection:ir.actions.server,state:0
 msgid "SMS"
 msgstr "SMS (missatge de text)"
@@ -796,8 +821,7 @@ msgstr "Mòduls no instal·lats"
 
 #. module: base
 #: help:res.partner.category,active:0
-msgid ""
-"The active field allows you to hide the category, without removing it."
+msgid "The active field allows you to hide the category, without removing it."
 msgstr "El camp actiu us permet ocultar la categoria sense eliminar-la."
 
 #. module: base
@@ -811,22 +835,16 @@ msgid "res.partner.event"
 msgstr "res.empresa.event"
 
 #. module: base
-#: view:res.request:0
-#: view:ir.model:0
-msgid "Status"
-msgstr "Posició"
+#: wizard_field:server.action.create,init,type:0
+#: wizard_view:server.action.create,init:0
+msgid "Select Action Type"
+msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid ""
-"Save this document to a .CSV file and open it with your favourite "
-"spreadsheet software. The file encoding is UTF-8. You have to translate the "
-"latest column before reimporting it."
-msgstr ""
-"Deseu aquest document en un fitxer .CSV i obriu-lo amb el vostre programa "
-"preferit de fulls de càlcul. La codificació del fitxer és UTF-8. Heu de "
-"traduir l'última columna abans de importar-lo de nou."
+#: code:addons/base/module/wizard/wizard_export_lang.py:0
+msgid "Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it."
+msgstr "Deseu aquest document en un fitxer .CSV i obriu-lo amb el vostre programa preferit de fulls de càlcul. La codificació del fitxer és UTF-8. Heu de traduir l'última columna abans de importar-lo de nou."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -836,14 +854,14 @@ msgid "Currencies"
 msgstr "Monedes"
 
 #. module: base
-#: help:res.partner,lang:0
-msgid ""
-"If the selected language is loaded in the system, all documents related to "
-"this partner will be printed in this language. If not, it will be english."
+#: selection:ir.actions.todo,type:0
+msgid "Configure"
 msgstr ""
-"Si l'idioma seleccionat està emmagatzemat en el sistema, tots els documents "
-"relacionats amb aquesta empresa seran mostrats en aquest idioma. Si no, "
-"seran mostrats en anglès."
+
+#. module: base
+#: help:res.partner,lang:0
+msgid "If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."
+msgstr "Si l'idioma seleccionat està emmagatzemat en el sistema, tots els documents relacionats amb aquesta empresa seran mostrats en aquest idioma. Si no, seran mostrats en anglès."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -851,9 +869,9 @@ msgid "STOCK_UNDERLINE"
 msgstr "STOCK_UNDERLINE"
 
 #. module: base
-#: field:ir.module.module.configuration.wizard,name:0
-msgid "Next Wizard"
-msgstr "Següent assistent"
+#: selection:ir.model,state:0
+msgid "Custom Object"
+msgstr "Objecte personalitzat"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -871,24 +889,15 @@ msgid "User ID"
 msgstr "ID usuari"
 
 #. module: base
-#: view:ir.module.module.configuration.wizard:0
-msgid "Next Configuration Step"
-msgstr "Següent pas configuració"
-
-#. module: base
 #: view:ir.rule:0
 msgid "Test"
 msgstr "Test"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
 #, python-format
-msgid ""
-"You can not remove the admin user as it is used internally for resources "
-"created by OpenERP (updates, module installation, ...)"
-msgstr ""
-"No podeu eliminar l'usuari admin ja que s'utilitza internament pels recursos "
-"creats per OpenERP (actualitzacions, instal·lació de mòduls, ...)"
+#: code:addons/base/res/res_user.py:0
+msgid "You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)"
+msgstr "No podeu eliminar l'usuari admin ja que s'utilitza internament pels recursos creats per OpenERP (actualitzacions, instal·lació de mòduls, ...)"
 
 #. module: base
 #: wizard_view:module.module.update,update:0
@@ -905,6 +914,11 @@ msgstr "Contingut SXW"
 #: field:ir.default,ref_id:0
 msgid "ID Ref."
 msgstr "Ref. ID"
+
+#. module: base
+#: help:res.partner.address,active:0
+msgid "Uncheck the active field to hide the contact."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_10
@@ -929,11 +943,6 @@ msgstr "Restricció"
 #: selection:res.partner.address,type:0
 msgid "Default"
 msgstr "Per defecte"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_custom
-msgid "Custom"
-msgstr "Personalització"
 
 #. module: base
 #: field:ir.model.fields,required:0
@@ -968,8 +977,8 @@ msgid "Bank type"
 msgstr "Tipus de banc"
 
 #. module: base
-#: code:osv/fields.py:0
 #, python-format
+#: code:osv/fields.py:0
 msgid "undefined get method !"
 msgstr "Mètode get (obtenir) no definit!"
 
@@ -979,8 +988,8 @@ msgid "Header/Footer"
 msgstr "Capçalera / Peu de pàgina"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The read method is not implemented on this object !"
 msgstr "El mètode read (llegir) no està implementat en aquest objecte!"
 
@@ -988,6 +997,11 @@ msgstr "El mètode read (llegir) no està implementat en aquest objecte!"
 #: view:res.request.history:0
 msgid "Request History"
 msgstr "Historial de sol·licituds"
+
+#. module: base
+#: view:res.users:0
+msgid "Roles are used to defined available actions, provided by workflows."
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1002,9 +1016,9 @@ msgid "Partner Events"
 msgstr "Esdeveniments empresa"
 
 #. module: base
-#: model:ir.model,name:base.model_workflow_transition
-msgid "workflow.transition"
-msgstr "workflow.transition"
+#: field:ir.actions.todo,note:0
+msgid "Text"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1054,17 +1068,15 @@ msgid "Partner contacts"
 msgstr "Contactes empresa"
 
 #. module: base
-#: view:ir.report.custom.fields:0
-msgid "Report Fields"
-msgstr "Camps informe"
+#: field:workflow.transition,trigger_model:0
+msgid "Trigger Object"
+msgstr ""
 
 #. module: base
 #: help:res.country,code:0
-msgid ""
-"The ISO country code in two chars.\n"
+msgid "The ISO country code in two chars.\n"
 "You can use this field for quick search."
-msgstr ""
-"EL codi ISO del país en dos caràcters.\n"
+msgstr "EL codi ISO del país en dos caràcters.\n"
 "Podeu utilitzar aquest camp per la cerca ràpida."
 
 #. module: base
@@ -1098,12 +1110,6 @@ msgid "System Upgrade"
 msgstr "Actualització del sistema"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_wizard_update_translations
-#: model:ir.ui.menu,name:base.menu_wizard_update_translations
-msgid "Reload Official Translations"
-msgstr "Recarrega traduccions oficials"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_REVERT_TO_SAVED"
 msgstr "STOCK_REVERT_TO_SAVED"
@@ -1130,9 +1136,10 @@ msgid "Parent Menu"
 msgstr "Menú pare"
 
 #. module: base
-#: view:res.users:0
-msgid "Define a New User"
-msgstr "Defineix un nou usuari"
+#, python-format
+#: code:addons/base/ir/ir_model.py:0
+msgid "Custom fields must have a name that starts with 'x_' !"
+msgstr "Els camps personalitzats han de tenir un nom que comença con 'x_'!"
 
 #. module: base
 #: field:res.partner.event,planned_cost:0
@@ -1157,13 +1164,9 @@ msgid "ir.report.custom"
 msgstr "ir.report.custom"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_res_roles_form
-#: field:res.users,roles_id:0
-#: model:ir.ui.menu,name:base.menu_action_res_roles_form
-#: view:res.roles:0
-#: view:res.users:0
-msgid "Roles"
-msgstr "Rols"
+#: field:ir.exports.line,export_id:0
+msgid "Exportation"
+msgstr "Exportació"
 
 #. module: base
 #: view:ir.model:0
@@ -1181,6 +1184,11 @@ msgid "get"
 msgstr "obté"
 
 #. module: base
+#: view:ir.report.custom.fields:0
+msgid "Report Fields"
+msgstr "Camps informe"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_values
 msgid "ir.values"
 msgstr "ir.valors"
@@ -1191,12 +1199,14 @@ msgid "Pie Chart"
 msgstr "Diagrama tipus pastel"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "Wrong ID for the browse record, got %s, expected an integer."
+#: field:workflow.transition,trigger_expr_id:0
+msgid "Trigger Expression"
 msgstr ""
-"ID erroni per mostrar el registre, es va obtenir %s, s'esperava un número "
-"enter."
+
+#. module: base
+#: view:ir.sequence:0
+msgid "Seconde: %(sec)s"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1212,11 +1222,6 @@ msgstr "STOCK_ZOOM_FIT"
 #: view:ir.sequence.type:0
 msgid "Sequence Type"
 msgstr "Tipus de seqüència"
-
-#. module: base
-#: view:res.users:0
-msgid "Skip & Continue"
-msgstr "Salta & Continua"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child2:0
@@ -1238,11 +1243,6 @@ msgstr "Camp fill0"
 #: model:ir.ui.menu,name:base.menu_module_update
 msgid "Update Modules List"
 msgstr "Actualitza llista de mòduls"
-
-#. module: base
-#: field:ir.attachment,datas_fname:0
-msgid "Data Filename"
-msgstr "Nom fitxer de dades"
 
 #. module: base
 #: view:res.config.view:0
@@ -1294,21 +1294,16 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
-#: code:addons/base/module/module.py:0
 #, python-format
-msgid ""
-"You try to install a module that depends on the module: %s.\n"
-"But this module is not available in your system."
+#: code:addons/base/module/module.py:0
+msgid "You try to install a module that depends on the module: %s.\nBut this module is not available in your system."
 msgstr ""
-"Esteu intentant d'instal·lar un mòdul que depèn del mòdul: %s.\n"
-"Però aquest mòdul no es troba disponible en el vostre sistema."
 
 #. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-#: selection:wizard.ir.model.menu.create.line,view_type:0
-msgid "Calendar"
-msgstr "Calendari"
+#: wizard_field:res.partner.spam_send,init,text:0
+#: field:ir.actions.server,message:0
+msgid "Message"
+msgstr "Missatge"
 
 #. module: base
 #: wizard_view:module.lang.install,start:0
@@ -1332,14 +1327,15 @@ msgid "Modules to update"
 msgstr "Mòduls a actualitzar"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action2
-msgid "Company Architecture"
-msgstr "Estructura de la companyia"
+#: model:res.partner.title,name:base.res_partner_title_miss
+msgid "Miss"
+msgstr "Sra."
 
 #. module: base
-#: view:ir.actions.act_window:0
-msgid "Open a Window"
-msgstr "Obre una finestra"
+#: field:workflow.workitem,act_id:0
+#: view:workflow.activity:0
+msgid "Activity"
+msgstr "Activitat"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1386,10 +1382,15 @@ msgid "Sequences"
 msgstr "Seqüències"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "Unknown position in inherited view %s !"
 msgstr "Posició desconeguda en vista heretada %s!"
+
+#. module: base
+#: view:res.users:0
+msgid "Add User"
+msgstr ""
 
 #. module: base
 #: field:res.request,trigger_date:0
@@ -1397,10 +1398,9 @@ msgid "Trigger Date"
 msgstr "Data de l'activació"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "Error occur when validation the fields %s: %s"
-msgstr "Ha ocorregut un error quan es validaven els camps %s: %s"
+#: model:ir.model,name:base.model_ir_actions_configuration_wizard
+msgid "ir.actions.configuration.wizard"
+msgstr ""
 
 #. module: base
 #: view:res.partner.bank:0
@@ -1408,11 +1408,10 @@ msgid "Bank account"
 msgstr "compte bancari"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Warning: using a relation field which uses an unknown object"
-msgstr ""
-"Advertència: utilitzan un camp relacional que utilitza un objecte desconegut"
+msgstr "Advertència: utilitzan un camp relacional que utilitza un objecte desconegut"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1459,13 +1458,25 @@ msgstr "Activació"
 
 #. module: base
 #: field:res.partner,supplier:0
+#: model:res.partner.category,name:base.res_partner_category_8
 msgid "Supplier"
 msgstr "Proveïdor"
+
+#. module: base
+#, python-format
+#: code:report/custom.py:0
+msgid "The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,translate:0
 msgid "Translate"
 msgstr "Tradueix"
+
+#. module: base
+#: view:ir.actions.server:0
+msgid "Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]"
+msgstr ""
 
 #. module: base
 #: field:res.request.history,body:0
@@ -1485,6 +1496,7 @@ msgstr "wizard.mòdul.actualitza_traduccions"
 #. module: base
 #: field:ir.actions.act_window,view_ids:0
 #: field:ir.actions.act_window,views:0
+#: field:ir.module.module,views_by_module:0
 #: field:wizard.ir.model.menu.create,view_ids:0
 #: view:wizard.ir.model.menu.create:0
 #: view:ir.actions.act_window:0
@@ -1497,16 +1509,20 @@ msgid "Send Email"
 msgstr "Envia email"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_4
+msgid "Basic Partner"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_SELECT_FONT"
 msgstr "STOCK_SELECT_FONT"
 
 #. module: base
-#: code:addons/base/module/module.py:0
 #, python-format
+#: code:addons/base/module/module.py:0
 msgid "You try to remove a module that is installed or will be installed"
-msgstr ""
-"Esteu intentant d'eliminar un mòdul que està instal·lat o serà instal·lat"
+msgstr "Esteu intentant d'eliminar un mòdul que està instal·lat o serà instal·lat"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -1541,16 +1557,17 @@ msgid "STOCK_GOTO_FIRST"
 msgstr "STOCK_GOTO_FIRST"
 
 #. module: base
+#, python-format
+#: code:addons/base/module/module.py:0
+msgid "Can not create the module file:\n %s"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
 #: model:ir.ui.menu,name:base.menu_workflow
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
 msgstr "Fluxes de treball"
-
-#. module: base
-#: field:workflow.transition,trigger_model:0
-msgid "Trigger Type"
-msgstr "Tipus d'activació"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -1577,15 +1594,19 @@ msgid "Request Link"
 msgstr "Enllaç sol·licitud"
 
 #. module: base
+#: field:wizard.module.lang.export,format:0
+msgid "File Format"
+msgstr "Format de fitxer"
+
+#. module: base
 #: field:ir.module.module,url:0
 msgid "URL"
 msgstr "URL"
 
 #. module: base
-#: field:ir.model.fields,state:0
-#: field:ir.model,state:0
-msgid "Manualy Created"
-msgstr "Creat manualment"
+#: rml:ir.module.reference:0
+msgid "Description :"
+msgstr ""
 
 #. module: base
 #: field:ir.report.custom,print_format:0
@@ -1626,11 +1647,9 @@ msgstr "res.roles"
 
 #. module: base
 #: help:ir.cron,priority:0
-msgid ""
-"0=Very Urgent\n"
+msgid "0=Very Urgent\n"
 "10=Not urgent"
-msgstr ""
-"0=Molt urgent\n"
+msgstr "0=Molt urgent\n"
 "10=Sense urgència"
 
 #. module: base
@@ -1645,25 +1664,19 @@ msgstr "Interface usuari - Vistes"
 
 #. module: base
 #: view:res.groups:0
+#: view:ir.model:0
 msgid "Access Rights"
 msgstr "Permisos d'accés"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
-msgid ""
-"The .rml path of the file or NULL if the content is in report_rml_content"
-msgstr ""
-"La ruta del fitxer .rml o NULL si el contingut està en report_rml_content"
+msgid "The .rml path of the file or NULL if the content is in report_rml_content"
+msgstr "La ruta del fitxer .rml o NULL si el contingut està en report_rml_content"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Can not create the module file:\n"
-" %s"
+#: view:res.users:0
+msgid "Skip"
 msgstr ""
-"No es pot crear el fitxer del mòdul:\n"
-" %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -1677,24 +1690,18 @@ msgid "STOCK_MEDIA_RECORD"
 msgstr "STOCK_MEDIA_RECORD"
 
 #. module: base
+#: selection:ir.rule,operator:0
+msgid "child_of"
+msgstr "fill_de"
+
+#. module: base
 #: view:res.partner.address:0
 msgid "Partner Address"
 msgstr "Direcció de l'empresa"
 
 #. module: base
-#: view:res.groups:0
-msgid "Menus"
-msgstr "Menús"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr "Els camps personalitzats han de tenir un nom que comença con 'x_'!"
-
-#. module: base
 #: code:addons/base/ir/ir_model.py:0
-#, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "No podeu eliminar aquest model '%s'!"
 
@@ -1715,8 +1722,8 @@ msgid "Subject"
 msgstr "Assumpte"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The write method is not implemented on this object !"
 msgstr "El mètode write (esciure) no està implementat en aquest objecte!"
 
@@ -1737,10 +1744,9 @@ msgid "Retailer"
 msgstr "Proveïdor"
 
 #. module: base
-#: field:ir.sequence,code:0
-#: field:ir.sequence.type,code:0
-msgid "Sequence Code"
-msgstr "Codi seqüència"
+#: wizard_button:server.action.create,init,step_1:0
+msgid "Next"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_11
@@ -1769,6 +1775,7 @@ msgid "State of Mind"
 msgstr "Grau de satisfacció"
 
 #. module: base
+#: field:ir.actions.todo,type:0
 #: field:ir.actions.report.xml,report_type:0
 #: field:ir.server.object.lines,type:0
 #: field:ir.translation,type:0
@@ -1778,15 +1785,35 @@ msgid "Type"
 msgstr "Tipus"
 
 #. module: base
+#: field:ir.model.fields,state:0
+#: field:ir.model,state:0
+msgid "Manualy Created"
+msgstr "Creat manualment"
+
+#. module: base
+#: view:ir.module.module:0
+msgid "Defined Reports"
+msgstr ""
+
+#. module: base
+#: field:workflow.transition,act_from:0
+msgid "Source Activity"
+msgstr "Activitat origen"
+
+#. module: base
+#: view:ir.attachment:0
+msgid "Attachment"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_FILE"
 msgstr "STOCK_FILE"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "The copy method is not implemented on this object !"
-msgstr "El mètode copy (copiar) no està implementat en aquest objecte!"
+#: model:res.partner.category,name:base.res_partner_category_9
+msgid "Components Supplier"
+msgstr ""
 
 #. module: base
 #: view:ir.rule.group:0
@@ -1851,8 +1878,14 @@ msgid "STOCK_OK"
 msgstr "STOCK_OK"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:report/report_sxw.py:0
+msgid "print"
+msgstr ""
+
+#. module: base
+#, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "Password empty !"
 msgstr "Contrasenya buida!"
 
@@ -1873,8 +1906,8 @@ msgid "None"
 msgstr "Cap"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "You can not write in this document! (%s)"
 msgstr "No podeu escriure en aquest document! (%s)"
 
@@ -1895,14 +1928,14 @@ msgid "Module Category"
 msgstr "Categoria del mòdul"
 
 #. module: base
-#: view:res.users:0
-msgid "Add & Continue"
-msgstr "Afegeix & Continua"
-
-#. module: base
 #: field:ir.rule,operand:0
 msgid "Operand"
 msgstr "Operant"
+
+#. module: base
+#: help:res.partner,supplier:0
+msgid "Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."
+msgstr ""
 
 #. module: base
 #: wizard_view:module.module.update,init:0
@@ -1920,14 +1953,9 @@ msgid "STOCK_UNINDENT"
 msgstr "STOCK_UNINDENT"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"The module you are trying to remove depends on installed modules :\n"
-" %s"
+#: selection:ir.actions.todo,start_on:0
+msgid "At Once"
 msgstr ""
-"El mòdul que intenteu eliminar depèn dels mòduls instal·lats:\n"
-" %s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
@@ -1967,8 +1995,8 @@ msgid "Low"
 msgstr "Baixa"
 
 #. module: base
-#: code:addons/base/module/module.py:0
 #, python-format
+#: code:addons/base/module/module.py:0
 msgid "Recursion error in modules dependencies !"
 msgstr "Error de recurrència entre dependències de mòduls!"
 
@@ -1984,6 +2012,7 @@ msgstr "Ruta XSL"
 
 #. module: base
 #: field:res.groups,model_access:0
+#: model:ir.ui.menu,name:base.menu_security_access
 #: view:ir.model.access:0
 #: view:res.groups:0
 msgid "Access Controls"
@@ -2022,19 +2051,14 @@ msgid "Channel Name"
 msgstr "Nom canal"
 
 #. module: base
-#: view:ir.module.module.configuration.wizard:0
+#: view:ir.actions.configuration.wizard:0
 msgid "Continue"
-msgstr "Contínua"
+msgstr ""
 
 #. module: base
 #: selection:res.config.view,view:0
 msgid "Simplified Interface"
 msgstr "Interfície simplificat"
-
-#. module: base
-#: view:res.users:0
-msgid "Assign Groups to Define Access Rights"
-msgstr "Assigna grups per definir permisos d'accés"
 
 #. module: base
 #: field:res.bank,street2:0
@@ -2053,20 +2077,19 @@ msgid "STOCK_UNDO"
 msgstr "STOCK_UNDO"
 
 #. module: base
+#: field:ir.attachment,create_date:0
+msgid "Date Created"
+msgstr ""
+
+#. module: base
 #: selection:ir.rule,operator:0
 msgid ">="
 msgstr ">="
 
 #. module: base
-#: wizard_view:list.vat.detail,go:0
-msgid "Notification"
-msgstr "Notifica"
-
-#. module: base
-#: field:workflow.workitem,act_id:0
-#: view:workflow.activity:0
-msgid "Activity"
-msgstr "Activitat"
+#: model:ir.model,name:base.model_ir_actions_todo
+msgid "ir.actions.todo"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
@@ -2085,17 +2108,19 @@ msgstr "Obté fitxer"
 
 #. module: base
 #: wizard_view:module.module.update,init:0
-msgid ""
-"This function will check for new modules in the 'addons' path and on module "
-"repositories:"
-msgstr ""
-"﻿Aquesta funció cercarà nous mòduls en el directori 'addons' i en les "
-"biblioteques de mòduls:"
+msgid "This function will check for new modules in the 'addons' path and on module repositories:"
+msgstr "﻿Aquesta funció cercarà nous mòduls en el directori 'addons' i en les biblioteques de mòduls:"
 
 #. module: base
-#: selection:ir.rule,operator:0
-msgid "child_of"
-msgstr "fill_de"
+#: model:ir.model,name:base.model_res_country
+#: field:res.bank,country:0
+#: field:res.country.state,country_id:0
+#: field:res.partner.address,country_id:0
+#: field:res.partner.bank,country_id:0
+#: field:res.partner,country:0
+#: view:res.country:0
+msgid "Country"
+msgstr "País"
 
 #. module: base
 #: field:res.currency,rate_ids:0
@@ -2109,9 +2134,9 @@ msgid "STOCK_GO_BACK"
 msgstr "STOCK_GO_BACK"
 
 #. module: base
+#, python-format
 #: code:addons/base/ir/ir_model.py:0
 #: code:osv/orm.py:0
-#, python-format
 msgid "AccessError"
 msgstr "ErrorAccés"
 
@@ -2159,8 +2184,8 @@ msgid "unknown"
 msgstr "desconegut"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The create method is not implemented on this object !"
 msgstr "El mètode create (crear) no està implementat en aquest objecte!"
 
@@ -2193,9 +2218,9 @@ msgid "SXW path"
 msgstr "Ruta SXW"
 
 #. module: base
-#: field:ir.attachment,datas:0
+#: view:ir.attachment:0
 msgid "Data"
-msgstr "Dades"
+msgstr ""
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -2240,11 +2265,6 @@ msgid "Module import"
 msgstr "Importació de mòdul"
 
 #. module: base
-#: wizard_field:list.vat.detail,init,limit_amount:0
-msgid "Limit Amount"
-msgstr "Import límit"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
 #: model:ir.ui.menu,name:base.menu_action_res_company_form
 #: view:res.company:0
@@ -2278,6 +2298,11 @@ msgid "Parent Company"
 msgstr "Empresa matriu"
 
 #. module: base
+#: view:ir.attachment:0
+msgid "Attached To"
+msgstr ""
+
+#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Enviar"
@@ -2301,11 +2326,6 @@ msgstr "Data d'inici"
 #: field:res.company,rml_header2:0
 msgid "RML Internal Header"
 msgstr "Capçalera interna RML"
-
-#. module: base
-#: model:ir.ui.menu,name:base.partner_wizard_vat_menu
-msgid "Listing of VAT Customers"
-msgstr "Llistat de clients amb CIF/NIF (per aplicar el IVA)"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -2342,13 +2362,23 @@ msgid "Code"
 msgstr "Codi"
 
 #. module: base
+#: view:ir.module.module:0
+msgid "Features"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-partner"
 msgstr "terp-partner"
 
 #. module: base
-#: code:osv/fields.py:0
+#: field:ir.attachment,create_uid:0
+msgid "Creator"
+msgstr ""
+
+#. module: base
 #, python-format
+#: code:osv/fields.py:0
 msgid "Not implemented get_memory method !"
 msgstr "El mètode get_memory no està implementat!"
 
@@ -2360,8 +2390,8 @@ msgid "Python Code"
 msgstr "Codi de Python"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "Bad query."
 msgstr "Interrogació errònia."
 
@@ -2371,8 +2401,8 @@ msgid "Field Label"
 msgstr "Etiqueta camp"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Intenteu saltar una regla d'accés (tipus document: %s)."
 
@@ -2407,7 +2437,6 @@ msgid "Customers Partners"
 msgstr "Clients"
 
 #. module: base
-#: wizard_button:list.vat.detail,init,end:0
 #: wizard_button:res.partner.spam_send,init,end:0
 #: wizard_button:res.partner.sms_send,init,end:0
 #: wizard_button:base.module.import,init,end:0
@@ -2415,6 +2444,7 @@ msgstr "Clients"
 #: wizard_button:module.lang.install,init,end:0
 #: wizard_button:module.module.update,init,end:0
 #: wizard_button:module.upgrade,next,end:0
+#: selection:ir.actions.todo,state:0
 #: view:wizard.ir.model.menu.create:0
 #: view:wizard.module.lang.export:0
 #: view:wizard.module.update_translations:0
@@ -2422,9 +2452,9 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: base
-#: field:ir.model.access,perm_read:0
-msgid "Read Access"
-msgstr "Permís per llegir"
+#: model:ir.model,name:base.model_res_users
+msgid "res.users"
+msgstr "res.usuaris"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_management
@@ -2432,7 +2462,11 @@ msgid "Modules Management"
 msgstr "Administració de mòduls"
 
 #. module: base
-#: field:ir.attachment,res_id:0
+#: selection:ir.ui.menu,icon:0
+msgid "terp-administration"
+msgstr "terp-administració"
+
+#. module: base
 #: field:ir.model.data,res_id:0
 #: field:ir.translation,res_id:0
 #: field:ir.values,res_id:0
@@ -2443,7 +2477,6 @@ msgstr "ID recurs"
 
 #. module: base
 #: field:ir.model,info:0
-#: view:ir.model:0
 msgid "Information"
 msgstr "Informació"
 
@@ -2478,9 +2511,9 @@ msgid "RML path"
 msgstr "Ruta RML"
 
 #. module: base
-#: field:ir.module.module.configuration.wizard,item_id:0
+#: field:ir.actions.configuration.wizard,item_id:0
 msgid "Next Configuration Wizard"
-msgstr "Següent assistent de configuració"
+msgstr ""
 
 #. module: base
 #: field:workflow.workitem,inst_id:0
@@ -2494,10 +2527,9 @@ msgid "Meta Datas"
 msgstr "Meta dades"
 
 #. module: base
-#: help:res.currency,rate:0
-#: help:res.currency.rate,rate:0
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "La taxa de canvi de la moneda a la moneda de taxa 1"
+#: model:ir.ui.menu,name:base.menu_custom
+msgid "Custom"
+msgstr "Personalització"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -2505,12 +2537,13 @@ msgid "raw"
 msgstr "en brut"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
 #, python-format
+#: code:addons/base/res/partner/partner.py:0
 msgid "Partners: "
 msgstr "Empreses: "
 
 #. module: base
+#: selection:ir.actions.todo,type:0
 #: selection:res.partner.address,type:0
 msgid "Other"
 msgstr "Altre"
@@ -2521,18 +2554,13 @@ msgid "Childs Field"
 msgstr "Camp fills"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_module_module_configuration_step
-msgid "ir.module.module.configuration.step"
-msgstr "ir.mòdul.mòdul.configuració.pas"
+#: field:res.roles,name:0
+msgid "Role Name"
+msgstr "Nom de rol"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_module_module_configuration_wizard
-msgid "ir.module.module.configuration.wizard"
-msgstr "ir.mòdul.mòdul.configuració.wizard"
-
-#. module: base
-#: code:addons/base/res/res_user.py:0
 #, python-format
+#: code:addons/base/res/res_user.py:0
 msgid "Can not remove root user!"
 msgstr "No es pot eliminar l'usuari principal!"
 
@@ -2554,10 +2582,10 @@ msgstr "Comercial dedicat"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
+#: field:ir.actions.todo,users_id:0
 #: field:ir.default,uid:0
 #: field:ir.rule.group,users:0
 #: field:res.groups,users:0
-#: field:res.partner,responsible:0
 #: field:res.roles,users:0
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
@@ -2580,12 +2608,8 @@ msgstr "Informe XML"
 
 #. module: base
 #: help:res.partner,user_id:0
-msgid ""
-"The internal user that is in charge of communicating with this partner if "
-"any."
-msgstr ""
-"﻿L'usuari intern que s'encarrega de comunicar-se amb aquesta empresa si n'hi "
-"ha."
+msgid "The internal user that is in charge of communicating with this partner if any."
+msgstr "﻿L'usuari intern que s'encarrega de comunicar-se amb aquesta empresa si n'hi ha."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -2598,15 +2622,15 @@ msgid "Cancel Upgrade"
 msgstr "Cancel·la actualització"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The search method is not implemented on this object !"
 msgstr "El mètode search (buscar) no està implementat en aquest objecte!"
 
 #. module: base
-#: field:ir.actions.server,address:0
-msgid "Email From / SMS"
-msgstr "Des de Email / SMS"
+#: field:ir.actions.report.xml,attachment:0
+msgid "Save As Attachment Prefix"
+msgstr ""
 
 #. module: base
 #: field:ir.cron,nextcall:0
@@ -2619,13 +2643,18 @@ msgid "Cumulate"
 msgstr "Acumulat"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Bad customers"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_lang
 msgid "res.lang"
 msgstr "res.idioma"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Pie charts need exactly two fields"
 msgstr "Gràfics de pastís necessiten exactament dos camps"
 
@@ -2647,12 +2676,12 @@ msgid "Create in Same Model"
 msgstr "Crea en el mateix model"
 
 #. module: base
+#: field:ir.actions.todo,name:0
 #: field:ir.actions.report.xml,name:0
 #: field:ir.cron,name:0
 #: field:ir.model.access,name:0
 #: field:ir.model.fields,name:0
 #: field:ir.module.category,name:0
-#: field:ir.module.module.configuration.step,name:0
 #: field:ir.module.module.dependency,name:0
 #: field:ir.module.module,name:0
 #: field:ir.module.repository,name:0
@@ -2674,9 +2703,20 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: base
+#: model:ir.actions.wizard,name:base.wizard_lang_install
+#: model:ir.ui.menu,name:base.menu_wizard_lang_install
+msgid "Load an Official Translation"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_APPLY"
 msgstr "STOCK_APPLY"
+
+#. module: base
+#: field:ir.module.module,reports_by_module:0
+msgid "Reports"
+msgstr ""
 
 #. module: base
 #: field:workflow,on_create:0
@@ -2699,8 +2739,8 @@ msgid "STOCK_MEDIA_PAUSE"
 msgstr "STOCK_MEDIA_PAUSE"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
+#: code:addons/base/module/wizard/wizard_module_import.py:0
 msgid "Error !"
 msgstr "Error!"
 
@@ -2717,26 +2757,19 @@ msgstr "GPL-2"
 
 #. module: base
 #: help:ir.module.repository,filter:0
-msgid ""
-"Regexp to search module on the repository webpage:\n"
+msgid "Regexp to search module on the repository webpage:\n"
 "- The first parenthesis must match the name of the module.\n"
 "- The second parenthesis must match all the version number.\n"
 "- The last parenthesis must match the extension of the module."
-msgstr ""
-"Expressió regular per cercar el mòdul en la biblioteca del web:\n"
+msgstr "Expressió regular per cercar el mòdul en la biblioteca del web:\n"
 "- El primer paréntesi haurà de coincidir amb el nom del mòdul.\n"
 "- El segon paréntesi haurà de coincidir amb tot el número de versió.\n"
 "- L'últim paréntesi haurà de coincidir amb l'extensió del mòdul."
 
 #. module: base
-#: field:res.partner,vat:0
-msgid "VAT"
-msgstr "IVA"
-
-#. module: base
-#: selection:ir.ui.menu,action:0
-msgid "ir.actions.act_url"
-msgstr "ir.actions.act_url"
+#: help:wizard.module.lang.export,lang:0
+msgid "To export a new language, do not select a language."
+msgstr "Per exportar un nou idioma, no seleccioni un idioma."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -2784,6 +2817,16 @@ msgid "STOCK_COPY"
 msgstr "STOCK_COPY"
 
 #. module: base
+#: selection:ir.actions.todo,start_on:0
+msgid "Auto"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_3
+msgid "Starter Partner"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_request_link
 msgid "res.request.link"
 msgstr "res.request.link"
@@ -2799,8 +2842,8 @@ msgid "ir.actions.act_window.view"
 msgstr "ir.accions.acc_window.vista"
 
 #. module: base
-#: code:tools/translate.py:0
 #, python-format
+#: code:tools/translate.py:0
 msgid "Bad file format"
 msgstr "Format de fitxer incorrecte"
 
@@ -2835,6 +2878,11 @@ msgid "Record rules"
 msgstr "Regles de registre"
 
 #. module: base
+#: wizard_view:module.lang.import,init:0
+msgid "You have to import a .CSV file wich is encoded in UTF-8.  Please check that the first line of your file is one of the following:"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,groupby:0
 msgid "Group by"
 msgstr "Agrupat per"
@@ -2846,8 +2894,8 @@ msgid "Readonly"
 msgstr "Només lectura"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "You can not remove the field '%s' !"
 msgstr "No podeu eliminar el camp '%s'!"
 
@@ -2878,11 +2926,6 @@ msgid "Document"
 msgstr "Document"
 
 #. module: base
-#: view:res.partner:0
-msgid "# of Contacts"
-msgstr "# de contactes"
-
-#. module: base
 #: field:res.partner.event,type:0
 msgid "Type of Event"
 msgstr "Tipus d'esdeveniment"
@@ -2904,20 +2947,25 @@ msgid "STOCK_STOP"
 msgstr "STOCK_STOP"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
-"used to refer to other modules data, as in module.reference_id"
-msgstr ""
-"﻿\"%s\" conté massa punts. Els ids de XML no han contenir punts! Aquests "
-"s'utilitzen per referir-se a dades d'altres mòduls, com en "
-"module.reference_id"
+#: code:addons/base/ir/ir_model.py:0
+msgid "\"%s\" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
+msgstr "﻿\"%s\" conté massa punts. Els ids de XML no han contenir punts! Aquests s'utilitzen per referir-se a dades d'altres mòduls, com en module.reference_id"
+
+#. module: base
+#: field:res.partner.bank,acc_number:0
+msgid "Account number"
+msgstr "Número de compte"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
 msgid "wizard.ir.model.menu.create.line"
 msgstr "wizard.ir.model.menú.crea.línia"
+
+#. module: base
+#: field:ir.attachment,res_id:0
+msgid "Attached ID"
+msgstr ""
 
 #. module: base
 #: selection:res.partner.event,type:0
@@ -2941,8 +2989,8 @@ msgid "Day: %(day)s"
 msgstr "Dia: %(day)s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "You can not read this document! (%s)"
 msgstr "No podeu llegir aquest document! (%s)"
 
@@ -3061,8 +3109,15 @@ msgstr "Valor del domini"
 
 #. module: base
 #: selection:ir.translation,type:0
+#: view:wizard.module.lang.export:0
 msgid "Help"
 msgstr "Ajuda"
+
+#. module: base
+#, python-format
+#: code:addons/base/module/module.py:0
+msgid "Some installed modules depends on the module you plan to desinstall :\n %s"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -3115,6 +3170,11 @@ msgid "Schedule for Installation"
 msgstr "Programa per instal·lació"
 
 #. module: base
+#: view:ir.sequence:0
+msgid "Year without century: %(y)s"
+msgstr ""
+
+#. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Advanced Search"
 msgstr "Cerca avançada"
@@ -3133,9 +3193,9 @@ msgid "Directory:"
 msgstr "Directori:"
 
 #. module: base
-#: field:res.partner,credit_limit:0
-msgid "Credit Limit"
-msgstr "Crèdit concedit"
+#: field:ir.attachment,res_model:0
+msgid "Attached Model"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
@@ -3143,8 +3203,13 @@ msgid "Trigger Name"
 msgstr "Nom d'activació"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: wizard_button:server.action.create,step_1,create:0
+msgid "Create"
+msgstr ""
+
+#. module: base
 #, python-format
+#: code:addons/base/res/res_user.py:0
 msgid "The name of the group can not start with \"-\""
 msgstr "El nom del grup no pot començar amb \"-\""
 
@@ -3179,9 +3244,15 @@ msgid "Source"
 msgstr "Text original"
 
 #. module: base
-#: field:workflow.transition,act_from:0
-msgid "Source Activity"
-msgstr "Activitat origen"
+#: model:ir.actions.act_window,name:base.action_partner_title_contact
+#: model:ir.ui.menu,name:base.menu_partner_title_contact
+msgid "Contacts Titles"
+msgstr ""
+
+#. module: base
+#: help:res.partner.address,partner_id:0
+msgid "Keep empty for a private address, not related to partner."
+msgstr ""
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -3229,14 +3300,10 @@ msgid "Resource Name"
 msgstr "Nom de recurs"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid ""
-"Save this document to a .tgz file. This archive containt UTF-8 %s files and "
-"may be uploaded to launchpad."
-msgstr ""
-"﻿Desa aquest document en un fitxer .tgz. Aquest fitxer contindrà %s fitxers "
-"UTF-8 i pot ser pujat a launchpad."
+#: code:addons/base/module/wizard/wizard_export_lang.py:0
+msgid "Save this document to a .tgz file. This archive containt UTF-8 %s files and may be uploaded to launchpad."
+msgstr "﻿Desa aquest document en un fitxer .tgz. Aquest fitxer contindrà %s fitxers UTF-8 i pot ser pujat a launchpad."
 
 #. module: base
 #: field:res.partner.address,type:0
@@ -3253,6 +3320,12 @@ msgstr "Inicia configuració"
 #: field:ir.exports,export_fields:0
 msgid "Export Id"
 msgstr "Exportar Id"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.ir_action_window
+#: model:ir.ui.menu,name:base.menu_ir_action_window
+msgid "Window Actions"
+msgstr "Accions de finestra"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -3280,8 +3353,8 @@ msgid "References"
 msgstr "Referències"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "This record was modified in the meanwhile"
 msgstr "Aquest registre mentrestant s'ha modificat"
 
@@ -3307,21 +3380,21 @@ msgid "Kind"
 msgstr "Classe"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "This method does not exist anymore"
 msgstr "Aquest mètode ja no existeix"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Tree can only be used in tabular reports"
 msgstr "Àrbre es pot utilitzar només en informes tabulars"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DELETE"
-msgstr "STOCK_DELETE"
+#: selection:ir.actions.todo,start_on:0
+msgid "Manual"
+msgstr ""
 
 #. module: base
 #: view:res.partner.bank:0
@@ -3337,20 +3410,24 @@ msgid "Tree"
 msgstr "Arbre"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Segmentation"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CLEAR"
 msgstr "STOCK_CLEAR"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
-#, python-format
-msgid "Bar charts need at least two fields"
-msgstr "Gràfics de barres necessiten al menys dos camps"
+#: help:res.users,password:0
+msgid "Keep empty if you don't want the user to be able to connect on the system."
+msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_users
-msgid "res.users"
-msgstr "res.usuaris"
+#: field:ir.model.access,perm_read:0
+msgid "Read Access"
+msgstr "Permís per llegir"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -3368,13 +3445,19 @@ msgid "Custom Field"
 msgstr "Camp personalitzat"
 
 #. module: base
-#: field:workflow.transition,role_id:0
-msgid "Role Required"
-msgstr "Rol requerit"
+#: field:ir.model.fields,relation_field:0
+msgid "Relation Field"
+msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
+msgid "Bar charts need at least two fields"
+msgstr "Gràfics de barres necessiten al menys dos camps"
+
+#. module: base
+#, python-format
+#: code:osv/fields.py:0
 msgid "Not implemented search_memory method !"
 msgstr "El mètode search_memory no està implementat!"
 
@@ -3418,6 +3501,12 @@ msgid "Rules"
 msgstr "Regles"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_title
+#: model:ir.ui.menu,name:base.menu_partner_title
+msgid "Titles"
+msgstr ""
+
+#. module: base
 #: wizard_view:module.upgrade,start:0
 #: wizard_view:module.upgrade,end:0
 msgid "System upgrade done"
@@ -3430,16 +3519,14 @@ msgid "Type of view"
 msgstr "Tipus de vista"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "The perm_read method is not implemented on this object !"
-msgstr ""
-"El mètode perm_read (llegir permisos) no està implementat en aquest objecte!"
-
-#. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "pdf"
 msgstr "pdf"
+
+#. module: base
+#: field:ir.actions.todo,start_date:0
+msgid "Start Date"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_address_form
@@ -3464,10 +3551,25 @@ msgid "STOCK_PROPERTIES"
 msgstr "STOCK_PROPERTIES"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Textile Suppliers"
+msgstr ""
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Grant access to menu"
 msgstr "Autoritza accés al menú"
+
+#. module: base
+#: field:ir.attachment,datas:0
+msgid "File Content"
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -3481,8 +3583,8 @@ msgid "New Window"
 msgstr "Nova finestra"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Second field should be figures"
 msgstr "El segon camp han de ser xifres"
 
@@ -3497,12 +3599,10 @@ msgid "Parent Action"
 msgstr "Acció pare"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
 #, python-format
-msgid ""
-"Couldn't generate the next id because some partners have an alphabetic id !"
-msgstr ""
-"No es pot generar el pròxim id perquè algunes empreses tenen un id alfabètic!"
+#: code:addons/base/res/partner/partner.py:0
+msgid "Couldn't generate the next id because some partners have an alphabetic id !"
+msgstr "No es pot generar el pròxim id perquè algunes empreses tenen un id alfabètic!"
 
 #. module: base
 #: selection:ir.report.custom,state:0
@@ -3515,11 +3615,17 @@ msgid "Number of modules updated"
 msgstr "Número de mòduls actualitzats"
 
 #. module: base
-#: view:ir.module.module.configuration.wizard:0
-msgid "Skip Step"
-msgstr "Salta pas"
+#: view:ir.attachment:0
+msgid "Preview"
+msgstr ""
 
 #. module: base
+#: view:ir.actions.configuration.wizard:0
+msgid "Skip Step"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner.event,name:0
 #: field:res.partner,events:0
 msgid "Events"
@@ -3533,6 +3639,7 @@ msgstr "Arbre de rols"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_url
+#: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.accions.url"
 
@@ -3548,9 +3655,21 @@ msgid "Active Partner Events"
 msgstr "Esdeveniments d'empreses actives"
 
 #. module: base
-#: field:workflow.transition,trigger_expr_id:0
-msgid "Trigger Expr ID"
-msgstr "ID expr activació"
+#, python-format
+#: code:osv/orm.py:0
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr ""
+
+#. module: base
+#, python-format
+#: code:osv/orm.py:0
+msgid "Error occured while validating the field(s) %s: %s"
+msgstr ""
+
+#. module: base
+#: view:res.users:0
+msgid "Define New Users"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
@@ -3575,17 +3694,25 @@ msgid "Phone"
 msgstr "Telèfon"
 
 #. module: base
-#: help:ir.actions.wizard,multi:0
-msgid ""
-"If set to true, the wizard will not be displayed on the right toolbar of a "
-"form views."
+#: view:ir.sequence:0
+msgid "Day of the year: %(doy)s"
 msgstr ""
-"﻿Si es fixa a verdader, l'assistent no es mostrarà en la barra d'eines dreta "
-"en les vistes formulari."
+
+#. module: base
+#: help:ir.actions.wizard,multi:0
+msgid "If set to true, the wizard will not be displayed on the right toolbar of a form views."
+msgstr "﻿Si es fixa a verdader, l'assistent no es mostrarà en la barra d'eines dreta en les vistes formulari."
+
+#. module: base
+#: field:workflow.transition,role_id:0
+msgid "Role Required"
+msgstr "Rol requerit"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
+#: field:ir.actions.todo,groups_id:0
 #: field:ir.actions.report.xml,groups_id:0
+#: field:ir.actions.act_window,groups_id:0
 #: field:ir.actions.wizard,groups_id:0
 #: field:ir.model.fields,groups:0
 #: field:ir.rule.group,groups:0
@@ -3603,6 +3730,7 @@ msgid "STOCK_SPELL_CHECK"
 msgstr "STOCK_SPELL_CHECK"
 
 #. module: base
+#: field:ir.actions.todo,active:0
 #: field:ir.cron,active:0
 #: field:ir.module.repository,active:0
 #: field:ir.sequence,active:0
@@ -3620,9 +3748,9 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_miss
-msgid "Miss"
-msgstr "Sra."
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr ""
 
 #. module: base
 #: field:ir.ui.view.custom,ref_id:0
@@ -3653,19 +3781,19 @@ msgid "STOCK_DIALOG_AUTHENTICATION"
 msgstr "STOCK_DIALOG_AUTHENTICATION"
 
 #. module: base
-#: field:ir.model.access,perm_unlink:0
-msgid "Delete Permission"
-msgstr "Permís per eliminar"
+#: view:ir.actions.act_window:0
+msgid "Open a Window"
+msgstr "Obre una finestra"
+
+#. module: base
+#: selection:ir.cron,interval_type:0
+msgid "Months"
+msgstr "Mesos"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
 msgid "Signal (subflow.*)"
 msgstr "Senyal (subflow.*)"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ABOUT"
-msgstr "STOCK_ABOUT"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3685,15 +3813,15 @@ msgstr "Categories filles"
 
 #. module: base
 #: field:ir.model.fields,model:0
-#: field:ir.model,model:0
 #: field:ir.model.grid,model:0
+#: field:ir.model,model:0
 #: field:ir.model,name:0
 msgid "Object Name"
 msgstr "Nom de l'objecte"
 
 #. module: base
+#: field:ir.actions.todo,action_id:0
 #: field:ir.actions.act_window.view,act_window_id:0
-#: field:ir.module.module.configuration.step,action_id:0
 #: field:ir.ui.menu,action:0
 #: view:ir.actions.actions:0
 msgid "Action"
@@ -3726,9 +3854,11 @@ msgid "Object Relation"
 msgstr "Relació objecte"
 
 #. module: base
-#: wizard_field:list.vat.detail,init,mand_id:0
-msgid "MandataireId"
-msgstr "Id solicitant"
+#: model:ir.actions.act_window,name:base.action_attachment
+#: model:ir.ui.menu,name:base.menu_action_attachment
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr "Adjunts"
 
 #. module: base
 #: field:ir.rule,field_id:0
@@ -3779,9 +3909,9 @@ msgid "terp-mrp"
 msgstr "terp-mrp"
 
 #. module: base
-#: selection:ir.module.module.configuration.step,state:0
+#: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Realitzat"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
@@ -3797,12 +3927,8 @@ msgstr "Factura"
 #: help:ir.actions.report.custom,multi:0
 #: help:ir.actions.report.xml,multi:0
 #: help:ir.actions.act_window.view,multi:0
-msgid ""
-"If set to true, the action will not be displayed on the right toolbar of a "
-"form views."
-msgstr ""
-"Si es fixa a verdader, l'acció no es mostrarà en la barra d'eines dreta en "
-"les vistes formulari."
+msgid "If set to true, the action will not be displayed on the right toolbar of a form views."
+msgstr "Si es fixa a verdader, l'acció no es mostrarà en la barra d'eines dreta en les vistes formulari."
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
@@ -3839,6 +3965,7 @@ msgstr "Mida"
 #: field:res.bank,city:0
 #: field:res.partner.address,city:0
 #: field:res.partner.bank,city:0
+#: field:res.partner,city:0
 msgid "City"
 msgstr "Ciutat"
 
@@ -3849,11 +3976,8 @@ msgstr "Empreses filials"
 
 #. module: base
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -3861,9 +3985,9 @@ msgid "Module:"
 msgstr "Mòdul:"
 
 #. module: base
-#: selection:ir.model,state:0
-msgid "Custom Object"
-msgstr "Objecte personalitzat"
+#: field:ir.actions.configuration.wizard,name:0
+msgid "Next Wizard"
+msgstr ""
 
 #. module: base
 #: selection:ir.rule,operator:0
@@ -3884,28 +4008,25 @@ msgid "<="
 msgstr "<="
 
 #. module: base
+#: view:wizard.module.lang.export:0
+msgid "Export Data"
+msgstr ""
+
+#. module: base
 #: field:workflow.triggers,instance_id:0
 msgid "Destination Instance"
 msgstr "Instància de destí"
 
 #. module: base
 #: wizard_view:module.lang.install,start:0
-msgid ""
-"The selected language has been successfully installed. You must change the "
-"preferences of the user and open a new menu to view changes."
-msgstr ""
-"L'idioma seleccionat s'ha instal·lat correctament. Heu de canviar les "
-"preferències de l'usuari i obrir un nou menú per veure els canvis."
+msgid "The selected language has been successfully installed. You must change the preferences of the user and open a new menu to view changes."
+msgstr "L'idioma seleccionat s'ha instal·lat correctament. Heu de canviar les preferències de l'usuari i obrir un nou menú per veure els canvis."
 
 #. module: base
-#: field:res.roles,name:0
-msgid "Role Name"
-msgstr "Nom de rol"
-
-#. module: base
-#: wizard_button:list.vat.detail,init,go:0
-msgid "Create XML"
-msgstr "Crea XML"
+#: field:ir.module.module,menus_by_module:0
+#: view:res.groups:0
+msgid "Menus"
+msgstr "Menús"
 
 #. module: base
 #: selection:ir.report.custom.fields,fc0_op:0
@@ -3927,9 +4048,24 @@ msgid "Child Field"
 msgstr "Camp fill"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Sr."
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "https://translations.launchpad.net/openobject"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_EDIT"
 msgstr "STOCK_EDIT"
+
+#. module: base
+#: selection:ir.module.module,license:0
+msgid "GPL-3 or later version"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.actions,usage:0
@@ -3946,8 +4082,8 @@ msgid "STOCK_HOME"
 msgstr "STOCK_HOME"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Enter at least one field !"
 msgstr "Introdueixi al menys un camp!"
 
@@ -3958,9 +4094,10 @@ msgid "Others Actions"
 msgstr "Altres accions"
 
 #. module: base
-#: selection:ir.report.custom.fields,operation:0
-msgid "Get Max"
-msgstr "Consegueix màxim"
+#: model:ir.actions.wizard,name:base.wizard_server_action_create
+#: view:ir.actions.server:0
+msgid "Create Action"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
@@ -4034,9 +4171,9 @@ msgid "Child ids"
 msgstr "IDs fills"
 
 #. module: base
-#: field:wizard.module.lang.export,format:0
-msgid "File Format"
-msgstr "Format de fitxer"
+#: field:ir.actions.todo,end_date:0
+msgid "End Date"
+msgstr ""
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -4045,9 +4182,9 @@ msgid "Resource"
 msgstr "Recurs"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_server_object_lines
-msgid "ir.server.object.lines"
-msgstr "ir.server.objecte.línias"
+#: field:ir.model.data,date_update:0
+msgid "Update Date"
+msgstr "Data revisió"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4131,6 +4268,12 @@ msgid "Field Mappings"
 msgstr "Mapa de camps"
 
 #. module: base
+#, python-format
+#: code:osv/orm.py:0
+msgid "The copy method is not implemented on this object !"
+msgstr "El mètode copy (copiar) no està implementat en aquest objecte!"
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_ADD"
 msgstr "STOCK_ADD"
@@ -4147,8 +4290,8 @@ msgid "center"
 msgstr "centre"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
+#: code:addons/base/module/wizard/wizard_module_import.py:0
 msgid "Can not create the module file: %s !"
 msgstr "No es pot crear el fitxer de mòdul: %s!"
 
@@ -4163,9 +4306,10 @@ msgid "Published Version"
 msgstr "Versió publicada"
 
 #. module: base
-#: field:ir.actions.act_window,auto_refresh:0
-msgid "Auto-Refresh"
-msgstr "Auto-refrescar"
+#: help:res.currency,rate:0
+#: help:res.currency.rate,rate:0
+msgid "The rate of the currency to the currency of rate 1"
+msgstr "La taxa de canvi de la moneda a la moneda de taxa 1"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
@@ -4194,13 +4338,9 @@ msgid "ir.exports.line"
 msgstr "ir.export.línia"
 
 #. module: base
-#: wizard_view:list.vat.detail,init:0
-msgid ""
-"This wizard will create an XML file for Vat details and total invoiced "
-"amounts per partner."
-msgstr ""
-"Aquest assistent crearà un fitxer XML per l'IVA desglossat i imports totals "
-"facturats per empresa."
+#: field:res.partner,credit_limit:0
+msgid "Credit Limit"
+msgstr "Crèdit concedit"
 
 #. module: base
 #: field:ir.default,value:0
@@ -4234,10 +4374,15 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.ir_action_window
-#: model:ir.ui.menu,name:base.menu_ir_action_window
-msgid "Window Actions"
-msgstr "Accions de finestra"
+#: view:res.request:0
+#: view:ir.model:0
+msgid "Status"
+msgstr "Posició"
+
+#. module: base
+#: field:ir.actions.act_window,auto_refresh:0
+msgid "Auto-Refresh"
+msgstr "Auto-refrescar"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -4245,9 +4390,9 @@ msgid "ir.actions.act_window_close"
 msgstr "ir.actions.act_window_close"
 
 #. module: base
-#: field:res.partner.bank,acc_number:0
-msgid "Account number"
-msgstr "Número de compte"
+#: selection:ir.actions.todo,type:0
+msgid "Service"
+msgstr ""
 
 #. module: base
 #: help:ir.actions.act_window,auto_refresh:0
@@ -4255,14 +4400,15 @@ msgid "Add an auto-refresh on the view"
 msgstr "Afegeix un auto-refrescar a la vista"
 
 #. module: base
+#: field:ir.attachment,datas_fname:0
 #: field:wizard.module.lang.export,name:0
 msgid "Filename"
 msgstr "Nom de fitxer"
 
 #. module: base
-#: field:ir.model,access:0
+#: field:ir.model,access_ids:0
 msgid "Access"
-msgstr "Accés"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4297,15 +4443,15 @@ msgid "Fax"
 msgstr "Fax"
 
 #. module: base
+#: view:res.users:0
+msgid "Groups are used to defined access rights on each screen and menu."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_workitem_form
 #: model:ir.ui.menu,name:base.menu_workflow_workitem
 msgid "Workitems"
 msgstr "Elements de treball"
-
-#. module: base
-#: help:wizard.module.lang.export,lang:0
-msgid "To export a new language, do not select a language."
-msgstr "Per exportar un nou idioma, no seleccioni un idioma."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4313,14 +4459,10 @@ msgid "STOCK_PRINT_PREVIEW"
 msgstr "STOCK_PRINT_PREVIEW"
 
 #. module: base
-#: code:report/custom.py:0
 #, python-format
-msgid ""
-"The sum of the data (2nd field) is null.\n"
-"We can draw a pie chart !"
-msgstr ""
-"La suma de les dades (2º camp) és nul.\n"
-"Es pot visualitzar un gràfic de pastís!"
+#: code:osv/orm.py:0
+msgid "The perm_read method is not implemented on this object !"
+msgstr "El mètode perm_read (llegir permisos) no està implementat en aquest objecte!"
 
 #. module: base
 #: field:ir.default,company_id:0
@@ -4332,16 +4474,6 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: base
-#: view:ir.actions.server:0
-msgid ""
-"Access all the fields related to the current object easily just by defining "
-"name of the attribute, i.e. [[partner_id.name]] for Invoice Object"
-msgstr ""
-"Accedeixi fàcilment a tots els camps relacionats amb l'objecte actual "
-"indicant només el nom de l'atribut, per exemple [[partner_id.name]] per "
-"l'objecte Factura"
-
-#. module: base
 #: field:res.request,create_date:0
 msgid "Created date"
 msgstr "Data creació"
@@ -4350,6 +4482,11 @@ msgstr "Data creació"
 #: view:ir.actions.server:0
 msgid "Email / SMS"
 msgstr "Email / SMS"
+
+#. module: base
+#: field:res.bank,bic:0
+msgid "BIC/Swift code"
+msgstr "Codi BIC/Swift"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
@@ -4374,7 +4511,6 @@ msgid "Icon"
 msgstr "Icona"
 
 #. module: base
-#: wizard_button:list.vat.detail,go,end:0
 #: wizard_button:module.lang.import,init,finish:0
 #: wizard_button:module.lang.install,start,end:0
 #: wizard_button:module.module.update,update,open_window:0
@@ -4387,13 +4523,8 @@ msgid "Repeat missed"
 msgstr "Repetir perduts"
 
 #. module: base
-#: model:ir.actions.wizard,name:base.partner_wizard_vat
-msgid "Enlist Vat Details"
-msgstr "Resum de l'IVA desglossat"
-
-#. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "Couldn't find tag '%s' in parent view !"
 msgstr "No es pot trobar la marca '%s' en la vista pare!"
 
@@ -4414,12 +4545,6 @@ msgid "Limit"
 msgstr "Límit"
 
 #. module: base
-#: model:ir.actions.wizard,name:base.wizard_lang_install
-#: model:ir.ui.menu,name:base.menu_wizard_lang_install
-msgid "Install new language file"
-msgstr "Instal·la nou fitxer d'idioma"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.res_request-act
 #: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
@@ -4431,6 +4556,11 @@ msgstr "Sol·licituds"
 #: selection:workflow.activity,split_mode:0
 msgid "Or"
 msgstr "Or"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_7
+msgid "Openstuff.net"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule_group
@@ -4457,21 +4587,26 @@ msgid "="
 msgstr "="
 
 #. module: base
+#: view:ir.sequence:0
+msgid "Week of the year: %(woy)s"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
 msgstr "Mòduls instal·lats"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
 #, python-format
+#: code:addons/base/res/partner/partner.py:0
 msgid "Warning"
 msgstr "Avís"
 
 #. module: base
-#: wizard_view:list.vat.detail,go:0
-msgid "XML File has been Created."
-msgstr "Fitxer XML ha estat creat."
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_ABOUT"
+msgstr "STOCK_ABOUT"
 
 #. module: base
 #: field:ir.rule,operator:0
@@ -4479,8 +4614,8 @@ msgid "Operator"
 msgstr "Operador"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "ValidateError"
 msgstr "Error de Validació"
 
@@ -4532,8 +4667,8 @@ msgid "Report Footer 1"
 msgstr "Peu de pàgina 1 de l'informe"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
 #, python-format
+#: code:addons/base/ir/ir_model.py:0
 msgid "You can not delete this document! (%s)"
 msgstr "No podeu eliminar aquest document! (%s)"
 
@@ -4544,14 +4679,20 @@ msgid "Custom Report"
 msgstr "Informe personalitzat"
 
 #. module: base
+#: view:ir.sequence:0
+msgid "Day of the week (0:Monday): %(weekday)s"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.server,state:0
 msgid "Email"
 msgstr "Email"
 
 #. module: base
-#: field:ir.actions.report.xml,auto:0
-msgid "Automatic XSL:RML"
-msgstr "XSL:RML automàtic"
+#: model:ir.actions.act_window,name:base.action_wizard_update_translations
+#: model:ir.ui.menu,name:base.menu_wizard_update_translations
+msgid "Resynchronise Terms"
+msgstr ""
 
 #. module: base
 #: field:ir.model.access,perm_create:0
@@ -4575,15 +4716,16 @@ msgid "Printed:"
 msgstr "Imprés:"
 
 #. module: base
-#: code:osv/fields.py:0
 #, python-format
-msgid "Not implemented set_memory method !"
-msgstr "El mètode set_memory no està implementat!"
+#: code:addons/base/module/module.py:0
+msgid "Can not upgrade module '%s'. It is not installed."
+msgstr ""
 
 #. module: base
-#: wizard_field:list.vat.detail,go,file_save:0
-msgid "Save File"
-msgstr "Desa el fitxer"
+#, python-format
+#: code:osv/fields.py:0
+msgid "Not implemented set_memory method !"
+msgstr "El mètode set_memory no està implementat!"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -4594,11 +4736,6 @@ msgstr "Finestra actual"
 #: view:res.partner.category:0
 msgid "Partner category"
 msgstr "Categoria d'empresa"
-
-#. module: base
-#: wizard_view:list.vat.detail,init:0
-msgid "Select Fiscal Year"
-msgstr "Selecciona exercici fiscal"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4625,12 +4762,12 @@ msgstr "Interface"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: view:ir.sequence:0
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Configuració"
 
 #. module: base
 #: field:ir.model.fields,ttype:0
-#: view:ir.model.fields:0
 #: view:ir.model:0
 msgid "Field Type"
 msgstr "Tipus de camp"
@@ -4650,6 +4787,11 @@ msgstr "Codi de província"
 #: field:ir.model.fields,on_delete:0
 msgid "On delete"
 msgstr "En eliminar"
+
+#. module: base
+#: view:ir.sequence:0
+msgid "Year with century: %(year)s"
+msgstr ""
 
 #. module: base
 #: view:ir.report.custom:0
@@ -4677,21 +4819,33 @@ msgid "Cascade"
 msgstr "En cascada"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Field %d should be a figure"
 msgstr "Camp %d ha de  ser una xifra"
 
 #. module: base
-#: field:res.users,signature:0
-msgid "Signature"
-msgstr "Signatura"
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+#: selection:wizard.ir.model.menu.create.line,view_type:0
+msgid "Gantt"
+msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
 #, python-format
+#: code:osv/fields.py:0
 msgid "Not Implemented"
 msgstr "No implementat"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_5
+msgid "Gold Partner"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_15
+msgid "IT sector"
+msgstr ""
 
 #. module: base
 #: view:ir.property:0
@@ -4705,9 +4859,9 @@ msgid "Bank Account Type"
 msgstr "Tipus de compte de banc"
 
 #. module: base
-#: wizard_field:list.vat.detail,init,test_xml:0
-msgid "Test XML file"
-msgstr "Fitxer XML de prova"
+#: view:ir.actions.configuration.wizard:0
+msgid "Next Configuration Step"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4728,14 +4882,8 @@ msgstr "Domini"
 
 #. module: base
 #: view:res.config.view:0
-msgid ""
-"Choose the simplified interface if you are testing OpenERP for the first "
-"time. Less used options or fields are automatically hidden. You will be able "
-"to change this, later, through the Administration menu."
-msgstr ""
-"Esculliu la interfície simplificada si està provant OpenERP per primera "
-"vegada. Les opcions o camps menys utilitzats s'oculten automàticament. Més "
-"tard podreu canviar això mitjançant el menú de Administració."
+msgid "Choose the simplified interface if you are testing OpenERP for the first time. Less used options or fields are automatically hidden. You will be able to change this, later, through the Administration menu."
+msgstr "Esculliu la interfície simplificada si està provant OpenERP per primera vegada. Les opcions o camps menys utilitzats s'oculten automàticament. Més tard podreu canviar això mitjançant el menú de Administració."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4748,6 +4896,11 @@ msgid "Short description"
 msgstr "Descripció breu"
 
 #. module: base
+#: help:ir.actions.report.xml,attachment:0
+msgid "This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports"
+msgstr ""
+
+#. module: base
 #: field:res.country.state,name:0
 msgid "State Name"
 msgstr "Nom província"
@@ -4756,6 +4909,11 @@ msgstr "Nom província"
 #: view:res.company:0
 msgid "Your Logo - Use a size of about 450x150 pixels."
 msgstr "El vostre logo – Utilitzeu una mida de 450x150 píxels aprox."
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_DELETE"
+msgstr "STOCK_DELETE"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
@@ -4768,10 +4926,11 @@ msgid "a5"
 msgstr "A5"
 
 #. module: base
-#: wizard_field:res.partner.spam_send,init,text:0
-#: field:ir.actions.server,message:0
-msgid "Message"
-msgstr "Missatge"
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+#: selection:wizard.ir.model.menu.create.line,view_type:0
+msgid "Calendar"
+msgstr "Calendari"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4785,13 +4944,20 @@ msgid "ir.actions.report.xml"
 msgstr "ir.accions.informe.xml"
 
 #. module: base
-#: view:res.users:0
-msgid ""
-"Please note that you will have to logout and relog if you change your "
-"password."
+#, python-format
+#: code:addons/base/maintenance/maintenance.py:0
+msgid "Maintenance Error !"
 msgstr ""
-"Tingueu en compte que haureu de sortir i tornar a registrar si canvieu la "
-"vostra contrasenya."
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once."
+msgstr ""
+
+#. module: base
+#: view:res.users:0
+msgid "Please note that you will have to logout and relog if you change your password."
+msgstr "Tingueu en compte que haureu de sortir i tornar a registrar si canvieu la vostra contrasenya."
 
 #. module: base
 #: field:res.partner,address:0
@@ -4807,14 +4973,19 @@ msgid "Graph"
 msgstr "Diagrama"
 
 #. module: base
-#: field:res.bank,bic:0
-msgid "BIC/Swift code"
-msgstr "Codi BIC/Swift"
+#: field:ir.module.module,latest_version:0
+msgid "Latest version"
+msgstr "Última versió"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
 msgid "ir.actions.server"
 msgstr "ir.accions.server"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "HR sector"
+msgstr ""
 
 #. module: base
 #: wizard_button:module.lang.install,init,start:0
@@ -4832,11 +5003,10 @@ msgid "Module dependency"
 msgstr "Dependència del mòdul"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The name_get method is not implemented on this object !"
-msgstr ""
-"El mètode name_get (obtenir nom) no està implementat en aquest objecte!"
+msgstr "El mètode name_get (obtenir nom) no està implementat en aquest objecte!"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_upgrade
@@ -4848,6 +5018,11 @@ msgstr "Aplica actualitzacions programades"
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DND_MULTIPLE"
 msgstr "STOCK_DND_MULTIPLE"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "OpenERP Partners"
+msgstr ""
 
 #. module: base
 #: view:res.config.view:0
@@ -4866,14 +5041,9 @@ msgid "Server Action"
 msgstr "Acció servidor"
 
 #. module: base
-#: wizard_field:list.vat.detail,go,msg:0
-msgid "File created"
-msgstr "Fitxer creat"
-
-#. module: base
-#: view:ir.sequence:0
-msgid "Year: %(year)s"
-msgstr "Any: %(year)s"
+#: selection:ir.module.module,license:0
+msgid "GPL-3"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window_close,name:0
@@ -4885,9 +5055,9 @@ msgid "Action Name"
 msgstr "Nom d'acció"
 
 #. module: base
-#: field:ir.module.module.configuration.wizard,progress:0
+#: field:ir.actions.configuration.wizard,progress:0
 msgid "Configuration Progress"
-msgstr "Progrés de la configuració"
+msgstr ""
 
 #. module: base
 #: field:res.company,rml_footer2:0
@@ -4896,9 +5066,13 @@ msgstr "Peu de pàgina 2 de l'informe"
 
 #. module: base
 #: field:res.bank,email:0
-#: field:res.partner.address,email:0
 msgid "E-Mail"
 msgstr "Email"
+
+#. module: base
+#: wizard_view:module.lang.import,init:0
+msgid "module,type,name,res_id,src,value"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -4914,6 +5088,11 @@ msgstr "Mode divisió"
 #: model:ir.ui.menu,name:base.menu_localisation
 msgid "Localisation"
 msgstr "Ubicació"
+
+#. module: base
+#: selection:ir.report.custom.fields,operation:0
+msgid "Calculate Count"
+msgstr "Calcular contador"
 
 #. module: base
 #: field:ir.module.module,dependencies_id:0
@@ -4953,8 +5132,14 @@ msgid "Import a Translation File"
 msgstr "Importa un fitxer de traducció"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_title
-#: model:ir.ui.menu,name:base.menu_partner_title
+#, python-format
+#: code:addons/base/ir/ir_actions.py:0
+msgid "Please specify the Partner Email address !"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_partner_title_partner
+#: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
 msgid "Partners Titles"
 msgstr "Títols empresa"
@@ -4966,9 +5151,9 @@ msgid "Untranslated terms"
 msgstr "Termes no traduïbles"
 
 #. module: base
-#: view:ir.actions.act_window:0
-msgid "Open Window"
-msgstr "Obre finestra"
+#: view:ir.actions.server:0
+msgid "If you use a formula type, use a python expression using the variable 'object'."
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -4981,13 +5166,15 @@ msgid "Transition"
 msgstr "Transició"
 
 #. module: base
-#: wizard_view:module.lang.import,init:0
-msgid ""
-"You have to import a .CSV file wich is encoded in UTF-8. Please check that "
-"the first line of your file is:"
+#: field:res.partner,vat:0
+msgid "VAT"
+msgstr "IVA"
+
+#. module: base
+#, python-format
+#: code:addons/base/maintenance/maintenance.py:0
+msgid "Valid Maintenance Contract !"
 msgstr ""
-"Heu d'importar un fitxer .CSV codificat en UTF-8. Comproveu que la primera "
-"línia del vostre fitxer és:"
 
 #. module: base
 #: field:res.partner.address,birthdate:0
@@ -5010,16 +5197,13 @@ msgid "res.partner.som"
 msgstr "res.empresa.som"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_security_access
-msgid "Access Conrols"
-msgstr "Controls d'accés"
-
-#. module: base
+#, python-format
+#: code:report/custom.py:0
+#: code:addons/base/ir/ir_actions.py:0
 #: code:addons/base/ir/ir_model.py:0
 #: code:addons/base/res/res_user.py:0
 #: code:addons/base/res/res_currency.py:0
 #: code:addons/base/module/module.py:0
-#, python-format
 msgid "Error"
 msgstr "Error"
 
@@ -5035,6 +5219,12 @@ msgstr "Categories d'empreses"
 #: model:ir.model,name:base.model_workflow_activity
 msgid "workflow.activity"
 msgstr "workflow.activitat"
+
+#. module: base
+#: field:ir.sequence,code:0
+#: field:ir.sequence.type,code:0
+msgid "Sequence Code"
+msgstr "Codi seqüència"
 
 #. module: base
 #: selection:res.request,state:0
@@ -5119,7 +5309,14 @@ msgid "Fields Mapping"
 msgstr "Mapa de camps"
 
 #. module: base
+#: field:ir.default,ref_table:0
+msgid "Table Ref."
+msgstr "Ref. taula"
+
+#. module: base
 #: wizard_button:base.module.import,import,open_window:0
+#: wizard_button:server.action.create,step_1,end:0
+#: wizard_button:server.action.create,init,end:0
 #: wizard_button:module.upgrade,start,end:0
 #: wizard_button:module.upgrade,end,end:0
 #: view:wizard.module.lang.export:0
@@ -5143,9 +5340,9 @@ msgid "The VAT doesn't seem to be correct."
 msgstr "L'IVA no sembla ser correcte."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Sir"
-msgstr "Sr."
+#: view:ir.sequence:0
+msgid "Hour 00->12: %(h12)s"
+msgstr ""
 
 #. module: base
 #: field:res.currency,rate:0
@@ -5161,6 +5358,11 @@ msgstr "Configura vista simple"
 #: wizard_button:module.upgrade,next,start:0
 msgid "Start Upgrade"
 msgstr "Inicia actualització"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_13
+msgid "Important customers"
+msgstr ""
 
 #. module: base
 #: field:res.partner.som,factor:0
@@ -5184,7 +5386,6 @@ msgid "Arguments"
 msgstr "Arguments"
 
 #. module: base
-#: field:ir.attachment,res_model:0
 #: field:workflow.instance,res_type:0
 #: field:workflow,osv:0
 msgid "Resource Object"
@@ -5229,13 +5430,12 @@ msgstr "res.config.vista"
 #: field:res.partner.event,description:0
 #: view:res.partner.event:0
 #: view:res.request:0
-#: view:ir.attachment:0
 msgid "Description"
 msgstr "Descripció"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
+#: code:addons/base/ir/ir_report_custom.py:0
 msgid "Invalid operation"
 msgstr "L'operació no és vàlida."
 
@@ -5271,15 +5471,20 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 msgstr "﻿El valor \"%s\" pel camp \"%s\" no està en la selecció"
 
 #. module: base
-#: selection:ir.report.custom.fields,operation:0
-msgid "Calculate Count"
-msgstr "Calcular contador"
+#: field:ir.actions.report.xml,auto:0
+msgid "Automatic XSL:RML"
+msgstr "XSL:RML automàtic"
+
+#. module: base
+#: field:ir.attachment,preview:0
+msgid "Image Preview"
+msgstr ""
 
 #. module: base
 #: view:workflow.workitem:0
@@ -5306,20 +5511,19 @@ msgstr "Exporta idioma"
 #. module: base
 #: field:res.partner,customer:0
 #: selection:res.partner.event,partner_type:0
+#: model:res.partner.category,name:base.res_partner_category_0
 msgid "Customer"
 msgstr "Client"
 
 #. module: base
 #: view:ir.rule.group:0
 msgid "Multiple rules on same objects are joined using operator OR"
-msgstr ""
-"Sobre un mateix objecte, les regles múltiples s'associen utilitzan "
-"l'operador OR"
+msgstr "Sobre un mateix objecte, les regles múltiples s'associen utilitzan l'operador OR"
 
 #. module: base
-#: selection:ir.cron,interval_type:0
-msgid "Months"
-msgstr "Mesos"
+#: field:ir.model.access,perm_unlink:0
+msgid "Delete Permission"
+msgstr "Permís per eliminar"
 
 #. module: base
 #: field:ir.actions.report.custom,name:0
@@ -5344,14 +5548,9 @@ msgid "Mass Mailing"
 msgstr "Enviament massiu d'emails"
 
 #. module: base
-#: model:ir.model,name:base.model_res_country
-#: field:res.bank,country:0
-#: field:res.country.state,country_id:0
-#: field:res.partner.address,country_id:0
-#: field:res.partner.bank,country_id:0
-#: view:res.country:0
-msgid "Country"
-msgstr "País"
+#: wizard_view:module.lang.import,init:0
+msgid "You can also import .po files."
+msgstr ""
 
 #. module: base
 #: wizard_view:base.module.import,import:0
@@ -5374,9 +5573,9 @@ msgid "Unsubscribe Report"
 msgstr "No subscriu informe"
 
 #. module: base
-#: wizard_field:list.vat.detail,init,fyear:0
-msgid "Fiscal Year"
-msgstr "Exercici fiscal"
+#: view:ir.sequence:0
+msgid "Hour 00->24: %(h24)s"
+msgstr ""
 
 #. module: base
 #: constraint:res.partner.category:0
@@ -5394,9 +5593,10 @@ msgid "a4"
 msgstr "A4"
 
 #. module: base
-#: field:ir.module.module,latest_version:0
-msgid "Latest version"
-msgstr "Última versió"
+#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
+#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
+msgid "New Partner"
+msgstr ""
 
 #. module: base
 #: wizard_view:module.lang.install,start:0
@@ -5407,6 +5607,11 @@ msgstr "Instal·lació realitzada"
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_JUSTIFY_RIGHT"
 msgstr "STOCK_JUSTIFY_RIGHT"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_1
+msgid "Prospect"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_function
@@ -5427,12 +5632,12 @@ msgstr "Mes: %(month)s"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
 msgid "Addresses"
-msgstr "Adreces"
+msgstr ""
 
 #. module: base
+#: field:ir.actions.todo,sequence:0
 #: field:ir.actions.server,sequence:0
 #: field:ir.actions.act_window.view,sequence:0
-#: field:ir.module.module.configuration.step,sequence:0
 #: field:ir.module.repository,sequence:0
 #: field:ir.report.custom.fields,sequence:0
 #: field:ir.ui.menu,sequence:0
@@ -5443,12 +5648,15 @@ msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: base
-#: help:ir.cron,numbercall:0
-msgid ""
-"Number of time the function is called,\n"
-"a negative number indicates that the function will always be called"
+#: help:res.partner.address,type:0
+msgid "Used to select automatically the right address according to the context in sales and purchases documents."
 msgstr ""
-"Número de vegades que la funció és executada,\n"
+
+#. module: base
+#: help:ir.cron,numbercall:0
+msgid "Number of time the function is called,\n"
+"a negative number indicates that the function will always be called"
+msgstr "Número de vegades que la funció és executada,\n"
 "un número negativo indica que serà executada sempre."
 
 #. module: base
@@ -5482,8 +5690,8 @@ msgid "Cancel Install"
 msgstr "Cancel·la instal·lació"
 
 #. module: base
-#: code:osv/orm.py:0
 #, python-format
+#: code:osv/orm.py:0
 msgid "Please check that all your lines have %d columns."
 msgstr "Verifiqueu que totes les línies tinguin %d columnes"
 
@@ -5496,3 +5704,4 @@ msgstr "Importa idioma"
 #: field:ir.model.data,name:0
 msgid "XML Identifier"
 msgstr "Identificador XML"
+
