@@ -77,10 +77,9 @@ def check_modules():
 
 def find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
-        for dirpath, dirnames, filenames in os.walk(dp):
-            if '__init__.py' in filenames:
-                modname = dirpath.replace(os.path.sep, '.')
-                yield modname.replace('bin', 'openerp-server', 1)
+        if '__init__.py' in names:
+            modname = dp.replace(os.path.sep, '.').replace('bin', 'openerp-server', 1)
+            yield modname
 
 def data_files():
     '''Build list of data files to be installed'''
@@ -89,12 +88,10 @@ def data_files():
         os.chdir('bin')
         for (dp,dn,names) in os.walk('addons'):
             files.append((dp, map(lambda x: opj('bin', dp, x), names)))
-        for (dp,dn,names) in os.walk('i18n'):
-            files.append((dp, map(lambda x: opj('bin', dp, x), names)))
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
-        files.append(('.', [('bin/import_xml.rng')]))
+        files.append(('.', [(opj('bin', 'import_xml.rng'))]))
     else:
         man_directory = opj('share', 'man')
         files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -107,44 +104,17 @@ def data_files():
 
         openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
 
-        files.append((opj(openerp_site_packages, 'i18n'), glob.glob('bin/i18n/*')))
-        files.append((opj(openerp_site_packages, 'addons', 'custom'),
-            glob.glob('bin/addons/custom/*xml') + glob.glob('bin/addons/custom/*rml') + glob.glob('bin/addons/custom/*xsl')))
-
         files.append((openerp_site_packages, [('bin/import_xml.rng')]))
 
         for addon in find_addons():
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
 
-            pathfiles = [
-                (
-                    addon_path, 
-                    glob.glob(opj(add_path, '*xml')) + 
-                    glob.glob(opj(add_path, '*csv')) + 
-                    glob.glob(opj(add_path, '*sql'))
-                ),
-                (
-                    opj(addon_path, 'data'), 
-                    glob.glob(opj(add_path, 'data', '*xml'))
-                ), 
-                (
-                    opj(addon_path, 'report'),
-                    glob.glob(opj(add_path, 'report', '*xml')) +
-                    glob.glob(opj(add_path, 'report', '*rml')) +
-                    glob.glob(opj(add_path, 'report', '*sxw')) +
-                    glob.glob(opj(add_path, 'report', '*xsl'))
-                ),
-                (   
-                    opj(addon_path, 'security'),
-                    glob.glob(opj(add_path, 'security', '*csv')) +
-                    glob.glob(opj(add_path, 'security', '*xml'))
-                ),
-                (   
-                    opj(addon_path, 'rng'), 
-                    glob.glob(opj(add_path, 'rng', '*rng'))
-                )
-            ]
+            pathfiles = []
+            for root, dirs, innerfiles in os.walk(add_path):
+                innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.py', '.pyd', '.pyo'), innerfiles)
+                if innerfiles:
+                    pathfiles.extend(((opj(addon_path, root.replace('bin/addons/', '')), map(lambda file: opj(root, file), innerfiles)),))
             files.extend(pathfiles)
     return files
 
@@ -157,15 +127,12 @@ f.close()
 
 class openerp_server_install(install):
     def run(self):
-        from pprint import pprint as pp
-        pp(self.__dict__)
         # create startup script
         start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (opj(self.install_libbase, "openerp-server"), sys.executable)
         # write script
         f = open('openerp-server', 'w')
         f.write(start_script)
         f.close()
-
         install.run(self)
 
 options = {
