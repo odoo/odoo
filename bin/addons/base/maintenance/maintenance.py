@@ -40,8 +40,8 @@ class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
     _description = "Maintenance Contract"
     _columns = {
-        'name' : fields.char('Contract ID', size=256, required=True),
-        'password' : fields.char('Password', size=64, invisible=True, required=True),
+        'name' : fields.char('Contract ID', size=256, required=True, readonly=True),
+        'password' : fields.char('Password', size=64, invisible=True, required=True, readonly=True),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'modules': fields.text('Covered Modules')
@@ -85,7 +85,7 @@ The maintenance program offers you:
 -----------------------------------------------------------
 You have a maintenance contract, But you installed modules those
 are not covered by your maintenance contract:
-'''+','.join(result['modules'])+'''
+%s
 It means we can not offer you the garantee of maintenance on
 your whole installation.
 The maintenance program includes:
@@ -100,12 +100,27 @@ extend your contract with the editor. We will review and validate
 your installed modules.
 
 * Extend your maintenance to the modules you used.
-* Check your maintenance contract'''))
+* Check your maintenance contract''') % ','.join(result['modules']))
             else:
                 raise osv.except_osv(_('Valid Maintenance Contract !'),('''Your Maintenance Contract is up to date'''))
         return result
 
 maintenance_contract()
+
+
+class maintenance_contract_wizard(osv.osv_memory):
+    _name = 'maintenance.contract.wizard'
+
+    _columns = {
+        'name' : fields.char('Contract ID', size=256, required=True ),
+        'password' : fields.char('Password', size=64, required=True),
+    }
+
+    def validate_cb(self, cr, uid, ids, context):
+        print "Validate_cb"
+        return False
+
+maintenance_contract_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
