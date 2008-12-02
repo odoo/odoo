@@ -104,7 +104,7 @@ def init_db(cr):
                         category_id, state) \
                     values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
                 id, info.get('author', ''),
-                release.version.rsplit('.', 1)[0] + '.' + info.get('version', ''),
+                release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
             dependencies = info.get('depends', [])

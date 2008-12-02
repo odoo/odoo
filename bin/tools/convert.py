@@ -92,7 +92,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 idref2['time'] = time
                 idref2['DateTime'] = DateTime
                 import release
-                idref2['version'] = release.version.rsplit('.', 1)[0]
+                idref2['version'] = release.major_version
                 idref2['ref'] = lambda x: self.id_get(cr, False, x)
                 if len(f_model):
                     idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)

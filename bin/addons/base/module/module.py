@@ -35,7 +35,7 @@ import addons
 import pooler
 import netsvc
 
-from parse_version import parse_version
+from tools.parse_version import parse_version
 
 class module_repository(osv.osv):
     _name = "ir.module.repository"
@@ -53,7 +53,7 @@ class module_repository(osv.osv):
     }
     _defaults = {
         'sequence': lambda *a: 5,
-        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.version.rsplit('.', 1)[0]+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
+        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.major_version+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
         'active': lambda *a: 1,
     }
     _order = "sequence"
@@ -91,7 +91,7 @@ class module(osv.osv):
             data = f.read()
             info = eval(data)
             if 'version' in info:
-                info['version'] = release.version.rsplit('.', 1)[0] + '.' + info['version']
+                info['version'] = release.major_version + '.' + info['version']
             f.close()
         except:
             return {}
@@ -326,8 +326,7 @@ class module(osv.osv):
 
                 if not os.path.isfile( mod_path ):
                     import imp
-                    # XXX must restrict to only addons paths
-                    path = imp.find_module(mod_name)
+                    path = imp.find_module(mod_name, [addons.ad, addons._ad])
                     imp.load_module(name, *path)
                 else:
                     import zipimport
