@@ -770,7 +770,7 @@ class orm_template(object):
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
-    def __view_look_dom(self, cr, user, node, context=None):
+    def __view_look_dom(self, cr, user, node, view_id, context=None):
         if not context:
             context = {}
         result = False
@@ -796,7 +796,7 @@ class orm_template(object):
                             node.removeChild(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
-                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, ctx)
+                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
                             views[str(f.localName)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -846,11 +846,11 @@ class orm_template(object):
 
         if childs:
             for f in node.childNodes:
-                fields.update(self.__view_look_dom(cr, user, f, context))
+                fields.update(self.__view_look_dom(cr, user, f, view_id, context))
         return fields
 
-    def __view_look_dom_arch(self, cr, user, node, context=None):
-        fields_def = self.__view_look_dom(cr, user, node, context=context)
+    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
 
         buttons = xpath.Evaluate('//button', node)
         if buttons:
@@ -877,7 +877,23 @@ class orm_template(object):
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
-            fields[field].update(fields_def[field])
+            if fields.has_key(field):
+                fields[field].update(fields_def[field])
+            else:
+                logger = netsvc.Logger()
+                print view_id
+                print field
+                cr.execute('select name, model from ir_ui_view where (id=%d or inherit_id=%d) and arch like %s', (view_id, view_id, '%'+ field + '%'))
+                res = cr.fetchall()
+                print 'select name, model from ir_ui_view where (id=%d or inherit_id=%d) and arch like %s', (view_id, view_id, field)
+                print res
+                msg = "Error, can't find database field or computed field:\n '%s' \nin the following view parts composing the view of object model '%s':\n\n" % (field, res[0][1])
+                for line in res:
+                    msg += "-  %s\n" % line[0]
+                msg += "\nEither you wrongly customized this view, \nor some modules bringing those views are not compatible with your current data model"
+                logger.notifyChannel('orm', netsvc.LOG_ERROR, msg )
+                raise except_orm('View error', msg )
+
         return arch, fields
 
     def __get_default_calendar_view(self):
@@ -1057,7 +1073,7 @@ class orm_template(object):
             result['view_id'] = 0
 
         doc = dom.minidom.parseString(result['arch'].encode('utf-8'))
-        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, context=context)
+        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
         if toolbar:
