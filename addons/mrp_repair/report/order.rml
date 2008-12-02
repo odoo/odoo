@@ -184,7 +184,9 @@
     <blockTable colWidths="265.0,51.0,225.0" style="AddressTable">
       <tr>
         <td>
-          <para style="P10">Shipping address :[[ o.address_id.title or '' ]] [[ o.address_id.name ]]</para>
+          <para style="P10">Shipping address :</para>
+          <para style="P1">[[ o.partner_id.name ]]</para>
+          <para style="P1">[[ o.address_id.title or '' ]] [[ o.address_id.name ]]</para>
           <para style="P1">[[ o.address_id.street ]]</para>
           <para style="P1">[[ o.address_id.street2 or '' ]]</para>
           <para style="P1">[[ o.address_id.city or '' ]] [[ o.address_id.zip or '' ]]</para>
@@ -202,7 +204,6 @@
           </para>
         </td>
         <td>
-          <para style="P19">[[ o.partner_id.name ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['name'] ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['street'] ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['zip'] ]] [[ o.partner_id and adr_get(o.partner_id, 'default')['city'] ]]</para>
@@ -216,7 +217,7 @@
     <para style="P7">
       <font color="white"> </font>
     </para>
-    <para style="P6">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]]Repair Quotation</para>
+    <para style="P6">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]]Repair Quotation N° : [[ o.name ]]</para>
     <para style="P26">[[ o.state=='draft' and removeParentNode('para') ]]Repair Order N° : [[ o.name ]]</para>
     <para style="P8">
       <font color="white"> </font>
@@ -262,11 +263,9 @@
     <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="100.0,100,80.0,100.0,60.0,64.0" repeatRows="1" style="HeadingTable">
+    <blockTable colWidths="120.0,140.0,100.0,80.0,80.0" repeatRows="1" style="HeadingTable">
       <tr>
-        <td>
-          <para style="P11">Product</para>
-        </td>
+
         <td>
           <para style="P11">Description</para>
         </td>
@@ -293,13 +292,9 @@
         <tr>
           <td>
             <para style="P4">[[ repeatIn(o.operations,'line') ]]</para>
-            <blockTable colWidths="100.0,120,80.0,100.0,60.0,64.0" style="Table7">
+            <blockTable colWidths="120.0,140.0,100.0,80.0,80.0" style="Table7">
               <tr>
-                <td>
-                  <para style="P3">Add [[ ((line.type == 'add') or removeParentNode('para')) and '' ]] </para>
-                  <para style="P3">Remove [[ ((line.type == 'remove') or removeParentNode('para')) and '' ]]</para>
-                  <para style="P1">[[ line.product_id.name ]]</para>
-                </td>
+
                 <td>
                   <para style="P1">[[ line.name ]]</para>
                 </td>
@@ -332,11 +327,9 @@
       <tr>
         <td>
           <para style="P23">[[ repeatIn(o.fees_lines,'fees') ]]</para>
-          <blockTable colWidths="100.0,120,80.0,100.0,60.0,64.0" style="Table9">
+          <blockTable colWidths="120.0,140.0,100.0,80.0,80.0" style="Table9">
             <tr>
-              <td>
-                <para style="P1">[[ fees.product_id.name ]]</para>
-              </td>
+
               <td>
                 <para style="P1">[[ fees.name ]]</para>
               </td>
