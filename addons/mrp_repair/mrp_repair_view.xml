@@ -83,8 +83,7 @@
                             <group col="13" colspan="4">                              
                                 <field name="state" select="2"/>
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>  
-                                <button name="repair_ready" states="confirmed" string="Ready to Repair"/>   
-                                <button name="action_repair_start" states="ready" string="Start Repair"/> 
+                                <button name="action_repair_start" states="confirmed" string="Start Repair"/> 
                                 <button name="action_repair_end" states="under_repair" string="End Repair"/>                           
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>                                
@@ -92,7 +91,7 @@
 								<button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                                 <button name="cancel" states="draft" string="Cancel Repair"/>                                
-                                <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
+                                <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,under_repair" string="Cancel Repair" type="action"/>
                             </group>
                         </page>
                         <page string="Invoicing">

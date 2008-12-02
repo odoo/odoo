@@ -77,7 +77,6 @@ class mrp_repair(osv.osv):
         'state': fields.selection([
             ('draft','Quotation'),
             ('confirmed','Confirmed'),
-            ('ready','Ready to Repair'),
             ('under_repair','Under Repair'),
             ('2binvoiced','To be Invoiced'),            
             ('invoice_except','Invoice Exception'),
@@ -259,8 +258,8 @@ class mrp_repair(osv.osv):
         invoices_group = {}
         for repair in self.browse(cr, uid, ids, context=context):
             res[repair.id]=False
-            if repair.state in ('draft','cancel') or repair.invoice_id:                                
-                continue           
+            if repair.state in ('draft','cancel') or repair.invoice_id:
+                continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
                 raise osv.except_osv('No partner !','You have to select a partner in the repair form ! ')
             comment=repair.quotation_notes
@@ -337,10 +336,6 @@ class mrp_repair(osv.osv):
         self.write(cr, uid, ids, {'state':'invoice_except'})
         return True
 
-    def action_repair_ready(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'ready'})
-        return True
-
     def action_repair_start(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'under_repair'})
         return True
@@ -349,7 +344,7 @@ class mrp_repair(osv.osv):
         for order in self.browse(cr, uid, ids):
             val = {}             
             if (order.invoice_method=='b4repair'):
-                val['state'] = 'ready'
+                val['state'] = 'under_repair'
             else:                
                 #val['state'] = 'done'                 
                 pass
@@ -363,7 +358,7 @@ class mrp_repair(osv.osv):
             if (not order.invoiced and order.invoice_method=='after_repair'):
                 val['state'] = '2binvoiced'  
             elif (not order.invoiced and order.invoice_method=='b4repair'):
-                val['state'] = 'ready'
+                val['state'] = 'confirmed'
             else:                
                 #val['state'] = 'done'                 
                 pass
