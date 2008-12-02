@@ -381,7 +381,7 @@ class account_invoice(osv.osv):
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
-    def _get_analityc_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
 
@@ -429,7 +429,7 @@ class account_invoice(osv.osv):
             line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
             ils = self.pool.get('account.invoice.line').read(cr, uid, line_ids)
             # one move line per invoice line
-            iml = self._get_analityc_lines(cr, uid, inv.id)
+            iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
             compute_taxes = ait_obj.compute(cr, uid, inv.id)
             if not inv.tax_line:
