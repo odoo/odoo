@@ -690,6 +690,14 @@ class orm_template(object):
 
     # returns the definition of each field in the object
     # the optional fields parameter can limit the result to some fields
+    def fields_get_keys(self, cr, user, context=None, read_access=True):
+        if context is None:
+            context = {}
+        res = self._columns.keys()
+        for parent in self._inherits:
+            res.extend(self.pool.get(parent).fields_get_keys(cr, user, fields, context))
+        return res
+
     def fields_get(self, cr, user, fields=None, context=None, read_access=True):
         if context is None:
             context = {}
@@ -700,6 +708,8 @@ class orm_template(object):
             res.update(self.pool.get(parent).fields_get(cr, user, fields,
                 context))
         for f in self._columns.keys():
+            if fields and f not in fields:
+                continue
             res[f] = {'type': self._columns[f]._type}
             for arg in ('string', 'readonly', 'states', 'size', 'required',
                     'change_default', 'translate', 'help', 'select'):
@@ -1773,7 +1783,6 @@ class orm(orm_template):
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        print 'READ', self._name, ids
         if not context:
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read')

@@ -103,6 +103,9 @@ res_partner_title()
 def _contact_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
     ids = obj.search(cr, uid, [('domain', '=', 'contact')])
+    import traceback
+    traceback.print_stack()
+    print 'TITLE GET'
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
     return [(r['shortcut'], r['name']) for r in res]
 

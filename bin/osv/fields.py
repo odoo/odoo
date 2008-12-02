@@ -719,7 +719,7 @@ class related(function):
 
     # TODO: call field_get on the object, not in the DB
     def _field_get(self, cr, uid, obj, model_name, prop):
-        fields = obj.pool.get(model_name).fields_get(cr, uid,)
+        fields = obj.pool.get(model_name).fields_get(cr, uid,[prop])
         if fields.get(prop, False):
             return(fields[prop].get('relation', False), fields[prop].get('type', False), fields)
         else:
