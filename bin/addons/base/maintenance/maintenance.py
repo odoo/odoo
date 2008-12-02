@@ -49,27 +49,44 @@ class maintenance_contract(osv.osv):
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
     }
-    def _test_maintenance(self, cr, uid, ids, context):
+
+maintenance_contract()
+
+
+class maintenance_contract_wizard(osv.osv_memory):
+    _name = 'maintenance.contract.wizard'
+
+    _columns = {
+        'name' : fields.char('Contract ID', size=256, required=True ),
+        'password' : fields.char('Password', size=64, required=True),
+    }
+
+    def validate_cb(self, cr, uid, ids, context):
+        login = 'admin'
+        password = 'admin'
         remote_db='trunk'
         remote_server='localhost'
         port=8069
+
         module_obj=self.pool.get('ir.module.module')
         contract_obj=self.pool.get('maintenance.contract')
         module_ids=module_obj.search(cr, uid, [('state','=','installed')])
         modules=module_obj.read(cr, uid, module_ids, ['name','installed_version'])
         contract_obj=contract_obj.read(cr, uid, ids[0])
-        local_url = 'http://%s:%d/xmlrpc/common'%(remote_server,port)
-        rpc = xmlrpclib.ServerProxy(local_url)
-        ruid = rpc.login(remote_db, 'admin', 'admin')
-        local_url = 'http://%s:%d/xmlrpc/object'%(remote_server,port)
-        rrpc = xmlrpclib.ServerProxy(local_url)
+        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/common' % (remote_server, port))
+        ruid = rpc.login(remote_db, login, password)
+        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remove_server, port))
         try:
-            result=rrpc.execute(remote_db, ruid, 'admin', 'maintenance.maintenance', 'check_contract' , modules,contract_obj)
+            result=rpc.execute(remote_db, ruid, 'admin', 'maintenance.maintenance', 'check_contract' , modules, contract_obj)
         except:
-            raise osv.except_osv(_('Maintenance Error !'),('''Module Maintenance_Editor is not installed at server : %s Database : %s'''%(remote_server,remote_db)))
+            raise osv.except_osv(
+                _('Maintenance Error !'),
+                _('''Module Maintenance_Editor is not installed at server : %s Database : %s''')%(remote_server,remote_db))
         if context.get('active_id',False):
-            if result['status']=='ko':
-                raise osv.except_osv(_('Maintenance Error !'),('''Maintenance Contract
+            if result['status']=='none':
+                raise osv.except_osv(
+                    _('Maintenance Error !'),
+                    _('''Maintenance Contract
 -----------------------------------------------------------
 You have no valid maintenance contract! If you are using
 Open ERP, it is highly suggested to take maintenance contract.
@@ -81,7 +98,9 @@ The maintenance program offers you:
 * Access to the customer portal.
 * Check the maintenance contract (www.openerp.com)'''))
             elif result['status']=='partial':
-                raise osv.except_osv(_('Maintenance Error !'),('''Maintenance Contract
+                raise osv.except_osv(
+                    _('Maintenance Error !'),
+                    _('''Maintenance Contract
 -----------------------------------------------------------
 You have a maintenance contract, But you installed modules those
 are not covered by your maintenance contract:
@@ -102,23 +121,8 @@ your installed modules.
 * Extend your maintenance to the modules you used.
 * Check your maintenance contract''') % ','.join(result['modules']))
             else:
-                raise osv.except_osv(_('Valid Maintenance Contract !'),('''Your Maintenance Contract is up to date'''))
+                raise osv.except_osv(_('Valid Maintenance Contract !'),_('''Your Maintenance Contract is up to date'''))
         return result
-
-maintenance_contract()
-
-
-class maintenance_contract_wizard(osv.osv_memory):
-    _name = 'maintenance.contract.wizard'
-
-    _columns = {
-        'name' : fields.char('Contract ID', size=256, required=True ),
-        'password' : fields.char('Password', size=64, required=True),
-    }
-
-    def validate_cb(self, cr, uid, ids, context):
-        print "Validate_cb"
-        return False
 
 maintenance_contract_wizard()
 
