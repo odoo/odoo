@@ -144,6 +144,8 @@ class mrp_bom(osv.osv):
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
             result[bom.id] = map(lambda x: x.id, bom.bom_lines)
+            if bom.bom_lines:
+                continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
             if bom.type=='phantom' or ok:
                 sids = self.pool.get('mrp.bom').search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
