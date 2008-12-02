@@ -54,14 +54,20 @@
             <field name="model">maintenance.contract.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add Maintenance Contract">
-                    <separator string="Add Maintenance Contract" colspan="2"/>
+                <form string="Add Maintenance Contract" col="4">
+                    <image name="gtk-dialog-info" />
+                    <group>
+                        <separator string="Add Maintenance Contract" colspan="2"/>
+                        <newline />
+                        <field name="name" />
+                        <newline />
+                        <field name="password" password="True" />
+                    </group>
                     <newline />
-                    <field name="name" />
-                    <newline />
-                    <field name="password" password="True" />
-                    <newline />
-                    <label string="" /><button name="validate_cb" type="object" string="Validate" />
+                    <group colspan="2">
+                        <button type="object" string="Cancel" special="cancel" icon="gtk-cancel" /> 
+                        <button name="action_validate" type="object" string="Validate" icon="gtk-apply" />
+                    </group>
                 </form>
             </field>
         </record>
