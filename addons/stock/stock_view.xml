@@ -298,7 +298,7 @@
             <field name="res_model">stock.move</field>
             <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
-            <field eval="stock_move_tree" name="view_id"/>
+            <field eval="stock_move_tree2" name="view_id"/>
         </record>
         <record id="ir_move_traceability_upstream" model="ir.values">
             <field eval="'tree_but_action'" name="key2"/>
@@ -307,18 +307,13 @@
             <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
             <field eval="True" name="object"/>
         </record>
-
-        #
-        # Composed lots
-        #
-
         <record id="action5" model="ir.actions.act_window">
             <field name="name">Upstream traceability</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move</field>
             <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
-            <field eval="stock_move_tree2" name="view_id"/>
+            <field eval="stock_move_tree" name="view_id"/>
         </record>
         <record id="ir_move_traceability_downstream" model="ir.values">
             <field eval="'tree_but_action'" name="key2"/>
