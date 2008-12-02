@@ -101,8 +101,8 @@ hr_analytic_timesheet()
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _get_analityc_lines(self, cr, uid, id):
-        iml = super(account_invoice, self)._get_analityc_lines(cr, uid, id)
+    def _get_analytic_lines(self, cr, uid, id):
+        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id)
         inv = self.browse(cr, uid, [id])[0]
         for il in iml:
             if il['account_analytic_id']:

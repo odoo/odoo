@@ -127,7 +127,7 @@ class account_voucher(osv.osv):
 
     }
     
-    def _get_analityc_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
         
@@ -193,7 +193,7 @@ class account_voucher(osv.osv):
         return True
     
 
-    def _get_analityc_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
 
@@ -238,7 +238,7 @@ class account_voucher(osv.osv):
             line_ids = self.read(cr, uid, [inv.id], ['payment_ids'])[0]['payment_ids']
             ils = self.pool.get('account.voucher.line').read(cr, uid, line_ids)
             # one move line per invoice line
-            iml = self._get_analityc_lines(cr, uid, inv.id)
+            iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
             diff_currency_p = inv.currency_id.id <> company_currency
             # create one move line for the total and possibly adjust the other lines amount
