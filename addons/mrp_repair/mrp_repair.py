@@ -204,14 +204,14 @@ class mrp_repair(osv.osv):
             }
 
         def get_last_move(lst_move):
-            while lst_move.move_dest_id and lst_move.state == 'done':
+            while lst_move.move_dest_id and lst_move.move_dest_id and lst_move.move_dest_id.picking_id.state == 'done':
                 lst_move = lst_move.move_dest_id
             return lst_move
 
         move_id = move_ids[0]
         move = get_last_move(self.pool.get('stock.move').browse(cr, uid, move_id))            
         product = self.pool.get('product.product').browse(cr, uid, product_id)
-        date = move.date_planned
+        date = move.picking_id.date_done
         limit = mx.DateTime.strptime(date, '%Y-%m-%d %H:%M:%S') + RelativeDateTime(months=product.warranty)            
         return {'value': {
                     'location_id': move.location_dest_id.id, 
@@ -381,13 +381,15 @@ class mrp_repair(osv.osv):
             
             picking = self.pool.get('stock.picking').create(cr, uid, {
                 'origin': repair.name,
-                'state': 'assigned',
+                'state': 'draft',
                 'move_type': 'one',
                 'address_id': repair.address_id and repair.address_id.id or False,
                 'note': repair.internal_notes,
                 'invoice_state': 'none',
                 'type': 'out',  # FIXME delivery ?
             })
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
 
             move_id = self.pool.get('stock.move').create(cr, uid, {
                 'name': repair.name,
