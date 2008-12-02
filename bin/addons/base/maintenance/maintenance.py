@@ -32,6 +32,7 @@ from osv import osv, fields
 import pooler
 import time
 import math
+from pprint import pprint as pp
 
 from tools import config
 import xmlrpclib
@@ -61,68 +62,33 @@ class maintenance_contract_wizard(osv.osv_memory):
         'password' : fields.char('Password', size=64, required=True),
     }
 
-    def validate_cb(self, cr, uid, ids, context):
-        login = 'admin'
-        password = 'admin'
-        remote_db='trunk'
-        remote_server='localhost'
-        port=8069
+    def action_validate(self, cr, uid, ids, context):
+        if not ids:
+            return False
+        contract = self.read(cr, uid, ids, ['name', 'password'])[0]
+        if contract['name'] == 'toto':
+            self.write(cr, uid, ids, { 'name' : 'trouduc' })
+            return False
 
-        module_obj=self.pool.get('ir.module.module')
-        contract_obj=self.pool.get('maintenance.contract')
-        module_ids=module_obj.search(cr, uid, [('state','=','installed')])
-        modules=module_obj.read(cr, uid, module_ids, ['name','installed_version'])
-        contract_obj=contract_obj.read(cr, uid, ids[0])
+        login, password, remote_db, remote_server, port = 'admin', 'admin', 'trunk', 'localhost', 8069
+
         rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/common' % (remote_server, port))
         ruid = rpc.login(remote_db, login, password)
-        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remove_server, port))
-        try:
-            result=rpc.execute(remote_db, ruid, 'admin', 'maintenance.maintenance', 'check_contract' , modules, contract_obj)
-        except:
-            raise osv.except_osv(
-                _('Maintenance Error !'),
-                _('''Module Maintenance_Editor is not installed at server : %s Database : %s''')%(remote_server,remote_db))
-        if context.get('active_id',False):
-            if result['status']=='none':
-                raise osv.except_osv(
-                    _('Maintenance Error !'),
-                    _('''Maintenance Contract
------------------------------------------------------------
-You have no valid maintenance contract! If you are using
-Open ERP, it is highly suggested to take maintenance contract.
-The maintenance program offers you:
-* Migrations on new versions,
-* Bugfix guarantee,
-* Monthly announces of bugs,
-* Security alerts,
-* Access to the customer portal.
-* Check the maintenance contract (www.openerp.com)'''))
-            elif result['status']=='partial':
-                raise osv.except_osv(
-                    _('Maintenance Error !'),
-                    _('''Maintenance Contract
------------------------------------------------------------
-You have a maintenance contract, But you installed modules those
-are not covered by your maintenance contract:
-%s
-It means we can not offer you the garantee of maintenance on
-your whole installation.
-The maintenance program includes:
-* Migrations on new versions,
-* Bugfix guarantee,
-* Monthly announces of bugs,
-* Security alerts,
-* Access to the customer portal.
+        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remote_server, port))
+        res = rpc.execute(remote_db, ruid, password, 
+                          'maintenance.maintenance', 'get_module_for_contract', contract['name'], contract['password'])
+        if res:
+            self.pool.get('maintenance.contract').create(
+                cr, 
+                uid, {
+                    'name' : contract['name'],
+                    'password' : contract['password'],
+                    'date_start' : res['date_from'],
+                    'date_stop' : res['date_to'],
+                }
+            )
 
-To include these modules in your maintenance contract, you should
-extend your contract with the editor. We will review and validate
-your installed modules.
-
-* Extend your maintenance to the modules you used.
-* Check your maintenance contract''') % ','.join(result['modules']))
-            else:
-                raise osv.except_osv(_('Valid Maintenance Contract !'),_('''Your Maintenance Contract is up to date'''))
-        return result
+        return res
 
 maintenance_contract_wizard()
 
