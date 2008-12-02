@@ -51,11 +51,8 @@
     <blockTableStyle id="HeadingTable">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/>
+
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
@@ -96,6 +93,7 @@
       <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,2" stop="3,2"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
@@ -186,7 +184,6 @@
     <blockTable colWidths="265.0,51.0,225.0" style="AddressTable">
       <tr>
         <td>
-          <para style="P37">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
           <para style="P10">Shipping address :[[ o.address_id.title or '' ]] [[ o.address_id.name ]]</para>
           <para style="P1">[[ o.address_id.street ]]</para>
           <para style="P1">[[ o.address_id.street2 or '' ]]</para>
@@ -252,10 +249,10 @@
           <para style="P13">[[ o.prodlot_id.name or '' ]]</para>
         </td>
         <td>
-          <para style="P13">[[ o.guarantee_limit ]]</para>
+          <para style="P13">[[ time.strftime('%d/%m/%Y', time.strptime(o.guarantee_limit, '%Y-%m-%d')) ]]</para>
         </td>
         <td>
-          <para style="P13">[[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+          <para style="P13">[[ time.strftime('%d/%m/%Y') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -265,10 +262,13 @@
     <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="165.0,165.0,90.0,51.0,64.0" repeatRows="1" style="HeadingTable">
+    <blockTable colWidths="100.0,100,80.0,100.0,60.0,64.0" repeatRows="1" style="HeadingTable">
       <tr>
         <td>
           <para style="P11">Product</para>
+        </td>
+        <td>
+          <para style="P11">Description</para>
         </td>
         <td>
           <para style="P11">VAT</para>
@@ -293,17 +293,18 @@
         <tr>
           <td>
             <para style="P4">[[ repeatIn(o.operations,'line') ]]</para>
-            <blockTable colWidths="35.0,130.0,165.0,90.0,51.0,64.0" style="Table7">
+            <blockTable colWidths="100.0,120,80.0,100.0,60.0,64.0" style="Table7">
               <tr>
                 <td>
                   <para style="P3">Add [[ ((line.type == 'add') or removeParentNode('para')) and '' ]] </para>
                   <para style="P3">Remove [[ ((line.type == 'remove') or removeParentNode('para')) and '' ]]</para>
-                </td>
-                <td>
                   <para style="P1">[[ line.product_id.name ]]</para>
                 </td>
                 <td>
-                  <para style="P31">[[ ', '.join(map(lambda x: x.name, line.tax_id)) or '0.00' ]]</para>
+                  <para style="P1">[[ line.name ]]</para>
+                </td>
+                <td>
+		     		<para style="P31">[[ ', '.join(map(lambda x: x.name, line.tax_id)) or '0.00' ]]</para>
                 </td>
                 <td>
                   <para style="P31">[[ line.product_uom_qty or '0.00' ]] [[ line.product_uom.name ]]</para>
@@ -312,7 +313,7 @@
                   <para style="P28">[[ line.price_unit ]]</para>
                 </td>
                 <td>
-                  <para style="P29">[[ line.price_subtotal ]]</para>
+                 	<para style="P29">[[ line.price_subtotal ]]</para>
                 </td>
               </tr>
             </blockTable>
@@ -331,15 +332,13 @@
       <tr>
         <td>
           <para style="P23">[[ repeatIn(o.fees_lines,'fees') ]]</para>
-          <blockTable colWidths="35.0,130.0,165.0,90.0,51.0,64.0" style="Table9">
+          <blockTable colWidths="100.0,120,80.0,100.0,60.0,64.0" style="Table9">
             <tr>
               <td>
-                <para style="P23">
-                  <font color="white"> </font>
-                </para>
+                <para style="P1">[[ fees.product_id.name ]]</para>
               </td>
               <td>
-                <para style="P1">[[ fees.product_id.name ]]</para>
+                <para style="P1">[[ fees.name ]]</para>
               </td>
               <td>
                 <para style="P31">[[ ', '.join(map(lambda x: x.name, fees.tax_id)) or '0.00' ]]</para>
@@ -367,7 +366,40 @@
     <para style="P20">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="436.0,39.0,40.0,22.0" style="Table4">
+    <blockTable colWidths="410.0,59.0,50.0,22.0" style="Table4">
+          <tr>
+        <td>
+          <para style="p1">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P35">Net Total :</para>
+        </td>
+        <td>
+          <para style="P27">[[ o.amount_untaxed or '0.00' ]]</para>
+        </td>
+        <td>
+          <para style="P30">[[ o.pricelist_id.currency_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="p1">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P35">Taxes :</para>
+        </td>
+        <td>
+          <para style="P27">[[ o.amount_tax or '0.00' ]]</para>
+        </td>
+        <td>
+          <para style="P30">[[ o.pricelist_id.currency_id.name ]]</para>
+        </td>
+      </tr>
+
       <tr>
         <td>
           <para style="P1">
