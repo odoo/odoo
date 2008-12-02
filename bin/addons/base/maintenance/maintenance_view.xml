@@ -54,19 +54,27 @@
             <field name="model">maintenance.contract.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add Maintenance Contract" col="4">
+                <form string="Add Maintenance Contract" col="2">
                     <image name="gtk-dialog-info" />
-                    <group>
-                        <separator string="Add Maintenance Contract" colspan="2"/>
-                        <newline />
-                        <field name="name" />
-                        <newline />
-                        <field name="password" password="True" />
+                    <group col="1">
+                        <separator string="Add Maintenance Contract" />
+                        <group states="draft">
+                            <field name="name" width="250" />
+                            <newline />
+                            <field name="password" password="True" />
+                            <field name="state" invisible="1" />
+                        </group>
+                        <group states="validated">
+                            <label string="Maintenance contract added !"/>
+                        </group>
+                        <group states="unvalidated">
+                            <label string="Could you check your contract information ?" />
+                        </group>
                     </group>
-                    <newline />
-                    <group colspan="2">
-                        <button type="object" string="Cancel" special="cancel" icon="gtk-cancel" /> 
-                        <button name="action_validate" type="object" string="Validate" icon="gtk-apply" />
+                    <group colspan="4">
+                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel" states="draft"/> 
+                        <button type="object" string="_Validate" icon="gtk-apply" name="action_validate" states="draft"/>
+                        <button type="object" string="_Close" icon="gtk-close" special="cancel" states="validated,unvalidated"/>
                     </group>
                 </form>
             </field>

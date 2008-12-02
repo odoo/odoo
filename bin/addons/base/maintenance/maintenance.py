@@ -60,15 +60,18 @@ class maintenance_contract_wizard(osv.osv_memory):
     _columns = {
         'name' : fields.char('Contract ID', size=256, required=True ),
         'password' : fields.char('Password', size=64, required=True),
+        'state' : fields.selection([('draft', 'Draft'),('validated', 'Validated'),('unvalidated', 'Unvalidated')], 'States'),
+    }
+
+    _defaults = {
+        'state' : lambda *a: 'draft',
     }
 
     def action_validate(self, cr, uid, ids, context):
         if not ids:
             return False
+
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
-        if contract['name'] == 'toto':
-            self.write(cr, uid, ids, { 'name' : 'trouduc' })
-            return False
 
         login, password, remote_db, remote_server, port = 'admin', 'admin', 'trunk', 'localhost', 8069
 
@@ -88,7 +91,7 @@ class maintenance_contract_wizard(osv.osv_memory):
                 }
             )
 
-        return res
+        return self.write(cr, uid, ids, {'state' : ('unvalidated', 'validated')[bool(res)] }, context=context)
 
 maintenance_contract_wizard()
 
