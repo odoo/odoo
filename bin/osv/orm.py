@@ -847,6 +847,10 @@ class orm_template(object):
         if childs:
             for f in node.childNodes:
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
+
+        if ('state' not in fields) and (('state' in self._columns) or ('state' in self._inherit_fields)):
+            fields['state'] = {}
+
         return fields
 
     def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
