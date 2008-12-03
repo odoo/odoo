@@ -39,11 +39,50 @@ def wiki_do_index(self, cr, uid, data, context):
     iid = ','.join([str(x) for x in ids])
     sSQL = "Select id, section from wiki_wiki where id in (%s) order by section " % (iid)
     cr.execute(sSQL)
-    wiki = cr.fetchall()
-    i = 1
-    for wk in wiki:
-        wiki_pool.write(cr, uid, [wk[0]], {'section':i})
-        i+=1
+    lst0 = cr.fetchall()
+    lst = []
+    ids = {}
+    for l in lst0:
+        ids[l[1]] = l[0]
+        lst.append(l[1])
+
+    lst.sort()
+    val = None
+    def toint(x):
+        try:
+            return int(x)
+        except:
+            return 1
+    
+    lst = map(lambda x: map(toint, x.split('.')), lst)
+    
+    result = []
+    current = ['0']
+    current2 = []
+
+    for l in lst:
+        for pos in range(len(l)):
+            if pos >= len(current):
+                current.append('1')
+                continue
+            if (pos == len(l) - 1) or (pos >= len(current2)) or (toint(l[pos]) > toint(current2[pos])):
+                 current[pos] = str(toint(current[pos]) + 1)
+                 current = current[:pos + 1]
+            if pos == len(l) - 1:
+                 break
+             
+        key = ('.'.join([str(x) for x in l]))
+        id = ids[key]
+        val = ('.'.join([str(x) for x in current[:]]), id)
+
+        if val:
+            result.append(val)
+        current2 = l
+    
+    print 'OLD', lst
+    print 'NEW', result
+    for rs in result:
+        wiki_pool.write(cr, uid, [rs[1]], {'section':rs[0]})
         
     return {}
 
