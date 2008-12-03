@@ -17,14 +17,12 @@
                         <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
                         <field name="repaired"/>
                     	<newline/>
-                        <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'readonly':[('deliver_bool','=', False)]}"/>
-                        <field name="address_id" attrs="{'readonly':[('deliver_bool','=', False)]}"/>
+                        <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)"/>
+                        <field name="address_id"/>
                     	<field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Products">
-                            <field name="location_id"/>
-                            <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
+                        <page string="Operationss">
                             <field name="guarantee_limit" />
                             <newline/>
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
@@ -41,7 +39,7 @@
 		                                    <field name="location_dest_id"/>
                                             <newline/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
-                                            <group colspan="2">                                                
+                                            <group colspan="2">
                                                 <field name="to_invoice"/>
     		                                    <field name="invoiced"/>  
                                             </group>
@@ -51,11 +49,8 @@
                                             <field name="state"/>
 										</page>
                                         <page string="History" groups="base.group_extended">
-                                            <separator colspan="4" string="Invoice Lines"/>
-                                            <field colspan="4" name="invoice_line_id" nolabel="1"/>                                      
-                                            
-                                            <separator colspan="4" string="Stock Moves"/>
-                                            <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
+                                            <field colspan="4" name="move_id" />
+                                            <field colspan="4" name="invoice_line_id"/>
                                         </page>
 		                                         
                                      </notebook>
@@ -81,7 +76,7 @@
                                 <button name="button_dummy" states="draft" string="Compute" type="object"/>
                             </group>
                             <newline/>
-                            <group col="13" colspan="4">                              
+                            <group col="13" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>
                                 <button name="repair_ready" states="confirmed" string="Start Repair"/>
@@ -97,10 +92,10 @@
                             </group>
                         </page>
                         <page string="Invoicing">
-                            <field name="pricelist_id" context="product_id=product_id"/>
-                            <field name="partner_invoice_id"/>
-                            <field name="invoice_method" attrs="{'readonly':[('deliver_bool','=', False)]}"/>
-                            <field name="invoice_id"/>
+                            <field name="invoice_method" colspan="4" />
+                            <field name="pricelist_id" context="product_id=product_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                            <!--<field name="invoice_id"/>-->
                             <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
                                 <form string="Fees">
                                     <notebook>
@@ -141,9 +136,11 @@
                             <separator colspan="4" string="Quotation Notes"/>
                             <field colspan="4" name="quotation_notes" nolabel="1"/>
                         </page>
-                        <page string="History" groups="base.group_extended">                            
-                            <!-- <field name="invoice_id"/> -->
+                        <page string="Extra Info" groups="base.group_extended">                            
+                            <field name="invoice_id"/>
                             <field name="picking_id"/>
+                            <field name="location_id"/>
+                            <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
                         </page>
                     </notebook>
                 </form>
