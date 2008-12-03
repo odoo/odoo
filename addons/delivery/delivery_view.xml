@@ -125,8 +125,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <separator string="Notes" position="before">
-                    <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':id}"/>
+                    <field name="carrier_id"/>
                 </separator>
             </field>
         </record>
