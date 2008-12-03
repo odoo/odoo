@@ -26,7 +26,12 @@
                     <field name="date_start" select="1"/>
                     <field name="date_stop" select="1"/>
                     <separator string="Covered Modules" colspan="4"/>
-                    <field name="modules" nolabel="1" colspan="4"/>
+                    <field name="module_ids" nolabel="1" colspan="4">
+                        <tree string="Covered Modules">
+                            <field name="name" />
+                            <field name="version" />
+                        </tree>
+                    </field>
                 </form>
             </field>
         </record>
