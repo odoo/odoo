@@ -14,7 +14,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Bug Tracker Form">
-                <group colspan="4" col="4">
+                <group colspan="4" col="6">
                     <field name="name" string="Title" colspan="2"/>
                     <field name="section_id" colspan="1"/>
                         <label string="Resolution: " align="1.0"/>
@@ -26,7 +26,7 @@
                     <field name="email_from" colspan="2"/>
                     <field name="user_id" />
                 </group>
-                <notebook>
+                <notebook colspan="4">
                 <page string="General">
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>

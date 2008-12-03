@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-11 15:39:25+0000"
-"PO-Revision-Date: 2008-09-11 15:39:25+0000"
-"Last-Translator: <>"
-"Language-Team: "
-"MIME-Version: 1.0"
-"Content-Type: text/plain; charset=UTF-8"
-"Content-Transfer-Encoding: "
-"Plural-Forms: "
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:07:56+0000\n"
+"PO-Revision-Date: 2008-11-28 17:07:56+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -51,13 +51,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries"
-msgstr ""
-
-#. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Create delivery line"
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
 msgstr ""
 
 #. module: delivery
@@ -82,8 +77,8 @@ msgid "States"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
+#: selection:delivery.grid.line,price_type:0
+msgid "Fixed"
 msgstr ""
 
 #. module: delivery
@@ -150,14 +145,19 @@ msgid "Grid"
 msgstr ""
 
 #. module: delivery
+#: view:res.partner:0
+msgid "Deliveries Properties"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: delivery
-#: wizard_view:delivery.sale.order,init:0
-msgid "Create deliveries"
+#: view:delivery.grid:0
+msgid "Grid definition"
 msgstr ""
 
 #. module: delivery
@@ -184,6 +184,11 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Condition"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
 msgstr ""
 
 #. module: delivery
@@ -246,13 +251,18 @@ msgid "Carrier"
 msgstr "Bärare"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-msgid "Fixed"
+#: wizard_button:delivery.sale.order,init,delivery:0
+msgid "Add Delivery Costs"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
+msgstr ""
+
+#. module: delivery
+#: field:sale.order,id:0
+msgid "ID"
 msgstr ""
 
 #. module: delivery
@@ -305,11 +315,6 @@ msgid ">="
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid:0
-msgid "Grid definition"
-msgstr ""
-
-#. module: delivery
 #: help:sale.order,carrier_id:0
 msgid "Complete this field if you plan to invoice the shipping based on packings made."
 msgstr ""
@@ -320,7 +325,6 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid:0
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
 msgstr ""
@@ -332,7 +336,6 @@ msgstr ""
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
-#: wizard_view:delivery.sale.order,init:0
 #: field:res.partner,property_delivery_carrier:0
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Method"
@@ -361,15 +364,11 @@ msgid "Delivery method"
 msgstr ""
 
 #. module: delivery
+#: field:delivery.carrier,price:0
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Pris"
-
-#. module: delivery
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

@@ -143,6 +143,8 @@
                 </form>
             </field>
         </record>
+
+
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
@@ -879,7 +881,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
         </record>
-        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_accounting"/>
+        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_reporting"/>
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
@@ -1414,6 +1416,8 @@
 
 
         <!-- Account Templates -->
+        <menuitem id="account_template_folder" name="Templates" parent="account.menu_finance_accounting"/>
+
 
         <record id="view_account_template_form" model="ir.ui.view">
             <field name="name">account.account.template.form</field>
@@ -1462,7 +1466,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_account_menu"/>
+
+        <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_folder"/>
 
         <!-- Chart of Accounts Templates -->
 
@@ -1505,7 +1510,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_account_menu"/>
+        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_folder"/>
 
         <!-- Account Tax Templates -->
 
@@ -1580,7 +1585,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="next_id_27" sequence="13"/>
+        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_folder" sequence="13"/>
 
         <!-- Account Tax Code Templates -->
         <record id="view_tax_code_template_tree" model="ir.ui.view">
@@ -1618,7 +1623,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="next_id_27" sequence="14"/>
+        <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="account_template_folder" sequence="14"/>
 
 
         <!--  Wizard for Multi Charts of Accounts -->
@@ -1663,7 +1668,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem parent="account.account_account_menu" action="action_wizard_multi_chart" id="menu_wizard"/>
+        <menuitem parent="account.account_template_folder" action="action_wizard_multi_chart" id="menu_wizard"/>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -232,8 +232,8 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes'),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes', store=True),
+        'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
         'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
     }
@@ -261,9 +261,9 @@ class sale_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)        
-            
-    
+        return osv.osv.unlink(self, cr, uid, unlink_ids)
+
+
     def onchange_shop_id(self, cr, uid, ids, shop_id):
         v={}
         if shop_id:
@@ -295,6 +295,32 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term}}
+
+    def shipping_policy_change(self, cr, uid, ids, policy, context={}):
+        if not policy:
+            return {}
+        inv_qty = 'order'
+        if policy=='prepaid':
+            inv_qty = 'order'
+        elif policy=='picking':
+            inv_qty = 'procurement'
+        return {'value':{'invoice_quantity':inv_qty}}
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.has_key('order_policy'):
+            if vals['order_policy']=='prepaid':
+                vals.update({'invoice_quantity':'order'})
+            elif vals['order_policy']=='picking':
+                vals.update({'invoice_quantity':'procurement'})
+        return super(sale_order, self).write(cr, uid, ids, vals, context=context)
+
+    def create(self, cr, uid, vals, context={}):
+        if vals.has_key('order_policy'):
+            if vals['order_policy']=='prepaid':
+                vals.update({'invoice_quantity':'order'})
+            if vals['order_policy']=='picking':
+                vals.update({'invoice_quantity':'procurement'})
+        return super(sale_order, self).create(cr, uid, vals, context=context)
 
     def button_dummy(self, cr, uid, ids, context={}):
         return True
@@ -337,7 +363,7 @@ class sale_order(osv.osv):
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id],
             pay_term,time.strftime('%Y-%m-%d'))
         if data.get('value',False):
-            inv_obj.write(cr, uid, [inv_id], inv.update(data['value']), context=context)
+            inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
@@ -453,7 +479,7 @@ class sale_order(osv.osv):
     def test_state(self, cr, uid, ids, mode, *args):
         assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
         finished = True
-        canceled = False 
+        canceled = False
         notcanceled = False
         write_done_ids = []
         write_cancel_ids = []

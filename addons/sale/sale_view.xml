@@ -202,14 +202,14 @@
                             <field groups="base.group_extended" name="incoterm"/>
                             <field groups="base.group_extended" name="picking_policy" required="True"/>
                             <field name="user_id"/>
-                            <field name="order_policy"/>
+                            <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
                             <field groups="base.group_extended" name="origin"/>
-                            <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid')]}"/>
+                            <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
                             <field name="payment_term"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page groups="base.group_extended" string="History">
+                        <page string="History">
                             <separator colspan="4" string="Related invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>

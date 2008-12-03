@@ -83,6 +83,7 @@ class wizard_delegate(wizard.interface):
             'planned_hours': task.remaining_hours,
             'planned_hours_me': 1.0,
             'prefix': 'CHECK: '+ (task.name or ''),
+            'include_info': 1,
             'state': 'pending'
         }
 

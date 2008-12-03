@@ -194,13 +194,6 @@ class wizard_base_setup(wizard.interface):
         cr.commit()
         (db, pool)=pooler.restart_pool(cr.dbname, update_module=True)
 
-        lang_obj=pool.get('res.lang')
-        lang_ids=lang_obj.search(cr, uid, [])
-        langs=lang_obj.browse(cr, uid, lang_ids)
-        for lang in langs:
-            if lang.code and lang.code != 'en_US':
-                filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
-                tools.trans_load(cr.dbname, filename, lang.code)
         return {}
 
     def _menu(self, cr, uid, data, context):
