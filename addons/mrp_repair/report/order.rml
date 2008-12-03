@@ -204,6 +204,7 @@
           </para>
         </td>
         <td>
+          <para style="P1">[[ o.partner_id.name ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['name'] ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['street'] ]]</para>
           <para style="P18">[[ o.partner_id and adr_get(o.partner_id, 'default')['zip'] ]] [[ o.partner_id and adr_get(o.partner_id, 'default')['city'] ]]</para>
@@ -435,11 +436,8 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="43.0,492.0" style="Table1">
+    <blockTable colWidths="492.0" style="Table1">
       <tr>
-        <td>
-          <para style="P2">Notes : </para>
-        </td>
         <td>
           <para style="P1">[[ format(o.quotation_notes or '') ]]</para>
         </td>
