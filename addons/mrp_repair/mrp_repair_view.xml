@@ -18,7 +18,7 @@
                         <field name="repaired"/>
                     	<newline/>
                         <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)"/>
-                        <field name="address_id"/>
+                        <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
                     	<field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
