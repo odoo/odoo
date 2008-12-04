@@ -320,11 +320,12 @@ class crm_case(osv.osv):
         return res
     def copy(self, cr, uid, id, default=None, context={}):
         if not default: default = {}
-        default.update( {'state':'draft', 'id':False, 'history_line':[],'log_ids':[]})
+#        default.update( {'state':'draft', 'id':False, 'history_line':[],'log_ids':[]})
+        default.update( {'state':'draft', 'history_line':[],'log_ids':[]})
         return super(crm_case, self).copy(cr, uid, id, default, context)
 
     _columns = {
-        'id': fields.integer('ID', readonly=True),
+#        'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description',size=64, required=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active'),
@@ -342,7 +343,7 @@ class crm_case(osv.osv):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
         'som': fields.many2one('res.partner.som', 'State of Mind'),
         'date': fields.datetime('Date'),
-        'create_date': fields.datetime('Created' ,readonly=True),
+#        'create_date': fields.datetime('Created' ,readonly=True),
         'date_deadline': fields.datetime('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
