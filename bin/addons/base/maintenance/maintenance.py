@@ -60,6 +60,9 @@ class maintenance_contract(osv.osv):
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
     }
+    _sql_constraints = [
+        ('uniq_name', 'unique(name)', "Your maintenance contract is already subscribed in the system !")
+    ]
 
 maintenance_contract()
 
