@@ -50,11 +50,13 @@ class mrp_repair(osv.osv):
             val = 0.0
             cur=repair.pricelist_id.currency_id
             for line in repair.operations:
-                for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
-                    val+= c['amount']
+                if line.to_invoice:
+                    for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
+                        val+= c['amount']
             for line in repair.fees_lines:
-                for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
-                    val+= c['amount']
+                if line.to_invoice:
+                    for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
+                        val+= c['amount']
             res[repair.id]=cur_obj.round(cr, uid, cur, val)
         return res
 
@@ -68,6 +70,7 @@ class mrp_repair(osv.osv):
             cur=repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
+
     _columns = {
         'name' : fields.char('Repair Ref',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -155,7 +158,10 @@ class mrp_repair(osv.osv):
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
-            data['value']['partner_id'] = move.address_id and move.address_id.partner_id and move.address_id.partner_id.id
+            if move.address_id:
+                data['value']['partner_id'] = move.address_id.partner_id and move.address_id.partner_id.id
+            else:
+                data['value']['partner_id'] = False
             data['value']['address_id'] = move.address_id and move.address_id.id
             d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['address_id'])
             data['value'].update(d['value'])
@@ -425,13 +431,17 @@ class ProductChangeMixin(object):
     def product_id_change(self, cr, uid, ids, pricelist, product, uom=False, product_uom_qty=0, partner_id=False, guarantee_limit=False):
         result = {}
         warning = {}       
-        
+        print "here we are"
         if not product_uom_qty:
             product_uom_qty = 1
         result['product_uom_qty'] = product_uom_qty 
 
         if product:
             product_obj =  self.pool.get('product.product').browse(cr, uid, product)
+            if partner_id:
+                partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
+                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, product_obj.taxes_id)
+
             result['name'] = product_obj.partner_ref
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
