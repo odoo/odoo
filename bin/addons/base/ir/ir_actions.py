@@ -371,6 +371,7 @@ class actions_server(osv.osv):
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
         'state': fields.selection([
+            ('client_action','Client Action'),
             ('python','Python Code'),
             ('dummy','Dummy'),
             ('trigger','Trigger'),
@@ -378,12 +379,12 @@ class actions_server(osv.osv):
             ('sms','SMS'),
             ('object_create','Create Object'),
             ('object_write','Write Object'),
-            ('client_action','Client Action'),
             ('other','Others Actions'),
-        ], 'Action State', required=True, size=32, change_default=True),
+        ], 'Action State', required=True, size=32),
         'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
+        'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
         'trigger_name': fields.char('Trigger Name', size=128),
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
         'message': fields.text('Message', translate=True),
@@ -457,6 +458,10 @@ class actions_server(osv.osv):
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
         for action in self.browse(cr, uid, ids, context):
+            if action.state=='client_action':
+                if not action.action_id:
+                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
+                return self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
             if action.state=='python':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
