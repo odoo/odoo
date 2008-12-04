@@ -452,7 +452,7 @@ def trans_generate(lang, modules, dbname=None):
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
-    for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
+    for root, dirs, files in tools.osutil.walksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
