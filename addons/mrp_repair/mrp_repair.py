@@ -431,7 +431,7 @@ class ProductChangeMixin(object):
     def product_id_change(self, cr, uid, ids, pricelist, product, uom=False, product_uom_qty=0, partner_id=False, guarantee_limit=False):
         result = {}
         warning = {}       
-        print "here we are"
+
         if not product_uom_qty:
             product_uom_qty = 1
         result['product_uom_qty'] = product_uom_qty 

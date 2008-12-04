@@ -38,7 +38,7 @@
     "demo_xml":[],
     "update_xml":[
         #"security/mrp_repair_security.xml",
-        #"security/ir.model.access.csv",
+        "security/ir.model.access.csv",
         "mrp_repair_sequence.xml",
         "mrp_repair_wizard.xml", 
         "mrp_repair_view.xml", 
