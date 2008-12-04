@@ -11,6 +11,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -22,7 +23,8 @@
             <field name="arch" type="xml">
                 <form string="Maintenance Contract">
                     <separator string="Information" colspan="4"/>
-                    <field name="name" select="1" colspan="4"/>
+                    <field name="name" select="1" />
+                    <field name="state" />
                     <field name="date_start" select="1"/>
                     <field name="date_stop" select="1"/>
                     <separator string="Covered Modules" colspan="4"/>

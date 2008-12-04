@@ -50,12 +50,20 @@ maintenance_contract_module()
 class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
     _description = "Maintenance Contract"
+
+    def _valid_get(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for contract in self.browse(cr, uid, ids, context=context):
+            res[contract.id] = ("unvalid", "valid")[contract.date_stop >= time.strftime('%Y-%m-%d')]
+        return res
+
     _columns = {
         'name' : fields.char('Contract ID', size=256, required=True, readonly=True),
         'password' : fields.char('Password', size=64, invisible=True, required=True, readonly=True),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'module_ids' : fields.many2many('maintenance.contract.module', 'maintenance_contract_module_rel', 'contract_id', 'module_id', 'Covered Modules', readonly=True),
+        'state' : fields.function(_valid_get, method=True, string="State", type="selection", selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True)
     }
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
