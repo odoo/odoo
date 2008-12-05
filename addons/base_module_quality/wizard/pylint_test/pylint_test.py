@@ -39,8 +39,9 @@ def _test_pylint(self, url, add_folder=None):
         if file.split('.')[-1] == 'py':
             save_file = file.split('.')[0]+".txt"
             file_path = os.path.join(url, file)
-            a1 = os.system('pylint '+file_path+'>> '+save_file+' ')
+            os.system('pylint '+file_path+'>> '+save_file+' ')
             a2 = os.system('cat '+save_file+' | tail -4 >> temp.txt')
+            os.system('rm '+save_file+' ')
             fp = open('temp.txt','r')
             result = fp.read()
             fp.close()
@@ -57,6 +58,7 @@ def _test_pylint(self, url, add_folder=None):
                     dict_files[add_folder + '/' + file] = str_result
                 else:
                     dict_files[file] = str_result
+    os.system(' rm temp.txt ')
     dict_files.update(subfolder)
     return dict_files
 
