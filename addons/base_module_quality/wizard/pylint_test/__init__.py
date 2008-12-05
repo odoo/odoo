@@ -20,8 +20,6 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
-
+import pylint_test
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

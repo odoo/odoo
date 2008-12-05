@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<wizard
+			id="wizard_base_module_merger"
+			string="Merge module"
+			model="ir.module.module"
+			multi="True"
+			name="base_module_merge.module_merge"/>
+
+		
+		<menuitem
+			parent="base.menu_management"
+			type="wizard"
+			action="wizard_base_module_merger"
+			id="menu_wizard_base_module_merger"/>
+
+
+	</data>
+</openerp>
