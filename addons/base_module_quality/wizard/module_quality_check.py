@@ -36,21 +36,18 @@ form_check = '''<?xml version="1.0"?>
 
 fields_check = {
     'test': {
-        'string':'Tests', 'type':'selection', 'size':64, 'required':True,
+        'string':'Tests', 'type':'selection',  'required':True,
         'selection': [('pylint', 'Pylint'), ('othertest','other')],
         'default': lambda *args: 'pylint'
     },
     }
 view_form = """<?xml version="1.0"?>
 <form string="Check quality">
-    <group colspan="2" col="4">
-        <field name="module_info" nolabel="1" colspan="4"/>
-    </group>
+        <field name="module_info" nolabel="1" colspan="4" height="150" width="400"/>
 </form>"""
 
 view_field = {
-    "module_info": {'type': 'text', 'string': 'check quality',
-        'readonly': True},
+    "module_info": {'type': 'text', 'string': 'check quality',  'readonly':True},
 }
 
 class wiz_quality_check(wizard.interface):
