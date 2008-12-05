@@ -1801,7 +1801,7 @@ class orm(orm_template):
                 if v == None:
                     r[key] = False
         if isinstance(ids, (int, long)):
-            return result[0]
+            return result and result[0] or False
         return result
 
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
