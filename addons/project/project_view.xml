@@ -210,7 +210,7 @@
                     <field name="remaining_hours" widget="float_time"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="compute_hours" string="Compute" type="object"/>
+                        <button icon="gtk-ok" name="compute_hours" string="Update" type="object"/>
                     </group>
                 </form>
             </field>
@@ -250,7 +250,7 @@
                             <field name="delay_hours" widget="float_time"/>
                             <group col="3" colspan="2">
 	                            <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-	                            <button name="%(action_config_compute_remaining)d" string="Compute" type="action" colspan="1" target="new"/>
+	                            <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" attrs="{'invisible':[('state','=','draft')]}"/>
                             </group>
                             <field name="effective_hours" widget="float_time"/>
 
