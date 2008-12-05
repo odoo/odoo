@@ -44,6 +44,8 @@ class WikiGroup(osv.osv):
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
+       'home':fields.many2one('wiki.wiki', 'Pages'),
+       'action_id': fields.many2one('ir.ui.menu', 'Menu')
     }
 WikiGroup()
 
