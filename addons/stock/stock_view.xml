@@ -27,7 +27,7 @@
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines">
                     <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
-                    <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1"/>
+                    <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                 </form>

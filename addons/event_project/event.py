@@ -51,7 +51,8 @@ class event(osv.osv):
     def write(self, cr, uid, ids,vals, *args, **kwargs):
         if 'date_begin' in vals and vals['date_begin']:
             for eve in self.browse(cr, uid, ids):
-                    self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin})
+                if eve.project_id:
+                    self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin[:10]})
 
         return super(event,self).write(cr, uid, ids,vals, *args, **kwargs)
 

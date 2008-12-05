@@ -1369,7 +1369,7 @@ class account_tax(osv.osv):
             r['amount'] *= quantity
         return res
 
-    def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+    def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None,tax_parent_tot=0.0):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
 
         res = []

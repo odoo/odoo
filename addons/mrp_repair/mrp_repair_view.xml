@@ -18,11 +18,11 @@
                         <field name="repaired"/>
                     	<newline/>
                         <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)"/>
-                        <field name="address_id"/>
+                        <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
                     	<field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Operationss">
+                        <page string="Operations">
                             <field name="guarantee_limit" />
                             <newline/>
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
@@ -31,7 +31,7 @@
                                         <page string="Repair Line">                                                                      
 		                                    <field name="name" colspan="4"/>		                                     
 		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>                                            
-		                                    <field name="product_uom_qty" string="Qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
+		                                    <field name="product_uom_qty" string="Qty" />
 		                                    <field name="product_uom" string="UoM"/>
 		                                    <field name="price_unit"/>     
 		                                    <field name="price_subtotal"/> 		                                    
@@ -61,9 +61,10 @@
                                     <field name='name'/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="product_uom_qty" string="Qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
                                     <field name="price_unit"/>
+                                    <field name="tax_id"/>
                                     <field name="to_invoice"/>
                                     <field name="price_subtotal"/>
                                 </tree>
@@ -102,7 +103,7 @@
                                         <page string="Fees Line"> 
                                             <field name='name'/>  
 		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
-		                                    <field name="product_uom_qty" string="Qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
+		                                    <field name="product_uom_qty" string="Qty"/>
 		                                    <field name="product_uom" string="UoM" /> 
 		                                    <field name="price_unit"/>  
 		                                    <field name="price_subtotal"/>  
@@ -122,7 +123,7 @@
                                 <tree string="Fees" editable="bottom">
                                     <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
                                     <field name='name'/>
-                                    <field name="product_uom_qty" string="Qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
+                                    <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
                                     <field name="price_unit"/>
                                     <field name="to_invoice"/>

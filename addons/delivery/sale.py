@@ -28,6 +28,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order' 
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on packings made."),
+        'id': fields.integer('ID', readonly=True,invisible=True),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part):
