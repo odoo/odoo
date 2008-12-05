@@ -466,7 +466,9 @@ class purchase_order_line(osv.osv):
                     'date': date_order,
                     })[pricelist]
         dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
+        context['partner_id'] = partner_id
+        prod_name = self.pool.get('product.product').browse(cr, uid,product, context=context).partner_ref
+
 
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
