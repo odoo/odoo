@@ -50,7 +50,7 @@ view_form = """<?xml version="1.0"?>
 
 view_field = {
     "module_info": {'type': 'text', 'string': 'check quality',
-        'readonly': True,},
+        'readonly': True},
 }
 
 class wiz_quality_check(wizard.interface):
