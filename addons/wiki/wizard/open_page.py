@@ -33,13 +33,12 @@ class wiz_timesheet_open(wizard.interface):
     def _open_wiki_page(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         menu_id = data['id']
-        group_ids = pool.get('wiki.groups').search(cr, uid, [('action_id','=',menu_id)])
-
-        group = pool.get('wiki.groups').browse(cr, uid, group_ids[0])
+        group_ids = pool.get('wiki.groups.link').search(cr, uid, [('action_id','=',menu_id)])
+        group = pool.get('wiki.groups.link').browse(cr, uid, group_ids[0])
         
         value = {
-            'context': "{'group_id':%d}" % (group.id),
-            'domain': "[('group_id','child_of',[%s])]" % (group.id),
+            'context': "{'group_id':%d}" % (group.group_id.id),
+            'domain': "[('group_id','child_of',[%s])]" % (group.group_id.id),
             'name': 'Wiki Page',
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -47,8 +46,8 @@ class wiz_timesheet_open(wizard.interface):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-        if group.home :
-            value['res_id'] = group.home.id
+        if group.group_id.home:
+            value['res_id'] = group.group_id.home.id
         else:
             value['view_type'] = 'form'
             value['view_mode'] = 'tree,form'
