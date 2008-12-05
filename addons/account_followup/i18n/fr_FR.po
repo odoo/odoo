@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-10 15:05:35+0000PO-Revision-"
-"Date: 2008-09-10 15:05:35+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 16:26+0000\n"
-"PO-Revision-Date: 2008-10-14 14:34+0000\n"
-"Last-Translator: Olivier Laurent <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
+"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_ids:0
@@ -35,6 +30,12 @@ msgstr "Type de terme"
 #: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
 msgid "All payable entries"
 msgstr "Toutes les entrées payables"
+
+#. module: account_followup
+#, python-format
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+msgid "No Follow up Defined"
+msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -137,11 +138,8 @@ msgstr "Relevé de compte"
 
 #. module: account_followup
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -160,15 +158,8 @@ msgstr "Payé"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid ""
-"Exception made if there was a mistake of ours, it seems that the following "
-"bills staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days."
-msgstr ""
-"Sauf erreur de notre part, il ressort de nos comptes que les montants "
-"suivants demeurent impayés à ce jour. Nous vous invitons dès lors à faire le "
-"nécessaire pour procéder à ce paiement afin qu'il nous parvienne dans les 10 "
-"jours."
+msgid "Exception made if there was a mistake of ours, it seems that the following bills staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days."
+msgstr "Sauf erreur de notre part, il ressort de nos comptes que les montants suivants demeurent impayés à ce jour. Nous vous invitons dès lors à faire le nécessaire pour procéder à ce paiement afin qu'il nous parvienne dans les 10 jours."
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,sendmail,end:0
@@ -239,18 +230,12 @@ msgstr "Sélection du Suivi"
 #. module: account_followup
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue!"
+msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"departement at (+32).10.68.94.39."
-msgstr ""
-"Si votre paiement a croisé le présent rappel, veuillez considérer celui-ci "
-"comme nul et non-avenu. N'hésitez pas à prendre contact avec notre service "
-"comptabilité si besoin."
+msgid "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39."
+msgstr "Si votre paiement a croisé le présent rappel, veuillez considérer celui-ci comme nul et non-avenu. N'hésitez pas à prendre contact avec notre service comptabilité si besoin."
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -291,8 +276,13 @@ msgstr "Cher Monsieur"
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,sendmail:0
 msgid "Mail not sent to following Partners , Email not available !"
+msgstr "Message non envoyé aux Partenaires suivants, adresse Email non disponible !"
+
+#. module: account_followup
+#, python-format
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+msgid "You must define at least one follow up for your company !"
 msgstr ""
-"Message non envoyé aux Partenaires suivants, adresse Email non disponible !"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -354,9 +344,7 @@ msgstr "Sous-total:"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Best regards."
-msgstr ""
-"Nous vous prions d'agréer, Madame, Monsieur, l'expression de nos sentiments "
-"distingués."
+msgstr "Nous vous prions d'agréer, Madame, Monsieur, l'expression de nos sentiments distingués."
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -463,3 +451,4 @@ msgstr "Entreprise"
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
 msgstr "Dernier suivi"
+

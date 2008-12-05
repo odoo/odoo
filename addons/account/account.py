@@ -1369,7 +1369,7 @@ class account_tax(osv.osv):
             r['amount'] *= quantity
         return res
 
-    def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+    def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None,tax_parent_tot=0.0):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
 
         res = []
@@ -2002,12 +2002,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'python_compute_inv': tax.python_compute_inv,
                 'python_applicable': tax.python_applicable,
                 'tax_group':tax.tax_group,
-                'base_code_id': tax.base_code_id and tax_code_template_ref[tax.base_code_id.id] or False,
-                'tax_code_id': tax.tax_code_id and tax_code_template_ref[tax.tax_code_id.id] or False,
+                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
+                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
                 'base_sign': tax.base_sign,
                 'tax_sign': tax.tax_sign,
-                'ref_base_code_id': tax.ref_base_code_id and tax_code_template_ref[tax.ref_base_code_id.id] or False,
-                'ref_tax_code_id': tax.ref_tax_code_id and tax_code_template_ref[tax.ref_tax_code_id.id] or False,
+                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
+                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
                 'ref_base_sign': tax.ref_base_sign,
                 'ref_tax_sign': tax.ref_tax_sign,
                 'include_base_amount': tax.include_base_amount,

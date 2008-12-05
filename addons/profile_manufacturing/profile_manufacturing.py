@@ -73,6 +73,8 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             help="Able you to set warnings on products and partners."),
         'board_document':fields.boolean('Document Management', 
             help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+        'mrp_repair': fields.boolean('Repair', 
+            help="Allow to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
 
     }
     def action_cancel(self,cr,uid,ids,conect=None):

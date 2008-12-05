@@ -4,26 +4,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.99Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-25 20:42:54+0000PO-Revision-"
-"Date: 2008-09-25 20:42:54+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 16:26+0000\n"
-"PO-Revision-Date: 2008-09-26 15:29+0000\n"
-"Last-Translator: Fabien Pinckaers <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:08:46+0000\n"
+"PO-Revision-Date: 2008-11-28 17:08:46+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all1
-msgid "Bugs Waiting Approval"
+#: field:report.crm.case.section.categ.categ2,categ_id:0
+#: field:report.crm.case.section.categ.stage,categ_id:0
+#: field:report.crm.case.section.stage,categ_id:0
+#: view:crm.case:0
+msgid "Category"
 msgstr ""
 
 #. module: crm_configuration
@@ -32,13 +29,13 @@ msgid "Cases by section, Category and stage"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads
-msgid "Leads Tracking"
+#: view:crm.case:0
+msgid "Severity"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Title"
+#: field:crm.menu.config_wizard,jobs:0
+msgid "Jobs Hiring Process"
 msgstr ""
 
 #. module: crm_configuration
@@ -47,15 +44,23 @@ msgid "Add Last Mail for Replying"
 msgstr "Додати останнє повідомлення для відповіді"
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_opp
+#, python-format
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+msgid "A partner is already defined on this lead."
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
+#: model:process.node,name:crm_configuration.process_node_opportunities0
 msgid "Opportunities"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor22
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor22
-msgid "My Opportunities"
+#: field:report.crm.case.section.categ2,nbr:0
+#: field:report.crm.case.section.categ.categ2,nbr:0
+#: field:report.crm.case.section.categ.stage,nbr:0
+#: field:report.crm.case.section.stage,nbr:0
+msgid "# of Cases"
 msgstr ""
 
 #. module: crm_configuration
@@ -64,30 +69,28 @@ msgid "Cases by section and category2"
 msgstr ""
 
 #. module: crm_configuration
+#: model:process.transition,name:crm_configuration.process_transition_leadpartner0
+msgid "Lead Partner"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.menu.config_wizard:0
+msgid "Configure CRM Sections"
+msgstr ""
+
+#. module: crm_configuration
+#: wizard_view:crm.case.meeting,init:0
+msgid "Note that you can also use the calendar view to graphically schedule your next meeting."
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
 msgid "Leads Tree"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_my3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_my3
-msgid "My Bugs Not Fixed"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetall3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_meetall3
-msgid "Next Deadlines"
-msgstr ""
-
-#. module: crm_configuration
 #: view:crm.case:0
-msgid "Meeting For Leads Generation"
-msgstr ""
-
-#. module: crm_configuration
-#: view:crm.case:0
-msgid "Severity"
+msgid "Action Description"
 msgstr ""
 
 #. module: crm_configuration
@@ -96,24 +99,28 @@ msgid "Funds Form"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_user
-msgid "Cases by Leads and User"
+#: help:crm.menu.config_wizard,helpdesk:0
+msgid "Manages an Helpdesk service."
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Campaign Type"
+msgid "Not Held"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act11
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act11
-msgid "My Jobs Requests"
+#: view:crm.case:0
+msgid "Action Information"
+msgstr "Інформація про дію"
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Title"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_user
-msgid "Cases by Opportunities and User"
+#: view:crm.case:0
+msgid "Reset to Unconfirmed"
 msgstr ""
 
 #. module: crm_configuration
@@ -122,22 +129,19 @@ msgid "Stage Name"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f7
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f7
-msgid "Old Feature Requests"
+#: help:crm.menu.config_wizard,document_ics:0
+msgid " Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetall1
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetmy1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_meetall1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_meetmy1
-msgid "Draft Meetings"
+#: wizard_button:crm.case.partner_create,init,confirm:0
+#: model:ir.actions.wizard,name:crm_configuration.wizard_crm_partner_create
+msgid "Create Partner"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor
-msgid "New Opportunity"
+#: view:crm.case:0
+msgid "Contract Data"
 msgstr ""
 
 #. module: crm_configuration
@@ -152,7 +156,7 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Opportunities Form"
+msgid "Claim Description"
 msgstr ""
 
 #. module: crm_configuration
@@ -161,19 +165,13 @@ msgid "Amount"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_meet_my
-msgid "My Meetings"
-msgstr ""
-
-#. module: crm_configuration
 #: view:crm.case:0
 msgid "Lead Source"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act111
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act111
-msgid "All Jobs Requests"
+#: view:crm.case:0
+msgid "Candidate Hired"
 msgstr ""
 
 #. module: crm_configuration
@@ -182,58 +180,38 @@ msgid "Expected Salary"
 msgstr ""
 
 #. module: crm_configuration
+#: field:crm.menu.config_wizard,document_ics:0
+msgid "Shared Calendar"
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
 msgid "Applied Job"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all2
-msgid "All Draft Leads"
+#: model:process.transition,note:crm_configuration.process_transition_opportunitymeeting0
+msgid "Normal or phone meeting for opportunity"
 msgstr ""
 
 #. module: crm_configuration
-#: field:report.crm.case.section.categ2,nbr:0
-#: field:report.crm.case.section.categ.categ2,nbr:0
-#: field:report.crm.case.section.categ.stage,nbr:0
-#: field:report.crm.case.section.stage,nbr:0
-msgid "# of Cases"
+#: view:crm.menu.config_wizard:0
+msgid "Calendar Sharing"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ_act0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_act0
-msgid "All Bugs"
+#: field:crm.case,note:0
+msgid "Note"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree_month
-#: view:report.crm.case.section.categ2:0
-msgid "Cases by Section and Category2"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my3
-msgid "My Open Leads"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_my0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_my0
-msgid "My Bugs"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetings
 #: view:crm.case:0
-msgid "Meetings"
+msgid "Relevant"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Refuse Job"
+msgid "Meetings"
 msgstr ""
 
 #. module: crm_configuration
@@ -242,26 +220,24 @@ msgid "Case Category2 Name"
 msgstr ""
 
 #. module: crm_configuration
+#: wizard_view:crm.case.opportunity_set,init:0
+#: model:ir.actions.wizard,name:crm_configuration.wizard_crm_opportunity_set
+msgid "Convert To Opportunity"
+msgstr ""
+
+#. module: crm_configuration
+#: wizard_field:crm.case.meeting,init,duration:0
+msgid "Duration (Hours)"
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
-msgid "Action Information"
-msgstr "Інформація про дію"
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_my2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs2
-msgid "My Jobs Propositions to Review"
+msgid "Availability (weeks)"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my
-msgid "My Leads"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor1
-msgid "All Open Opportunities"
+#: view:crm.case:0
+msgid "Held"
 msgstr ""
 
 #. module: crm_configuration
@@ -275,17 +251,13 @@ msgid "Extra Info"
 msgstr "Додаткова інформація"
 
 #. module: crm_configuration
-#: selection:report.crm.case.section.categ2,state:0
-#: selection:report.crm.case.section.categ.categ2,state:0
-#: selection:report.crm.case.section.categ.stage,state:0
-#: selection:report.crm.case.section.stage,state:0
-msgid "Draft"
+#: view:crm.case:0
+msgid "Campaign Type"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_my1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_my1
-msgid "My Open Bugs"
+#: field:crm.case,category2_id:0
+msgid "Category Name"
 msgstr ""
 
 #. module: crm_configuration
@@ -295,14 +267,13 @@ msgid "Case Section"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all5
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all5
-msgid "All Cancelled Leads"
-msgstr ""
+#: view:crm.case:0
+msgid "Estimates"
+msgstr "Оцінки"
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Proposed Salary"
+#: wizard_view:crm.case.partner_create,init:0
+msgid "Convert To Partner"
 msgstr ""
 
 #. module: crm_configuration
@@ -326,14 +297,18 @@ msgid "Dates"
 msgstr "Дати"
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f4
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f4
-msgid "Pending Feature Requests"
+#: view:crm.menu.config_wizard:0
+msgid "Next"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Priority"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Source"
 msgstr ""
 
 #. module: crm_configuration
@@ -355,8 +330,6 @@ msgid "Location"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ_categ2
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_categ2
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree_month
 #: view:report.crm.case.section.categ.categ2:0
@@ -366,6 +339,11 @@ msgstr ""
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Payment Mode"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Stage: "
 msgstr ""
 
 #. module: crm_configuration
@@ -381,26 +359,44 @@ msgid "Email"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_stage
-msgid "Cases by Leads and Stage"
+#: view:crm.case:0
+msgid "Candidate Refused"
+msgstr ""
+
+#. module: crm_configuration
+#: help:crm.menu.config_wizard,opportunity:0
+msgid "Tracks identified business opportunities for your sales pipeline."
+msgstr ""
+
+#. module: crm_configuration
+#, python-format
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+msgid "Error !"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.menu.config_wizard:0
+msgid "Install Pre-Configured Features"
+msgstr ""
+
+#. module: crm_configuration
+#: field:crm.menu.config_wizard,fund:0
+msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Meeting"
+msgid "Appreciation"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_my1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs1
-msgid "My Pending Jobs Requests"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my2
-msgid "My Draft Leads"
-msgstr ""
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.stage,state:0
+#: view:crm.case:0
+msgid "Pending"
+msgstr "На розгляді"
 
 #. module: crm_configuration
 #: model:ir.model,name:crm_configuration.model_report_crm_case_section_categ_categ2
@@ -408,15 +404,19 @@ msgid "Cases by section, Category and Category2"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all2
-msgid "Open Bugs"
+#: view:crm.case:0
+#: model:process.node,name:crm_configuration.process_node_meeting0
+msgid "Meeting"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f3
-msgid "Open Feature Requests"
+#: view:crm.case:0
+msgid "References"
+msgstr "Зв'язки"
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Subject"
 msgstr ""
 
 #. module: crm_configuration
@@ -429,14 +429,14 @@ msgid "Stage"
 msgstr ""
 
 #. module: crm_configuration
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:process.node,note:crm_configuration.process_node_leads0
+msgid "Very first contact with new prospect"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ
-msgid "Cases by Opportunities and Category2"
-msgstr ""
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильний XML для Архітектури Вигляду!"
 
 #. module: crm_configuration
 #: field:crm.case,partner_name2:0
@@ -449,9 +449,33 @@ msgid "Description Information"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_all2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_all2
-msgid "All Jobs Propositions"
+#: view:crm.case:0
+msgid "Contact Name"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Direction"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Lead Subject"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Send Partner & Historize"
+msgstr "Надіслати партнерові та архівувати"
+
+#. module: crm_configuration
+#: view:crm.menu.config_wizard:0
+msgid "The CRM module of OpenERP is able to manage any kind of relationship. But, as to help you to start quickly on the system, we configured a few of them for you."
+msgstr ""
+
+#. module: crm_configuration
+#: model:process.transition,note:crm_configuration.process_transition_leadpartner0
+msgid "Prospect is converting to business partner"
 msgstr ""
 
 #. module: crm_configuration
@@ -460,8 +484,8 @@ msgid "Contact"
 msgstr ""
 
 #. module: crm_configuration
-#: field:crm.case,category2_id:0
-msgid "Category Name"
+#: view:crm.case:0
+msgid "Next Interview"
 msgstr ""
 
 #. module: crm_configuration
@@ -476,13 +500,43 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "References"
-msgstr "Зв'язки"
+msgid "Candidate Name2"
+msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_my2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_my2
-msgid "My Bugs With Patches"
+#: model:process.transition,name:crm_configuration.process_transition_opportunitymeeting0
+msgid "Opportunity Meeting"
+msgstr ""
+
+#. module: crm_configuration
+#: field:crm.menu.config_wizard,phonecall:0
+#: view:crm.case:0
+msgid "Phone Calls"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Type of Action"
+msgstr ""
+
+#. module: crm_configuration
+#: wizard_field:crm.case.opportunity_set,init,planned_revenue:0
+msgid "Expected Revenue"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Meeting Date"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Meeting With Candidates"
+msgstr ""
+
+#. module: crm_configuration
+#: model:process.node,note:crm_configuration.process_node_opportunities0
+msgid "When a real project/opportunity is detected"
 msgstr ""
 
 #. module: crm_configuration
@@ -492,13 +546,17 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Estimates"
-msgstr "Оцінки"
+msgid "Convert to Partner"
+msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_all1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_all1
-msgid "All Pending Jobs Requests"
+#: view:crm.case:0
+msgid "Communication history"
+msgstr "Історія зв'язку"
+
+#. module: crm_configuration
+#: wizard_field:crm.case.partner_create,init,close:0
+msgid "Close Lead"
 msgstr ""
 
 #. module: crm_configuration
@@ -515,9 +573,9 @@ msgid "Month"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead
+#: field:crm.menu.config_wizard,lead:0
 #: view:crm.case:0
+#: model:process.node,name:crm_configuration.process_node_leads0
 msgid "Leads"
 msgstr ""
 
@@ -535,22 +593,13 @@ msgid "Job Info"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetall2
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_meetmy2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_meetall2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_meetmy2
-msgid "Confirmed Meetings"
+#: view:crm.case:0
+msgid "Confirm Meeting"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Funds"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor_my2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor_my2
-msgid "My Pending Opportunities"
+msgid "Proposed Salary"
 msgstr ""
 
 #. module: crm_configuration
@@ -559,26 +608,17 @@ msgid "Jobs - Recruitment Tree"
 msgstr ""
 
 #. module: crm_configuration
+#: model:ir.actions.wizard,name:crm_configuration.wizard_crm_meeting
 #: view:crm.case:0
-msgid "Jobs Description"
+msgid "Schedule Meeting"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_all0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_all0
-msgid "All Open Jobs Requests"
+#: view:crm.case:0
+msgid "Convert to Opportunity"
 msgstr ""
 
 #. module: crm_configuration
-#: field:report.crm.case.section.categ.categ2,categ_id:0
-#: field:report.crm.case.section.categ.stage,categ_id:0
-#: field:report.crm.case.section.stage,categ_id:0
-msgid "Category"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ_stage
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_stage
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_stage_tree
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_stage_tree_month
 #: view:report.crm.case.section.categ.stage:0
@@ -586,15 +626,18 @@ msgid "Cases by Section, Category and Stage"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all1
-msgid "All Unclosed Leads"
+#: view:crm.case:0
+msgid "Resolution: "
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_category_act_f0
-msgid "All Feature Request"
+#: help:crm.menu.config_wizard,fund:0
+msgid "This may help associations in their fund raising process and tracking."
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Meetings Form"
 msgstr ""
 
 #. module: crm_configuration
@@ -603,8 +646,20 @@ msgid "Historize"
 msgstr "До архіву"
 
 #. module: crm_configuration
-#: field:crm.case,note:0
-msgid "Note"
+#: view:crm.case:0
+msgid "Send Candidate & Historize"
+msgstr ""
+
+#. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree_month
+#: view:report.crm.case.section.categ2:0
+msgid "Cases by Section and Category2"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Candidate Email"
 msgstr ""
 
 #. module: crm_configuration
@@ -616,9 +671,16 @@ msgid "Delay Close"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all4
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all4
-msgid "All Pending Leads"
+#: wizard_field:crm.case.opportunity_set,init,probability:0
+msgid "Success Probability"
+msgstr ""
+
+#. module: crm_configuration
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.stage,state:0
+msgid "Draft"
 msgstr ""
 
 #. module: crm_configuration
@@ -630,25 +692,24 @@ msgid "Closed"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all4
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all4
-msgid "Bugs Not Fixed"
+#: view:crm.case:0
+msgid "Sales Stage: "
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Reminder"
 msgstr ""
 
 #. module: crm_configuration
 #: field:crm.case,partner_name:0
-#: view:crm.case:0
 msgid "Employee Name"
 msgstr ""
 
 #. module: crm_configuration
-#: selection:report.crm.case.section.categ2,state:0
-#: selection:report.crm.case.section.categ.categ2,state:0
-#: selection:report.crm.case.section.categ.stage,state:0
-#: selection:report.crm.case.section.stage,state:0
-#: view:crm.case:0
-msgid "Pending"
-msgstr "На розгляді"
+#: help:crm.menu.config_wizard,lead:0
+msgid "Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."
+msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -656,11 +717,13 @@ msgid "Status"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all6
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f5
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all6
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f5
-msgid "Planned For Future Release"
+#: wizard_button:crm.case.opportunity_set,init,confirm:0
+msgid "Create Opportunity"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Jobs - Recruitment Form"
 msgstr ""
 
 #. module: crm_configuration
@@ -679,25 +742,33 @@ msgid "Escalate"
 msgstr "Підвищити увагу"
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_meet
-msgid "All Meetings"
+#: view:crm.case:0
+msgid "Funds"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all3
-msgid "All Open Leads"
+#: view:crm.case:0
+msgid "Send Prospect & Historize"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f2
-msgid "Feature Requests Waiting Approval"
+#: wizard_view:crm.case.partner_create,init:0
+msgid "You may have to verify that this partner does not exist already."
 msgstr ""
 
 #. module: crm_configuration
 #: field:crm.case,partner_phone:0
 msgid "Phone"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Qualication"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Prospect Name"
 msgstr ""
 
 #. module: crm_configuration
@@ -709,26 +780,28 @@ msgid "User"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ
-msgid "Cases by Leads and Category2"
+#: view:crm.case:0
+msgid "Date"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_my0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs0
-msgid "My Open Jobs Requests"
+#: model:process.transition,name:crm_configuration.process_transition_leadopportunity0
+msgid "Lead Opportunity"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all5
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all5
-msgid "Pending Bugs"
+#: view:crm.case:0
+msgid "Candidate Name"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor_all2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor_all2
-msgid "All Pending Opportunities"
+#: help:crm.menu.config_wizard,meeting:0
+msgid "Manages the calendar of meetings of the users."
+msgstr ""
+
+#. module: crm_configuration
+#: model:process.transition,note:crm_configuration.process_transition_leadopportunity0
+msgid "Creating business opportunities from leads"
 msgstr ""
 
 #. module: crm_configuration
@@ -737,25 +810,19 @@ msgid "Bugs"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my6
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_category_act_leads_my6
-msgid "Calendar Of My Leads Meetings"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_all3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_all3
-msgid "All Unclosed Requests"
-msgstr ""
-
-#. module: crm_configuration
 #: view:crm.case:0
-msgid "Jobs - Recruitment Form"
+msgid "Claims Info"
 msgstr ""
 
 #. module: crm_configuration
+#: field:crm.menu.config_wizard,claims:0
 #: view:crm.case:0
-msgid "Deadlines"
+msgid "Claims"
+msgstr ""
+
+#. module: crm_configuration
+#: help:crm.menu.config_wizard,phonecall:0
+msgid "Help you to encode the result of a phone call or to planify a list of phone calls to process."
 msgstr ""
 
 #. module: crm_configuration
@@ -769,25 +836,23 @@ msgid "History"
 msgstr "Історія"
 
 #. module: crm_configuration
+#: view:crm.case:0
+msgid "Assigned to"
+msgstr ""
+
+#. module: crm_configuration
 #: model:ir.model,name:crm_configuration.model_crm_case_category2
 msgid "Category2 of case"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ_act_new
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_act_new
-msgid "New Bug"
+#: view:crm.case:0
+msgid "Claim Revenue"
 msgstr ""
 
 #. module: crm_configuration
 #: model:ir.model,name:crm_configuration.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my1
-msgid "My Unclosed Leads"
 msgstr ""
 
 #. module: crm_configuration
@@ -807,18 +872,21 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Communication history"
-msgstr "Історія зв'язку"
+msgid "Communication"
+msgstr ""
 
 #. module: crm_configuration
+#: wizard_button:crm.case.meeting,init,end:0
+#: wizard_button:crm.case.opportunity_set,init,end:0
+#: wizard_button:crm.case.partner_create,init,end:0
 #: view:crm.case:0
+#: view:crm.menu.config_wizard:0
 msgid "Cancel"
 msgstr "Скасувати"
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor11
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor11
-msgid "All Opportunities"
+#: field:crm.menu.config_wizard,opportunity:0
+msgid "Business Opportunities"
 msgstr ""
 
 #. module: crm_configuration
@@ -831,28 +899,23 @@ msgid "Open"
 msgstr "Відкрити"
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all6
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all6
-msgid "Calendar Of All Leads Meetings"
-msgstr ""
-
-#. module: crm_configuration
-#: view:crm.case:0
-msgid "Meetings Form"
+#: wizard_field:crm.case.meeting,init,date:0
+msgid "Meeting date"
 msgstr ""
 
 #. module: crm_configuration
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Claim Cost"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all7
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f6
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all7
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_f6
-msgid "Waiting For Reporter Response"
+#: field:crm.menu.config_wizard,helpdesk:0
+msgid "Helpdesk"
 msgstr ""
 
 #. module: crm_configuration
@@ -861,58 +924,38 @@ msgid "Responsible"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_stage
-msgid "Cases by Opportunities and Stage"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_all
-msgid "All Leads"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor2
-msgid "My Open Opportunities"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all3
-msgid "Bugs With Patches Waiting Approval"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my5
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my5
-msgid "My Cancelled Leads"
-msgstr ""
-
-#. module: crm_configuration
 #: view:crm.case:0
-msgid "Designation"
+msgid "Date of Claim"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Meeting Duration"
+#: wizard_button:crm.case.meeting,init,order:0
+msgid "Set Meeting"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Internal Notes"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_my3
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs3
-msgid "My Unclosed Requests"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_category_act_meetings
+#: field:crm.menu.config_wizard,meeting:0
 msgid "Calendar of Meetings"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Cases By Stage and Estimates"
+msgstr ""
+
+#. module: crm_configuration
+#: help:crm.menu.config_wizard,bugs:0
+msgid "Used by companies to track bugs and support requests on softwares"
+msgstr ""
+
+#. module: crm_configuration
+#: model:process.process,name:crm_configuration.process_process_contractworkflow0
+msgid "Contract Workflow"
+msgstr ""
+
+#. module: crm_configuration
+#: help:crm.menu.config_wizard,jobs:0
+msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
 msgstr ""
 
 #. module: crm_configuration
@@ -921,19 +964,40 @@ msgid "Leads Form"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_job_req_main
-msgid "Jobs Requests"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor
-msgid "Opportunity"
+#: view:crm.case:0
+msgid "Description"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Availability (weeks)"
+msgid "Internal Notes"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Meeting For Leads Generation"
+msgstr ""
+
+#. module: crm_configuration
+#: wizard_view:crm.case.partner_create,init:0
+msgid "Are you sure you want to create a partner based on this lead ?"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Prospect Email"
+msgstr ""
+
+#. module: crm_configuration
+#, python-format
+#: view:crm.case:0
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+msgid "Opportunity"
+msgstr ""
+
+#. module: crm_configuration
+#: wizard_view:crm.case.meeting,init:0
+msgid "Planify Meeting"
 msgstr ""
 
 #. module: crm_configuration
@@ -942,8 +1006,14 @@ msgid "Opportunities Tree"
 msgstr ""
 
 #. module: crm_configuration
+#: field:crm.menu.config_wizard,name:0
 #: view:crm.case:0
 msgid "Name"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Lead Details"
 msgstr ""
 
 #. module: crm_configuration
@@ -952,9 +1022,14 @@ msgid "Sales Stage"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Send Partner & Historize"
-msgstr "Надіслати партнерові та архівувати"
+#: field:crm.case,case_id:0
+msgid "Related Case"
+msgstr ""
+
+#. module: crm_configuration
+#: help:crm.menu.config_wizard,claims:0
+msgid "Manages the supplier and customers claims, including your corrective or preventive actions."
+msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -967,43 +1042,50 @@ msgid "Next Meeting"
 msgstr ""
 
 #. module: crm_configuration
+#: model:process.node,note:crm_configuration.process_node_meeting0
+msgid "Schedule a normal or phone meeting"
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
-msgid "Meeting With Future Employees"
+msgid "Deadlines"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all8
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_all8
-msgid "Old Bugs"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_bug_track
+#: field:crm.menu.config_wizard,bugs:0
 msgid "Bug Tracking"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Description"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_alljobs
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_myjobs
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_alljobs
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs_myjobs
-msgid "Calendar Of Jobs Meetings"
+#: wizard_field:crm.case.opportunity_set,init,name:0
+msgid "Opportunity Summary"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Quality"
+msgid "Type of claim"
 msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Actions"
 msgstr "Дії"
+
+#. module: crm_configuration
+#: model:process.node,note:crm_configuration.process_node_partner0
+msgid "Convert to prospect to business partner"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+msgid "Prospect Information"
+msgstr ""
+
+#. module: crm_configuration
+#: view:crm.case:0
+#: model:process.node,name:crm_configuration.process_node_partner0
+msgid "Partner"
+msgstr ""
 
 #. module: crm_configuration
 #: field:crm.case,duration:0
@@ -1016,13 +1098,7 @@ msgid "Bugs Tree"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f1
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_category_act_f1
-msgid "New Feature Request"
+#: model:ir.model,name:crm_configuration.model_crm_menu_config_wizard
+msgid "crm.menu.config_wizard"
 msgstr ""
 
-#. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_my4
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_my4
-msgid "My Pending Leads"
-msgstr ""

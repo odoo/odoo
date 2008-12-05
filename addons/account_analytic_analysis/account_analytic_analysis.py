@@ -329,7 +329,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
-            elif account.real_margin <> 0.0:
+            elif account.total_cost <> 0.0:
                 res[account.id] = -(account.real_margin / account.total_cost) * 100
             else:
                 res[account.id] = 0.0

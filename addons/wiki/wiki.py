@@ -64,7 +64,7 @@ class Wiki(osv.osv):
         'summary':fields.char('Summary',size=256, select=True),
         'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
-        'toc':fields.boolean('Table of Contents ?'),
+        'toc':fields.boolean('Table of Contents'),
         'review': fields.boolean('Need Review')
     }
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):

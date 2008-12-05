@@ -246,7 +246,7 @@ class task(osv.osv):
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
-
+    
     def copy(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
@@ -424,7 +424,29 @@ class project_work(osv.osv):
         return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 project_work()
 
+class config_compute_remaining(osv.osv_memory):
+    _name='config.compute.remaining'
+    def _get_remaining(self,cr, uid, ctx):
+        if 'active_id' in ctx:
+            return self.pool.get('project.task').browse(cr,uid,ctx['active_id']).remaining_hours
+        return False
 
+    _columns = {
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+            }
+
+    _defaults = {
+        'remaining_hours': _get_remaining
+        }
+    
+    def compute_hours(self, cr, uid, ids, context=None):
+        if 'active_id' in context:
+            remaining_hrs=self.browse(cr,uid,ids)[0].remaining_hours
+            self.pool.get('project.task').write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
+        return {
+                'type': 'ir.actions.act_window_close',
+         }
+config_compute_remaining()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

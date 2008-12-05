@@ -692,17 +692,7 @@ class account_move_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if not context:
             context={}
-        raise_ex=False
 
-        if ('debit' in vals and 'credit' in vals)  and not vals['debit'] and not vals['credit']:
-            raise_ex=True
-        if ('debit' in vals and 'credit' not in vals) and  not vals['debit']:
-            raise_ex=True
-        if ('credit' in vals and 'debit' not in vals) and  not vals['credit']:
-            raise_ex=True
-
-        if raise_ex:
-            raise osv.except_osv(_('Wrong Accounting Entry!'), _('Both Credit and Debit cannot be zero!'))
         account_obj = self.pool.get('account.account')
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))

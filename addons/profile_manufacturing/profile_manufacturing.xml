@@ -2,16 +2,17 @@
 <openerp>
     <data>
         <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Manufacturing Profile : Install extra modules</field>
+            <field name="name">Manufacturing Profile: Install Extra Modules</field>
             <field name="model">profile.manufacturing.config.install_modules_wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Profile : Install Extra Module">
+                <form string="Manufacturing Profile: Install Extra Modules">
                     <separator string="Stock &amp; Manufacturing" colspan="4"/>
                     <field name="stock_location"/>
                     <field name="mrp_jit"/>
                     <field name="mrp_operation"/>
-                    <field name="mrp_subproduct"/>
+					<field name="mrp_subproduct"/>
+					<field name="mrp_repair"/>
                     <separator string="Sales Management" colspan="4"/>
                     <field name="point_of_sale"/>
                     <field name="sale_journal"/>
@@ -32,7 +33,7 @@
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Manufacturing Profile : Install Extra Modules</field>
+            <field name="name">Manufacturing Profile: Install Extra Modules</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">profile.manufacturing.config.install_modules_wizard</field>
             <field name="view_type">form</field>
@@ -42,7 +43,7 @@
 
       <record model="ir.actions.todo"
             id="config_install_module">
-            <field name="name">Manufacturing Profile : Install Extra modules</field>
+            <field name="name">Manufacturing Profile: Install Extra modules</field>
             <field name="note">Install more modules. A few modules are proposed according to the manufacturing profile you selected. You will be able to install them based on our requirements.</field>
             <field name="action_id" ref="action_config_install_module"/>
             <field name="state">open</field>

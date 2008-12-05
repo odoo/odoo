@@ -144,6 +144,8 @@ class mrp_bom(osv.osv):
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
             result[bom.id] = map(lambda x: x.id, bom.bom_lines)
+            if bom.bom_lines:
+                continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
             if bom.type=='phantom' or ok:
                 sids = self.pool.get('mrp.bom').search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
@@ -889,7 +891,7 @@ class mrp_procurement(osv.osv):
         res = True
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method=='buy':
+            if procurement.product_id.product_tmpl_id.supply_method<>'produce':
                 if procurement.product_id.seller_ids:
                     partner = procurement.product_id.seller_ids[0].name
                     if user.company_id and user.company_id.partner_id:
@@ -907,7 +909,7 @@ class mrp_procurement(osv.osv):
     def check_buy(self, cr, uid, ids):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method=='produce':
+            if procurement.product_id.product_tmpl_id.supply_method<>'buy':
                 return False
             if not procurement.product_id.seller_ids:
                 cr.execute('update mrp_procurement set message=%s where id=%d', ('No supplier defined for this product !', procurement.id))
@@ -1180,6 +1182,7 @@ class StockMove(osv.osv):
                         'product_uos_qty': line['product_uos_qty'],
                         'move_dest_id': move.id,
                         'state': state,
+                        'name': line['name'],
                         'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],

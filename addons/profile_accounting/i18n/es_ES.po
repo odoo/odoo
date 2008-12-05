@@ -4,21 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-10 15:05:00+0000PO-Revision-"
-"Date: 2008-09-10 15:05:00+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 13:21+0000\n"
-"PO-Revision-Date: 2008-11-02 23:30+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:07:08+0000\n"
+"PO-Revision-Date: 2008-11-28 17:07:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:01+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: profile_accounting
+#: help:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Helps you to manage financial and analytic budgets."
+msgstr ""
 
 #. module: profile_accounting
 #: constraint:ir.ui.view:0
@@ -26,61 +26,87 @@ msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: profile_accounting
-#: field:config.install_extra_modules,hr_timesheet_invoice:0
-msgid "Invoice on Timesheets"
-msgstr "Facturar a partir de los horarios de trabajo"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: field:profile.accounting.config.install_modules_wizard,name:0
+msgid "Name"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_payment:0
+msgid "Suppliers Payment Management"
+msgstr ""
+
+#. module: profile_accounting
+#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
+msgid "profile.accounting.config.install_modules_wizard"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Services Management"
-msgstr "Gestión de servicios"
-
-#. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Resources Management"
-msgstr "Gestión de recursos"
-
-#. module: profile_accounting
-#: help:config.install_extra_modules,account_budget_crossover:0
-msgid ""
-"Allows you to manage analytic budgets by journals. This module is used to "
-"manage budgets of your projects."
 msgstr ""
-"Permite la gestión de presupuestos analíticos por diarios. Este módulo es "
-"usado para gestionar presupuestos en sus proyectos."
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Accounting Management"
-msgstr "Gestión financiera"
-
-#. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Install"
-msgstr "Instalar"
-
-#. module: profile_accounting
-#: help:config.install_extra_modules,hr_timesheet_invoice:0
-msgid ""
-"There are different invoicing methods in OpenERP: from sale orders, from "
-"shippings, ... Install this module if you plan to invoice your customers "
-"based on time spent on projects."
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
+msgid "Analytic Accounting"
 msgstr ""
-"Hay diferentes métodos de facturación en OpenERP: desde órdenes de venta, "
-"desde envíos, ... Instale este módulo si piensa facturar a sus clientes "
-"basándose en el tiempo utilizado en proyectos."
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_plans:0
+msgid "Multiple Analytic Plans"
+msgstr ""
+
+#. module: profile_accounting
+#: help:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
+msgid "Invoice on Analytic Entries"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "Document Management"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Budgets"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Install"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_asset:0
+msgid "Asset Management"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Resources Management"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Install Extra Module"
-msgstr "Instalar módulo extra"
+msgstr ""
 
 #. module: profile_accounting
-#: field:config.install_extra_modules,account_budget_crossover:0
-msgid "Analytic Budgets"
-msgstr "Presupuestos analíticos"
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Accounting Management"
+msgstr ""
+

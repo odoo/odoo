@@ -88,7 +88,6 @@ class res_partner_address(osv.osv):
     _description ='Partner Address'
     _columns = {
         'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
-        'email': fields.related('job_ids', 'email', type='char', string='Default Email'),
     }
 res_partner_address()
 
@@ -119,8 +118,8 @@ class res_partner_job(osv.osv):
         'address_id':fields.many2one('res.partner.address','Address'),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
         'function_id': fields.many2one('res.partner.function','Job Title'),
-        'sequence_contact':fields.integer('Sequence (Contact)',help='order of importance of this address in the list of addresses of the linked contact'),
-        'sequence_partner':fields.integer('Sequence (Partner)',help='order of importance of this job title in the list of job title of the linked partner'),
+        'sequence_contact':fields.integer('Sequence',help='Order of importance of this address in the list of addresses of the linked contact'),
+        'sequence_partner':fields.integer('Sequence',help='Order of importance of this job title in the list of job title of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
         'date_start' : fields.date('Date Start'),

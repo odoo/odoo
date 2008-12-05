@@ -49,7 +49,7 @@ class wiz_journal(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
+            'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
         }
     }
 wiz_journal('stock.traceability.downstream')
@@ -58,7 +58,7 @@ class wiz_journal2(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
+            'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
         }
     }
 wiz_journal2('stock.traceability.upstream')

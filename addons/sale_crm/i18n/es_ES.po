@@ -4,84 +4,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 4.3.0Report-Msgid-Bugs-To: "
-"support@openerp.comPOT-Creation-Date: 2008-09-10 15:05:00+0000PO-Revision-"
-"Date: 2008-09-10 15:05:00+0000Last-Translator: <>Language-Team: MIME-"
-"Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-"
-"Encoding: Plural-Forms:\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-05 13:33+0000\n"
-"PO-Revision-Date: 2008-10-04 11:19+0000\n"
-"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-28 17:07:08+0000\n"
+"PO-Revision-Date: 2008-11-28 17:07:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-11-21 14:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: sale_crm
-#: wizard_field:crm.case.make_order,init,shop_id:0
-msgid "Shop"
-msgstr "Tienda"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,name:0
-msgid "Order name"
-msgstr "Nombre pedido"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,partner_id:0
-msgid "Default partner"
-msgstr "Empresa por defecto"
-
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,name:0
-msgid "Case Description"
-msgstr "Descripción del caso"
+#: model:process.transition,name:sale_crm.process_transition_crmopportunityquotation
+msgid "Crm opportunity quotation"
+msgstr ""
 
 #. module: sale_crm
 #: wizard_view:crm.case.make_order,init:0
-#: wizard_button:crm.case.make_order,init,order:0
-#: model:ir.actions.wizard,name:sale_crm.sale_crm_wizard
-msgid "Make Sale Order"
-msgstr "Realizar pedido de venta"
-
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,user:0
-msgid "User Responsible"
-msgstr "Usuario responsable"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,analytic_account:0
-msgid "Analytic account"
-msgstr "Cuenta analítica"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,picking_policy:0
-msgid "Packing policy"
-msgstr "Política de empaquetado"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,products:0
-msgid "Products"
-msgstr "Productos"
-
-#. module: sale_crm
-#: wizard_button:sale_crm.make_case,init,end:0
-#: wizard_button:crm.case.make_order,init,end:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,close:0
-msgid "Close"
-msgstr "Cerrar"
-
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,description:0
-msgid "Your action"
-msgstr "Su acción"
+#: view:crm.case:0
+msgid "Convert to Quote"
+msgstr ""
 
 #. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
@@ -89,7 +32,145 @@ msgid "Create"
 msgstr "Crear"
 
 #. module: sale_crm
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,note:sale_crm.process_transition_crmopportunityquotation
+msgid "Opportunity goes into the quotation"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,name:sale_crm.process_node_contractanalytic0
+msgid "Analytic account"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,note:sale_crm.process_node_crmquotation0
+msgid "Convert opportunity to quotation"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_field:sale_crm.make_case,init,description:0
+msgid "Your action"
+msgstr "Su acción"
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,picking_policy:0
+msgid "Packing Policy"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_button:crm.case.make_order,init,order:0
+msgid "Create Quote"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,note:sale_crm.process_node_contractpricelist0
+msgid "Contract Volume (pricelist)"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,name:sale_crm.process_node_crmopportunity0
+msgid "CRM Opportunity"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
+msgid "Opportunity convert into quotation"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,note:sale_crm.process_node_contractanalytic0
+msgid "Reflect the contract made with customer"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,name:sale_crm.process_node_crmquotation0
+msgid "Quotation"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,partner_id:0
+msgid "Customer"
+msgstr ""
+
+#. module: sale_crm
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
+
+#. module: sale_crm
+#: wizard_field:sale_crm.make_case,init,user:0
+msgid "User Responsible"
+msgstr "Usuario responsable"
+
+#. module: sale_crm
+#: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
+msgid "Opportunity Quotation"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
+msgid "Opportunity Analytic"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,products:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,close:0
+msgid "Close Case"
+msgstr ""
+
+#. module: sale_crm
 #: wizard_view:sale_crm.make_case,init:0
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_make_case_wizard
 msgid "Make Case"
 msgstr "Realizar caso"
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,shop_id:0
+msgid "Shop"
+msgstr "Tienda"
+
+#. module: sale_crm
+#: model:process.node,note:sale_crm.process_node_crmopportunity0
+msgid "The CRM Opportunity can lead to a quotation."
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,name:sale_crm.process_transition_opportunitypricelist0
+msgid "Opportunity Pricelist"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.node,name:sale_crm.process_node_contractpricelist0
+msgid "Contract Pricelist"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_field:sale_crm.make_case,init,name:0
+msgid "Case Description"
+msgstr "Descripción del caso"
+
+#. module: sale_crm
+#: wizard_field:crm.case.make_order,init,analytic_account:0
+#: model:process.transition,note:sale_crm.process_transition_opportunityanalytic0
+msgid "Analytic Account"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.actions.wizard,name:sale_crm.sale_crm_wizard
+msgid "Make Quotation"
+msgstr ""
+
+#. module: sale_crm
+#: wizard_button:sale_crm.make_case,init,end:0
+#: wizard_button:crm.case.make_order,init,end:0
+msgid "Cancel"
+msgstr "Cancelar"
+
