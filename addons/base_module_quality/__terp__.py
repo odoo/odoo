@@ -23,13 +23,13 @@
     "name" : "Base module quality",
     "author" : "Tiny",
     "version" : "1.0",
-    "depends" : ["base", "product"],
+    "depends" : ["base",],
     "description": "Sample module to check the quality",
     "init_xml" : [],
-    "update_xml" : ["base_module_quality_view.xml"],
+    "update_xml" : ["base_module_quality_wizard.xml"],
     "category" : "Tiny Specific Modules/Base module quality",
     "active": False,
-    "installable": False
+    "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

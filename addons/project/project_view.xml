@@ -197,6 +197,34 @@
             id="menu_open_view_my_project_open"
             parent="project.menu_all_project"/>
 
+	<!-- Wizard for compute remaining hours -->
+
+        <record id="view_config_compute_remaining" model="ir.ui.view">
+            <field name="name">Compute Remaining Hours </field>
+            <field name="model">config.compute.remaining</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Remaining Hours">
+                    <separator colspan="4" string="Change Remaining Hours"/>
+                    <newline/>
+                    <field name="remaining_hours" widget="float_time"/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="compute_hours" string="Update" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+		<record id="action_config_compute_remaining" model="ir.actions.act_window">
+            <field name="name">Compute Remaining Hours</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">config.compute.remaining</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         <!-- Task -->
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
@@ -220,8 +248,10 @@
                                 widget="float_time"
                                 on_change="onchange_planned(planned_hours,effective_hours)"/>
                             <field name="delay_hours" widget="float_time"/>
-                            <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="1"/>
-                            <button name="_button_dummy" string="Compute" type="object" colspan="1"/>
+                            <group col="3" colspan="2">
+	                            <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+	                            <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" attrs="{'invisible':[('state','=','draft')]}"/>
+                            </group>
                             <field name="effective_hours" widget="float_time"/>
 
                             <field colspan="4" name="description" nolabel="1" select="2"/>

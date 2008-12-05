@@ -891,7 +891,7 @@ class mrp_procurement(osv.osv):
         res = True
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method=='buy':
+            if procurement.product_id.product_tmpl_id.supply_method<>'produce':
                 if procurement.product_id.seller_ids:
                     partner = procurement.product_id.seller_ids[0].name
                     if user.company_id and user.company_id.partner_id:
@@ -909,7 +909,7 @@ class mrp_procurement(osv.osv):
     def check_buy(self, cr, uid, ids):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method=='produce':
+            if procurement.product_id.product_tmpl_id.supply_method<>'buy':
                 return False
             if not procurement.product_id.seller_ids:
                 cr.execute('update mrp_procurement set message=%s where id=%d', ('No supplier defined for this product !', procurement.id))

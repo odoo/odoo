@@ -99,14 +99,16 @@
                         <field name="name" select="1"/>
                         <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
                         <field name="section" select="2" invisible="not context.get('section',False)"/>
+                    </group>
+                    <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
+                    <separator colspan="4" string="Modifications"/>
+                    <group col="6" colspan="4">
                         <field name="write_date" readonly="1" select="2"/>
                         <field name="review" select="1"/>
-                        <field name="minor_edit" select="2" groups="base.group_extended"/>
                         <field name="toc"/>
                         <field name="tags" select="2" groups="base.group_extended"/>
                         <field name="summary" colspan="4" select="2" groups="base.group_extended"/>
                     </group>
-                    <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                 </form>
             </field>
         </record>

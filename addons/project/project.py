@@ -247,15 +247,6 @@ class task(osv.osv):
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
     
-    def _button_dummy(self, cr, uid, ids, context={}):
-        tot_work=0
-        for obj in self.browse(cr,uid,ids):
-            for work in obj.work_ids:
-                tot_work+=work.hours
-            final_val = obj.planned_hours - tot_work
-            self.write(cr,uid,ids[0],{'remaining_hours':final_val})
-        return True
-
     def copy(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
@@ -417,8 +408,45 @@ class project_work(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
     _order = "date desc"
+    def create(self, cr, uid, vals, *args, **kwargs):
+        if 'task_id' in vals:
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (-vals.get('hours',0.0), vals['task_id']))
+        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
+    def write(self, cr, uid, ids,vals,context={}):
+        for work in self.browse(cr, uid, ids, context):
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2f) where id=%d', (-vals.get('hours',0.0), work.hours, work.task_id.id))
+        return super(project_work,self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for work in self.browse(cr, uid, ids):
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (work.hours, work.task_id.id))
+        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 project_work()
+
+class config_compute_remaining(osv.osv_memory):
+    _name='config.compute.remaining'
+    def _get_remaining(self,cr, uid, ctx):
+        if 'active_id' in ctx:
+            return self.pool.get('project.task').browse(cr,uid,ctx['active_id']).remaining_hours
+        return False
+
+    _columns = {
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+            }
+
+    _defaults = {
+        'remaining_hours': _get_remaining
+        }
+    
+    def compute_hours(self, cr, uid, ids, context=None):
+        if 'active_id' in context:
+            remaining_hrs=self.browse(cr,uid,ids)[0].remaining_hours
+            self.pool.get('project.task').write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
+        return {
+                'type': 'ir.actions.act_window_close',
+         }
+config_compute_remaining()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

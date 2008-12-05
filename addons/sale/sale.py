@@ -209,15 +209,15 @@ class sale_order(osv.osv):
         'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')],
             'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."""),
         'order_policy': fields.selection([
-            ('prepaid','Payment before delivery'),
+            ('prepaid','Payment Before Delivery'),
             ('manual','Shipping & Manual Invoice'),
-            ('postpaid','Automatic Invoice after delivery'),
+            ('postpaid','Invoice on Order After Delivery'),
             ('picking','Invoice from the packings'),
         ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]},
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice after delivery' choice will generate the draft invoice after the packing list have been finished.
+  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
   - The 'Invoice from the packings' choice is used to create an invoice during the packing process."""),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'project_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly', False)]}),
