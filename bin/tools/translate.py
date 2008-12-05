@@ -360,10 +360,14 @@ def trans_generate(lang, modules, dbname=None):
 
                     # export fields
                     for field_name, field_def in result['fields'].iteritems():
+                        res_name = name + ',' + field_name
                         if 'string' in field_def:
                             source = field_def['string']
-                            res_name = name + ',' + field_name
-                            push_translation(module, 'wizard_field', res_name, 0, source)
+                            push_translation(module, 'wizard_field', res_name, 0, source.encode('utf8'))
+                            
+                        if 'selection' in field_def:
+                            for key, val in field_def['selection']:
+                                push_translation(module, 'selection', res_name, 0, val.encode('utf8'))
 
                     # export arch
                     arch = result['arch']
