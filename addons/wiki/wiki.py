@@ -31,6 +31,10 @@ import time
 from StringIO import StringIO
 from HTMLParser import HTMLParser
 
+class Wiki(osv.osv):
+    _name="wiki.wiki"
+Wiki()
+
 class WikiGroup(osv.osv):
     _name = "wiki.groups"
     _description="Wiki Groups"
@@ -59,7 +63,7 @@ class GroupLink(osv.osv):
 GroupLink()
 
 class Wiki(osv.osv):
-    _name="wiki.wiki"
+    _inherit="wiki.wiki"
     _description="Wiki Page"
     _order = 'section,create_date desc'
     _columns={
