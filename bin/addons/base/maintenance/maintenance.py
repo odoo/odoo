@@ -63,7 +63,8 @@ class maintenance_contract(osv.osv):
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'module_ids' : fields.many2many('maintenance.contract.module', 'maintenance_contract_module_rel', 'contract_id', 'module_id', 'Covered Modules', readonly=True),
-        'state' : fields.function(_valid_get, method=True, string="State", type="selection", selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True)
+        'state' : fields.function(_valid_get, method=True, string="State", type="selection", selection=[('valid', 'Valid'),('unvalid', 'Unvalid')], readonly=True),
+        'kind' : fields.selection([('full', 'Full'),('partial', 'Partial')], 'Kind', required=True, readonly=True),
     }
     _defaults = {
         'password' : lambda obj,cr,uid,context={} : '',
@@ -92,6 +93,10 @@ class maintenance_contract_wizard(osv.osv_memory):
         if not ids:
             return False
 
+        module_proxy = self.pool.get('ir.module.module')
+        module_ids = module_proxy.search(cr, uid, [('state', '=', 'installed')])
+        modules = module_proxy.read(cr, uid, module_ids, ['name', 'installed_version'])
+
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
 
         login, password, remote_db, remote_server, port = 'admin', 'admin', 'trunk', 'localhost', 8069
@@ -99,12 +104,12 @@ class maintenance_contract_wizard(osv.osv_memory):
         rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/common' % (remote_server, port))
         ruid = rpc.login(remote_db, login, password)
         rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remote_server, port))
-        contract_info = rpc.execute(remote_db, ruid, password, 
-                          'maintenance.maintenance', 'get_module_for_contract', contract['name'], contract['password'])
-        if contract_info:
-            if contract_info['modules']:
+        contract_info = rpc.execute(remote_db, ruid, password, 'maintenance.maintenance', 'check_contract', modules, contract )
+        is_ok = contract_info['status'] in ('partial', 'full')
+        if is_ok:
+            if contract_info['modules_with_contract']:
                 module_ids = []
-                for name, version in contract_info['modules']:
+                for name, version in contract_info['modules_with_contract']:
                     contract_module = self.pool.get('maintenance.contract.module')
                     res = contract_module.search(cr, uid, [('name', '=', name),('version', '=', version)])
                     if not res:
@@ -120,11 +125,12 @@ class maintenance_contract_wizard(osv.osv_memory):
                     'password' : contract['password'],
                     'date_start' : contract_info['date_from'],
                     'date_stop' : contract_info['date_to'],
+                    'kind' : contract_info['status'],
                     'module_ids' : [(6,0,module_ids)],
                 }
             )
 
-        return self.write(cr, uid, ids, {'state' : ('unvalidated', 'validated')[bool(contract_info)] }, context=context)
+        return self.write(cr, uid, ids, {'state' : ('unvalidated', 'validated')[is_ok] }, context=context)
 
 maintenance_contract_wizard()
 
