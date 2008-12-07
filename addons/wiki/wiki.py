@@ -31,6 +31,10 @@ import time
 from StringIO import StringIO
 from HTMLParser import HTMLParser
 
+class Wiki(osv.osv):
+    _name="wiki.wiki"
+Wiki()
+
 class WikiGroup(osv.osv):
     _name = "wiki.groups"
     _description="Wiki Groups"
@@ -44,11 +48,22 @@ class WikiGroup(osv.osv):
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
+       'home':fields.many2one('wiki.wiki', 'Pages')
     }
 WikiGroup()
 
+class GroupLink(osv.osv):
+    _name = "wiki.groups.link"
+    _description="Wiki Groups Links"
+    _rec_name = 'action_id'
+    _columns={
+       'group_id':fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
+       'action_id': fields.many2one('ir.ui.menu', 'Menu')
+    }
+GroupLink()
+
 class Wiki(osv.osv):
-    _name="wiki.wiki"
+    _inherit="wiki.wiki"
     _description="Wiki Page"
     _order = 'section,create_date desc'
     _columns={

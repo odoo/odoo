@@ -29,6 +29,16 @@ from mx.DateTime import RelativeDateTime
 
 from tools import config
 
+type2journal = {
+    'rec_voucher':'cash', 
+    'bank_rec_voucher':'cash',
+    'pay_voucher': 'cash',
+    'bank_pay_voucher':'cash',
+    'cont_voucher':'cash',
+    'journal_sale_voucher':'sale',
+    'journal_pur_voucher':'purchase'
+}
+
 class account_voucher(osv.osv):
     def _get_period(self, cr, uid, context):
         periods = self.pool.get('account.period').find(cr, uid)
@@ -45,9 +55,9 @@ class account_voucher(osv.osv):
         return [('none', 'Free Reference')]
     
     def _get_journal(self, cr, uid, context):
-        type_inv = context #.get('type', 'rec_voucher')
-        type2journal = {'rec_voucher': 'cash', 'bank_rec_voucher': 'cash','pay_voucher': 'cash','bank_pay_voucher': 'cash', 'cont_voucher': 'cash','journal_sale_voucher': 'sale','journal_pur_voucher': 'purchase' }
+        type_inv = context.get('type', 'rec_voucher')
         journal_obj = self.pool.get('account.journal')
+        res = False
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'cash'))], limit=1)
         if res:
             return res[0]
@@ -99,18 +109,6 @@ class account_voucher(osv.osv):
         'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry'),
     }
     
-#    def get_bank(self, cr, uid, context={}):
-#        type = context.get('type', 'bank_payment')
-#        journal = self.pool.get('account.journal')
-#        if type == 'bank_payment':
-#            id = journal.search(cr, uid, [('name','ilike','Bank')])
-#            return id
-#        elif type == 'cash_payment':
-#            id = journal.search(cr, uid, [('name','ilike','Cash')])
-#            return id
-#
-#        return 3
-    
     _defaults = {
         #'journal_id':get_bank,
         'state': lambda *a: 'draft',
@@ -123,8 +121,6 @@ class account_voucher(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'currency_id': _get_currency,
-
-
     }
     
     def _get_analytic_lines(self, cr, uid, id):

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 import time
 import wizard
 import osv
@@ -31,31 +30,35 @@ section_form = '''<?xml version="1.0"?>
     <separator string="Menu Information" colspan="4"/>
     <field name="menu_name"/>
     <field name="menu_parent_id"/>
+    <field name="page" colspan="4" domain="[('group_id','=', active_id)]"/>
 </form>'''
 
 section_fields = {
     'menu_name': {'string':'Menu Name', 'type':'char', 'required':True, 'size':64},
     'menu_parent_id': {'string':'Parent Menu', 'type':'many2one', 'relation':'ir.ui.menu', 'required':True},
+    'page': {'string':'Group Home Page', 'type':'many2one', 'relation':'wiki.wiki'},
 }
 
 def wiki_menu_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     group = pool.get('wiki.groups').browse(cr, uid, data['id'])
+    action_id = pool.get('ir.actions.wizard').search(cr, uid, [('wiz_name','=','wiki.wiki.page.open')])
 
-    action_id = pool.get('ir.actions.act_window').create(cr, uid, {
-        'name': group.name,
-        'view_type':'form',
-        'view_mode':"tree,form",
-        'context': "{'group_id':%d, 'section':%d}" % (group.id, group.section),
-        'domain': "[('group_id','child_of',[%d])]" % (group.id,),
-        'res_model': 'wiki.wiki'
-    })
-    pool.get('ir.ui.menu').create(cr, uid, {
+    menu_id = pool.get('ir.ui.menu').create(cr, uid, {
         'name': data['form']['menu_name'],
         'parent_id': data['form']['menu_parent_id'],
-        'icon': 'STOCK_JUSTIFY_FILL',
-        'action': 'ir.actions.act_window,'+str(action_id)
+        'icon': 'STOCK_DIALOG_QUESTION',
+        'action': 'ir.actions.wizard,'+str(action_id[0])
     }, context)
+    
+    home = data['form']['page']
+    group_id = data['id']
+    res = {
+        'home':home,
+    }
+    pool.get('wiki.groups').write(cr, uid, [data['id']], res)
+    pool.get('wiki.groups.link').create(cr, uid, {'group_id':group_id, 'action_id':menu_id})
+    
     return {}
 
 class wizard_create_menu(wizard.interface):

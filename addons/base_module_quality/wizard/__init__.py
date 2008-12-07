@@ -20,8 +20,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
+import module_quality_check
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
