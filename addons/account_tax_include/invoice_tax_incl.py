@@ -55,7 +55,7 @@ class account_invoice_line(osv.osv):
             }
             if not line.quantity:
                 continue
-            if line.invoice_id and line.invoice_id.price_type == 'tax_included':
+            if line.invoice_id:
                 product_taxes = []
                 if line.product_id:
                     if line.invoice_id.type in ('out_invoice', 'out_refund'):
@@ -63,7 +63,7 @@ class account_invoice_line(osv.osv):
                     else:
                         product_taxes = filter(lambda x: x.price_include, line.product_id.supplier_taxes_id)
 
-                if (set(product_taxes) == set(line.invoice_line_tax_id)) or not product_taxes:
+                if ((set(product_taxes) == set(line.invoice_line_tax_id)) or not product_taxes) and (line.invoice_id.price_type == 'tax_included'):
                     res[line.id]['price_subtotal_incl'] = res_init[line.id]
                 else:
                     res[line.id]['price_subtotal'] = res_init[line.id]

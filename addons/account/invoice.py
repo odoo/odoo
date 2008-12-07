@@ -206,7 +206,12 @@ class account_invoice(osv.osv):
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
-        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True, help="Remaining amount due."),
+        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual',
+            store={
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 12),
+                'account.invoice.tax': (_get_invoice_tax, None, 12),
+            },
+            help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Account Move', size=64),
     }
