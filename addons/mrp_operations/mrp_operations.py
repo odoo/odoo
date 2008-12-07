@@ -294,7 +294,7 @@ class mrp_operations_operation(osv.osv):
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),
-        'order_date': fields.function(_get_order_date,method=True,string='Order Date',type='date',store={'mrp.production':(['date_planned'],_order_date_search_production)}),
+        'order_date': fields.function(_get_order_date,method=True,string='Order Date',type='date',store={'mrp.production':(_order_date_search_production,['date_planned'])}),
         }
     _defaults={
               'date_start': lambda *a:DateTime.now().strftime('%Y-%m-%d %H:%M:%S')

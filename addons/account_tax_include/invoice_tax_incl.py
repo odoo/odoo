@@ -107,9 +107,9 @@ class account_invoice_line(osv.osv):
         return result.keys()
     _columns = {
         'price_subtotal': fields.function(_amount_line2, method=True, string='Subtotal w/o tax', multi='amount',
-            store={'account.invoice':(_get_invoice,None), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
+            store={'account.invoice':(_get_invoice,['price_type']), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
         'price_subtotal_incl': fields.function(_amount_line2, method=True, string='Subtotal', multi='amount',
-            store={'account.invoice':(_get_invoice,None), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
+            store={'account.invoice':(_get_invoice,['price_type']), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
     }
 
     _defaults = {
