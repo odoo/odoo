@@ -1433,6 +1433,7 @@ class orm(orm_template):
                         cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" DROP NOT NULL" % (self._table, column['attname']))
 
             # iterate on the "object columns"
+            todo_update_store = []
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
@@ -1474,20 +1475,9 @@ class orm(orm_template):
                                     cr.execute("UPDATE \"%s\" SET \"%s\"=NULL" % (self._table, k))
                                 else:
                                     cr.execute("UPDATE \"%s\" SET \"%s\"='%s'" % (self._table, k, default))
+
                             if isinstance(f, fields.function):
-                                cr.execute('select id from '+self._table)
-                                ids_lst = map(lambda x: x[0], cr.fetchall())
-                                while ids_lst:
-                                    iids = ids_lst[:40]
-                                    ids_lst = ids_lst[40:]
-                                    res = f.get(cr, self, iids, k, 1, {})
-                                    for key,val in res.items():
-                                        if f._multi:
-                                            val = val[k]
-                                        if (val<>False) or (type(val)<>bool):
-                                            cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
-                                        #else:
-                                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
+                                todo_update_store.append((f,k))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -1601,6 +1591,21 @@ class orm(orm_template):
                                             cr.commit()
                     else:
                         print "ERROR"
+            for f,k in todo_update_store:
+                cr.execute('select id from '+self._table)
+                ids_lst = map(lambda x: x[0], cr.fetchall())
+                while ids_lst:
+                    iids = ids_lst[:40]
+                    ids_lst = ids_lst[40:]
+                    res = f.get(cr, self, iids, k, 1, {})
+                    for key,val in res.items():
+                        if f._multi:
+                            val = val[k]
+                        if (val<>False) or (type(val)<>bool):
+                            cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
+                        #else:
+                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
+
         else:
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
             create = not bool(cr.fetchone())
