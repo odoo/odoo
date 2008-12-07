@@ -60,38 +60,29 @@ class sale_order(osv.osv):
         })
         return super(sale_order, self).copy(cr, uid, id, default, context)
 
-    def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        cur_obj=self.pool.get('res.currency')
-        for sale in self.browse(cr, uid, ids):
-            res[sale.id] = 0.0
-            for line in sale.order_line:
-                res[sale.id] += line.price_subtotal
-            cur = sale.pricelist_id.currency_id
-            res[sale.id] = cur_obj.round(cr, uid, cur, res[sale.id])
-        return res
+    def _amount_line_tax(self, cr, uid, line, context={}):
+        val = 0.0
+        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
+            val+= c['amount']
+        return val
 
-    def _amount_tax(self, cr, uid, ids, field_name, arg, context):
+    def _amount_all(self, cr, uid, ids, field_name, arg, context):
         res = {}
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
-            val = 0.0
+            res[order.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': 0.0,
+                'amount_total': 0.0,
+            }
+            val = val1 = 0.0
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
-                for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, order.partner_invoice_id.id, line.product_id, order.partner_id):
-                    val+= c['amount']
-            res[order.id]=cur_obj.round(cr, uid, cur, val)
-        return res
-
-    def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
-        tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
-        cur_obj=self.pool.get('res.currency')
-        for id in ids:
-            order=self.browse(cr, uid, [id])[0]
-            cur=order.pricelist_id.currency_id
-            res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
+                val1 += line.price_subtotal
+                val += self._amount_line_tax(cr, uid, line, context)
+            res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
@@ -231,9 +222,12 @@ class sale_order(osv.osv):
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes'),
-        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes', store=True),
-        'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
+
+        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+            store=True, multi='sums'),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes', store=True, multi='sums'),
+        'amount_total': fields.function(_amount_all, method=True, string='Total', store=True, multi='sums'),
+
         'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
     }

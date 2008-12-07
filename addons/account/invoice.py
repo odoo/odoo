@@ -113,6 +113,12 @@ class account_invoice(osv.osv):
                 res[id]=[x for x in l if x <> line.id]
         return res
 
+    def _get_invoice_line(self, cr, uid, ids, context={}):
+        result = {}
+        for tax in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
+            result[tax.invoice_id.id] = True
+        return result.keys()
+
     def _get_invoice_tax(self, cr, uid, ids, context={}):
         result = {}
         for tax in self.pool.get('account.invoice.tax').browse(cr, uid, ids, context=context):
@@ -183,18 +189,21 @@ class account_invoice(osv.osv):
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                 'account.invoice.tax': (_get_invoice_tax, None, 10),
+                'account.invoice.line': (_get_invoice_line, None, 10),
             },
             multi='all'),
         'amount_tax': fields.function(_amount_all, method=True, digits=(16,2), string='Tax',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                 'account.invoice.tax': (_get_invoice_tax, None, 10),
+                'account.invoice.line': (_get_invoice_line, None, 10),
             },
             multi='all'),
         'amount_total': fields.function(_amount_all, method=True, digits=(16,2), string='Total',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                 'account.invoice.tax': (_get_invoice_tax, None, 10),
+                'account.invoice.line': (_get_invoice_line, None, 10),
             },
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
