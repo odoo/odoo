@@ -132,39 +132,36 @@ class mrp_procurement(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
         wf_service = netsvc.LocalService("workflow")
 
-        cr.execute('select id from stock_warehouse')
-        warehouses = [x for x, in cr.fetchall()]
+        warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
+
         cr.execute('select id from product_product')
         products_id = [x for x, in cr.fetchall()]
-        products = dict(zip(products_id, product_obj.browse(cr, uid, products_id, context)))
-        for warehouse in warehouses:
-            v_stock = product_obj._product_virtual_available(cr, uid, products_id, None, {'warehouse': warehouse})
-            cr.execute("select lot_stock_id from stock_warehouse")
-            location_ids_str = ','.join([str(id) for id, in cr.fetchall()])
-            stock_locations = warehouse_obj.read(cr, uid, [warehouse], ['lot_input_id', 'lot_stock_id'])[0]
-            for prod_id, available in v_stock.items():
-                if available >= 0:
+
+        for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
+            context['warehouse'] = warehouse
+            for product in self.pool.get('product.product').browse(cr, uid, products_id, context=context):
+                if product.virtual_available>=0.0:
                     continue
-                newdate = DateTime.now() + DateTime.RelativeDateTime(days=products[prod_id].seller_delay)
-                if products[prod_id].supply_method == 'buy':
-                    location_id = stock_locations['lot_input_id'][0]
-                elif products[prod_id].supply_method == 'produce':
-                    location_id = stock_locations['lot_stock_id'][0]
+
+                newdate = DateTime.now()
+                if product.supply_method == 'buy':
+                    location_id = warehouse.lot_input_id.id
+                elif product.supply_method == 'produce':
+                    location_id = warehouse.lot_stock_id.id
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid, {
-                    'name': 'PROC:Automatic OP for product:%s' % products[prod_id].name,
+                    'name': 'PROC:Automatic OP for product:%s' % product.name,
                     'origin': 'SCHEDULER',
-                    'date_planned': newdate.strftime('%Y-%m-%d'),
-                    'product_id': prod_id,
-                    'product_qty': -available,
-                    'product_uom': products[prod_id].uom_id.id,
+                    'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                    'product_id': product.id,
+                    'product_qty': -product.virtual_available,
+                    'product_uom': product.uom_id.id,
                     'location_id': location_id,
                     'procure_method': 'make_to_order',
                     })
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
-
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):

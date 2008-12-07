@@ -30,7 +30,7 @@ parameter_form = '''<?xml version="1.0"?>
 </form>'''
 
 parameter_fields = {
-    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'Triggers an automatic procurement for all products that have a virtual stock under 0.', 'default': lambda *a: False},
+    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.', 'default': lambda *a: False},
 }
 
 def _procure_calculation_all(self, db_name, uid, data, context):
