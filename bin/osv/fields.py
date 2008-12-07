@@ -597,6 +597,9 @@ class function(_column):
         self._type = type
         self._fnct_search = fnct_search
         self.store = store
+        if store:
+            self._classic_read = True
+            self._classic_write = True
         if type == 'float':
             self._symbol_c = '%f'
             self._symbol_f = lambda x: __builtin__.float(x or 0.0)
