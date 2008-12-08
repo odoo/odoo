@@ -144,17 +144,16 @@ def get_value_text(cr, uid, field_name,values,object, context={}):
                     if values:
                         if type(values)==tuple:
                             values=values[0]
-                        val=pool.get(model).read(cr,uid,[values],['name'])
+                        val=pool.get(model).read(cr,uid,[values],[pool.get(model)._rec_name])
                         if len(val):
-                            return val[0]['name']
-
+                            return val[0][pool.get(model)._rec_name]
                 elif field['ttype'] == 'many2many':
                     value=[]
                     if values:
                         for id in values:
-                            val=pool.get(model).read(cr,uid,[id],['name'])
+                            val=pool.get(model).read(cr,uid,[id],[pool.get(model)._rec_name])
                             if len(val):
-                                value.append(val[0]['name'])
+                                value.append(val[0][pool.get(model)._rec_name])
                     return value
 
                 elif field['ttype'] == 'one2many':
@@ -162,9 +161,10 @@ def get_value_text(cr, uid, field_name,values,object, context={}):
                     if values:
                         value=[]
                         for id in values:
-                            val=pool.get(model).read(cr,uid,[id],['name'])
+                            val=pool.get(model).read(cr,uid,[id],[pool.get(model)._rec_name])
+
                             if len(val):
-                                value.append(val[0]['name'])
+                                value.append(val[0][pool.get(model)._rec_name])
                         return value
             return values
         

@@ -74,7 +74,7 @@ period_fields = {
         'selection':[('customer','Receivable Accounts'),('supplier','Payable Accounts'),('all','Receivable and Payable Accounts')],
         'required':True
     },
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
     'reconcil':{'string':"       Include Reconciled Entries",'type':'boolean'},
     'page_split':{'string':"One Partner Per Page",'type':'boolean'},
     'date1': {'string':'        Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},

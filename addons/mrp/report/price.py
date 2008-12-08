@@ -25,6 +25,8 @@ import pooler
 from report.interface import report_rml
 from report.interface import toxml
 
+from tools.translate import _
+
 
 #FIXME: we should use toxml
 class report_custom(report_rml):
@@ -116,38 +118,38 @@ class report_custom(report_rml):
         """
         header = """
             <header>
-            <field>Product name</field>
-            <field>Product supplier</field>
-            <field>Product quantity</field>
-            <field>Product uom</field>
-            <field>Product Standard Price</field>
-            <field>Unit Product Price</field>
+            <field>%s</field>
+            <field>%s</field>
+            <field>%s</field>
+            <field>%s</field>
+            <field>%s</field>
+            <field>%s</field>
             </header>
-            """
+            """ % (_('Product name'), _('Product supplier'), _('Product quantity'), _('Product uom'), _('Product Standard Price'), _('Unit Product Price'))
         workcenter_header = """
             <lines style='header'>
                 <row>
-                    <col>Workcenter name</col>
+                    <col>%s</col>
                     <col/>
                     <col/>
                     <col/>
-                    <col>Cycles Cost</col>
-                    <col>Hours Cost</col>
+                    <col>%s</col>
+                    <col>%s</col>
                 </row>
             </lines>
-        """
+        """ % (_('Workcenter name'), _('Cycles Cost'), _('Hours Cost'))
         prod_header = """
             <lines style='header'>
                 <row>
-                    <col para='yes'>Product name</col>
-                    <col para='yes'>Product supplier</col>
-                    <col para='yes'>Product Quantity</col>
-                    <col para='yes'>Product uom</col>
-                    <col para='yes'>Product Standard Price</col>
-                    <col para='yes'>Unit Product Price</col>
+                    <col para='yes'>%s</col>
+                    <col para='yes'>%s</col>
+                    <col para='yes'>%s</col>
+                    <col para='yes'>%s</col>
+                    <col para='yes'>%s</col>
+                    <col para='yes'>%s</col>
                 </row>
             </lines>
-        """
+        """ % (_('Product name'), _('Product supplier'), _('Product Quantity'), _('Product uom'), _('Product Standard Price'), _('Unit Product Price'))
 
         company_currency = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         first = True
@@ -171,8 +173,7 @@ class report_custom(report_rml):
                 if not first:
                     xml += prod_header
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-                xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + '%.2f' % total_strd + '</col><col>' + '%.2f' % total  + '</col></row></lines>'
-
+                xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % total_strd + '</col><col>' + '%.2f' % total  + '</col></row></lines>'
                 total2 = 0
                 xml_tmp = ''
                 for wrk in (sub_boms and sub_boms[1]):
@@ -182,11 +183,12 @@ class report_custom(report_rml):
                 if xml_tmp:
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-                    xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col/><col>" + '%.2f' % total2 + '</col></row></lines>'
-                xml += "<lines style='total'><row><col>TOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + '%.2f' % (total_strd+total2) + "</col><col>" + '%.2f' % (total+total2) + '</col></row></lines>'
+                    xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col/><col>" % (_('products')) + '%.2f' % total2 + '</col></row></lines>'
+                xml += "<lines style='total'><row><col>%s : </col><col>(" % (_('TOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % (total_strd+total2) + "</col><col>" + '%.2f' % (total+total2) + '</col></row></lines>'
+
                 first = False
 
-        xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>Product Cost Structure\n\r' + prod.name  + '</report-header>'+ config_stop +  header + xml + '</report>'
+        xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>%s\n\r' % (_('Product Cost Structure')) + prod.name  + '</report-header>'+ config_stop +  header + xml + '</report>'
 
         return xml
 

@@ -22,6 +22,8 @@
 from osv import fields,osv
 from osv import orm
 
+from tools.translate import _
+
 def _get_answers(cr, uid, ids):
     query = """
     select distinct(answer)
@@ -131,11 +133,9 @@ class questionnaire(osv.osv):
         from crm_profiling_question
         where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""% data['form']['questionnaire_name']
         cr.execute(query)
-        
         quest_fields={}
         quest_form='''<?xml version="1.0"?>
-            <form string="Questionnaire">'''
-        
+            <form string="%s">''' % _('Questionnaire')
         for x in cr.fetchall():
             quest_form = quest_form + '''<field name="quest_form'''+str(x[1])+'''"/><newline/>'''
             quest_fields['quest_form'+str(x[1])] = {'string': str(x[0]), 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',x[1])] }

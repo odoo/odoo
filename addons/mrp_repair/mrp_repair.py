@@ -93,7 +93,7 @@ class mrp_repair(osv.osv):
         'guarantee_limit': fields.date('Guarantee limit', help="The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='The pricelist comes from the selected partner, by default.'),
-        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice to',  domain="[('partner_id','=',partner_id)]"),
+        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoicing Address',  domain="[('partner_id','=',partner_id)]"),
         'invoice_method':fields.selection([
             ("none","No Invoice"),
             ("b4repair","Before Repair"),
@@ -374,7 +374,6 @@ class mrp_repair(osv.osv):
         res = {}    
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for repair in self.browse(cr, uid, ids, context=context): 
-            #TODO: create the moves add/remove
             for move in repair.operations:
                 move_id = self.pool.get('stock.move').create(cr, uid, {
                     'name': move.name,
@@ -385,7 +384,7 @@ class mrp_repair(osv.osv):
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
                     'tracking_id': False,
-                    'state': 'assigned',
+                    'state': 'done',
                 })
                 self.pool.get('mrp.repair.line').write(cr, uid, [move.id], {'move_id': move_id})
 
@@ -397,7 +396,7 @@ class mrp_repair(osv.osv):
                     'address_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
                     'invoice_state': 'none',
-                    'type': 'out',  # FIXME delivery ?
+                    'type': 'out',
                 })
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
@@ -499,8 +498,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
-        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),      
+        'location_id': fields.many2one('stock.location', 'Source Location', domain=[('type','!=','view')], required=True, select=True),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', domain=[('type','!=','view')], required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
         'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', required=True, readonly=True),
     }

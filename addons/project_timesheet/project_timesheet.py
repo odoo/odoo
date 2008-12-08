@@ -57,7 +57,7 @@ class project_work(osv.osv):
         if line_id in list_avail_ids:
             obj = self.pool.get('hr.analytic.timesheet')
             if 'name' in vals:
-                vals_line['name']=task.name+': '+vals['name']
+            vals_line['name']=task.name+': '+vals['name']
             if 'user_id' in vals:
                 vals_line['user_id']=vals['user_id']
             if 'date' in vals:

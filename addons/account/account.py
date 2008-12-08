@@ -1442,7 +1442,8 @@ class account_model(osv.osv):
     }
 
     _defaults = {
-        'legend':lambda *a:'''You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s''',
+        'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
+
     }
 
 account_model()

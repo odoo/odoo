@@ -874,7 +874,7 @@ class mrp_procurement(osv.osv):
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
         if not bom_id:
-            cr.execute('update mrp_procurement set message=%s where id=%d', ('No BoM defined for this product !', procurement.id))
+            cr.execute('update mrp_procurement set message=%s where id=%d', (_('No BoM defined for this product !'), procurement.id))
             return False
         return True
 
@@ -912,7 +912,7 @@ class mrp_procurement(osv.osv):
             if procurement.product_id.product_tmpl_id.supply_method<>'buy':
                 return False
             if not procurement.product_id.seller_ids:
-                cr.execute('update mrp_procurement set message=%s where id=%d', ('No supplier defined for this product !', procurement.id))
+                cr.execute('update mrp_procurement set message=%s where id=%d', (_('No supplier defined for this product !'), procurement.id))
                 return False
             partner = procurement.product_id.seller_ids[0].name
             if user.company_id and user.company_id.partner_id:
@@ -920,7 +920,7 @@ class mrp_procurement(osv.osv):
                     return False
             address_id = self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
-                cr.execute('update mrp_procurement set message=%s where id=%d', ('No address defined for the supplier', procurement.id))
+                cr.execute('update mrp_procurement set message=%s where id=%d', (_('No address defined for the supplier'), procurement.id))
                 return False
         return True
 
@@ -956,7 +956,7 @@ class mrp_procurement(osv.osv):
         return True
 
     def action_move_assigned(self, cr, uid, ids):
-        self.write(cr, uid, ids, {'state':'running','message':'from stock: products assigned.'})
+        self.write(cr, uid, ids, {'state':'running','message':_('from stock: products assigned.')})
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
@@ -970,7 +970,7 @@ class mrp_procurement(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%d', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update mrp_procurement set message=%s where id=%d', ('from stock and no minimum orderpoint rule defined', procurement.id))
+                    cr.execute('update mrp_procurement set message=%s where id=%d', (_('from stock and no minimum orderpoint rule defined'), procurement.id))
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):

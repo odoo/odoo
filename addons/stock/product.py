@@ -21,6 +21,8 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
+
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -161,36 +163,36 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur Receptions'
+                        res['fields']['virtual_available']['string'] = _('Futur Receptions')
                     if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = 'Received Qty'
+                        res['fields']['qty_available']['string'] = _('Received Qty')
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur Stock'
+                        res['fields']['virtual_available']['string'] = _('Futur Stock')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur Deliveries'
+                        res['fields']['virtual_available']['string'] = _('Futur Deliveries')
                     if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = 'Delivered Qty'
+                        res['fields']['qty_available']['string'] = _('Delivered Qty')
 
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur P&L'
-                    res['fields']['qty_available']['string'] = 'P&L Qty'
+                        res['fields']['virtual_available']['string'] = _('Futur P&L')
+                    res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur Qty'
+                        res['fields']['virtual_available']['string'] = _('Futur Qty')
                     if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = 'Unplanned Qty'
+                        res['fields']['qty_available']['string'] = _('Unplanned Qty')
 
                 if location_info.usage == 'production':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = 'Futur Productions'
+                        res['fields']['virtual_available']['string'] = _('Futur Productions')
                     if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = 'Produced Qty'
+                        res['fields']['qty_available']['string'] = _('Produced Qty')
 
         return res
 product_product()

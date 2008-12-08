@@ -42,6 +42,7 @@ class GanttCanvas(object):
             user=user.replace('/', '//')
         if hasattr(name, 'replace'):
             name=name.replace('/', '//')
+        name = name.encode('ascii', 'ignore')
         if user not in self._datas:
             self._datas[user] = []
         for f in datas:

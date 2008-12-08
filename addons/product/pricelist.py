@@ -36,8 +36,16 @@ class price_type(osv.osv):
         sale and purchase prices based on some fields of the product.
     """
     def _price_field_get(self, cr, uid, context={}):
-        cr.execute('select name, field_description from ir_model_fields where model in (%s,%s) and ttype=%s order by name', ('product.product', 'product.template', 'float'))
-        return cr.fetchall()
+        import tools
+        cr.execute('select name, field_description, model from ir_model_fields where model in (%s,%s) and ttype=%s order by name', ('product.product', 'product.template', 'float'))
+        res = []
+        for field in cr.dictfetchall():
+            desc = tools.translate(cr, field['model'] + ',' + field['name'], 'field', context.get('lang', False) or 'en_US')
+            if not desc:
+                desc = field['field_description']
+            res.append((field['name'], desc))
+        return res
+
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
         if not comp:
@@ -297,9 +305,16 @@ product_pricelist_version()
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context={}):
         cr.execute('select id,name from product_price_type where active')
-        result = cr.fetchall()
-        result.append((-1,'Other Pricelist'))
-        result.append((-2,'Partner section of the product form'))
+        import tools
+        result = []
+        for line in cr.fetchall():
+            transl_name = tools.translate(cr, 'product.price.type,name', 'model', ('lang' in context) and context['lang'] or 'en_US', line[1])
+            if not transl_name:
+                transl_name = line[1]
+            result.append((line[0], transl_name))
+
+        result.append((-1, _('Other Pricelist')))
+        result.append((-2, _('Partner section of the product form')))
         return result
 
     _name = "product.pricelist.item"

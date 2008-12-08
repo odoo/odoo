@@ -4,7 +4,8 @@ import authorizer
 import abstracted_fs
 import netsvc
 
-PORT = 8021
+from tools import config
+PORT = config.get('ftp_server_port', 8021)
 HOST = ''
 
 class ftp_server(threading.Thread):
