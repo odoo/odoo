@@ -30,7 +30,7 @@ import pooler
 import copy
 import sys
 
-import psycopg
+from psycopg2 import IntegrityError
 from netsvc import Logger, LOG_ERROR
 from tools.misc import UpdateableDict
 
@@ -87,7 +87,7 @@ class osv_pool(netsvc.Service):
             self.abortResponse(1, inst.name, 'warning', inst.value)
         except except_osv, inst:
             self.abortResponse(1, inst.name, inst.exc_type, inst.value)
-        except psycopg.IntegrityError, inst:
+        except IntegrityError, inst:
             for key in self._sql_error.keys():
                 if key in inst[0]:
                     self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])

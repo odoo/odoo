@@ -27,10 +27,7 @@ Miscelleanous tools used by OpenERP.
 import os, time, sys
 import inspect
 
-import psycopg
-#import netsvc
 from config import config
-#import tools
 
 import zipfile
 import release

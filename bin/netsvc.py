@@ -206,6 +206,7 @@ class Logger(object):
         log = logging.getLogger(name)
         getattr(log, level)(msg)
 
+init_logger()
 
 class Agent(object):
     _timers = []

@@ -35,7 +35,7 @@
 import string
 import netsvc
 
-import psycopg
+from psycopg2 import Binary
 import warnings
 
 import tools
@@ -195,7 +195,7 @@ class time(_column):
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
-    _symbol_f = lambda symb: symb and psycopg.Binary(symb) or None
+    _symbol_f = lambda symb: symb and Binary(symb) or None
     _symbol_set = (_symbol_c, _symbol_f)
 
     _classic_read = False
