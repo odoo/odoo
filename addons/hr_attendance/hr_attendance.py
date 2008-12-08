@@ -71,7 +71,8 @@ class hr_attendance(osv.osv):
             ''' % (id, id)
             cr.execute(sql)
             atts = cr.fetchall()
-            if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
+            print "ATTS", atts
+            if not ((len(atts)==1 and atts[0][0] == 'sign_in')) or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1]):
                 return False
         return True
     
