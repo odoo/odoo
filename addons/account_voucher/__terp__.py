@@ -20,13 +20,12 @@
 #
 ##############################################################################
 {
-    "name" : "India Accounting",
+    "name" : "Accounting - Voucher Management",
     "version" : "1.0",
     "author" : "Tiny",
     "description": """
-    India Accounting module includes all the basic requirenment of 
-    Basic Accounting, plus new things which available are 
-    * Indian Account Chart
+India Accounting module includes all the basic requirenment of 
+Basic Accounting, plus new things which available are:
     * New Invoice - (Local, Retail)
     * Invoice Report
     * Tax structure

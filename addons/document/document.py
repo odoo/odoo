@@ -94,7 +94,6 @@ class node_class(object):
                     if test_nodename.find('/'):
                         test_nodename=test_nodename.replace('/', '_')
                     path = self.path+'/'+test_nodename
-                    #path = self.path+'/'+self.object2.name + (content.suffix or '') + (content.extension or '')
                     if not nodename:
                         n = node_class(self.cr, self.uid,path, self.object2, False, content=content, type='content', root=False)
                         res2.append( n)

@@ -66,7 +66,7 @@ class account_bank_statement(osv.osv):
                 else:
                     if line.account_id.id == \
                             statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
+                        res[statement.id] -= res_currency_obj.compute(cursor,
                                 user, company_currency_id, currency_id,
                                 line.credit, context=context)
             if statement.state == 'draft':

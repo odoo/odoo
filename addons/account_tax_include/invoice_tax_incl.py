@@ -26,42 +26,12 @@ from osv import fields, osv
 import ir
 
 class account_invoice(osv.osv):
-    def _amount_untaxed(self, cr, uid, ids, name, args, context={}):
-        res = {}
-        for invoice in self.browse(cr,uid,ids):
-            if invoice.price_type == 'tax_included':
-                res[invoice.id] = reduce( lambda x, y: x+y.price_subtotal, invoice.invoice_line,0)
-            else:
-                res[invoice.id] = super(account_invoice, self)._amount_untaxed(cr, uid, [invoice.id], name, args, context)[invoice.id]
-        return res
-
-    def _amount_tax(self, cr, uid, ids, name, args, context={}):
-        res = {}
-        for invoice in self.browse(cr,uid,ids):
-            if invoice.price_type == 'tax_included':
-                res[invoice.id] = reduce( lambda x, y: x+y.amount, invoice.tax_line,0)
-            else:
-                res[invoice.id] = super(account_invoice, self)._amount_tax(cr, uid, [invoice.id], name, args, context)[invoice.id]
-        return res
-
-    def _amount_total(self, cr, uid, ids, name, args, context={}):
-        res = {}
-        for invoice in self.browse(cr,uid,ids):
-            if invoice.price_type == 'tax_included':
-                res[invoice.id]= invoice.amount_untaxed + invoice.amount_tax
-            else:
-                res[invoice.id] = super(account_invoice, self)._amount_total(cr, uid, [invoice.id], name, args, context)[invoice.id]
-        return res
-
     _inherit = "account.invoice"
     _columns = {
         'price_type': fields.selection([('tax_included','Tax included'),
                                         ('tax_excluded','Tax excluded')],
                                         'Price method', required=True, readonly=True,
                                         states={'draft':[('readonly',False)]}),
-        'amount_untaxed': fields.function(_amount_untaxed, digits=(16,2), method=True,string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
-        'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
     }
     _defaults = {
         'price_type': lambda *a: 'tax_excluded',
@@ -70,47 +40,51 @@ account_invoice()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
-    def _amount_line(self, cr, uid, ids, name, args, context={}):
+    def _amount_line2(self, cr, uid, ids, name, args, context={}):
         """
         Return the subtotal excluding taxes with respect to price_type.
         """
         res = {}
         tax_obj = self.pool.get('account.tax')
-        res = super(account_invoice_line, self)._amount_line(cr, uid, ids, name, args, context)
-        res2 = res.copy()
+        res_init = super(account_invoice_line, self)._amount_line(cr, uid, ids, name, args, context)
         for line in self.browse(cr, uid, ids):
+            res[line.id] = {
+                'price_subtotal': 0.0,
+                'price_subtotal_incl': 0.0,
+                'data': []
+            }
             if not line.quantity:
-                res[line.id] = 0.0
                 continue
-            if line.invoice_id and line.invoice_id.price_type == 'tax_included':
-                product_taxes = None
+            if line.invoice_id:
+                product_taxes = []
                 if line.product_id:
                     if line.invoice_id.type in ('out_invoice', 'out_refund'):
-                        product_taxes = line.product_id.taxes_id
+                        product_taxes = filter(lambda x: x.price_include, line.product_id.taxes_id)
                     else:
-                        product_taxes = line.product_id.supplier_taxes_id
-                if product_taxes:
-                    for tax in tax_obj.compute_inv(cr, uid, product_taxes, res[line.id]/line.quantity, line.quantity):
-                        res[line.id] = res[line.id] - round(tax['amount'], 2)
+                        product_taxes = filter(lambda x: x.price_include, line.product_id.supplier_taxes_id)
+
+                if ((set(product_taxes) == set(line.invoice_line_tax_id)) or not product_taxes) and (line.invoice_id.price_type == 'tax_included'):
+                    res[line.id]['price_subtotal_incl'] = res_init[line.id]
                 else:
-                    for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
-                        res[line.id] = res[line.id] - round(tax['amount'], 2)
-            if name == 'price_subtotal_incl' and line.invoice_id and line.invoice_id.price_type == 'tax_included':
-                prod_taxe_ids = None
-                line_taxe_ids = None
-                if product_taxes:
-                    prod_taxe_ids = [ t.id for t in product_taxes ]
-                    prod_taxe_ids.sort()
-                    line_taxe_ids = [ t.id for t in line.invoice_line_tax_id ]
-                    line_taxe_ids.sort()
-                if product_taxes and prod_taxe_ids == line_taxe_ids:
-                    res[line.id] = res2[line.id]
-                elif not line.product_id:
-                    res[line.id] = res2[line.id]
-                else:
-                    for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
-                        res[line.id] = res[line.id] + tax['amount']
-            res[line.id]= round(res[line.id], 2)
+                    res[line.id]['price_subtotal'] = res_init[line.id]
+                    for tax in tax_obj.compute_inv(cr, uid, product_taxes, res_init[line.id]/line.quantity, line.quantity):
+                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], 2)
+            else:
+                res[line.id]['price_subtotal'] = res_init[line.id]
+
+            if res[line.id]['price_subtotal']:
+                res[line.id]['price_subtotal_incl'] = res[line.id]['price_subtotal']
+                for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, res[line.id]['price_subtotal']/line.quantity, line.quantity):
+                    res[line.id]['price_subtotal_incl'] = res[line.id]['price_subtotal_incl'] + tax['amount']
+                    res[line.id]['data'].append( tax)
+            else:
+                res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl']
+                for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, res[line.id]['price_subtotal_incl']/line.quantity, line.quantity):
+                    res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
+                    res[line.id]['data'].append( tax)
+
+        res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], 2)
+        res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], 2)
         return res
 
     def _price_unit_default(self, cr, uid, context={}):
@@ -125,9 +99,17 @@ class account_invoice_line(osv.osv):
             return super(account_invoice_line, self)._price_unit_default(cr, uid, context)
         return 0
 
+    def _get_invoice(self, cr, uid, ids, context):
+        result = {}
+        for inv in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
+            for line in inv.invoice_line:
+                result[line.id] = True
+        return result.keys()
     _columns = {
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o tax', store=True),
-        'price_subtotal_incl': fields.function(_amount_line, method=True, string='Subtotal'),
+        'price_subtotal': fields.function(_amount_line2, method=True, string='Subtotal w/o tax', multi='amount',
+            store={'account.invoice':(_get_invoice,['price_type']), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
+        'price_subtotal_incl': fields.function(_amount_line2, method=True, string='Subtotal', multi='amount',
+            store={'account.invoice':(_get_invoice,['price_type']), 'account.invoice.line': (lambda self,cr,uid,ids,c={}: ids, None)}),
     }
 
     _defaults = {
@@ -147,32 +129,36 @@ class account_invoice_line(osv.osv):
                 'account_analytic_id':line.account_analytic_id.id,
             }
 
-    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context={}):
-        if context.get('price_type', False) == 'tax_included':
-            return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
-        else:
-            return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
-
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, price_type='tax_excluded', context={}):
-        context.update({'price_type': price_type})
-        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context=context)
+# TODO: check why ?
+#
+#    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context={}):
+#        if context.get('price_type', False) == 'tax_included':
+#            return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
+#        else:
+#            return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
+#
+#    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, price_type='tax_excluded', context={}):
+#        context.update({'price_type': price_type})
+#        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context=context)
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
     _inherit = "account.invoice.tax"
 
-    def compute(self, cr, uid, invoice_id):
+    def compute(self, cr, uid, invoice_id, context={}):
+        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+        line_ids = map(lambda x: x.id, inv.invoice_line)
+
+
+
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
         cur = inv.currency_id
 
-        if inv.price_type=='tax_excluded':
-            return super(account_invoice_tax,self).compute(cr, uid, invoice_id)
-
         for line in inv.invoice_line:
-            for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit * (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+            data = self.pool.get('account.invoice.line')._amount_line2(cr, uid, [line.id], [], [], context)[line.id]
+            for tax in data['data']:
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']

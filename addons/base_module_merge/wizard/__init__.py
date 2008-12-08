@@ -20,15 +20,6 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import base_module_merge
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-
-#class res_partner(osv.osv):
-#    _name = 'res.partner'
-#    _inherit = 'res.partner'
-#    _columns = {
-#        'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
-#    }
-#
-#res_partner()
-#
