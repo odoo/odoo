@@ -54,7 +54,7 @@ execfile(opj('bin', 'release.py'))
 py_short_version = '%s.%s' % sys.version_info[:2]
 
 required_modules = [
-    ('psycopg', 'PostgreSQL module'),
+    ('psycopg2', 'PostgreSQL module'),
     ('xml', 'XML Tools for python'),
     ('libxml2', 'libxml2 python bindings'),
     ('libxslt', 'libxslt python bindings'),
