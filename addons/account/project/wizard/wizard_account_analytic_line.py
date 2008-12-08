@@ -23,6 +23,7 @@
 import wizard
 import pooler
 import time
+from tools.translate import _
 
 def _action_open_window(self, cr, uid, data, context): 
     domain=[]
@@ -35,7 +36,7 @@ def _action_open_window(self, cr, uid, data, context):
     elif to_date:
         domain=[('date','<=',to_date)]
     return {
-        'name': 'Analytic Entries',
+        'name': _('Analytic Entries'),
         'view_type': 'form',
         "view_mode": 'tree,form',
         'res_model': 'account.analytic.line',

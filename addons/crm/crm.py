@@ -223,6 +223,7 @@ class crm_case_rule(osv.osv):
             ('create','Creation Date'),
             ('action_last','Last Action Date'),
             ('deadline','Deadline'),
+            ('date','Date'),
             ], 'Trigger Date', size=16),
         'trg_date_range': fields.integer('Delay after trigger date'),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
@@ -435,6 +436,8 @@ class crm_case(osv.osv):
                             base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='deadline' and case.date_deadline:
                         base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d')
+                    elif action.trg_date_type=='date' and case.date:
+                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d')
                     if base:
                         fnct = {
                             'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
@@ -531,7 +534,10 @@ class crm_case(osv.osv):
             return False
         for case in cases:
             if case.partner_id:
-                name = 'Case ' + keyword + ': ' + case.name
+                translated_keyword = keyword
+                if 'translated_keyword' in context:
+                    translated_keyword = context['translated_keyword']
+                name = _('Case') +  ' ' + translated_keyword + ': ' + case.name
                 if isinstance(name, str):
                     name = unicode(name, 'utf-8')
                 if len(name) > 64:
@@ -574,7 +580,7 @@ class crm_case(osv.osv):
         res = super(crm_case, self).create(cr, uid, *args, **argv)
         cases = self.browse(cr, uid, [res])
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'draft')
+        self.__log(cr,uid, cases, 'draft', context={'translated_keyword': _('draft')})
         self._action(cr,uid, cases, 'draft')
         return res
 
@@ -626,7 +632,7 @@ class crm_case(osv.osv):
 
     def case_log(self, cr, uid, ids,context={}, email=False, *args):
         cases = self.browse(cr, uid, ids)
-        self.__history(cr, uid, cases, 'Historize', history=True, email=email)
+        self.__history(cr, uid, cases, _('Historize'), history=True, email=email)
         return self.write(cr, uid, ids, {'description': False, 'som': False,
             'canal_id': False})
 
@@ -636,7 +642,7 @@ class crm_case(osv.osv):
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),
                         _('You must put a Partner eMail to use this action!'))
-        self.__history(cr, uid, cases, 'Send', history=True, email=False)
+        self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
                 'description': False,
@@ -685,8 +691,8 @@ class crm_case(osv.osv):
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'done')
-        self.__history(cr, uid, cases, 'Close')
+        self.__log(cr,uid, cases, 'done', context={'translated_keyword': _('done')})
+        self.__history(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state':'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         #
         # We use the cache of cases to keep the old case state
@@ -705,15 +711,15 @@ class crm_case(osv.osv):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
             self.write(cr, uid, ids, data)
-        self.__history(cr, uid, cases, 'escalate')
+        self.__history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
 
 
     def case_open(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
-        self.__log(cr, uid, cases, 'open')
-        self.__history(cr, uid, cases, 'Open')
+        self.__log(cr, uid, cases, 'open', context={'translated_keyword': _('open')})
+        self.__history(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state':'open', 'active':True}
             if not case.user_id:
@@ -729,8 +735,8 @@ class crm_case(osv.osv):
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'cancel')
-        self.__history(cr, uid, cases, 'Cancel')
+        self.__log(cr, uid, cases, 'cancel', context={'translated_keyword': _('cancel')})
+        self.__history(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state':'cancel', 'active':True})
         self._action(cr,uid, cases, 'cancel')
         return True
@@ -738,8 +744,8 @@ class crm_case(osv.osv):
     def case_pending(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'pending')
-        self.__history(cr, uid, cases, 'Pending')
+        self.__log(cr, uid, cases, 'pending', context={'translated_keyword': _('draft')})
+        self.__history(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state':'pending', 'active':True})
         self._action(cr,uid, cases, 'pending')
         return True
@@ -747,8 +753,8 @@ class crm_case(osv.osv):
     def case_reset(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'draft')
-        self.__history(cr, uid, cases, 'Draft')
+        self.__log(cr, uid, cases, 'draft', context={'translated_keyword': _('draft')})
+        self.__history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state':'draft', 'active':True})
         self._action(cr, uid, cases, 'draft')
         return True

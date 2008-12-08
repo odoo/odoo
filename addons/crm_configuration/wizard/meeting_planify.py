@@ -27,6 +27,8 @@ import netsvc
 import ir
 import pooler
 
+from tools.translate import _
+
 case_form = """<?xml version="1.0"?>
 <form string="Planify Meeting">
     <field name="date"/>
@@ -54,7 +56,7 @@ class make_meeting(wizard.interface):
             'date': data['form']['date'],
             'duration': data['form']['duration']
         }, context=context)
-        case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), 'meeting')
+        case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), _('meeting'))
         return {}
 
     states = {

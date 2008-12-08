@@ -21,6 +21,8 @@
 ##############################################################################
 
 import wizard
+from tools.translate import _
+
 
 _journal_form = '''<?xml version="1.0"?>
 <form string="%s">
@@ -34,7 +36,7 @@ _journal_fields = {
 def _action_open_window(self, cr, uid, data, context):
     return {
         'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['form']['account_id'],
-        'name': 'Reconciliation',
+        'name': _('Reconciliation'),
         'view_type': 'form',
         'view_mode': 'tree,form',
         'view_id': False,

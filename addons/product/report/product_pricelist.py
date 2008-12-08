@@ -24,6 +24,9 @@ import time
 from report import report_sxw
 from osv import osv
 import pooler
+
+from tools.translate import _
+
 parents = {
     'tr':1,
     'li':1,
@@ -45,16 +48,19 @@ class product_pricelist(report_sxw.rml_parse):
             'qty_header':self._qty_header,
         })
     def _qty_header(self,form):
+        def _get_unit_text(obj, cr, uid, par_qty):
+            if form[q]==1:
+                return _('%d unit')%(par_qty)
+            else:
+                return _('%d units')%(par_qty)
+
         qty=[]
         self.pricelist=form['price_list']
         for i in range(1,6):
             q = 'qty%d'%i
             if form[q]:
                 self.quantity.append(form[q])
-                if form[q]==1:
-                    qty.append('%d unit'%(form[q]))
-                else:
-                    qty.append('%d units'%(form[q]))
+                qty.append(_get_unit_text(self, self.cr, self.uid, form[q]))
         return qty
 
 

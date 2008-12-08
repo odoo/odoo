@@ -18,10 +18,7 @@
 		<field name="type">form</field>
 		<field name="inherit_id" ref="sale.view_order_form"/>
 		<field name="arch" type="xml">
-			<field name="product_id"
-				on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order)"
-				context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
-				select="1" position="after">
+			<field name="product_id" position="after">
 				<field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
 			</field>
 		</field>

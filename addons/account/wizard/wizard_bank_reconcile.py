@@ -40,7 +40,8 @@ def _action_open_window(self, cr, uid, data, context):
         raise Exception, _('You have to define the bank account\nin the journal definition for reconciliation.')
     return {
         'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (form['journal_id'],account_id),
-        'name': 'Saisie Standard',
+        'name': _('Standard Encoding'),
+
         'view_type': 'form',
         'view_mode': 'tree,form',
         'res_model': 'account.move.line',
