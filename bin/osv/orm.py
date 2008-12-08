@@ -1988,7 +1988,9 @@ class orm(orm_template):
 
         fn_list = []
         for fnct in self.pool._store_function.get(self._name, []):
-            fn_list.append( (fnct[0], fnct[1], fnct[2](self,cr, uid, ids, context)) )
+            ids2 = filter(None, fnct[2](self,cr, uid, ids, context))
+            if ids2:
+                fn_list.append( (fnct[0], fnct[1], ids2) )
 
         delta = context.get('read_delta', False)
         if delta and self._log_access:
@@ -2037,7 +2039,9 @@ class orm(orm_template):
                         'where id in ('+str_d+')', sub_ids)
 
         for object,field,ids in fn_list:
-            self.pool.get(object)._store_set_values(cr, uid, ids, field, context)
+            ids = self.pool.get(object).search(cr, uid, [('id','in', ids)], context=context)
+            if ids:
+                self.pool.get(object)._store_set_values(cr, uid, ids, field, context)
         return True
 
     #
@@ -2256,7 +2260,9 @@ class orm(orm_template):
                     ok = True
             if ok:
                 ids2 = fnct[2](self,cr, user, ids, context)
-                self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
+                ids2 = filter(None, ids2)
+                if ids2:
+                    self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return True
 
     #
@@ -2366,12 +2372,10 @@ class orm(orm_template):
 
         for fnct in self.pool._store_function.get(self._name, []):
             ids2 = fnct[2](self,cr, user, [id_new], context)
-            self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
+            ids2 = filter(None, ids2)
+            if ids2:
+                self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return id_new
-
-    def _store_get_ids(self, cr, uid, ids, tuple_fn, context):
-        parent_id = getattr(self.pool.get(tuple_fn[0]), tuple_fn[4].func_name)(cr, uid, ids, context)
-        return parent_id
 
     def _store_set_values(self, cr, uid, ids, field, context):
         args = {}
