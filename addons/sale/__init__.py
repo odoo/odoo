@@ -26,7 +26,6 @@
 
 import sale
 import stock
-import partner
 import product
 
 import wizard
