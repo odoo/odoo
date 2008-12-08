@@ -33,7 +33,8 @@ from tools.translate import _
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context={}):
         res = {}
-        for invoice in self.browse(cr,uid,ids):
+        print ids
+        for invoice in self.browse(cr,uid,ids, context=context):
             res[invoice.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
@@ -115,8 +116,10 @@ class account_invoice(osv.osv):
 
     def _get_invoice_line(self, cr, uid, ids, context={}):
         result = {}
-        for tax in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
-            result[tax.invoice_id.id] = True
+        for line in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
+            print '\t', line.invoice_id
+            result[line.invoice_id.id] = True
+        print result
         return result.keys()
 
     def _get_invoice_tax(self, cr, uid, ids, context={}):
