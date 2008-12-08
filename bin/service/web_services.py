@@ -67,6 +67,7 @@ class db(netsvc.Service):
         db = sql_db.db_connect('template1', serialize=1)
         db.truedb.autocommit()
         cr = db.cursor()
+        time.sleep(0.2)
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
         class DBInitialize(object):

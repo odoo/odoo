@@ -37,6 +37,7 @@ import netsvc
 
 from tools.parse_version import parse_version
 
+
 class module_repository(osv.osv):
     _name = "ir.module.repository"
     _description = "Module Repository"
@@ -208,7 +209,7 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
