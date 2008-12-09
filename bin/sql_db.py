@@ -28,6 +28,21 @@ from psycopg2.psycopg1 import cursor as psycopg1cursor
 import psycopg2.extensions
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
+types_mapping = {
+    'date': (1082,),
+    'time': (1083,),
+    'datetime': (1114,),
+}
+
+def undecimalize(symb, cr):
+    if symb is None: return None
+    return float(symb)
+
+for name, typeoid in types_mapping.items():
+    psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
+psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
+
+
 import tools
 import re
 
@@ -64,16 +79,19 @@ class Cursor(object):
         query = base_string(query)
 
         if '%d' in query or '%f' in query:
-            log(queyr, netsvc.LOG_WARNING)
+            #import traceback
+            #traceback.print_stack()
+            log(query, netsvc.LOG_WARNING)
             log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
-            query = query.replace('%d', '%s').replace('%f', '%s')
+            if p:
+                query = query.replace('%d', '%s').replace('%f', '%s')
 
         if self.sql_log:
             now = mdt.now()
             log("SQL LOG query: %s" % (query,))
             log("SQL LOG params: %r" % (p,))
 
-        res = self._obj.execute(query, p)
+        res = self._obj.execute(query, p or None)
 
         if self.sql_log:
             self.count+=1
@@ -103,7 +121,7 @@ class Cursor(object):
         log("SUM:%s/%d" % (sum, self.count))
 
     def close(self):
-        if self.sql_log:
+        if self.sql_from_log or self.sql_into_log:
             self.print_log('from')
             self.print_log('into')
         self._obj.close()
@@ -166,8 +184,17 @@ class PoolManager(object):
         return PoolManager._pools[db_name]
     get = staticmethod(get)
 
+    def close(db_name):
+        if db_name is PoolManager._pools:
+            PoolManager._pools[db_name].closeall()
+            del PoolManager._pools[db_name]
+    close = staticmethod(close)
+
 def db_connect(db_name, serialize=0):
     return PoolManager.get(db_name)
+
+def close_db(db_name):
+    return PoolManager.close(db_name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

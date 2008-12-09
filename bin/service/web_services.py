@@ -65,8 +65,8 @@ class db(netsvc.Service):
         self.actions[id] = {'clean': False}
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         time.sleep(0.2)
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
@@ -140,12 +140,12 @@ class db(netsvc.Service):
 
     def drop(self, password, db_name):
         security.check_super(password)
-        pooler.close_db(db_name)
+        sql_db.close_db(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         try:
             try:
                 cr.execute('DROP DATABASE ' + db_name)
@@ -195,8 +195,8 @@ class db(netsvc.Service):
             raise Exception, "Database already exists"
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
 
@@ -231,7 +231,6 @@ class db(netsvc.Service):
     def db_exist(self, db_name):
         try:
             db = sql_db.db_connect(db_name)
-            db.truedb.close()
             return True
         except:
             return False
@@ -256,7 +255,6 @@ class db(netsvc.Service):
             cr.close()
         except:
             res = []
-        db.truedb.close()
         res.sort()
         return res
 
