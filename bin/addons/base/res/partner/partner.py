@@ -259,7 +259,7 @@ class res_partner(osv.osv):
             raise osv.except_osv(_('Warning'), _("Couldn't generate the next id because some partners have an alphabetic id !"))
 
         # update the current partner
-        cr.execute("update res_partner set ref=%d where id=%d", (nextref, ids[0]))
+        cr.execute("update res_partner set ref=%s where id=%s", (nextref, ids[0]))
         return True
 
     def view_header_get(self, cr, uid, view_id, view_type, context):

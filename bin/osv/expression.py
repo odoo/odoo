@@ -50,7 +50,7 @@ class expression(object):
             subids = ids[i:i+cr.IN_MAX]
             cr.execute('SELECT "%s"'    \
                        '  FROM "%s"'    \
-                       ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%d']*len(subids))),
+                       ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
                        subids)
             res.extend([r[0] for r in cr.fetchall()])
         return res
@@ -243,7 +243,7 @@ class expression(object):
 
             if len_after:
                 if left == 'id':
-                     instr = ','.join(['%d'] * len_after)
+                     instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)

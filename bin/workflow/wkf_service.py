@@ -44,15 +44,15 @@ class workflow_service(netsvc.Service):
 
     def trg_write(self, uid, res_type, res_id, cr):
         ident = (uid,res_type,res_id)
-        cr.execute('select id from wkf_instance where res_id=%d and res_type=%s and state=%s', (res_id,res_type, 'active'))
+        cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id,res_type, 'active'))
         for (id,) in cr.fetchall():
             instance.update(cr, id, ident)
 
     def trg_trigger(self, uid, res_type, res_id, cr):
-        cr.execute('select instance_id from wkf_triggers where res_id=%d and model=%s', (res_id,res_type))
+        cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (res_id,res_type))
         res = cr.fetchall()
         for (instance_id,) in res:
-            cr.execute('select uid,res_type,res_id from wkf_instance where id=%d', (instance_id,))
+            cr.execute('select uid,res_type,res_id from wkf_instance where id=%s', (instance_id,))
             ident = cr.fetchone()
             instance.update(cr, instance_id, ident)
 
@@ -76,7 +76,7 @@ class workflow_service(netsvc.Service):
         result = False
         ident = (uid,res_type,res_id)
         # ids of all active workflow instances for a corresponding resource (id, model_nam)
-        cr.execute('select id from wkf_instance where res_id=%d and res_type=%s and state=%s', (res_id, res_type, 'active'))
+        cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id, res_type, 'active'))
         for (id,) in cr.fetchall():
             res2 = instance.validate(cr, id, ident, signal)
             result = result or res2
@@ -88,21 +88,21 @@ class workflow_service(netsvc.Service):
     def trg_redirect(self, uid, res_type, res_id, new_rid, cr):
         # get ids of wkf instances for the old resource (res_id)
 #CHECKME: shouldn't we get only active instances?
-        cr.execute('select id, wkf_id from wkf_instance where res_id=%d and res_type=%s', (res_id, res_type))
+        cr.execute('select id, wkf_id from wkf_instance where res_id=%s and res_type=%s', (res_id, res_type))
         for old_inst_id, wkf_id in cr.fetchall():
             # first active instance for new resource (new_rid), using same wkf
             cr.execute(
                 'SELECT id '\
                 'FROM wkf_instance '\
-                'WHERE res_id=%d AND res_type=%s AND wkf_id=%d AND state=%s', 
+                'WHERE res_id=%s AND res_type=%s AND wkf_id=%s AND state=%s', 
                 (new_rid, res_type, wkf_id, 'active'))
             new_id = cr.fetchone()
             if new_id:
                 # select all workitems which "wait" for the old instance
-                cr.execute('select id from wkf_workitem where subflow_id=%d', (old_inst_id,))
+                cr.execute('select id from wkf_workitem where subflow_id=%s', (old_inst_id,))
                 for (item_id,) in cr.fetchall():
                     # redirect all those workitems to the wkf instance of the new resource
-                    cr.execute('update wkf_workitem set subflow_id=%d where id=%d', (new_id[0], item_id))
+                    cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (new_id[0], item_id))
 workflow_service()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

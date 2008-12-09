@@ -59,7 +59,7 @@ def upgrade():
     for module_id,name,url in cr.fetchall():
         print '\tremoving module %s' % name
         remove(name)
-        cr.execute('update ir_module_module set state=%s where id=%d', ('uninstalled', module_id))
+        cr.execute('update ir_module_module set state=%s where id=%s', ('uninstalled', module_id))
         cr.commit()
 
     print 'Check for modules to upgrade...'
@@ -68,7 +68,7 @@ def upgrade():
         print '\tupgrading module %s' % name
         remove(name)
         install(name, url)
-        cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
+        cr.execute('update ir_module_module set state=%s where id=%s', ('installed', module_id))
         cr.commit()
         toupdate.append(name)
 
@@ -77,7 +77,7 @@ def upgrade():
     for module_id,name,url in cr.fetchall():
         print '\tinstalling module %s' % name
         install(name, url)
-        cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
+        cr.execute('update ir_module_module set state=%s where id=%s', ('installed', module_id))
         cr.commit()
         toinit.append(name)
 

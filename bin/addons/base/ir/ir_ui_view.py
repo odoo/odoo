@@ -99,7 +99,7 @@ class view(osv.osv):
 
         for rs in result:
             if rs.get('model') == 'board.board':
-                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%d and ref_id=%d", (uid, rs['id']))
+                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%s and ref_id=%s", (uid, rs['id']))
                 oview = cr.dictfetchall()
                 if oview:
                     rs['arch'] = oview[0]['arch']

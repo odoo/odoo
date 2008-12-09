@@ -46,7 +46,7 @@ def check(db, uid, passwd):
         return True
         
     cr = pooler.get_db(db).cursor()
-    cr.execute('select count(*) from res_users where id=%d and password=%s', (int(uid), passwd))
+    cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):

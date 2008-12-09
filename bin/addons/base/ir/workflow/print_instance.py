@@ -28,7 +28,7 @@ import report,pooler,tools
 
 def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
     import pydot
-    cr.execute('select * from wkf_activity where wkf_id=%d', (wkf_id,))
+    cr.execute('select * from wkf_activity where wkf_id=%s', (wkf_id,))
     nodes = cr.dictfetchall()
     activities = {}
     actfrom = {}
@@ -36,7 +36,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
     for n in nodes:
         activities[n['id']] = n
         if n['subflow_id'] and nested:
-            cr.execute('select * from wkf where id=%d', (n['subflow_id'],))
+            cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
             graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = """\"Subflow: %s\\nOSV: %s\"""" % ( n['name'], wkfinfo['osv']) )
             (s1,s2) = graph_get(cr, graph2, n['subflow_id'], nested,workitem)
@@ -78,9 +78,9 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
         graph.add_edge(pydot.Edge( str(activity_from) ,str(activity_to), fontsize='10', **args))
     nodes = cr.dictfetchall()
-    cr.execute('select id from wkf_activity where flow_start=True and wkf_id=%d limit 1', (wkf_id,))
+    cr.execute('select id from wkf_activity where flow_start=True and wkf_id=%s limit 1', (wkf_id,))
     start = cr.fetchone()[0]
-    cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%d", (wkf_id,))
+    cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%s", (wkf_id,))
     stop = cr.fetchall()
     stop = (stop[0][1], dict(stop))
     return ((start,{}),stop)
@@ -88,14 +88,14 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
 
 def graph_instance_get(cr, graph, inst_id, nested=False):
     workitems = {}
-    cr.execute('select * from wkf_instance where id=%d', (inst_id,))
+    cr.execute('select * from wkf_instance where id=%s', (inst_id,))
     inst = cr.dictfetchone()
 
     def workitem_get(instance):
-        cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%d group by act_id', (instance,))
+        cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (instance,))
         workitems = dict(cr.fetchall())
 
-        cr.execute('select subflow_id from wkf_workitem where inst_id=%d', (instance,))
+        cr.execute('select subflow_id from wkf_workitem where inst_id=%s', (instance,))
         for (subflow_id,) in cr.fetchall():
             workitems.update(workitem_get(subflow_id))
         return workitems
@@ -130,7 +130,7 @@ class report_graph_instance(object):
 showpage'''
             else:
                 cr.execute('SELECT id FROM wkf_instance \
-                        WHERE res_id=%d AND wkf_id=%d \
+                        WHERE res_id=%s AND wkf_id=%s \
                         ORDER BY state LIMIT 1',
                         (data['id'], wkfinfo['id']))
                 inst_id = cr.fetchone()

@@ -68,7 +68,7 @@ class module_category(osv.osv):
         cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str,ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str,ids))+')) group by category_id')
         result = dict(cr.fetchall())
         for id in ids:
-            cr.execute('select id from ir_module_category where parent_id=%d', (id,))
+            cr.execute('select id from ir_module_category where parent_id=%s', (id,))
             childs = [c for c, in cr.fetchall()]
             result[id] = reduce(lambda x,y:x+y, [result.get(c, 0) for c in childs], result.get(id, 0))
         return result
@@ -312,7 +312,7 @@ class module(osv.osv):
                     'license': terp.get('license', 'GPL-2'),
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency\
-                        WHERE module_id = %d', (id,))
+                        WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends',
                     []))
                 self._update_category(cr, uid, ids[0], terp.get('category',
@@ -433,7 +433,7 @@ class module(osv.osv):
                 'license': terp.get('license', 'GPL-2'),
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
-                    'WHERE module_id = %d', (mod.id,))
+                    'WHERE module_id = %s', (mod.id,))
             self._update_dependencies(cr, uid, mod.id, terp.get('depends',
                 []))
             self._update_category(cr, uid, mod.id, terp.get('category',
@@ -445,21 +445,21 @@ class module(osv.osv):
 
     def _update_dependencies(self, cr, uid, id, depends=[]):
         for d in depends:
-            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%d, %s)', (id, d))
+            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 
     def _update_category(self, cr, uid, id, category='Uncategorized'):
         categs = category.split('/')
         p_id = None
         while categs:
             if p_id is not None:
-                cr.execute('select id from ir_module_category where name=%s and parent_id=%d', (categs[0], p_id))
+                cr.execute('select id from ir_module_category where name=%s and parent_id=%s', (categs[0], p_id))
             else:
                 cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
             c_id = cr.fetchone()
             if not c_id:
                 cr.execute('select nextval(\'ir_module_category_id_seq\')')
                 c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category (id, name, parent_id) values (%d, %s, %d)', (c_id, categs[0], p_id))
+                cr.execute('insert into ir_module_category (id, name, parent_id) values (%s, %s, %s)', (c_id, categs[0], p_id))
             else:
                 c_id = c_id[0]
             p_id = c_id

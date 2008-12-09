@@ -487,10 +487,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
                     else:
                         tools.convert_xml_import(cr, m, fp, idref, noupdate=True, **kwargs)
                     fp.close()
-                cr.execute('update ir_module_module set demo=%s where id=%d', (True, mid))
+                cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
             package_todo.append(package.name)
             ver = release.major_version + '.' + package.data.get('version', '1.0')
-            cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%d", (ver, mid,))
+            cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
             cr.commit()
 
             # Update translations for all installed languages

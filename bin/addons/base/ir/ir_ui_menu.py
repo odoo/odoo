@@ -41,7 +41,7 @@ class many2many_unique(fields.many2many):
         for act in values:
             if act[0]==4:
                 cr.execute('SELECT * FROM '+self._rel+' \
-                        WHERE '+self._id1+'=%d AND '+self._id2+'=%d', (id, act[1]))
+                        WHERE '+self._id1+'=%s AND '+self._id2+'=%s', (id, act[1]))
                 if cr.fetchall():
                     val.remove(act)
         return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
