@@ -442,6 +442,18 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     
     migrations = MigrationManager(cr, graph)
 
+    # only if update
+    register_class('base')
+    pool.instanciate('base', cr)
+    modobj = pool.get('ir.module.module')
+    modobj.update_list(cr, 1)
+
+    mids = modobj.search(cr, 1, [('state','=','installed')])
+    for m in modobj.browse(cr, 1, mids):
+        for dep in m.dependencies_id:
+            if dep.state=='uninstalled':
+                modobj.button_install(cr, 1, [m.id])
+
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
         m = package.name
@@ -493,8 +505,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%d", (ver, mid,))
             cr.commit()
 
-            # Update translations for all installed languages
+            # Set new modules and dependencies
             modobj = pool.get('ir.module.module')
+
+            # Update translations for all installed languages
             if modobj:
                 modobj.update_translations(cr, 1, [mid], None)
                 cr.commit()
