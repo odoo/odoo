@@ -424,12 +424,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
 
-    # only if update
-    register_class('base')
-    pool.instanciate('base', cr)
-    modobj = pool.get('ir.module.module')
-    modobj.update_list(cr, 1)
-
 
     # update the graph with values from the database (if exist)
     ## First, we set the default values for each package in graph
@@ -448,12 +442,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             setattr(package, k, v)
     
     migrations = MigrationManager(cr, graph)
-
-    mids = modobj.search(cr, 1, [('state','=','installed')])
-    for m in modobj.browse(cr, 1, mids):
-        for dep in m.dependencies_id:
-            if dep.state=='uninstalled':
-                modobj.button_install(cr, 1, [m.id])
 
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
@@ -538,11 +526,23 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     force = []
     if force_demo:
         force.append('demo')
+    pool = pooler.get_pool(cr.dbname)
     if update_module:
         for module in tools.config['init']:
-            # FIXME lp:304807
             cr.execute('update ir_module_module set state=%s where state=%s and name=%s', ('to install', 'uninstalled', module))
             cr.commit()
+
+            register_class('base')
+            pool.instanciate('base', cr)
+            modobj = pool.get('ir.module.module')
+            modobj.update_list(cr, 1)
+
+            mids = modobj.search(cr, 1, [('state','in',('installed','to install'))])
+            for m in modobj.browse(cr, 1, mids):
+                for dep in m.dependencies_id:
+                    if dep.state=='uninstalled':
+                        modobj.button_install(cr, 1, [m.id])
+
         cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
     else:
         cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
