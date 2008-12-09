@@ -325,14 +325,14 @@ class module(osv.osv):
                 if not terp or not terp.get('installable', True):
                     continue
 
-                if not os.path.isfile( mod_path ):
-                    import imp
-                    path = imp.find_module(mod_name, [addons.ad, addons._ad])
-                    imp.load_module(name, *path)
-                else:
-                    import zipimport
-                    zimp = zipimport.zipimporter(mod_path)
-                    zimp.load_module(mod_name)
+                #if not os.path.isfile( mod_path ):
+                #    import imp
+                #    path = imp.find_module(mod_name, [addons.ad, addons._ad])
+                #    imp.load_module(name, *path)
+                #else:
+                #    import zipimport
+                #    zimp = zipimport.zipimporter(mod_path)
+                #    zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
                     'state': 'uninstalled',
