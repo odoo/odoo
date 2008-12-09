@@ -86,7 +86,7 @@ class _column(object):
         pass
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
-        cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value), id))
+        cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%s', (self._symbol_set[1](value), id))
 
     def set_memory(self, cr, obj, id, name, value, user=None, context=None):
         raise Exception(_('Not implemented set_memory method !'))
@@ -118,13 +118,13 @@ class boolean(_column):
 
 class integer_big(_column):
     _type = 'integer_big'
-    _symbol_c = '%d'
+    _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
 
 class integer(_column):
     _type = 'integer'
-    _symbol_c = '%d'
+    _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
 
@@ -168,10 +168,9 @@ class text(_column):
 
 import __builtin__
 
-
 class float(_column):
     _type = 'float'
-    _symbol_c = '%f'
+    _symbol_c = '%s'
     _symbol_f = lambda x: __builtin__.float(x or 0.0)
     _symbol_set = (_symbol_c, _symbol_f)
 
@@ -263,9 +262,9 @@ class one2one(_column):
         self._table = obj_src.pool.get(self._obj)._table
         if act[0] == 0:
             id_new = obj.create(cr, user, act[1])
-            cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new, id))
+            cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (id_new, id))
         else:
-            cr.execute('select '+field+' from '+obj_src._table+' where id=%d', (act[0],))
+            cr.execute('select '+field+' from '+obj_src._table+' where id=%s', (act[0],))
             id = cr.fetchone()[0]
             obj.write(cr, user, [id], act[1], context=context)
 
@@ -331,20 +330,20 @@ class many2one(_column):
             for act in values:
                 if act[0] == 0:
                     id_new = obj.create(cr, act[2])
-                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new, id))
+                    cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (id_new, id))
                 elif act[0] == 1:
                     obj.write(cr, [act[1]], act[2], context=context)
                 elif act[0] == 2:
-                    cr.execute('delete from '+self._table+' where id=%d', (act[1],))
+                    cr.execute('delete from '+self._table+' where id=%s', (act[1],))
                 elif act[0] == 3 or act[0] == 5:
-                    cr.execute('update '+obj_src._table+' set '+field+'=null where id=%d', (id,))
+                    cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
                 elif act[0] == 4:
-                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (act[1], id))
+                    cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (act[1], id))
         else:
             if values:
-                cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (values, id))
+                cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (values, id))
             else:
-                cr.execute('update '+obj_src._table+' set '+field+'=null where id=%d', (id,))
+                cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit)
@@ -435,19 +434,19 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%d', (act[1],))
+                cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
-                cr.execute('update '+_table+' set '+self._fields_id+'=%d where id=%d', (id, act[1]))
+                cr.execute('update '+_table+' set '+self._fields_id+'=%s where id=%s', (id, act[1]))
             elif act[0] == 5:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%d', (id,))
+                cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
                 if not act[2]:
                     ids2 = [0]
                 else:
                     ids2 = act[2]
-                cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%d and id not in ('+','.join(map(str, ids2))+')', (id,))
+                cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
                 if act[2]:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=%d where id in ('+','.join(map(str, act[2]))+')', (id,))
+                    cr.execute('update '+_table+' set '+self._fields_id+'=%s where id in ('+','.join(map(str, act[2]))+')', (id,))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
@@ -500,7 +499,7 @@ class many2many(_column):
                 FROM '+self._rel+' , '+obj._table+' \
                 WHERE '+self._rel+'.'+self._id1+' in ('+ids_s+') \
                     AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
-                +limit_str+' order by '+obj._table+'.'+obj._order+' offset %d',
+                +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
                 d2+[offset])
         for r in cr.fetchall():
             res[r[1]].append(r[0])
@@ -515,26 +514,26 @@ class many2many(_column):
         for act in values:
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2])
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id, idnew))
+                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, idnew))
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('delete from '+self._rel+' where ' + self._id1 + '=%d and '+ self._id2 + '=%d', (id, act[1]))
+                cr.execute('delete from '+self._rel+' where ' + self._id1 + '=%s and '+ self._id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id, act[1]))
+                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
-                cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%d', (id,))
+                cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
 
                 d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
                 if d1:
                     d1 = ' and ' + d1
-                cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%d AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
+                cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
 
                 for act_nbr in act[2]:
-                    cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d, %d)', (id, act_nbr))
+                    cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s, %s)', (id, act_nbr))
 
     #
     # TODO: use a name_search
@@ -601,9 +600,9 @@ class function(_column):
             self._classic_read = True
             self._classic_write = True
         if type == 'float':
-            self._symbol_c = '%f'
-            self._symbol_f = lambda x: __builtin__.float(x or 0.0)
-            self._symbol_set = (self._symbol_c, self._symbol_f)
+            self._symbol_c = float._symbol_c
+            self._symbol_f = float._symbol_f
+            self._symbol_set = float._symbol_set
 
     def search(self, cr, uid, obj, name, args):
         if not self._fnct_search:
@@ -680,7 +679,7 @@ class related(function):
                 if field_detail[1] in ('date'):
                     where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
                 if field_detail[1] in ['integer', 'long', 'float','integer_big']:
-                    where += " %s.%s %s '%d' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
+                    where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
         if len(where)>10:
             query += where.rstrip('and')
         cr.execute(query)
@@ -754,7 +753,7 @@ class property(function):
         nid = property.search(cr, uid, [('fields_id', '=', definition_id),
             ('res_id', '=', obj._name+','+str(id))])
         while len(nid):
-            cr.execute('DELETE FROM ir_property WHERE id=%d', (nid.pop(),))
+            cr.execute('DELETE FROM ir_property WHERE id=%s', (nid.pop(),))
 
         nid = property.search(cr, uid, [('fields_id', '=', definition_id),
             ('res_id', '=', False)])

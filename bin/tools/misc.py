@@ -68,7 +68,7 @@ def init_db(cr):
                 if p_id is not None:
                     cr.execute('select id \
                             from ir_module_category \
-                            where name=%s and parent_id=%d', (categs[0], p_id))
+                            where name=%s and parent_id=%s', (categs[0], p_id))
                 else:
                     cr.execute('select id \
                             from ir_module_category \
@@ -79,7 +79,7 @@ def init_db(cr):
                     c_id = cr.fetchone()[0]
                     cr.execute('insert into ir_module_category \
                             (id, name, parent_id) \
-                            values (%d, %s, %d)', (c_id, categs[0], p_id))
+                            values (%s, %s, %s)', (c_id, categs[0], p_id))
                 else:
                     c_id = c_id[0]
                 p_id = c_id
@@ -99,7 +99,7 @@ def init_db(cr):
             cr.execute('insert into ir_module_module \
                     (id, author, latest_version, website, name, shortdesc, description, \
                         category_id, state) \
-                    values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
                 release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
@@ -580,6 +580,28 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
+def ustr(value):
+    """This method is similar to the builtin `str` method, except
+    it will return Unicode string.
+
+    @param value: the value to convert
+
+    @rtype: unicode
+    @return: unicode string
+    """
+
+    if isinstance(value, unicode):
+        return value
+
+    if hasattr(value, '__unicode__'):
+        return unicode(value)
+
+    if not isinstance(value, str):
+        value = str(value)
+
+    return unicode(value, 'utf-8')
+
+
 def get_languages():
     languages={
         'bg_BG': u'Bulgarian / български',
@@ -630,7 +652,7 @@ def get_user_companies(cr, user):
         res=[x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %d AND comp.id = u.company_id' % (user,))
+    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id' % (user,))
     compids=[cr.fetchone()[0]]
     compids.extend(_get_company_children(cr, compids))
     return compids
