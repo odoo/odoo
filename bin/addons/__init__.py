@@ -424,6 +424,13 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
 
+    # only if update
+    register_class('base')
+    pool.instanciate('base', cr)
+    modobj = pool.get('ir.module.module')
+    modobj.update_list(cr, 1)
+
+
     # update the graph with values from the database (if exist)
     ## First, we set the default values for each package in graph
     additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'latest_version': None})
@@ -441,12 +448,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             setattr(package, k, v)
     
     migrations = MigrationManager(cr, graph)
-
-    # only if update
-    register_class('base')
-    pool.instanciate('base', cr)
-    modobj = pool.get('ir.module.module')
-    modobj.update_list(cr, 1)
 
     mids = modobj.search(cr, 1, [('state','=','installed')])
     for m in modobj.browse(cr, 1, mids):
