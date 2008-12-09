@@ -153,7 +153,10 @@ class base_module_record(osv.osv):
                         else:
                             fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
-                        newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                        if valitem[0]==0:
+                            newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                        else:
+                            newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord

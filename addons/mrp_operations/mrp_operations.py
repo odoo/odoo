@@ -138,8 +138,8 @@ mrp_operations_operation_code()
 class mrp_operations_operation(osv.osv):
     _name="mrp_operations.operation"
 
-    def _order_date_search_production(self,cr,uid,ids):
-        operation_ids=self.pool.get('mrp_operations.operation').search(cr,uid,[('production_id','=',ids[0])])
+    def _order_date_search_production(self, cr, uid, ids, context=None):
+        operation_ids=self.pool.get('mrp_operations.operation').search(cr, uid, [('production_id','=',ids[0])], context=context)
         return operation_ids
 
     def _get_order_date(self, cr, uid, ids, field_name, arg, context):
