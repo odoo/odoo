@@ -22,6 +22,7 @@
 ##############################################################################
 
 from tools import flatten, reverse_enumerate
+import fields
 
 
 class expression(object):
@@ -190,7 +191,7 @@ class expression(object):
                         dom = _rec_get(ids2, working_table, left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
-                    if isinstance(right, basestring):
+                    if isinstance(right, basestring): # and not isinstance(field, fields.related):
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
