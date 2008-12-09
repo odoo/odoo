@@ -81,14 +81,12 @@ parameter) will see those record just disappear.
         </record>
         
         <!--
-	Property
-	-->
+        Property
+        -->
         <record forcecreate="True" id="property_product_pricelist" model="ir.property">
             <field name="name">property_product_pricelist</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
-            <field eval="'product.pricelist,'+str(list0)" name="value"/>
+            <field eval="'product.pricelist,'+ref('list0')" name="value"/>
         </record>
-        
-        
     </data>
 </openerp>
