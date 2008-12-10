@@ -191,10 +191,7 @@ class account_move_line(osv.osv):
                 account = move.journal_id.default_debit_account_id
 
         data['account_id'] = account.id
-        if account and account.tax_ids:
-            for tax in self.pool.get('account.tax').compute_inv(cr,uid,[account.tax_ids[0]],total,1.00):
-                total -= tax['amount']
-            data['account_tax_id'] = account.tax_ids[0].id
+
         s = -total
         data['debit'] = s>0  and s or 0.0
         data['credit'] = s<0  and -s or 0.0
@@ -436,13 +433,11 @@ class account_move_line(osv.osv):
             date = now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
-        if part.property_payment_term and part.property_payment_term.line_ids:# Compute Maturity Date in val !
-                line = part.property_payment_term.line_ids[0]
-                next_date = mx.DateTime.strptime(date, '%Y-%m-%d') + RelativeDateTime(days=line.days)
-                if line.condition == 'end of month':
-                    next_date += RelativeDateTime(day=-1)
-                next_date = next_date.strftime('%Y-%m-%d')
-                val['date_maturity'] = next_date
+        if part.property_payment_term and part.property_payment_term.line_ids:
+            payterm = part.property_payment_term.line_ids[0]
+            res = self.pool.get('account.payment.term').compute(cr, uid, payterm.id, 100, date)
+            if res:
+                val['date_maturity'] = res[0][0]
         if not account_id:
             id1 = part.property_account_payable.id
             id2 =  part.property_account_receivable.id
@@ -452,6 +447,16 @@ class account_move_line(osv.osv):
                     val['account_id'] =  id2
                 elif jt=='purchase':
                     val['account_id'] =  id1
+                if val['account_id']:
+                    d = self.onchange_account_id(cr, uid, ids, val['account_id'])
+                    val.update(d['value'])
+        return {'value':val}
+
+    def onchange_account_id(self, cr, uid, ids, account_id=False):
+        val = {}
+        if account_id:
+            tax_ids = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
+            val['account_tax_id'] = tax_ids and tax_ids[0].id or False
         return {'value':val}
 
     #
@@ -658,7 +663,7 @@ class account_move_line(osv.osv):
                 elif field.field=='account_tax_id':
                     attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 elif field.field=='account_id' and journal.id:
-                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]"')
+                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id)"')
                 if field.readonly:
                     attrs.append('readonly="1"')
                 if field.required:
@@ -668,7 +673,7 @@ class account_move_line(osv.osv):
                 if field.field in ('amount_currency','currency_id'):
                     attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field == 'partner_id':
-                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
+                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.field in widths:
                     attrs.append('width="'+str(widths[field.field])+'"')
                 xml += '''<field name="%s" %s/>\n''' % (field.field,' '.join(attrs))
