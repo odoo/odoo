@@ -82,8 +82,8 @@ class account_invoice(osv.osv):
             res[id] = self.test_paid(cr, uid, [id])
         return res
 
-    def _get_reference_type(self, cursor, user, context=None):
-        return [('none', 'Free Reference')]
+    def _get_reference_type(self, cr, uid, context=None):
+        return [('none', _('Free Reference'))]
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
         res = {}

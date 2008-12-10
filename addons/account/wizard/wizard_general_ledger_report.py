@@ -25,32 +25,6 @@ import pooler
 import locale
 import time
 
-#report_type =  '''<?xml version="1.0"?>
-#<form string="Select Report Type">
-#</form>'''
-#
-#dates_form = '''<?xml version="1.0"?>
-#<form string="Select period ">
-#    <field name="date_from" colspan="4"/>
-#    <field name="date_to" colspan="4"/>
-#    <field name="sortbydate" colspan="4"/>
-#    <field name="display_account" colspan="4"/>
-#    <field name="landscape" colspan="4"/>
-#    <field name="soldeinit"/>
-#    <field name="amount_currency" colspan="4"/>
-#</form>'''
-#
-#dates_fields = {
-#    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
-#    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-#    'sortbydate':{'string':"Sort by",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Mouvement')]},
-#    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-#    'landscape':{'string':"Print in Landscape Mode",'type':'boolean'},
-#    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
-#    'amount_currency':{'string':"with amount in currency",'type':'boolean'}
-#
-#}
-
 account_form = '''<?xml version="1.0"?>
 <form string="Select Chart">
     <field name="Account_list" colspan="4"/>
@@ -108,11 +82,10 @@ period_fields = {
     'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Movement')]},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
     'landscape':{'string':"Landscape Mode",'type':'boolean'},
-    'soldeinit':{'string':"Inclure les soldes initiaux",'type':'boolean'},
+    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
     'amount_currency':{'string':"With Currency",'type':'boolean'},
     'date_from': {'string':"           Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    
 }
 def _check_path(self, cr, uid, data, context):
     if data['model'] == 'account.account':

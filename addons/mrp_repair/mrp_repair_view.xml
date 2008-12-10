@@ -199,9 +199,18 @@
             <field name="res_model">mrp.repair</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','confirmed')]</field>
+            <field name="domain">[('state','=','under_repair')]</field>
         </record>
-        
+
+        <record id="action_repair_ready_tree" model="ir.actions.act_window">
+            <field name="name">Repairs Ready to Start</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.repair</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','!=','draft'),('state','!=','under_repair'),('state','!=','2binvoiced'),('state','!=','invoice_except'),('state','!=','done'),('state','!=','cancel'),]</field>
+        </record>
+
         <record id="action_repair_2binvoiced_tree" model="ir.actions.act_window">
             <field name="name">Repairs to be invoiced</field>
             <field name="type">ir.actions.act_window</field>
@@ -214,8 +223,10 @@
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_root" name="Repairs"/>
         
         <menuitem action="action_repair_quotation_tree" id="menu_repair_quotation" parent="menu_repair_order"/>
-        
+
         <menuitem action="action_repair_progress_tree" id="menu_repair_progress" parent="menu_repair_order"/>
+
+        <menuitem action="action_repair_ready_tree" id="menu_repair_ready" parent="menu_repair_order"/>
     	
     	<menuitem action="action_repair_2binvoiced_tree" id="menu_repair_2binvoiced" parent="menu_repair_order"/>
     	

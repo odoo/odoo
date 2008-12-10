@@ -78,7 +78,7 @@ def _record_objects(self, cr, uid, data, context):
         elif filter =='modified':
             search_condition =[('write_date','>',check_date)]
         elif filter =='created_modified':
-            search_condition =[('create_date','>',check_date),('write_date','>',check_date)]
+            search_condition =['|',('create_date','>',check_date),('write_date','>',check_date)]
         if '_log_access' in dir(obj_pool):
               if not (obj_pool._log_access):
                   search_condition=[]

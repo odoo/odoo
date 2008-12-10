@@ -153,7 +153,10 @@ class base_module_record(osv.osv):
                         else:
                             fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
-                        newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                        if valitem[0]==0:
+                            newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                        else:
+                            newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
@@ -282,7 +285,10 @@ class base_module_record(osv.osv):
             rec=copy_rec
             rec_data=[(self.recording_data[0][0],rec,self.recording_data[0][2],self.recording_data[0][3])]
             self.recording_data=rec_data
-            id = self._create_id(cr, uid, rec[3],rec[6])
+
+            id,update = self._get_id(cr, uid, rec[3], rec[5])
+            if not id:
+                id = self._create_id(cr, uid, rec[3],rec[6])
             record,noupdate = self._create_record(cr, uid, doc, rec[3], rec[6], id)
             self.ids[(rec[3],result)] = id
             record_list += record
@@ -291,6 +297,7 @@ class base_module_record(osv.osv):
 
     def _generate_assert_xml(self, rec, doc):
         pass
+
     def generate_xml(self, cr, uid):
         # Create the minidom document
         if len(self.recording_data):

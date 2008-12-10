@@ -137,10 +137,12 @@ class event(osv.osv):
         'mail_confirm': fields.text('Confirmation Email', help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."),
         'product_id':fields.many2one('product.product','Product', required=True),
     }
+
     _defaults = {
         'state': lambda *args: 'draft',
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'event.event'),
         'user_id': lambda self,cr,uid,ctx: uid,
+
     }
 event()
 
@@ -148,6 +150,8 @@ class event_registration(osv.osv):
 
     def _history(self, cr, uid,ids,keyword, history=False, email=False, context={}):
         for case in self.browse(cr, uid, ids):
+            if not case.case_id:
+                return True
             data = {
                 'name': keyword,
                 'som': case.som.id,
@@ -333,7 +337,8 @@ class event_registration(osv.osv):
         case_data = self.browse(cr,uid,ids)
         new_ids=[]
         for case in case_data:
-            new_ids.append(case.case_id.id)
+            if case.case_id:
+                new_ids.append(case.case_id.id)
         return getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
 
 

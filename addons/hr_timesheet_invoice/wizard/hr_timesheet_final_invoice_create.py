@@ -117,7 +117,7 @@ class final_invoice_create(wizard.interface):
                     'discount': 0.0,
                     'invoice_line_tax_id': [(6,0,tax)],
                     'invoice_id': last_invoice,
-                    'name': ref+(product and ' - '+product.name or ''),
+                    'name': ref or '' +(product and ' - '+product.name or ''),
                     'product_id': product_id,
                     'uos_id': product_uom_id,
                     'account_id': account_id,
@@ -139,7 +139,7 @@ class final_invoice_create(wizard.interface):
                 'invoice_line_tax_id': [(6,0,tax)],
                 'invoice_id': last_invoice,
                 'name': product.name,
-                'product_id': product_id,
+                'product_id': product.id,
                 'uos_id': product.uom_id.id,
                 'account_id': account_id,
                 'account_analytic_id': account.id

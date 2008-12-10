@@ -110,7 +110,7 @@ class report_custom(report_int):
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d')
-        dates = self._compute_dates(datas['form']['time_unit'], time.strftime('%Y-%m-%d'), res['stop'])
+        dates = self._compute_dates(datas['form']['time_unit'], time.strftime('%Y-%m-%d'), res['stop'][:10])
         dates_list = dates.keys()
         dates_list.sort()
         x_index = []
@@ -151,7 +151,7 @@ class report_custom(report_int):
                                 AND (mrp_workcenter.id=%d) \
                                 AND (mrp_production.date_planned BETWEEN %s AND %s) \
                             GROUP BY mrp_production_workcenter_line.workcenter_id, mrp_workcenter.name, mrp_workcenter.id \
-                            ORDER BY mrp_workcenter.id", (workcenter['id'], dates[date]['start'], dates[date]['stop']))
+                            ORDER BY mrp_workcenter.id", (workcenter['id'], dates[date]['start'] + ' 00:00:00', dates[date]['stop'] + ' 23:59:59'))
                 res = cr.dictfetchall()
                 if not res:
                     vals.append(0.0)

@@ -73,7 +73,10 @@ class ir_action_window(osv.osv):
                 r['domain'] = r['domain'].replace(mystring, str(
                     self.pool.get('hr.department')._get_members(cr, uid)))
         if isinstance(ids, (int, long)):
-            return res[0]
+            if res:
+                return res[0]
+            else:
+                return False
         return res
 
 ir_action_window()

@@ -59,11 +59,11 @@
 	<xsl:template match="tasks">
 		<blockTable style="tasks" colWidths="10cm,1.6cm,1.6cm,2cm,2.5cm">
 		<tr>
-			<td>Tasks</td>
-			<td>Hours</td>
-			<td>Done</td>
-			<td>Deadline</td>
-			<td>Responsible</td>
+			<td t="True">Tasks</td>
+			<td t="True">Hours</td>
+			<td t="True">Done</td>
+			<td t="True">Deadline</td>
+			<td t="True">Responsible</td>
 		</tr>
 		<xsl:apply-templates select="task"/>
 		</blockTable>
@@ -76,24 +76,24 @@
 		<spacer length="1cm"/>
 		<blockTable colWidths="3cm,6cm,3cm,6cm" style="project">
 		<tr>
-			<td>Manager:</td>
+			<td t="True">Manager:</td>
 			<td><para><b><xsl:value-of select="manager"/></b></para></td>
-			<td>Members:</td>
+			<td t="True">Members:</td>
 			<td><para><xsl:apply-templates select="members"/></para></td>
 		</tr><tr>
-			<td>Project:</td>
+			<td t="True">Project:</td>
 			<td><xsl:value-of select="parent"/></td>
 			<td></td>
 			<td></td>
 		</tr><tr>
-			<td>Date Start:</td>
+			<td t="True">Date Start:</td>
 			<td><xsl:value-of select="date_start"/></td>
-			<td>Date Stop:</td>
+			<td t="True">Date Stop:</td>
 			<td><xsl:value-of select="date_stop"/></td>
 		</tr><tr>
-			<td>Planned Hours:</td>
+			<td t="True">Planned Hours:</td>
 			<td><xsl:value-of select="planned_hours"/></td>
-			<td>Effective Hours:</td>
+			<td t="True">Effective Hours:</td>
 			<td><xsl:value-of select="effective_hours"/></td>
 		</tr>
 		</blockTable>

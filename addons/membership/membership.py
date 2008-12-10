@@ -225,8 +225,8 @@ membership_line()
 class Partner(osv.osv):
     '''Partner'''
 
-    def _membership_state_search_inv(self,cr,uid,ids):
-        data_inv = self.pool.get('account.invoice').browse(cr,uid,ids)
+    def _membership_state_search_inv(self, cr, uid, ids, context=None):
+        data_inv = self.pool.get('account.invoice').browse(cr, uid, ids, context)
         list_partner = []
         for data in data_inv:
             list_partner.append(data.partner_id.id)
