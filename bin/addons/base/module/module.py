@@ -261,6 +261,7 @@ class module(osv.osv):
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
         todo = self.browse(cr, uid, ids, context=context)
+        to_install = set()
         i = 0
         while i<len(todo):
             mod = todo[i]
@@ -272,7 +273,10 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed':
                     todo.append(dep.module_id)
+                elif dep.module_id.state == 'uninstalled':
+                    to_install.add(dep.module_id.id)
         self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+        self.button_install(cr, uid, list(to_install))
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
