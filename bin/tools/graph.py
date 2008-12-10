@@ -759,8 +759,6 @@ if __name__=='__main__':
     g.process(starting_node)
     g.scale(radius*3,radius*3, radius, radius)
 
-    print g
-
     import Image
     import ImageDraw
     img = Image.new("RGB", (800, 600), "#ffffff")
