@@ -28,7 +28,7 @@
     "description": """
 This module can be used by developpers to automatically publish their modules
 in a few click to the following websites:
-* http://TinyERP.com, section module
+* http://OpenERP.com, section module
 * http://TinyForge.org
 * PyPi, The python offical repository
 * http://Freshmeat.net
