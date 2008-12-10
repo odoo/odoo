@@ -1462,7 +1462,12 @@ class orm(orm_template):
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
                         cr.commit()
                 else:
-                    cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid", (self._table, k))
+                    cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+                               "FROM pg_class c,pg_attribute a,pg_type t " \
+                               "WHERE c.relname=%s " \
+                               "AND a.attname=%s " \
+                               "AND c.oid=a.attrelid " \
+                               "AND a.atttypid=t.oid", (self._table, k))
                     res = cr.dictfetchall()
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
@@ -1600,7 +1605,8 @@ class orm(orm_template):
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
                     else:
-                        print "ERROR"
+                        logger = netsvc.Logger()
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error !")
             for f,k in todo_update_store:
                 ss = self._columns[k]._symbol_set
                 update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
