@@ -108,13 +108,12 @@ class db(netsvc.Service):
                     traceback.print_exc(file=e_str)
                     traceback_str = e_str.getvalue()
                     e_str.close()
-                    print traceback_str
+                    netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
                     serv.actions[id]['traceback'] = traceback_str
                     if cr:
                         cr.close()
         logger = netsvc.Logger()
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'CREATE DB: %s' % (db_name.lower()))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
         dbi = DBInitialize()
         create_thread = threading.Thread(target=dbi,
                 args=(self, id, db_name, demo, lang, user_password))
