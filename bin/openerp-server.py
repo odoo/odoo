@@ -65,8 +65,6 @@ if sys.platform == 'win32':
     import mx.DateTime
     mx.DateTime.strptime = lambda x, y: mx.DateTime.mktime(time.strptime(x, y))
 
-#os.chdir(tools.file_path_root)
-
 #----------------------------------------------------------
 # init net service
 #----------------------------------------------------------
