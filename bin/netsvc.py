@@ -177,7 +177,7 @@ def init_logger():
 
     # add the handler to the root logger
     logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(config['log_level'])
 
     if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
         # change color of level names
