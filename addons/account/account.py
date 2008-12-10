@@ -606,8 +606,8 @@ class account_period(osv.osv):
             if role.name=='Period':
                 mode = 'draft'
                 for id in ids:
-                    cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
-                    cr.execute('update account_period set state=%s where id=%d', (mode, id))
+                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+                    cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
 account_period()
@@ -637,7 +637,7 @@ class account_journal_period(osv.osv):
 
     def _check(self, cr, uid, ids, context={}):
         for obj in self.browse(cr, uid, ids, context):
-            cr.execute('select * from account_move_line where journal_id=%d and period_id=%d limit 1', (obj.journal_id.id, obj.period_id.id))
+            cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
             res = cr.fetchall()
             if res:
                 raise osv.except_osv(_('Error !'), _('You can not modify/delete a journal with entries for this period !'))
@@ -882,7 +882,7 @@ class account_move(osv.osv):
 
         # find the first line of this move with the current mode
         # or create it if it doesn't exist
-        cr.execute('select id from account_move_line where move_id=%d and centralisation=%s limit 1', (move.id, mode))
+        cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode))
         res = cr.fetchone()
         if res:
             line_id = res[0]
@@ -901,16 +901,16 @@ class account_move(osv.osv):
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
-        cr.execute('select id from account_move_line where move_id=%d and centralisation=%s limit 1', (move.id, mode2))
+        cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode2))
         res = cr.fetchone()
         if res:
             line_id2 = res[0]
         else:
             line_id2 = 0
 
-        cr.execute('select sum('+mode+') from account_move_line where move_id=%d and id<>%d', (move.id, line_id2))
+        cr.execute('select sum('+mode+') from account_move_line where move_id=%s and id<>%s', (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
-        cr.execute('update account_move_line set '+mode2+'=%f where id=%d', (result, line_id))
+        cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
 
     #
@@ -1625,7 +1625,7 @@ class account_config_wizard(osv.osv_memory):
                 mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
                 mod_obj.download(cr, uid, [id], context=context)
                 cr.commit()
-                cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
+                cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%s and m.state='uninstalled'",(id,))
                 ret = cr.fetchall()
                 if len(ret):
                     for r in ret:

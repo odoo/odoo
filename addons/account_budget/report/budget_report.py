@@ -61,7 +61,7 @@ class budget_report(report_sxw.rml_parse):
     def lines(self, post_obj, date1, date2):
         res = []
         for a in post_obj.account_ids:
-            self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
+            self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%s AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
             achievements = float(self.cr.fetchone()[0])
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res

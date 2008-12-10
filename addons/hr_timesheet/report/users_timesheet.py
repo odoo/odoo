@@ -40,7 +40,7 @@ def emp_create_xml(cr, id, som, eom):
         "product_uom as unit "\
         "where hr.line_id=line.id "\
         "and product_uom_id = unit.id "\
-        "and line.user_id=%d and line.date >= %s and line.date < %s "
+        "and line.user_id=%s and line.date >= %s and line.date < %s "
         "order by line.date",
         (id, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
     
@@ -58,7 +58,7 @@ def emp_create_xml(cr, id, som, eom):
     time_xml = ([xml % (day, amount) for day, amount in month.iteritems()])
     
     # Computing the employee
-    cr.execute("select name from res_users where id=%d", (id,))
+    cr.execute("select name from res_users where id=%s", (id,))
     emp = cr.fetchone()[0]
     
     # Computing the xml

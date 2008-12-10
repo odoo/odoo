@@ -191,7 +191,7 @@ class partner_balance(report_sxw.rml_parse):
                 "FROM account_account a " \
                 "LEFT JOIN account_account_type t " \
                     "ON (a.type = t.code) " \
-                "WHERE a.company_id = %d " \
+                "WHERE a.company_id = %s " \
                     "AND a.type IN " + self.ACCOUNT_TYPE + " " \
                     "AND a.active", (data['form']['company_id'],))
         self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])

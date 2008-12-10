@@ -129,8 +129,8 @@ class followup_all_print(wizard.interface):
         for id in to_update.keys():
             cr.execute(
                 "UPDATE account_move_line "\
-                "SET followup_line_id=%d, followup_date=%s "\
-                "WHERE id=%d",
+                "SET followup_line_id=%s, followup_date=%s "\
+                "WHERE id=%s",
                 (to_update[id],
                 data['form']['date'], int(id),))
         return {}
@@ -230,7 +230,7 @@ class followup_all_print(wizard.interface):
         cr.execute(
             "SELECT * "\
             "FROM account_followup_followup_line "\
-            "WHERE followup_id=%d "\
+            "WHERE followup_id=%s "\
             "ORDER BY sequence", (fup_id,))
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])

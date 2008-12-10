@@ -90,7 +90,7 @@ class account_analytic_profit(report_sxw.rml_parse):
             xxx = round(price * line.unit_amount * (1-(discount or 0.0)), 2)
             res[id]['amount_th']+=xxx
             if line.invoice_id:
-                self.cr.execute('select id from account_analytic_line where invoice_id=%d', (line.invoice_id.id,))
+                self.cr.execute('select id from account_analytic_line where invoice_id=%s', (line.invoice_id.id,))
                 tot = 0
                 for lid in self.cr.fetchall():
                     lid2 = line_obj.browse(self.cr, self.uid, lid[0])

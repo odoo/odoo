@@ -65,84 +65,84 @@ class auction_total_rml(report_sxw.rml_parse):
 
 
     def sum_taxes(self,auction_id):
-            self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d group by auction_id "%(auction_id))
+            self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s group by auction_id ", (auction_id,))
             res = self.cr.fetchone()
             return res[0]
     def sold_item(self, object_id):
-        self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and state in ('unsold') "%(object_id,))
+        self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and state in ('unsold') ", (object_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
 
     def sum_buyer(self, auction_id):
-        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and (ach_uid is not null or ach_login is not null) "%(auction_id))
+        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and (ach_uid is not null or ach_login is not null) ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
 
     def sum_seller(self, auction_id):
-        self.cr.execute("select count(distinct bord_vnd_id)  from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d AND bord_vnd_id is not null "%(auction_id))
+        self.cr.execute("select count(distinct bord_vnd_id)  from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s AND bord_vnd_id is not null ", (auction_id,))
         res = self.cr.fetchone()
         return res[0]
 
     def sum_adj(self, auction_id):
-        self.cr.execute("select sum(obj_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d "%(auction_id))
+        self.cr.execute("select sum(obj_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
     def count_take(self, auction_id):
-        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and ach_emp='True' "%(auction_id))
+        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and ach_emp='True' ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
     def chek_paid(self, auction_id):
-        self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and ((paid_ach='T') or (is_ok='T')) "%(auction_id))
+        self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and ((paid_ach='T') or (is_ok='T')) ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
     def check_paid_seller(self,auction_id):
-        self.cr.execute("select sum(seller_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and paid_vnd != 'T' "%(auction_id))
+        self.cr.execute("select sum(seller_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and paid_vnd != 'T' ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0]) or 0.0
 
     def sum_credit(self,auction_id):
-        self.cr.execute("select sum(buyer_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d "%(auction_id))
+        self.cr.execute("select sum(buyer_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
     def sum_debit_buyer(self,auction_id):
-        self.cr.execute("select sum(buyer_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d "%(auction_id))
+        self.cr.execute("select sum(buyer_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0] or 0)
 
     def sum_debit(self,object_id):
-        self.cr.execute("select sum(seller_price) from auction_lots where auction_id=%d "%(object_id,))
+        self.cr.execute("select sum(seller_price) from auction_lots where auction_id=%s", (object_id,))
         res = self.cr.fetchone()
         return str(res[0] or 0)
 
     def sum_credit_seller(self, object_id):
 
 
-        self.cr.execute("select sum(seller_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d "%(object_id))
+        self.cr.execute("select sum(seller_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s", (object_id,))
         res = self.cr.fetchone()
         return str(res[0] or 0)
 
     def sum_minadj(self, auction_id):
-        self.cr.execute('select sum(lot_est1) from auction_lots where id in ('+','.join(map(str,self.total_obj))+') and auction_id=%d '%(auction_id))
+        self.cr.execute('select sum(lot_est1) from auction_lots where id in ('+','.join(map(str,self.total_obj))+') and auction_id=%s', (auction_id,))
         res = self.cr.fetchone()
         return str(res[0]) or 0
 
     def sum_maxadj(self, auction_id):
-        self.cr.execute('select sum(lot_est2) from auction_lots where id in ('+','.join(map(str,self.total_obj))+') and auction_id=%d '%(auction_id))
+        self.cr.execute('select sum(lot_est2) from auction_lots where id in ('+','.join(map(str,self.total_obj))+') and auction_id=%s', (auction_id,))
         res = self.cr.fetchone()
         return str(res[0]) or 0
 
     def sum_buyer_paid(self, auction_id):
-        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and state = 'paid' "%(auction_id))
+        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and state = 'paid' ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
     def count_comm(self, auction_id):
-        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and obj_comm is not null "%(auction_id))
+        self.cr.execute("select count(*) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%s and obj_comm is not null ", (auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 

@@ -371,14 +371,14 @@ class account_invoice(osv.osv):
             return False
         ok = True
         for id in res:
-            cr.execute('select reconcile_id from account_move_line where id=%d', (id,))
+            cr.execute('select reconcile_id from account_move_line where id=%s', (id,))
             ok = ok and  bool(cr.fetchone()[0])
         return ok
 
     def button_reset_taxes(self, cr, uid, ids, context={}):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
-            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%d", (id,))
+            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
             for taxe in ait_obj.compute(cr, uid, id).values():
                 ait_obj.create(cr, uid, taxe)
         return True
@@ -664,13 +664,13 @@ class account_invoice(osv.osv):
                 else:
                     ref = self._convert_ref(cr, uid, number)
                 cr.execute('UPDATE account_invoice SET number=%s ' \
-                        'WHERE id=%d', (number, id))
+                        'WHERE id=%s', (number, id))
                 cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%d AND (ref is null OR ref = \'\')',
+                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
                         (ref, move_id))
                 cr.execute('UPDATE account_analytic_line SET ref=%s ' \
                         'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %d ' \
+                        'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
         return True
@@ -705,7 +705,7 @@ class account_invoice(osv.osv):
         for inv in invs:
             part=inv['partner_id'] and inv['partner_id'][0]
             pc = pr = 0.0
-            cr.execute('select sum(quantity*price_unit) from account_invoice_line where invoice_id=%d', (inv['id'],))
+            cr.execute('select sum(quantity*price_unit) from account_invoice_line where invoice_id=%s', (inv['id'],))
             total = inv['amount_untaxed']
             if inv['type'] in ('in_invoice','in_refund'):
                 partnertype='supplier'
@@ -1115,7 +1115,7 @@ class account_invoice_tax(osv.osv):
 
     def move_line_get(self, cr, uid, invoice_id):
         res = []
-        cr.execute('SELECT * FROM account_invoice_tax WHERE invoice_id=%d', (invoice_id,))
+        cr.execute('SELECT * FROM account_invoice_tax WHERE invoice_id=%s', (invoice_id,))
         for t in cr.dictfetchall():
             if not t['amount'] \
                     and not t['tax_code_id'] \

@@ -45,13 +45,13 @@ class product_product(osv.osv):
             return res
 
         if context.get('shop', False):
-            cr.execute('select warehouse_id from sale_shop where id=%d', (int(context['shop']),))
+            cr.execute('select warehouse_id from sale_shop where id=%s', (int(context['shop']),))
             res2 = cr.fetchone()
             if res2:
                 context['warehouse'] = res2[0]
 
         if context.get('warehouse', False):
-            cr.execute('select lot_stock_id from stock_warehouse where id=%d', (int(context['warehouse']),))
+            cr.execute('select lot_stock_id from stock_warehouse where id=%s', (int(context['warehouse']),))
             res2 = cr.fetchone()
             if res2:
                 context['location'] = res2[0]

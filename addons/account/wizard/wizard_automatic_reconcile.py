@@ -226,11 +226,11 @@ def _reconcile(self, cr, uid, data, context):
         cr.execute(
             "SELECT partner_id " \
             "FROM account_move_line " \
-            "WHERE account_id=%d " \
+            "WHERE account_id=%s " \
             "AND reconcile_id IS NULL " \
             "AND state <> 'draft' " \
             "GROUP BY partner_id " \
-            "HAVING ABS(SUM(debit-credit)) < %f AND count(*)>0",
+            "HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0",
             (account_id, max_amount))
         partner_ids = [id for (id,) in cr.fetchall()]
 
@@ -238,8 +238,8 @@ def _reconcile(self, cr, uid, data, context):
             cr.execute(
                 "SELECT id " \
                 "FROM account_move_line " \
-                "WHERE account_id=%d " \
-                "AND partner_id=%d " \
+                "WHERE account_id=%s " \
+                "AND partner_id=%s " \
                 "AND state <> 'draft' " \
                 "AND reconcile_id IS NULL",
                 (account_id, partner_id))
@@ -253,7 +253,7 @@ def _reconcile(self, cr, uid, data, context):
         cr.execute(
             "SELECT partner_id " \
             "FROM account_move_line " \
-            "WHERE account_id=%d " \
+            "WHERE account_id=%s " \
             "AND reconcile_id IS NULL " \
             "AND state <> 'draft' " \
             "AND partner_id IS NOT NULL " \
@@ -267,8 +267,8 @@ def _reconcile(self, cr, uid, data, context):
             cr.execute(
                 "SELECT id, debit " \
                 "FROM account_move_line " \
-                "WHERE account_id=%d " \
-                "AND partner_id=%d " \
+                "WHERE account_id=%s " \
+                "AND partner_id=%s " \
                 "AND reconcile_id IS NULL " \
                 "AND state <> 'draft' " \
                 "AND debit > 0",
@@ -279,8 +279,8 @@ def _reconcile(self, cr, uid, data, context):
             cr.execute(
                 "SELECT id, credit " \
                 "FROM account_move_line " \
-                "WHERE account_id=%d " \
-                "AND partner_id=%d " \
+                "WHERE account_id=%s " \
+                "AND partner_id=%s " \
                 "AND reconcile_id IS NULL " \
                 "AND state <> 'draft' " \
                 "AND credit > 0",
@@ -297,7 +297,7 @@ def _reconcile(self, cr, uid, data, context):
         cr.execute(
             "SELECT count(*) " \
             "FROM account_move_line " \
-            "WHERE account_id=%d " \
+            "WHERE account_id=%s " \
             "AND reconcile_id IS NULL " \
             "AND state <> 'draft' " + partner_filter,
             (account_id,))

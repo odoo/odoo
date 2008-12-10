@@ -133,7 +133,7 @@ class account_move_line(osv.osv):
                     from \
                         account_move_line \
                     where \
-                        journal_id=%d and period_id=%d and create_uid=%d and state=%s \
+                        journal_id=%s and period_id=%s and create_uid=%s and state=%s \
                     order by id desc limit 1',
                     (context['journal_id'], context['period_id'], uid, 'draft'))
                 res = cr.fetchone()
@@ -148,7 +148,7 @@ class account_move_line(osv.osv):
                     from \
                         account_move_line \
                     where \
-                        journal_id=%d and period_id=%d and create_uid=%d \
+                        journal_id=%s and period_id=%s and create_uid=%s \
                     order by id desc',
                     (context['journal_id'], context['period_id'], uid))
                 res = cr.fetchone()
@@ -216,9 +216,9 @@ class account_move_line(osv.osv):
         res={}
         # TODO group the foreach in sql
         for id in ids:
-            cr.execute('SELECT date,account_id FROM account_move_line WHERE id=%d', (id,))
+            cr.execute('SELECT date,account_id FROM account_move_line WHERE id=%s', (id,))
             dt, acc = cr.fetchone()
-            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%d AND (date<%s OR (date=%s AND id<=%d))', (acc,dt,dt,id))
+            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%s AND (date<%s OR (date=%s AND id<=%s))', (acc,dt,dt,id))
             res[id] = cr.fetchone()[0]
         return res
 
@@ -281,11 +281,11 @@ class account_move_line(osv.osv):
                 elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
                     qu1.append('(i.id IS NOT NULL)')
                 else:
-                    qu1.append('(i.id %s %s)' % (x[1], '%d'))
+                    qu1.append('(i.id %s %s)' % (x[1], '%s'))
                     qu2.append(x[2])
             elif x[1] == 'in':
                 if len(x[2]) > 0:
-                    qu1.append('(i.id in (%s))' % (','.join(['%d'] * len(x[2]))))
+                    qu1.append('(i.id in (%s))' % (','.join(['%s'] * len(x[2]))))
                     qu2 += x[2]
                 else:
                     qu1.append(' (False)')
@@ -347,7 +347,7 @@ class account_move_line(osv.osv):
         dt = time.strftime('%Y-%m-%d')
         if ('journal_id' in context) and ('period_id' in context):
             cr.execute('select date from account_move_line ' \
-                    'where journal_id=%d and period_id=%d ' \
+                    'where journal_id=%s and period_id=%s ' \
                     'order by id desc limit 1',
                     (context['journal_id'], context['period_id']))
             res = cr.fetchone()
@@ -615,15 +615,15 @@ class account_move_line(osv.osv):
 
     def view_header_get(self, cr, user, view_id, view_type, context):
         if context.get('account_id', False):
-            cr.execute('select code from account_account where id=%d', (context['account_id'],))
+            cr.execute('select code from account_account where id=%s', (context['account_id'],))
             res = cr.fetchone()
             res = _('Entries: ')+ (res[0] or '')
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
-        cr.execute('select code from account_journal where id=%d', (context['journal_id'],))
+        cr.execute('select code from account_journal where id=%s', (context['journal_id'],))
         j = cr.fetchone()[0] or ''
-        cr.execute('select code from account_period where id=%d', (context['period_id'],))
+        cr.execute('select code from account_period where id=%s', (context['period_id'],))
         p = cr.fetchone()[0] or ''
         if j or p:
             return j+(p and (':'+p) or '')
@@ -716,7 +716,7 @@ class account_move_line(osv.osv):
         return result
 
     def _update_journal_check(self, cr, uid, journal_id, period_id, context={}):
-        cr.execute('select state from account_journal_period where journal_id=%d and period_id=%d', (journal_id, period_id))
+        cr.execute('select state from account_journal_period where journal_id=%s and period_id=%s', (journal_id, period_id))
         result = cr.fetchall()
         for (state,) in result:
             if state=='done':
@@ -767,7 +767,7 @@ class account_move_line(osv.osv):
         if not move_id:
             if journal.centralisation:
                 # use the first move ever created for this journal and period
-                cr.execute('select id, state, name from account_move where journal_id=%d and period_id=%d order by id limit 1', (context['journal_id'],context['period_id']))
+                cr.execute('select id, state, name from account_move where journal_id=%s and period_id=%s order by id limit 1', (context['journal_id'],context['period_id']))
                 res = cr.fetchone()
                 if res:
                     if res[1] != 'draft':

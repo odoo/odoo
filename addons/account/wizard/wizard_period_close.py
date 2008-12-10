@@ -36,8 +36,8 @@ def _data_save(self, cr, uid, data, context):
     mode = 'done'
     if data['form']['sure']:
         for id in data['ids']:
-            cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
-            cr.execute('update account_period set state=%s where id=%d', (mode, id))
+            cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+            cr.execute('update account_period set state=%s where id=%s', (mode, id))
     return {}
 
 class wiz_journal_close(wizard.interface):

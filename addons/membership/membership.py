@@ -181,10 +181,10 @@ class membership_line(osv.osv):
                 l.id = (
                     SELECT  ml.account_invoice_line FROM
                     membership_membership_line ml WHERE
-                    ml.id = %d
+                    ml.id = %s
                     )
                 )
-            ''' % line.id)
+            ''', (line.id,))
             fetched = cr.fetchone()
             if not fetched :
                 res[line.id] = 'canceled'
@@ -283,7 +283,7 @@ class Partner(osv.osv):
                 res[id] = 'free'
             if partner_data.associate_member:
                 assciate_partner = self.browse(cr,uid,partner_data.associate_member.id)
-                cr.execute('select membership_state from res_partner where id=%d', (partner_data.id,))
+                cr.execute('select membership_state from res_partner where id=%s', (partner_data.id,))
                 data_partner_state = cr.fetchall()
                 for i in assciate_partner.member_lines:
                     if i.date_from <= today and i.date_to >= today and i.account_invoice_line.invoice_id.state == 'paid' and s!=0 and data_partner_state[0][0] !='free':
@@ -358,7 +358,7 @@ class Partner(osv.osv):
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.browse(cr, uid, ids):
-            cr.execute('select membership_state from res_partner where id=%d', (partner.id,))
+            cr.execute('select membership_state from res_partner where id=%s', (partner.id,))
             data_state = cr.fetchall()
             #if partner.membership_state == 'associated':
             if data_state[0][0] == 'associated':

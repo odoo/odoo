@@ -86,7 +86,7 @@ class purchase_order(osv.osv):
             cr.execute("""update purchase_order_line set
                     date_planned=%s
                 where
-                    order_id=%d and
+                    order_id=%s and
                     (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
         return True
 

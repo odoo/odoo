@@ -205,7 +205,7 @@ class report_custom(report_rml):
                 dept = pooler.get_pool(cr.dbname).get('hr.department').browse(cr, uid, id, context.copy())
                 depts.append(dept)
 
-                cr.execute('select user_id from hr_department_user_rel where department_id=%d'%(dept.id))
+                cr.execute('select user_id from hr_department_user_rel where department_id=%s', (dept.id,))
                 result=cr.fetchall()
 
                 if result==[]:

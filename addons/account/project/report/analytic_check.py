@@ -49,19 +49,19 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
         for a in acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code']):
             self.cr.execute("SELECT sum(debit), sum(credit) \
                     FROM account_move_line \
-                    WHERE date>=%s AND date<=%s AND state<>'draft' AND account_id = %d", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND state<>'draft' AND account_id = %s", (date1, date2, a['id']))
             (gd, gc) = self.cr.fetchone()
             gd = gd or 0.0
             gc = gc or 0.0
 
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %d", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %s", (date1, date2, a['id']))
             (ad,) = self.cr.fetchone()
             ad = ad or 0.0
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %d", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %s", (date1, date2, a['id']))
             (ac,) = self.cr.fetchone()
             ac = ac or 0.0
 
@@ -85,19 +85,19 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
 #        for a in acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code','sign']):
 #            self.cr.execute("SELECT sum(debit), sum(credit) \
 #                    FROM account_move_line \
-#                    WHERE date>=%s AND date<=%s AND state<>'draft' AND account_id = %d", (date1, date2, a['id']))
+#                    WHERE date>=%s AND date<=%s AND state<>'draft' AND account_id = %s", (date1, date2, a['id']))
 #            (gd, gc) = self.cr.fetchone()
 #            gd = gd or 0.0
 #            gc = gc or 0.0
 #
 #            self.cr.execute("SELECT abs(sum(amount)) AS balance \
 #                    FROM account_analytic_line \
-#                    WHERE date>=%s AND date<=%s AND amount*%d>0 AND general_account_id = %d", (date1, date2, a['sign'], a['id']))
+#                    WHERE date>=%s AND date<=%s AND amount*%s>0 AND general_account_id = %s", (date1, date2, a['sign'], a['id']))
 #            (ad,) = self.cr.fetchone()
 #            ad = ad or 0.0
 #            self.cr.execute("SELECT abs(sum(amount)) AS balance \
 #                    FROM account_analytic_line \
-#                    WHERE date>=%s AND date<=%s AND amount*%d<0 AND general_account_id = %d", (date1, date2, a['sign'], a['id']))
+#                    WHERE date>=%s AND date<=%s AND amount*%s<0 AND general_account_id = %s", (date1, date2, a['sign'], a['id']))
 #            (ac,) = self.cr.fetchone()
 #            ac = ac or 0.0
 #

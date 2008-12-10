@@ -111,9 +111,9 @@ class tax_report(rml_parse.rml_parse):
 						LEFT JOIN account_invoice invoice ON \
 							(invoice.move_id = move.id) \
 					WHERE line.state<>%s \
-						AND line.tax_code_id = %d  \
+						AND line.tax_code_id = %s  \
 						AND line.account_id = account.id \
-						AND account.company_id = %d \
+						AND account.company_id = %s \
 						AND move.id = line.move_id \
 						AND ((invoice.state = %s) \
 							OR (invoice.id IS NULL))  \
@@ -131,9 +131,9 @@ class tax_report(rml_parse.rml_parse):
 					FROM account_move_line AS line, \
 						account_account AS account \
 					WHERE line.state <> %s \
-						AND line.tax_code_id = %d  \
+						AND line.tax_code_id = %s  \
 						AND line.account_id = account.id \
-						AND account.company_id = %d \
+						AND account.company_id = %s \
 						AND account.active \
 					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
 						company_id))
