@@ -486,7 +486,7 @@ form: module.record_id""" % (xml_id,)
                     try:
                         npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
                     except:
-                        print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
+                        self.logger.notifyChannel('init', netsvc.LOG_ERROR, "addon: %s xml_id: %s" % (self.module, xml_id))
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
                     self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
@@ -738,7 +738,7 @@ form: module.record_id""" % (xml_id,)
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
         if de.nodeName == 'terp':
-            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp /> is deprecated, use <openerp/>")
+            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp/> is deprecated, use <openerp/>")
 
         for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="data")]:
             for rec in n.childNodes:
@@ -747,7 +747,7 @@ form: module.record_id""" % (xml_id,)
                         try:
                             self._tags[rec.nodeName](self.cr, rec, n)
                         except:
-                            self.logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
+                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+rec.toxml())
                             self.cr.rollback()
                             raise
         return True
@@ -821,7 +821,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         try:
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
-            print "ERROR while importing the line: ", line
+            logger = netsvc.Logger()
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "Can not import the line: %s" % line)
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
