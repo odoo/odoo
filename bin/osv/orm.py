@@ -1530,6 +1530,12 @@ class orm(orm_template):
                                         cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_size::VARCHAR(%d)" % (self._table, k, f.size))
                                         cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_size" % (self._table,))
                                         cr.commit()
+                            if f_pg_type == 'varchar' and f._type == 'text':
+                                        cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_type" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" text " % (self._table, k))
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_type" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_type" % (self._table,))
+                                        cr.commit()
                             if f_pg_type == 'date' and f._type == 'datetime':
                                         cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_type" % (self._table, k))
                                         cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" TIMESTAMP " % (self._table, k))
