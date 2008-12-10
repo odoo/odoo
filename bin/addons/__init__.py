@@ -538,32 +538,19 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if tools.config['init']: 
             ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', tools.config['init'])])
             if ids:
-                #modobj.write(cr, ids, {'state': 'to install'})
                 modobj.button_install(cr, 1, ids)
 
         ids = modobj.search(cr, 1, ['&', '!', ('name', '=', 'base'), ('state', 'in', ('installed', 'to upgrade'))])
         if ids:
             modobj.button_upgrade(cr, 1, ids)
         
-        """
-        for module in modobj.browse(cr, uid, modobj.search(crtools.config['init']:
-            cr.execute('update ir_module_module set state=%s where state=%s and name=%s', ('to install', 'uninstalled', module))
-            cr.commit()
-
-,
-        mids = modobj.search(cr, 1, [('state','in',('installed','to install'))])
-        for m in modobj.browse(cr, 1, mids):
-            for dep in m.dependencies_id:
-                if dep.state=='uninstalled':
-                    modobj.button_install(cr, 1, [m.id])
-        #"""
-
         cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
     else:
         cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
     module_list = [name for (name,) in cr.fetchall()]
     graph = create_graph(module_list, force)
     
+    # the 'base' module has already been updated
     base = graph['base']
     for kind in ('init', 'demo', 'update'):
         if hasattr(base, kind):
