@@ -27,7 +27,7 @@
     "category" : "Generic Modules/Production",
     "depends" : ["stock", "hr", "purchase", "product","process"],
     "description": """
-    This is the base module to manage the manufacturing process in Tiny ERP.
+    This is the base module to manage the manufacturing process in Open ERP.
 
     Features:
     * Make to Stock / Make to Order (by line)

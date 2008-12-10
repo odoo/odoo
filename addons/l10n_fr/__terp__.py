@@ -35,7 +35,7 @@
     "website": "http://erp-libre.info",
     "depends" : ["base", "account", "account_chart", 'base_vat'],
      "description": """
-    This is the base module to manage the accounting chart for France in Tiny ERP.
+    This is the base module to manage the accounting chart for France in Open ERP.
 
     After Installing this module,The Configuration wizard for accounting is launched.
     * We have the account templates which can be helpful to generate Charts of Accounts.

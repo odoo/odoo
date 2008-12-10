@@ -36,7 +36,7 @@ intro_fields = {
     'text': {'string': 'Introduction', 'type': 'text', 'readonly': True,
         'default': lambda *a: """
 This system will automatically publish and upload the selected modules to the
-Tiny ERP official website. You can use it to quickly update a set of
+Open ERP official website. You can use it to quickly update a set of
 module (new version).
 
 Make sure you read the publication manual and modules guidlines
@@ -50,7 +50,7 @@ Thanks you for contributing!
 login_form = '''<?xml version="1.0"?>
 <form string="Module publication">
     <separator string="User information" colspan="4"/>
-    <label string="Please provide here your login on the Tiny ERP website."
+    <label string="Please provide here your login on the Open ERP website."
     align="0.0" colspan="4"/>
     <label string="If you don't have an access, you can create one http://www.openerp.com/"
     align="0.0" colspan="4"/>

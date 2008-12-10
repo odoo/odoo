@@ -448,7 +448,7 @@ class account_journal(osv.osv):
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
         'active': fields.boolean('Active'),
-        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Tiny ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
+        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account'),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account'),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal."),

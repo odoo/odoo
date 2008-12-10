@@ -45,7 +45,7 @@ did not installed yet, you can find this package on:
 
 This wizard will provide you the .SXW report that you can modify
 in OpenOffice. After having modified it, you will be able to reupload
-it to the Tiny ERP server.
+it to the Open ERP server.
 """},
     'operation': {
         'string': 'Operation',
@@ -83,7 +83,7 @@ get_form_result = '''<?xml version="1.0"?>
     <newline/>
     <field name="file_sxw"/>
     <newline/>
-    <label colspan="4" string="This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the Tiny OpenOffice package to modify it.\nOnce it is modified, re-upload it in Tiny ERP using this wizard." align="0.0"/>
+    <label colspan="4" string="This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the Tiny OpenOffice package to modify it.\nOnce it is modified, re-upload it in Open ERP using this wizard." align="0.0"/>
 </form>'''
 
 get_form_fields = {

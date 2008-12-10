@@ -47,7 +47,7 @@ class report_tasks(report_int):
         io = StringIO.StringIO()
 
         canv = canvas.init(fname=io, format='pdf')
-        canv.set_author("Tiny ERP")
+        canv.set_author("Open ERP")
 
         cr.execute('select id,date_start,date_stop from scrum_sprint where id=%s', (datas['id'],))
         for (id,date_start,date_stop) in cr.fetchall():

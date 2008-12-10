@@ -31,7 +31,7 @@ class GanttCanvas(object):
     def __init__(self, io, convertors=(lambda x:x,lambda x:x)):
         self._datas = {}
         self._canvas = canvas.init(fname=io, format='pdf')
-        self._canvas.set_author("Tiny ERP")
+        self._canvas.set_author("Open ERP")
         self._names = {}
         self._conv = convertors
         self._min = 0

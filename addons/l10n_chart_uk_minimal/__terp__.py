@@ -22,7 +22,7 @@
 
 #
 # This module provides a minimal UK chart of accounts for building upon further
-# Tiny ERP's default currency and accounts are remapped to this chart
+# Open ERP's default currency and accounts are remapped to this chart
 #
 # This module works for TinyERP 4.1.0 (and, assumed, onwards).
 # This module does not work for TinyERP 4.0.2 and before.
