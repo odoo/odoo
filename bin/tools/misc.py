@@ -690,6 +690,7 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(when):
+    import netsvc
     def log(f, res, *args, **kwargs):
         vector = ['Call -> function: %s' % f]
         for i, arg in enumerate(args):
@@ -697,7 +698,7 @@ def logged(when):
         for key, value in kwargs.items():
             vector.append( '  kwarg %10s: %r' % ( key, value ) )
         vector.append( '  result: %r' % res )
-        print "\n".join(vector)
+        netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, vector)
 
     def pre_logged(f):
         def wrapper(*args, **kwargs):
@@ -715,7 +716,7 @@ def logged(when):
                 return res
             finally:
                 log(f, res, *args, **kwargs)
-                print "  time delta: %s" % (time.time() - now)
+                netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, "time delta: %s" % (time.time() - now))
         return wrapper
 
     try:
