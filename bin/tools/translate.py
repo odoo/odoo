@@ -543,7 +543,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             line += 1
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             if (not row) or (not row[-1]):
-                #print "translate: skip %s" % repr(row)
                 continue
 
             # dictionary which holds values for this line of the csv file

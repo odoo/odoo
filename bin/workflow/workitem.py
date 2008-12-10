@@ -97,7 +97,6 @@ def _execute(cr, workitem, activity, ident, stack):
         if workitem['state']=='active':
             _state_set(cr, workitem, activity, 'complete', ident)
             if activity['action_id']:
-                print 'ICI'
                 res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
                 if res2:
                     stack.append(res2)
