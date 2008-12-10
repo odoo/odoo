@@ -414,7 +414,7 @@ class MigrationManager(object):
                     del mod
     
 
-def load_module_graph(cr, graph, status=None, **kwargs):
+def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
         status={}
@@ -507,12 +507,14 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 
         statusi+=1
 
-    cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
-    for (model,name) in cr.fetchall():
-        logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon object %s (%s) has no access rules!' % (model,name))
+    if check_access_rules:
+        cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+        for (model,name) in cr.fetchall():
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon object %s (%s) has no access rules!' % (model,name))
+
 
     pool = pooler.get_pool(cr.dbname)
-    cr.execute('select * from ir_model where state=%s', ('manual',))
+    cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
 
@@ -530,7 +532,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     report = tools.assertion_report()
     if update_module:
         basegraph = create_graph(['base'], force)
-        load_module_graph(cr, basegraph, status, report=report)
+        load_module_graph(cr, basegraph, status, check_access_rules=False, report=report)
         
         modobj = pool.get('ir.module.module')
         modobj.update_list(cr, 1)
