@@ -385,6 +385,7 @@ def sms_send(user, password, api_id, text, to):
     params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
     #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
     f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
+    # FIXME: Use the logger if there is an error
     print f.read()
     return True
 
