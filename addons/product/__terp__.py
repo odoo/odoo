@@ -48,7 +48,8 @@
     "update_xml" : [
         "security/product_security.xml",
         "security/ir.model.access.csv",
-        "product_data.xml","product_report.xml",
+        "product_data.xml",
+        "product_report.xml",
         "product_view.xml", "pricelist_view.xml",
         "partner_view.xml", "product_wizard.xml",
         "process/product_process.xml"
