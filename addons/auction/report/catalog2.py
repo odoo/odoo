@@ -124,20 +124,23 @@ class auction_catalog(report_rml):
                         lnum.appendChild(doc.createTextNode(escape(cat['lot_num'])))
                         infos.appendChild(lnum)
 
-                    dest = os.path.join('/tmp/pdf_catalog/',str(cwid),str(cat['obj_desc'])+'.jpg')
                     if cat['image']:
                         import random
+                        import tempfile
                         limg = doc.createElement('photo_small')
-                        file_name = '/tmp/image_%d.jpg' % (random.randint(1,1000),)
-                        fp = file(file_name,'wb+')
+
+                        file_name = tempfile.mktemp(prefix='openerp_auction_', suffix='.jpg')
+                        fp = file(file_name, 'w')
                         content = base64.decodestring(cat['image'])
                         fp.write(content)
                         fp.close()
                         fp = file(file_name,'r')
-                        size = photo_shadow.convert_catalog(fp, '/tmp/test.jpg',110)
-                        fp = file('/tmp/test.jpg')
+                        test_file_name = tempfile.mktemp(prefix='openerp_auction_test_', suffix='.jpg')
+                        size = photo_shadow.convert_catalog(fp, test_file_name,110)
+                        fp = file(test_file_name)
                         file_data = fp.read()
                         test_data = base64.encodestring(file_data)
+                        fp.close()
                         limg.appendChild(doc.createTextNode(test_data))
                         infos.appendChild(limg)
 
