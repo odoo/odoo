@@ -100,7 +100,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     import pytz
                 except:
                     logger = netsvc.Logger()
-                    logger.notifyChannel("init", netsvc.LOG_INFO, 'could not find pytz library')
+                    logger.notifyChannel("init", netsvc.LOG_WARNING, 'could not find pytz library')
                     class pytzclass(object):
                         all_timezones=[]
                     pytz=pytzclass()
