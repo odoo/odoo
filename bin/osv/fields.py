@@ -638,60 +638,27 @@ class function(_column):
 
 class related(function):
 
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, context=None):
-        where_flag = 0
-        where = " where"
-        query = "select %s.id from %s" % (obj._table, obj._table)
-        relation_child = obj._name
-        relation = obj._name
-        for i in range(len(self._arg)):
-            field_detail = self._field_get(cr, uid, obj, relation, self._arg[i])
-            relation = field_detail[0]
-            if field_detail[1] in ('one2many', 'many2many'):
-                obj_child = obj.pool.get(field_detail[2][self._arg[i]]['relation'])
-                field_detail_child = obj_child.fields_get(cr, uid,)
-
-                fields_filter = dict(filter(lambda x: x[1].get('relation', False)
-                                       and x[1].get('relation') == relation_child
-                                       and x[1].get('type')=='many2one', field_detail_child.items()))
-                query += " inner join %s on %s.id = %s.%s" % (obj_child._table, obj._table, obj_child._table, fields_filter.keys()[0])
-                relation_child = relation
-            elif field_detail[1] in ('many2one'):
-                obj_child = obj.pool.get(field_detail[2][self._arg[i]]['relation'])
-                obj_child2 = obj.pool.get(relation_child)
-                if obj_child._name == obj_child2._name:
-#                     select res_partner.id from res_partner where res_partner.parent_id in(select id from res_partner where res_partner.date >= '2008-10-01');
-#                    where +=" %s.id = %s.%s in (select id from %s where %s.%s %s %s"%(obj_child._table,obj_child2._table,self._arg[i])
-                    pass
-                else:
-                    query += " inner join %s on %s.id = %s.%s" % (obj_child._table, obj_child._table, obj_child2._table, self._arg[i])
-                relation_child = field_detail[0]
-                if i == (len(self._arg)-1):
-                    if obj_child._inherits:
-                        obj_child_inherits = obj.pool.get(obj_child._inherits.keys()[0])
-                        query += " inner join %s on %s.id = %s.%s" % (obj_child_inherits._table, obj_child_inherits._table, obj_child._table, obj_child._inherits.values()[0])
-                        obj_child = obj_child_inherits
-                    where += " %s.%s %s '%%%s%%' and" % (obj_child._table, obj_child._rec_name, context[0][1], context[0][2])
+    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context={}):
+        self._field_get2(cr, uid, obj, context)
+        i = len(self._arg)-1
+        sarg = name
+        while i>0:
+            if type(sarg) in [type([]), type( (1,) )]:
+                where = [(self._arg[i], 'in', sarg)]
             else:
-                obj_child = obj.pool.get(relation_child)
-                if field_detail[1] in ('char'):
-                    where += " %s.%s %s '%%%s%%' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-                if field_detail[1] in ('date'):
-                    where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-                if field_detail[1] in ['integer', 'long', 'float','integer_big']:
-                    where += " %s.%s %s '%s' and" % (obj_child._table, self._arg[i], context[0][1], context[0][2])
-        if len(where)>10:
-            query += where.rstrip('and')
-        cr.execute(query)
-        ids = []
-        for id in cr.fetchall():
-            ids.append(id[0])
-        return [('id', 'in', ids)]
+                where = [(self._arg[i], '=', sarg)]
+            if domain:
+                where = map(lambda x: (self._arg[i],x[1], x[2]), domain)
+                domain = []
+            sarg = obj.pool.get(self._relations[i]['object']).search(cr, uid, where, context=context)
+            i -= 1
+        return [(self._arg[0], 'in', sarg)]
 
-#    def _fnct_write(self,obj,cr, uid, ids,values, field_name, args, context=None):
-#        raise 'Not Implemented Yet'
+    def _fnct_write(self,obj,cr, uid, ids,values, field_name, args, context=None):
+        raise 'Not Implemented Yet'
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+        self._field_get2(cr, uid, obj, context)
         if not ids: return {}
         relation = obj._name
         res = {}
@@ -700,12 +667,12 @@ class related(function):
             t_data = data
             relation = obj._name
             for i in range(len(self.arg)):
-                field_detail = self._field_get(cr, uid, obj, relation, self.arg[i])
-                relation = field_detail[0]
+                field_detail = self._relations[i]
+                relation = field_detail['object']
                 if not t_data[self.arg[i]]:
                     t_data = False
                     break
-                if field_detail[1] in ('one2many', 'many2many'):
+                if field_detail['type'] in ('one2many', 'many2many'):
                     t_data = t_data[self.arg[i]][0]
                 else:
                     t_data = t_data[self.arg[i]]
@@ -717,16 +684,23 @@ class related(function):
 
     def __init__(self, *arg, **args):
         self.arg = arg
+        self._relations = []
         super(related, self).__init__(self._fnct_read, arg, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
 
-    # TODO: call field_get on the object, not in the DB
-    def _field_get(self, cr, uid, obj, model_name, prop):
-        fields = obj.pool.get(model_name).fields_get(cr, uid,[prop])
-        if fields.get(prop, False):
-            return(fields[prop].get('relation', False), fields[prop].get('type', False), fields)
-        else:
-            raise 'Field %s not exist in %s' % (prop, model_name)
+    def _field_get2(self, cr, uid, obj, context={}):
+        if self._relations:
+            return
+        obj_name = obj._name
+        for i in range(len(self._arg)):
+            f = obj.pool.get(obj_name).fields_get(cr, uid, [self._arg[i]], context=context)[self._arg[i]]
+            self._relations.append({
+                'object': obj_name,
+                'type': f['type']
 
+            })
+            if f.get('relation',False):
+                obj_name = f['relation']
+                self._relations[-1]['relation'] = f['relation']
 
 # ---------------------------------------------------------
 # Serialized fields

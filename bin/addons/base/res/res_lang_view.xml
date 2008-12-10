@@ -15,6 +15,34 @@
                 </tree>
             </field>
         </record>
+        <record id="res_lang_form" model="ir.ui.view">
+            <field name="name">res.lang.form</field>
+            <field name="model">res.lang</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Languages">
+                	<group col="4" colspan="4">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="active" />
+                    <field name="translatable"/>
+                    <field name="grouping" />
+                    <newline/>
+                    <field name="date_format"/>
+                    <field name="time_format"/>                    
+                    <field name="decimal_point"/>
+                    <field name="thousands_sep"/>
+                    <newline/>
+                    <field name="direction" />
+                    </group>
+                    
+                    <newline/>
+                    <separator colspan="4" string="Legends for Date and Time Formats"/>
+                    <field name="legend" nolabel="1" colspan="4"/>                    
+                </form>
+            </field>
+        </record>
+        
         <record id="res_lang_act_window" model="ir.actions.act_window">
             <field name="name">Languages</field>
             <field name="res_model">res.lang</field>

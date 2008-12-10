@@ -308,12 +308,16 @@ class orm_template(object):
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
             cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s,%s)", (model_id, self._name, self._description, self.__doc__, 'base'))
-            if 'module' in context:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                    ('model_'+self._name.replace('.','_'), context['module'], 'ir.model', model_id)
-                )
         else:
             model_id = cr.fetchone()[0]
+        if 'module' in context:
+            name_id = 'model_'+self._name.replace('.','_')
+            cr.execute('select * from ir_model_data where name=%s and res_id=%s', (name_id,model_id))
+            if not cr.rowcount:
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                    (name_id, context['module'], 'ir.model', model_id)
+                )
+
         cr.commit()
 
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
@@ -1522,6 +1526,12 @@ class orm(orm_template):
                                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
                                         cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
                                         cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size' % (self._table,))
+                                        cr.commit()
+                            if f_pg_type == 'varchar' and f._type == 'text':
+                                        cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_type" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" text " % (self._table, k))
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_type" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_type" % (self._table,))
                                         cr.commit()
                             if f_pg_type == 'date' and f._type == 'datetime':
                                         cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_type' % (self._table, k))

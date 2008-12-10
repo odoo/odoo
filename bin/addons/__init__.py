@@ -424,6 +424,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
 
+
     # update the graph with values from the database (if exist)
     ## First, we set the default values for each package in graph
     additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'latest_version': None})
@@ -493,8 +494,10 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
             cr.commit()
 
-            # Update translations for all installed languages
+            # Set new modules and dependencies
             modobj = pool.get('ir.module.module')
+
+            # Update translations for all installed languages
             if modobj:
                 modobj.update_translations(cr, 1, [mid], None)
                 cr.commit()
@@ -523,17 +526,49 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     force = []
     if force_demo:
         force.append('demo')
+    pool = pooler.get_pool(cr.dbname)
+    report = tools.assertion_report()
     if update_module:
-        for module in tools.config['init']:
-            # FIXME lp:304807
+        basegraph = create_graph(['base'], force)
+        load_module_graph(cr, basegraph, status, report=report)
+        
+        modobj = pool.get('ir.module.module')
+        modobj.update_list(cr, 1)
+        
+        if tools.config['init']: 
+            ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', tools.config['init'])])
+            if ids:
+                #modobj.write(cr, ids, {'state': 'to install'})
+                modobj.button_install(cr, 1, ids)
+
+        ids = modobj.search(cr, 1, ['&', '!', ('name', '=', 'base'), ('state', 'in', ('installed', 'to upgrade'))])
+        if ids:
+            modobj.button_upgrade(cr, 1, ids)
+        
+        """
+        for module in modobj.browse(cr, uid, modobj.search(crtools.config['init']:
             cr.execute('update ir_module_module set state=%s where state=%s and name=%s', ('to install', 'uninstalled', module))
             cr.commit()
+
+,
+        mids = modobj.search(cr, 1, [('state','in',('installed','to install'))])
+        for m in modobj.browse(cr, 1, mids):
+            for dep in m.dependencies_id:
+                if dep.state=='uninstalled':
+                    modobj.button_install(cr, 1, [m.id])
+        #"""
+
         cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
     else:
         cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
     module_list = [name for (name,) in cr.fetchall()]
     graph = create_graph(module_list, force)
-    report = tools.assertion_report()
+    
+    base = graph['base']
+    for kind in ('init', 'demo', 'update'):
+        if hasattr(base, kind):
+            delattr(base, kind)
+
     load_module_graph(cr, graph, status, report=report)
     if report.get_report():
         logger.notifyChannel('init', netsvc.LOG_INFO, 'assert: %s' % report)

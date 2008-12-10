@@ -261,6 +261,7 @@ class module(osv.osv):
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
         todo = self.browse(cr, uid, ids, context=context)
+        to_install = set()
         i = 0
         while i<len(todo):
             mod = todo[i]
@@ -272,7 +273,10 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed':
                     todo.append(dep.module_id)
+                elif dep.module_id.state == 'uninstalled':
+                    to_install.add(dep.module_id.id)
         self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+        self.button_install(cr, uid, list(to_install))
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
@@ -325,14 +329,14 @@ class module(osv.osv):
                 if not terp or not terp.get('installable', True):
                     continue
 
-                if not os.path.isfile( mod_path ):
-                    import imp
-                    path = imp.find_module(mod_name, [addons.ad, addons._ad])
-                    imp.load_module(name, *path)
-                else:
-                    import zipimport
-                    zimp = zipimport.zipimporter(mod_path)
-                    zimp.load_module(mod_name)
+                #if not os.path.isfile( mod_path ):
+                #    import imp
+                #    path = imp.find_module(mod_name, [addons.ad, addons._ad])
+                #    imp.load_module(name, *path)
+                #else:
+                #    import zipimport
+                #    zimp = zipimport.zipimporter(mod_path)
+                #    zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
                     'state': 'uninstalled',
@@ -347,8 +351,8 @@ class module(osv.osv):
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
                 self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
-        import socket
-        socket.setdefaulttimeout(10)
+        #import socket
+        #socket.setdefaulttimeout(10)
         for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
             try:
                 index_page = urllib.urlopen(repository.url).read()
