@@ -104,7 +104,7 @@ def init_db(cr):
                         category_id, state) \
                     values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
                 id, info.get('author', ''),
-                release.version.rsplit('.', 1)[0] + '.' + info.get('version', ''),
+                release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
             dependencies = info.get('depends', [])
@@ -251,23 +251,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
     raise IOError, 'File not found : '+str(name)
 
-
-def oswalksymlinks(top, topdown=True, onerror=None):
-    """
-    same as os.walk but follow symlinks
-    attention: all symlinks are walked before all normals directories
-    """
-    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
-        if topdown:
-            yield dirpath, dirnames, filenames
-
-        symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
-        for s in symlinks:
-            for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
-                yield x
-
-        if not topdown:
-            yield dirpath, dirnames, filenames
 
 #----------------------------------------------------------
 # iterables

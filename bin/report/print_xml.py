@@ -121,7 +121,7 @@ class document(object):
 #Pinky: Why not this ? eval(expr, browser) ?
 #       name = browser.name
 #       data_dict = browser._data[self.get_value(browser, 'id')]
-        return eval(expr)
+        return eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
         # node is the node of the xml template to be parsed

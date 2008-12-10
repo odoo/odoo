@@ -190,13 +190,16 @@ class TinyPoFile(object):
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
 
-        if "code" in map(lambda e: e[0], tnrs):
-            # only strings in python code are python formated
-            self.buffer.write("#, python-format\n")
 
-
+        code = False
         for typy, name, res_id in tnrs:
             self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
+            if typy == 'code':
+                code = True
+
+        if code:
+            # only strings in python code are python formated
+            self.buffer.write("#, python-format\n")
 
         if not isinstance(trad, unicode):
             trad = unicode(trad, 'utf8')
@@ -373,10 +376,14 @@ def trans_generate(lang, modules, dbname=None):
 
                     # export fields
                     for field_name, field_def in result['fields'].iteritems():
+                        res_name = name + ',' + field_name
                         if 'string' in field_def:
                             source = field_def['string']
-                            res_name = name + ',' + field_name
-                            push_translation(module, 'wizard_field', res_name, 0, source)
+                            push_translation(module, 'wizard_field', res_name, 0, source.encode('utf8'))
+                            
+                        if 'selection' in field_def:
+                            for key, val in field_def['selection']:
+                                push_translation(module, 'selection', res_name, 0, val.encode('utf8'))
 
                     # export arch
                     arch = result['arch']
@@ -472,7 +479,7 @@ def trans_generate(lang, modules, dbname=None):
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
-    for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
+    for root, dirs, files in tools.osutil.walksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
@@ -506,7 +513,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) # FIXME translate message
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
@@ -627,7 +634,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             logger.notifyChannel("init", netsvc.LOG_INFO,
                     "translation file loaded succesfully")
     except IOError:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+        filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
+        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -508,7 +508,7 @@
         <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_partner_form" sequence="1"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name" eval="False"/>
+			<field name="name">Partner Categories</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

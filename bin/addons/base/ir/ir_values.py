@@ -166,14 +166,19 @@ class ir_values(osv.osv):
 
             result = []
             ok = True
+            result_ids = {}
             while ok:
                 if not where_opt:
-                    cr.execute('select id from ir_values where ' +\
+                    cr.execute('select id,name,value,object,meta, key from ir_values where ' +\
                             ' and '.join(where1)+' and user_id is null', where2)
                 else:
-                    cr.execute('select id from ir_values where ' +\
+                    cr.execute('select id,name,value,object,meta, key from ir_values where ' +\
                             ' and '.join(where1+where_opt), where2)
-                result.extend([x[0] for x in cr.fetchall()])
+                for rec in cr.fetchall():
+                    if rec[0] in result_ids:
+                        continue
+                    result.append(rec)
+                    result_ids[rec[0]] = True
                 if len(where_opt):
                     where_opt.pop()
                 else:
@@ -184,13 +189,6 @@ class ir_values(osv.osv):
 
         if not result:
             return []
-        cid = self.pool.get('res.users').browse(cr, uid, uid, context={}).company_id.id
-        cr.execute('select id,name,value,object,meta, key ' \
-                'from ir_values ' \
-                'where id in ('+','.join(map(str,result))+') ' \
-                    'and (company_id is null or company_id = %d) '\
-                'ORDER BY user_id', (cid,))
-        result = cr.fetchall()
 
         def _result_get(x, keys):
             if x[1] in keys:
@@ -199,18 +197,19 @@ class ir_values(osv.osv):
             if x[3]:
                 model,id = x[2].split(',')
                 id = int(id)
-                datas = self.pool.get(model).read(cr, uid, id, False, context)
+                fields = self.pool.get(model).fields_get_keys(cr, uid)
+                pos = 0
+                while pos<len(fields):
+                    if fields[pos] in ('report_sxw_content', 'report_rml_content',
+                        'report_sxw', 'report_rml', 'report_sxw_content_data',
+                        'report_rml_content_data'):
+                        del fields[pos]
+                    else:
+                        pos+=1
+                datas = self.pool.get(model).read(cr, uid, [id], fields, context)[0]
                 if not datas:
                     #ir_del(cr, uid, x[0])
                     return False
-                def clean(x):
-                    for key in ('report_sxw_content', 'report_rml_content',
-                            'report_sxw', 'report_rml', 'report_sxw_content_data',
-                            'report_rml_content_data'):
-                        if key in x:
-                            del x[key]
-                    return x
-                datas = clean(datas)
             else:
                 datas = pickle.loads(x[2])
             if meta:

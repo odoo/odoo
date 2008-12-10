@@ -22,7 +22,8 @@
 ##############################################################################
 
 name = 'openerp-server'
-version = '5.0.0-alpha'
+version = '5.0.0-rc1'
+major_version = version.rsplit('.', 1)[0]
 description = 'OpenERP Server'
 long_desc = '''\
 OpenERP is a complete ERP and CRM. The main features are accounting (analytic
@@ -33,7 +34,7 @@ customizable reports, and SOAP and XML-RPC interfaces.
 '''
 classifiers = """\
 Development Status :: 5 - Production/Stable
-License :: OSI Approved :: GNU General Public License Version 2 (GPL-2)
+License :: OSI Approved :: GNU General Public License Version 3 (GPL-3)
 Programming Language :: Python
 """
 url = 'http://www.openerp.com'

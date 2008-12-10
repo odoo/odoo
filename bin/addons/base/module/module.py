@@ -35,111 +35,7 @@ import addons
 import pooler
 import netsvc
 
-ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
-suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
-
-def vercmp(ver1, ver2):
-    """
-    Compare two versions
-    Take from portage_versions.py
-    @param ver1: version to compare with
-    @type ver1: string (example "1.2-r3")
-    @param ver2: version to compare again
-    @type ver2: string (example "2.1-r1")
-    @rtype: None or float
-    @return:
-    1. position if ver1 is greater than ver2
-    2. negative if ver1 is less than ver2
-    3. 0 if ver1 equals ver2
-    4. None if ver1 or ver2 are invalid
-    """
-
-    match1 = ver_regexp.match(ver1)
-    match2 = ver_regexp.match(ver2)
-
-    if not match1 or not match1.groups():
-        return None
-    if not match2 or not match2.groups():
-        return None
-
-    list1 = [int(match1.group(1))]
-    list2 = [int(match2.group(1))]
-
-    if len(match1.group(2)) or len(match2.group(2)):
-        vlist1 = match1.group(2)[1:].split(".")
-        vlist2 = match2.group(2)[1:].split(".")
-        for i in range(0, max(len(vlist1), len(vlist2))):
-            # Implicit .0 is given -1, so 1.0.0 > 1.0
-            # would be ambiguous if two versions that aren't literally equal
-            # are given the same value (in sorting, for example).
-            if len(vlist1) <= i or len(vlist1[i]) == 0:
-                list1.append(-1)
-                list2.append(int(vlist2[i]))
-            elif len(vlist2) <= i or len(vlist2[i]) == 0:
-                list1.append(int(vlist1[i]))
-                list2.append(-1)
-            # Let's make life easy and use integers unless we're forced to use floats
-            elif (vlist1[i][0] != "0" and vlist2[i][0] != "0"):
-                list1.append(int(vlist1[i]))
-                list2.append(int(vlist2[i]))
-            # now we have to use floats so 1.02 compares correctly against 1.1
-            else:
-                list1.append(float("0."+vlist1[i]))
-                list2.append(float("0."+vlist2[i]))
-    # and now the final letter
-    if len(match1.group(4)):
-        list1.append(ord(match1.group(4)))
-    if len(match2.group(4)):
-        list2.append(ord(match2.group(4)))
-
-    for i in range(0, max(len(list1), len(list2))):
-        if len(list1) <= i:
-            return -1
-        elif len(list2) <= i:
-            return 1
-        elif list1[i] != list2[i]:
-            return list1[i] - list2[i]
-
-    # main version is equal, so now compare the _suffix part
-    list1 = match1.group(5).split("_")[1:]
-    list2 = match2.group(5).split("_")[1:]
-
-    for i in range(0, max(len(list1), len(list2))):
-        # Implicit _p0 is given a value of -1, so that 1 < 1_p0
-        if len(list1) <= i:
-            s1 = ("p","-1")
-        else:
-            s1 = suffix_regexp.match(list1[i]).groups()
-        if len(list2) <= i:
-            s2 = ("p","-1")
-        else:
-            s2 = suffix_regexp.match(list2[i]).groups()
-        if s1[0] != s2[0]:
-            return suffix_value[s1[0]] - suffix_value[s2[0]]
-        if s1[1] != s2[1]:
-            # it's possible that the s(1|2)[1] == ''
-            # in such a case, fudge it.
-            try:
-                r1 = int(s1[1])
-            except ValueError:
-                r1 = 0
-            try:
-                r2 = int(s2[1])
-            except ValueError:
-                r2 = 0
-            if r1 - r2:
-                return r1 - r2
-
-    # the suffix part is equal to, so finally check the revision
-    if match1.group(9):
-        r1 = int(match1.group(9))
-    else:
-        r1 = 0
-    if match2.group(9):
-        r2 = int(match2.group(9))
-    else:
-        r2 = 0
-    return r1 - r2
+from tools.parse_version import parse_version
 
 
 class module_repository(osv.osv):
@@ -158,7 +54,7 @@ class module_repository(osv.osv):
     }
     _defaults = {
         'sequence': lambda *a: 5,
-        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.version.rsplit('.', 1)[0]+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
+        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.major_version+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
         'active': lambda *a: 1,
     }
     _order = "sequence"
@@ -196,7 +92,7 @@ class module(osv.osv):
             data = f.read()
             info = eval(data)
             if 'version' in info:
-                info['version'] = release.version.rsplit('.', 1)[0] + '.' + info['version']
+                info['version'] = release.major_version + '.' + info['version']
             f.close()
         except:
             return {}
@@ -313,7 +209,7 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
@@ -403,7 +299,7 @@ class module(osv.osv):
                 terp = self.get_module_info(mod_name)
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
-                if vercmp(terp.get('version', ''), mod.latest_version or '0') > 0:
+                if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
                     self.write(cr, uid, id, {
                         'latest_version': terp.get('version'),
                         'url': ''})
@@ -429,15 +325,14 @@ class module(osv.osv):
                 if not terp or not terp.get('installable', True):
                     continue
 
-                if not os.path.isfile( mod_path ):
-                    import imp
-                    # XXX must restrict to only addons paths
-                    path = imp.find_module(mod_name)
-                    imp.load_module(name, *path)
-                else:
-                    import zipimport
-                    zimp = zipimport.zipimporter(mod_path)
-                    zimp.load_module(mod_name)
+                #if not os.path.isfile( mod_path ):
+                #    import imp
+                #    path = imp.find_module(mod_name, [addons.ad, addons._ad])
+                #    imp.load_module(name, *path)
+                #else:
+                #    import zipimport
+                #    zimp = zipimport.zipimporter(mod_path)
+                #    zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
                     'state': 'uninstalled',
@@ -452,8 +347,8 @@ class module(osv.osv):
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
                 self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
-        import socket
-        socket.setdefaulttimeout(10)
+        #import socket
+        #socket.setdefaulttimeout(10)
         for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
             try:
                 index_page = urllib.urlopen(repository.url).read()
@@ -472,7 +367,7 @@ class module(osv.osv):
                 if version == 'x': # 'x' version was a mistake
                     version = '0'
                 if name in mod_sort:
-                    if vercmp(version, mod_sort[name][0]) <= 0:
+                    if parse_version(version) <= parse_version(mod_sort[name][0]):
                         continue
                 mod_sort[name] = [version, extension]
             for name in mod_sort.keys():
@@ -494,8 +389,7 @@ class module(osv.osv):
                             ['latest_version']
                     if latest_version == 'x': # 'x' version was a mistake
                         latest_version = '0'
-                    c = vercmp(version, latest_version)
-                    if c > 0:
+                    if parse_version(version) > parse_version(latest_version):
                         self.write(cr, uid, id,
                                 {'latest_version': version, 'url': url})
                         res[0] += 1
@@ -503,8 +397,7 @@ class module(osv.osv):
                             ['published_version']
                     if published_version == 'x' or not published_version:
                         published_version = '0'
-                    c = vercmp(version, published_version)
-                    if c > 0:
+                    if parse_version(version) > parse_version(published_version):
                         self.write(cr, uid, id,
                                 {'published_version': version})
         return res
@@ -518,7 +411,7 @@ class module(osv.osv):
             version = '0'
             if match:
                 version = match.group(1)
-            if vercmp(mod.installed_version or '0', version) >= 0:
+            if parse_version(mod.installed_version or '0') >= parse_version(version):
                 continue
             res.append(mod.url)
             if not download:

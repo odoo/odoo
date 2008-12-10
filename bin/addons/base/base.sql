@@ -27,6 +27,7 @@ CREATE TABLE ir_model (
   id serial,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   name varchar(64),
+  state varchar(16),
   info text,
   primary key(id)
 );
@@ -196,7 +197,7 @@ create table wkf_activity
     signal_send varchar(32) default null,
     flow_start boolean default False,
     flow_stop boolean default False,
-    action varchar(64) default null,
+    action text default null,
     primary key(id)
 );
 

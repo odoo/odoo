@@ -505,8 +505,8 @@
                 <form string="Attachments">
                     <group colspan="4" col="6">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="1"/>
-                        <field name="create_date" select="1"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
@@ -517,7 +517,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
-                            <field name="res_model" select="1"/>
+                            <field name="res_model" select="2"/>
                             <field name="res_id"/>
                         </group>
                         <separator string="Preview" colspan="4"/>
@@ -1155,19 +1155,23 @@
                             <field name="trigger_name" select="2"/>
                         </page>
                         
-                        <page string="Email / SMS" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
-                            <separator colspan="4" string="Email Configuration"/>
-                            <field name="address" domain="[('model_id','=',model_id)]"/>
-                            <field name="sms" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','email'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
-                            <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','sms'), ('state','=','client_action'), ('state','=','other')]}" />
-                            <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
+                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
+                            <field name="action_id" select="2" colspan="4"/>
                         </page>
                         
-                        <page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
+                        <page string="Email / SMS" attrs="{'invisible':[('state','!=','sms'),('state','!=','email')]}">
+                            <separator colspan="4" string="Email Configuration"/>
+                            <field name="address" domain="[('model_id','=',model_id)]"/>
+                            <field name="sms" colspan="4" attrs="{'readonly':[('state','!=','sms')]}"/>
+                            <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','!=','email')]}" />
+                            <newline/>
+                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
+                        </page>
+                        
+                        <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
                             <field name="otype"/>
-                            <field name="srcmodel_id" select="2" attrs="{'readonly':[('type','=','copy'),('state','=','write_create')]}"/>
+                            <field name="srcmodel_id" select="2"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
@@ -1180,6 +1184,7 @@
                                     <field name="value" colsapan="4"/>
                                 </form>
                             </field>
+                            <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
                         <page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
@@ -1290,7 +1295,7 @@
                         <separator colspan="4" string=""/>
                         <label string="" colspan="2"/>
                         <group colspan="2" col="2">
-                            <button icon="gtk-cancel" special="cancel" string="Skip Step"/>
+                            <button icon="gtk-cancel" name="button_skip" string="Skip Step" type="object"/>
                             <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
                         </group>
                     </group>
