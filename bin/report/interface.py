@@ -77,28 +77,21 @@ class report_rml(report_int):
         self.xsl = xsl
         self.bin_datas = {}
         self.generators = {
-                'pdf': self.create_pdf,
-                'html': self.create_html,
-                'raw': self.create_raw,
-                'sxw': self.create_sxw,
-                }
+            'pdf': self.create_pdf,
+            'html': self.create_html,
+            'raw': self.create_raw,
+            'sxw': self.create_sxw,
+        }
 
     def create(self, cr, uid, ids, datas, context):
         xml = self.create_xml(cr, uid, ids, datas, context)
-#       file('/tmp/terp.xml','wb+').write(xml)
         if datas.get('report_type', 'pdf') == 'raw':
             return xml
         rml = self.create_rml(cr, xml, uid, context)
-#       file('/tmp/terp.rml','wb+').write(rml)
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
-        try:
-            report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
-                [('report_name', '=', self.name[7:])], context=context)
-            self.title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
-        except:
-            print 'Report not Found !'
-            self.title = 'Unknown'
+        report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
+        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
