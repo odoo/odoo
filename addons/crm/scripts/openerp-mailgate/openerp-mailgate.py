@@ -106,8 +106,8 @@ class email_parser(object):
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
         except Exception, e:
-            print e
-        #end try
+            import netsvc
+            netsvc.Logger().notifyChannel('mailgate', netsvc.LOG_ERROR, "%s" % e)
 
         id = self.rpc('crm.case', 'create', data)
         attachments = message['attachment']
@@ -122,7 +122,6 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        #end for
 
         return id
 

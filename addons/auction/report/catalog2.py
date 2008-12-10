@@ -125,24 +125,21 @@ class auction_catalog(report_rml):
                         infos.appendChild(lnum)
 
                     dest = os.path.join('/tmp/pdf_catalog/',str(cwid),str(cat['obj_desc'])+'.jpg')
-                    if not cat['image']:
-                        print "Cat with no Image "
-
-                    else:
-                            import random
-                            limg = doc.createElement('photo_small')
-                            file_name = '/tmp/image_%d.jpg' % (random.randint(1,1000),)
-                            fp = file(file_name,'wb+')
-                            content = base64.decodestring(cat['image'])
-                            fp.write(content)
-                            fp.close()
-                            fp = file(file_name,'r')
-                            size = photo_shadow.convert_catalog(fp, '/tmp/test.jpg',110)
-                            fp = file('/tmp/test.jpg')
-                            file_data = fp.read()
-                            test_data = base64.encodestring(file_data)
-                            limg.appendChild(doc.createTextNode(test_data))
-                            infos.appendChild(limg)
+                    if cat['image']:
+                        import random
+                        limg = doc.createElement('photo_small')
+                        file_name = '/tmp/image_%d.jpg' % (random.randint(1,1000),)
+                        fp = file(file_name,'wb+')
+                        content = base64.decodestring(cat['image'])
+                        fp.write(content)
+                        fp.close()
+                        fp = file(file_name,'r')
+                        size = photo_shadow.convert_catalog(fp, '/tmp/test.jpg',110)
+                        fp = file('/tmp/test.jpg')
+                        file_data = fp.read()
+                        test_data = base64.encodestring(file_data)
+                        limg.appendChild(doc.createTextNode(test_data))
+                        infos.appendChild(limg)
 
                 for key in ('lot_est1','lot_est2'):
                     ref2 = doc.createElement(key)

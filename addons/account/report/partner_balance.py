@@ -264,7 +264,6 @@ class partner_balance(report_sxw.rml_parse):
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name")
         res = self.cr.dictfetchall()
-        print "============ res",res
         for r in res:
             full_account.append(r)
 
@@ -368,8 +367,6 @@ class partner_balance(report_sxw.rml_parse):
                     #
                     r['balance'] = float(r['sdebit']) - float(r['scredit'])
 
-                    #
-                    print "=========r",r
                     completearray.append(r)
 
                 if cleanarray[i]['account_id'] == cleanarray[i-1]['account_id']:

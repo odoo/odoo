@@ -79,7 +79,6 @@ def _sign_in(self, cr, uid, data, context):
         })
     try:
         success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_in', [emp_id])
-        print success
     except:
         raise wizard.except_wizard(_('UserError'), _('A sign-in must be right after a sign-out !'))
     return {'success': success}
