@@ -77,6 +77,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self._get_lines()
+	self.lines_count = len(self.lines);
 
         self.first = True
         self.tnrs= []
@@ -90,6 +91,9 @@ class TinyPoFile(object):
 
         lines.append('') # ensure that the file ends with at least an empty line
         return lines
+
+    def cur_line(self):
+	return (self.lines_count - len(self.lines))
 
     def next(self):
         def unquote(str):
@@ -133,7 +137,7 @@ class TinyPoFile(object):
 
             while not line.startswith('msgstr'):
                 if not line:
-                    raise Exception('malformed file')
+                    raise Exception('malformed file at %d'% self.cur_line())
                 source += unquote(line)
                 line = self.lines.pop(0).strip()
 
