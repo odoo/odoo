@@ -176,7 +176,7 @@ class PoolManager(object):
         if db_name not in PoolManager._pools:
             logger = netsvc.Logger()
             try:
-                logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name.lower()))
+                logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name,))
                 PoolManager._pools[db_name] = ConnectionPool(ThreadedConnectionPool(0, PoolManager.maxconn, PoolManager.dsn(db_name)), db_name)
             except Exception, e:
                 logger.notifyChannel('dbpool', netsvc.LOG_CRITICAL, 'Unable to connect to %s: %r' % (db_name, e))
@@ -186,6 +186,7 @@ class PoolManager(object):
 
     def close(db_name):
         if db_name is PoolManager._pools:
+            logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Closing all connections to %s' % (db_name,))
             PoolManager._pools[db_name].closeall()
             del PoolManager._pools[db_name]
     close = staticmethod(close)

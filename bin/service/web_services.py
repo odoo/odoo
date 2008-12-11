@@ -148,10 +148,10 @@ class db(netsvc.Service):
         try:
             try:
                 cr.execute('DROP DATABASE ' + db_name)
-            except:
+            except Exception, e:
                 logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                    'DROP DB: %s failed' % (db_name,))
-                raise
+                        'DROP DB: %s failed:\n%s' % (db_name, e))
+                raise Exception("Couldn't drop database %s: %s" % (db_name, e))
             else:
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'DROP DB: %s' % (db_name))
