@@ -508,7 +508,7 @@ class actions_server(osv.osv):
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
                 
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-                if tools.email_send(user, address, subject, body, debug=False) == True:
+                if tools.email_send(user, [address], subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))

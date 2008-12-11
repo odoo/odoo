@@ -252,7 +252,7 @@ class ir_model_fields(osv.osv):
             vals['relation']=model_data.model
         if 'relation_field_id' in vals:
             field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
-            vals['relation'] = field_data.name
+            vals['relation_field'] = field_data.name
         if 'model_id' in vals:
             model_data=self.pool.get('ir.model').browse(cr,user,vals['model_id'])
             vals['model']=model_data.model

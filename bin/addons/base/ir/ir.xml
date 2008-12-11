@@ -1177,8 +1177,8 @@
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="otype"/>
-                            <field name="srcmodel_id" select="2"/>
+                            <field name="otype" attrs="{'invisible':[('state','=','object_create')]}"/>
+                            <field name="srcmodel_id" select="2" attrs="{'invisible':[('otype','=','copy')]}"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
@@ -1200,8 +1200,7 @@
                         </page>
                         
                     </notebook>
-                    <field name="usage"/>
-                    <field name="type"/>
+                    <field name="type" readonly="1"/>
                 </form>
             </field>
         </record>
