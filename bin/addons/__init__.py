@@ -380,7 +380,7 @@ class MigrationManager(object):
 
         from tools.parse_version import parse_version
 
-        parsed_installed_version = parse_version(pkg.installed_version)
+        parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data.get('version', '0')))
         
         versions = _get_migration_versions(pkg)
