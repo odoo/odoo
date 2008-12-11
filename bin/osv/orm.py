@@ -842,11 +842,11 @@ class orm_template(object):
                     if not trans and ('base_model_name' in context):
                         trans = tools.translate(cr, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if trans:
-                        node.setAttribute('string', trans.decode('utf8'))
+                        node.setAttribute('string', trans)
                 if node.hasAttribute('sum') and node.getAttribute('sum'):
                     trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
                     if trans:
-                        node.setAttribute('sum', trans.decode('utf8'))
+                        node.setAttribute('sum', trans)
 
         if childs:
             for f in node.childNodes:

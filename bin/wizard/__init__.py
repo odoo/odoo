@@ -54,7 +54,7 @@ class interface(netsvc.Service):
             if node.hasAttribute('string') and node.getAttribute('string'):
                 trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.getAttribute('string').encode('utf8'))
                 if trans:
-                    node.setAttribute('string', trans.decode('utf8'))
+                    node.setAttribute('string', trans)
         for n in node.childNodes:
             self.translate_view(cr, n, state, lang)
 
