@@ -23,7 +23,7 @@
     "name" : "Analytic planning - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["account", "hr_timesheet_invoice","project","report_analytic_line"],
     "category" : "Generic Modules/Accounting",
     "description": "Planning on analytic accounts.",

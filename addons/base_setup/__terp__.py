@@ -23,7 +23,7 @@
     "name" : "Base Setup",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": """
     This module implements a configuration system that helps user

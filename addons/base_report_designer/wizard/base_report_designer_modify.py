@@ -41,7 +41,7 @@ intro_fields = {
         'readonly': True,
         'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
 did not installed yet, you can find this package on:
-    http://tinyerp.com
+    http://www.openerp.com
 
 This wizard will provide you the .SXW report that you can modify
 in OpenOffice. After having modified it, you will be able to reupload

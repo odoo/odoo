@@ -31,7 +31,7 @@
     Taxes management
     Budgets
     """,
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
     ],

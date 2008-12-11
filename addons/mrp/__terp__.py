@@ -23,7 +23,7 @@
     "name" : "Manufacturing Resource Planning",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_mrp.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["stock", "hr", "purchase", "product","process"],
     "description": """

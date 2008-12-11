@@ -23,7 +23,7 @@
     "name" : "Budget Management",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_crossovered_budget.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "description": """This module allow accountants to manage analytic and crossovered budgets.
 

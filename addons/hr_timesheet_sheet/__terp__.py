@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Human Resources",
-    "website" : "http://tinyerp.com/module_hr.html",
+    "website" : "http://www.openerp.com",
     "description": """
 This module help you easily encode and validate timesheet and attendances
 within the same view. The upper part of the view is for attendances and

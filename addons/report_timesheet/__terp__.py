@@ -23,7 +23,7 @@
     "name" : "Timesheet - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["hr_timesheet",'hr_timesheet_invoice'],
     "category" : "Generic Modules/Human Resources",
     "init_xml" : [],

@@ -34,7 +34,7 @@ Basic Accounting, plus new things which available are:
     * Accounting Periods
     """,
     "category" : "Generic Modules/Accounting",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["base", "account"],
     "init_xml" : [
     ],

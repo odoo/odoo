@@ -23,7 +23,7 @@
     "name" : "Project Timesheet",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Human Resources",
     "description": """
         This module lets you transfer the entries under tasks defined for Project Management to

@@ -23,7 +23,7 @@
     "name" : "Purchase Analytic Distribution Management",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_sale.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["purchase","account_analytic_plans"],
     "category" : "Generic Modules/Sales & Purchases",
     "init_xml" : [],

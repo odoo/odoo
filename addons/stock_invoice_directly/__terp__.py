@@ -23,7 +23,7 @@
     "name" : "Invoice Picking Directly",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_sale.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["delivery", "stock"],
     "category" : "Generic Modules/Sales & Purchases",
     "description": """

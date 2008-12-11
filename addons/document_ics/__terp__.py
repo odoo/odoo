@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
-    "website": "http://www.tinyerp.com",
+    "website": "http://www.openerp.com",
     "description": """Allows to synchronize calendars with others applications.""",
     "depends" : ["document","crm_configuration"],
     "init_xml" : ["document_data.xml"],

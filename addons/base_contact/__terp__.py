@@ -23,7 +23,7 @@
     "name" : "Base Contact",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": """
         This module allows you to manage entirely your contacts.

@@ -23,7 +23,7 @@
     "name" : "Module publisher",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": """
 This module can be used by developpers to automatically publish their modules

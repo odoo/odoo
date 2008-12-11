@@ -25,7 +25,7 @@
     "depends" : ["account"],
     "author" : "Tiny",
     "description": """Financial and accounting reporting""",
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [ ],
     "demo_xml" : [ ],

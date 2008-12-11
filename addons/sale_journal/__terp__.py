@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Sales & Purchases",
-    "website": "http://www.tinyerp.com",
+    "website": "http://www.openerp.com",
     "depends" : ["stock","sale"],
     "demo_xml" : ['sale_journal_demo.xml'],
     "init_xml" : ['sale_journal_data.xml'],

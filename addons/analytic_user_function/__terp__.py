@@ -31,7 +31,7 @@
     Obviously if no data has been recorded for the current account, the default value is given as usual by the employee data so that this module is perfectly compatible with older configurations.
 
     """,
-    "website" : "http://tinyerp.com/",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Others",
     "init_xml" : [],
     "demo_xml" : [],

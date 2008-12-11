@@ -57,7 +57,7 @@ intro_start_fields = {
     'version': {'string':'Version', 'type':'char', 'size':16, 'required':True},
     'author': {'string':'Author', 'type':'char', 'size':64, 'default': lambda *args: 'Tiny', 'required':True},
     'category': {'string':'Category', 'type':'char', 'size':64, 'default': lambda *args: 'Vertical Modules/Parametrization', 'required':True},
-    'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://tinyerp.com', 'required':True},
+    'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://www.openerp.com', 'required':True},
     'description': {'string':'Full Description', 'type':'text', 'required':True},
     'data_kind': {'string':'Type of Data', 'type':'selection', 'selection':[('demo','Demo Data'),('update','Normal Data')], 'required':True, 'default': lambda *args:'update'},
 }

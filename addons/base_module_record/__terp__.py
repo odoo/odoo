@@ -23,7 +23,7 @@
     "name" : "Module Recorder",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": """
 This module allows you to create a new module without any development.

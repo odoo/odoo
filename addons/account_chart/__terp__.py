@@ -25,7 +25,7 @@
     "depends" : ["account"],
     "author" : "Tiny",
     "description": """Remove minimal account chart""",
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
     ],

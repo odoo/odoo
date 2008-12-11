@@ -29,7 +29,7 @@ Especially useful for b2c businesses.
     
 This module implement the modification on the invoice form.
 """,
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [ ],
     "demo_xml" : [ ],
