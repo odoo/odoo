@@ -30,7 +30,7 @@ people to intelligently and efficiently manage tasks, issues, and requests.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
-Open ERP ensures that all cases are successfly tracked by users, customers and
+Open ERP ensures that all cases are successfully tracked by users, customers and
 suppliers. It can automatically send reminders, escalate the request, trigger
 specific methods and lots of others actions based on your enterprise own rules.
 
