@@ -689,7 +689,7 @@
                                         <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
                                         <field name="relation_id" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
-                                                                                  'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
+                                                                                  'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                         <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
                                                                              'readonly': [('ttype','!=','one2many')]}"/>
                                         <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
