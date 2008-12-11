@@ -503,8 +503,10 @@ class orm_template(object):
                                 module, xml_id = current_module, line[i]
                             ir_model_data_obj = self.pool.get('ir.model.data')
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-                            res_id = ir_model_data_obj.read(cr, uid, [id],
-                                    ['res_id'])[0]['res_id']
+			    res_res_id = ir_model_data_obj.read(cr, uid, [id],
+                                    ['res_id'])
+			    if res_res_id:
+				    res_id = res_res_id[0]['res_id']
                     row[field[0][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
