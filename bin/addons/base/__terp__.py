@@ -23,7 +23,7 @@
     "name" : "Base",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://openerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": "The kernel of OpenERP, needed for all installation.",
     "depends" : [],
