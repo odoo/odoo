@@ -59,6 +59,12 @@ logger = netsvc.Logger()
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import tools
+
+logger.notifyChannel("server", netsvc.LOG_INFO, "version - %s" % release.version )
+for name, value in [('addons_path', tools.config['addons_path']),
+                    ('database hostname', tools.config['db_host'] or 'localhost')]:
+    logger.notifyChannel("server", netsvc.LOG_INFO, "%s - %s" % ( name, value ))
+
 import time
 
 if sys.platform == 'win32':
@@ -93,7 +99,10 @@ if tools.config['upgrade']:
 #----------------------------------------------------------
 # import basic modules
 #----------------------------------------------------------
-import osv, workflow, report, service
+import osv
+import workflow
+import report
+import service
 
 #----------------------------------------------------------
 # import addons
@@ -152,17 +161,14 @@ if tools.config['xmlrpc']:
     if tools.config["xmlrpc"]:
         xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
         httpd.attach("/xmlrpc", xml_gw)
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                "starting XML-RPC" + \
-                        (tools.config['secure'] and ' Secure' or '') + \
-                        " services, port " + str(port))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC%s services, port %s" % ((tools.config['secure'] and ' Secure' or ''), port))
 
-    #
-    #if tools.config["soap"]:
-    #   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-    #   httpd.attach("/soap", soap_gw )
-    #   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-    #
+#
+#if tools.config["soap"]:
+#   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
+#   httpd.attach("/soap", soap_gw )
+#   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
+#
 
 if tools.config['netrpc']:
     try:
