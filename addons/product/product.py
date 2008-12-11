@@ -160,7 +160,7 @@ class product_ul(osv.osv):
     _name = "product.ul"
     _description = "Shipping Unit"
     _columns = {
-        'name' : fields.char('Name', size=64,select=True),
+        'name' : fields.char('Name', size=64,select=True, required=True),
         'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('palet', 'Palet')], 'Type', required=True),
     }
 product_ul()
