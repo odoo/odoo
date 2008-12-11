@@ -27,18 +27,74 @@
                     <field name="active" />
                     <field name="translatable"/>
                     <field name="grouping" />
+                    <field name="direction" />
                     <newline/>
                     <field name="date_format"/>
                     <field name="time_format"/>                    
                     <field name="decimal_point"/>
                     <field name="thousands_sep"/>
                     <newline/>
-                    <field name="direction" />
-                    </group>
                     
                     <newline/>
+                    </group>
                     <separator colspan="4" string="Legends for Date and Time Formats"/>
-                    <field name="legend" nolabel="1" colspan="4"/>                    
+                    <group col="4" colspan="4">
+	                     <label align="0.0" string="%%a - Abbreviated weekday name."/>
+	                     <label align="0.0" string="%%A - Full weekday name."/>
+	                     <newline/>
+	                     <label align="0.0" string="%%b - Abbreviated month name."/>
+	                     <label align="0.0" string="%%B - Full month name." />
+	                     <newline/>
+	                     <label align="0.0" string="%%c - Appropriate date and time representation." />
+	                     <label align="0.0" string="%%d - Day of the month as a decimal number [01,31]." />
+	                     <newline/>
+	                     <label align="0.0" string="%%H - Hour (24-hour clock) as a decimal number [00,23]." />
+	                     <label align="0.0" string="%%I - Hour (12-hour clock) as a decimal number [01,12]." />
+	                     <newline/>
+	                     <label align="0.0" string="%%j - Day of the year as a decimal number [001,366]." />
+	                     <label align="0.0" string="%%m - Month as a decimal number [01,12]." />
+	                     <newline/>
+	                     <label align="0.0" string="%%M - Minute as a decimal number [00,59]." />
+	                     <label align="0.0" string="%%p - Equivalent of either AM or PM." />
+	                     <newline/>
+	                     <label align="0.0" string="%%S - Second as a decimal number [00,61]." />
+	                     <label align="0.0" string="%%w - Weekday as a decimal number [0(Sunday),6]." />
+	                     <newline/>
+	                     <label align="0.0" string="%%x - Appropriate date representation." />
+	                     <label align="0.0" string="%%X - Appropriate time representation." />
+	                     <newline/>
+	                     <label align="0.0" string="%%y - Year without century as a decimal number [00,99]." />
+	                     <label align="0.0" string="%%Y - Year with century as a decimal number." />
+	                     <newline/>
+	                     <label align="0.0" string="%%U - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0." />
+	                	 <label align="0.0" string="%%W - Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0." />
+	                	 <newline/>
+	                     <label align="0.0" string="======================================================" />
+                    </group>
+                    <newline/>
+                    <group colspan="4" cols="4">
+	                    <separator string="Examples"/>
+	                    <newline/>
+	                    <label align="0.0" string="1.  %%c              ==> Fri Dec  5 18:25:20 2008"/>
+		                <label align="0.0" string="2.  %%a ,%%A         ==> Fri, Friday"/>
+		                <newline/>
+		                <label align="0.0" string="3.  %%x ,%%X         ==> 12/05/08, 18:25:20"/>
+		                <label align="0.0" string="4.  %%b, %%B         ==> Dec, December"/>
+		                <newline/>
+		                <label align="0.0" string="5.  %%y, %%Y         ==> 08, 2008"/>
+		                <label align="0.0" string="6.  %%d, %%m         ==> 05, 12"/>
+		                <newline/>
+		                <label align="0.0" string="7.  %%H:%%M:%%S      ==> 18:25:20"/>
+		                <label align="0.0" string="8.  %%I:%%M:%%S %%p  ==> 06:25:20 PM"/>
+		                <newline/>
+		                <label align="0.0" string="9.  %%j              ==> 340"/>
+		                <label align="0.0" string="10. %%S              ==> 20"/>
+		                <newline/>
+		                <label align="0.0" string="11. %%U or %%W       ==> 48 (49th week)"/>
+		                <label align="0.0" string="12. %%w              ==> 5 ( Friday is the 6th day)"/>
+		                <newline/>
+                    </group>
+                                      
                 </form>
             </field>
         </record>

@@ -44,7 +44,6 @@ class lang(osv.osv):
         'grouping':fields.char('Separator Format',size=64,required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),        
         'decimal_point':fields.char('Decimal Separator', size=64,required=True),
         'thousands_sep':fields.char('Thousands Separator',size=64),
-        'legend':fields.text('Legends for Date and Time Formats',readonly=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -55,40 +54,6 @@ class lang(osv.osv):
         'grouping':lambda *a: '[]',
         'decimal_point':lambda *a: '.',
         'thousands_sep':lambda *a: ',',
-        'legend': lambda *a: '%a  - Abbreviated weekday name.\
-\n%A  - Full weekday name.\
-\n%b  - Abbreviated month name.\
-\n%B  - Full month name.     \
-\n%c  - Appropriate date and time representation.\
-\n%d  - Day of the month as a decimal number [01,31].\
-\n%H  - Hour (24-hour clock) as a decimal number [00,23].\
-\n%I  - Hour (12-hour clock) as a decimal number [01,12].\
-\n%j  - Day of the year as a decimal number [001,366].\
-\n%m  - Month as a decimal number [01,12].\
-\n%M  - Minute as a decimal number [00,59].\
-\n%p  - Equivalent of either AM or PM.\
-\n%S  - Second as a decimal number [00,61].\
-\n%U  - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0.\
-\n%w  - Weekday as a decimal number [0(Sunday),6].\
-\n%W  - Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0.\
-\n%x  - Appropriate date representation.\
-\n%X  - Appropriate time representation.\
-\n%y  - Year without century as a decimal number [00,99].\
-\n%Y  - Year with century as a decimal number.\
-\n ==========================================\
-\n\nExamples:\
-\n1.  %c ==> Fri Dec  5 18:25:20 2008\
-\n2.  %a ,%A ==> Fri, Friday\
-\n3.  %x ,%X ==> 12/05/08, 18:25:20\
-\n4.  %b, %B ==> Dec, December\
-\n5.  %y, %Y ==> 08, 2008\
-\n6.  %d, %m ==> 05, 12\
-\n7.  %H:%M:%S ==> 18:25:20\
-\n8.  %I:%M:%S %p ==> 06:25:20 PM\
-\n9.  %j ==> 340\
-\n10. %S ==> 20\
-\n11. %U or %W ==> 48 (49th week)\
-\n12. %w ==> 5 ( Friday is the 6th day)',
     }
     
     def _group(self,cr,uid,ids,s, monetary=False):
