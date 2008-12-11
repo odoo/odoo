@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_workflow_root" name="Workflows" parent="menu_custom"/>
+        <menuitem id="menu_workflow_root" name="Workflow Definitions" parent="menu_custom"/>
         
         <!--
 	================================
@@ -110,7 +110,7 @@
         </record>
         
         <record id="action_workflow_activity_form" model="ir.actions.act_window">
-            <field name="name">Activites</field>
+            <field name="name">Activities</field>
             <field name="res_model">workflow.activity</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_activity_tree"/>
@@ -207,7 +207,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_instance_tree"/>
         </record>
-        <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_workflow_root"/>
+        <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
         
         <!--
 	================================
@@ -248,7 +248,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_workitem_tree"/>
         </record>
-        <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_workflow_root"/>
+        <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
         
     </data>
 </openerp>
