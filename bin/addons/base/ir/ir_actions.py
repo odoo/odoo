@@ -387,8 +387,9 @@ class actions_server(osv.osv):
         'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
         'trigger_name': fields.char('Trigger Name', size=128),
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
+        'email': fields.many2one('ir.model.fields', 'Contact'),
         'message': fields.text('Message', translate=True),
-        'address': fields.many2one('ir.model.fields', 'Email / Mobile'),
+        'mobile': fields.many2one('ir.model.fields', 'Contact'),
         'sms': fields.char('SMS', size=160, translate=True),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
@@ -416,17 +417,39 @@ class actions_server(osv.osv):
         'otype': lambda *a: 'copy',
     }
 
-    def get_field_value(self, cr, uid, action, context):
+    
+    def get_email(self, cr, uid, action, context):
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
 
         fields = None
 
-        if '/' in action.address.complete_name:
-            fields = action.address.complete_name.split('/')
-        elif '.' in action.address.complete_name:
-            fields = action.address.complete_name.split('.')
+        if '/' in action.email.complete_name:
+            fields = action.email.complete_name.split('/')
+        elif '.' in action.email.complete_name:
+            fields = action.email.complete_name.split('.')
+
+        for field in fields:
+            try:
+                obj = getattr(obj, field)
+            except Exception,e :
+                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+
+        return obj
+
+
+    def get_mobile(self, cr, uid, action, context):
+        obj_pool = self.pool.get(action.model_id.model)
+        id = context.get('active_id')
+        obj = obj_pool.browse(cr, uid, id)
+
+        fields = None
+
+        if '/' in action.mobile.complete_name:
+            fields = action.mobile.complete_name.split('/')
+        elif '.' in action.mobile.complete_name:
+            fields = action.mobile.complete_name.split('.')
 
         for field in fields:
             try:
@@ -442,13 +465,13 @@ class actions_server(osv.osv):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
-            return eval(match[2:-2], {'object':obj, 'context': context,'time':time})
+            exp = str(match.group()[2:-2]).strip()
+            return eval(exp, {'object':obj, 'context': context,'time':time})
 
         com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
         return message
 
-    #
     # Context should contains:
     #   ids : original ids
     #   id  : current id of the object
@@ -478,11 +501,14 @@ class actions_server(osv.osv):
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
-                address = self.get_field_value(cr, uid, action, context)
+                address = self.get_email(cr, uid, action, context)
                 if not address:
                     raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
+                if not user:
+                    raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
+                
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-                if tools.email_send_attach(user, address, subject, body, debug=False) == True:
+                if tools.email_send(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))
@@ -499,7 +525,7 @@ class actions_server(osv.osv):
                 # for the sms gateway user / password
                 api_id = ''
                 text = action.sms
-                to = self.get_field_value(cr, uid, action, context)
+                to = self.get_mobile(cr, uid, action, context)
                 #TODO: Apply message mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
