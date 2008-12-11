@@ -107,49 +107,33 @@ class module(osv.osv):
                 res[m.id] = ''
         return res
 
-    def _get_menus(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                menu_txt = ''
-                menus_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.menu')])
-                for data_id in model_data_obj.browse(cr,uid,menus_id):
-                    menu_txt += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
-                res[m.id] = menu_txt
-            else:
-                res[m.id] = ''
-        return res
-
-    def _get_reports(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        report_obj = self.pool.get('ir.actions.report.xml')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                report_txt = ''
-                report_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.actions.report.xml')])
-                for data_id in model_data_obj.browse(cr,uid,report_id):
-                    report_txt += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = report_txt
-            else:
-                res[m.id] = ''
-        return res
-
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
-        for m in self.browse(cr, uid, ids, context=context):
-            if m.state == 'installed':
-                view_txt = ''
-                view_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.view')])
-                for data_id in model_data_obj.browse(cr,uid,view_id):
-                    view_txt += view_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = view_txt
-            else:
-                res[m.id] = ''
+        report_obj = self.pool.get('ir.actions.report.xml')
+        menu_obj = self.pool.get('ir.ui.menu')
+        mlist = self.browse(cr, uid, ids, context=context)
+        mnames = {}
+        for m in mlist:
+            mnames[m.name] = m.id
+            res[m.id] = {
+                'menus_by_module':'',
+                'reports_by_module':'',
+                'views_by_module': ''
+            }
+        view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
+            ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
+        for data_id in model_data_obj.browse(cr,uid,view_id,context):
+            key = data_id['model']
+            if key=='ir.ui.view':
+                v = view_obj.browse(cr,uid,data_id.res_id)
+                aa = v.inherit_id and '* INHERIT ' or ''
+                res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+            elif key=='ir.actions.report.xml':
+                res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+            elif key=='ir.ui.menu':
+                res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
         return res
 
     _columns = {
@@ -182,9 +166,9 @@ class module(osv.osv):
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
                 ('Other proprietary', 'Other proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
-        'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
+        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta"),
+        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta"),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta"),
     }
 
     _defaults = {

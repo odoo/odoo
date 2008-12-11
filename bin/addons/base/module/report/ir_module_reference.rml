@@ -137,6 +137,13 @@
         </tr>
       </blockTable>
       <para style="P6">[[ format(module.description or '') ]]</para>
+      <h1>Menus</h1>
+      <para style="P6">[[ format(module.menus_by_module or '') ]]</para>
+      <h1>Reports</h1>
+      <para style="P6">[[ format(module.reports_by_module or '') ]]</para>
+      <h1>Views</h1>
+      <para style="P6">[[ format(module.views_by_module or '') ]]</para>
+      <h1>Objects</h1>
       <section>
         <para style="Standard">[[ repeatIn(findobj(module.name) ,'object') ]]</para>
         <blockTable colWidths="510.0" repeatRows="1" style="Tableau3">
