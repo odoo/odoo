@@ -131,22 +131,23 @@ class questionnaire(osv.osv):
         query = """
         select name, id
         from crm_profiling_question
-        where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""% data['form']['questionnaire_name']
-        cr.execute(query)
+        where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""
+        res = cr.execute(query, data['form']['questionnaire_name'])
+        result = cr.fetchall()
         quest_fields={}
         quest_form='''<?xml version="1.0"?>
             <form string="%s">''' % _('Questionnaire')
-        for x in cr.fetchall():
+        for x in result:
             quest_form = quest_form + '''<field name="quest_form'''+str(x[1])+'''"/><newline/>'''
             quest_fields['quest_form'+str(x[1])] = {'string': str(x[0]), 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',x[1])] }
         quest_form = quest_form + '''</form>'''      
         return quest_form,quest_fields
 
-    _columns={
+    _columns = {
         'name': fields.char("Questionnaire",size=128, required=True),
         'description':fields.text("Description", required=True),
         'questions_ids': fields.many2many('crm_profiling.question','profile_questionnaire_quest_rel','questionnaire', 'question', "Questions"),
-        }
+    }
 
 questionnaire()
 
