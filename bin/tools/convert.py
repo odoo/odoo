@@ -607,7 +607,12 @@ form: module.record_id""" % (xml_id,)
                 count = int(rec_src_count)
                 if len(ids) != count:
                     self.assert_report.record_assertion(False, severity)
-                    self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (search count is incorrect: ' + str(len(ids)) + ')' )
+                    msg = 'assertion "%s" failed!\n'    \
+                          ' Incorrect search count:\n'  \
+                          ' expected count: %d\n'       \
+                          ' obtained count: %d\n'       \
+                          % (rec_string, count, len(ids))
+                    self.logger.notifyChannel('init', severity, msg)
                     sevval = getattr(logging, severity.upper())
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
@@ -630,10 +635,16 @@ form: module.record_id""" % (xml_id,)
             globals['_ref'] = ref
             for test in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="test")]:
                 f_expr = test.getAttribute("expr").encode('utf-8')
-                f_val = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
-                if eval(f_expr, globals) != f_val: # assertion failed
+                expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
+                expression_value = eval(f_expr, globals)
+                if expression_value != expected_value: # assertion failed
                     self.assert_report.record_assertion(False, severity)
-                    self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (tag ' + test.toxml() + ')' )
+                    msg = 'assertion "%s" failed!\n'    \
+                          ' xmltag: %s\n'               \
+                          ' expected value: %r\n'       \
+                          ' obtained value: %r\n'       \
+                          % (rec_string, test.toxml(), expected_value, expression_value)
+                    self.logger.notifyChannel('init', severity, msg)
                     sevval = getattr(logging, severity.upper())
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
