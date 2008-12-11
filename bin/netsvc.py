@@ -206,7 +206,7 @@ class Logger(object):
         log = logging.getLogger(name)
         level_method = getattr(log, level)
 
-        result = msg.strip().split('\n')
+        result = str(msg).strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
                 level_method('[%02d]: %s' % (idx+1, s,))
