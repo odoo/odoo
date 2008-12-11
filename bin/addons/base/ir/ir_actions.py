@@ -396,10 +396,7 @@ class actions_server(osv.osv):
         'type': fields.char('Report Type', size=32, required=True),
         'srcmodel_id': fields.many2one('ir.model', 'Model'),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
-        'otype': fields.selection([
-            ('copy','Create in Same Model'),
-            ('new','Create in Other Model')
-        ], 'Create Model', size=32, change_default=True),
+        'record_id':fields.many2one('ir.model.fields', 'Record Id')
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -414,7 +411,6 @@ class actions_server(osv.osv):
 #    - ids
 # If you plan to return an action, assign: action = {...}
 """,
-        'otype': lambda *a: 'copy',
     }
 
     
@@ -558,9 +554,15 @@ class actions_server(osv.osv):
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
-                obj_pool = self.pool.get(action.model_id.model)
-                obj_pool.write(cr, uid, [context.get('active_id')], res)
 
+                if not action.srcmodel_id:
+                    obj_pool = self.pool.get(action.model_id.model)
+                    obj_pool.write(cr, uid, [context.get('active_id')], res)
+                else:
+                    obj_pool = self.pool.get(action.srcmodel_id.model)
+                    id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.record_id.name])
+                    obj_pool.write(cr, uid, [int(id[0][action.record_id.name])], res)
+                
             if action.state == 'object_create':
                 res = {}
                 for exp in action.fields_lines:
@@ -574,13 +576,10 @@ class actions_server(osv.osv):
                     res[exp.col1.name] = expr
 
                 obj_pool = None
-                if action.state == 'object_create' and action.otype == 'new':
-                    obj_pool = self.pool.get(action.srcmodel_id.model)
-                    obj_pool.create(cr, uid, res)
-                else:
-                    obj_pool = self.pool.get(action.model_id.model)
-                    id = context.get('active_id')
-                    obj_pool.copy(cr, uid, id, res)
+                res_id = False
+                obj_pool = self.pool.get(action.srcmodel_id.model)
+                res_id = obj_pool.create(cr, uid, res)
+                self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
 
         return False
 actions_server()

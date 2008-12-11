@@ -1177,8 +1177,7 @@
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="otype" attrs="{'invisible':[('state','=','object_create')]}"/>
-                            <field name="srcmodel_id" select="2" attrs="{'invisible':[('otype','=','copy')]}"/>
+                            <field name="srcmodel_id" select="2"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
@@ -1191,6 +1190,7 @@
                                     <field name="value" colspan="4"/>
                                 </form>
                             </field>
+                            <field name="record_id" attrs="{'invisible':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
