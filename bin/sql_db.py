@@ -69,8 +69,11 @@ class Cursor(object):
         self.dbname = pool.dbname
 
     def execute(self, query, params=None):
-        if not params:
+        if params is None:
             params=()
+        if not isinstance(params, (tuple, list)):
+            params = (params,)
+
         def base_string(s):
             if isinstance(s, unicode):
                 return s.encode('utf-8')
