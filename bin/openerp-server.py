@@ -53,9 +53,6 @@ __version__ = release.version
 # get logger
 #----------------------------------------------------------
 import netsvc
-
-netsvc.init_logger()
-
 logger = netsvc.Logger()
 
 #-----------------------------------------------------------------------
@@ -68,8 +65,6 @@ if sys.platform == 'win32':
     import mx.DateTime
     mx.DateTime.strptime = lambda x, y: mx.DateTime.mktime(time.strptime(x, y))
 
-#os.chdir(tools.file_path_root)
-
 #----------------------------------------------------------
 # init net service
 #----------------------------------------------------------
@@ -81,35 +76,13 @@ dispatcher.monitor(signal.SIGINT)
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
-import psycopg
 import pooler
-
-db_name = tools.config["db_name"]
-
-# test whether it is needed to initialize the db (the db is empty)
-#try:
-#    cr = pooler.get_db_only(db_name).cursor()
-#except psycopg.OperationalError:
-#    logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
-#    cr = None
-#if cr:
-#    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
-#    if len(cr.fetchall())==0:
-##if False:
-#        logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-#        tools.init_db(cr)
-#        # in that case, force --init=all
-#        tools.config["init"]["all"] = 1
-#        tools.config['update']['all'] = 1
-#        if not tools.config['without_demo']:
-#            tools.config["demo"]['all'] = 1
-#    cr.close()
 
 #----------------------------------------------------------
 # launch modules install/upgrade/removes if needed
 #----------------------------------------------------------
 if tools.config['upgrade']:
-    print 'Upgrading new modules...'
+    logger.notifyChannel('init', netsvc.LOG_INFO, 'Upgrading new modules...')
     import tools.upgrade
     (toinit, toupdate) = tools.upgrade.upgrade()
     for m in toinit:

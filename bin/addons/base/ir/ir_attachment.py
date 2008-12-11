@@ -52,12 +52,11 @@ class ir_attachment(osv.osv):
         cache = {}
         ima = self.pool.get('ir.model.access')
         for m in models:
-            if m['res_model'] in cache:
-                if not cache[m['res_model']]:
-                    ids.remove(m['id'])
-                continue
-            cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read',
-                                              raise_exception=False)
+            if m['res_model'] not in cache:
+                cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read',
+                                                  raise_exception=False)
+            if not cache[m['res_model']]:
+                ids.remove(m['id'])
 
         if count:
             return len(ids)

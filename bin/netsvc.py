@@ -177,7 +177,7 @@ def init_logger():
 
     # add the handler to the root logger
     logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(config['log_level'])
 
     if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
         # change color of level names
@@ -204,8 +204,16 @@ def init_logger():
 class Logger(object):
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
-        getattr(log, level)(msg)
+        level_method = getattr(log, level)
 
+        result = msg.strip().split('\n')
+        if len(result)>1:
+            for idx, s in enumerate(result):
+                level_method('[%02d]: %s' % (idx+1, s,))
+        elif result:
+            level_method(result[0])
+
+init_logger()
 
 class Agent(object):
     _timers = []

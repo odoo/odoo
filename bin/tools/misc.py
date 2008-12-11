@@ -27,10 +27,7 @@ Miscelleanous tools used by OpenERP.
 import os, time, sys
 import inspect
 
-import psycopg
-#import netsvc
 from config import config
-#import tools
 
 import zipfile
 import release
@@ -71,7 +68,7 @@ def init_db(cr):
                 if p_id is not None:
                     cr.execute('select id \
                             from ir_module_category \
-                            where name=%s and parent_id=%d', (categs[0], p_id))
+                            where name=%s and parent_id=%s', (categs[0], p_id))
                 else:
                     cr.execute('select id \
                             from ir_module_category \
@@ -82,7 +79,7 @@ def init_db(cr):
                     c_id = cr.fetchone()[0]
                     cr.execute('insert into ir_module_category \
                             (id, name, parent_id) \
-                            values (%d, %s, %d)', (c_id, categs[0], p_id))
+                            values (%s, %s, %s)', (c_id, categs[0], p_id))
                 else:
                     c_id = c_id[0]
                 p_id = c_id
@@ -102,9 +99,9 @@ def init_db(cr):
             cr.execute('insert into ir_module_module \
                     (id, author, latest_version, website, name, shortdesc, description, \
                         category_id, state) \
-                    values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
-                release.version.rsplit('.', 1)[0] + '.' + info.get('version', ''),
+                release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
             dependencies = info.get('depends', [])
@@ -252,23 +249,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     raise IOError, 'File not found : '+str(name)
 
 
-def oswalksymlinks(top, topdown=True, onerror=None):
-    """
-    same as os.walk but follow symlinks
-    attention: all symlinks are walked before all normals directories
-    """
-    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
-        if topdown:
-            yield dirpath, dirnames, filenames
-
-        symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
-        for s in symlinks:
-            for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
-                yield x
-
-        if not topdown:
-            yield dirpath, dirnames, filenames
-
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
@@ -405,6 +385,7 @@ def sms_send(user, password, api_id, text, to):
     params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
     #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
     f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
+    # FIXME: Use the logger if there is an error
     print f.read()
     return True
 
@@ -600,6 +581,28 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
+def ustr(value):
+    """This method is similar to the builtin `str` method, except
+    it will return Unicode string.
+
+    @param value: the value to convert
+
+    @rtype: unicode
+    @return: unicode string
+    """
+
+    if isinstance(value, unicode):
+        return value
+
+    if hasattr(value, '__unicode__'):
+        return unicode(value)
+
+    if not isinstance(value, str):
+        value = str(value)
+
+    return unicode(value, 'utf-8')
+
+
 def get_languages():
     languages={
         'bg_BG': u'Bulgarian / български',
@@ -650,7 +653,7 @@ def get_user_companies(cr, user):
         res=[x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %d AND comp.id = u.company_id' % (user,))
+    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id' % (user,))
     compids=[cr.fetchone()[0]]
     compids.extend(_get_company_children(cr, compids))
     return compids
@@ -687,6 +690,7 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(when):
+    import netsvc
     def log(f, res, *args, **kwargs):
         vector = ['Call -> function: %s' % f]
         for i, arg in enumerate(args):
@@ -694,7 +698,7 @@ def logged(when):
         for key, value in kwargs.items():
             vector.append( '  kwarg %10s: %r' % ( key, value ) )
         vector.append( '  result: %r' % res )
-        print "\n".join(vector)
+        netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, vector)
 
     def pre_logged(f):
         def wrapper(*args, **kwargs):
@@ -712,7 +716,7 @@ def logged(when):
                 return res
             finally:
                 log(f, res, *args, **kwargs)
-                print "  time delta: %s" % (time.time() - now)
+                netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, "time delta: %s" % (time.time() - now))
         return wrapper
 
     try:

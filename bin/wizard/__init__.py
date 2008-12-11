@@ -116,6 +116,11 @@ class interface(netsvc.Service):
                         trans = translate(cr, self.wiz_name+','+state+','+field, 'wizard_field', lang)
                         if trans:
                             fields[field]['string'] = trans
+                        
+                        if 'selection' in fields[field]:
+                            trans = lambda x: translate(cr, self.wiz_name+','+state+','+field, 'selection', lang, x) or x
+                            for idx, (key, val) in enumerate(fields[field]['selection']):
+                                fields[field]['selection'][idx] = (key, trans(val))
 
                     # translate arch
                     if not isinstance(arch, UpdateableStr):

@@ -360,10 +360,14 @@ def trans_generate(lang, modules, dbname=None):
 
                     # export fields
                     for field_name, field_def in result['fields'].iteritems():
+                        res_name = name + ',' + field_name
                         if 'string' in field_def:
                             source = field_def['string']
-                            res_name = name + ',' + field_name
-                            push_translation(module, 'wizard_field', res_name, 0, source)
+                            push_translation(module, 'wizard_field', res_name, 0, source.encode('utf8'))
+                            
+                        if 'selection' in field_def:
+                            for key, val in field_def['selection']:
+                                push_translation(module, 'selection', res_name, 0, val.encode('utf8'))
 
                     # export arch
                     arch = result['arch']
@@ -452,7 +456,7 @@ def trans_generate(lang, modules, dbname=None):
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
-    for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
+    for root, dirs, files in tools.osutil.walksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
@@ -539,7 +543,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             line += 1
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             if (not row) or (not row[-1]):
-                #print "translate: skip %s" % repr(row)
                 continue
 
             # dictionary which holds values for this line of the csv file

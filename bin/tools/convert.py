@@ -92,7 +92,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 idref2['time'] = time
                 idref2['DateTime'] = DateTime
                 import release
-                idref2['version'] = release.version.rsplit('.', 1)[0]
+                idref2['version'] = release.major_version
                 idref2['ref'] = lambda x: self.id_get(cr, False, x)
                 if len(f_model):
                     idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
@@ -100,7 +100,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     import pytz
                 except:
                     logger = netsvc.Logger()
-                    logger.notifyChannel("init", netsvc.LOG_INFO, 'could not find pytz library')
+                    logger.notifyChannel("init", netsvc.LOG_WARNING, 'could not find pytz library')
                     class pytzclass(object):
                         all_timezones=[]
                     pytz=pytzclass()
@@ -474,7 +474,7 @@ form: module.record_id""" % (xml_id,)
             pid = False
             for idx, menu_elem in enumerate(m_l):
                 if pid:
-                    cr.execute('select id from ir_ui_menu where parent_id=%d and name=%s', (pid, menu_elem))
+                    cr.execute('select id from ir_ui_menu where parent_id=%s and name=%s', (pid, menu_elem))
                 else:
                     cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (menu_elem,))
                 res = cr.fetchone()
@@ -486,7 +486,7 @@ form: module.record_id""" % (xml_id,)
                     try:
                         npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
                     except:
-                        print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
+                        self.logger.notifyChannel('init', netsvc.LOG_ERROR, "addon: %s xml_id: %s" % (self.module, xml_id))
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
                     self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
@@ -513,15 +513,15 @@ form: module.record_id""" % (xml_id,)
             values['icon'] = icons.get(a_type,'STOCK_NEW')
             if a_type=='act_window':
                 a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
-                cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%d', (int(a_id),))
+                cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (int(a_id),))
                 rrres = cr.fetchone()
                 assert rrres, "No window action defined for this id %s !\n" \
                     "Verify that this is a window action or add a type argument." % (a_action,)
                 action_type,action_mode,action_name,view_id,target = rrres
                 if view_id:
-                    cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
+                    cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (int(view_id),))
                     action_mode, = cr.fetchone()
-                cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
+                cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (int(a_id),))
                 if cr.rowcount:
                     action_mode, = cr.fetchone()
                 if action_type=='tree':
@@ -538,7 +538,7 @@ form: module.record_id""" % (xml_id,)
                     values['name'] = action_name
             elif a_type=='wizard':
                 a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
-                cr.execute('select name from ir_act_wizard where id=%d', (int(a_id),))
+                cr.execute('select name from ir_act_wizard where id=%s', (int(a_id),))
                 resw = cr.fetchone()
                 if (not values.get('name', False)) and resw:
                     values['name'] = resw[0]
@@ -738,7 +738,7 @@ form: module.record_id""" % (xml_id,)
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
         if de.nodeName == 'terp':
-            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp /> is deprecated, use <openerp/>")
+            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp/> is deprecated, use <openerp/>")
 
         for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="data")]:
             for rec in n.childNodes:
@@ -747,7 +747,7 @@ form: module.record_id""" % (xml_id,)
                         try:
                             self._tags[rec.nodeName](self.cr, rec, n)
                         except:
-                            self.logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
+                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+rec.toxml())
                             self.cr.rollback()
                             raise
         return True
@@ -819,9 +819,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         if (not line) or not reduce(lambda x,y: x or y, line) :
             continue
         try:
-            datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
+            datas.append(map(lambda x: misc.ustr(x), line))
         except:
-            print "ERROR while importing the line: ", line
+            logger = netsvc.Logger()
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "Can not import the line: %s" % line)
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))

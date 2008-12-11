@@ -38,7 +38,8 @@
             <field name="domain">[('res_id','=',False)]</field>
             <field name="view_id" ref="ir_property_view_tree"/>
         </record>
-        <menuitem id="next_id_15" name="Properties" parent="base.menu_custom"/><menuitem action="ir_property_form" id="menu_ir_property_form" parent="next_id_15"/>
+        <menuitem id="next_id_15" name="Properties" parent="base.menu_config"/>
+        <menuitem action="ir_property_form" id="menu_ir_property_form" parent="next_id_15"/>
         
         <record id="ir_property_form_all" model="ir.actions.act_window">
             <field name="name">All Properties</field>
