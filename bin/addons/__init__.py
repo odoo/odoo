@@ -380,7 +380,7 @@ class MigrationManager(object):
 
         from tools.parse_version import parse_version
 
-        parsed_installed_version = parse_version(pkg.latest_version)
+        parsed_installed_version = parse_version(pkg.installed_version)
         current_version = parse_version(convert_version(pkg.data.get('version', '0')))
         
         versions = _get_migration_versions(pkg)
@@ -402,7 +402,7 @@ class MigrationManager(object):
                     try:
                         mod = imp.load_source(name, pyfile, fp)
                         logger.notifyChannel('migration', netsvc.LOG_INFO, 'addon %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
-                        mod.migrate(self.cr, pkg.latest_version)
+                        mod.migrate(self.cr, pkg.installed_version)
                     except ImportError:
                         logger.notifyChannel('migration', netsvc.LOG_ERROR, 'addon %(addon)s: Unable to load %(stage)-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
                         raise
@@ -427,13 +427,14 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
 
     # update the graph with values from the database (if exist)
     ## First, we set the default values for each package in graph
-    additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'latest_version': None})
+    additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
     ## Then we get the values from the database
-    cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version'
+    cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                '  FROM ir_module_module'
                ' WHERE name in (%s)' % (','.join(['%s'] * len(graph))),
                 additional_data.keys()
                )
+
     ## and we update the default values with values from the database
     additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
 
@@ -491,6 +492,7 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
             package_todo.append(package.name)
             ver = release.major_version + '.' + package.data.get('version', '1.0')
+            # update the installed version in database...
             cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
             cr.commit()
 

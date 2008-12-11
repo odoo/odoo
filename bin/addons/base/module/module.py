@@ -98,13 +98,10 @@ class module(osv.osv):
             return {}
         return info
 
-    def _get_installed_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
+    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = dict.setdefault(ids, '')
         for m in self.browse(cr, uid, ids):
-            if m.state in ('installed', 'to upgrade', 'to remove'):
-                res[m.id] = self.get_module_info(m.name).get('version', '')
-            else:
-                res[m.id] = ''
+            res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
 
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
@@ -143,10 +140,16 @@ class module(osv.osv):
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
-        'installed_version': fields.function(_get_installed_version, method=True,
-            string='Installed version', type='char'),
-        'latest_version': fields.char('Latest version', size=64, readonly=True),
+
+        # attention: Incorrect field names !! 
+        #   installed_version refer the latest version (the one on disk)
+        #   latest_version refer the installed version (the one in database)
+        #   published_version refer the version available on the repository
+        'installed_version': fields.function(_get_latest_version, method=True,
+            string='Latest version', type='char'),  
+        'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
+        
         'url': fields.char('URL', size=128),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
@@ -289,7 +292,6 @@ class module(osv.osv):
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
                     self.write(cr, uid, id, {
-                        'latest_version': terp.get('version'),
                         'url': ''})
                     res[0] += 1
                 self.write(cr, uid, id, {
@@ -328,7 +330,6 @@ class module(osv.osv):
                     'shortdesc': terp.get('name', ''),
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
-                    'latest_version': terp.get('version', ''),
                     'license': terp.get('license', 'GPL-2'),
                 })
                 res[1] += 1
@@ -365,7 +366,6 @@ class module(osv.osv):
                 if not ids:
                     self.create(cr, uid, {
                         'name': name,
-                        'latest_version': version,
                         'published_version': version,
                         'url': url,
                         'state': 'uninstalled',
@@ -373,16 +373,15 @@ class module(osv.osv):
                     res[1] += 1
                 else:
                     id = ids[0]
-                    latest_version = self.read(cr, uid, id, ['latest_version'])\
-                            ['latest_version']
-                    if latest_version == 'x': # 'x' version was a mistake
-                        latest_version = '0'
-                    if parse_version(version) > parse_version(latest_version):
-                        self.write(cr, uid, id,
-                                {'latest_version': version, 'url': url})
+                    installed_version = self.read(cr, uid, id, ['latest_version'])['latest_version']
+                    if installed_version == 'x': # 'x' version was a mistake
+                        installed_version = '0'
+                    if parse_version(version) > parse_version(installed_version):
+                        self.write(cr, uid, id, {
+                            'url': url
+                        })
                         res[0] += 1
-                    published_version = self.read(cr, uid, id, ['published_version'])\
-                            ['published_version']
+                    published_version = self.read(cr, uid, id, ['published_version'])['published_version']
                     if published_version == 'x' or not published_version:
                         published_version = '0'
                     if parse_version(version) > parse_version(published_version):

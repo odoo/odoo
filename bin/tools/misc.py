@@ -97,11 +97,10 @@ def init_db(cr):
             cr.execute('select nextval(\'ir_module_module_id_seq\')')
             id = cr.fetchone()[0]
             cr.execute('insert into ir_module_module \
-                    (id, author, latest_version, website, name, shortdesc, description, \
+                    (id, author, website, name, shortdesc, description, \
                         category_id, state) \
-                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
+                    values (%s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
-                release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
             dependencies = info.get('depends', [])
