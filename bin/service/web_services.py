@@ -321,6 +321,7 @@ class common(netsvc.Service):
         return res or False
     
     def logout(self, db, login, password):
+        # FIXME: WTF !!! what is this hardcoding ?
         res = security.logout(db, login, password)
         service = netsvc.LocalService("object_proxy")
         fields = service.execute(db, login, 'res.users', 'fields_get', {})
@@ -338,7 +339,8 @@ class common(netsvc.Service):
             pass
         logger = netsvc.Logger()
         logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout=>%s from database %s'%(res,db.lower()))
-       
+        return True
+    
        
 
     def about(self, extended=False):
