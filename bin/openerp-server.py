@@ -64,7 +64,7 @@ logger.notifyChannel("server", netsvc.LOG_INFO, "version - %s" % release.version
 for name, value in [('addons_path', tools.config['addons_path']),
                     ('database hostname', tools.config['db_host'] or 'localhost'),
                     ('database port', tools.config['db_port'] or '5432'),
-                    ('database user', tools.config['db_user'] or 'oerp')]:
+                    ('database user', tools.config['db_user'])]:
     logger.notifyChannel("server", netsvc.LOG_INFO, "%s - %s" % ( name, value ))
 
 import time
