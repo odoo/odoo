@@ -153,11 +153,11 @@ class project(osv.osv):
         for proj in self.browse(cr, uid, ids):
             parent_id=context.get('parent_id',False)
             new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
-            cr.execute('select id from project_task where project_id=%d', (proj.id,))
+            cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
             for (tasks_id,) in res:
                 self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
-            cr.execute('select id from project_project where parent_id=%d', (proj.id,))
+            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
             res = cr.fetchall()
             project_ids = [x[0] for x in res]
             for child in project_ids:
@@ -172,11 +172,11 @@ class project(osv.osv):
     def setActive(self, cr, uid, ids, value=True, context={}):   
         for proj in self.browse(cr, uid, ids, context):            
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
-            cr.execute('select id from project_task where project_id=%d', (proj.id,))
+            cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            cr.execute('select id from project_project where parent_id=%d', (proj.id,))            
+            cr.execute('select id from project_project where parent_id=%s', (proj.id,))            
             project_ids = [x[0] for x in cr.fetchall()]            
             for child in project_ids:
                 self.setActive(cr, uid, [child], value, context)     		
@@ -410,17 +410,17 @@ class project_work(osv.osv):
     _order = "date desc"
     def create(self, cr, uid, vals, *args, **kwargs):
         if 'task_id' in vals:
-            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (-vals.get('hours',0.0), vals['task_id']))
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%s', (-vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids,vals,context={}):
         for work in self.browse(cr, uid, ids, context):
-            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2f) where id=%d', (-vals.get('hours',0.0), work.hours, work.task_id.id))
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2f) where id=%s', (-vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for work in self.browse(cr, uid, ids):
-            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (work.hours, work.task_id.id))
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%s', (work.hours, work.task_id.id))
         return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 project_work()
 

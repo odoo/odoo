@@ -47,14 +47,14 @@ class report_tasks(report_int):
         io = StringIO.StringIO()
 
         canv = canvas.init(fname=io, format='pdf')
-        canv.set_author("Tiny ERP")
+        canv.set_author("Open ERP")
 
-        cr.execute('select id,date_start,date_stop from scrum_sprint where id=%d', (datas['id'],))
+        cr.execute('select id,date_start,date_stop from scrum_sprint where id=%s', (datas['id'],))
         for (id,date_start,date_stop) in cr.fetchall():
             date_to_int = lambda x: int(x.ticks())
             int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d/%m/%Y')
 
-            cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%d)', (id,))
+            cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%s)', (id,))
 
             ids = map(lambda x: x[0], cr.fetchall())
             datas = _burndown.compute_burndown(cr, uid, ids, date_start, date_stop)

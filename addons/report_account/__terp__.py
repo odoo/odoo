@@ -23,7 +23,7 @@
     "name" : "Account Reporting - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["account"],
     "category" : "Generic Modules/Accounting",
     "description": "A module that adds new reports based on the account module.",

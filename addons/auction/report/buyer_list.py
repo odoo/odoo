@@ -55,7 +55,7 @@ class buyer_list(report_sxw.rml_parse):
         auct_dat=[]
         for ad_id in auc_date_ids:
             auc_dates_fields = self.pool.get('auction.dates').read(self.cr,self.uid,ad_id[0],['name'])
-            self.cr.execute('select * from auction_buyer_taxes_rel abr,auction_dates ad where ad.id=abr.auction_id and ad.id=%d'%(ad_id[0],))
+            self.cr.execute('select * from auction_buyer_taxes_rel abr,auction_dates ad where ad.id=abr.auction_id and ad.id=%s', (ad_id[0],))
             res=self.cr.fetchall()
             total=0
             for r in res:
@@ -70,8 +70,8 @@ class buyer_list(report_sxw.rml_parse):
 
         auc_date_ids = self.pool.get('auction.dates').search(self.cr,self.uid,([('name','like',obj['name'])]))
 
-#       self.cr.execute('select ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%d  and ach_uid is not null group by ach_uid '%(auc_date_ids[0]))
-        self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%d and ach_login is not null  group by ach_login order by ach_login'%(auc_date_ids[0]))
+#       self.cr.execute('select ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%s  and ach_uid is not null group by ach_uid ', (auc_date_ids[0],))
+        self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%s and ach_login is not null  group by ach_login order by ach_login', (auc_date_ids[0],))
         res = self.cr.dictfetchall()
         for r in res:
 #           if r['ach_uid']:

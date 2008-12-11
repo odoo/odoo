@@ -60,11 +60,8 @@ so_fields = {
 def _get_empid(self, cr, uid, data, context):
     service = netsvc.LocalService('object_proxy')
     emp_id = service.execute(cr.dbname, uid, 'hr.employee', 'search', [('user_id', '=', uid)])
-    print "EMP :::::::::", emp_id
     if emp_id:
-        print "IF ::::::::"
         employee = service.execute(cr.dbname, uid, 'hr.employee', 'read', emp_id)[0]
-        print "employee .........", employee
         return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]}
     return {}
 
@@ -82,7 +79,6 @@ def _sign_in(self, cr, uid, data, context):
         })
     try:
         success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_in', [emp_id])
-        print success
     except:
         raise wizard.except_wizard(_('UserError'), _('A sign-in must be right after a sign-out !'))
     return {'success': success}

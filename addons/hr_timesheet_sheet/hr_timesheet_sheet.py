@@ -261,8 +261,8 @@ class hr_timesheet_sheet(osv.osv):
             cr.execute('SELECT id \
                     FROM hr_timesheet_sheet_sheet \
                     WHERE (date_from < %s and %s < date_to) \
-                        AND user_id=%d \
-                        AND id <> %d', (sheet.date_to, sheet.date_from,
+                        AND user_id=%s \
+                        AND id <> %s', (sheet.date_to, sheet.date_from,
                             sheet.user_id.id, sheet.id))
             if cr.fetchall():
                 return False

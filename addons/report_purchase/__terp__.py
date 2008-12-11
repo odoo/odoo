@@ -23,7 +23,7 @@
     "name" : "Sales Management - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_purchase.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["purchase"],
     "category" : "Generic Modules/Sales & Purchases",
     "init_xml" : [],

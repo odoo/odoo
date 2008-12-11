@@ -23,7 +23,7 @@
     "name" : "Project Management",
     "version": "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_project.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["product", "account", "hr", "process"],
     "description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",

@@ -23,7 +23,7 @@
     "name" : "Sales Management - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_project.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["project", "report_task"],
     "category" : "Generic Modules/Sales & Purchases",
     "description": "A module that adds some reports on the sales",

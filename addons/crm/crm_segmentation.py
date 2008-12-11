@@ -59,7 +59,7 @@ class crm_segmentation(osv.osv):
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
+                    cr.execute('delete from res_partner_category_rel where category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
 
@@ -68,7 +68,7 @@ class crm_segmentation(osv.osv):
 
             if categ['sales_purchase_active']:
                 to_remove_list=[]
-                cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
+                cr.execute('select id from crm_segmentation_line where segmentation_id=%s', (id,))
                 line_ids = [x[0] for x in cr.fetchall()]
 
                 for pid in partners:
@@ -78,7 +78,7 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%d,%d)', (categ['categ_id'][0],partner_id))
+                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
             cr.commit()
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
@@ -124,14 +124,14 @@ class crm_segmentation_line(osv.osv):
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %d '\
+                                'AND i.partner_id = %s '\
                                 'AND i.type = \'out_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %d '\
+                                'AND i.partner_id = %s '\
                                 'AND i.type = \'out_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0
@@ -139,14 +139,14 @@ class crm_segmentation_line(osv.osv):
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %d '\
+                                'AND i.partner_id = %s '\
                                 'AND i.type = \'in_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %d '\
+                                'AND i.partner_id = %s '\
                                 'AND i.type = \'in_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0

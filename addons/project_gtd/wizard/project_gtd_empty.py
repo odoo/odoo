@@ -42,10 +42,8 @@ class wiz_timebox_empty(wizard.interface):
             else:
                 up.append(task.id)
         if up:
-            print 'UP', up
             pool.get('project.task').write(cr, uid, up, {'timebox_id':ids[0]})
         if close:
-            print 'CLOSE', close
             pool.get('project.task').write(cr, uid, close, {'timebox_id':False})
         return {}
 

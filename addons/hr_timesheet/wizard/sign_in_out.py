@@ -80,7 +80,7 @@ def _get_empid(self, cr, uid, data, context):
 
 def _get_empid2(self, cr, uid, data, context):
     res = _get_empid(self,cr, uid, data, context)
-    cr.execute('select name,action from hr_attendance where employee_id=%d order by name desc limit 1', (res['emp_id'],))
+    cr.execute('select name,action from hr_attendance where employee_id=%s order by name desc limit 1', (res['emp_id'],))
     res['server_date'] = time.strftime('%Y-%m-%d %H:%M:%S')
     res['date_start'] = cr.fetchone()[0]
     res['info'] = ''
@@ -133,7 +133,7 @@ def _sign_out_result(self, cr, uid, data, context):
 def _state_check(self, cr, uid, data, context):
     emp_id = _get_empid(self, cr, uid, data, context)['emp_id']
     # get the latest action (sign_in or out) for this employee
-    cr.execute('select action from hr_attendance where employee_id=%d and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
+    cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
     res = (cr.fetchone() or ('sign_out',))[0]
 #TODO: invert sign_in et sign_out
     return res

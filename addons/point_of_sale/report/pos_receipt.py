@@ -41,14 +41,14 @@ class order(report_sxw.rml_parse):
         })
 
     def netamount(self, order_line_id):
-        sql = 'select (qty*price_unit) as net_price from pos_order_line where id = %d '
-        self.cr.execute(sql%(order_line_id))
+        sql = 'select (qty*price_unit) as net_price from pos_order_line where id = %s'
+        self.cr.execute(sql, (order_line_id,))
         res = self.cr.fetchone()
         return res[0]
 
     def discount(self, order_id):
-        sql = 'select discount, price_unit, qty from pos_order_line where order_id  = %d '
-        self.cr.execute(sql%(order_id))
+        sql = 'select discount, price_unit, qty from pos_order_line where order_id = %s '
+        self.cr.execute(sql, (order_id,))
         res = self.cr.fetchall()
         dsum = 0
         for line in res:

@@ -36,34 +36,16 @@ def _test_pylint(self, url, add_folder=None):
             subfolder.update(res)
     dict_files = {}
     for file in list_files:
-        if file.split('.')[-1] == 'py':
-            save_file = file.split('.')[0]+".txt"
+        if file.split('.')[-1] == 'py' and not file.startswith('__init__'):
             file_path = os.path.join(url, file)
-            os.system('pylint '+file_path+'>> '+save_file+' ')
-            a2 = os.system('cat '+save_file+' | tail -4 >> temp.txt')
-            os.system('rm '+save_file+' ')
-            fp = open('temp.txt','r')
-            result = fp.read()
-            fp.close()
-            str_result = ''
-            try:
-                for line in result:
-                    str_result = str_result + line
-            finally:
-                fp = open('temp.txt','w')
-                fp.write('')
-                fp.close()
-            if str_result.startswith('Global'):
+            res = os.popen('pylint '+file_path+' | tail -4').read()
+            if res.startswith('Global'):
                 if add_folder:
-                    dict_files[add_folder + '/' + file] = str_result
+                    dict_files[add_folder + '/' + file] = res
                 else:
-                    dict_files[file] = str_result
-    os.system(' rm temp.txt ')
+                    dict_files[file] = res
     dict_files.update(subfolder)
     return dict_files
-
-#
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

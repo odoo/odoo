@@ -273,13 +273,13 @@ class general_ledger_landscape(rml_parse.rml_parse):
 					FROM account_move_line as l
    					LEFT JOIN res_currency c on (l.currency_id=c.id)
    	   				JOIN account_journal j on (l.journal_id=j.id)
-   	   	   			AND account_id = %d
+   	   	   			AND account_id = %%s
    	   	   			AND %s
-   	   	   	  		WHERE l.date<='%s'
-   	   	   	  		AND l.date>='%s'
-   	   	   	  		ORDER by %s"""%(account.id,self.query,self.date_borne['max_date'],self.date_borne['min_date'],sorttag)
+   	   	   	  		WHERE l.date<=%%s
+   	   	   	  		AND l.date>=%%s
+   	   	   	  		ORDER by %s""" % (self.query, sorttag)
 
-		self.cr.execute(sql)
+		self.cr.execute(sql, (account.id, self.date_borne['max_date'], self.date_borne['min_date'],))
 
 		res = self.cr.dictfetchall()
 		sum = 0.0
@@ -395,7 +395,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 	def _sum_currency_amount_account(self, account, form):
 		self._set_get_account_currency_code(account.id)
-		self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %d "%account.id)
+		self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
 		total = self.cr.fetchone()
 
 		if self.account_currency:

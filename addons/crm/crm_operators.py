@@ -33,7 +33,7 @@ def som(cr, uid, partner_id, args):
              '''
              select s.factor from res_partner_event e
              left join res_partner_som s
-             on (e.som=s.id) where partner_id=%d and date>=%s and date<%s''', 
+             on (e.som=s.id) where partner_id=%s and date>=%s and date<%s''', 
              (partner_id, 
               time.strftime('%Y-%m-%d', time.gmtime(date_start)),
               time.strftime('%Y-%m-%d', time.gmtime(next_date))))

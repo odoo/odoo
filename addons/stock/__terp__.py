@@ -23,7 +23,7 @@
     "name" : "Stock Management",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_stock.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["product", "account"],
     "category" : "Generic Modules/Inventory Control",
     "init_xml" : [],

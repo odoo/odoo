@@ -118,7 +118,7 @@ class account_invoice_1(report_sxw.rml_parse):
             res={}
 
             if entry.state=='article':
-                self.cr.execute('select tax_id from account_invoice_line_tax where invoice_line_id=%d'%(entry.id))
+                self.cr.execute('select tax_id from account_invoice_line_tax where invoice_line_id=%s', (entry.id,))
                 tax_ids=self.cr.fetchall()
 
                 if tax_ids==[]:
@@ -126,7 +126,7 @@ class account_invoice_1(report_sxw.rml_parse):
                 else:
                     tax_names_dict={}
                     for item in range(0,len(tax_ids))    :
-                        self.cr.execute('select name from account_tax where id=%d'%(tax_ids[item][0]))
+                        self.cr.execute('select name from account_tax where id=%s', (tax_ids[item][0],))
                         type=self.cr.fetchone()
                         tax_names_dict[item] =type[0]
                     tax_names = ','.join([tax_names_dict[x] for x in range(0,len(tax_names_dict))])

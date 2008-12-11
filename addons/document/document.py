@@ -35,7 +35,7 @@ import StringIO
 
 import random
 import string
-
+from psycopg2 import Binary
 from tools import config
 
 def random_name():
@@ -522,9 +522,9 @@ class document_file(osv.osv):
             v = base64.decodestring(value)
             fp.write(v)
             filesize = os.stat(fname).st_size
-            cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%d where id=%d', (os.path.join(flag,filename),'fs',len(v),id))
+            cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))
         else:
-            cr.execute('update ir_attachment set datas=%s,store_method=%s where id=%d', (psycopg.Binary(value),'db',id))
+            cr.execute('update ir_attachment set datas=%s,store_method=%s where id=%s', (Binary(value),'db',id))
         return True
 
     _columns = {

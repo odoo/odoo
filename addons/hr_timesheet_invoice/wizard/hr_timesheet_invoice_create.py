@@ -87,7 +87,7 @@ class invoice_create(wizard.interface):
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
-                    "WHERE account_id = %d " \
+                    "WHERE account_id = %s " \
                         "AND id IN (" + ','.join([str(x) for x in data['ids']]) + ") " \
                         "AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id,to_invoice", (account.id,))
@@ -128,7 +128,7 @@ class invoice_create(wizard.interface):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %d and id IN (%s) AND product_id=%d and to_invoice=%d" % (account.id, ','.join(map(str,data['ids'])), product_id, factor_id))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN (%s) AND product_id=%s and to_invoice=%s", (account.id, ','.join(map(str,data['ids'])), product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:
@@ -149,7 +149,8 @@ class invoice_create(wizard.interface):
 
                 curr_line['note'] = "\n".join(map(str,note))
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
-                cr.execute("update account_analytic_line set invoice_id=%d WHERE account_id = %d and id IN (%s)" % (last_invoice,account.id, ','.join(map(str,data['ids']))))
+                strids = ','.join(map(str, data['ids']))
+                cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",

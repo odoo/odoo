@@ -23,7 +23,7 @@
     "name" : "Google Map",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Others",
     "description": """The module adds google map field in partner address
 so that we can directly open google map from the

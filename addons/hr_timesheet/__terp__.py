@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Human Resources",
-    "website" : "http://tinyerp.com/module_hr.html",
+    "website" : "http://www.openerp.com",
     "description": """
 This module implement a timesheet system. Each employee can encode and
 track their time spent on the different projects. A project is an

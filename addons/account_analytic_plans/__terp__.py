@@ -52,7 +52,7 @@ Plan2:
 So when this line of invoice will be confirmed, it will generate 3 analytic lines,
 for one account entry.
         """,
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
     ],

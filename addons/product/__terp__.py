@@ -28,7 +28,7 @@
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """
-    This is the base module to manage products and pricelists in Tiny ERP.
+    This is the base module to manage products and pricelists in Open ERP.
 
     Products support variants, different pricing methods, suppliers
     information, make to stock/order, different unit of measures,

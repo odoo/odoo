@@ -79,8 +79,6 @@ def wiki_do_index(self, cr, uid, data, context):
             result.append(val)
         current2 = l
     
-    print 'OLD', lst
-    print 'NEW', result
     for rs in result:
         wiki_pool.write(cr, uid, [rs[1]], {'section':rs[0]})
         

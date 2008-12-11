@@ -37,7 +37,7 @@ class account_bank_statement(osv.osv):
         return False
 
     def _default_balance_start(self, cr, uid, context={}):
-        cr.execute('select id from account_bank_statement where journal_id=%d order by date desc limit 1', (1,))
+        cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
         res = cr.fetchone()
         if res:
             return self.browse(cr, uid, [res[0]], context)[0].balance_end
@@ -313,7 +313,7 @@ class account_bank_statement(osv.osv):
 
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
-                WHERE journal_id = %d \
+                WHERE journal_id = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id,))
         res = cursor.fetchone()
         balance_start = res and res[0] or 0.0
@@ -513,8 +513,8 @@ class account_bank_statement_line(osv.osv):
         cursor.execute('SELECT sum(debit-credit) \
                 FROM account_move_line \
                 WHERE (reconcile_id is null) \
-                    AND partner_id = %d \
-                    AND account_id=%d', (partner_id, account_id))
+                    AND partner_id = %s \
+                    AND account_id=%s', (partner_id, account_id))
         res = cursor.fetchone()
         balance = res and res[0] or 0.0
 

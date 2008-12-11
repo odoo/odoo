@@ -80,8 +80,6 @@ def _invoice_membership(self, cr, uid, data, context):
         if line_value['invoice_line_tax_id']:
             tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
             line_value['invoice_line_tax_id'] = tax_tab
-        else:
-            print "no tax"
         invoice_line_id = invoice_line_obj.create(cr, uid, line_value)
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:

@@ -65,7 +65,7 @@ class board_board(osv.osv):
         view = self.create_view(cr, uid, ids[0], context)
         id = board.view_id.id
         
-        cr.execute("update ir_ui_view set arch='%s' where id=%d" % (view, id))
+        cr.execute("update ir_ui_view set arch='%s' where id=%s" % (view, id))
         cr.commit()
                 
         return result

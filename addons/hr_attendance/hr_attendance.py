@@ -130,7 +130,7 @@ class hr_employee(osv.osv):
         return id
 
     def _action_check(self, cr, uid, emp_id, dt=False,context={}):
-        cr.execute('select max(name) from hr_attendance where employee_id=%d', (emp_id,))
+        cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 

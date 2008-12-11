@@ -234,9 +234,9 @@ class stock_location(osv.osv):
         result = []
         amount = 0.0
         for id in self.search(cr, uid, [('location_id', 'child_of', ids)]):
-            cr.execute("select product_uom,sum(product_qty) as product_qty from stock_move where location_dest_id=%d and product_id=%d and state='done' group by product_uom", (id,product_id))
+            cr.execute("select product_uom,sum(product_qty) as product_qty from stock_move where location_dest_id=%s and product_id=%s and state='done' group by product_uom", (id,product_id))
             results = cr.dictfetchall()
-            cr.execute("select product_uom,-sum(product_qty) as product_qty from stock_move where location_id=%d and product_id=%d and state in ('done', 'assigned') group by product_uom", (id,product_id))
+            cr.execute("select product_uom,-sum(product_qty) as product_qty from stock_move where location_id=%s and product_id=%s and state in ('done', 'assigned') group by product_uom", (id,product_id))
             results += cr.dictfetchall()
 
             total = 0.0
@@ -340,7 +340,7 @@ class stock_picking(osv.osv):
             sql_str="""update stock_move set
                     date_planned='%s'
                 where
-                    picking_id=%d """ % (value,pick.id)
+                    picking_id=%s """ % (value,pick.id)
             if pick.min_date:
                 sql_str += " and (date_planned='"+pick.min_date+"' or date_planned<'"+value+"')"
             cr.execute(sql_str)
@@ -800,7 +800,7 @@ stock_production_lot_revision()
 #
 class stock_move(osv.osv):
     def _getSSCC(self, cr, uid, context={}):
-        cr.execute('select id from stock_tracking where create_uid=%d order by id desc limit 1', (uid,))
+        cr.execute('select id from stock_tracking where create_uid=%s order by id desc limit 1', (uid,))
         res = cr.fetchone()
         return (res and res[0]) or False
     _name = "stock.move"
@@ -1030,13 +1030,13 @@ class stock_move(osv.osv):
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
-                    cr.execute('update stock_move set location_id=%d, product_qty=%f where id=%d', (r[1],r[0], move.id))
+                    cr.execute('update stock_move set location_id=%s, product_qty=%s where id=%s', (r[1],r[0], move.id))
 
                     while res:
                         r = res.pop(0)
                         move_id = self.copy(cr, uid, move.id, {'product_qty':r[0], 'location_id':r[1]})
                         done.append(move_id)
-                        #cr.execute('insert into stock_move_history_ids values (%d,%d)', (move.id,move_id))
+                        #cr.execute('insert into stock_move_history_ids values (%s,%s)', (move.id,move_id))
         if done:
             count += len(done)
             self.write(cr, uid, done, {'state':'assigned'})
@@ -1084,7 +1084,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids):
             if move.move_dest_id.id and (move.state != 'done'):
                 mid = move.move_dest_id.id
-                cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (move.id, move.move_dest_id.id))
+                cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting','confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
                     if move.move_dest_id.picking_id:

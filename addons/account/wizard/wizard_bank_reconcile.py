@@ -34,7 +34,7 @@ _journal_fields = {
 
 def _action_open_window(self, cr, uid, data, context):
     form = data['form']
-    cr.execute('select default_credit_account_id from account_journal where id=%d', (form['journal_id'],))
+    cr.execute('select default_credit_account_id from account_journal where id=%s', (form['journal_id'],))
     account_id = cr.fetchone()[0]
     if not account_id:
         raise Exception, _('You have to define the bank account\nin the journal definition for reconciliation.')

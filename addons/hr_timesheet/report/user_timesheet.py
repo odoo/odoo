@@ -61,7 +61,7 @@ class report_custom(report_rml):
             "account_analytic_account as account, product_uom as unit "\
             "where hr.line_id=line.id and line.account_id=account.id "\
             "and product_uom_id = unit.id "\
-            "and line.user_id=%d and line.date >= %s and line.date < %s "
+            "and line.user_id=%s and line.date >= %s and line.date < %s "
             "order by line.date",
             (data['form']['user_id'], som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
 
@@ -88,7 +88,7 @@ class report_custom(report_rml):
             account_xml.append('</account>')
 
         # Computing the employee
-        cr.execute("select name from res_users where id=%d", (data['form']['user_id'],))
+        cr.execute("select name from res_users where id=%s", (data['form']['user_id'],))
         emp = cr.fetchone()[0]
 
         # Computing the xml

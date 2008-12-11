@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -28,10 +28,10 @@ OpenOffice.
     "version" : "0.1",
     "depends" : ["base"],
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "init_xml" : [ ],
-    "demo_xml" : ["base_report_user_data.xml"],
+    "demo_xml" : ["base_report_data.xml"],
     "update_xml" : [ "base_report_designer_wizard.xml" ],
     "active": False,
     "installable": True
