@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!-- This file must be loaded  _after_  account_demo.xml ! --> 
         <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
@@ -40,10 +40,11 @@
         
         <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
         
+        <!--
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
         </assert>
-        
+        -->
         <!--
 		 journal_id: bank_journal
 		 period_id: period_7 (or 'period_' +time.strftime('m'))
@@ -60,6 +61,7 @@
 			writeoff_journal_id,
 			context={}):
 		-->
+        <!--
         <function model="account.invoice" name="pay_and_reconcile">
             <value eval="[ref('test_invoice_1')]"/>
             <value eval="1850"/>
@@ -74,5 +76,6 @@
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
             <test expr="state">paid</test>
         </assert>
+        -->
     </data>
 </openerp>
