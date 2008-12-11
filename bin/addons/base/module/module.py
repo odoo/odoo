@@ -259,10 +259,20 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed':
                     todo.append(dep.module_id)
-
+        
         ids = map(lambda x: x.id, todo)
         self.write(cr, uid, ids, {'state':'to upgrade'}, context=context)
-        self.button_install(cr, uid, ids, context=context)
+        
+        to_install = []
+        for mod in todo:
+            for dep in mod.dependencies_id:
+                if dep.state == 'unknown':
+                    raise orm.except_orm(_('Error'), _('You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                if dep.state == 'uninstalled':
+                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
+                    to_install.extend(ids2)
+
+        self.button_install(cr, uid, to_install, context=context)
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
