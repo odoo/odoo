@@ -41,7 +41,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
             self.cr.execute("SELECT sum(aal.unit_amount) AS quantity, \
                         aa.code AS code, aa.name AS name, aa.id AS id \
                     FROM account_account AS aa, account_analytic_line AS aal \
-                    WHERE (aal.account_id=%d) AND (aal.date>=%s) \
+                    WHERE (aal.account_id=%s) AND (aal.date>=%s) \
                         AND (aal.date<=%s) AND (aal.general_account_id=aa.id) \
                         AND aa.active \
                     GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code",
@@ -51,7 +51,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
             self.cr.execute("SELECT sum(aal.unit_amount) AS quantity, \
                         aa.code AS code, aa.name AS name, aa.id AS id \
                     FROM account_account AS aa, account_analytic_line AS aal \
-                    WHERE (aal.account_id=%d) AND (aal.date>=%s) \
+                    WHERE (aal.account_id=%s) AND (aal.date>=%s) \
                         AND (aal.date<=%s) AND (aal.general_account_id=aa.id) \
                         AND aa.active \
                         AND (aal.journal_id IN (" +
@@ -68,7 +68,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         aaj.code AS cj \
                     FROM account_analytic_line AS aal, \
                         account_analytic_journal AS aaj \
-                    WHERE (aal.general_account_id=%d) AND (aal.account_id=%d) \
+                    WHERE (aal.general_account_id=%s) AND (aal.account_id=%s) \
                         AND (aal.date>=%s) AND (aal.date<=%s) \
                         AND (aal.journal_id=aaj.id) \
                     ORDER BY aal.date, aaj.code, aal.code",
@@ -80,7 +80,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         aaj.code AS cj \
                     FROM account_analytic_line AS aal, \
                         account_analytic_journal AS aaj \
-                    WHERE (aal.general_account_id=%d) AND (aal.account_id=%d) \
+                    WHERE (aal.general_account_id=%s) AND (aal.account_id=%s) \
                         AND (aal.date>=%s) AND (aal.date<=%s) \
                         AND (aal.journal_id=aaj.id) AND (aaj.id IN (" +
                         ','.join(map(str, journal_ids)) + ")) \
@@ -93,13 +93,13 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
         if not journals or not journals[0][2]:
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
-                    WHERE account_id=%d AND date>=%s AND date<=%s",
+                    WHERE account_id=%s AND date>=%s AND date<=%s",
                     (account_id, date1, date2))
         else:
             journal_ids = journals[0][2]
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
-                    WHERE account_id = %d AND date >= %s AND date <= %s \
+                    WHERE account_id = %s AND date >= %s AND date <= %s \
                         AND journal_id IN (" +
                         ','.join(map(str, journal_ids)) + ")",
                         (account_id, date1, date2))

@@ -42,7 +42,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _lines_g(self, account_id, date1, date2):
         self.cr.execute("SELECT sum(aal.amount) AS balance, aa.code AS code, aa.name AS name, aa.id AS id \
                 FROM account_account AS aa, account_analytic_line AS aal \
-                WHERE (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) AND aa.active \
+                WHERE (aal.account_id=%s) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) AND aa.active \
                 GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code", (account_id, date1, date2))
         res = self.cr.dictfetchall()
 
@@ -60,7 +60,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _lines_a(self, general_account_id, account_id, date1, date2):
         self.cr.execute("SELECT aal.name AS name, aal.code AS code, aal.amount AS balance, aal.date AS date, aaj.code AS cj FROM account_analytic_line AS aal, account_analytic_journal AS aaj \
-                WHERE (aal.general_account_id=%d) AND (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) \
+                WHERE (aal.general_account_id=%s) AND (aal.account_id=%s) AND (aal.date>=%s) AND (aal.date<=%s) \
                 AND (aal.journal_id=aaj.id) \
                 ORDER BY aal.date, aaj.code, aal.code", (general_account_id, account_id, date1, date2))
         res = self.cr.dictfetchall()
@@ -78,11 +78,11 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _account_sum_debit(self, account_id, date1, date2):
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_credit(self, account_id, date1, date2):
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_balance(self, account_id, date1, date2):

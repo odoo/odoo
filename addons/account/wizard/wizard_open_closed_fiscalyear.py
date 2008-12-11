@@ -47,13 +47,13 @@ def _remove_entries(self, cr, uid, data, context):
     pool.get('account.move').unlink(cr,uid,ids_move)
     cr.execute('UPDATE account_journal_period ' \
             'SET state = %s ' \
-            'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %d)',
+            'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
             ('draft',data_fyear))
     cr.execute('UPDATE account_period SET state = %s ' \
-            'WHERE fiscalyear_id = %d', ('draft',data_fyear))
+            'WHERE fiscalyear_id = %s', ('draft',data_fyear))
     cr.execute('UPDATE account_fiscalyear ' \
             'SET state = %s, end_journal_period_id = null '\
-            'WHERE id = %d', ('draft',data_fyear))
+            'WHERE id = %s', ('draft',data_fyear))
     return {}
 
 class open_closed_fiscal(wizard.interface):

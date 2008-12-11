@@ -23,7 +23,7 @@
     "name" : "Project Management - MRP Link",
     "version": "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_project.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["project", 'mrp', "sale", "mrp_jit"],
     "description": """

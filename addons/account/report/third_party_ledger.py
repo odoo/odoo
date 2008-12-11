@@ -175,7 +175,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			"FROM account_account a " \
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
-			"WHERE a.company_id = %d " \
+			"WHERE a.company_id = %s " \
 				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
@@ -195,7 +195,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.reconcile_id IS NULL " \
 					"AND line.account_id IN (" + self.account_ids + ") " \
 					" " + PARTNER_REQUEST + " " \
-					"AND account.company_id = %d " \
+					"AND account.company_id = %s " \
 					"AND account.active " ,
 				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],data['form']['company_id']))
 #		else:
@@ -208,7 +208,7 @@ class third_party_ledger(rml_parse.rml_parse):
 #					"AND line.date IN (" + self.date_lst_string + ") " \
 #					"AND line.account_id IN (" + self.account_ids + ") " \
 #					" " + PARTNER_REQUEST + " " \
-#					"AND account.company_id = %d " \
+#					"AND account.company_id = %s " \
 #					"AND account.active " ,
 #				(data['form']['company_id']))
 		
@@ -236,7 +236,7 @@ class third_party_ledger(rml_parse.rml_parse):
 #					"FROM account_move_line l " \
 #					"LEFT JOIN account_journal j " \
 #						"ON (l.journal_id = j.id) " \
-#					"WHERE l.partner_id = %d " \
+#					"WHERE l.partner_id = %s " \
 #						"AND l.account_id IN (" + self.account_ids + ") " \
 #						"AND l.date <= %s " \
 #						"AND l.reconcile_id IS NULL "
@@ -255,7 +255,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				"FROM account_move_line l " \
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
-				"WHERE l.partner_id = %d " \
+				"WHERE l.partner_id = %s " \
 					"AND l.account_id IN (" + self.account_ids + ") " \
 					"AND l.date IN (" + self.date_lst_string + ") " \
 					" " + RECONCILE_TAG + " "\
@@ -283,7 +283,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
-				"WHERE partner_id = %d " \
+				"WHERE partner_id = %s " \
 					"AND account_id IN (" + self.account_ids + ") " \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
@@ -298,7 +298,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.cr.execute(
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
-				"WHERE partner_id = %d " \
+				"WHERE partner_id = %s " \
 					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,
@@ -322,7 +322,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id=%d " \
+					"WHERE partner_id=%s " \
 						"AND account_id IN (" + self.account_ids + ") " \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
@@ -336,7 +336,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.cr.execute(
 				"SELECT sum(credit) " \
 				"FROM account_move_line " \
-				"WHERE partner_id=%d " \
+				"WHERE partner_id=%s " \
 					"AND account_id IN (" + self.account_ids + ") " \
 					" " + RECONCILE_TAG + " " \
 					"AND date IN (" + self.date_lst_string + ") " ,

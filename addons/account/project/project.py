@@ -222,7 +222,7 @@ class account_analytic_journal(osv.osv):
         'name' : fields.char('Journal name', size=64, required=True),
         'code' : fields.char('Journal code', size=8),
         'active' : fields.boolean('Active'),
-        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Tiny ERP will look for a matching journal of the same type."),
+        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
     }
     _defaults = {

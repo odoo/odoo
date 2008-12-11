@@ -114,7 +114,7 @@ class wizard_vat(wizard.interface):
         for p_id in p_id_list:
             record=[] # this holds record per partner
             obj_partner=pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
-            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%d and l.date between %s group by a.type'%(p_id,period))
+            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%%s and l.date between %s group by a.type' % (period,), (p_id,))
             line_info=cr.fetchall()
             if not line_info:
                 continue

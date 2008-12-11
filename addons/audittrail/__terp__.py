@@ -23,7 +23,7 @@
     "name" : "Audit Trail",
     "version" : "1.0",
     "depends" : ["base","account","purchase","mrp"],
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "author" : "Tiny",
     "init_xml" : [],
     "description": "Allows the administrator to track every user operations on all objects of the system.",

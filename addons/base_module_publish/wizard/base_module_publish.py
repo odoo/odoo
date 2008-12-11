@@ -40,7 +40,7 @@ intro_fields = {
     'text': {'string':'Introduction', 'type':'text', 'readonly':True,
         'default': lambda *args: """
 This system will automatically publish the selected module to the
-Tiny ERP official website. You can use it to quickly publish a new
+Open ERP official website. You can use it to quickly publish a new
 module or update an existing one (new version).
 
 Make sure you read the publication manual and modules guidelines
@@ -123,7 +123,7 @@ check_fields = {
 upload_info_form = '''<?xml version="1.0"?>
 <form string="Module publication">
     <separator string="User information" colspan="4"/>
-    <label string="Please provide here your login on the Tiny ERP website."
+    <label string="Please provide here your login on the Open ERP website."
     align="0.0" colspan="4"/>
     <label string="If you don't have an access, you can create one http://www.openerp.com/"
     align="0.0" colspan="4"/>
@@ -174,7 +174,7 @@ end_fields = {
 Thank you for contributing !
 
 Your module has been successfully uploaded to the official website.
-You must wait a few hours/days so that the Tiny ERP core team review
+You must wait a few hours/days so that the Open ERP core team review
 your module for approval on the website.
 """},
     'result': {'string':'Result page', 'type':'text', 'readonly':True}

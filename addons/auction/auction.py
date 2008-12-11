@@ -49,7 +49,7 @@ class auction_dates(osv.osv):
         tmp={}
         for id in ids:
             tmp[id]=0.0
-            cr.execute("select sum(obj_price) from auction_lots where auction_id=%d", (id,))
+            cr.execute("select sum(obj_price) from auction_lots where auction_id=%s", (id,))
             sum = cr.fetchone()
             if sum:
                 tmp[id]=sum[0]
@@ -346,7 +346,7 @@ class auction_lots(osv.osv):
                 res[lot.id] = 0.0
                 continue
             auct_id=lot.auction_id.id
-            cr.execute('select count(*) from auction_lots where auction_id=%d', (auct_id,))
+            cr.execute('select count(*) from auction_lots where auction_id=%s', (auct_id,))
             nb = cr.fetchone()[0]
             account_analytic_line_obj = self.pool.get('account.analytic.line')
             line_ids = account_analytic_line_obj.search(cr, uid, [('account_id', '=', lot.auction_id.account_analytic_id.id),('journal_id', '<>', lot.auction_id.journal_id.id),('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
@@ -806,16 +806,16 @@ class auction_lots(osv.osv):
 
 
     def numerotate(self, cr, uid, ids):
-        cr.execute('select auction_id from auction_lots where id=%d', (ids[0],))
+        cr.execute('select auction_id from auction_lots where id=%s', (ids[0],))
         auc_id = cr.fetchone()[0]
-        cr.execute('select max(obj_num) from auction_lots where auction_id=%d', (auc_id,))
+        cr.execute('select max(obj_num) from auction_lots where auction_id=%s', (auc_id,))
         try:
             max = cr.fetchone()[0]
         except:
             max = 0
         for id in ids:
             max+=1
-            cr.execute('update auction_lots set obj_num=%d where id=%d', (max, id))
+            cr.execute('update auction_lots set obj_num=%s where id=%s', (max, id))
         return []
 
 auction_lots()

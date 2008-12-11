@@ -36,7 +36,7 @@
 
     * Note: this module is not compatible with the module segmentation, since it's the same which has been renamed.
     """,
-    "website" : "http://tinyerp.com/",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/CRM & SRM",
     "init_xml" : [],
     "demo_xml" : ["crm_profiling_demo.xml"],

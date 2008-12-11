@@ -66,7 +66,7 @@ class aged_trial_report(rml_parse.rml_parse):
 					"AND ((reconcile_id IS NULL) " \
 					"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
 					"AND (line.partner_id=res_partner.id) " \
-					"AND (account_account.company_id = %d) " \
+					"AND (account_account.company_id = %s) " \
 				"ORDER BY res_partner.name", (form['date1'],form['company_id']))
 		partners = self.cr.dictfetchall()
 		## mise a 0 du total
@@ -82,10 +82,10 @@ class aged_trial_report(rml_parse.rml_parse):
 					"FROM account_move_line AS line, account_account " \
 					"WHERE (line.account_id=account_account.id) " \
 						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (COALESCE(date_maturity,date) < %s) AND (partner_id=%d) " \
+						"AND (COALESCE(date_maturity,date) < %s) AND (partner_id=%s) " \
 						"AND ((reconcile_id IS NULL) " \
 						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %d) " \
+						"AND (account_account.company_id = %s) " \
 						"AND account_account.active",
 						(form['date1'], partner['id'],form['date1'], form['company_id']))
 				before = self.cr.fetchone()
@@ -98,10 +98,10 @@ class aged_trial_report(rml_parse.rml_parse):
 					"FROM account_move_line AS line, account_account " \
 					"WHERE (line.account_id=account_account.id) " \
 						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (COALESCE(date_maturity,date) > %s) AND (partner_id=%d) " \
+						"AND (COALESCE(date_maturity,date) > %s) AND (partner_id=%s) " \
 						"AND ((reconcile_id IS NULL) " \
 						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %d) " \
+						"AND (account_account.company_id = %s) " \
 						"AND account_account.active",
 						(form['date1'], partner['id'],form['date1'], form['company_id']))
 				after = self.cr.fetchone()
@@ -113,10 +113,10 @@ class aged_trial_report(rml_parse.rml_parse):
 						"WHERE (line.account_id=account_account.id) " \
 							"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
 							"AND (COALESCE(date_maturity,date) BETWEEN %s AND  %s) " \
-							"AND (partner_id = %d) " \
+							"AND (partner_id = %s) " \
 							"AND ((reconcile_id IS NULL) " \
 							"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-							"AND (account_account.company_id = %d) " \
+							"AND (account_account.company_id = %s) " \
 							"AND account_account.active",
 							(form[str(i)]['start'], form[str(i)]['stop'],partner['id'],form['date1'] ,form['company_id']))
 				during = self.cr.fetchone()
@@ -127,10 +127,10 @@ class aged_trial_report(rml_parse.rml_parse):
 					"FROM account_move_line AS line, account_account " \
 					"WHERE (line.account_id = account_account.id) " \
 						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (partner_id = %d) " \
+						"AND (partner_id = %s) " \
 						"AND ((reconcile_id IS NULL) " \
 						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %d) " \
+						"AND (account_account.company_id = %s) " \
 						"AND account_account.active",
 						(partner['id'],form['date1'],form['company_id']))
 			total = self.cr.fetchone()

@@ -23,7 +23,7 @@
     "name" : "Account Date check",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_sale.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["account"],
     "category" : "Generic Modules/Accounting",
     "init_xml" : [],

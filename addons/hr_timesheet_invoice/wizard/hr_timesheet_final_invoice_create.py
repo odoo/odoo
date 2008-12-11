@@ -79,7 +79,7 @@ class final_invoice_create(wizard.interface):
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
-                    "WHERE account_id = %d " \
+                    "WHERE account_id = %s " \
                         "AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id, to_invoice", (account.id,))
 
@@ -94,14 +94,14 @@ class final_invoice_create(wizard.interface):
                     LEFT JOIN account_move_line as move_line on (line.move_id=move_line.id)
                     LEFT JOIN account_analytic_journal as journal on (line.journal_id=journal.id)
                 WHERE
-                    line.account_id = %d AND 
+                    line.account_id = %s AND 
                     line.move_id IS NOT NULL AND 
                     journal.type = 'sale'
                 GROUP BY
                     line.product_id,
                     line.general_account_id,
                     line.product_uom_id,
-                    move_line.ref""" % (account.id))
+                    move_line.ref""", (account.id,))
             for product_id, amount, account_id, product_uom_id, ref in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
 
@@ -147,7 +147,7 @@ class final_invoice_create(wizard.interface):
             pool.get('account.invoice.line').create(cr, uid, curr_line)
             if account.amount_max < amount_total:
                 pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
-            cr.execute('update account_analytic_line set invoice_id=%d where invoice_id is null and account_id=%d', (last_invoice, account.id))
+            cr.execute('update account_analytic_line set invoice_id=%s where invoice_id is null and account_id=%s', (last_invoice, account.id))
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",

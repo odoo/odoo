@@ -52,7 +52,7 @@ class account_balance(report_sxw.rml_parse):
                 fisc_id = form['fiscalyear']
                 if not (fisc_id):
                     return ''
-                self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
+                self.cr.execute("select name from account_fiscalyear where id = %s" , (int(fisc_id),))
                 res=self.cr.fetchone()
             return res and res[0] or ''
 

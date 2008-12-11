@@ -23,7 +23,7 @@
     "name" : "Analytic lines - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["account", "hr_timesheet_invoice"],
     "category" : "Generic Modules/Accounting",
     "description": "A report on analytic lines, costs by products, months and accounts.",

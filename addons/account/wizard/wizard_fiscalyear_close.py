@@ -106,11 +106,11 @@ def _data_save(self, cr, uid, data, context):
                                 'amount_currency, currency_id, blocked, partner_id, ' \
                                 'date_maturity, date_created ' \
                             'FROM account_move_line ' \
-                            'WHERE account_id = %d ' \
+                            'WHERE account_id = %s ' \
                                 'AND ' + query_line + ' ' \
                                 'AND reconcile_id is NULL ' \
                             'ORDER BY id ' \
-                            'LIMIT %d OFFSET %d', (account.id, limit, offset))
+                            'LIMIT %s OFFSET %s', (account.id, limit, offset))
                     result = cr.dictfetchall()
                     if not result:
                         break
@@ -136,10 +136,10 @@ def _data_save(self, cr, uid, data, context):
                                 'amount_currency, currency_id, blocked, partner_id, ' \
                                 'date_maturity, date_created ' \
                             'FROM account_move_line ' \
-                            'WHERE account_id = %d ' \
+                            'WHERE account_id = %s ' \
                                 'AND ' + query_line + ' ' \
                             'ORDER BY id ' \
-                            'LIMIT %d OFFSET %d', (account.id,fy_id, limit, offset))
+                            'LIMIT %s OFFSET %s', (account.id,fy_id, limit, offset))
                     result = cr.dictfetchall()
                     if not result:
                         break
@@ -157,13 +157,13 @@ def _data_save(self, cr, uid, data, context):
 
     cr.execute('UPDATE account_journal_period ' \
             'SET state = %s ' \
-            'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %d)',
+            'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
             ('done',fy_id))
     cr.execute('UPDATE account_period SET state = %s ' \
-            'WHERE fiscalyear_id = %d', ('done',fy_id))
+            'WHERE fiscalyear_id = %s', ('done',fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
-            'SET state = %s, end_journal_period_id = %d' \
-            'WHERE id = %d', ('done',start_jp,fy_id))
+            'SET state = %s, end_journal_period_id = %s' \
+            'WHERE id = %s', ('done',start_jp,fy_id))
     return {}
 
 class wiz_journal_close(wizard.interface):

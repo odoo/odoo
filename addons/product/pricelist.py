@@ -130,7 +130,7 @@ class product_pricelist(osv.osv):
         for id in ids:
             cr.execute('SELECT * ' \
                     'FROM product_pricelist_version ' \
-                    'WHERE pricelist_id = %d AND active=True ' \
+                    'WHERE pricelist_id = %s AND active=True ' \
                         'AND (date_start IS NULL OR date_start <= %s) ' \
                         'AND (date_end IS NULL OR date_end >= %s) ' \
                     'ORDER BY id LIMIT 1', (id, date, date))
@@ -145,14 +145,14 @@ class product_pricelist(osv.osv):
                     'FROM product_template ' \
                     'WHERE id = (SELECT product_tmpl_id ' \
                         'FROM product_product ' \
-                        'WHERE id = %d)', (prod_id,))
+                        'WHERE id = %s)', (prod_id,))
             tmpl_id, categ = cr.fetchone()
             categ_ids = []
             while categ:
                 categ_ids.append(str(categ))
                 cr.execute('SELECT parent_id ' \
                         'FROM product_category ' \
-                        'WHERE id = %d', (categ,))
+                        'WHERE id = %s', (categ,))
                 categ = cr.fetchone()[0]
                 if str(categ) in categ_ids:
                     raise osv.except_osv(_('Warning !'),
@@ -168,11 +168,11 @@ class product_pricelist(osv.osv):
                 'SELECT i.*, pl.currency_id '
                 'FROM product_pricelist_item AS i, '
                     'product_pricelist_version AS v, product_pricelist AS pl '
-                'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %d) '
-                    'AND (product_id IS NULL OR product_id = %d) '
+                'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %s) '
+                    'AND (product_id IS NULL OR product_id = %s) '
                     'AND (' + categ_where + ' OR (categ_id IS NULL)) '
-                    'AND price_version_id = %d '
-                    'AND (min_quantity IS NULL OR min_quantity <= %f) '
+                    'AND price_version_id = %s '
+                    'AND (min_quantity IS NULL OR min_quantity <= %s) '
                     'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                 'ORDER BY sequence LIMIT 1',
                 (tmpl_id, prod_id, plversion['id'], qty))
@@ -201,7 +201,7 @@ class product_pricelist(osv.osv):
                                 'FROM pricelist_partnerinfo ' \
                                 'WHERE suppinfo_id IN (' + \
                                     ','.join(map(str, sinfo)) + ') ' \
-                                    'AND min_quantity <= %f ' \
+                                    'AND min_quantity <= %s ' \
                                 'ORDER BY min_quantity DESC LIMIT 1', (qty,))
                         res2 = cr.dictfetchone()
                         if res2:
@@ -275,9 +275,9 @@ class product_pricelist_version(osv.osv):
                         'OR (%s = \'0000-01-01\' AND %s = \'0000-01-01\') ' \
                         'OR (%s = \'0000-01-01\' AND date_start <= %s) ' \
                         'OR (%s = \'0000-01-01\' AND %s <= date_end)) ' \
-                        'AND pricelist_id = %d ' \
+                        'AND pricelist_id = %s ' \
                         'AND active ' \
-                        'AND id <> %d', (pricelist_version.date_end or '0000-01-01',
+                        'AND id <> %s', (pricelist_version.date_end or '0000-01-01',
                             pricelist_version.date_start or '0000-01-01',
                             pricelist_version.date_end or '0000-01-01',
                             pricelist_version.date_start or '0000-01-01',

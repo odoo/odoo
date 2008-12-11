@@ -57,7 +57,7 @@ intro_start_fields = {
     'version': {'string':'Version', 'type':'char', 'size':16, 'required':True},
     'author': {'string':'Author', 'type':'char', 'size':64, 'default': lambda *args: 'Tiny', 'required':True},
     'category': {'string':'Category', 'type':'char', 'size':64, 'default': lambda *args: 'Vertical Modules/Parametrization', 'required':True},
-    'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://tinyerp.com', 'required':True},
+    'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://www.openerp.com', 'required':True},
     'description': {'string':'Full Description', 'type':'text', 'required':True},
     'data_kind': {'string':'Type of Data', 'type':'selection', 'selection':[('demo','Demo Data'),('update','Normal Data')], 'required':True, 'default': lambda *args:'update'},
 }
@@ -69,7 +69,7 @@ intro_save_form = '''<?xml version="1.0"?>
     <newline/>
     <field name="module_file"/>
     <separator string="Information" colspan="4"/>
-    <label string="If you think your module could interrest others people, we'd like you to publish it on TinyERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
+    <label string="If you think your module could interrest others people, we'd like you to publish it on OpenERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
     <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
 </form>'''
 
@@ -169,13 +169,10 @@ class base_module_merge(wizard.interface):
                             terp_file=os.path.join(fromurl,'__terp__.py')
                             terp_info=eval(tools.file_open(terp_file).read())
                             if os.path.basename(path) in terp_info['init_xml']:
-                                print "in init_xml",new_path
                                 self.init_xml+=[os.path.basename(new_path)]
                             elif os.path.basename(path) in terp_info['demo_xml']:
-                                print "in demo_xml",new_path
                                 self.demo_xml+=[os.path.basename(new_path)]
                             elif os.path.basename(path) in terp_info['update_xml']:
-                                print "in update_xml",new_path
                                 self.update_xml+=[os.path.basename(new_path)]
                     else:
                         file_data=tools.file_open(os.path.join(fromurl, path)).read()

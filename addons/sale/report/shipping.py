@@ -42,7 +42,7 @@ class shipping(report_sxw.rml_parse):
                          "and so.partner_id=rp.id " \
                          "and so.partner_invoice_id=rpa.id  " \
                          "and rpa.country_id=rc.id " \
-                         "and sp.id=%d "%(data.id))
+                         "and sp.id=%s", (data.id,))
 
          add=self.cr.dictfetchall()
          return add
@@ -55,7 +55,7 @@ class shipping(report_sxw.rml_parse):
                          "and so.partner_id=rp.id " \
                          "and so.partner_shipping_id=rpa.id  " \
                          "and rpa.country_id=rc.id " \
-                         "and sp.id=%d "%(data.id))
+                         "and sp.id=%s", (data.id,))
 
          ship=self.cr.dictfetchall()
          return ship
@@ -67,7 +67,7 @@ class shipping(report_sxw.rml_parse):
 #                        "LEFT JOIN  stock_move sm ON (sp.id = sm.picking_id) "\
 #                        "LEFT JOIN  product_product pp ON (sm.product_id = pp.id) "\
 #                        "LEFT JOIN  product_template pt ON (pp.product_tmpl_id = pt.id) "\
-#                        "WHERE sm.picking_id = %d "%(data['id']))
+#                        "WHERE sm.picking_id = %s", (data['id'],))
 #        sum_total = self.cr.fetchone()[0] or 0.00
 #        return True
 

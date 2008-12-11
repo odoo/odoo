@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Accounting",
-    "website" : "http://tinyerp.com/",
+    "website" : "http://www.openerp.com",
     "depends" : ["account",'hr_timesheet'],
     "description": """
 Module to generate invoices based on costs (human ressources, expenses, ...).

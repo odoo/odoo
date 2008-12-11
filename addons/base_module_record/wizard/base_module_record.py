@@ -27,14 +27,14 @@ import pooler
 intro_stop_form = '''<?xml version="1.0"?>
 <form string="Module Recording">
     <separator string="Recording Information" colspan="4"/>
-    <label string="Tiny ERP recording is stopped. Don't forget to save the recorded module." colspan="4" align="0.0"/>
+    <label string="Open ERP recording is stopped. Don't forget to save the recorded module." colspan="4" align="0.0"/>
     <label string="You can continue the recording session by relauching the 'start recording' wizard." colspan="4" align="0.0"/>
 </form>'''
 
 intro_start_form = '''<?xml version="1.0"?>
 <form string="Recording Stopped">
     <separator string="Recording information" colspan="4"/>
-    <label string="The module recorder allows you to record every operation made in the Tiny ERP client and save them as a module. You will be able to install this module on any database to reuse and/or publish it." colspan="4" align="0.0"/>
+    <label string="The module recorder allows you to record every operation made in the Open ERP client and save them as a module. You will be able to install this module on any database to reuse and/or publish it." colspan="4" align="0.0"/>
     <field name="continue"/>
 </form>'''
 

@@ -31,7 +31,7 @@ def _action_open_window(self, cr, uid, data, context):
     id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
     result = act_obj.read(cr, uid, [id])[0]
 
-    cr.execute('select journal_id,period_id from account_journal_period where id=%d', (data['id'],))
+    cr.execute('select journal_id,period_id from account_journal_period where id=%s', (data['id'],))
     journal_id,period_id = cr.fetchone()
 
     result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])

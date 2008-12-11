@@ -37,7 +37,7 @@
     It will generate a PDF with all the letters according the the
     different levels of recall defined. You can define different policies
     for different companies.""",
-    "website" : "http://tinyerp.com/module_account.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [],
     "demo_xml" : ["followup_demo.xml"],

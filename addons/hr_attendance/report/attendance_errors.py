@@ -44,7 +44,7 @@ class attendance_print(report_sxw.rml_parse):
             return dt.strftime(format)
 
     def _lst(self, employee_id, dt_from, dt_to, max, *args):
-        self.cr.execute('select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%d and name<=%s and name>=%s and action in (%s,%s) order by name', (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
+        self.cr.execute('select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and name<=%s and name>=%s and action in (%s,%s) order by name', (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         for r in res:
             if r['action']=='sign_out':
@@ -58,7 +58,7 @@ class attendance_print(report_sxw.rml_parse):
         return res
 
     def _lst_total(self, employee_id, dt_from, dt_to, max, *args):
-        self.cr.execute('select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%d and name<=%s and name>=%s and action in (%s,%s)', (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
+        self.cr.execute('select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and name<=%s and name>=%s and action in (%s,%s)', (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         if not res:
             return ('/','/')

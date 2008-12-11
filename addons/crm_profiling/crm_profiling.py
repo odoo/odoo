@@ -90,8 +90,8 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
     cr.execute('''
         select r.category_id 
         from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id) 
-        where r.partner_id = %d and (s.exclusif = false or s.exclusif is null);
-        '''% pid)
+        where r.partner_id = %s and (s.exclusif = false or s.exclusif is null)
+        ''', (pid,))
     for x in cr.fetchall():
         ok.append(x[0])
 
@@ -173,10 +173,8 @@ class partner(osv.osv):
             if x.startswith("quest_form") and data['form'][x] != 0 :
                 temp.append(data['form'][x])
 
-        query = """ 
-        select answer from partner_question_rel 
-        where partner =%d"""% data['id']
-        cr.execute(query)
+        query = "select answer from partner_question_rel where partner=%s"
+        cr.execute(query, data['id'])
         for x in cr.fetchall():
             temp.append(x[0])
 
@@ -212,7 +210,7 @@ class crm_segmentation(osv.osv):
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
+                    cr.execute('delete from res_partner_category_rel where category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']            
 
@@ -221,7 +219,7 @@ class crm_segmentation(osv.osv):
 
             if categ['sales_purchase_active']:
                 to_remove_list=[]
-                cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
+                cr.execute('select id from crm_segmentation_line where segmentation_id=%s', (id,))
                 line_ids = [x[0] for x in cr.fetchall()]
 
                 for pid in partners:
@@ -234,7 +232,7 @@ class crm_segmentation(osv.osv):
                 to_remove_list=[]
                 for pid in partners:
 
-                    cr.execute('select distinct(answer) from partner_question_rel where partner=%d' % pid)
+                    cr.execute('select distinct(answer) from partner_question_rel where partner=%s',(pid,))
                     answers_ids = [x[0] for x in cr.fetchall()]
 
                     if (not test_prof(cr, uid, id, pid, answers_ids)):
@@ -243,7 +241,7 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%d,%d)', (categ['categ_id'][0],partner_id))
+                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
             cr.commit()
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})

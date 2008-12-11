@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
-    "website": "http://www.tinyerp.com",
+    "website": "http://www.openerp.com",
     "description": """This is a complete document management system:
     * FTP Interface
     * User Authentification

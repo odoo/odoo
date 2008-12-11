@@ -42,11 +42,11 @@ def do_merge(self, cr, uid, data, context):
         raise wizard.except_wizard("Warning",
                                    "Please select one and only one inventory!")
 
-    cr.execute('select distinct location_id from stock_inventory_line where inventory_id=%d', (data['ids'][0],))
+    cr.execute('select distinct location_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     loc_ids = map(lambda x: x[0], cr.fetchall())
     locs = ','.join(map(lambda x: str(x), loc_ids))
 
-    cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%d', (data['ids'][0],))
+    cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     inv = cr.fetchall()
 
     cr.execute('select distinct product_id from stock_move where (location_dest_id in ('+locs+')) or (location_id in ('+locs+'))')

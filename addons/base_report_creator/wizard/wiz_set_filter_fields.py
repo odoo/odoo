@@ -166,7 +166,6 @@ def _set_form_value(self, cr, uid, data, context):
 
 def _set_operator(self, cr, uid, data, context):
     field = pooler.get_pool(cr.dbname).get('ir.model.fields').browse(cr, uid, data['form']['field_id'])
-    print field.ttype
     operator = set_value_fields['operator']['selection']
     while operator: 
         operator.pop(operator.__len__()-1)

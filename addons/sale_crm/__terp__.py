@@ -23,7 +23,7 @@
     "name" : "Sale CRM Stuff",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_sale.html",
+    "website" : "http://www.openerp.com",
     "depends" : ["sale", "crm_configuration"],
     "category" : "Generic Modules/Sales & Purchases",
     "description": """

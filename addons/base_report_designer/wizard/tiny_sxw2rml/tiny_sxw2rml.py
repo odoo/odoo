@@ -31,7 +31,7 @@
 ##############################################################################
 
 """
-Tiny SXW2RML - The Tiny ERP's report engine
+Tiny SXW2RML - The Open ERP's report engine
 
 Tiny SXW2RMLis part of the Tiny report project.
 Tiny Report is a module that allows you to render high quality PDF document

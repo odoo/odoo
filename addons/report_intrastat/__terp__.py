@@ -23,7 +23,7 @@
     "name" : "Intrastat Reporting - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "depends" : ["base", "product", "stock", "sale", "purchase"],
     "category" : "Generic Modules/Inventory Control",
     "description": "A module that adds intrastat reports.",

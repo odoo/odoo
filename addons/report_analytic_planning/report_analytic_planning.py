@@ -73,7 +73,7 @@ class report_account_analytic_planning_stat_account(osv.osv):
     def _sum_amount_real(self, cr, uid, ids, name, args, context):
         result = {}
         for line in self.browse(cr, uid, ids, context):
-            cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%d and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+            cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%s and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
             result[line.id] = cr.fetchone()[0]
         return result
     _columns = {
@@ -110,9 +110,9 @@ class report_account_analytic_planning_stat(osv.osv):
         result = {}
         for line in self.browse(cr, uid, ids, context):
             if line.user_id:
-                cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%d and account_id=%d and date>=%s and date<=%s', (line.user_id.id,line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+                cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%s and account_id=%s and date>=%s and date<=%s', (line.user_id.id,line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
             else:
-                cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%d and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+                cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%s and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
             result[line.id] = cr.fetchone()[0]
         return result
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context):
@@ -127,7 +127,7 @@ class report_account_analytic_planning_stat(osv.osv):
                     project_task
                 where
                 '''+where+'''
-                    project_id in (select id from project_project where category_id=%d) and
+                    project_id in (select id from project_project where category_id=%s) and
                     date_close>=%s and
                     date_close<=%s''', (
                 line.account_id.id,
@@ -179,7 +179,7 @@ class report_account_analytic_planning_stat_user(osv.osv):
         for line in self.browse(cr, uid, ids, context):
             result[line.id] = 0.0
             if line.user_id:
-                cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%d and date>=%s and date<=%s', (line.user_id.id,line.planning_id.date_from,line.planning_id.date_to))
+                cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%s and date>=%s and date<=%s', (line.user_id.id,line.planning_id.date_from,line.planning_id.date_to))
                 result[line.id] = cr.fetchone()[0]
         return result
     _columns = {

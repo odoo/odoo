@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
-    "website": "http://www.tinyerp.com",
+    "website": "http://www.openerp.com",
     "description": "Sample custom module where you can put your customer specific developments.",
     "depends" : ["base"],
     "init_xml" : [],

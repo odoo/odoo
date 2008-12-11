@@ -75,7 +75,7 @@ class journal_print(report_sxw.rml_parse):
                     periods.append(data.period_id.id)
             for period in periods:
                 period_data = self.pool.get('account.period').browse(self.cr, self.uid, period)
-                self.cr.execute('select j.code, j.name, sum(l.debit) as debit, sum(l.credit) as credit from account_move_line l left join account_journal j on (l.journal_id=j.id) where period_id=%d and journal_id in (' + ','.join(map(str, journal_id)) + ') and l.state<>\'draft\' group by j.id, j.code, j.name', (period,))
+                self.cr.execute('select j.code, j.name, sum(l.debit) as debit, sum(l.credit) as credit from account_move_line l left join account_journal j on (l.journal_id=j.id) where period_id=%s and journal_id in (' + ','.join(map(str, journal_id)) + ') and l.state<>\'draft\' group by j.id, j.code, j.name', (period,))
                 res = self.cr.dictfetchall()
                 res[0].update({'period_name':period_data.name})
                 res[0].update({'pid':period})
@@ -83,27 +83,27 @@ class journal_print(report_sxw.rml_parse):
             return lines_data
         if not self.journal_ids:
             return []
-        self.cr.execute('select j.code, j.name, sum(l.debit) as debit, sum(l.credit) as credit from account_move_line l left join account_journal j on (l.journal_id=j.id) where period_id=%d and journal_id in (' + self.journal_ids + ') and l.state<>\'draft\' group by j.id, j.code, j.name', (period_id,))
+        self.cr.execute('select j.code, j.name, sum(l.debit) as debit, sum(l.credit) as credit from account_move_line l left join account_journal j on (l.journal_id=j.id) where period_id=%s and journal_id in (' + self.journal_ids + ') and l.state<>\'draft\' group by j.id, j.code, j.name', (period_id,))
         res = self.cr.dictfetchall()
         return res
 
     def _sum_debit_period(self, period_id,journal_id=None):
         if type(journal_id)==type([]):
-            self.cr.execute('select sum(debit) from account_move_line where period_id=%d and journal_id in (' + ','.join(map(str, journal_id)) + ') and state<>\'draft\'', (period_id,))
+            self.cr.execute('select sum(debit) from account_move_line where period_id=%s and journal_id in (' + ','.join(map(str, journal_id)) + ') and state<>\'draft\'', (period_id,))
             return self.cr.fetchone()[0] or 0.0
         if not self.journal_ids:
             return 0.0
-        self.cr.execute('select sum(debit) from account_move_line where period_id=%d and journal_id in (' + self.journal_ids + ') and state<>\'draft\'', (period_id,))
+        self.cr.execute('select sum(debit) from account_move_line where period_id=%s and journal_id in (' + self.journal_ids + ') and state<>\'draft\'', (period_id,))
 
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit_period(self, period_id,journal_id=None):
         if type(journal_id)==type([]):
-            self.cr.execute('select sum(credit) from account_move_line where period_id=%d and journal_id in (' + ','.join(map(str, journal_id)) + ') and state<>\'draft\'', (period_id,))
+            self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id in (' + ','.join(map(str, journal_id)) + ') and state<>\'draft\'', (period_id,))
             return self.cr.fetchone()[0] or 0.0
         if not self.journal_ids:
             return 0.0
-        self.cr.execute('select sum(credit) from account_move_line where period_id=%d and journal_id in (' + self.journal_ids + ') and state<>\'draft\'', (period_id,))
+        self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id in (' + self.journal_ids + ') and state<>\'draft\'', (period_id,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_debit(self,period_id=None,journal_id=None):

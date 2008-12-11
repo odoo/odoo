@@ -38,7 +38,7 @@
 
     5. You have an option to print the desired report in Landscape format.
     """,
-    "website" : "http://tinyerp.com/account_balance.html",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
     ],

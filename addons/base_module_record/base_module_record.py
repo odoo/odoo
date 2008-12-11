@@ -236,8 +236,6 @@ class base_module_record(osv.osv):
         return result
 
     def _create_function(self, cr, uid, doc, model, name, record_id):
-        print 'Create Function', model, name, record_id
-
         record = doc.createElement('function')
         record.setAttribute("name", name)
         record.setAttribute("model", model)

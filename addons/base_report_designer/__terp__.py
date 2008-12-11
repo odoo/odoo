@@ -28,7 +28,7 @@ OpenOffice.
     "version" : "0.1",
     "depends" : ["base"],
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "init_xml" : [ ],
     "demo_xml" : ["base_report_data.xml"],

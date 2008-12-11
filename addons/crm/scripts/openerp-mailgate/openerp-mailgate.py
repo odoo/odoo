@@ -106,8 +106,8 @@ class email_parser(object):
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
         except Exception, e:
-            print e
-        #end try
+            import netsvc
+            netsvc.Logger().notifyChannel('mailgate', netsvc.LOG_ERROR, "%s" % e)
 
         id = self.rpc('crm.case', 'create', data)
         attachments = message['attachment']
@@ -122,7 +122,6 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        #end for
 
         return id
 
@@ -297,11 +296,11 @@ if __name__ == '__main__':
 
     group = optparse.OptionGroup(parser, "Note",
         "This program parse a mail from standard input and communicate "
-        "with the Tiny ERP server for case management in the CRM module.")
+        "with the Open ERP server for case management in the CRM module.")
     parser.add_option_group(group)
 
-    parser.add_option("-u", "--user", dest="userid", help="ID of the user in Tiny ERP", default=3, type='int')
-    parser.add_option("-p", "--password", dest="password", help="Password of the user in Tiny ERP", default='admin')
+    parser.add_option("-u", "--user", dest="userid", help="ID of the user in Open ERP", default=3, type='int')
+    parser.add_option("-p", "--password", dest="password", help="Password of the user in Open ERP", default='admin')
     parser.add_option("-e", "--email", dest="email", help="Email address used in the From field of outgoing messages")
     parser.add_option("-s", "--section", dest="section", help="ID or code of the case section", default="support")
     parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
