@@ -99,7 +99,7 @@ class module(osv.osv):
         return info
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = dict.setdefault(ids, '')
+        res = dict.fromkeys(ids, '')
         for m in self.browse(cr, uid, ids):
             res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
