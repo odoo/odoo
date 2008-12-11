@@ -34,7 +34,7 @@ def listdir(dir, recursive=False):
 		return os.listdir(dir)
 
 	res = []
-	for root, dirs, files in os.walk(dir):
+	for root, dirs, files in walksymlinks(dir):
 		root = root[len(dir)+1:]
 		res.extend([opj(root, f) for f in files])
 	return res
