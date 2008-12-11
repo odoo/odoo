@@ -259,7 +259,10 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed':
                     todo.append(dep.module_id)
-        self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+
+        ids = map(lambda x: x.id, todo)
+        self.write(cr, uid, ids, {'state':'to upgrade'}, context=context)
+        self.button_install(cr, uid, ids, context=context)
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
