@@ -260,6 +260,7 @@
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="separator"/>
@@ -315,6 +316,7 @@
             <rng:optional><rng:attribute name="target"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />
