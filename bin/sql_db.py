@@ -62,7 +62,8 @@ class Cursor(object):
     count = 0
     
     def check(f):
-        from functools import wraps
+        from tools.func import wraps
+
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if not hasattr(self, '_obj'):

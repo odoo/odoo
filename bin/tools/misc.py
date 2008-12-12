@@ -689,7 +689,7 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(f):
-    from functools import wraps
+    from tools.func import wraps
     
     @wraps(f)
     def wrapper(*args, **kwargs):
