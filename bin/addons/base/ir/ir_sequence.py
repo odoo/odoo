@@ -69,11 +69,11 @@ class ir_sequence(osv.osv):
             'sec': time.strftime('%S'),
         }
 
-    def get_id(self, cr, uid, sequence_id, test='id=%d'):
+    def get_id(self, cr, uid, sequence_id, test='id=%s'):
         cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True FOR UPDATE', (sequence_id,))
         res = cr.dictfetchone()
         if res:
-            cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%d and active=True', (res['id'],))
+            cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%s and active=True', (res['id'],))
             if res['number_next']:
                 return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
             else:

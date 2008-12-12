@@ -171,6 +171,9 @@ def amount_to_text_nl(number, currency):
 #-------------------------------------------------------------
 
 _translate_funcs = {'fr' : amount_to_text_fr, 'nl' : amount_to_text_nl}
+
+def add_amount_to_text_function(lang, func):
+    _translate_funcs[lang] = func
     
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented

@@ -35,6 +35,16 @@ def login(db, login, password):
     else:
         return False
 
+def logout(db, login, password):
+    cr = pooler.get_db(db).cursor()
+    cr.execute('select login from res_users where id=%d'%(login))
+    res = cr.fetchone()
+    cr.close()
+    if res:
+        return res[0]
+    else:
+        return False
+
 def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
         return True
@@ -46,7 +56,7 @@ def check(db, uid, passwd):
         return True
         
     cr = pooler.get_db(db).cursor()
-    cr.execute('select count(*) from res_users where id=%d and password=%s', (int(uid), passwd))
+    cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):

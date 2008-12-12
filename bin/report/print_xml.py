@@ -78,17 +78,13 @@ class document(object):
         fields = field_path.split('.')
 
         if not len(fields):
-            print "WARNING: field name is empty!"
             return ''
                     
         value = browser
         for f in fields:
             if isinstance(value, list):
                 if len(value)==0:
-                    print "WARNING: empty list found!"
                     return ''
-#               elif len(value)>1:
-#                   print "WARNING:", len(value), "possibilities for", value[0]._table_name , "picking first..."
                 value = value[0]
             if isinstance(value, browse_null):
                 return ''
@@ -121,19 +117,13 @@ class document(object):
 #Pinky: Why not this ? eval(expr, browser) ?
 #       name = browser.name
 #       data_dict = browser._data[self.get_value(browser, 'id')]
-        return eval(expr)
+        return eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
         # node is the node of the xml template to be parsed
         # parent = the parent node in the xml data tree we are creating
         
         if node.nodeType == node.ELEMENT_NODE:
-#           print '-'*60
-#           print "parse_node", node
-#           print "parent: ", parent
-#           print "ids:", ids
-#           print "model:", model
-#           print "datas:", datas
             
             # convert the attributes of the node to a dictionary
             
@@ -203,9 +193,6 @@ class document(object):
                     el.appendChild(el_txt)
 
                 elif attrs['type']=='eval':
-#TODO: faire ca plus proprement
-                    if isinstance(browser, list):
-                        print "ERROR: EVAL!"
                     el = self.doc.createElement(node.localName)
                     parent.appendChild(el)
                     value = self.eval(browser, attrs['expr'])
@@ -270,8 +257,6 @@ class document(object):
                             parent.appendChild(el)
                             atr = self.node_attrs_get(node)
                             if 'value' in atr:
-                                #print "type=>",type(datas[atr['value']])
-                                #print "value=>",datas[atr['value']]
                                 if not isinstance(datas[atr['value']], (str, unicode)):
                                     txt = self.doc.createTextNode(str(datas[atr['value']]))
                                 else:

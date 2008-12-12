@@ -193,7 +193,9 @@ class ir_model_fields(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True),
+        'relation_id':fields.many2one('ir.model', 'Object Relation'),
         'relation': fields.char('Object Relation', size=64),
+        'relation_field_id':fields.many2one('ir.model.fields', 'Relation Field'),
         'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
@@ -231,8 +233,26 @@ class ir_model_fields(osv.osv):
         # MAY BE ADD A ALTER TABLE DROP ?
         #
         return super(ir_model_fields, self).unlink(cr, user, ids, context)
-
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        res = False
+        if 'relation_id' in vals:
+            model_data = self.pool.get('ir.model').browse(cr, uid, vals['relation_id'])
+            vals['relation'] = model_data.model
+        if 'relation_field_id' in vals:
+            field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
+            vals['relation'] = field_data.name
+            
+        res = super(ir_model_fields, self).write(cr, uid, ids, vals, context)
+        return res
+    
     def create(self, cr, user, vals, context=None):
+        if 'relation_id' in vals:
+            model_data = self.pool.get('ir.model').browse(cr,user,vals['relation_id'])
+            vals['relation']=model_data.model
+        if 'relation_field_id' in vals:
+            field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
+            vals['relation_field'] = field_data.name
         if 'model_id' in vals:
             model_data=self.pool.get('ir.model').browse(cr,user,vals['model_id'])
             vals['model']=model_data.model
@@ -266,7 +286,7 @@ class ir_model_access(osv.osv):
         if not grouparr:
             return False
 
-        cr.execute("select 1 from res_groups_users_rel where uid=%d and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
+        cr.execute("select 1 from res_groups_users_rel where uid=%s and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
         return bool(cr.fetchone())
 
     def check_group(self, cr, uid, model, mode, group_ids):
@@ -285,7 +305,7 @@ class ir_model_access(osv.osv):
             cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
-                   " WHERE m.model = %s AND a.group_id = %d", (model_name, group_id)
+                   " WHERE m.model = %s AND a.group_id = %s", (model_name, group_id)
                    )
             r = cr.fetchone()
             if r is None:
@@ -442,10 +462,10 @@ class ir_model_data(osv.osv):
             cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
             results = cr.fetchall()
             for action_id2,res_id2 in results:
-                cr.execute('select id from '+self.pool.get(model)._table+' where id=%d', (res_id2,))
+                cr.execute('select id from '+self.pool.get(model)._table+' where id=%s', (res_id2,))
                 result3 = cr.fetchone()
                 if not result3:
-                    cr.execute('delete from ir_model_data where id=%d', (action_id2,))
+                    cr.execute('delete from ir_model_data where id=%s', (action_id2,))
                 else:
                     res_id,action_id = res_id2,action_id2
 
@@ -513,7 +533,7 @@ class ir_model_data(osv.osv):
         #self.pool.get(model).unlink(cr, uid, ids)
         for id in ids:
             self.unlink_mark[(model, id)]=False
-            cr.execute('delete from ir_model_data where res_id=%d and model=\'%s\'', (id,model))
+            cr.execute('delete from ir_model_data where res_id=%s and model=\'%s\'', (id,model))
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
@@ -525,7 +545,7 @@ class ir_model_data(osv.osv):
             model = models[0]
 
         if res_id:
-            where = ' and res_id=%d' % (res_id,)
+            where = ' and res_id=%s' % (res_id,)
         else:
             where = ' and (res_id is null)'
 
@@ -552,10 +572,10 @@ class ir_model_data(osv.osv):
             if (module,name) not in self.loads:
                 self.unlink_mark[(model,res_id)] = id
                 if model=='workflow.activity':
-                    cr.execute('select res_type,res_id from wkf_instance where id in (select inst_id from wkf_workitem where act_id=%d)', (res_id,))
+                    cr.execute('select res_type,res_id from wkf_instance where id in (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
-                    cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%d where act_to=%d", (res_id,res_id))
-                    cr.execute("delete from wkf_transition where act_to=%d", (res_id,))
+                    cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                    cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
 
         for model,id in wkf_todo:
             wf_service = netsvc.LocalService("workflow")

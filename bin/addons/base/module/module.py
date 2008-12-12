@@ -35,111 +35,7 @@ import addons
 import pooler
 import netsvc
 
-ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
-suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
-
-def vercmp(ver1, ver2):
-    """
-    Compare two versions
-    Take from portage_versions.py
-    @param ver1: version to compare with
-    @type ver1: string (example "1.2-r3")
-    @param ver2: version to compare again
-    @type ver2: string (example "2.1-r1")
-    @rtype: None or float
-    @return:
-    1. position if ver1 is greater than ver2
-    2. negative if ver1 is less than ver2
-    3. 0 if ver1 equals ver2
-    4. None if ver1 or ver2 are invalid
-    """
-
-    match1 = ver_regexp.match(ver1)
-    match2 = ver_regexp.match(ver2)
-
-    if not match1 or not match1.groups():
-        return None
-    if not match2 or not match2.groups():
-        return None
-
-    list1 = [int(match1.group(1))]
-    list2 = [int(match2.group(1))]
-
-    if len(match1.group(2)) or len(match2.group(2)):
-        vlist1 = match1.group(2)[1:].split(".")
-        vlist2 = match2.group(2)[1:].split(".")
-        for i in range(0, max(len(vlist1), len(vlist2))):
-            # Implicit .0 is given -1, so 1.0.0 > 1.0
-            # would be ambiguous if two versions that aren't literally equal
-            # are given the same value (in sorting, for example).
-            if len(vlist1) <= i or len(vlist1[i]) == 0:
-                list1.append(-1)
-                list2.append(int(vlist2[i]))
-            elif len(vlist2) <= i or len(vlist2[i]) == 0:
-                list1.append(int(vlist1[i]))
-                list2.append(-1)
-            # Let's make life easy and use integers unless we're forced to use floats
-            elif (vlist1[i][0] != "0" and vlist2[i][0] != "0"):
-                list1.append(int(vlist1[i]))
-                list2.append(int(vlist2[i]))
-            # now we have to use floats so 1.02 compares correctly against 1.1
-            else:
-                list1.append(float("0."+vlist1[i]))
-                list2.append(float("0."+vlist2[i]))
-    # and now the final letter
-    if len(match1.group(4)):
-        list1.append(ord(match1.group(4)))
-    if len(match2.group(4)):
-        list2.append(ord(match2.group(4)))
-
-    for i in range(0, max(len(list1), len(list2))):
-        if len(list1) <= i:
-            return -1
-        elif len(list2) <= i:
-            return 1
-        elif list1[i] != list2[i]:
-            return list1[i] - list2[i]
-
-    # main version is equal, so now compare the _suffix part
-    list1 = match1.group(5).split("_")[1:]
-    list2 = match2.group(5).split("_")[1:]
-
-    for i in range(0, max(len(list1), len(list2))):
-        # Implicit _p0 is given a value of -1, so that 1 < 1_p0
-        if len(list1) <= i:
-            s1 = ("p","-1")
-        else:
-            s1 = suffix_regexp.match(list1[i]).groups()
-        if len(list2) <= i:
-            s2 = ("p","-1")
-        else:
-            s2 = suffix_regexp.match(list2[i]).groups()
-        if s1[0] != s2[0]:
-            return suffix_value[s1[0]] - suffix_value[s2[0]]
-        if s1[1] != s2[1]:
-            # it's possible that the s(1|2)[1] == ''
-            # in such a case, fudge it.
-            try:
-                r1 = int(s1[1])
-            except ValueError:
-                r1 = 0
-            try:
-                r2 = int(s2[1])
-            except ValueError:
-                r2 = 0
-            if r1 - r2:
-                return r1 - r2
-
-    # the suffix part is equal to, so finally check the revision
-    if match1.group(9):
-        r1 = int(match1.group(9))
-    else:
-        r1 = 0
-    if match2.group(9):
-        r2 = int(match2.group(9))
-    else:
-        r2 = 0
-    return r1 - r2
+from tools.parse_version import parse_version
 
 
 class module_repository(osv.osv):
@@ -158,7 +54,7 @@ class module_repository(osv.osv):
     }
     _defaults = {
         'sequence': lambda *a: 5,
-        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.version.rsplit('.', 1)[0]+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
+        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.major_version+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
         'active': lambda *a: 1,
     }
     _order = "sequence"
@@ -172,7 +68,7 @@ class module_category(osv.osv):
         cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str,ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str,ids))+')) group by category_id')
         result = dict(cr.fetchall())
         for id in ids:
-            cr.execute('select id from ir_module_category where parent_id=%d', (id,))
+            cr.execute('select id from ir_module_category where parent_id=%s', (id,))
             childs = [c for c, in cr.fetchall()]
             result[id] = reduce(lambda x,y:x+y, [result.get(c, 0) for c in childs], result.get(id, 0))
         return result
@@ -196,64 +92,45 @@ class module(osv.osv):
             data = f.read()
             info = eval(data)
             if 'version' in info:
-                info['version'] = release.version.rsplit('.', 1)[0] + '.' + info['version']
+                info['version'] = release.major_version + '.' + info['version']
             f.close()
         except:
             return {}
         return info
 
-    def _get_installed_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
+    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = dict.fromkeys(ids, '')
         for m in self.browse(cr, uid, ids):
-            if m.state in ('installed', 'to upgrade', 'to remove'):
-                res[m.id] = self.get_module_info(m.name).get('version', '')
-            else:
-                res[m.id] = ''
-        return res
-
-    def _get_menus(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                menu_txt = ''
-                menus_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.menu')])
-                for data_id in model_data_obj.browse(cr,uid,menus_id):
-                    menu_txt += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
-                res[m.id] = menu_txt
-            else:
-                res[m.id] = ''
-        return res
-
-    def _get_reports(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        report_obj = self.pool.get('ir.actions.report.xml')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                report_txt = ''
-                report_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.actions.report.xml')])
-                for data_id in model_data_obj.browse(cr,uid,report_id):
-                    report_txt += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = report_txt
-            else:
-                res[m.id] = ''
+            res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
 
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
-        for m in self.browse(cr, uid, ids, context=context):
-            if m.state == 'installed':
-                view_txt = ''
-                view_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.view')])
-                for data_id in model_data_obj.browse(cr,uid,view_id):
-                    view_txt += view_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = view_txt
-            else:
-                res[m.id] = ''
+        report_obj = self.pool.get('ir.actions.report.xml')
+        menu_obj = self.pool.get('ir.ui.menu')
+        mlist = self.browse(cr, uid, ids, context=context)
+        mnames = {}
+        for m in mlist:
+            mnames[m.name] = m.id
+            res[m.id] = {
+                'menus_by_module':'',
+                'reports_by_module':'',
+                'views_by_module': ''
+            }
+        view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
+            ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
+        for data_id in model_data_obj.browse(cr,uid,view_id,context):
+            key = data_id['model']
+            if key=='ir.ui.view':
+                v = view_obj.browse(cr,uid,data_id.res_id)
+                aa = v.inherit_id and '* INHERIT ' or ''
+                res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+            elif key=='ir.actions.report.xml':
+                res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+            elif key=='ir.ui.menu':
+                res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
         return res
 
     _columns = {
@@ -263,10 +140,16 @@ class module(osv.osv):
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
-        'installed_version': fields.function(_get_installed_version, method=True,
-            string='Installed version', type='char'),
-        'latest_version': fields.char('Latest version', size=64, readonly=True),
+
+        # attention: Incorrect field names !! 
+        #   installed_version refer the latest version (the one on disk)
+        #   latest_version refer the installed version (the one in database)
+        #   published_version refer the version available on the repository
+        'installed_version': fields.function(_get_latest_version, method=True,
+            string='Latest version', type='char'),  
+        'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
+        
         'url': fields.char('URL', size=128),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
@@ -286,9 +169,9 @@ class module(osv.osv):
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
                 ('Other proprietary', 'Other proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
-        'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
+        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta"),
+        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta"),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta"),
     }
 
     _defaults = {
@@ -313,7 +196,7 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
@@ -376,7 +259,20 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed':
                     todo.append(dep.module_id)
-        self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+        
+        ids = map(lambda x: x.id, todo)
+        self.write(cr, uid, ids, {'state':'to upgrade'}, context=context)
+        
+        to_install = []
+        for mod in todo:
+            for dep in mod.dependencies_id:
+                if dep.state == 'unknown':
+                    raise orm.except_orm(_('Error'), _('You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                if dep.state == 'uninstalled':
+                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
+                    to_install.extend(ids2)
+
+        self.button_install(cr, uid, to_install, context=context)
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
@@ -403,9 +299,8 @@ class module(osv.osv):
                 terp = self.get_module_info(mod_name)
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
-                if vercmp(terp.get('version', ''), mod.latest_version or '0') > 0:
+                if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
                     self.write(cr, uid, id, {
-                        'latest_version': terp.get('version'),
                         'url': ''})
                     res[0] += 1
                 self.write(cr, uid, id, {
@@ -416,7 +311,7 @@ class module(osv.osv):
                     'license': terp.get('license', 'GPL-2'),
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency\
-                        WHERE module_id = %d', (id,))
+                        WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends',
                     []))
                 self._update_category(cr, uid, ids[0], terp.get('category',
@@ -429,15 +324,14 @@ class module(osv.osv):
                 if not terp or not terp.get('installable', True):
                     continue
 
-                if not os.path.isfile( mod_path ):
-                    import imp
-                    # XXX must restrict to only addons paths
-                    path = imp.find_module(mod_name)
-                    imp.load_module(name, *path)
-                else:
-                    import zipimport
-                    zimp = zipimport.zipimporter(mod_path)
-                    zimp.load_module(mod_name)
+                #if not os.path.isfile( mod_path ):
+                #    import imp
+                #    path = imp.find_module(mod_name, [addons.ad, addons._ad])
+                #    imp.load_module(name, *path)
+                #else:
+                #    import zipimport
+                #    zimp = zipimport.zipimporter(mod_path)
+                #    zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
                     'state': 'uninstalled',
@@ -445,15 +339,14 @@ class module(osv.osv):
                     'shortdesc': terp.get('name', ''),
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
-                    'latest_version': terp.get('version', ''),
                     'license': terp.get('license', 'GPL-2'),
                 })
                 res[1] += 1
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
                 self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
-        import socket
-        socket.setdefaulttimeout(10)
+        #import socket
+        #socket.setdefaulttimeout(10)
         for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
             try:
                 index_page = urllib.urlopen(repository.url).read()
@@ -472,7 +365,7 @@ class module(osv.osv):
                 if version == 'x': # 'x' version was a mistake
                     version = '0'
                 if name in mod_sort:
-                    if vercmp(version, mod_sort[name][0]) <= 0:
+                    if parse_version(version) <= parse_version(mod_sort[name][0]):
                         continue
                 mod_sort[name] = [version, extension]
             for name in mod_sort.keys():
@@ -482,7 +375,6 @@ class module(osv.osv):
                 if not ids:
                     self.create(cr, uid, {
                         'name': name,
-                        'latest_version': version,
                         'published_version': version,
                         'url': url,
                         'state': 'uninstalled',
@@ -490,21 +382,18 @@ class module(osv.osv):
                     res[1] += 1
                 else:
                     id = ids[0]
-                    latest_version = self.read(cr, uid, id, ['latest_version'])\
-                            ['latest_version']
-                    if latest_version == 'x': # 'x' version was a mistake
-                        latest_version = '0'
-                    c = vercmp(version, latest_version)
-                    if c > 0:
-                        self.write(cr, uid, id,
-                                {'latest_version': version, 'url': url})
+                    installed_version = self.read(cr, uid, id, ['latest_version'])['latest_version']
+                    if installed_version == 'x': # 'x' version was a mistake
+                        installed_version = '0'
+                    if parse_version(version) > parse_version(installed_version):
+                        self.write(cr, uid, id, {
+                            'url': url
+                        })
                         res[0] += 1
-                    published_version = self.read(cr, uid, id, ['published_version'])\
-                            ['published_version']
+                    published_version = self.read(cr, uid, id, ['published_version'])['published_version']
                     if published_version == 'x' or not published_version:
                         published_version = '0'
-                    c = vercmp(version, published_version)
-                    if c > 0:
+                    if parse_version(version) > parse_version(published_version):
                         self.write(cr, uid, id,
                                 {'published_version': version})
         return res
@@ -518,7 +407,7 @@ class module(osv.osv):
             version = '0'
             if match:
                 version = match.group(1)
-            if vercmp(mod.installed_version or '0', version) >= 0:
+            if parse_version(mod.installed_version or '0') >= parse_version(version):
                 continue
             res.append(mod.url)
             if not download:
@@ -540,7 +429,7 @@ class module(osv.osv):
                 'license': terp.get('license', 'GPL-2'),
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
-                    'WHERE module_id = %d', (mod.id,))
+                    'WHERE module_id = %s', (mod.id,))
             self._update_dependencies(cr, uid, mod.id, terp.get('depends',
                 []))
             self._update_category(cr, uid, mod.id, terp.get('category',
@@ -552,21 +441,21 @@ class module(osv.osv):
 
     def _update_dependencies(self, cr, uid, id, depends=[]):
         for d in depends:
-            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%d, %s)', (id, d))
+            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 
     def _update_category(self, cr, uid, id, category='Uncategorized'):
         categs = category.split('/')
         p_id = None
         while categs:
             if p_id is not None:
-                cr.execute('select id from ir_module_category where name=%s and parent_id=%d', (categs[0], p_id))
+                cr.execute('select id from ir_module_category where name=%s and parent_id=%s', (categs[0], p_id))
             else:
                 cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
             c_id = cr.fetchone()
             if not c_id:
                 cr.execute('select nextval(\'ir_module_category_id_seq\')')
                 c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category (id, name, parent_id) values (%d, %s, %d)', (c_id, categs[0], p_id))
+                cr.execute('insert into ir_module_category (id, name, parent_id) values (%s, %s, %s)', (c_id, categs[0], p_id))
             else:
                 c_id = c_id[0]
             p_id = c_id

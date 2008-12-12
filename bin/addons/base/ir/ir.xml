@@ -41,7 +41,7 @@
         </record>
         
         <record id="act_values_form" model="ir.actions.act_window">
-            <field name="name">Values</field>
+            <field name="name">Client Actions Connections</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
@@ -49,7 +49,6 @@
             <field name="context">{'read':'default'}</field>
         </record>
         
-        <menuitem id="next_id_4" name="Low Level" parent="menu_custom"/>
         <menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
         
         <!-- Sequences -->
@@ -114,7 +113,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences" parent="base.menu_custom"/>
+        <menuitem id="next_id_5" name="Sequences" parent="base.menu_config"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
         
         <!-- Sequences Types -->
@@ -464,7 +463,7 @@
             <field name="model">ir.ui.view</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="User Interface - Views">
+                <form string="Views">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                     <field name="model" select="1"/>
@@ -480,7 +479,7 @@
             <field name="model">ir.ui.view</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string="Views">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
@@ -488,7 +487,7 @@
             </field>
         </record>
         <record id="action_ui_view" model="ir.actions.act_window">
-            <field name="name">View</field>
+            <field name="name">Views</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view</field>
             <field name="view_id" ref="view_view_tree"/>
@@ -689,9 +688,9 @@
                                     <group colspan="2" col="2">
                                         <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
-                                        <field name="relation" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
-                                                                                  'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-                                        <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
+                                        <field name="relation_id" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                                                                  'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
+                                        <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
                                                                              'readonly': [('ttype','!=','one2many')]}"/>
                                         <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                         <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
@@ -719,7 +718,7 @@
                         </page>
                         <page string="Access Rights">
                             <field colspan="4" name="access_ids" select="1" nolabel="1">
-                                <tree string="Access Rules" editable="bottom" colspan="4">
+                                <tree string="Access Rules" editable="bottom">
                                     <field name="group_id"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
@@ -768,9 +767,11 @@
                         <page string="Properties">
                             <group colspan="2" col="2">
                                 <field name="ttype" select="2"/>
-                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                <field name="relation_id" select="2" on_change="on_relation_change(relation_id)" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
+<!--                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],-->
+<!--                                                                          'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>-->
+                                <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
                                                                      'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                 <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
@@ -786,7 +787,7 @@
                                 <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                             </group>
                         </page>
-                        <page string="Security on Groups" colspan="4">
+                        <page string="Security on Groups">
                             <field name="groups" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
@@ -933,7 +934,7 @@
             </field>
         </record>
         <record id="grant_menu_access" model="ir.actions.act_window">
-            <field name="name">Grant access to menu</field>
+            <field name="name">Grant Access To Menus</field>
             <field name="res_model">ir.ui.menu</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_menu"/>
@@ -991,7 +992,7 @@
             <field name="context">{'active_test': False}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_custom"/>
+        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"/>
         <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
         
         
@@ -1154,31 +1155,42 @@
                             <field name="trigger_name" select="2"/>
                         </page>
                         
-                        <page string="Email / SMS" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
+                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
+                            <field name="action_id" select="2" colspan="4"/>
+                        </page>
+                        
+                        <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
-                            <field name="address" domain="[('model_id','=',model_id)]"/>
-                            <field name="sms" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','email'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
-                            <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','sms'), ('state','=','client_action'), ('state','=','other')]}" />
+                            <field name="email" domain="[('model_id','=',model_id)]"/>
+                            <field name="message" select="2" colspan="4"/>
                             <newline/>
                             <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
                         </page>
                         
-                        <page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
+                        <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
+                            <separator colspan="4" string="SMS Configuration"/>
+                            <field name="mobile" domain="[('model_id','=',model_id)]"/>
+                            <field name="sms" colspan="4"/>
+                            <newline/>
+                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
+                        </page>
+                        
+                        <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="otype"/>
-                            <field name="srcmodel_id" select="2" attrs="{'readonly':[('type','=','copy'),('state','=','write_create')]}"/>
+                            <field name="srcmodel_id" select="2"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
                                     <field name="type"/>
-                                    <field name="value" colsapan="4"/>
+                                    <field name="value" colspan="4"/>
                                 </tree>
                                 <form string="Field Mapping"> 
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
                                     <field name="type"/>
-                                    <field name="value" colsapan="4"/>
+                                    <field name="value" colspan="4"/>
                                 </form>
                             </field>
+                            <field name="record_id" attrs="{'invisible':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
@@ -1188,8 +1200,7 @@
                         </page>
                         
                     </notebook>
-                    <field name="usage"/>
-                    <field name="type"/>
+                    <field name="type" readonly="1"/>
                 </form>
             </field>
         </record>
@@ -1214,7 +1225,7 @@
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="context">{'key':'server_action'}</field>
         </record>
-        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
+        <menuitem action="action_server_action" id="menu_server_action" parent="base.menu_custom_action"/>
 
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="name">ir.model.fields.tree</field>
@@ -1274,7 +1285,8 @@
             <field name="view_type">form</field>
 			<field name="domain">[('type','=','configure')]</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_custom"/><menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
+        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
         
         <record id="view_config_wizard_form" model="ir.ui.view">
             <field name="name">Main Configuration Wizard</field>

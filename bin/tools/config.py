@@ -62,10 +62,11 @@ class configmanager(object):
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
             
-            'assert_exit_level': logging.WARNING, # level above which a failed assert will 
+            'log_level': logging.INFO,
+            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
         }
         
-        assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_ERROR, netsvc.LOG_WARNING, netsvc.LOG_INFO, netsvc.LOG_DEBUG)
+        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')]) 
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version)
@@ -89,7 +90,8 @@ class configmanager(object):
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, help="stop the server after it initializes")
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        parser.add_option("--assert-exit-level", dest='assert_exit_level', help="specify the level at which a failed assertion will stop the server " + str(assert_exit_levels))
+        parser.add_option('--log-level', dest='log_level', type='choice', choices=loglevels.keys(), help='specify the level of the logging. Accepted values: ' + str(loglevels.keys()))
+        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), help="specify the level at which a failed assertion will stop the server. Accepted values: " + str(loglevels.keys()))
         parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
         
         parser.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
@@ -163,8 +165,9 @@ class configmanager(object):
             self.options[arg] = getattr(opt, arg)
         
         if opt.assert_exit_level:
-            assert opt.assert_exit_level in assert_exit_levels, 'ERROR: The assert-exit-level must be one of those values: '+str(assert_exit_levels)
-            self.options['assert_exit_level'] = getattr(logging, opt.assert_exit_level.upper())
+            self.options['assert_exit_level'] = loglevels[opt.assert_exit_level]
+        if opt.log_level:
+            self.options['log_level'] = loglevels[opt.log_level]
             
         if not self.options['root_path'] or self.options['root_path']=='None':
             self.options['root_path'] = os.path.abspath(os.path.dirname(sys.argv[0]))

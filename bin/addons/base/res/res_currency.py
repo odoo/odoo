@@ -39,7 +39,7 @@ class res_currency(osv.osv):
             date=time.strftime('%Y-%m-%d')
         date= date or time.strftime('%Y-%m-%d')
         for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %d AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
             if cr.rowcount:
                 id, rate=cr.fetchall()[0]
                 res[id]=rate
@@ -91,7 +91,7 @@ class res_currency(osv.osv):
         if account and (account.currency_mode=='average') and account.currency_id:
             q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
             cr.execute('select sum(debit-credit),sum(amount_currency) from account_move_line l ' \
-              'where l.currency_id=%d and l.account_id=%d and '+q, (account.currency_id.id,account.id,))
+              'where l.currency_id=%s and l.account_id=%s and '+q, (account.currency_id.id,account.id,))
             tot1,tot2 = cr.fetchone()
             if tot2 and not account_invert:
                 rate = float(tot1)/float(tot2)

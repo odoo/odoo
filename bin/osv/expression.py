@@ -22,6 +22,7 @@
 ##############################################################################
 
 from tools import flatten, reverse_enumerate
+import fields
 
 
 class expression(object):
@@ -50,7 +51,7 @@ class expression(object):
             subids = ids[i:i+cr.IN_MAX]
             cr.execute('SELECT "%s"'    \
                        '  FROM "%s"'    \
-                       ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%d']*len(subids))),
+                       ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
                        subids)
             res.extend([r[0] for r in cr.fetchall()])
         return res
@@ -190,7 +191,7 @@ class expression(object):
                         dom = _rec_get(ids2, working_table, left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
-                    if isinstance(right, basestring):
+                    if isinstance(right, basestring): # and not isinstance(field, fields.related):
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
@@ -243,7 +244,7 @@ class expression(object):
 
             if len_after:
                 if left == 'id':
-                     instr = ','.join(['%d'] * len_after)
+                     instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)

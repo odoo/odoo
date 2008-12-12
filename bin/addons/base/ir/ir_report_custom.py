@@ -25,6 +25,7 @@ from osv.orm import browse_null
 import ir
 import report.custom
 from tools.translate import _
+import netsvc
 
 class report_custom(osv.osv):
     _name = 'ir.report.custom'
@@ -187,7 +188,7 @@ class report_custom_fields(osv.osv):
                     }
                 }
             else:
-                print _("Warning: using a relation field which uses an unknown object") #TODO use the logger
+                netsvc.Logger().notifyChannel('web-services', netsvc.LOG_WARNING, _("Using a relation field which uses an unknown object"))
                 return {'required': {next_level_field_name: True}}
         else:
             return {'domain': {next_level_field_name: []}}

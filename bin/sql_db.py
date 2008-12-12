@@ -20,63 +20,90 @@
 #
 ##############################################################################
 
-import psycopg
+import netsvc
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_SERIALIZABLE
+from psycopg2.pool import ThreadedConnectionPool
+from psycopg2.psycopg1 import cursor as psycopg1cursor
+
+import psycopg2.extensions
+psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+
+types_mapping = {
+    'date': (1082,),
+    'time': (1083,),
+    'datetime': (1114,),
+}
+
+def undecimalize(symb, cr):
+    if symb is None: return None
+    return float(symb)
+
+for name, typeoid in types_mapping.items():
+    psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
+psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
+
+
 import tools
-import sys,os
-
-#try:
-#   import decimal
-#except ImportError:
-#   from tools import decimal
-
-
 import re
 
 from mx import DateTime as mdt
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
-class fake_cursor:
+def log(msg, lvl=netsvc.LOG_DEBUG):
+    logger = netsvc.Logger()
+    logger.notifyChannel('sql', lvl, msg)
+
+class Cursor(object):
     IN_MAX = 1000
-    nbr = 0
-    _tables = {}
     sql_from_log = {}
     sql_into_log = {}
     sql_log = False
     count = 0
 
-    def __init__(self, db, con, dbname):
-        self.db = db
-        self.obj = db.cursor()
-        self.con = con
-        self.dbname = dbname
+    def __init__(self, pool):
+        self._pool = pool
+        self._cnx = pool.getconn()
+        self.autocommit(False)
+        self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
+        self.dbname = pool.dbname
 
-    def execute(self, sql, params=None):
-        if not params:
+    def execute(self, query, params=None):
+        if params is None:
             params=()
+        if not isinstance(params, (tuple, list)):
+            params = (params,)
+
         def base_string(s):
             if isinstance(s, unicode):
                 return s.encode('utf-8')
             return s
         p=map(base_string, params)
-        if isinstance(sql, unicode):
-            sql = sql.encode('utf-8')
+        query = base_string(query)
+
+        if '%d' in query or '%f' in query:
+            #import traceback
+            #traceback.print_stack()
+            log(query, netsvc.LOG_WARNING)
+            log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
+            if p:
+                query = query.replace('%d', '%s').replace('%f', '%s')
+
         if self.sql_log:
             now = mdt.now()
-            print "SQL LOG query:", sql
-            print "SQL LOG params:", repr(p)
-        if p:
-            res = self.obj.execute(sql, p)
-        else:
-            res = self.obj.execute(sql)
+            log("SQL LOG query: %s" % (query,))
+            log("SQL LOG params: %r" % (p,))
+
+        res = self._obj.execute(query, p or None)
+
         if self.sql_log:
             self.count+=1
-            res_from = re_from.match(sql.lower())
+            res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
                 self.sql_from_log[res_from.group(1)][1] += mdt.now() - now
-            res_into = re_into.match(sql.lower())
+            res_into = re_into.match(query.lower())
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
@@ -84,7 +111,7 @@ class fake_cursor:
         return res
 
     def print_log(self, type='from'):
-        print "SQL LOG %s:" % (type,)
+        log("SQL LOG %s:" % (type,))
         if type == 'from':
             logs = self.sql_from_log.items()
         else:
@@ -92,63 +119,86 @@ class fake_cursor:
         logs.sort(lambda x, y: cmp(x[1][1], y[1][1]))
         sum=0
         for r in logs:
-            print "table:", r[0], ":", str(r[1][1]), "/", r[1][0]
+            log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
             sum+= r[1][1]
-        print "SUM:%s/%d"% (sum, self.count)
+        log("SUM:%s/%d" % (sum, self.count))
 
     def close(self):
-        if self.sql_log:
+        if self.sql_from_log or self.sql_into_log:
             self.print_log('from')
             self.print_log('into')
-        self.obj.close()
+        self._obj.close()
 
         # This force the cursor to be freed, and thus, available again. It is
         # important because otherwise we can overload the server very easily
         # because of a cursor shortage (because cursors are not garbage
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
-        del self.obj
+        del self._obj
+        self._pool.putconn(self._cnx)
+    
+    def autocommit(self, on):
+        self._cnx.set_isolation_level([ISOLATION_LEVEL_SERIALIZABLE, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
+    
+    def commit(self):
+        return self._cnx.commit()
+    
+    def rollback(self):
+        return self._cnx.rollback()
 
     def __getattr__(self, name):
-        return getattr(self.obj, name)
+        return getattr(self._obj, name)
 
-class fakedb:
-    def __init__(self, truedb, dbname):
-        self.truedb = truedb
+class ConnectionPool(object):
+    def __init__(self, pool, dbname):
         self.dbname = dbname
+        self._pool = pool
 
     def cursor(self):
-        return fake_cursor(self.truedb, {}, self.dbname)
+        return Cursor(self)
 
-def decimalize(symb):
-    if symb is None: return None
-    if isinstance(symb, float):
-        return decimal.Decimal('%f' % symb)
-    return decimal.Decimal(symb)
+    def __getattr__(self, name):
+        return getattr(self._pool, name)
+
+class PoolManager(object):
+    _pools = {}
+    _dsn = None
+    maxconn =  int(tools.config['db_maxconn']) or 64
+    
+    def dsn(db_name):
+        if PoolManager._dsn is None:
+            PoolManager._dsn = ''
+            for p in ('host', 'port', 'user', 'password'):
+                cfg = tools.config['db_' + p]
+                if cfg:
+                    PoolManager._dsn += '%s=%s ' % (p, cfg)
+        return '%s dbname=%s' % (PoolManager._dsn, db_name)
+    dsn = staticmethod(dsn)
+
+    def get(db_name):
+        if db_name not in PoolManager._pools:
+            logger = netsvc.Logger()
+            try:
+                logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name,))
+                PoolManager._pools[db_name] = ConnectionPool(ThreadedConnectionPool(0, PoolManager.maxconn, PoolManager.dsn(db_name)), db_name)
+            except Exception, e:
+                logger.notifyChannel('dbpool', netsvc.LOG_CRITICAL, 'Unable to connect to %s: %r' % (db_name, e))
+                raise
+        return PoolManager._pools[db_name]
+    get = staticmethod(get)
+
+    def close(db_name):
+        if db_name is PoolManager._pools:
+            logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Closing all connections to %s' % (db_name,))
+            PoolManager._pools[db_name].closeall()
+            del PoolManager._pools[db_name]
+    close = staticmethod(close)
 
 def db_connect(db_name, serialize=0):
-    host = tools.config['db_host'] and "host=%s" % tools.config['db_host'] or ''
-    port = tools.config['db_port'] and "port=%s" % tools.config['db_port'] or ''
-    name = "dbname=%s" % db_name
-    user = tools.config['db_user'] and "user=%s" % tools.config['db_user'] or ''
-    password = tools.config['db_password'] and "password=%s" % tools.config['db_password'] or ''
-    maxconn = int(tools.config['db_maxconn']) or 64
-    tdb = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password),
-            serialize=serialize, maxconn=maxconn)
-    fdb = fakedb(tdb, db_name)
-    return fdb
+    return PoolManager.get(db_name)
 
-def init():
-    #define DATEOID 1082, define TIMESTAMPOID 1114 see pgtypes.h
-    psycopg.register_type(psycopg.new_type((1082,), "date", lambda x:x))
-    psycopg.register_type(psycopg.new_type((1083,), "time", lambda x:x))
-    psycopg.register_type(psycopg.new_type((1114,), "datetime", lambda x:x))
-    #psycopg.register_type(psycopg.new_type((700, 701, 1700), 'decimal', decimalize))
-
-psycopg.register_type(psycopg.new_type((1082,), "date", lambda x:x))
-psycopg.register_type(psycopg.new_type((1083,), "time", lambda x:x))
-psycopg.register_type(psycopg.new_type((1114,), "datetime", lambda x:x))
-
+def close_db(db_name):
+    return PoolManager.close(db_name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

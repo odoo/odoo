@@ -54,7 +54,7 @@ class interface(netsvc.Service):
             if node.hasAttribute('string') and node.getAttribute('string'):
                 trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.getAttribute('string').encode('utf8'))
                 if trans:
-                    node.setAttribute('string', trans.decode('utf8'))
+                    node.setAttribute('string', trans)
         for n in node.childNodes:
             self.translate_view(cr, n, state, lang)
 
@@ -116,6 +116,11 @@ class interface(netsvc.Service):
                         trans = translate(cr, self.wiz_name+','+state+','+field, 'wizard_field', lang)
                         if trans:
                             fields[field]['string'] = trans
+                        
+                        if 'selection' in fields[field]:
+                            trans = lambda x: translate(cr, self.wiz_name+','+state+','+field, 'selection', lang, x) or x
+                            for idx, (key, val) in enumerate(fields[field]['selection']):
+                                fields[field]['selection'][idx] = (key, trans(val))
 
                     # translate arch
                     if not isinstance(arch, UpdateableStr):

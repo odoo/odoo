@@ -11,6 +11,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -22,13 +23,17 @@
             <field name="arch" type="xml">
                 <form string="Maintenance Contract">
                     <separator string="Information" colspan="4"/>
-                    <field name="name" select="1"/>
-                    <field name="password" password="True"/>
+                    <field name="name" select="1" />
+                    <field name="state" />
                     <field name="date_start" select="1"/>
                     <field name="date_stop" select="1"/>
-                    <button name="_test_maintenance" string="Check Maintenance" type="object" colspan="2"/>
                     <separator string="Covered Modules" colspan="4"/>
-                    <field name="modules" nolabel="1" colspan="4"/>
+                    <field name="module_ids" nolabel="1" colspan="4">
+                        <tree string="Covered Modules">
+                            <field name="name" />
+                            <field name="version" />
+                        </tree>
+                    </field>
                 </form>
             </field>
         </record>
@@ -40,13 +45,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record id="action_maintenance_contract_form" model="ir.actions.act_window">
-            <field name="name">Encode a New Maintenance Contract</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">maintenance.contract</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
+
         <menuitem
             name="Maintenance"
             id="maintenance"
@@ -56,6 +55,51 @@
             action="action_maintenance_contract_form"
             id="menu_maintenance_contract"
             parent="maintenance"/>
+
+        <record id="maintenance_contract_add_wizard" model="ir.ui.view">
+            <field name="name">maintenance.contract.add.wizard</field>
+            <field name="model">maintenance.contract.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Add Maintenance Contract" col="2">
+                    <image name="gtk-dialog-info" />
+                    <group col="1">
+                        <separator string="Add Maintenance Contract" />
+                        <group states="draft">
+                            <field name="name" width="250" />
+                            <newline />
+                            <field name="password" password="True" />
+                            <field name="state" invisible="1" />
+                        </group>
+                        <group states="validated">
+                            <label string="Maintenance contract added !"/>
+                        </group>
+                        <group states="unvalidated">
+                            <label string="Could you check your contract information ?" />
+                        </group>
+                    </group>
+                    <group colspan="4">
+                        <button type="object" string="_Cancel" icon="gtk-cancel" special="cancel" states="draft"/> 
+                        <button type="object" string="_Validate" icon="gtk-apply" name="action_validate" states="draft"/>
+                        <button type="object" string="_Close" icon="gtk-close" special="cancel" states="validated,unvalidated"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_maintenance_contract_add_wizard" model="ir.actions.act_window">
+            <field name="name">Add Maintenance Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">maintenance.contract.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            action="action_maintenance_contract_add_wizard"
+            id="menu_maintenance_contract_add"
+            parent="maintenance" />
 
     </data>
 </openerp>

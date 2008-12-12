@@ -36,6 +36,7 @@ import copy
 import StringIO
 import zipfile
 import os
+import mx.DateTime
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -255,6 +256,7 @@ class rml_parse(object):
             'format': self.format,
             'formatLang': self.formatLang,
             'logo' : user.company_id.logo,
+            'lang' : user.company_id.partner_id.lang,
         }
         self.localcontext.update(context)
         self.rml_header = user.company_id.rml_header
@@ -333,31 +335,61 @@ class rml_parse(object):
                     else:
                         obj._cache[table][id] = {'id': id}
 
-    def formatLang(self, value, digit=2, date=False):
+    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
         if not value:
             return ''
-        lc, encoding = locale.getdefaultlocale()
-        if not encoding:
-            encoding = 'UTF-8'
-        if encoding == 'utf':
-            encoding = 'UTF-8'
-        if encoding == 'cp1252':
-            encoding= '1252'
+
+        pool_lang=self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        try:
-            if os.name == 'nt':
-                locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+        lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
+                
+        if date or date_time:
+            date_format = lang_obj.date_format
+            if date_time:
+                date_format = lang_obj.date_format + " " + lang_obj.time_format
+                        
+            if not isinstance(value, time.struct_time):
+                # assume string, parse it
+                if len(str(value)) == 10:
+                    # length of date like 2001-01-01 is ten
+                    # assume format '%Y-%m-%d'
+                    date = mx.DateTime.strptime(str(value),DT_FORMAT)
+                else:
+                    # assume format '%Y-%m-%d %H:%M:%S'
+                    value = str(value)[:19]
+                    date = mx.DateTime.strptime(str(value),DHM_FORMAT)
             else:
-                locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
-        except Exception:
-            netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
-                    'report %s: unable to set locale "%s"' % (self.name,
-                        self.localcontext.get('lang', 'en_US') or 'en_US'))
-        if date:
-            date = time.strptime(value, DT_FORMAT)
-            return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
-                    date)
-        return locale.format('%.' + str(digit) + 'f', value, True)
+                date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
+            
+            return date.strftime(date_format)
+        
+        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+    
+#    def formatLang(self, value, digit=2, date=False):
+#        if not value:
+#            return ''
+#        lc, encoding = locale.getdefaultlocale()
+#        if not encoding:
+#            encoding = 'UTF-8'
+#        if encoding == 'utf':
+#            encoding = 'UTF-8'
+#        if encoding == 'cp1252':
+#            encoding= '1252'
+#        lang = self.localcontext.get('lang', 'en_US') or 'en_US'
+#        try:
+#            if os.name == 'nt':
+#                locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+#            else:
+#                locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
+#        except Exception:
+#            netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
+#                    'report %s: unable to set locale "%s"' % (self.name,
+#                        self.localcontext.get('lang', 'en_US') or 'en_US'))
+#        if date:
+#            date = time.strptime(value, DT_FORMAT)
+#            return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
+#                    date)
+#        return locale.format('%.' + str(digit) + 'f', value, True)
 
     def repeatIn(self, lst, name, nodes_parent=False):
         self._node.data = ''
@@ -555,7 +587,7 @@ class report_sxw(report_rml):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
-        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
+        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
 
     def create(self, cr, uid, ids, data, context=None):
         logo = None
@@ -578,6 +610,7 @@ class report_sxw(report_rml):
             attach = report_xml.attachment
             rml = report_xml.report_rml_content
             report_type = report_xml.report_type
+            context['actual_model']=report_xml.actual_model
         else:
             ir_menu_report_obj = pool.get('ir.ui.menu')
             report_menu_ids = ir_menu_report_obj.search(cr, uid,
