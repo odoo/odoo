@@ -538,16 +538,18 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         
         modobj = pool.get('ir.module.module')
         modobj.update_list(cr, 1)
-        
+
         mods = [k for k in tools.config['init'] if tools.config['init'][k]]
         if mods:
             ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
             if ids:
                 modobj.button_install(cr, 1, ids)
-
-        ids = modobj.search(cr, 1, ['&', '!', ('name', '=', 'base'), ('state', 'in', ('installed', 'to upgrade'))])
-        if ids:
-            modobj.button_upgrade(cr, 1, ids)
+        
+        mods = [k for k in tools.config['update'] if tools.config['update'][k]]
+        if mods:
+            ids = modobj.search(cr, 1, ['&', '&',('state', '=', 'installed'), ('name', 'in', mods), '!', ('name', '=', 'base')])
+            if ids:
+                modobj.button_upgrade(cr, 1, ids)
         
         cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
     else:

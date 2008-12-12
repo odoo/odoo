@@ -257,7 +257,7 @@ class module(osv.osv):
                         _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
             iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
             for dep in depobj.browse(cr, uid, iids, context=context):
-                if dep.module_id.state=='installed':
+                if dep.module_id.state=='installed' and dep.module_id not in todo:
                     todo.append(dep.module_id)
         
         ids = map(lambda x: x.id, todo)
@@ -271,7 +271,7 @@ class module(osv.osv):
                 if dep.state == 'uninstalled':
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
                     to_install.extend(ids2)
-
+        
         self.button_install(cr, uid, to_install, context=context)
         return True
 
