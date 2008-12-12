@@ -654,8 +654,31 @@ class related(function):
             i -= 1
         return [(self._arg[0], 'in', sarg)]
 
-    def _fnct_write(self,obj,cr, uid, ids,values, field_name, args, context=None):
-        raise 'Not Implemented Yet'
+    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+        if values and field_name:
+            self._field_get2(cr, uid, obj, context)
+            self._field_get2(cr, uid, obj, context)
+            relation = obj._name
+            res = {}
+            if type(ids) != type([]):
+                ids=[ids]
+            objlst = obj.browse(cr, uid, ids)
+            for data in objlst:
+                t_data = data
+                relation = obj._name
+                for i in range(len(self.arg)):
+                    field_detail = self._relations[i]
+                    relation = field_detail['object']
+                    if not t_data[self.arg[i]]:
+                        t_data = False
+                        break
+                    if field_detail['type'] in ('one2many', 'many2many'):
+                        t_id=t_data.id
+                        t_data = t_data[self.arg[i]][0]
+                    else:
+                        t_id=t_data['id']
+                        t_data = t_data[self.arg[i]]
+            return obj.pool.get(field_detail['object']).write(cr,uid,t_id,{args[-1]:values})
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
@@ -685,7 +708,7 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
 
     def _field_get2(self, cr, uid, obj, context={}):
         if self._relations:
