@@ -61,6 +61,10 @@
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="angle"/></rng:optional>
+            <rng:zeroOrMore>
+               <rng:text/>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -229,6 +233,7 @@
             <rng:optional><rng:attribute name="filename"/></rng:optional>
             <rng:optional><rng:attribute name="fieldname"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form"/>
@@ -295,6 +300,7 @@
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="orientation" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
