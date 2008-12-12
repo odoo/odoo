@@ -67,7 +67,7 @@ class Cursor(object):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if not hasattr(self, '_obj'):
-                raise Exception('Unable to use the cursor after having closing it')
+                raise psycopg2.ProgrammingError('Unable to use the cursor after having closing it')
             return f(self, *args, **kwargs)
         return wrapper
 
@@ -78,6 +78,16 @@ class Cursor(object):
         self.autocommit(False)
         self.dbname = pool.dbname
     
+    def __del__(self):
+        if hasattr(self, '_obj'):
+            # Oops. 'self' has not been closed explicitly.
+            # The cursor will be deleted by the garbage collector, 
+            # but the database connection is not put back into the connection
+            # pool, preventing some operation on the database like dropping it.
+            # This can also lead to a server overload.
+            log('Cursor not closed explicitly', netsvc.LOG_WARNING)
+            self.close()
+
     @check
     def execute(self, query, params=None):
         if params is None:
@@ -136,6 +146,7 @@ class Cursor(object):
             sqllogs[type].clear()
         process('from')
         process('into')
+        self.count = 0
 
     @check
     def close(self):
