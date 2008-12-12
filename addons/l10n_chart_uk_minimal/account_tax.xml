@@ -24,7 +24,7 @@
         </record>
         
         <record id="vat_code_input_S" model="account.tax.code.template">
-            <field name="name">Input VAT Rate S (17.5%)</field>
+            <field name="name">Input VAT Rate S (15%)</field>
             <field name="parent_id" ref="vat_code_input"/>
         </record>
         
@@ -41,7 +41,7 @@
         </record>
         
         <record id="vat_code_output_S" model="account.tax.code.template">
-            <field name="name">Output VAT Rate S (17.5%)</field>
+            <field name="name">Output VAT Rate S (15%)</field>
             <field name="parent_id" ref="vat_code_output"/>
         </record>
         
@@ -65,7 +65,7 @@
         </record>
         
         <record id="vat_code_purch_S" model="account.tax.code.template">
-            <field name="name">Taxable Purchases Rated S (17.5%)</field>
+            <field name="name">Taxable Purchases Rated S (15%)</field>
             <field name="parent_id" ref="vat_code_base_purchases"/>
         </record>
         
@@ -97,7 +97,7 @@
         </record>
         
         <record id="vat_code_sales_S" model="account.tax.code.template">
-            <field name="name">Taxable Sales Rated S (17.5%)</field>
+            <field name="name">Taxable Sales Rated S (15%)</field>
             <field name="parent_id" ref="vat_code_base_sales"/>
         </record>
         
@@ -140,7 +140,7 @@
         <record id="ivats" model="account.tax.template">
        	 	<field name="chart_template_id" ref="l10n_uk_chart_template"/>
             <field name="name">IVAT S</field>
-            <field eval="0.175" name="amount"/>
+            <field eval="0.15" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="l10n_chart_uk_minimal.iva"/>
             <field name="account_paid_id" ref="l10n_chart_uk_minimal.iva"/>
@@ -195,7 +195,7 @@
         <record id="ovats" model="account.tax.template">
         	<field name="chart_template_id" ref="l10n_uk_chart_template"/>
             <field name="name">OVAT S</field>
-            <field eval="0.175" name="amount"/>
+            <field eval="0.15" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="l10n_chart_uk_minimal.ova"/>
             <field name="account_paid_id" ref="l10n_chart_uk_minimal.ova"/>
