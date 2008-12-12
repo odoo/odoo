@@ -81,15 +81,16 @@ class report_rml(report_int):
                 'html': self.create_html,
                 'raw': self.create_raw,
                 'sxw': self.create_sxw,
+		'txt': self.create_txt,
                 }
 
     def create(self, cr, uid, ids, datas, context):
         xml = self.create_xml(cr, uid, ids, datas, context)
-#       file('/tmp/terp.xml','wb+').write(xml)
+        #file('/tmp/terp.xml','wb+').write(xml)
         if datas.get('report_type', 'pdf') == 'raw':
             return xml
         rml = self.create_rml(cr, xml, uid, context)
-#       file('/tmp/terp.rml','wb+').write(rml)
+        #file('/tmp/terp.rml','wb+').write(rml)
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
         try:
@@ -208,6 +209,11 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
+    def create_txt(self, xml, logo=None, title=None):
+        obj = render.rml2txt(xml, self.bin_datas)
+        obj.render()
+        return obj.get().encode('utf-8')
+
     def create_raw(self, xml, logo=None, title=None):
         return xml
 
@@ -235,4 +241,3 @@ def register_all(db):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -21,7 +21,7 @@
 ##############################################################################
 
 from simple import simple
-from rml import rml, rml2html
+from rml import rml, rml2html, rml2txt
 
 from render import render
 

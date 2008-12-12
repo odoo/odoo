@@ -23,6 +23,7 @@
 import render
 import rml2pdf
 import rml2html as htmlizer
+import rml2txt as txtizer
 
 class rml(render.render):
     def __init__(self, xml, datas={}, path='.',title=None):
@@ -43,6 +44,15 @@ class rml2html(render.render):
 
     def _render(self):
         return htmlizer.parseString(self.xml)
+
+class rml2txt(render.render):
+    def __init__(self, xml, datas={}):
+        super(rml2txt, self).__init__(datas)
+        self.xml = xml
+        self.output_type = 'txt'
+
+    def _render(self):
+        return txtizer.parseString(self.xml)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
