@@ -394,9 +394,9 @@ class actions_server(osv.osv):
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
-        'srcmodel_id': fields.many2one('ir.model', 'Model'),
+        'srcmodel_id': fields.many2one('ir.model', 'Model', help="In which object you want to create / write the object if its empty refer to the Object field"),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
-        'record_id':fields.many2one('ir.model.fields', 'Record Id')
+        'record_id':fields.many2one('ir.model.fields', 'Record Id', help="privide the field name from where the record id refers, if its empty it will refer to the active id of the object")
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -555,9 +555,13 @@ class actions_server(osv.osv):
                         expr = exp.value
                     res[exp.col1.name] = expr
 
-                if not action.srcmodel_id:
-                    obj_pool = self.pool.get(action.model_id.model)
-                    obj_pool.write(cr, uid, [context.get('active_id')], res)
+                if not action.record_id:
+                    if not action.srcmodel_id:
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj_pool.write(cr, uid, [context.get('active_id')], res)
+                    else:
+                        obj_pool = self.pool.get(action.srcmodel_id.model)
+                        obj_pool.write(cr, uid, [context.get('active_id')], res)
                 else:
                     obj_pool = self.pool.get(action.srcmodel_id.model)
                     id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.record_id.name])
