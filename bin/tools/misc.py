@@ -688,40 +688,30 @@ def human_size(sz):
         i = i + 1
     return "%0.2f %s" % (s, units[i])
 
-def logged(when):
-    import netsvc
-    def log(f, res, *args, **kwargs):
-        vector = ['Call -> function: %s' % f]
+def logged(f):
+    from functools import wraps
+    
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        import netsvc
+        from pprint import pformat
+
+        vector = ['Call -> function: %r' % f]
         for i, arg in enumerate(args):
-            vector.append( '  arg %02d: %r' % ( i, arg ) )
+            vector.append('  arg %02d: %s' % (i, pformat(arg)))
         for key, value in kwargs.items():
-            vector.append( '  kwarg %10s: %r' % ( key, value ) )
-        vector.append( '  result: %r' % res )
-        netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, vector)
+            vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
-    def pre_logged(f):
-        def wrapper(*args, **kwargs):
-            res = f(*args, **kwargs)
-            log(f, res, *args, **kwargs)
-            return res
-        return wrapper
+        timeb4 = time.time()
+        res = f(*args, **kwargs)
+        
+        vector.append('  result: %s' % pformat(res))
+        vector.append('  time delta: %s' % (time.time() - timeb4))
+        #netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, '\n'.join(vector))
+        return res
 
-    def post_logged(f):
-        def wrapper(*args, **kwargs):
-            now = time.time()
-            res = None
-            try:
-                res = f(*args, **kwargs)
-                return res
-            finally:
-                log(f, res, *args, **kwargs)
-                netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, "time delta: %s" % (time.time() - now))
-        return wrapper
+    return wrapper
 
-    try:
-        return { "pre" : pre_logged, "post" : post_logged}[when]
-    except KeyError, e:
-        raise ValueError(e), "must to be 'pre' or 'post'"
 
 icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
