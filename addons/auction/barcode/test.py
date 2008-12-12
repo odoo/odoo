@@ -1,4 +1,4 @@
-#!/usr/pkg/bin/python
+#!/usr/bin/python
 from common import *
 from code39 import *
 from code93 import *
