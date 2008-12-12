@@ -34,7 +34,6 @@ class actions(osv.osv):
         'name': fields.char('Action Name', required=True, size=64),
         'type': fields.char('Action Type', required=True, size=32),
         'usage': fields.char('Action Usage', size=32),
-        'parent_id': fields.many2one('ir.actions.server', 'Parent Action'),
     }
     _defaults = {
         'usage': lambda *a: False,
@@ -290,7 +289,7 @@ class ir_model_fields(osv.osv):
         'complete_name': fields.char('Complete Name', size=64, select=1),
     }
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=800):
         def get_fields(cr, uid, field, rel):
             result = []
             mobj = self.pool.get('ir.model')
@@ -389,7 +388,6 @@ class actions_server(osv.osv):
         'name': fields.char('Action Name', required=True, size=64),
         'state': fields.selection([
             ('client_action','Client Action'),
-            ('python','Python Code'),
             ('dummy','Dummy'),
             ('trigger','Trigger'),
             ('email','Email'),
@@ -403,12 +401,13 @@ class actions_server(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', required=True),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
         'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128),
+        'wkf_model_id': fields.many2one('ir.model', 'Workflow on'),
         'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On'),
         'email': fields.many2one('ir.model.fields', 'Contact'),
         'message': fields.text('Message', translate=True),
         'mobile': fields.many2one('ir.model.fields', 'Contact'),
         'sms': fields.char('SMS', size=160, translate=True),
-        'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
+        'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
         'srcmodel_id': fields.many2one('ir.model', 'Model', help="In which object you want to create / write the object if its empty refer to the Object field"),
@@ -530,9 +529,7 @@ class actions_server(osv.osv):
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
-                res = str(action.trigger_obj_id).split(',')
-
-                model = action.model_id.model
+                model = action.wkf_model_id.model
                 obj_pool = self.pool.get(action.model_id.model)
                 res_id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.trigger_obj_id.name])
                 id = res_id [0][action.trigger_obj_id.name]
@@ -551,19 +548,12 @@ class actions_server(osv.osv):
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
             
             if action.state == 'other':
-                localdict = {
-                    'self': self.pool.get(action.model_id.model),
-                    'context': context,
-                    'time': time,
-                    'ids': ids,
-                    'cr': cr,
-                    'uid': uid
-                }
+                res = None
                 for act in action.child_ids:
-                    code = """action = {'model':'%s','type':'%s', %s}""" % (action.model_id.model, act.type, act.usage)
-                    exec code in localdict
-                    if 'action' in localdict:
-                        return localdict['action']
+                    result = self.run(cr, uid, [act.id], context)
+                    if result:
+                        res = result
+                return res
             
             if action.state == 'object_write':
                 res = {}
@@ -588,7 +578,7 @@ class actions_server(osv.osv):
                     obj_pool = self.pool.get(action.srcmodel_id.model)
                     id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.record_id.name])
                     obj_pool.write(cr, uid, [int(id[0][action.record_id.name])], res)
-                
+            
             if action.state == 'object_create':
                 res = {}
                 for exp in action.fields_lines:
