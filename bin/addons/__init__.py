@@ -539,8 +539,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         modobj = pool.get('ir.module.module')
         modobj.update_list(cr, 1)
         
-        if tools.config['init']: 
-            ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', tools.config['init'])])
+        mods = [k for k in tools.config['init'] if tools.config['init'][k]]
+        if mods:
+            ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
             if ids:
                 modobj.button_install(cr, 1, ids)
 
