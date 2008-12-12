@@ -657,13 +657,13 @@ class related(function):
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
         if values and field_name:
             self._field_get2(cr, uid, obj, context)
-            self._field_get2(cr, uid, obj, context)
             relation = obj._name
             res = {}
             if type(ids) != type([]):
                 ids=[ids]
             objlst = obj.browse(cr, uid, ids)
             for data in objlst:
+		t_id=None
                 t_data = data
                 relation = obj._name
                 for i in range(len(self.arg)):
@@ -678,7 +678,8 @@ class related(function):
                     else:
                         t_id=t_data['id']
                         t_data = t_data[self.arg[i]]
-            return obj.pool.get(field_detail['object']).write(cr,uid,t_id,{args[-1]:values})
+		if t_id:
+                    obj.pool.get(field_detail['object']).write(cr,uid,t_id,{args[-1]:values})
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
