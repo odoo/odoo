@@ -365,6 +365,23 @@ server_object_lines()
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
+    
+    def _select_signals(self, cr, uid, context={}):
+        cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
+                        " where w.id = a.wkf_id " \
+                        " and t.act_from = a.wkf_id " \
+                        " or t.act_to = a.wkf_id ")
+        return cr.fetchall()
+    
+    def on_trigger_obj_id(self, cr, uid, ids, context={}):
+        cr.execute("select distinct t.signal as key, t.signal as val from wkf w, wkf_activity a, wkf_transition t "\
+                        " where w.id = a.wkf_id " \
+                        " and t.act_from = a.wkf_id " \
+                        " or t.act_to = a.wkf_id " \
+                        " and w.osv = %s ", ('account.invoice'))
+        data = cr.fetchall()
+        return {"values":{'trigger_name':data}}
+    
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _sequence = 'ir_actions_id_seq'
@@ -385,8 +402,8 @@ class actions_server(osv.osv):
         'sequence': fields.integer('Sequence'),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
-        'trigger_name': fields.char('Trigger Name', size=128),
-        'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
+        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128),
+        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On'),
         'email': fields.many2one('ir.model.fields', 'Contact'),
         'message': fields.text('Message', translate=True),
         'mobile': fields.many2one('ir.model.fields', 'Contact'),
@@ -477,10 +494,12 @@ class actions_server(osv.osv):
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
         for action in self.browse(cr, uid, ids, context):
+            
             if action.state=='client_action':
                 if not action.action_id:
                     raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
                 return self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
+            
             if action.state=='python':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
@@ -512,8 +531,11 @@ class actions_server(osv.osv):
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
                 res = str(action.trigger_obj_id).split(',')
-                model = res[0]
-                id = res[1]
+
+                model = action.model_id.model
+                obj_pool = self.pool.get(action.model_id.model)
+                res_id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.trigger_obj_id.name])
+                id = res_id [0][action.trigger_obj_id.name]
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
 
             if action.state == 'sms':
@@ -527,6 +549,7 @@ class actions_server(osv.osv):
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+            
             if action.state == 'other':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
@@ -536,7 +559,6 @@ class actions_server(osv.osv):
                     'cr': cr,
                     'uid': uid
                 }
-
                 for act in action.child_ids:
                     code = """action = {'model':'%s','type':'%s', %s}""" % (action.model_id.model, act.type, act.usage)
                     exec code in localdict

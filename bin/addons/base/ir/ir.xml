@@ -1151,7 +1151,7 @@
                         
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
-                            <field name="trigger_obj_id" select="2" colspan="4"/>
+                            <field name="trigger_obj_id" select="2" colspan="4" domain="[('model_id','=',model_id)]" on_change="on_trigger_obj_id(trigger_obj_id)"/>
                             <field name="trigger_name" select="2"/>
                         </page>
                         
