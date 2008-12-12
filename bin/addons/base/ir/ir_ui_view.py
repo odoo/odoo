@@ -33,7 +33,7 @@ def _check_xml(self, cr, uid, ids, context={}):
         relaxng = etree.RelaxNG(file=frng)
         if not relaxng.validate(eview):
             logger = netsvc.Logger()
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
+            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
             logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
             return False
     return True
