@@ -169,9 +169,9 @@ class module(osv.osv):
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
                 ('Other proprietary', 'Other proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta"),
-        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta"),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta"),
+        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
+        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
     }
 
     _defaults = {

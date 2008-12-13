@@ -385,7 +385,6 @@ def sms_send(user, password, api_id, text, to):
     #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
     f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
     # FIXME: Use the logger if there is an error
-    print f.read()
     return True
 
 #---------------------------------------------------------
@@ -537,29 +536,36 @@ def is_hashable(h):
 # Timeout: 0 = no timeout, otherwise in seconds
 #
 class cache(object):
-    def __init__(self, timeout=10000, skiparg=2):
+    def __init__(self, timeout=10000, skiparg=2, multi=None):
         self.timeout = timeout
+        self.skiparg = skiparg
+        self.multi = multi
         self.cache = {}
 
     def __call__(self, fn):
-        arg_names = inspect.getargspec(fn)[0][2:]
+        arg_names = inspect.getargspec(fn)[0][self.skiparg:]
         def cached_result(self2, cr=None, *args, **kwargs):
             if cr is None:
                 self.cache = {}
                 return True
+            if ('clear_keys' in kwargs):
+                if (kwargs['clear_keys'] in self.cache):
+                    del self.cache[kwargs['clear_keys']]
+                return True
 
             # Update named arguments with positional argument values
-            kwargs.update(dict(zip(arg_names, args)))
-            for k in kwargs:
-                if isinstance(kwargs[k], (list, dict, set)):
-                    kwargs[k] = tuple(kwargs[k])
-                elif not is_hashable(kwargs[k]):
-                    kwargs[k] = repr(kwargs[k])
-            kwargs = kwargs.items()
-            kwargs.sort()
+            kwargs2 = kwargs.copy()
+            kwargs2.update(dict(zip(arg_names, args)))
+            for k in kwargs2:
+                if isinstance(kwargs2[k], (list, dict, set)):
+                    kwargs2[k] = tuple(kwargs2[k])
+                elif not is_hashable(kwargs2[k]):
+                    kwargs2[k] = repr(kwargs2[k])
+            kwargs2 = kwargs2.items()
+            kwargs2.sort()
 
             # Work out key as a tuple of ('argname', value) pairs
-            key = (('dbname', cr.dbname),) + tuple(kwargs)
+            key = (('dbname', cr.dbname),) + tuple(kwargs2)
 
             # Check cache and return cached value if possible
             if key in self.cache:
@@ -571,7 +577,7 @@ class cache(object):
             # Work out new value, cache it and return it
             # FIXME Should copy() this value to avoid futur modifications of the cache ?
             # FIXME What about exceptions ?
-            result = fn(self2,cr,**dict(kwargs))
+            result = fn(self2,cr,*args, **kwargs)
 
             self.cache[key] = (result, time.time())
             return result

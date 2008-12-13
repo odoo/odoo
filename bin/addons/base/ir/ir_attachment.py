@@ -36,9 +36,7 @@ class ir_attachment(osv.osv):
         for o in objs:
             if o and o.res_model:
                 ima.check(cr, uid, o.res_model, mode)
-    
-    check = tools.cache()(check)
-        
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         ids = super(ir_attachment, self).search(cr, uid, args, offset=offset, 

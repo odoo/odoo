@@ -727,7 +727,6 @@ class orm_template(object):
                         and getattr(self._columns[f], arg):
                     res[f][arg] = getattr(self._columns[f], arg)
 
-            # translate the field label
             res_trans = translation_obj._get_source(cr, user,
                     self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
             if res_trans:
@@ -838,13 +837,13 @@ class orm_template(object):
             # translate view
             if ('lang' in context) and not result:
                 if node.hasAttribute('string') and node.getAttribute('string'):
-                    trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if not trans and ('base_model_name' in context):
-                        trans = tools.translate(cr, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+                        trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if trans:
                         node.setAttribute('string', trans)
                 if node.hasAttribute('sum') and node.getAttribute('sum'):
-                    trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
                     if trans:
                         node.setAttribute('sum', trans)
 
@@ -2005,11 +2004,7 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        fn_list = []
-        for fnct in self.pool._store_function.get(self._name, []):
-            ids2 = filter(None, fnct[2](self,cr, uid, ids, context))
-            if ids2:
-                fn_list.append( (fnct[0], fnct[1], ids2) )
+        result_store = self._store_get_values(cr, user, ids, vals.keys(), context)
 
         delta = context.get('read_delta', False)
         if delta and self._log_access:
@@ -2057,10 +2052,8 @@ class orm(orm_template):
                 cr.execute('delete from "'+self._table+'" ' \
                         'where id in ('+str_d+')', sub_ids)
 
-        for object,field,ids in fn_list:
-            ids = self.pool.get(object).search(cr, uid, [('id','in', ids)], context=context)
-            if ids:
-                self.pool.get(object)._store_set_values(cr, uid, ids, field, context)
+        for order, object, ids, fields in result_store:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
         return True
 
     #
@@ -2268,20 +2261,14 @@ class orm(orm_template):
         if 'read_delta' in context:
             del context['read_delta']
 
+
+        result = self._store_get_values(cr, user, ids, vals.keys(), context)
+        for order, object, ids, fields in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_write(user, self._name, id, cr)
-
-        for fnct in self.pool._store_function.get(self._name, []):
-            ok = False
-            for key in vals.keys():
-                if (not fnct[3]) or (key in fnct[3]):
-                    ok = True
-            if ok:
-                ids2 = fnct[2](self,cr, user, ids, context)
-                ids2 = filter(None, ids2)
-                if ids2:
-                    self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return True
 
     #
@@ -2386,34 +2373,68 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
 
+        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
+        for order, object, ids, fields in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-
-        for fnct in self.pool._store_function.get(self._name, []):
-            ids2 = fnct[2](self,cr, user, [id_new], context)
-            ids2 = filter(None, ids2)
-            if ids2:
-                self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return id_new
 
-    def _store_set_values(self, cr, uid, ids, field, context):
-        args = {}
-        result = self._columns[field].get(cr, self, ids, field, uid, context=context)
-        for id,value in result.items():
-            upd0 = []
-            upd1 = []
-            if self._columns[field]._multi:
-                value = value[field]
-            if self._columns[field]._type in ('many2one', 'one2one'):
-                try:
-                    value = value[0]
-                except:
-                    pass
-            upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
-            upd1.append(self._columns[field]._symbol_set[1](value))
-            upd1.append(id)
-            cr.execute('update "' + self._table + '" set ' + \
-                    string.join(upd0, ',') + ' where id = %s', upd1)
+    def _store_get_values(self, cr, uid, ids, fields, context):
+        result = {}
+        fncts = self.pool._store_function.get(self._name, [])
+        for fnct in range(len(fncts)):
+            result.setdefault(fncts[fnct][0], {})
+            ids2 = fncts[fnct][2](self,cr, uid, ids, context)
+            for id in filter(None, ids2):
+                result[fncts[fnct][0]].setdefault(id, [])
+                result[fncts[fnct][0]][id].append(fnct)
+        result2 = []
+        for object in result:
+            k2 = {}
+            for id,fnct in result[object].items():
+                k2.setdefault(tuple(fnct), [])
+                k2[tuple(fnct)].append(id)
+            for fnct,id in k2.items():
+                result2.append((fncts[fnct[0]][4],object,id,map(lambda x: fncts[x][1], fnct)))
+        result2.sort()
+        return result2
+
+    def _store_set_values(self, cr, uid, ids, fields, context):
+        todo = {}
+        for f in fields:
+            todo.setdefault(self._columns[f]._multi, [])
+            todo[self._columns[f]._multi].append(f)
+        for key,val in todo.items():
+            if key:
+                result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
+                for id,value in result.items():
+                    upd0 = []
+                    upd1 = []
+                    for v in value:
+                        if self._columns[v]._type in ('many2one', 'one2one'):
+                            try:
+                                value[v] = value[v][0]
+                            except:
+                                pass
+                        upd0.append('"'+v+'"='+self._columns[v]._symbol_set[0])
+                        upd1.append(self._columns[v]._symbol_set[1](value[v]))
+                    upd1.append(id)
+                    cr.execute('update "' + self._table + '" set ' + \
+                        string.join(upd0, ',') + ' where id = %s', upd1)
+
+            else:
+                for f in val:
+                    result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    for id,value in result.items():
+                        if self._columns[f]._type in ('many2one', 'one2one'):
+                            try:
+                                value = value[0]
+                            except:
+                                pass
+                        cr.execute('update "' + self._table + '" set ' + \
+                            '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (value,id))
         return True
 
     #

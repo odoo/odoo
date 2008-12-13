@@ -319,29 +319,11 @@ class common(netsvc.Service):
         msg = res and 'successful login' or 'bad login or password'
         logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
         return res or False
-    
+
     def logout(self, db, login, password):
-        # FIXME: WTF !!! what is this hardcoding ?
-        res = security.logout(db, login, password)
-        service = netsvc.LocalService("object_proxy")
-        fields = service.execute(db, login, 'res.users', 'fields_get', {})
-        try:
-            if 'current_status' in fields.keys():
-                service.execute(db, login, 'res.users', 'write', login, {'current_status':False})
-                emp_id = service.execute(db, login, 'hr.employee', 'search',[('user_id','=',login)])
-                emp =  emp_id[0]
-                service.execute(db, login, 'hr.attendance', 'create',{'action':'sign_out','employee_id':emp})
-                cr = pooler.get_db(db).cursor()
-                cr.execute("delete from time_sheet_remote_temp where user_id = '%s'"%(res))
-                cr.commit()
-                cr.close()
-        except:
-            pass
         logger = netsvc.Logger()
-        logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout=>%s from database %s'%(res,db.lower()))
+        logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
         return True
-    
-       
 
     def about(self, extended=False):
         """Return information about the OpenERP Server.

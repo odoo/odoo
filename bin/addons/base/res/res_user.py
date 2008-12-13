@@ -152,7 +152,7 @@ class users(osv.osv):
         'groups_id': _get_group,
     }
     def company_get(self, cr, uid, uid2):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        company_id = self.pool.get('res.users').browse(cr, uid, uid2).company_id.id
         return company_id
     company_get = tools.cache()(company_get)
 
