@@ -634,7 +634,7 @@ class mrp_production(osv.osv):
             }
             res_final_id = self.pool.get('stock.move').create(cr, uid, data)
 
-            self.write(cr, uid, [production.id], {'move_created_ids': [(6, 'WTF', [res_final_id])]})
+            self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
             for line in production.product_lines:
                 move_id=False

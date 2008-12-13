@@ -59,12 +59,7 @@ class wizard_account_chart(wizard.interface):
 
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        result = act_obj.read(cr, uid, [id])[0]
-        if 'lang' in context:
-            import tools
-            trans_name = tools.translate(cr, 'ir.actions.act_window,name', 'model', context['lang'], result['name'])
-            if trans_name:
-                result['name'] = trans_name
+        result = act_obj.read(cr, uid, [id], context=context)[0]
         result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'target_move':data['form']['target_move']})
         if data['form']['fiscalyear']:
             result['name']+=':'+pooler.get_pool(cr.dbname).get('account.fiscalyear').read(cr,uid,[data['form']['fiscalyear']])[0]['code']

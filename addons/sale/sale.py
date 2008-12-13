@@ -172,6 +172,12 @@ class sale_order(osv.osv):
             return [('id', '=', 0)]
         return [('id', 'in', [x[0] for x in res])]
 
+    def _get_order(self, cr, uid, ids, context={}):
+        result = {}
+        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -224,9 +230,23 @@ class sale_order(osv.osv):
         'note': fields.text('Notes'),
 
         'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
-            store=True, multi='sums'),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes', store=True, multi='sums'),
-        'amount_total': fields.function(_amount_all, method=True, string='Total', store=True, multi='sums'),
+            store={
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                'sale.order.line': (_get_order, None, 10),
+            },
+            multi='sums'),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+            store={
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                'sale.order.line': (_get_order, None, 10),
+            },
+            multi='sums'),
+        'amount_total': fields.function(_amount_all, method=True, string='Total',
+            store={
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                'sale.order.line': (_get_order, None, 10),
+            },
+            multi='sums'),
 
         'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
