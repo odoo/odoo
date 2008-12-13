@@ -62,7 +62,7 @@ class res_partner_contact(osv.osv):
             addr += r.get('name', '')
             if r['name'] and r['first_name']:
                 addr += ' '
-            addr += r.get('first_name', '')
+            addr += (r.get('first_name', '') or '')
             res.append((r['id'], addr))
         return res
 res_partner_contact()

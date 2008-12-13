@@ -1994,9 +1994,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account
 
             dig = obj_multi.code_digits
-            code_main = len(account_template.code)
-            code_acc = account_template.code
-            if code_main<=dig and account_template.type != 'view':
+            code_main = account_template.code and len(account_template.code) or 0
+            code_acc = account_template.code or ''
+            if code_main>0 and code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
