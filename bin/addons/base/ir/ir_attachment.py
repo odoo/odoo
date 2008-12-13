@@ -81,23 +81,11 @@ class ir_attachment(osv.osv):
             self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create')
         return super(ir_attachment, self).create(cr, uid, values, *args, **kwargs)
 
-    def clear_cache(self):
-        self.check()    
-    
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
-
-    def __init__(self, *args, **kwargs):
-        r = super(ir_attachment, self).__init__(*args, **kwargs)
-        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
-        return r
-
-    def __del__(self):
-        self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
-        return super(ir_attachment, self).__del__()
 
     def _get_preview(self, cr, uid, ids, name, arg, context=None):
         result = {}
