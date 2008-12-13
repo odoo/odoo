@@ -43,7 +43,6 @@ class ir_translation(osv.osv):
     _log_access = False
 
     def _get_language(self, cr, uid, context):
-        print '***', _get_language
         lang_obj = self.pool.get('res.lang')
         lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
                 context=context)
