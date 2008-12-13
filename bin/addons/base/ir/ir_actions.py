@@ -394,7 +394,7 @@ class actions_server(osv.osv):
             ('sms','SMS'),
             ('object_create','Create Object'),
             ('object_write','Write Object'),
-            ('other','Others Actions'),
+            ('other','Multi Actions'),
         ], 'Action State', required=True, size=32),
         'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
@@ -409,7 +409,7 @@ class actions_server(osv.osv):
         'sms': fields.char('SMS', size=160, translate=True),
         'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
-        'type': fields.char('Report Type', size=32, required=True),
+        'type': fields.char('Action Type', size=32, required=True),
         'srcmodel_id': fields.many2one('ir.model', 'Model', help="In which object you want to create / write the object if its empty refer to the Object field"),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
         'record_id':fields.many2one('ir.model.fields', 'Record Id', help="privide the field name from where the record id refers, if its empty it will refer to the active id of the object")
