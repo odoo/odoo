@@ -431,6 +431,7 @@ class actions_server(osv.osv):
 
     
     def get_email(self, cr, uid, action, context):
+        logger = netsvc.Logger()
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -446,12 +447,13 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception,e :
-                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (field))
 
         return obj
 
 
     def get_mobile(self, cr, uid, action, context):
+        logger = netsvc.Logger()
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -467,7 +469,7 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception,e :
-                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (field))
 
         return obj
 
@@ -478,10 +480,14 @@ class actions_server(osv.osv):
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
             exp = str(match.group()[2:-2]).strip()
-            return eval(exp, {'object':obj, 'context': context,'time':time})
-
+            result = eval(exp, {'object':obj, 'context': context,'time':time})
+            if result in (None, False):
+                return str("--------")
+            return str(result)
+        
         com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
+        
         return message
 
     # Context should contains:
@@ -522,7 +528,7 @@ class actions_server(osv.osv):
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
                 
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-                if tools.email_send(user, [address], subject, body, debug=False) == True:
+                if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))

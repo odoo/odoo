@@ -2004,7 +2004,7 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, user, ids, vals.keys(), context)
+        result_store = self._store_get_values(cr, uid, ids, None, context)
 
         delta = context.get('read_delta', False)
         if delta and self._log_access:
@@ -2053,7 +2053,7 @@ class orm(orm_template):
                         'where id in ('+str_d+')', sub_ids)
 
         for order, object, ids, fields in result_store:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+            self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
