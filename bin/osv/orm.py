@@ -2005,7 +2005,6 @@ class orm(orm_template):
             ids = [ids]
 
         result_store = self._store_get_values(cr, uid, ids, None, context)
-
         delta = context.get('read_delta', False)
         if delta and self._log_access:
             for i in range(0, len(ids), cr.IN_MAX):
