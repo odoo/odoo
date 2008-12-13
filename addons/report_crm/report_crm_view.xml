@@ -155,5 +155,43 @@
         
         <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="report.crm.case.categ" src_model="crm.case.section"/>
         
+        
+        <!-- Cases by Section  -->
+        
+        <record id="view_report_crm_case_section_tree" model="ir.ui.view">
+            <field name="name">report.crm.case.section.tree</field>
+            <field name="model">report.crm.case.section</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Cases by Section">
+                    <field name="name"/>
+                    <field name="section_id"/>
+                    <field name="nbr_cases"/>
+                    <field name="avg_answers"/>
+                    <field name="perc_done"/>
+                    <field name="perc_cancel"/>
+                    <field name="delay_close"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_report_crm_case_section_graph" model="ir.ui.view">
+            <field name="name">report.crm.case.section.graph</field>
+            <field name="model">report.crm.case.section</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Cases by Section" type="bar">
+                    <field name="name"/>
+                    <field name="nbr_cases" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record id="action_report_crm_case_section_tree" model="ir.actions.act_window">
+            <field name="name">Cases by Section</field>
+            <field name="res_model">report.crm.case.section</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+        </record>
     </data>
 </openerp>
