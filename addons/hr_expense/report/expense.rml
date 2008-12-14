@@ -198,7 +198,7 @@
             <para style="terp_default_Right_9">[[ '%.2f' % line.unit_amount or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ company.currency_id.name ]]</para>
+            <para style="terp_default_Right_9">[[ o.currency_id.name ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ '%.2f' % line.unit_quantity or '' ]]</para>
@@ -207,7 +207,7 @@
             <para style="terp_default_Right_9">[[ '%.2f' % line.total_amount or '' ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ company.currency_id.name ]]</para>
+            <para style="terp_default_Right_9">[[ o.currency_id.name ]]</para>
           </td>
         </tr>
         <tr>
@@ -276,7 +276,7 @@
           <para style="terp_tblheader_Details_Right">[[ '%.2f' % o.amount ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ company.currency_id.name ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ o.currency_id.name ]]</para>
         </td>
       </tr>
     </blockTable>
