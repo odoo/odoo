@@ -602,15 +602,11 @@ class account_invoice(osv.osv):
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
-            if journal.sequence_id and not inv.move_name:
-                name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-            else:
-                name = inv.move_name
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Can not create invoice move on centralized journal'))
 
-            move = {'name': name, 'line_id': line, 'journal_id': journal_id}
+            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
@@ -630,7 +626,6 @@ class account_invoice(osv.osv):
 
     def line_get_convert(self, cr, uid, x, part, date, context={}):
         return {
-            'date':date,
             'date_maturity': x.get('date_maturity', False),
             'partner_id':part,
             'name':x['name'][:64],
@@ -663,6 +658,9 @@ class account_invoice(osv.osv):
                     ref = self._convert_ref(cr, uid, number)
                 cr.execute('UPDATE account_invoice SET number=%s ' \
                         'WHERE id=%s', (number, id))
+                cr.execute('UPDATE account_move SET ref=%s ' \
+                        'WHERE id=%s AND (ref is null OR ref = \'\')',
+                        (ref, move_id))
                 cr.execute('UPDATE account_move_line SET ref=%s ' \
                         'WHERE move_id=%s AND (ref is null OR ref = \'\')',
                         (ref, move_id))
@@ -814,16 +812,7 @@ class account_invoice(osv.osv):
         assert len(ids)==1, "Can only pay one invoice at a time"
         invoice = self.browse(cr, uid, ids[0])
         src_account_id = invoice.account_id.id
-        journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id)
-        if journal.sequence_id:
-            name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-        else:
-            raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         # Take the seq as name for move
-        if journal.sequence_id:
-            seq = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-        else:
-            raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
         types = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = types[invoice.type]
         #take the choosen date
@@ -832,26 +821,22 @@ class account_invoice(osv.osv):
         else:
             date=time.strftime('%Y-%m-%d')
         l1 = {
-            'name': name,
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
             'partner_id': invoice.partner_id.id,
-            'date': date,
             'ref':invoice.number,
         }
         l2 = {
-            'name':name,
             'debit': direction * pay_amount<0 and - direction * pay_amount,
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
             'partner_id': invoice.partner_id.id,
-            'date': date,
             'ref':invoice.number,
         }
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'name': seq, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
+        move = {'ref': inv.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move)
 
         line_ids = []

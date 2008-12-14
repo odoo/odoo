@@ -468,8 +468,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account entry">
-                    <field name="ref"/>
                     <field name="name"/>
+                    <field name="date"/>
+                    <field name="ref"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
@@ -800,6 +801,7 @@
             <field name="arch" type="xml">
                 <tree string="Account Entry">
                     <field name="name"/>
+                    <field name="date"/>
                     <field name="ref"/>
                     <field name="journal_id"/>
                     <field name="period_id"/>
@@ -822,8 +824,9 @@
                     <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="ref" select="1" groups="base.group_extended"/>
-                    <field name="to_check" select="2" groups="base.group_extended"/>
+                    <field name="date" select="1"/>
+                    <field name="ref" select="1"/>
+                    <field name="to_check" select="2"/>
                     <field name="type" select="2" groups="base.group_extended"/>
                     </group>
                     <field name="partner_id" invisible="1" select="1"/>
@@ -833,9 +836,8 @@
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
-                            <field name="date"/>
                             <field name="account_id"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
 
                             <field name="debit" select="1"/>
                             <field name="credit" select="1"/>
@@ -855,9 +857,8 @@
                             <field name="state"/>
                         </form>
                         <tree editable="top" string="Account Entry Line">
-                            <field name="date"/>
                             <field name="name"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
                             <field name="account_id"/>
                             <field name="date_maturity"/>
                             <field name="ref"/>
