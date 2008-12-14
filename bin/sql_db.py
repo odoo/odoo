@@ -26,6 +26,7 @@ from psycopg2.pool import ThreadedConnectionPool
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 
 import psycopg2.extensions
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 types_mapping = {
@@ -33,6 +34,10 @@ types_mapping = {
     'time': (1083,),
     'datetime': (1114,),
 }
+
+def unbuffer(symb, cr):
+    if symb is None: return None
+    return str(symb)
 
 def undecimalize(symb, cr):
     if symb is None: return None

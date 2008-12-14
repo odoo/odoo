@@ -122,15 +122,19 @@ class module(osv.osv):
         view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
             ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
         for data_id in model_data_obj.browse(cr,uid,view_id,context):
-            key = data_id['model']
-            if key=='ir.ui.view':
-                v = view_obj.browse(cr,uid,data_id.res_id)
-                aa = v.inherit_id and '* INHERIT ' or ''
-                res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
-            elif key=='ir.actions.report.xml':
-                res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
-            elif key=='ir.ui.menu':
-                res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+            # We use try except, because views or menus may not exist
+            try:
+                key = data_id['model']
+                if key=='ir.ui.view':
+                    v = view_obj.browse(cr,uid,data_id.res_id)
+                    aa = v.inherit_id and '* INHERIT ' or ''
+                    res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                elif key=='ir.actions.report.xml':
+                    res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                elif key=='ir.ui.menu':
+                    res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+            except KeyError, e:
+                pass
         return res
 
     _columns = {

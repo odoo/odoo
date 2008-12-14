@@ -25,17 +25,15 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
-
     def check(self, cr, uid, ids, mode):
         if not ids: 
             return
         ima = self.pool.get('ir.model.access')
         if isinstance(ids, (int, long)):
             ids = [ids]
-        objs = self.browse(cr, uid, ids) or []
-        for o in objs:
-            if o and o.res_model:
-                ima.check(cr, uid, o.res_model, mode)
+        cr.execute('select distinct res_model from ir_attachment where id in ('+','.join(map(str, ids))+')')
+        for obj in cr.fetchall():
+            ima.check(cr, uid, obj[0], mode)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):

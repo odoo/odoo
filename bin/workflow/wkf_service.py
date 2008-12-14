@@ -44,7 +44,7 @@ class workflow_service(netsvc.Service):
 
     def trg_write(self, uid, res_type, res_id, cr):
         ident = (uid,res_type,res_id)
-        cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id,res_type, 'active'))
+        cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id or None,res_type or None, 'active'))
         for (id,) in cr.fetchall():
             instance.update(cr, id, ident)
 

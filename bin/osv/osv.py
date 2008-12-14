@@ -184,7 +184,7 @@ class osv_memory(orm.orm_memory):
         name = hasattr(cls, '_name') and cls._name or cls._inherit
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
-            print 'Inherit not supported in osv_memory object !'
+            raise 'Inherit not supported in osv_memory object !'
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj

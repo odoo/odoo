@@ -35,7 +35,7 @@ class configmanager(object):
             'netport': '8070',
             'db_host': False,
             'db_port': False,
-            'db_name': 'terp',
+            'db_name': False,
             'db_user': False,
             'db_password': False,
             'db_maxconn': 64,

@@ -196,6 +196,7 @@ class binary(_column):
     _symbol_c = '%s'
     _symbol_f = lambda symb: symb and Binary(symb) or None
     _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self, x: x and str(x)
 
     _classic_read = False
 
@@ -208,7 +209,6 @@ class binary(_column):
             context = {}
         if not values:
             values = []
-
         res = {}
         for i in ids:
             val = None
@@ -216,10 +216,10 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            res.setdefault(i, val)
             if context.get('bin_size', False):
                 res[i] = tools.human_size(val)
-
+            else:
+                res[i] = val
         return res
 
     get = get_memory
@@ -276,6 +276,9 @@ class many2one(_column):
     _classic_read = False
     _classic_write = True
     _type = 'many2one'
+    _symbol_c = '%s'
+    _symbol_f = lambda x: x or None
+    _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, obj, string='unknown', **args):
         _column.__init__(self, string=string, **args)

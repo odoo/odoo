@@ -610,7 +610,6 @@ class report_sxw(report_rml):
             attach = report_xml.attachment
             rml = report_xml.report_rml_content
             report_type = report_xml.report_type
-            context['actual_model']=report_xml.actual_model
         else:
             ir_menu_report_obj = pool.get('ir.ui.menu')
             report_menu_ids = ir_menu_report_obj.search(cr, uid,

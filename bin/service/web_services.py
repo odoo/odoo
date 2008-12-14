@@ -29,7 +29,6 @@ import logging
 import threading, thread
 
 import time
-import base64
 import addons
 
 import sql_db

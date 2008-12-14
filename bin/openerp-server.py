@@ -107,10 +107,16 @@ import service
 #----------------------------------------------------------
 # import addons
 #----------------------------------------------------------
+
 import addons
 
-if tools.config['init'] or tools.config['update']:
-    pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
+#----------------------------------------------------------
+# Load and update databases if requested
+#----------------------------------------------------------
+
+if tools.config['db_name']:
+    for db in tools.config['db_name'].split(','):
+        pooler.get_db_and_pool(db, update_module=tools.config['init'] or tools.config['update'])
 
 #----------------------------------------------------------
 # translation stuff
