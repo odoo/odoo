@@ -465,15 +465,19 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids):
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
-            move_ids = [x.id for x in pick.move_lines]
-            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+            #move_ids = [x.id for x in pick.move_lines]
+            #self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+            #wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def draft_validate(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids):
+            move_ids = [x.id for x in pick.move_lines]
+            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+
             self.action_move(cr, uid, [pick.id])
             wf_service.trg_validate(uid, 'stock.picking', pick.id , 'button_done', cr)
         return True
