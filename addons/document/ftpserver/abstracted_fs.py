@@ -70,6 +70,7 @@ class abstracted_fs:
 
     # Ok
     def db_list(self):
+        return pooler.pool_dic.keys()
         s = netsvc.LocalService('db')
         result = s.list()
         self.db_name_list = []
@@ -89,8 +90,9 @@ class abstracted_fs:
             finally:
                 if cr is not None:
                     cr.close()
-                if db is not None:
-                    pooler.close_db(db_name)
+                #if db is not None:
+                #    pooler.close_db(db_name)
+        print 'Return', self.db_name_list
         return self.db_name_list
 
     # Ok

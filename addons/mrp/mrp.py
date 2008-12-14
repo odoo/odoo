@@ -776,7 +776,15 @@ class mrp_procurement(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
         'message': fields.char('Latest error', size=64),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('exception','Exception'),('running','Running'),('cancel','Cancel'),('done','Done'),('waiting','Waiting')], 'Status')
+        'state': fields.selection([
+            ('draft','Draft'),
+            ('confirmed','Confirmed'),
+            ('exception','Exception'),
+            ('running','Running'),
+            ('cancel','Cancel'),
+            ('ready','Ready'),
+            ('done','Done'),
+            ('waiting','Waiting')], 'Status')
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -1072,7 +1080,7 @@ class mrp_procurement(osv.osv):
         return True
 
     def action_check_finnished(self, cr, uid, ids):
-        return True
+        return self.check_move_done(cr, uid, ids)
 
     def action_check(self, cr, uid, ids):
         ok = False
@@ -1082,17 +1090,21 @@ class mrp_procurement(osv.osv):
                 ok = True
         return ok
 
+    def action_ready(self, cr, uid, ids):
+        res = self.write(cr, uid, ids, {'state':'ready'})
+        return res
+
     def action_done(self, cr, uid, ids):
         for procurement in self.browse(cr, uid, ids):
             if procurement.move_id:
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     self.pool.get('stock.move').action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state':'done', 'date_close':time.strftime('%Y-%m-%d')})
-
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
         return res
+
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         '''
         use_new_cursor: False or the dbname

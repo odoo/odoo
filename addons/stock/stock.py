@@ -234,9 +234,9 @@ class stock_location(osv.osv):
         result = []
         amount = 0.0
         for id in self.search(cr, uid, [('location_id', 'child_of', ids)]):
-            cr.execute("select product_uom,sum(product_qty) as product_qty from stock_move where location_dest_id=%s and product_id=%s and state='done' group by product_uom", (id,product_id))
+            cr.execute("select product_uom,sum(product_qty) as product_qty from stock_move where location_dest_id=%s and location_id<>%s and product_id=%s and state='done' group by product_uom", (id,id,product_id))
             results = cr.dictfetchall()
-            cr.execute("select product_uom,-sum(product_qty) as product_qty from stock_move where location_id=%s and product_id=%s and state in ('done', 'assigned') group by product_uom", (id,product_id))
+            cr.execute("select product_uom,-sum(product_qty) as product_qty from stock_move where location_id=%s and location_dest_id<>%s and product_id=%s and state in ('done', 'assigned') group by product_uom", (id,id,product_id))
             results += cr.dictfetchall()
 
             total = 0.0

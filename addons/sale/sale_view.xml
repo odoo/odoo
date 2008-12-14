@@ -384,11 +384,11 @@
                         <page string="Order Lines">
                             <separator colspan="4" string="Automatic Declaration"/>
                             <field name="order_id" select="1"/>
-                            <field name="invoiced" select="2"/>
+                            <field name="order_partner_id" readonly="1" select="1" invisible="1"/>
                             <field name="product_uom_qty" readonly="1" select="2"/>
                             <field name="product_uom" readonly="2"/>
                             <field name="product_id" readonly="1" select="1"/>
-                            <field name="order_partner_id" readonly="1" select="1" invisible="1"/>
+                            <field name="invoiced" select="2"/>
 
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name" select="2"/>
@@ -401,7 +401,8 @@
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
                             <group col="2" colspan="2">
-                                <button name="button_done" states="confirmed" string="Done" type="object"/>
+                                <button name="button_done" states="confirmed,exception" string="Done" type="object"/>
+                                <button name="button_cancel" states="confirmed,exception" string="Cancel" type="object"/>
                             </group>
                         </page>
                         <page string="Properties">

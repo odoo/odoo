@@ -337,7 +337,10 @@ class product_product(osv.osv):
         pricelist = context.get('pricelist', False)
         if pricelist:
             for id in ids:
-                price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                try:
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                except:
+                    price = 0.0
                 res[id] = price
         for id in ids:
             res.setdefault(id, 0.0)

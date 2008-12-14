@@ -66,7 +66,7 @@ def _makeInvoices(self, cr, uid, data, context):
         return inv_id
 
     for line in pool.get('sale.order.line').browse(cr,uid,data['ids']):
-        if not line.invoiced:
+        if (not line.invoiced) and (line.state not in ('draft','cancel')):
             if not line.order_id.id in invoices:
                 invoices[line.order_id.id] = []
             line_id = pool.get('sale.order.line').invoice_line_create(cr, uid,
@@ -91,7 +91,7 @@ def _makeInvoices(self, cr, uid, data, context):
         il = map(lambda x: x[1], result)
         res = make_invoice(order, il)
         cr.execute('INSERT INTO sale_order_invoice_rel \
-                (order_id,invoice_id) values (%d,%d)', (order.id, res))
+                (order_id,invoice_id) values (%s,%s)', (order.id, res))
     return {}
 
 

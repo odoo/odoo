@@ -38,7 +38,10 @@ class delivery_carrier(osv.osv):
             if order_id:
               order = sale_obj.browse(cr, uid, [order_id])[0]
               carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
-              price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
+              if carrier_grid:
+                  price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
+              else:
+                  price = 0.0
             res[carrier.id]=price
         return res
     _columns = {

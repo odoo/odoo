@@ -540,7 +540,10 @@
                                     <field name="date_planned"/>
                                     <field name="address_id" select="1" context="{'context_display':'partner'}"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="2" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                                    <field name="prodlot_id" select="2"
+                                        context="{'location_id':location_id, 'product_id':product_id}"
+                                        domain="[('product_id','=',product_id)]"
+                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="2"/>
                                     <newline/>
                                     <label/>
@@ -633,7 +636,10 @@
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="2" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                                    <field name="prodlot_id" select="2"
+                                        context="{'location_id':location_id, 'product_id':product_id}"
+                                        domain="[('product_id','=',product_id)]"
+                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
@@ -821,7 +827,10 @@
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="1" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                                    <field name="prodlot_id" select="1"
+                                        context="{'location_id':location_id, 'product_id':product_id}"
+                                        domain="[('product_id','=',product_id)]"
+                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
@@ -1005,7 +1014,10 @@
                                     <newline/>
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <newline/>
-                                    <field name="prodlot_id" select="1" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                                    <field name="prodlot_id" select="1"
+                                        context="{'location_id':location_id, 'product_id':product_id}"
+                                        domain="[('product_id','=',product_id)]"
+                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <newline/>
                                     <label/>
@@ -1220,7 +1232,10 @@
                     <field name="priority"/>
                     <field name="address_id" select="2" context="{'context_display':'partner'}"/>
                     <newline/>
-                    <field name="prodlot_id" select="2" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
+                    <field name="prodlot_id" select="2"
+                        context="{'location_id':location_id, 'product_id':product_id}"
+                        domain="[('product_id','=',product_id)]"
+                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                     <field name="tracking_id" select="2"/>
                     <newline/>
                     <label/>

@@ -110,7 +110,11 @@ class account_move_line(osv.osv):
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
-                data['account_id'] = account.id
+
+
+                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
+                    data['account_id'] = account.id
+
             s = -total_new
             data['debit'] = s>0  and s or 0.0
             data['credit'] = s<0  and -s or 0.0
@@ -122,7 +126,6 @@ class account_move_line(osv.osv):
             return data
 
         period_obj = self.pool.get('account.period')
-        tax_obj=self.pool.get('account.tax')
 
         # Compute the current move
         move_id = False
@@ -190,7 +193,13 @@ class account_move_line(osv.osv):
             else:
                 account = move.journal_id.default_debit_account_id
 
-        data['account_id'] = account.id
+        if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
+            data['account_id'] = account.id
+            # Propose the price VAT excluded, the VAT will be added when confirming line
+            if account.tax_ids:
+                tax = account.tax_ids
+                for t in self.pool.get('account.tax').compute_inv(cr, uid, tax, total, 1):
+                    total -= t['amount']
 
         s = -total
         data['debit'] = s>0  and s or 0.0
@@ -339,7 +348,7 @@ class account_move_line(osv.osv):
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,2)),
         'parent_move_lines':fields.many2many('account.move.line', 'account_move_line_rel', 'child_id', 'parent_id', 'Parent'),
-        'reconcile_implicit':fields.boolean('Implicit Reconciliaiton')
+        'reconcile_implicit':fields.boolean('Implicit Reconciliation')
     }
 
     def _get_date(self, cr, uid, context):
@@ -778,9 +787,8 @@ class account_move_line(osv.osv):
 
             if not vals.get('move_id', False):
                 if journal.sequence_id:
-                    name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    #name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
                     v = {
-                        'name': name,
                         'period_id': context['period_id'],
                         'journal_id': context['journal_id']
                     }

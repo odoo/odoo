@@ -31,7 +31,6 @@ class product_product(osv.osv):
 
     def _pricelist_calculate(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        format=""
         pricelist_obj=self.pool.get('product.pricelist')
         if name=='pricelist_purchase':
             pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','purchase')])
@@ -39,17 +38,18 @@ class product_product(osv.osv):
             pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','sale')])
         pricelist_browse=pricelist_obj.browse(cr,uid,pricelist_ids)
         for product in self.browse(cr, uid, ids, context):
+            result[product.id] = ""
             for pricelist in pricelist_browse:
                 for version in pricelist.version_id:
                     for items in version.items_id:
                         qty=items.min_quantity
-                        price=pricelist_obj.price_get(cr, uid,[pricelist.id],product.id,qty,partner=None, context=None)
-                        if name=='pricelist_purchase':
-                            format+=pricelist.name + "\t"  +str(qty) +" \t\t" + str(price[pricelist.id]) + "\n"
-                        else:
-                            format+=pricelist.name + "\t\t\t"  +str(qty) +" \t\t\t" + str(price[pricelist.id]) + "\n"
-                    result[product.id]=format
-                    format=""
+                        try:
+                            price=pricelist_obj.price_get(cr, uid,[pricelist.id],product.id,qty,partner=None, context=None)
+                        except:
+                            price = 0.0
+                        result[product.id]+= ("%s (%.2f) : %.2f" % (pricelist.name,qty or 0.0,price[pricelist.id] or 0.0)) + "\n"
+                        break
+                    break
         return result
 
     _columns = {
