@@ -1537,7 +1537,9 @@ class orm(orm_template):
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
-                            logger.notifyChannel('init', netsvc.LOG_INFO, 'column %s (%s) in table %s was converted to a function !\nYou should remove this column from your database.' % (k, f.string, self._table))
+                            logger.notifyChannel('init', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.commit()
                             f_obj_type = None
                         else:
                             f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
