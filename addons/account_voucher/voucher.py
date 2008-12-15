@@ -331,6 +331,7 @@ class account_voucher(osv.osv):
                 elif line.type == 'cr':
                     move_line['credit'] = line.amount or False
                     amount=line.amount * (-1)
+                
                 ml_id=self.pool.get('account.move.line').create(cr, uid, move_line)
                 
                 if inv.narration:
@@ -338,17 +339,18 @@ class account_voucher(osv.osv):
                 else:
                     line.name=line.name
                 
-                an_line = {
-                     'name':line.name,
-                     'date':inv.date,
-                     'amount':amount,
-                     'account_id':line.account_analytic_id.id or False,
-                     'move_id':ml_id,
-                     'journal_id':an_journal_id ,
-                     'general_account_id':line.account_id.id,
-                     'ref':ref
-                 }
-                self.pool.get('account.analytic.line').create(cr,uid,an_line)
+                if line.account_analytic_id:
+                    an_line = {
+                         'name':line.name,
+                         'date':inv.date,
+                         'amount':amount,
+                         'account_id':line.account_analytic_id.id or False,
+                         'move_id':ml_id,
+                         'journal_id':an_journal_id ,
+                         'general_account_id':line.account_id.id,
+                         'ref':ref
+                     }
+                    self.pool.get('account.analytic.line').create(cr,uid,an_line)
                 
             self.write(cr, uid, [inv.id], {'move_id': move_id})
             obj=self.pool.get('account.move').browse(cr, uid, move_id)
