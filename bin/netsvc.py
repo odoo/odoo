@@ -263,7 +263,6 @@ class xmlrpc(object):
 
 class GenericXMLRPCRequestHandler:
     def _dispatch(self, method, params):
-        #print 'TERP-CALL : ',method, params
         import traceback
         try:
             n = self.path.split("/")[-1]
@@ -398,8 +397,6 @@ class TinySocketClientThread(threading.Thread):
                 ts.mysend(r)
             except Exception, e:
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                print e
-                print tb_s
                 import tools
                 if tools.config['debug_mode']:
                     import pdb

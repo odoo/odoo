@@ -22,8 +22,8 @@
 ##############################################################################
 
 name = 'openerp-server'
-version = '5.0.0-rc1'
-major_version = version.rsplit('.', 1)[0]
+version = '5.0.0_rc1'
+major_version = '5.0'
 description = 'OpenERP Server'
 long_desc = '''\
 OpenERP is a complete ERP and CRM. The main features are accounting (analytic
