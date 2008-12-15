@@ -35,6 +35,7 @@
             <rng:optional><rng:attribute name="toolbar"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
@@ -60,6 +61,10 @@
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="angle"/></rng:optional>
+            <rng:zeroOrMore>
+               <rng:text/>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -228,6 +233,7 @@
             <rng:optional><rng:attribute name="fieldname"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
+            <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form"/>
@@ -238,6 +244,7 @@
                     <rng:ref name="xpath"/>
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
+                    <rng:ref name="graph"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -257,6 +264,7 @@
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="separator"/>
@@ -279,6 +287,7 @@
             <rng:optional><rng:attribute name="date_stop" /></rng:optional>
             <rng:optional><rng:attribute name="day_length" /></rng:optional>
             <rng:optional><rng:attribute name="date_delay" /></rng:optional>
+            <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
@@ -290,6 +299,7 @@
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="orientation" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
