@@ -137,24 +137,26 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
-                    <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
-                    <field name="type" readonly="1" select="2"/>
-                    <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1"/>
-                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+                    <group col="6" colspan="4">
+                        <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
+                        <field name="type" readonly="1" select="2"/>
+                        <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
+                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1"/>
+                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+                        <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                             <field name="date_due" select="1"/>
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)" select="2"/>
                             <field name="reference_type" nolabel="1" select="2" size="0"/>
                             <field name="reference" nolabel="1" select="1"/>
                             <field name="check_total" required="2"/>
-                            <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
                             <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1">
                                 <tree string="Invoice lines" editable="top">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.partner_id,account_id)"/>
-                                    <field name="invoice_line_tax_id" view_mode="2"/>
+                                    <field name="invoice_line_tax_id" view_mode="2" domain="[('parent_id','=',False)]"/>
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>

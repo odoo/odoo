@@ -468,8 +468,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account entry">
-                    <field name="ref"/>
                     <field name="name"/>
+                    <field name="date"/>
+                    <field name="ref"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
@@ -665,14 +666,13 @@
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                    <field name="account_tax_id"/>
+                    <field name="account_tax_id" groups="base.group_extended"/>
                     <field name="analytic_account_id"/>
-                    <field name="amount_currency"/>
-                    <field name="currency_id"/>
+                    <field name="amount_currency" groups="base.group_extended"/>
+                    <field name="currency_id" groups="base.group_extended"/>
                     <field name="state"/>
                     <field name="reconcile_id"/>
-                    <field name="reconcile_partial_id"/>
-                    <field colspan="4" name="reconcile_implicit"/>
+                    <field name="reconcile_partial_id" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -724,10 +724,10 @@
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
-                        <!--<page string="Move Lines">
+                        <page string="Linked Lines" groups="base.group_extended">
                             <field colspan="4" name="reconcile_implicit"/>
                             <field colspan="4" name="parent_move_lines" nolabel="0"/>
-                           </page>-->
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -800,13 +800,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account Entry">
-                    <field name="ref"/>
                     <field name="name"/>
-                    <field name="period_id"/>
+                    <field name="date"/>
+                    <field name="ref"/>
                     <field name="journal_id"/>
+                    <field name="period_id"/>
                     <field name="partner_id"/>
-                    <field name="amount"/>
                     <field name="line_id"/>
+                    <field name="to_check" groups="base.group_extended"/>
+                    <field name="amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -822,18 +824,20 @@
                     <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="ref" select="1" groups="base.group_extended"/>
-                    <field name="to_check" select="2" groups="base.group_extended"/>
-                    <field name="type" select="1" groups="base.group_extended"/>
+                    <field name="date" select="1"/>
+                    <field name="ref" select="1"/>
+                    <field name="to_check" select="2"/>
+                    <field name="type" select="2" groups="base.group_extended"/>
                     </group>
+                    <field name="partner_id" invisible="1" select="1"/>
+                    <field name="amount" invisible="1" select="1"/>
 
                     <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
-                            <field name="date"/>
                             <field name="account_id"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
 
                             <field name="debit" select="1"/>
                             <field name="credit" select="1"/>
@@ -853,15 +857,16 @@
                             <field name="state"/>
                         </form>
                         <tree editable="top" string="Account Entry Line">
-                            <field name="date"/>
                             <field name="name"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
                             <field name="account_id"/>
                             <field name="date_maturity"/>
                             <field name="ref"/>
                             <field name="debit" sum="Total Debit"/>
                             <field name="credit" sum="Total Credit"/>
                             <field name="analytic_account_id"/>
+                            <field name="tax_code_id"/>
+                            <field name="tax_amount"/>
                             <field name="state"/>
                         </tree>
                     </field>
@@ -1330,7 +1335,6 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id"/>
-                    <field colspan="4" name="reconcile_implicit"/>
                     <field name="state"/>
                 </tree>
             </field>

@@ -185,7 +185,9 @@
         </record>
         <record id="act_make_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
-            <field name="name">done</field>
+            <field name="name">ready</field>
+            <field name="kind">function</field>
+            <field name="action">action_ready()</field>
         </record>
         <record id="act_wait_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
@@ -301,14 +303,9 @@
         <record id="trans_make_to_stock_make_done" model="workflow.transition">
             <field name="act_from" ref="act_make_to_stock"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="condition">check_move_done()</field>
-            <field name="trigger_model">stock.move</field>
-            <field name="trigger_expr_id">[move_id.id]</field>
-        </record>
-        <record id="trans_make_to_stock_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_make_to_stock"/>
-            <field name="act_to" ref="act_cancel"/>
-            <field name="condition">check_move_cancel()</field>
+            <field name="condition">True</field>
+            <field name="trigger_model" eval="False"/>
+            <field name="trigger_expr_id" eval="False"/>
         </record>
         <record id="trans_produce_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
@@ -348,8 +345,8 @@
         </record>
         <record id="trans_make_done_confirm" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
-            <field name="act_to" ref="act_confirm"/>
-            <field name="condition">not action_check_finnished()</field>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="condition">check_move_cancel()</field>
         </record>
     </data>
 </openerp>

@@ -45,7 +45,7 @@
                                 <field name="name"/>
                                 <field name="sequence_contact"/>
                                 <field name="phone"/>
-                                <field name="email"/>
+                                <field name="email" widget="email"/>
                                 <field name="date_start" />
                                 <field name="date_stop" />
                                 <field name="state" />
@@ -105,7 +105,7 @@
                         <newline/>
                         <field name="phone"/>
                         <field name="fax"/>
-                        <field name="email"/>
+                        <field name="email" widget="email"/>
                         <newline/>
                         <field name="job_ids" mode="tree,form" nolabel="1" colspan="4">
                             <tree string="Contacts" editable="top">
@@ -121,7 +121,7 @@
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
-                                <field name="email"/>
+                                <field name="email" widget="email"/>
                             </form>
                         </field>
                     </form>
@@ -277,7 +277,7 @@
                         <field name="contact_id"/>
                         <field name="function_id"/>
                         <field name="phone"/>
-                        <field name="email"/>
+                        <field name="email" widget="email"/>
                     </form>
                 </field>
             </field>
@@ -314,7 +314,7 @@
                         <field name="address_id" select="1"/>
                         <field name="contact_id" select="1"/>
                         <field name="function_id" select="1"/>
-                        <field name="email" select="2"/>
+                        <field name="email" select="2" widget="email"/>
                         <field name="phone" select="2"/>
                         <field name="sequence_contact" select="2" groups="base.group_user"/>
                         <field name="sequence_partner" select="2" groups="base.group_user"/>

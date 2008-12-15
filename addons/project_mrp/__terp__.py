@@ -20,18 +20,18 @@
 #
 ##############################################################################
 {
-    "name" : "Project Management - MRP Link",
+    "name" : "Project Management - MRP and Sale Integration",
     "version": "1.0",
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["project", 'mrp', "sale", "mrp_jit"],
     "description": """
-This module is used to automatically create tasks base on different
+This module is used to automatically create tasks based on different
 procurements: sales order, manufacturing order, ...
 
-It is mainly used to invoices services based on tasks by doing sales
-order on services products.
+It is mainly used to invoices services based on tasks automatically
+created by sales orders.
 """,
     "init_xml" : [],
     "demo_xml" : [],

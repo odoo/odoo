@@ -110,7 +110,11 @@ class account_move_line(osv.osv):
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
-                data['account_id'] = account.id
+
+
+                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
+                    data['account_id'] = account.id
+
             s = -total_new
             data['debit'] = s>0  and s or 0.0
             data['credit'] = s<0  and -s or 0.0
@@ -122,7 +126,6 @@ class account_move_line(osv.osv):
             return data
 
         period_obj = self.pool.get('account.period')
-        tax_obj=self.pool.get('account.tax')
 
         # Compute the current move
         move_id = False
@@ -190,7 +193,13 @@ class account_move_line(osv.osv):
             else:
                 account = move.journal_id.default_debit_account_id
 
-        data['account_id'] = account.id
+        if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
+            data['account_id'] = account.id
+            # Propose the price VAT excluded, the VAT will be added when confirming line
+            if account.tax_ids:
+                tax = account.tax_ids
+                for t in self.pool.get('account.tax').compute_inv(cr, uid, tax, total, 1):
+                    total -= t['amount']
 
         s = -total
         data['debit'] = s>0  and s or 0.0
@@ -301,6 +310,13 @@ class account_move_line(osv.osv):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
+    def _get_move_lines(self, cr, uid, ids, context={}):
+        result = []
+        for move in self.pool.get('account.move').browse(cr, uid, ids, context=context):
+            for line in move.line_id:
+                result.append(line.id)
+        return result
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
@@ -324,7 +340,10 @@ class account_move_line(osv.osv):
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
         'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
-        'date': fields.date('Effective date', required=True),
+        'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
+            store={
+                'account.move': (_get_move_lines, ['date'], 20)
+            }),
         'date_created': fields.date('Creation date'),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
@@ -339,7 +358,7 @@ class account_move_line(osv.osv):
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,2)),
         'parent_move_lines':fields.many2many('account.move.line', 'account_move_line_rel', 'child_id', 'parent_id', 'Parent'),
-        'reconcile_implicit':fields.boolean('Implicit Reconciliaiton')
+        'reconcile_implicit':fields.boolean('Implicit Reconciliation')
     }
 
     def _get_date(self, cr, uid, context):
@@ -630,7 +649,7 @@ class account_move_line(osv.osv):
         return False
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context)
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
         if view_type=='tree' and 'journal_id' in context:
             title = self.view_header_get(cr, uid, view_id, view_type, context)
             journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
@@ -705,6 +724,11 @@ class account_move_line(osv.osv):
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check(cr, uid, ids, context)
 
+        todo_date = None
+        if vals.get('date', False):
+            todo_date = vals['date']
+            del vals['date']
+        print 'Writing', vals, 'to move_line', ids
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
@@ -713,6 +737,8 @@ class account_move_line(osv.osv):
                 if line.move_id.id not in done:
                     done.append(line.move_id.id)
                     self.pool.get('account.move').validate(cr, uid, [line.move_id.id], context)
+                    if todo_date:
+                        self.pool.get('account.move').write(cr, uid, [line.move_id.id], {'date': todo_date}, context=context)
         return result
 
     def _update_journal_check(self, cr, uid, journal_id, period_id, context={}):
@@ -778,9 +804,9 @@ class account_move_line(osv.osv):
 
             if not vals.get('move_id', False):
                 if journal.sequence_id:
-                    name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    #name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
                     v = {
-                        'name': name,
+                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'period_id': context['period_id'],
                         'journal_id': context['journal_id']
                     }
@@ -788,6 +814,10 @@ class account_move_line(osv.osv):
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+        else:
+            if 'date' in vals:
+                self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
+                del vals['date']
 
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
@@ -820,7 +850,7 @@ class account_move_line(osv.osv):
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
                         'name': vals['name'],
-                        'date': vals['date'],
+                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'account_id': vals['analytic_account_id'],
                         'unit_amount':'quantity' in vals and vals['quantity'] or 1.0,
                         'amount': vals['debit'] or vals['credit'],

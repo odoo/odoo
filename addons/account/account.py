@@ -78,7 +78,7 @@ class account_payment_term_line(osv.osv):
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
         'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
-        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the end of the month)."),
+        'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
     _defaults = {
@@ -681,6 +681,7 @@ account_fiscalyear()
 class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
+    _order = 'id desc'
 
     def name_get(self, cursor, user, ids, context=None):
         if not len(ids):
@@ -712,15 +713,16 @@ class account_move(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Entry Number', size=64, required=True),
+        'name': fields.char('Number', size=64, required=True),
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
-        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2), store=True),
+        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2)),
+        'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
             ('bank_pay_voucher','Bank Payment'),
@@ -737,6 +739,7 @@ class account_move(osv.osv):
         'state': lambda *a: 'draft',
         'period_id': _get_period,
         'type' : lambda *a : 'journal_voucher',
+        'date': lambda *a:time.strftime('%Y-%m-%d'),
     }
 
     def _check_centralisation(self, cursor, user, ids):
@@ -1994,9 +1997,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account
 
             dig = obj_multi.code_digits
-            code_main = len(account_template.code)
-            code_acc = account_template.code
-            if code_main<=dig and account_template.type != 'view':
+            code_main = account_template.code and len(account_template.code) or 0
+            code_acc = account_template.code or ''
+            if code_main>0 and code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,

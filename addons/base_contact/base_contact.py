@@ -59,10 +59,10 @@ class res_partner_contact(osv.osv):
         res = []
         for r in self.read(cr, user, ids, ['name','first_name','title']):
             addr = r['title'] and str(r['title'])+" " or ''
-            addr +=str(r['name'] or '')
+            addr += r.get('name', '')
             if r['name'] and r['first_name']:
                 addr += ' '
-            addr += str(r['first_name'] or '')
+            addr += (r.get('first_name', '') or '')
             res.append((r['id'], addr))
         return res
 res_partner_contact()
@@ -79,7 +79,7 @@ class res_partner_address(osv.osv):
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 addr = str('')
-                addr += str(r['street'] or '') + ' ' + str(r['zip'] or '') + ' ' + str(r['city'] or '')
+                addr += "%s %s %s" % ( r.get('street', ''), r.get('zip', ''), r.get('city', '') )
                 res.append((r['id'], addr.strip() or '/'))
         return res
 

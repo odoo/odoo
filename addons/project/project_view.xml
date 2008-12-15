@@ -249,8 +249,8 @@
                                 on_change="onchange_planned(planned_hours,effective_hours)"/>
                             <field name="delay_hours" widget="float_time"/>
                             <group col="3" colspan="2">
-	                            <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-	                            <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" attrs="{'invisible':[('state','=','draft')]}"/>
+                                <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+                                <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending"/>
                             </group>
                             <field name="effective_hours" widget="float_time"/>
 
