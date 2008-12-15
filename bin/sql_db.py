@@ -117,7 +117,7 @@ class Cursor(object):
 
         if self.sql_log:
             now = mdt.now()
-
+        
         res = self._obj.execute(query, p or None)
 
         if self.sql_log:

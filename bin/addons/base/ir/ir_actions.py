@@ -372,15 +372,6 @@ class actions_server(osv.osv):
                         " or t.act_to = a.wkf_id ")
         return cr.fetchall()
     
-    def on_trigger_obj_id(self, cr, uid, ids, context={}):
-        cr.execute("select distinct t.signal as key, t.signal as val from wkf w, wkf_activity a, wkf_transition t "\
-                        " where w.id = a.wkf_id " \
-                        " and t.act_from = a.wkf_id " \
-                        " or t.act_to = a.wkf_id " \
-                        " and w.osv = %s ", ('account.invoice'))
-        data = cr.fetchall()
-        return {"values":{'trigger_name':data}}
-    
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _sequence = 'ir_actions_id_seq'
@@ -568,7 +559,7 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj})
+                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -592,7 +583,7 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj})
+                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
