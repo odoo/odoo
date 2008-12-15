@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -157,13 +157,12 @@ def init_logger():
 
     if config['logfile']:
         logf = config['logfile']
-        # test if the directories exist, else create them
         try:
             dirname = os.path.dirname(logf)
-            if not os.path.isdir(dirname):
-                res = os.makedirs(dirname)
+            if dirname and not os.path.isdir(dirname):
+                os.makedirs(dirname)
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
-        except:
+        except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
             handler = logging.StreamHandler(sys.stdout)
     else:
@@ -177,7 +176,7 @@ def init_logger():
 
     # add the handler to the root logger
     logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().setLevel(config['log_level'])
 
     if (not isinstance(handler, logging.FileHandler)) and os.name != 'nt':
         # change color of level names
@@ -204,8 +203,16 @@ def init_logger():
 class Logger(object):
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
-        getattr(log, level)(msg)
+        level_method = getattr(log, level)
 
+        result = str(msg).strip().split('\n')
+        if len(result)>1:
+            for idx, s in enumerate(result):
+                level_method('[%02d]: %s' % (idx+1, s,))
+        elif result:
+            level_method(result[0])
+
+init_logger()
 
 class Agent(object):
     _timers = []
@@ -391,12 +398,14 @@ class TinySocketClientThread(threading.Thread):
                 ts.mysend(r)
             except Exception, e:
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                s = str(e)
+                print e
+                print tb_s
                 import tools
                 if tools.config['debug_mode']:
                     import pdb
                     tb = sys.exc_info()[2]
                     pdb.post_mortem(tb)
+                e = Exception(e.message)
                 ts.mysend(e, exception=True, traceback=tb_s)
             except:
                 pass

@@ -29,7 +29,6 @@ import logging
 import threading, thread
 
 import time
-import base64
 import addons
 
 import sql_db
@@ -65,8 +64,8 @@ class db(netsvc.Service):
         self.actions[id] = {'clean': False}
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         time.sleep(0.2)
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
@@ -108,13 +107,12 @@ class db(netsvc.Service):
                     traceback.print_exc(file=e_str)
                     traceback_str = e_str.getvalue()
                     e_str.close()
-                    print traceback_str
+                    netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
                     serv.actions[id]['traceback'] = traceback_str
                     if cr:
                         cr.close()
         logger = netsvc.Logger()
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'CREATE DB: %s' % (db_name.lower()))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
         dbi = DBInitialize()
         create_thread = threading.Thread(target=dbi,
                 args=(self, id, db_name, demo, lang, user_password))
@@ -140,19 +138,19 @@ class db(netsvc.Service):
 
     def drop(self, password, db_name):
         security.check_super(password)
-        pooler.close_db(db_name)
+        sql_db.close_db(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         try:
             try:
                 cr.execute('DROP DATABASE ' + db_name)
-            except:
+            except Exception, e:
                 logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                    'DROP DB: %s failed' % (db_name,))
-                raise
+                        'DROP DB: %s failed:\n%s' % (db_name, e))
+                raise Exception("Couldn't drop database %s: %s" % (db_name, e))
             else:
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'DROP DB: %s' % (db_name))
@@ -195,8 +193,8 @@ class db(netsvc.Service):
             raise Exception, "Database already exists"
 
         db = sql_db.db_connect('template1', serialize=1)
-        db.truedb.autocommit()
         cr = db.cursor()
+        cr.autocommit(True)
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
 
@@ -231,7 +229,6 @@ class db(netsvc.Service):
     def db_exist(self, db_name):
         try:
             db = sql_db.db_connect(db_name)
-            db.truedb.close()
             return True
         except:
             return False
@@ -256,7 +253,6 @@ class db(netsvc.Service):
             cr.close()
         except:
             res = []
-        db.truedb.close()
         res.sort()
         return res
 
@@ -285,6 +281,7 @@ class common(netsvc.Service):
         self.exportMethod(self.ir_del)
         self.exportMethod(self.about)
         self.exportMethod(self.login)
+        self.exportMethod(self.logout)
         self.exportMethod(self.timezone_get)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
@@ -319,8 +316,13 @@ class common(netsvc.Service):
         res = security.login(db, login, password)
         logger = netsvc.Logger()
         msg = res and 'successful login' or 'bad login or password'
-        logger.notifyChannel("web-services", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
+        logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
         return res or False
+
+    def logout(self, db, login, password):
+        logger = netsvc.Logger()
+        logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
+        return True
 
     def about(self, extended=False):
         """Return information about the OpenERP Server.

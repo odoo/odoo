@@ -53,22 +53,23 @@ __version__ = release.version
 # get logger
 #----------------------------------------------------------
 import netsvc
-
-netsvc.init_logger()
-
 logger = netsvc.Logger()
 
 #-----------------------------------------------------------------------
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import tools
+
+logger.notifyChannel("server", netsvc.LOG_INFO, "version - %s" % release.version )
+for name, value in [('addons_path', tools.config['addons_path']),
+                    ('database hostname', tools.config['db_host'] or 'localhost')]:
+    logger.notifyChannel("server", netsvc.LOG_INFO, "%s - %s" % ( name, value ))
+
 import time
 
 if sys.platform == 'win32':
     import mx.DateTime
     mx.DateTime.strptime = lambda x, y: mx.DateTime.mktime(time.strptime(x, y))
-
-#os.chdir(tools.file_path_root)
 
 #----------------------------------------------------------
 # init net service
@@ -81,35 +82,13 @@ dispatcher.monitor(signal.SIGINT)
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
-import psycopg
 import pooler
-
-db_name = tools.config["db_name"]
-
-# test whether it is needed to initialize the db (the db is empty)
-#try:
-#    cr = pooler.get_db_only(db_name).cursor()
-#except psycopg.OperationalError:
-#    logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
-#    cr = None
-#if cr:
-#    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
-#    if len(cr.fetchall())==0:
-##if False:
-#        logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-#        tools.init_db(cr)
-#        # in that case, force --init=all
-#        tools.config["init"]["all"] = 1
-#        tools.config['update']['all'] = 1
-#        if not tools.config['without_demo']:
-#            tools.config["demo"]['all'] = 1
-#    cr.close()
 
 #----------------------------------------------------------
 # launch modules install/upgrade/removes if needed
 #----------------------------------------------------------
 if tools.config['upgrade']:
-    print 'Upgrading new modules...'
+    logger.notifyChannel('init', netsvc.LOG_INFO, 'Upgrading new modules...')
     import tools.upgrade
     (toinit, toupdate) = tools.upgrade.upgrade()
     for m in toinit:
@@ -120,15 +99,24 @@ if tools.config['upgrade']:
 #----------------------------------------------------------
 # import basic modules
 #----------------------------------------------------------
-import osv, workflow, report, service
+import osv
+import workflow
+import report
+import service
 
 #----------------------------------------------------------
 # import addons
 #----------------------------------------------------------
+
 import addons
 
-if tools.config['init'] or tools.config['update']:
-    pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
+#----------------------------------------------------------
+# Load and update databases if requested
+#----------------------------------------------------------
+
+if tools.config['db_name']:
+    for db in tools.config['db_name'].split(','):
+        pooler.get_db_and_pool(db, update_module=tools.config['init'] or tools.config['update'])
 
 #----------------------------------------------------------
 # translation stuff
@@ -179,17 +167,14 @@ if tools.config['xmlrpc']:
     if tools.config["xmlrpc"]:
         xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
         httpd.attach("/xmlrpc", xml_gw)
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                "starting XML-RPC" + \
-                        (tools.config['secure'] and ' Secure' or '') + \
-                        " services, port " + str(port))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC%s services, port %s" % ((tools.config['secure'] and ' Secure' or ''), port))
 
-    #
-    #if tools.config["soap"]:
-    #   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-    #   httpd.attach("/soap", soap_gw )
-    #   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-    #
+#
+#if tools.config["soap"]:
+#   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
+#   httpd.attach("/soap", soap_gw )
+#   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
+#
 
 if tools.config['netrpc']:
     try:

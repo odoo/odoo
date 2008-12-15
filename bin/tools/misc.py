@@ -27,10 +27,7 @@ Miscelleanous tools used by OpenERP.
 import os, time, sys
 import inspect
 
-import psycopg
-#import netsvc
 from config import config
-#import tools
 
 import zipfile
 import release
@@ -71,7 +68,7 @@ def init_db(cr):
                 if p_id is not None:
                     cr.execute('select id \
                             from ir_module_category \
-                            where name=%s and parent_id=%d', (categs[0], p_id))
+                            where name=%s and parent_id=%s', (categs[0], p_id))
                 else:
                     cr.execute('select id \
                             from ir_module_category \
@@ -82,7 +79,7 @@ def init_db(cr):
                     c_id = cr.fetchone()[0]
                     cr.execute('insert into ir_module_category \
                             (id, name, parent_id) \
-                            values (%d, %s, %d)', (c_id, categs[0], p_id))
+                            values (%s, %s, %s)', (c_id, categs[0], p_id))
                 else:
                     c_id = c_id[0]
                 p_id = c_id
@@ -100,11 +97,10 @@ def init_db(cr):
             cr.execute('select nextval(\'ir_module_module_id_seq\')')
             id = cr.fetchone()[0]
             cr.execute('insert into ir_module_module \
-                    (id, author, latest_version, website, name, shortdesc, description, \
+                    (id, author, website, name, shortdesc, description, \
                         category_id, state) \
-                    values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
+                    values (%s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
-                release.major_version + '.' + info.get('version', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
             dependencies = info.get('depends', [])
@@ -388,7 +384,7 @@ def sms_send(user, password, api_id, text, to):
     params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
     #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
     f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
-    print f.read()
+    # FIXME: Use the logger if there is an error
     return True
 
 #---------------------------------------------------------
@@ -540,29 +536,36 @@ def is_hashable(h):
 # Timeout: 0 = no timeout, otherwise in seconds
 #
 class cache(object):
-    def __init__(self, timeout=10000, skiparg=2):
+    def __init__(self, timeout=10000, skiparg=2, multi=None):
         self.timeout = timeout
+        self.skiparg = skiparg
+        self.multi = multi
         self.cache = {}
 
     def __call__(self, fn):
-        arg_names = inspect.getargspec(fn)[0][2:]
+        arg_names = inspect.getargspec(fn)[0][self.skiparg:]
         def cached_result(self2, cr=None, *args, **kwargs):
             if cr is None:
                 self.cache = {}
                 return True
+            if ('clear_keys' in kwargs):
+                if (kwargs['clear_keys'] in self.cache):
+                    del self.cache[kwargs['clear_keys']]
+                return True
 
             # Update named arguments with positional argument values
-            kwargs.update(dict(zip(arg_names, args)))
-            for k in kwargs:
-                if isinstance(kwargs[k], (list, dict, set)):
-                    kwargs[k] = tuple(kwargs[k])
-                elif not is_hashable(kwargs[k]):
-                    kwargs[k] = repr(kwargs[k])
-            kwargs = kwargs.items()
-            kwargs.sort()
+            kwargs2 = kwargs.copy()
+            kwargs2.update(dict(zip(arg_names, args)))
+            for k in kwargs2:
+                if isinstance(kwargs2[k], (list, dict, set)):
+                    kwargs2[k] = tuple(kwargs2[k])
+                elif not is_hashable(kwargs2[k]):
+                    kwargs2[k] = repr(kwargs2[k])
+            kwargs2 = kwargs2.items()
+            kwargs2.sort()
 
             # Work out key as a tuple of ('argname', value) pairs
-            key = (('dbname', cr.dbname),) + tuple(kwargs)
+            key = (('dbname', cr.dbname),) + tuple(kwargs2)
 
             # Check cache and return cached value if possible
             if key in self.cache:
@@ -574,7 +577,7 @@ class cache(object):
             # Work out new value, cache it and return it
             # FIXME Should copy() this value to avoid futur modifications of the cache ?
             # FIXME What about exceptions ?
-            result = fn(self2,cr,**dict(kwargs))
+            result = fn(self2,cr,*args, **kwargs)
 
             self.cache[key] = (result, time.time())
             return result
@@ -582,6 +585,28 @@ class cache(object):
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+
+def ustr(value):
+    """This method is similar to the builtin `str` method, except
+    it will return Unicode string.
+
+    @param value: the value to convert
+
+    @rtype: unicode
+    @return: unicode string
+    """
+
+    if isinstance(value, unicode):
+        return value
+
+    if hasattr(value, '__unicode__'):
+        return unicode(value)
+
+    if not isinstance(value, str):
+        value = str(value)
+
+    return unicode(value, 'utf-8')
+
 
 def get_languages():
     languages={
@@ -633,7 +658,7 @@ def get_user_companies(cr, user):
         res=[x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %d AND comp.id = u.company_id' % (user,))
+    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id' % (user,))
     compids=[cr.fetchone()[0]]
     compids.extend(_get_company_children(cr, compids))
     return compids
@@ -669,39 +694,30 @@ def human_size(sz):
         i = i + 1
     return "%0.2f %s" % (s, units[i])
 
-def logged(when):
-    def log(f, res, *args, **kwargs):
-        vector = ['Call -> function: %s' % f]
+def logged(f):
+    from tools.func import wraps
+    
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        import netsvc
+        from pprint import pformat
+
+        vector = ['Call -> function: %r' % f]
         for i, arg in enumerate(args):
-            vector.append( '  arg %02d: %r' % ( i, arg ) )
+            vector.append('  arg %02d: %s' % (i, pformat(arg)))
         for key, value in kwargs.items():
-            vector.append( '  kwarg %10s: %r' % ( key, value ) )
-        vector.append( '  result: %r' % res )
-        print "\n".join(vector)
+            vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
-    def pre_logged(f):
-        def wrapper(*args, **kwargs):
-            res = f(*args, **kwargs)
-            log(f, res, *args, **kwargs)
-            return res
-        return wrapper
+        timeb4 = time.time()
+        res = f(*args, **kwargs)
+        
+        vector.append('  result: %s' % pformat(res))
+        vector.append('  time delta: %s' % (time.time() - timeb4))
+        #netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, '\n'.join(vector))
+        return res
 
-    def post_logged(f):
-        def wrapper(*args, **kwargs):
-            now = time.time()
-            res = None
-            try:
-                res = f(*args, **kwargs)
-                return res
-            finally:
-                log(f, res, *args, **kwargs)
-                print "  time delta: %s" % (time.time() - now)
-        return wrapper
+    return wrapper
 
-    try:
-        return { "pre" : pre_logged, "post" : post_logged}[when]
-    except KeyError, e:
-        raise ValueError(e), "must to be 'pre' or 'post'"
 
 icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',

@@ -30,7 +30,7 @@ import pooler
 import copy
 import sys
 
-import psycopg
+from psycopg2 import IntegrityError
 from netsvc import Logger, LOG_ERROR
 from tools.misc import UpdateableDict
 
@@ -87,7 +87,7 @@ class osv_pool(netsvc.Service):
             self.abortResponse(1, inst.name, 'warning', inst.value)
         except except_osv, inst:
             self.abortResponse(1, inst.name, inst.exc_type, inst.value)
-        except psycopg.IntegrityError, inst:
+        except IntegrityError, inst:
             for key in self._sql_error.keys():
                 if key in inst[0]:
                     self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
@@ -96,8 +96,7 @@ class osv_pool(netsvc.Service):
             import traceback
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
             logger = Logger()
-            for idx, s in enumerate(tb_s.split('\n')):
-                logger.notifyChannel("web-services", LOG_ERROR, '[%2d]: %s' % (idx, s,))
+            logger.notifyChannel('web-services', LOG_ERROR, tb_s)
             raise
 
     def execute(self, db, uid, obj, method, *args, **kw):
@@ -185,7 +184,7 @@ class osv_memory(orm.orm_memory):
         name = hasattr(cls, '_name') and cls._name or cls._inherit
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
-            print 'Inherit not supported in osv_memory object !'
+            raise 'Inherit not supported in osv_memory object !'
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
@@ -251,123 +250,4 @@ class osv(orm.orm):
         pool.add(self._name, self)
         self.pool = pool
         orm.orm.__init__(self, cr)
-
-
-class Cacheable(object):
-
-    _cache = UpdateableDict()
-
-    def add(self, key, value):
-        self._cache[key] = value
-
-    def invalidate(self, key):
-        del self._cache[key]
-
-    def get(self, key):
-        try:
-            w = self._cache[key]
-            return w
-        except KeyError:
-            return None
-
-    def clear(self):
-        self._cache.clear()
-        self._items = []
-
-
-def filter_dict(d, fields):
-    res = {}
-    for f in fields + ['id']:
-        if f in d:
-            res[f] = d[f]
-    return res
-
-
-class cacheable_osv(osv, Cacheable):
-
-    _relevant = ['lang']
-
-    def __init__(self):
-        super(cacheable_osv, self).__init__()
-
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        if not fields:
-            fields = []
-        if not context:
-            context = {}
-        fields = fields or self._columns.keys()
-        ctx = [context.get(x, False) for x in self._relevant]
-        result, tofetch = [], []
-        for id in ids:
-            res = self.get(self._name, id, ctx)
-            if not res:
-                tofetch.append(id)
-            else:
-                result.append(filter_dict(res, fields))
-
-        # gen the list of "local" (ie not inherited) fields which are classic or many2one
-        nfields = filter(lambda x: x[1]._classic_write, self._columns.items())
-        # gen the list of inherited fields
-        inherits = map(lambda x: (x[0], x[1][2]), self._inherit_fields.items())
-        # complete the field list with the inherited fields which are classic or many2one
-        nfields += filter(lambda x: x[1]._classic_write, inherits)
-        nfields = [x[0] for x in nfields]
-
-        res = super(cacheable_osv, self).read(cr, user, tofetch, nfields, context, load)
-        for r in res:
-            self.add((self._name, r['id'], ctx), r)
-            result.append(filter_dict(r, fields))
-
-        # Appel de fonction si necessaire
-        tofetch = []
-        for f in fields:
-            if f not in nfields:
-                tofetch.append(f)
-        for f in tofetch:
-            fvals = self._columns[f].get(cr, self, ids, f, user, context=context)
-            for r in result:
-                r[f] = fvals[r['id']]
-
-        # TODO: tri par self._order !!
-        return result
-
-    def invalidate(self, key):
-        del self._cache[key[0]][key[1]]
-
-    def write(self, cr, user, ids, values, context=None):
-        if not context:
-            context = {}
-        for id in ids:
-            self.invalidate((self._name, id))
-        return super(cacheable_osv, self).write(cr, user, ids, values, context)
-
-    def unlink(self, cr, user, ids):
-        self.clear()
-        return super(cacheable_osv, self).unlink(cr, user, ids)
-
-#cacheable_osv = osv
-
-
-#class FakePool(object):
-#   def __init__(self, module):
-#       self.preferred_module = module
-
-#   def get(self, name):
-#       localpool = module_objects_dict.get(self.preferred_module, {'dict': {}})['dict']
-#       if name in localpool:
-#           obj = localpool[name]
-#       else:
-#           obj = pooler.get_pool(cr.dbname).get(name)
-#       return obj
-
-#       fake_pool = self
-#       class fake_class(obj.__class__):
-#           def __init__(self):
-#               super(fake_class, self).__init__()
-#               self.pool = fake_pool
-
-#       return fake_class()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

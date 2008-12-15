@@ -34,8 +34,8 @@ class res_request(osv.osv):
 
     def request_send(self, cr, uid, ids, *args):
         for id in ids:
-            cr.execute('update res_request set state=%s,date_sent=%s where id=%d', ('waiting', time.strftime('%Y-%m-%d %H:%M:%S'), id))
-            cr.execute('select act_from,act_to,body,date_sent from res_request where id=%d', (id,))
+            cr.execute('update res_request set state=%s,date_sent=%s where id=%s', ('waiting', time.strftime('%Y-%m-%d %H:%M:%S'), id))
+            cr.execute('select act_from,act_to,body,date_sent from res_request where id=%s', (id,))
             values = cr.dictfetchone()
             if values['body'] and (len(values['body']) > 128):
                 values['name'] = values['body'][:125] + '...'
@@ -47,7 +47,7 @@ class res_request(osv.osv):
 
     def request_reply(self, cr, uid, ids, *args):
         for id in ids:
-            cr.execute("update res_request set state='active', act_from=%d, act_to=act_from, trigger_date=NULL, body='' where id=%d", (uid,id))
+            cr.execute("update res_request set state='active', act_from=%s, act_to=act_from, trigger_date=NULL, body='' where id=%s", (uid,id))
         return True
 
     def request_close(self, cr, uid, ids, *args):
@@ -55,9 +55,9 @@ class res_request(osv.osv):
         return True
 
     def request_get(self, cr, uid):
-        cr.execute('select id from res_request where act_to=%d and (trigger_date<=%s or trigger_date is null) and active=True', (uid,time.strftime('%Y-%m-%d')))
+        cr.execute('select id from res_request where act_to=%s and (trigger_date<=%s or trigger_date is null) and active=True', (uid,time.strftime('%Y-%m-%d')))
         ids = map(lambda x:x[0], cr.fetchall())
-        cr.execute('select id from res_request where act_from=%d and (act_to<>%d) and (trigger_date<=%s or trigger_date is null) and active=True', (uid,uid,time.strftime('%Y-%m-%d')))
+        cr.execute('select id from res_request where act_from=%s and (act_to<>%s) and (trigger_date<=%s or trigger_date is null) and active=True', (uid,uid,time.strftime('%Y-%m-%d')))
         ids2 = map(lambda x:x[0], cr.fetchall())
         return (ids, ids2)
 

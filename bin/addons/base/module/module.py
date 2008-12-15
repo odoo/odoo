@@ -68,7 +68,7 @@ class module_category(osv.osv):
         cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str,ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str,ids))+')) group by category_id')
         result = dict(cr.fetchall())
         for id in ids:
-            cr.execute('select id from ir_module_category where parent_id=%d', (id,))
+            cr.execute('select id from ir_module_category where parent_id=%s', (id,))
             childs = [c for c, in cr.fetchall()]
             result[id] = reduce(lambda x,y:x+y, [result.get(c, 0) for c in childs], result.get(id, 0))
         return result
@@ -98,58 +98,43 @@ class module(osv.osv):
             return {}
         return info
 
-    def _get_installed_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
+    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
+        res = dict.fromkeys(ids, '')
         for m in self.browse(cr, uid, ids):
-            if m.state in ('installed', 'to upgrade', 'to remove'):
-                res[m.id] = self.get_module_info(m.name).get('version', '')
-            else:
-                res[m.id] = ''
-        return res
-
-    def _get_menus(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                menu_txt = ''
-                menus_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.menu')])
-                for data_id in model_data_obj.browse(cr,uid,menus_id):
-                    menu_txt += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
-                res[m.id] = menu_txt
-            else:
-                res[m.id] = ''
-        return res
-
-    def _get_reports(self, cr, uid, ids, field_name=None, arg=None, context={}):
-        res = {}
-        model_data_obj = self.pool.get('ir.model.data')
-        report_obj = self.pool.get('ir.actions.report.xml')
-        for m in self.browse(cr, uid, ids):
-            if m.state == 'installed':
-                report_txt = ''
-                report_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.actions.report.xml')])
-                for data_id in model_data_obj.browse(cr,uid,report_id):
-                    report_txt += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = report_txt
-            else:
-                res[m.id] = ''
+            res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
 
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
-        for m in self.browse(cr, uid, ids, context=context):
-            if m.state == 'installed':
-                view_txt = ''
-                view_id = model_data_obj.search(cr,uid,[('module','=',m.name),('model','=','ir.ui.view')])
-                for data_id in model_data_obj.browse(cr,uid,view_id):
-                    view_txt += view_obj.browse(cr,uid,data_id.res_id).name + '\n'
-                res[m.id] = view_txt
-            else:
-                res[m.id] = ''
+        report_obj = self.pool.get('ir.actions.report.xml')
+        menu_obj = self.pool.get('ir.ui.menu')
+        mlist = self.browse(cr, uid, ids, context=context)
+        mnames = {}
+        for m in mlist:
+            mnames[m.name] = m.id
+            res[m.id] = {
+                'menus_by_module':'',
+                'reports_by_module':'',
+                'views_by_module': ''
+            }
+        view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
+            ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
+        for data_id in model_data_obj.browse(cr,uid,view_id,context):
+            # We use try except, because views or menus may not exist
+            try:
+                key = data_id['model']
+                if key=='ir.ui.view':
+                    v = view_obj.browse(cr,uid,data_id.res_id)
+                    aa = v.inherit_id and '* INHERIT ' or ''
+                    res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                elif key=='ir.actions.report.xml':
+                    res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                elif key=='ir.ui.menu':
+                    res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+            except KeyError, e:
+                pass
         return res
 
     _columns = {
@@ -159,10 +144,16 @@ class module(osv.osv):
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
-        'installed_version': fields.function(_get_installed_version, method=True,
-            string='Installed version', type='char'),
-        'latest_version': fields.char('Latest version', size=64, readonly=True),
+
+        # attention: Incorrect field names !! 
+        #   installed_version refer the latest version (the one on disk)
+        #   latest_version refer the installed version (the one in database)
+        #   published_version refer the version available on the repository
+        'installed_version': fields.function(_get_latest_version, method=True,
+            string='Latest version', type='char'),  
+        'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
+        
         'url': fields.char('URL', size=128),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
@@ -182,9 +173,9 @@ class module(osv.osv):
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
                 ('Other proprietary', 'Other proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_menus, method=True, string='Menus', type='text'),
-        'reports_by_module': fields.function(_get_reports, method=True, string='Reports', type='text'),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text'),
+        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
+        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
     }
 
     _defaults = {
@@ -270,9 +261,22 @@ class module(osv.osv):
                         _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
             iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
             for dep in depobj.browse(cr, uid, iids, context=context):
-                if dep.module_id.state=='installed':
+                if dep.module_id.state=='installed' and dep.module_id not in todo:
                     todo.append(dep.module_id)
-        self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+        
+        ids = map(lambda x: x.id, todo)
+        self.write(cr, uid, ids, {'state':'to upgrade'}, context=context)
+        
+        to_install = []
+        for mod in todo:
+            for dep in mod.dependencies_id:
+                if dep.state == 'unknown':
+                    raise orm.except_orm(_('Error'), _('You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                if dep.state == 'uninstalled':
+                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
+                    to_install.extend(ids2)
+        
+        self.button_install(cr, uid, to_install, context=context)
         return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
@@ -301,7 +305,6 @@ class module(osv.osv):
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
                     self.write(cr, uid, id, {
-                        'latest_version': terp.get('version'),
                         'url': ''})
                     res[0] += 1
                 self.write(cr, uid, id, {
@@ -312,7 +315,7 @@ class module(osv.osv):
                     'license': terp.get('license', 'GPL-2'),
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency\
-                        WHERE module_id = %d', (id,))
+                        WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends',
                     []))
                 self._update_category(cr, uid, ids[0], terp.get('category',
@@ -340,7 +343,6 @@ class module(osv.osv):
                     'shortdesc': terp.get('name', ''),
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
-                    'latest_version': terp.get('version', ''),
                     'license': terp.get('license', 'GPL-2'),
                 })
                 res[1] += 1
@@ -377,7 +379,6 @@ class module(osv.osv):
                 if not ids:
                     self.create(cr, uid, {
                         'name': name,
-                        'latest_version': version,
                         'published_version': version,
                         'url': url,
                         'state': 'uninstalled',
@@ -385,16 +386,15 @@ class module(osv.osv):
                     res[1] += 1
                 else:
                     id = ids[0]
-                    latest_version = self.read(cr, uid, id, ['latest_version'])\
-                            ['latest_version']
-                    if latest_version == 'x': # 'x' version was a mistake
-                        latest_version = '0'
-                    if parse_version(version) > parse_version(latest_version):
-                        self.write(cr, uid, id,
-                                {'latest_version': version, 'url': url})
+                    installed_version = self.read(cr, uid, id, ['latest_version'])['latest_version']
+                    if installed_version == 'x': # 'x' version was a mistake
+                        installed_version = '0'
+                    if parse_version(version) > parse_version(installed_version):
+                        self.write(cr, uid, id, {
+                            'url': url
+                        })
                         res[0] += 1
-                    published_version = self.read(cr, uid, id, ['published_version'])\
-                            ['published_version']
+                    published_version = self.read(cr, uid, id, ['published_version'])['published_version']
                     if published_version == 'x' or not published_version:
                         published_version = '0'
                     if parse_version(version) > parse_version(published_version):
@@ -433,7 +433,7 @@ class module(osv.osv):
                 'license': terp.get('license', 'GPL-2'),
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
-                    'WHERE module_id = %d', (mod.id,))
+                    'WHERE module_id = %s', (mod.id,))
             self._update_dependencies(cr, uid, mod.id, terp.get('depends',
                 []))
             self._update_category(cr, uid, mod.id, terp.get('category',
@@ -445,21 +445,21 @@ class module(osv.osv):
 
     def _update_dependencies(self, cr, uid, id, depends=[]):
         for d in depends:
-            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%d, %s)', (id, d))
+            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 
     def _update_category(self, cr, uid, id, category='Uncategorized'):
         categs = category.split('/')
         p_id = None
         while categs:
             if p_id is not None:
-                cr.execute('select id from ir_module_category where name=%s and parent_id=%d', (categs[0], p_id))
+                cr.execute('select id from ir_module_category where name=%s and parent_id=%s', (categs[0], p_id))
             else:
                 cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
             c_id = cr.fetchone()
             if not c_id:
                 cr.execute('select nextval(\'ir_module_category_id_seq\')')
                 c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category (id, name, parent_id) values (%d, %s, %d)', (c_id, categs[0], p_id))
+                cr.execute('insert into ir_module_category (id, name, parent_id) values (%s, %s, %s)', (c_id, categs[0], p_id))
             else:
                 c_id = c_id[0]
             p_id = c_id

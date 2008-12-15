@@ -41,7 +41,7 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 #
-# TODO: a caching method
+# Warning: better use self.pool.get('ir.translation')._get_source if you can
 #
 def translate(cr, name, source_type, lang, source=None):
     if source and name:
@@ -64,8 +64,10 @@ class GettextAlias(object):
 			return source
 	except:
 		return source
-        return translate(cr, None, 'code', lang, source) or source
 
+        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
+        res_trans = cr.fetchone()
+        return res_trans and res_trans[0] or source
 _ = GettextAlias()
 
 
@@ -570,7 +572,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             line += 1
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             if (not row) or (not row[-1]):
-                #print "translate: skip %s" % repr(row)
                 continue
 
             # dictionary which holds values for this line of the csv file

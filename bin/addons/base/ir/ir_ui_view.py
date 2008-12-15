@@ -27,14 +27,13 @@ import netsvc
 import os
 
 def _check_xml(self, cr, uid, ids, context={}):
-    return True
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch)
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng = etree.RelaxNG(file=frng)
         if not relaxng.validate(eview):
             logger = netsvc.Logger()
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
+            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
             logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
             return False
     return True
@@ -99,7 +98,7 @@ class view(osv.osv):
 
         for rs in result:
             if rs.get('model') == 'board.board':
-                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%d and ref_id=%d", (uid, rs['id']))
+                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%s and ref_id=%s", (uid, rs['id']))
                 oview = cr.dictfetchall()
                 if oview:
                     rs['arch'] = oview[0]['arch']

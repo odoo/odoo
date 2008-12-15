@@ -94,7 +94,7 @@
                     <field name="fax"/>
                     <newline/>
                     <field name="mobile" select="2"/>
-                    <field name="email" select="2"/>
+                    <field name="email" select="2" widget="email"/>
                 </form>
             </field>
         </record>
@@ -146,7 +146,7 @@
                     <field name="fax"/>
                     <newline/>
                     <field name="mobile"/>
-                    <field name="email"/>
+                    <field name="email" widget="email"/>
                 </form>
             </field>
         </record>
@@ -183,7 +183,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
         </record>
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="action_partner_title"/>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_partner_title"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contacts Titles</field>
@@ -192,7 +192,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
         </record>
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="action_partner_title"/>
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="menu_partner_title"/>
 
         <!--
     =======================

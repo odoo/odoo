@@ -7,6 +7,7 @@
             <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
@@ -33,12 +34,15 @@
             <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="toolbar"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:optional><rng:attribute name="link"/></rng:optional>
+            <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="group"/>
+                    <rng:ref name="button"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -57,6 +61,35 @@
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="angle"/></rng:optional>
+            <rng:zeroOrMore>
+               <rng:text/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="level">
+        <rng:element name="level">
+            <rng:optional><rng:attribute name="object"/></rng:optional>
+            <rng:optional><rng:attribute name="link"/></rng:optional>
+            <rng:optional><rng:attribute name="domain"/></rng:optional>
+            <rng:oneOrMore>
+                <rng:optional><rng:ref name="field"/></rng:optional>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="gantt">
+        <rng:element name="gantt">
+            <rng:optional><rng:attribute name="color"/></rng:optional>
+            <rng:optional><rng:attribute name="date_delay"/></rng:optional>
+            <rng:optional><rng:attribute name="date_start"/></rng:optional>
+            <rng:optional><rng:attribute name="date_string"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:optional><rng:ref name="level"/></rng:optional>
+                <rng:optional><rng:ref name="field"/></rng:optional>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -123,6 +156,17 @@
             <rng:optional><rng:attribute name="col"/></rng:optional>
             <rng:optional><rng:attribute name="select"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="label" />
+                    <rng:ref name="group" />
+                    <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -132,9 +176,10 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-		            <rng:ref name="notebook" />
-		            <rng:ref name="graph" />
-		            <rng:ref name="calendar" />
+                    <rng:ref name="notebook" />
+                    <rng:ref name="graph" />
+                    <rng:ref name="calendar" />
+                    <rng:ref name="gantt" />
                     <rng:ref name="form"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="field"/>
@@ -181,17 +226,25 @@
             <rng:optional><rng:attribute name="digits"/></rng:optional>
             <rng:optional><rng:attribute name="icon"/></rng:optional>
             <rng:optional><rng:attribute name="mode"/></rng:optional>
+            <rng:optional><rng:attribute name="img_width"/></rng:optional>
+            <rng:optional><rng:attribute name="img_height"/></rng:optional>
             <rng:optional><rng:attribute name="size"/></rng:optional>
+            <rng:optional><rng:attribute name="filename"/></rng:optional>
+            <rng:optional><rng:attribute name="fieldname"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="rowspan"/></rng:optional>
+            <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="field"/>
+                    <rng:ref name="label"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="xpath"/>
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
+                    <rng:ref name="graph"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -203,12 +256,15 @@
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="col"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
+            <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="expand"/></rng:optional>
             <rng:optional><rng:attribute name="states"/></rng:optional>
             <rng:optional><rng:attribute name="groups"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="separator"/>
@@ -231,6 +287,7 @@
             <rng:optional><rng:attribute name="date_stop" /></rng:optional>
             <rng:optional><rng:attribute name="day_length" /></rng:optional>
             <rng:optional><rng:attribute name="date_delay" /></rng:optional>
+            <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
@@ -242,6 +299,7 @@
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="orientation" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
@@ -263,18 +321,20 @@
             <rng:optional><rng:attribute name="target"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-		            <rng:ref name="form" />
-		            <rng:ref name="field" />
-		            <rng:ref name="tree" />
-		            <rng:ref name="notebook" />
-		            <rng:ref name="graph" />
-		            <rng:ref name="calendar" />
-		            <rng:ref name="xpath" />
-		            <rng:ref name="page" />
-		            <rng:ref name="separator"/>
-		            <rng:ref name="button"/>
+                    <rng:ref name="form" />
+                    <rng:ref name="field" />
+                    <rng:ref name="tree" />
+                    <rng:ref name="notebook" />
+                    <rng:ref name="graph" />
+                    <rng:ref name="calendar" />
+                    <rng:ref name="gantt" />
+                    <rng:ref name="xpath" />
+                    <rng:ref name="page" />
+                    <rng:ref name="separator"/>
+                    <rng:ref name="button"/>
                     <rng:element name="properties"><rng:empty/></rng:element>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -286,11 +346,13 @@
     <rng:start>
         <rng:choice>
             <rng:ref name="form" />
+            <rng:ref name="group" />
             <rng:ref name="field" />
             <rng:ref name="tree" />
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
             <rng:ref name="calendar" />
+            <rng:ref name="gantt" />
             <rng:ref name="xpath" />
             <rng:ref name="page" />
             <rng:ref name="separator"/>

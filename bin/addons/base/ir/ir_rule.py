@@ -148,7 +148,7 @@ class ir_rule(osv.osv):
                 WHERE m.model = %s
                 AND (g.id IN (SELECT rule_group_id FROM group_rule_group_rel g_rel
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
-                            WHERE u_rel.uid = %d) OR g.global)""", (model_name, uid))
+                            WHERE u_rel.uid = %s) OR g.global)""", (model_name, uid))
         ids = map(lambda x:x[0], cr.fetchall())
         if not ids:
             return '', []

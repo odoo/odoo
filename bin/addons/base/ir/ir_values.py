@@ -211,7 +211,7 @@ class ir_values(osv.osv):
                     #ir_del(cr, uid, x[0])
                     return False
             else:
-                datas = pickle.loads(x[2])
+                datas = pickle.loads(str(x[2]))
             if meta:
                 meta2 = pickle.loads(x[4])
                 return (x[0],x[1],datas,meta2)
