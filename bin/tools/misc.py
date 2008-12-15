@@ -531,12 +531,14 @@ def is_hashable(h):
     except TypeError:
         return False
 
-#
-# Use it as a decorator of the function you plan to cache
-# Timeout: 0 = no timeout, otherwise in seconds
-#
 class cache(object):
+    """
+    Use it as a decorator of the function you plan to cache
+    Timeout: 0 = no timeout, otherwise in seconds
+    """
+
     def __init__(self, timeout=10000, skiparg=2, multi=None):
+        assert skiparg >= 2 # at least self and cr
         self.timeout = timeout
         self.skiparg = skiparg
         self.multi = multi
@@ -553,9 +555,9 @@ class cache(object):
                     del self.cache[kwargs['clear_keys']]
                 return True
 
-            # Update named arguments with positional argument values
+            # Update named arguments with positional argument values (without self and cr)
             kwargs2 = kwargs.copy()
-            kwargs2.update(dict(zip(arg_names, args)))
+            kwargs2.update(dict(zip(arg_names, args[self.skiparg-2:])))
             for k in kwargs2:
                 if isinstance(kwargs2[k], (list, dict, set)):
                     kwargs2[k] = tuple(kwargs2[k])
@@ -577,7 +579,7 @@ class cache(object):
             # Work out new value, cache it and return it
             # FIXME Should copy() this value to avoid futur modifications of the cache ?
             # FIXME What about exceptions ?
-            result = fn(self2,cr,*args, **kwargs)
+            result = fn(self2, cr, *args, **kwargs)
 
             self.cache[key] = (result, time.time())
             return result
