@@ -60,7 +60,6 @@ def _pay_and_reconcile(self, cr, uid, data, context):
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
 
-    
     # Take the choosen date
     if form.has_key('comment'):
         context={'date_p':form['date'],'comment':form['comment']}
