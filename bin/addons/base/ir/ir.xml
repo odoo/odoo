@@ -324,12 +324,25 @@
         </record>
         <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
         
-        <record id="act_wizard_view" model="ir.ui.view">
+        <record id="act_wizard_view_tree" model="ir.ui.view">
+            <field name="name">ir.actions.wizard.tree</field>
+            <field name="model">ir.actions.wizard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Wizard">
+                    <field name="name" select="1"/>
+                    <field name="wiz_name" select="1"/>
+                    <field name="multi"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="act_wizard_view" model="ir.ui.view">
             <field name="name">ir.actions.wizard</field>
             <field name="model">ir.actions.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wizard">
+                <form string="Wizards">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                     <field name="wiz_name" select="1"/>
@@ -340,7 +353,7 @@
         </record>
         
         <record id="ir_action_wizard" model="ir.actions.act_window">
-            <field name="name">Wizard</field>
+            <field name="name">Wizards</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.wizard</field>
             <field name="view_type">form</field>
