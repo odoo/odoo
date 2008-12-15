@@ -273,7 +273,7 @@ class account_move_line(osv.osv):
         while i < len(args):
             fargs = args[i][0].split('.', 1)
             if len(fargs) > 1:
-                args[i] = (frags[0], 'in', invoice_obj.search(cursor, user,
+                args[i] = (fargs[0], 'in', invoice_obj.search(cursor, user,
                     [(fargs[1], args[i][1], args[i][2])]))
                 i += 1
                 continue
@@ -728,7 +728,6 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
-        print 'Writing', vals, 'to move_line', ids
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
@@ -850,6 +849,7 @@ class account_move_line(osv.osv):
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
                         'name': vals['name'],
+                        'currency_id': account.company_id.currency_id.id,
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'account_id': vals['analytic_account_id'],
                         'unit_amount':'quantity' in vals and vals['quantity'] or 1.0,
@@ -860,6 +860,10 @@ class account_move_line(osv.osv):
                     })]
             else:
                 raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
+
+        #if not 'currency_id' in vals:
+        #    vals['currency_id'] = account.company_id.currency_id.id
+
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
         if 'account_tax_id' in vals and vals['account_tax_id']:

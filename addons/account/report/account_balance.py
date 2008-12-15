@@ -28,7 +28,6 @@ import datetime
 from report import report_sxw
 
 class account_balance(report_sxw.rml_parse):
-
         _name = 'report.account.account.balance'
         def __init__(self, cr, uid, name, context):
             super(account_balance, self).__init__(cr, uid, name, context)
@@ -181,11 +180,12 @@ class account_balance(report_sxw.rml_parse):
                     lst_string = ''
                     lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
                     self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
-                    a_id = self.cr.fetchall()                   
+                    a_id = self.cr.fetchall()
                     a_id.sort()
                     ids2 = [x[1] for x in a_id]
-                    
+
                     result_acc += self.lines(form, ids2, done, level+1)
+
             return result_acc
 
         def date_range(self,start,end):

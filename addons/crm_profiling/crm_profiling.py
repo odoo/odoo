@@ -137,11 +137,11 @@ class questionnaire(osv.osv):
         quest_fields={}
         quest_form='''<?xml version="1.0"?>
             <form string="%s">''' % _('Questionnaire')
-        for x in result:
-            quest_form = quest_form + '''<field name="quest_form'''+str(x[1])+'''"/><newline/>'''
-            quest_fields['quest_form'+str(x[1])] = {'string': str(x[0]), 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',x[1])] }
+        for name, oid in result:
+            quest_form = quest_form + '<field name="quest_form%d"/><newline/>' % (oid,)
+            quest_fields['quest_form%d' % (oid,)] = {'string': name, 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',oid)] }
         quest_form = quest_form + '''</form>'''      
-        return quest_form,quest_fields
+        return quest_form, quest_fields
 
     _columns = {
         'name': fields.char("Questionnaire",size=128, required=True),

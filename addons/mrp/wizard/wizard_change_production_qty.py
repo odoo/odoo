@@ -67,7 +67,7 @@ def _change_prod_qty(self, cr, uid, data, context):
         bom_point = prod.bom_id
         bom_id = prod.bom_id.id
         if not bom_point:
-            bom_id = pool.get('mrp.bom')._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id, properties)
+            bom_id = pool.get('mrp.bom')._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id)
             if not bom_id:
                 raise osv.except_osv('Error', "Couldn't find bill of material for product")
             self.write(cr, uid, [prod.id], {'bom_id': bom_id})

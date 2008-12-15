@@ -286,7 +286,7 @@ class account_move_line(osv.osv):
            if line.analytics_id:
                toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
-                    obj_line.unlink(cr, uid, toremove, context=context)
+                    line.unlink(cr, uid, toremove, context=context)
                for line2 in line.analytics_id.account_ids:
                    val = (line.credit or  0.0) - (line.debit or 0.0)
                    amt=val * (line2.rate/100)

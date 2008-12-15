@@ -26,14 +26,16 @@ class file_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
-        uid =self.uid
-        val = self.getvalue()
-        val2 = {
-            'datas': base64.encodestring(val),
-            'file_size': len(val),
-        }
-        pool.get('ir.attachment').write(cr, uid, [self.ressource_id], val2)
-        cr.commit()
+        try:
+            val = self.getvalue()
+            val2 = {
+                'datas': base64.encodestring(val),
+                'file_size': len(val),
+            }
+            pool.get('ir.attachment').write(cr, self.uid, [self.ressource_id], val2)
+        finally:
+            cr.commit()
+            cr.close()
         StringIO.StringIO.close(self, *args, **kwargs)
 
 class content_wrapper(StringIO.StringIO):
@@ -47,10 +49,12 @@ class content_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
-        getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+        try:
+            getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+        finally:
+            cr.commit()
+            cr.close()
         StringIO.StringIO.close(self, *args, **kwargs)
-        cr.commit()
-        cr.close()
 
 
 class abstracted_fs:
