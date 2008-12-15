@@ -179,6 +179,9 @@ class browse_record(object):
                             d[n].set_value(d[n], self, f)
 
 
+	    if not datas:
+		    # Where did those ids come from? Perhaps old entries in ir_model_data?
+		    raise except_orm('NoDataError', 'Field %s in %s%s'%(name,self._table_name,str(ids)))
             # create browse records for 'remote' objects
             for data in datas:
                 for n, f in ffields:
@@ -201,7 +204,10 @@ class browse_record(object):
                 self._data[data['id']].update(data)
 	if not name in self._data[self._id]:
 		#how did this happen?
-		raise AttributeError(_('Unknown attribute % in % ') % (name,self._id))
+		logger = netsvc.Logger()
+		logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Ffields: %s, datas: %s"%(str(fffields),str(datas)))
+		logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Data: %s, Table: %s"%(str(self._data[self._id]),str(self._table)))
+		raise AttributeError(_('Unknown attribute %s in %s ') % (str(name),self._table_name))
         return self._data[self._id][name]
 
     def __getattr__(self, name):
@@ -716,8 +722,8 @@ class orm_template(object):
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
         for f in self._columns.keys():
-	    if fields and f not in fields:
-		    continue
+            if fields and f not in fields:
+                continue
             res[f] = {'type': self._columns[f]._type}
             for arg in ('string', 'readonly', 'states', 'size', 'required',
                     'change_default', 'translate', 'help', 'select'):
