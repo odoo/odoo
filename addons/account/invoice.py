@@ -618,7 +618,7 @@ class account_invoice(osv.osv):
                     i[2]['period_id'] = period_id
 
             if not 'name' in move:
-                move['name'] = inv.name
+                move['name'] = inv.name or '/'
 
             move_id = self.pool.get('account.move').create(cr, uid, move)
             new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
