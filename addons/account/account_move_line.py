@@ -728,7 +728,6 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
-        print 'Writing', vals, 'to move_line', ids
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
