@@ -140,8 +140,6 @@ def get_module_path(module):
 
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
-    raise IOError, 'Module not found : %s' % module
-
 
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
