@@ -437,7 +437,7 @@ class Partner(osv.osv):
 #       'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
 #           type='selection', selection=STATE, fnct_search=_membership_state_search),
         'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
-            type='selection',selection=STATE,store={'account.invoice':(_membership_state_search_inv,['state'])}),
+            type='selection',selection=STATE,store={'account.invoice':(_membership_state_search_inv,['state'], 10)}),
 #       'associate_member': fields.many2one('res.partner', 'Associate member'),
         'free_member': fields.boolean('Free member'),
         'membership_start': fields.function(_membership_start, method=True,
