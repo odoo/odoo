@@ -263,6 +263,7 @@ class xmlrpc(object):
 
 class GenericXMLRPCRequestHandler:
     def _dispatch(self, method, params):
+#        print 'TERP-CALL : ',method, params
         import traceback
         try:
             n = self.path.split("/")[-1]

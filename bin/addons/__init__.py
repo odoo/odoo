@@ -140,8 +140,6 @@ def get_module_path(module):
 
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
-    raise IOError, 'Module not found : %s' % module
-
 
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
@@ -193,7 +191,11 @@ def get_modules():
             if name[-4:] == '.zip':
                 name = name[:-4]
             return name
-        return map(clean, os.listdir(dir))
+
+        def is_really_module(name):
+            name = opj(dir, name)
+            return os.path.isdir(name) or zipfile.is_zipfile(name)
+        return map(clean, filter(is_really_module, os.listdir(dir)))
 
     return list(set(listdir(ad) + listdir(_ad)))
 
@@ -545,9 +547,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         modobj = pool.get('ir.module.module')
         logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
-        cr.execute("select id from ir_module_module where state in ('to install','to upgrade') and name=%s", ('base',))
-        if cr.rowcount:
-            modobj.update_list(cr, 1)
+        modobj.update_list(cr, 1)
 
         mods = [k for k in tools.config['init'] if tools.config['init'][k]]
         if mods:

@@ -709,8 +709,7 @@ class orm_template(object):
         translation_obj = self.pool.get('ir.translation')
         model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
-            res.update(self.pool.get(parent).fields_get(cr, user, fields,
-                context))
+            res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
         for f in self._columns.keys():
             if fields and f not in fields:
                 continue
@@ -727,12 +726,10 @@ class orm_template(object):
                         and getattr(self._columns[f], arg):
                     res[f][arg] = getattr(self._columns[f], arg)
 
-            res_trans = translation_obj._get_source(cr, user,
-                    self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+            res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
             if res_trans:
                 res[f]['string'] = res_trans
-            help_trans = translation_obj._get_source(cr, user,
-                    self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+            help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
             if help_trans:
                 res[f]['help'] = help_trans
 
@@ -744,9 +741,7 @@ class orm_template(object):
                     for (key, val) in sel:
                         val2 = None
                         if val:
-                            val2 = translation_obj._get_source(cr, user,
-                                self._name + ',' + f, 'selection',
-                                context.get('lang', False) or 'en_US', val)
+                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
                         sel2.append((key, val2 or val))
                     sel = sel2
                     res[f]['selection'] = sel
