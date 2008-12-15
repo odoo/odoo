@@ -832,6 +832,7 @@ class account_move(osv.osv):
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
+            print 'XXXXXXXXXXXXXXXXXXX : ',vals
             result = super(account_move, self).create(cr, uid, vals, c)
             self.validate(cr, uid, [result], context)
         else:
