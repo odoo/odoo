@@ -547,9 +547,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         modobj = pool.get('ir.module.module')
         logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
-        cr.execute("select id from ir_module_module where state in ('to install','to upgrade') and name=%s", ('base',))
-        if cr.rowcount:
-            modobj.update_list(cr, 1)
+        modobj.update_list(cr, 1)
 
         mods = [k for k in tools.config['init'] if tools.config['init'][k]]
         if mods:
