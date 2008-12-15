@@ -151,7 +151,6 @@
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                     <field name="usage"/>
-                    <field name="parent_id"/>
                 </form>
             </field>
         </record>
@@ -1143,15 +1142,16 @@
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
                     <notebook colspan="4">
-                        <page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
+                        <!--<page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
                             <separator colspan="4" string="Python code"/>
                             <field name="code" colspan="4" nolabel="1" />
                             <button string="Create Action" name="%(wizard_server_action_create)d" type="action"/>
                         </page>
                         
-                        <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
+                        --><page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
-                            <field name="trigger_obj_id" select="2" colspan="4"/>
+                            <field name="wkf_model_id"/>
+                            <field name="trigger_obj_id" select="2" domain="[('model_id','=',model_id)]" on_change="on_trigger_obj_id(trigger_obj_id)"/>
                             <field name="trigger_name" select="2"/>
                         </page>
                         
@@ -1194,9 +1194,10 @@
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         
-                        <page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
+                        <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
                             <separator colspan="4" string="Other Actions Configuration"/>
-                            <field name="child_ids" nolabel="1" colspan="4" />
+                            <field name="child_ids" nolabel="1" colspan="4"/>
+                            <label colspan="4" string="Only one client action will be execute, last clinent action will be consider in case of multipls clinets actions" align="0.0"/>
                         </page>
                         
                     </notebook>

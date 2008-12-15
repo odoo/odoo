@@ -122,15 +122,19 @@ class module(osv.osv):
         view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
             ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
         for data_id in model_data_obj.browse(cr,uid,view_id,context):
-            key = data_id['model']
-            if key=='ir.ui.view':
-                v = view_obj.browse(cr,uid,data_id.res_id)
-                aa = v.inherit_id and '* INHERIT ' or ''
-                res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
-            elif key=='ir.actions.report.xml':
-                res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
-            elif key=='ir.ui.menu':
-                res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+            # We use try except, because views or menus may not exist
+            try:
+                key = data_id['model']
+                if key=='ir.ui.view':
+                    v = view_obj.browse(cr,uid,data_id.res_id)
+                    aa = v.inherit_id and '* INHERIT ' or ''
+                    res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                elif key=='ir.actions.report.xml':
+                    res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                elif key=='ir.ui.menu':
+                    res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+            except KeyError, e:
+                pass
         return res
 
     _columns = {
@@ -169,9 +173,9 @@ class module(osv.osv):
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
                 ('Other proprietary', 'Other proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta"),
-        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta"),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta"),
+        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
+        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
+        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
     }
 
     _defaults = {
@@ -257,7 +261,7 @@ class module(osv.osv):
                         _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
             iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
             for dep in depobj.browse(cr, uid, iids, context=context):
-                if dep.module_id.state=='installed':
+                if dep.module_id.state=='installed' and dep.module_id not in todo:
                     todo.append(dep.module_id)
         
         ids = map(lambda x: x.id, todo)
@@ -271,7 +275,7 @@ class module(osv.osv):
                 if dep.state == 'uninstalled':
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
                     to_install.extend(ids2)
-
+        
         self.button_install(cr, uid, to_install, context=context)
         return True
 

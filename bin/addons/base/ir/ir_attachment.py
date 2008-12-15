@@ -25,20 +25,16 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
-
     def check(self, cr, uid, ids, mode):
         if not ids: 
             return
         ima = self.pool.get('ir.model.access')
         if isinstance(ids, (int, long)):
             ids = [ids]
-        objs = self.browse(cr, uid, ids) or []
-        for o in objs:
-            if o and o.res_model:
-                ima.check(cr, uid, o.res_model, mode)
-    
-    check = tools.cache()(check)
-        
+        cr.execute('select distinct res_model from ir_attachment where id in ('+','.join(map(str, ids))+')')
+        for obj in cr.fetchall():
+            ima.check(cr, uid, obj[0], mode)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         ids = super(ir_attachment, self).search(cr, uid, args, offset=offset, 
@@ -83,23 +79,11 @@ class ir_attachment(osv.osv):
             self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create')
         return super(ir_attachment, self).create(cr, uid, values, *args, **kwargs)
 
-    def clear_cache(self):
-        self.check()    
-    
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
-
-    def __init__(self, *args, **kwargs):
-        r = super(ir_attachment, self).__init__(*args, **kwargs)
-        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
-        return r
-
-    def __del__(self):
-        self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
-        return super(ir_attachment, self).__del__()
 
     def _get_preview(self, cr, uid, ids, name, arg, context=None):
         result = {}

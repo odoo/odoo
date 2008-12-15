@@ -21,7 +21,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.osv  import Cacheable
 import tools
 
 TRANSLATION_TYPE = [
@@ -39,7 +38,7 @@ TRANSLATION_TYPE = [
     ('constraint', 'Constraint'),
 ]
 
-class ir_translation(osv.osv, Cacheable):
+class ir_translation(osv.osv):
     _name = "ir.translation"
     _log_access = False
 
@@ -81,27 +80,19 @@ class ir_translation(osv.osv, Cacheable):
             cr.commit()
 
     def _get_ids(self, cr, uid, name, tt, lang, ids):
-        translations, to_fetch = {}, []
-        for id in ids:
-            trans = self.get((lang, name, id))
-            if trans is not None:
-                translations[id] = trans
-            else:
-                to_fetch.append(id)
-        if to_fetch:
+        translations = {}
+        if ids:
             cr.execute('select res_id,value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s ' \
-                        'and res_id in ('+','.join(map(str, to_fetch))+')',
+                        'and res_id in ('+','.join(map(str, ids))+')',
                     (lang,tt,name))
             for res_id, value in cr.fetchall():
-                self.add((lang, tt, name, res_id), value)
                 translations[res_id] = value
         for res_id in ids:
             if res_id not in translations:
-                self.add((lang, tt, name, res_id), False)
                 translations[res_id] = False
         return translations
 
@@ -122,11 +113,8 @@ class ir_translation(osv.osv, Cacheable):
                 })
         return len(ids)
 
+    @tools.cache(skiparg=3)
     def _get_source(self, cr, uid, name, tt, lang, source=None):
-        trans = self.get((lang, tt, name, source))
-        if trans is not None:
-            return trans
-
         if source:
             #if isinstance(source, unicode):
             #   source = source.encode('utf8')
@@ -145,25 +133,8 @@ class ir_translation(osv.osv, Cacheable):
                         'and name=%s',
                     (lang, tt, str(name)))
         res = cr.fetchone()
-        
         trad = res and res[0] or ''
-        self.add((lang, tt, name, source), trad)
         return trad
-
-    def unlink(self, cursor, user, ids, context=None):
-        self.clear()
-        return super(ir_translation, self).unlink(cursor, user, ids,
-                context=context)
-
-    def create(self, cursor, user, vals, context=None):
-        self.clear()
-        return super(ir_translation, self).create(cursor, user, vals,
-                context=context)
-
-    def write(self, cursor, user, ids, vals, context=None):
-        self.clear()
-        return super(ir_translation, self).write(cursor, user, ids, vals,
-                context=context)
 
 ir_translation()
 

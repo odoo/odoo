@@ -26,6 +26,7 @@ from psycopg2.pool import ThreadedConnectionPool
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 
 import psycopg2.extensions
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 types_mapping = {
@@ -33,6 +34,10 @@ types_mapping = {
     'time': (1083,),
     'datetime': (1114,),
 }
+
+def unbuffer(symb, cr):
+    if symb is None: return None
+    return str(symb)
 
 def undecimalize(symb, cr):
     if symb is None: return None
@@ -60,14 +65,35 @@ class Cursor(object):
     sql_into_log = {}
     sql_log = False
     count = 0
+    
+    def check(f):
+        from tools.func import wraps
+
+        @wraps(f)
+        def wrapper(self, *args, **kwargs):
+            if not hasattr(self, '_obj'):
+                raise psycopg2.ProgrammingError('Unable to use the cursor after having closing it')
+            return f(self, *args, **kwargs)
+        return wrapper
 
     def __init__(self, pool):
         self._pool = pool
         self._cnx = pool.getconn()
-        self.autocommit(False)
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
+        self.autocommit(False)
         self.dbname = pool.dbname
+    
+    def __del__(self):
+        if hasattr(self, '_obj'):
+            # Oops. 'self' has not been closed explicitly.
+            # The cursor will be deleted by the garbage collector, 
+            # but the database connection is not put back into the connection
+            # pool, preventing some operation on the database like dropping it.
+            # This can also lead to a server overload.
+            log('Cursor not closed explicitly', netsvc.LOG_WARNING)
+            self.close()
 
+    @check
     def execute(self, query, params=None):
         if params is None:
             params=()
@@ -91,12 +117,11 @@ class Cursor(object):
 
         if self.sql_log:
             now = mdt.now()
-            log("SQL LOG query: %s" % (query,))
-            log("SQL LOG params: %r" % (p,))
 
         res = self._obj.execute(query, p or None)
 
         if self.sql_log:
+            log("query: %s" % self._obj.query)
             self.count+=1
             res_from = re_from.match(query.lower())
             if res_from:
@@ -110,23 +135,27 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
         return res
 
-    def print_log(self, type='from'):
-        log("SQL LOG %s:" % (type,))
-        if type == 'from':
-            logs = self.sql_from_log.items()
-        else:
-            logs = self.sql_into_log.items()
-        logs.sort(lambda x, y: cmp(x[1][1], y[1][1]))
-        sum=0
-        for r in logs:
-            log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
-            sum+= r[1][1]
-        log("SUM:%s/%d" % (sum, self.count))
+    def print_log(self):
+        def process(type):
+            sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
+            if not sqllogs[type]:
+                return
+            sqllogitems = sqllogs[type].items()
+            sqllogitems.sort(key=lambda k: k[1][1])
+            sum = 0
+            log("SQL LOG %s:" % (type,))
+            for r in sqllogitems:
+                log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
+                sum+= r[1][1]
+            log("SUM:%s/%d" % (sum, self.count))
+            sqllogs[type].clear()
+        process('from')
+        process('into')
+        self.count = 0
 
+    @check
     def close(self):
-        if self.sql_from_log or self.sql_into_log:
-            self.print_log('from')
-            self.print_log('into')
+        self.print_log()
         self._obj.close()
 
         # This force the cursor to be freed, and thus, available again. It is
@@ -137,15 +166,19 @@ class Cursor(object):
         del self._obj
         self._pool.putconn(self._cnx)
     
+    @check
     def autocommit(self, on):
         self._cnx.set_isolation_level([ISOLATION_LEVEL_SERIALIZABLE, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
     
+    @check
     def commit(self):
         return self._cnx.commit()
     
+    @check
     def rollback(self):
         return self._cnx.rollback()
 
+    @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
 

@@ -41,7 +41,7 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 #
-# TODO: a caching method
+# Warning: better use self.pool.get('ir.translation')._get_source if you can
 #
 def translate(cr, name, source_type, lang, source=None):
     if source and name:
@@ -61,8 +61,10 @@ class GettextAlias(object):
         lang = frame.f_locals.get('context', {}).get('lang', False)
         if not (lang and cr):
             return source
-        return translate(cr, None, 'code', lang, source) or source
 
+        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
+        res_trans = cr.fetchone()
+        return res_trans and res_trans[0] or source
 _ = GettextAlias()
 
 

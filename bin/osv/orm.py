@@ -727,7 +727,6 @@ class orm_template(object):
                         and getattr(self._columns[f], arg):
                     res[f][arg] = getattr(self._columns[f], arg)
 
-            # translate the field label
             res_trans = translation_obj._get_source(cr, user,
                     self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
             if res_trans:
@@ -838,13 +837,13 @@ class orm_template(object):
             # translate view
             if ('lang' in context) and not result:
                 if node.hasAttribute('string') and node.getAttribute('string'):
-                    trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if not trans and ('base_model_name' in context):
-                        trans = tools.translate(cr, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+                        trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
                     if trans:
                         node.setAttribute('string', trans)
                 if node.hasAttribute('sum') and node.getAttribute('sum'):
-                    trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
                     if trans:
                         node.setAttribute('sum', trans)
 
@@ -1377,10 +1376,31 @@ class orm(orm_template):
         browse_rec(None)
         return True
 
+    def _update_store(self, cr, f, k):
+        logger = netsvc.Logger()
+        logger.notifyChannel('init', netsvc.LOG_INFO, "storing computed values of fields.function '%s'" % (k,))
+        ss = self._columns[k]._symbol_set
+        update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
+        cr.execute('select id from '+self._table)
+        ids_lst = map(lambda x: x[0], cr.fetchall())
+        while ids_lst:
+            iids = ids_lst[:40]
+            ids_lst = ids_lst[40:]
+            res = f.get(cr, self, iids, k, 1, {})
+            for key,val in res.items():
+                if f._multi:
+                    val = val[k]
+                # if val is a many2one, just write the ID
+                if type(val)==tuple:
+                    val = val[0]
+                if (val<>False) or (type(val)<>bool):
+                    cr.execute(update_query, (ss[1](val), key))
+
     def _auto_init(self, cr, context={}):
         store_compute =  False
         logger = netsvc.Logger()
         create = False
+        todo_end = []
         self._field_create(cr, context=context)
         if not hasattr(self, "_auto") or self._auto:
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
@@ -1480,10 +1500,17 @@ class orm(orm_template):
                                 default = self._defaults[k](self, cr, 1, {})
                                 ss = self._columns[k]._symbol_set
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
-                                cr.execute(query, (default is not None and ss[1](default) or None,))
+                                cr.execute(query, (ss[1](default),))
+                                cr.commit()
+                                logger.notifyChannel('init', netsvc.LOG_DEBUG, 'setting default value of new column %s of table %s'% (k, self._table))
+                            elif not create:
+                                logger.notifyChannel('init', netsvc.LOG_DEBUG, 'creating new column %s of table %s'% (k, self._table))
 
                             if isinstance(f, fields.function):
-                                todo_update_store.append((f,k))
+                                order = 10
+                                if f.store is not True:
+                                    order = f.store[f.store.keys()[0]][2]
+                                todo_update_store.append((order, f,k))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -1498,10 +1525,10 @@ class orm(orm_template):
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                             if f.required:
-                                cr.commit()
                                 try:
+                                    cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                except:
+                                except Exception, e:
                                     logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
@@ -1510,40 +1537,42 @@ class orm(orm_template):
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
-                            logger.notifyChannel('init', netsvc.LOG_WARNING, 'column %s (%s) in table %s was converted to a function !\nYou should remove this column from your database.' % (k, f.string, self._table))
+                            logger.notifyChannel('init', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.commit()
                             f_obj_type = None
                         else:
                             f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
 
                         if f_obj_type:
-                            if f_pg_type != f_obj_type:
-                                logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) !" % (k, self._table, f_pg_type, f._type))
+                            ok = False
+                            casts = [
+                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
+                                ('varchar', 'text', 'TEXT', ''),
+                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                            ]
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
-                                # columns with the name 'type' cannot be changed for an unknown reason?!
-                                if k != 'type':
-                                    if f_pg_size > f.size:
-                                        logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed size (DB = %d, def = %d), DB size will be kept !" % (k, self._table, f_pg_size, f.size))
-                                    # If actual DB size is < than new
-                                    # We update varchar size, otherwise, we keep DB size
-                                    # to avoid truncated string...
-                                    if f_pg_size < f.size:
-                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
-                                        cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
-                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size' % (self._table,))
-                                        cr.commit()
-                            if f_pg_type == 'varchar' and f._type == 'text':
-                                        cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_type" % (self._table, k))
-                                        cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" text " % (self._table, k))
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_type" % (self._table, k))
-                                        cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_type" % (self._table,))
-                                        cr.commit()
-                            if f_pg_type == 'date' and f._type == 'datetime':
-                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_type' % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" TIMESTAMP' % (self._table, k))
-                                        cr.execute('UPDATE "%s" SET "%s"=temp_change_type::TIMESTAMP' % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_type' % (self._table,))
-                                        cr.commit()
+                                logger.notifyChannel('init', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
+                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size' % (self._table,))
+                                cr.commit()
+                            for c in casts:
+                                if (f_pg_type==c[0]) and (f._type==c[1]):
+                                    logger.notifyChannel('init', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                    ok = True
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                    cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                    cr.commit()
+
+                            if f_pg_type != f_obj_type:
+                                if not ok:
+                                    logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) but unable to migrate this change !" % (k, self._table, f_pg_type, f._type))
+
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
                                 # set the field to the default value if any
@@ -1553,12 +1582,12 @@ class orm(orm_template):
                                         ss = self._columns[k]._symbol_set
                                         query = 'UPDATE "%s" SET "%s"=%s WHERE %s is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
-                                        cr.commit()
                                 # add the NOT NULL constraint
+                                cr.commit()
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     cr.commit()
-                                except:
+                                except Exception, e:
                                     logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
@@ -1607,23 +1636,8 @@ class orm(orm_template):
                     else:
                         logger = netsvc.Logger()
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error !")
-            for f,k in todo_update_store:
-                ss = self._columns[k]._symbol_set
-                update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
-                cr.execute('select id from '+self._table)
-                ids_lst = map(lambda x: x[0], cr.fetchall())
-                while ids_lst:
-                    iids = ids_lst[:40]
-                    ids_lst = ids_lst[40:]
-                    res = f.get(cr, self, iids, k, 1, {})
-                    for key,val in res.items():
-                        if f._multi:
-                            val = val[k]
-                        if (val<>False) or (type(val)<>bool):
-                            #cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
-                            cr.execute(update_query, (ss[1](val), key))
-                        #else:
-                        #    cr.execute("UPDATE \"%s\" SET \"%s\"=NULL where id=%d"% (self._table, k, key))
+            for order,f,k in todo_update_store:
+                todo_end.append((order, self._update_store, (f, k)))
 
         else:
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
@@ -1648,6 +1662,7 @@ class orm(orm_template):
                         cr.commit()
         if store_compute:
             self._parent_store_compute(cr)
+        return todo_end
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
@@ -1659,18 +1674,15 @@ class orm(orm_template):
             if not f.store:
                 continue
             if self._columns[store_field].store is True:
-                sm = {self._name:(lambda self,cr, uid, ids, c={}: ids, None)}
+                sm = {self._name:(lambda self,cr, uid, ids, c={}: ids, None, 10)}
             else:
                 sm = self._columns[store_field].store
             for object, aa in sm.items():
-                if len(aa)==2:
-                    (fnct,fields2)=aa
-                    order = 1
-                elif len(aa)==3:
+                if len(aa)==3:
                     (fnct,fields2,order)=aa
                 else:
-                    raise except_orm(_('Error'),
-                        _('Invalid function definition %s in object %s !' % (store_field, self._name)))
+                    raise except_orm('Error',
+                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
                 ok = True
                 for x,y,z,e,f in self.pool._store_function[object]:
@@ -1790,7 +1802,6 @@ class orm(orm_template):
             if key.startswith('default_'):
                 value[key[8:]] = context[key]
         return value
-
 
     #
     # Update objects that uses this one to update their _inherits fields
@@ -2005,12 +2016,7 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        fn_list = []
-        for fnct in self.pool._store_function.get(self._name, []):
-            ids2 = filter(None, fnct[2](self,cr, uid, ids, context))
-            if ids2:
-                fn_list.append( (fnct[0], fnct[1], ids2) )
-
+        result_store = self._store_get_values(cr, uid, ids, None, context)
         delta = context.get('read_delta', False)
         if delta and self._log_access:
             for i in range(0, len(ids), cr.IN_MAX):
@@ -2057,10 +2063,8 @@ class orm(orm_template):
                 cr.execute('delete from "'+self._table+'" ' \
                         'where id in ('+str_d+')', sub_ids)
 
-        for object,field,ids in fn_list:
-            ids = self.pool.get(object).search(cr, uid, [('id','in', ids)], context=context)
-            if ids:
-                self.pool.get(object)._store_set_values(cr, uid, ids, field, context)
+        for order, object, ids, fields in result_store:
+            self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
@@ -2268,20 +2272,14 @@ class orm(orm_template):
         if 'read_delta' in context:
             del context['read_delta']
 
+
+        result = self._store_get_values(cr, user, ids, vals.keys(), context)
+        for order, object, ids, fields in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_write(user, self._name, id, cr)
-
-        for fnct in self.pool._store_function.get(self._name, []):
-            ok = False
-            for key in vals.keys():
-                if (not fnct[3]) or (key in fnct[3]):
-                    ok = True
-            if ok:
-                ids2 = fnct[2](self,cr, user, ids, context)
-                ids2 = filter(None, ids2)
-                if ids2:
-                    self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return True
 
     #
@@ -2386,34 +2384,74 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
 
+        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
+        for order, object, ids, fields in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-
-        for fnct in self.pool._store_function.get(self._name, []):
-            ids2 = fnct[2](self,cr, user, [id_new], context)
-            ids2 = filter(None, ids2)
-            if ids2:
-                self.pool.get(fnct[0])._store_set_values(cr, user, ids2, fnct[1], context)
         return id_new
 
-    def _store_set_values(self, cr, uid, ids, field, context):
-        args = {}
-        result = self._columns[field].get(cr, self, ids, field, uid, context=context)
-        for id,value in result.items():
-            upd0 = []
-            upd1 = []
-            if self._columns[field]._multi:
-                value = value[field]
-            if self._columns[field]._type in ('many2one', 'one2one'):
-                try:
-                    value = value[0]
-                except:
-                    pass
-            upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
-            upd1.append(self._columns[field]._symbol_set[1](value))
-            upd1.append(id)
-            cr.execute('update "' + self._table + '" set ' + \
-                    string.join(upd0, ',') + ' where id = %s', upd1)
+    def _store_get_values(self, cr, uid, ids, fields, context):
+        result = {}
+        fncts = self.pool._store_function.get(self._name, [])
+        for fnct in range(len(fncts)):
+            result.setdefault(fncts[fnct][0], {})
+            ids2 = fncts[fnct][2](self,cr, uid, ids, context)
+            for id in filter(None, ids2):
+                result[fncts[fnct][0]].setdefault(id, [])
+                result[fncts[fnct][0]][id].append(fnct)
+        result2 = []
+        for object in result:
+            k2 = {}
+            for id,fnct in result[object].items():
+                k2.setdefault(tuple(fnct), [])
+                k2[tuple(fnct)].append(id)
+            for fnct,id in k2.items():
+                result2.append((fncts[fnct[0]][4],object,id,map(lambda x: fncts[x][1], fnct)))
+        result2.sort()
+        return result2
+
+    def _store_set_values(self, cr, uid, ids, fields, context):
+        todo = {}
+        keys = []
+        for f in fields:
+            if self._columns[f]._multi not in keys:
+                keys.append(self._columns[f]._multi)
+            todo.setdefault(self._columns[f]._multi, [])
+            todo[self._columns[f]._multi].append(f)
+        for key in keys:
+            val = todo[key]
+            if key:
+                result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
+                for id,value in result.items():
+                    upd0 = []
+                    upd1 = []
+                    for v in value:
+                        if v not in val:
+                            continue
+                        if self._columns[v]._type in ('many2one', 'one2one'):
+                            try:
+                                value[v] = value[v][0]
+                            except:
+                                pass
+                        upd0.append('"'+v+'"='+self._columns[v]._symbol_set[0])
+                        upd1.append(self._columns[v]._symbol_set[1](value[v]))
+                    upd1.append(id)
+                    cr.execute('update "' + self._table + '" set ' + \
+                        string.join(upd0, ',') + ' where id = %s', upd1)
+
+            else:
+                for f in val:
+                    result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    for id,value in result.items():
+                        if self._columns[f]._type in ('many2one', 'one2one'):
+                            try:
+                                value = value[0]
+                            except:
+                                pass
+                        cr.execute('update "' + self._table + '" set ' + \
+                            '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value),id))
         return True
 
     #

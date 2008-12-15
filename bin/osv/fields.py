@@ -196,6 +196,7 @@ class binary(_column):
     _symbol_c = '%s'
     _symbol_f = lambda symb: symb and Binary(symb) or None
     _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self, x: x and str(x)
 
     _classic_read = False
 
@@ -208,7 +209,6 @@ class binary(_column):
             context = {}
         if not values:
             values = []
-
         res = {}
         for i in ids:
             val = None
@@ -216,10 +216,10 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            res.setdefault(i, val)
             if context.get('bin_size', False):
                 res[i] = tools.human_size(val)
-
+            else:
+                res[i] = val
         return res
 
     get = get_memory
@@ -276,6 +276,9 @@ class many2one(_column):
     _classic_read = False
     _classic_write = True
     _type = 'many2one'
+    _symbol_c = '%s'
+    _symbol_f = lambda x: x or None
+    _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, obj, string='unknown', **args):
         _column.__init__(self, string=string, **args)
@@ -654,8 +657,33 @@ class related(function):
             i -= 1
         return [(self._arg[0], 'in', sarg)]
 
-    def _fnct_write(self,obj,cr, uid, ids,values, field_name, args, context=None):
-        raise 'Not Implemented Yet'
+    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+        print 'Related Write', obj._name
+        if values and field_name:
+            self._field_get2(cr, uid, obj, context)
+            relation = obj._name
+            res = {}
+            if type(ids) != type([]):
+                ids=[ids]
+            objlst = obj.browse(cr, uid, ids)
+            for data in objlst:
+                t_id=None
+                t_data = data
+                relation = obj._name
+                for i in range(len(self.arg)):
+                    field_detail = self._relations[i]
+                    relation = field_detail['object']
+                    if not t_data[self.arg[i]]:
+                        t_data = False
+                        break
+                    if field_detail['type'] in ('one2many', 'many2many'):
+                        t_id=t_data.id
+                        t_data = t_data[self.arg[i]][0]
+                    else:
+                        t_id=t_data['id']
+                        t_data = t_data[self.arg[i]]
+                if t_id:
+                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values})
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
@@ -685,7 +713,7 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
 
     def _field_get2(self, cr, uid, obj, context={}):
         if self._relations:

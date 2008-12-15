@@ -66,7 +66,7 @@ def _eval_expr(cr, ident, workitem, action):
     ret=False
     assert action, 'You used a NULL action in a workflow, use dummy node instead.'
     for line in action.split('\n'):
-        line = line.replace(chr(13),'')
+        line = line.strip()
         uid=ident[0]
         model=ident[1]
         ids=[ident[2]]
