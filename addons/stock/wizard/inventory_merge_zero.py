@@ -40,7 +40,7 @@ def do_merge(self, cr, uid, data, context):
 
     if len(data['ids']) <> 1:
         raise wizard.except_wizard("Warning",
-                                   "Please select one and only one inventory!")
+                                   "Please select one and only one inventory !")
 
     cr.execute('select distinct location_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     loc_ids = map(lambda x: x[0], cr.fetchall())
@@ -49,19 +49,23 @@ def do_merge(self, cr, uid, data, context):
     cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     inv = cr.fetchall()
 
-    cr.execute('select distinct product_id from stock_move where (location_dest_id in ('+locs+')) or (location_id in ('+locs+'))')
-    stock = cr.fetchall()
-    for s in stock:
-        for loc in loc_ids:
-            if (loc,s[0]) not in inv:
-                p = prod_obj.browse(cr, uid, s[0])
-                invent_line_obj.create(cr, uid, {
-                    'inventory_id': data['ids'][0],
-                    'location_id': loc,
-                    'product_id': s[0],
-                    'product_uom': p.uom_id.id,
-                    'product_qty': 0.0,
-                    })
+    if not inv:
+        raise wizard.except_wizard("Warning",
+                                   "Please select at least one inventory location !")
+    else:
+        cr.execute('select distinct product_id from stock_move where (location_dest_id in ('+locs+')) or (location_id in ('+locs+'))')
+        stock = cr.fetchall()
+        for s in stock:
+            for loc in loc_ids:
+                if (loc,s[0]) not in inv:
+                    p = prod_obj.browse(cr, uid, s[0])
+                    invent_line_obj.create(cr, uid, {
+                        'inventory_id': data['ids'][0],
+                        'location_id': loc,
+                        'product_id': s[0],
+                        'product_uom': p.uom_id.id,
+                        'product_qty': 0.0,
+                        })
     return {}
 
 
