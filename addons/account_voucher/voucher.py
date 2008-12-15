@@ -207,7 +207,6 @@ class account_voucher(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
-                
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': inv['date'],
@@ -215,10 +214,9 @@ class account_voucher(osv.osv):
                     'amount': inv['amount'] * sign,
                     #'partner_id': il['partner_id'] or False,
                     'general_account_id': il['account_id'] or False,
-                    'journal_id': self._get_journal(cr, uid, inv.type),
+                    'journal_id': self.pool.get('account.voucher').browse(cr, uid, id).journal_id.analytic_journal_id.id or False,
                     'ref': ref,
                 })]
-
         return iml
     
     def action_move_line_create(self, cr, uid, ids, *args):
@@ -249,7 +247,6 @@ class account_voucher(osv.osv):
                 if inv.currency_id.id != company_currency:
                     i['currency_id'] = inv.currency_id.id
                     i['amount_currency'] = i['amount']
-
                 else:
                     i['amount_currency'] = False
                     i['currency_id'] = False
@@ -295,7 +292,6 @@ class account_voucher(osv.osv):
                 for i in line:
                     i[2]['period_id'] = inv.period_id.id
             move_id = self.pool.get('account.move').create(cr, uid, move)
-            # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id})
             obj=self.pool.get('account.move').browse(cr,uid,move_id)
             for line in obj.line_id :
