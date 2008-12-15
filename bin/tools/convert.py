@@ -289,11 +289,13 @@ form: module.record_id""" % (xml_id,)
 
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
+        
+        
         if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
             keyword = str(rec.getAttribute('keyword') or 'client_print_multi')
             keys = [('action',keyword),('res_model',res['model'])]
             value = 'ir.actions.report.xml,'+str(id)
-            replace = rec.hasAttribute('replace') and rec.getAttribute("replace")
+            replace = rec.hasAttribute('replace') and rec.getAttribute("replace") or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
         return False
 
@@ -426,7 +428,7 @@ form: module.record_id""" % (xml_id,)
             keyword = 'client_action_relate'
             keys = [('action', keyword), ('res_model', res_model)]
             value = 'ir.actions.act_window,'+str(id)
-            replace = rec.hasAttribute('replace') and rec.getAttribute('replace')
+            replace = rec.hasAttribute('replace') and rec.getAttribute('replace') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
         return False

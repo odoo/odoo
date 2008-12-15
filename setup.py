@@ -36,10 +36,6 @@ from stat import ST_MODE
 
 from distutils.core import setup, Command
 from distutils.command.install import install
-from distutils.command.build import build
-from distutils.command.build_scripts import build_scripts
-from distutils.command.install_scripts import install_scripts
-from distutils.file_util import copy_file
 
 if os.name == 'nt':
     import py2exe
@@ -91,7 +87,6 @@ def data_files():
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
-        files.append(('.', [(opj('bin', 'import_xml.rng'))]))
     else:
         man_directory = opj('share', 'man')
         files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -104,12 +99,9 @@ def data_files():
 
         openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
 
-        files.append((openerp_site_packages, [('bin/import_xml.rng')]))
-
         for addon in find_addons():
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
-
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.py', '.pyd', '.pyo'), innerfiles)
@@ -121,7 +113,7 @@ def data_files():
 check_modules()
 
 f = file('openerp-server','w')
-start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage" """
+start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage\n" """
 f.write(start_script)
 f.close()
 
@@ -177,13 +169,7 @@ setup(name             = name,
                           'openerp-server.workflow'] + \
                          list(find_addons()),
       package_dir      = {'openerp-server': 'bin'},
-      console = [ 
-          { "script" : "bin\\openerp-server.py", 
-            "icon_resources" : [
-                (1,"pixmaps\\openerp-icon.ico")
-            ]
-          }
-      ],
+      console = [ { "script" : "bin\\openerp-server.py", "icon_resources" : [ (1,"pixmaps\\openerp-icon.ico") ] } ],
       options = options,
       )
 

@@ -658,7 +658,6 @@ class related(function):
         return [(self._arg[0], 'in', sarg)]
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
-        print 'Related Write', obj._name
         if values and field_name:
             self._field_get2(cr, uid, obj, context)
             relation = obj._name

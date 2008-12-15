@@ -1143,13 +1143,7 @@
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
                     <notebook colspan="4">
-                        <!--<page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
-                            <separator colspan="4" string="Python code"/>
-                            <field name="code" colspan="4" nolabel="1" />
-                            <button string="Create Action" name="%(wizard_server_action_create)d" type="action"/>
-                        </page>
-                        
-                        --><page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
+                        <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id"/>
                             <field name="trigger_obj_id" select="2" domain="[('model_id','=',model_id)]" on_change="on_trigger_obj_id(trigger_obj_id)"/>
@@ -1198,7 +1192,8 @@
                         <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
                             <separator colspan="4" string="Other Actions Configuration"/>
                             <field name="child_ids" nolabel="1" colspan="4"/>
-                            <label colspan="4" string="Only one client action will be execute, last clinent action will be consider in case of multipls clinets actions" align="0.0"/>
+                            <label colspan="4" string="Only one client action will be execute, last
+                                clinent action will be consider in case of multiples clients actions" align="0.0"/>
                         </page>
                         
                     </notebook>
@@ -1224,6 +1219,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.server</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="context">{'key':'server_action'}</field>
         </record>

@@ -366,21 +366,22 @@ server_object_lines()
 #
 class actions_server(osv.osv):
     
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+        res = super(actions_server, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        #print 'RES : ',res
+        return res
+        
     def _select_signals(self, cr, uid, context={}):
         cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
                         " where w.id = a.wkf_id " \
                         " and t.act_from = a.wkf_id " \
-                        " or t.act_to = a.wkf_id ")
-        return cr.fetchall()
-    
-    def on_trigger_obj_id(self, cr, uid, ids, context={}):
-        cr.execute("select distinct t.signal as key, t.signal as val from wkf w, wkf_activity a, wkf_transition t "\
-                        " where w.id = a.wkf_id " \
-                        " and t.act_from = a.wkf_id " \
-                        " or t.act_to = a.wkf_id " \
-                        " and w.osv = %s ", ('account.invoice'))
-        data = cr.fetchall()
-        return {"values":{'trigger_name':data}}
+                        " or t.act_to = a.wkf_id and t.signal not in (null, NULL)")
+        result = cr.fetchall() or []
+        res = []
+        for rs in result:
+            if not rs[0] == None and not rs[1] == None:
+                res.append(rs)
+        return res
     
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
@@ -397,7 +398,6 @@ class actions_server(osv.osv):
             ('object_write','Write Object'),
             ('other','Multi Actions'),
         ], 'Action State', required=True, size=32),
-        'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
@@ -418,16 +418,7 @@ class actions_server(osv.osv):
     _defaults = {
         'state': lambda *a: 'dummy',
         'type': lambda *a: 'ir.actions.server',
-        'sequence': lambda *a: 0,
-        'code': lambda *a: """# You can use the following variables
-#    - object
-#    - object2
-#    - time
-#    - cr
-#    - uid
-#    - ids
-# If you plan to return an action, assign: action = {...}
-""",
+        'sequence': lambda *a: 5,
     }
 
     
@@ -569,7 +560,7 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj})
+                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -593,7 +584,7 @@ class actions_server(osv.osv):
                     if exp.type == 'equation':
                         obj_pool = self.pool.get(action.model_id.model)
                         obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq, {'context':context, 'object': obj})
+                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
