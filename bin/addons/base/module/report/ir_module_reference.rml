@@ -3,6 +3,18 @@
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="42.0" width="511" height="758"/>
+      	<header>
+			<pageGraphics>
+				<setFont name="Helvetica-Bold" size="9"/>
+				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
+				<drawRightString x="20cm" y="28.1cm"> Reference Guide </drawRightString>
+			    <lineMode width="0.7"/>
+				<stroke color="black"/>
+				<lines>1cm 28cm 20cm 28cm</lines>
+				
+			</pageGraphics>
+		</header>
+
     </pageTemplate>
   </template>
   <stylesheet>
@@ -95,6 +107,7 @@
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_11" fontName="Helvetica-Bold" fontSize="11.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -105,37 +118,28 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="139.0,220.0,152.0" repeatRows="1" style="Table1">
-      <tr>
-        <td>
-          <para style="terp_header_Centre">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_header_Centre">Reference Guide</para>
-        </td>
-        <td>
-          <para style="terp_header_Centre">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_default_9">[[ company.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9">Introspection report on objects</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">Printed: [[ time.strftime('%y-%m-%d')]]</para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
+    <blockTable colWidths="19.0,220.0,12.0" repeatRows="1" style="Table1">
+      <tr>
+        <td>
+          <para style="terp_header_Centre">
+          </para>
+        </td>
+       <td>
+          <para style="terp_default_11">Introspection report on objects</para>
+        </td>
+        <td>
+          <para style="terp_header_Centre">
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+      </tr>
+    </blockTable>
     <section>
       <para style="Text body">[[ repeatIn(objects, 'module') ]]</para>
       <blockTable colWidths="102.0,102.0,102.0,102.0,102.0" style="module_tbl_heading">
