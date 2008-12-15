@@ -206,7 +206,8 @@ class ir_values(osv.osv):
                         del fields[pos]
                     else:
                         pos+=1
-                datas = self.pool.get(model).read(cr, uid, [id], fields, context)[0]
+                datas = self.pool.get(model).read(cr, uid, [id], fields, context)
+                datas= datas and datas[0] or None
                 if not datas:
                     #ir_del(cr, uid, x[0])
                     return False
