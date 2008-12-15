@@ -292,10 +292,7 @@ class module(osv.osv):
         res = [0, 0] # [update, add]
 
         # iterate through installed modules and mark them as being so
-        for name in addons.get_modules():
-            mod_name = name
-            if name[-4:]=='.zip':
-                mod_name=name[:-4]
+        for mod_name in addons.get_modules():
             ids = self.search(cr, uid, [('name','=',mod_name)])
             if ids:
                 id = ids[0]
@@ -304,8 +301,7 @@ class module(osv.osv):
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
-                    self.write(cr, uid, id, {
-                        'url': ''})
+                    self.write(cr, uid, id, { 'url': ''})
                     res[0] += 1
                 self.write(cr, uid, id, {
                     'description': terp.get('description', ''),
@@ -314,28 +310,16 @@ class module(osv.osv):
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
                     })
-                cr.execute('DELETE FROM ir_module_module_dependency\
-                        WHERE module_id = %s', (id,))
-                self._update_dependencies(cr, uid, ids[0], terp.get('depends',
-                    []))
-                self._update_category(cr, uid, ids[0], terp.get('category',
-                    'Uncategorized'))
+                cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
+                self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
+                self._update_category(cr, uid, ids[0], terp.get('category', 'Uncategorized'))
                 continue
-            terp_file = addons.get_module_resource(name, '__terp__.py')
-            mod_path = addons.get_module_path(name)
-            if mod_path and (os.path.isdir(mod_path) or os.path.islink(mod_path) or zipfile.is_zipfile(mod_path)):
+            mod_path = addons.get_module_path(mod_name)
+            if mod_path:
                 terp = self.get_module_info(mod_name)
                 if not terp or not terp.get('installable', True):
                     continue
 
-                #if not os.path.isfile( mod_path ):
-                #    import imp
-                #    path = imp.find_module(mod_name, [addons.ad, addons._ad])
-                #    imp.load_module(name, *path)
-                #else:
-                #    import zipimport
-                #    zimp = zipimport.zipimporter(mod_path)
-                #    zimp.load_module(mod_name)
                 id = self.create(cr, uid, {
                     'name': mod_name,
                     'state': 'uninstalled',
@@ -349,8 +333,6 @@ class module(osv.osv):
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
                 self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
-        #import socket
-        #socket.setdefaulttimeout(10)
         for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
             try:
                 index_page = urllib.urlopen(repository.url).read()
@@ -363,9 +345,7 @@ class module(osv.osv):
             modules = re.findall(repository.filter, index_page, re.I+re.M)
             mod_sort = {}
             for m in modules:
-                name = m[0]
-                version = m[1]
-                extension = m[-1]
+                name, version, extension = m[0], m[1], m[-1]
                 if version == 'x': # 'x' version was a mistake
                     version = '0'
                 if name in mod_sort:
@@ -390,16 +370,13 @@ class module(osv.osv):
                     if installed_version == 'x': # 'x' version was a mistake
                         installed_version = '0'
                     if parse_version(version) > parse_version(installed_version):
-                        self.write(cr, uid, id, {
-                            'url': url
-                        })
+                        self.write(cr, uid, id, { 'url': url })
                         res[0] += 1
                     published_version = self.read(cr, uid, id, ['published_version'])['published_version']
                     if published_version == 'x' or not published_version:
                         published_version = '0'
                     if parse_version(version) > parse_version(published_version):
-                        self.write(cr, uid, id,
-                                {'published_version': version})
+                        self.write(cr, uid, id, {'published_version': version})
         return res
 
     def download(self, cr, uid, ids, download=True, context=None):
