@@ -140,8 +140,6 @@ def get_module_path(module):
 
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
-    raise IOError, 'Module not found : %s' % module
-
 
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
@@ -193,7 +191,11 @@ def get_modules():
             if name[-4:] == '.zip':
                 name = name[:-4]
             return name
-        return map(clean, os.listdir(dir))
+
+        def is_really_module(name):
+            name = opj(dir, name)
+            return os.path.isdir(name) or zipfile.is_zipfile(name)
+        return map(clean, filter(is_really_module, os.listdir(dir)))
 
     return list(set(listdir(ad) + listdir(_ad)))
 
