@@ -839,6 +839,10 @@ class account_invoice(osv.osv):
             'ref':invoice.number,
         }
 
+        name = invoice.invoice_line[0].name
+        l1['name'] = name
+        l2['name'] = name
+
         lines = [(0, 0, l1), (0, 0, l2)]
         move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move)
