@@ -398,6 +398,7 @@ class actions_server(osv.osv):
             ('object_write','Write Object'),
             ('other','Multi Actions'),
         ], 'Action State', required=True, size=32),
+	'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
@@ -419,6 +420,15 @@ class actions_server(osv.osv):
         'state': lambda *a: 'dummy',
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
+	'code': lambda *a: """# You can use the following variables
+#    - object
+#    - object2
+#    - time
+#    - cr
+#    - uid
+#    - ids
+# If you plan to return an action, assign: saction = {...}
+""",
     }
 
     
