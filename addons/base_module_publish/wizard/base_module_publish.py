@@ -129,7 +129,7 @@ upload_info_form = '''<?xml version="1.0"?>
     align="0.0" colspan="4"/>
     <field name="login"/>
     <newline/>
-    <field name="password"/>
+    <field name="password" password="True"/>
     <newline/>
     <field name="email"/>
 </form>'''
@@ -227,18 +227,18 @@ def _upload(self, cr, uid, datas, context):
         download = 'http://www.openerp.com/download/modules/'+res['module_filename']
         result = post_multipart('www.openerp.com', '/mtree_upload.php',
             [
-                ('login',datas['form']['login']),
-                ('password',datas['form']['password']),
-                ('module_name',mod.name)
+                ('login', datas['form']['login']),
+                ('password', datas['form']['password']),
+                ('module_name', str(mod.name))
             ], [
                 ('module', res['module_filename'], res['module_file'])
             ])
-        if result[0] == "1":
+        if result and result[0] == "1":
             raise wizard.except_wizard(_('Error'), _('Login failed!'))
-        elif result[0] == "2":
+        elif result and result[0] == "2":
             raise wizard.except_wizard(_('Error'),
                     _('This version of the module is already exist on the server'))
-        elif result[0] != "0":
+        elif result and result[0] != "0":
             raise wizard.except_wizard(_('Error'), _('Failed to upload the file'))
 
     updata = {
