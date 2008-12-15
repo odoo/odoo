@@ -365,6 +365,11 @@ server_object_lines()
 #
 class actions_server(osv.osv):
     
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+        res = super(actions_server, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        #print 'RES : ',res
+        return res
+        
     def _select_signals(self, cr, uid, context={}):
         cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
                         " where w.id = a.wkf_id " \
