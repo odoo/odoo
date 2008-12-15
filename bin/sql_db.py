@@ -118,7 +118,12 @@ class Cursor(object):
         if self.sql_log:
             now = mdt.now()
         
-        res = self._obj.execute(query, p or None)
+        try:
+            res = self._obj.execute(query, p or None)
+	except psycopg2.ProgrammingError, pe:
+	    logger= netsvc.Logger()
+	    logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
+	    raise
 
         if self.sql_log:
             log("query: %s" % self._obj.query)
