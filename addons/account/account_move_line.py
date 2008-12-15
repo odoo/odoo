@@ -273,7 +273,7 @@ class account_move_line(osv.osv):
         while i < len(args):
             fargs = args[i][0].split('.', 1)
             if len(fargs) > 1:
-                args[i] = (frags[0], 'in', invoice_obj.search(cursor, user,
+                args[i] = (fargs[0], 'in', invoice_obj.search(cursor, user,
                     [(fargs[1], args[i][1], args[i][2])]))
                 i += 1
                 continue
