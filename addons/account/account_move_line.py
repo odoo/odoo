@@ -849,7 +849,6 @@ class account_move_line(osv.osv):
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
                         'name': vals['name'],
-                        'currency_id': account.company_id.currency_id.id,
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'account_id': vals['analytic_account_id'],
                         'unit_amount':'quantity' in vals and vals['quantity'] or 1.0,
