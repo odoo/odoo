@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -34,6 +34,27 @@ class project_work(osv.osv):
         vals_line={}
         obj_task = self.pool.get('project.task').browse(cr, uid, vals['task_id'])
 
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', vals.get('user_id',uid))])
+
+        if not emp_id:
+            raise osv.except_osv(_('Bad Configuration !'),
+                 _('No employee defined for this user. You must create one.'))
+        emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
+        if not emp.product_id:
+            raise osv.except_osv(_('Bad Configuration !'),
+                 _('No product defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        if not emp.journal_id:
+            raise osv.except_osv(_('Bad Configuration !'),
+                 _('No journal defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        a =  emp.product_id.product_tmpl_id.property_account_expense.id
+        if not a:
+            a = emp.product_id.categ_id.property_account_expense_categ.id
+        vals_line['general_account_id'] = a
+        vals_line['journal_id'] = emp.journal_id.id
+
         vals_line['name']=obj_task.name + ': ' + vals['name']
         vals_line['user_id']=vals['user_id']
         vals_line['date']=vals['date'][:10]
@@ -57,7 +78,7 @@ class project_work(osv.osv):
         if line_id in list_avail_ids:
             obj = self.pool.get('hr.analytic.timesheet')
             if 'name' in vals:
-				vals_line['name']=task.name+': '+vals['name']
+                vals_line['name']=task.name+': '+vals['name']
             if 'user_id' in vals:
                 vals_line['user_id']=vals['user_id']
             if 'date' in vals:
