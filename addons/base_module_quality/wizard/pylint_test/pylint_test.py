@@ -24,28 +24,60 @@ import netsvc
 from osv import fields, osv
 import os
 
-def _test_pylint(self, url, add_folder=None):
-    list_files = os.listdir(url)
-    new_list = []
-    subfolder = {}
-    for i in list_files:
-        if os.path.isdir(i):
-            path = os.path.join(url, i)
-            new_list.append(os.listdir(path))
-            res = _test_pylint(self, path, add_folder=i)
-            subfolder.update(res)
-    dict_files = {}
-    for file in list_files:
-        if file.split('.')[-1] == 'py' and not file.startswith('__init__'):
-            file_path = os.path.join(url, file)
-            res = os.popen('pylint '+file_path+' | tail -4').read()
-            if res.startswith('Global'):
-                if add_folder:
-                    dict_files[add_folder + '/' + file] = res
-                else:
-                    dict_files[file] = res
-    dict_files.update(subfolder)
-    return dict_files
+
+
+class _test_pylint(quality_check):
+
+    def __init__(self, url, add_folder=None):
+        print "dans le test"
+        list_files = os.listdir(url)
+        new_list = []
+        subfolder = {}
+        for i in list_files:
+            if os.path.isdir(i):
+                path = os.path.join(url, i)
+                new_list.append(os.listdir(path))
+                res = _test_pylint(self, path, add_folder=i)
+                subfolder.update(res)
+        dict_files = {}
+        for file in list_files:
+            if file.split('.')[-1] == 'py' and not file.startswith('__init__'):
+                file_path = os.path.join(url, file)
+                res = os.popen('pylint '+file_path+' | tail -4').read()
+                if res.startswith('Global'):
+                    if add_folder:
+                        dict_files[add_folder + '/' + file] = res
+                    else:
+                        dict_files[file] = res
+        dict_files.update(subfolder)
+        print "dict_files", dict_files
+        return dict_files
+
+_test_pylint()
+
+
+#~ def _test_pylint(self, url, add_folder=None):
+    #~ list_files = os.listdir(url)
+    #~ new_list = []
+    #~ subfolder = {}
+    #~ for i in list_files:
+        #~ if os.path.isdir(i):
+            #~ path = os.path.join(url, i)
+            #~ new_list.append(os.listdir(path))
+            #~ res = _test_pylint(self, path, add_folder=i)
+            #~ subfolder.update(res)
+    #~ dict_files = {}
+    #~ for file in list_files:
+        #~ if file.split('.')[-1] == 'py' and not file.startswith('__init__'):
+            #~ file_path = os.path.join(url, file)
+            #~ res = os.popen('pylint '+file_path+' | tail -4').read()
+            #~ if res.startswith('Global'):
+                #~ if add_folder:
+                    #~ dict_files[add_folder + '/' + file] = res
+                #~ else:
+                    #~ dict_files[file] = res
+    #~ dict_files.update(subfolder)
+    #~ return dict_files
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -28,6 +28,7 @@ import sys
 import tools
 import os
 import pylint
+import base_module_quality
 
 form_check = '''<?xml version="1.0"?>
 <form string="Quality check">
@@ -41,30 +42,65 @@ fields_check = {
         'default': lambda *args: 'pylint'
     },
     }
+
 view_form = """<?xml version="1.0"?>
 <form string="Check quality">
-        <field name="module_info" nolabel="1" colspan="4" height="150" width="400"/>
+    <notebook>
+        <page string="Summary">
+            <field name="general_info" nolabel="1" colspan="4" height="350" width="400"/>
+        </page>
+    </notebook>
 </form>"""
+#TODO: utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?
+#TODO: remove the first screen which is unused
 
 view_field = {
-    "module_info": {'type': 'text', 'string': 'check quality',  'readonly':True},
+    "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
 }
+
+
+
 
 class wiz_quality_check(wizard.interface):
 
-    def _check(self, cr, uid, data, context):
-        if data['form']['test'] == 'pylint':
-            pool=pooler.get_pool(cr.dbname)
-            module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
-            from pylint_test import pylint_test
-            ad = tools.config['addons_path']
-            url = os.path.join(ad, module_data[0].name)
-            result = pylint_test._test_pylint(self, url)
-            string_ret = ''
-            for i in result:
-                string_ret = string_ret + i + ':\n' + result[i]
 
-        return {'module_info':string_ret}
+    def _check(self, cr, uid, data, context):
+        string_ret = ""
+        from tools import config
+        list_folders=os.listdir(config['addons_path']+'/base_module_quality/')
+        for item in list_folders:
+            path = config['addons_path']+'/base_module_quality/wizard/'+item
+            if os.path.exists(path+'/'+item+'.py') and item not in ['report','wizard', 'security']:
+                pool=pooler.get_pool(cr.dbname)
+                module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
+
+                ad = tools.config['addons_path']
+                module_path = os.path.join(ad, module_data[0].name)
+                #import pylint_test
+                x = __import__(item)
+                val = x.__init__(module_path)
+                string_ret += val._result
+
+        return {'general_info':string_ret}
+
+
+            #mra version
+            #~ result = pylint_test._test_pylint(self, url)
+            #~ string_ret = ''
+            #~ for i in result:
+                #~ string_ret = string_ret + i + ':\n' + result[i]
+        #~ string_ret = ""
+        #~ if data['form']['test'] == 'pylint':
+            #~ pool=pooler.get_pool(cr.dbname)
+            #~ module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
+            #~ from pylint_test import pylint_test
+            #~ ad = tools.config['addons_path']
+            #~ url = os.path.join(ad, module_data[0].name)
+            #~ result = pylint_test._test_pylint(self, url)
+            #~ string_ret = ''
+            #~ for i in result:
+                #~ string_ret = string_ret + i + ':\n' + result[i]
+
     states = {
         'init': {
             'actions': [],

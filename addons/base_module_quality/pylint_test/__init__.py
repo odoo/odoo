@@ -20,34 +20,7 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
-
-class quality_check(object):
-    '''
-        This Class provide...
-    '''
-
-    _score = 0.0
-    _result = ""
-    _result_details = ""
-
-    def __init__(self, module_path=""):
-        '''
-        this method should do the test and fill the _score, _result and _result_details var
-        '''
-        raise 'Not Implemented'
-
-    #~ def __get_result__(self, cr, uid, module_ids):
-        #~ '''
-        #~ '''
-        #~ return _result
-
-    #~ def __get_detailed_result__(self, cr, uid, module_ids):
-        #~ '''
-        #~ '''
-        #~ return _result_details
-
+import pylint_test
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
