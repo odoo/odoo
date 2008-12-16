@@ -55,7 +55,7 @@ class ir_model(osv.osv):
             if model.state=='manual':
                 if not model.model.startswith('x_'):
                     return False
-            if not re.match('^[a-z_A-Z0-9]+$',model.model):
+            if not re.match('^[a-z_A-Z0-9.]+$',model.model):
                 return False
         return True
 
