@@ -62,7 +62,7 @@ class wizard_export_lang(osv.osv_memory):
             this.advice = _('Save this document to a .tgz file. This archive containt UTF-8 %s files and may be uploaded to launchpad.') % (ext,)
        
         this.name = "%s.%s" % (this.lang or _('new'), this.format)
-        out=base64.encodestring(buf.getvalue().encode('utf8'))
+        out=base64.encodestring(buf.getvalue())
         buf.close()
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice, 'name':this.name}, context=context)
 
