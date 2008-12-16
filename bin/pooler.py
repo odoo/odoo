@@ -37,9 +37,11 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         pool_dic[db_name] = pool
         addons.load_modules(db, force_demo, status, update_module)
         cr = db.cursor()
-        pool.init_set(cr, False)
-        cr.commit()
-        cr.close()
+        try:
+            pool.init_set(cr, False)
+            cr.commit()
+        finally:
+            cr.close()
 
         if not update_module:
             import report
