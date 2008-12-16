@@ -24,6 +24,7 @@ import os, sys, imp
 from os.path import join as opj
 import itertools
 from sets import Set
+import zipimport
 
 import osv
 import tools
@@ -268,25 +269,32 @@ def init_module_objects(cr, module_name, obj_list):
         t[1](cr, *t[2])
     cr.commit()
 
-#
-# Register module named m, if not already registered
-# 
 def register_class(m):
+    """
+    Register module named m, if not already registered
+    """
     global loaded
     if m in loaded:
         return
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
     loaded.append(m)
     mod_path = get_module_path(m)
-    if not os.path.isfile(mod_path+'.zip'):
-        imp.load_module(m, *imp.find_module(m, [ad, _ad]))
-    else:
-        import zipimport
-        try:
-            zimp = zipimport.zipimporter(mod_path+'.zip')
+    try:
+        zip_mod_path = mod_path + '.zip'
+        if not os.path.isfile(zip_mod_path):
+            imp.load_module(m, *imp.find_module(m, [ad, _ad]))
+        else:
+            zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
-        except zipimport.ZipImportError:
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
+    except zipimport.ZipImportError:
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find zip module %s' % m)
+        raise
+    except ImportError:
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % m)
+        raise
+    except Exception:
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % (m))
+        raise
 
 
 class MigrationManager(object):
@@ -535,84 +543,86 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:
         status={}
+
     cr = db.cursor()
-    force = []
-    if force_demo:
-        force.append('demo')
-    pool = pooler.get_pool(cr.dbname)
-    report = tools.assertion_report()
-    if update_module:
-        basegraph = create_graph(['base'], force)
-        load_module_graph(cr, basegraph, status, check_access_rules=False, report=report)
+    try:
+        force = []
+        if force_demo:
+            force.append('demo')
+        pool = pooler.get_pool(cr.dbname)
+        report = tools.assertion_report()
+        if update_module:
+            basegraph = create_graph(['base'], force)
+            load_module_graph(cr, basegraph, status, check_access_rules=False, report=report)
 
-        modobj = pool.get('ir.module.module')
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
-        modobj.update_list(cr, 1)
+            modobj = pool.get('ir.module.module')
+            logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
+            modobj.update_list(cr, 1)
 
-        mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-        if mods:
-            ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
-            if ids:
-                modobj.button_install(cr, 1, ids)
+            mods = [k for k in tools.config['init'] if tools.config['init'][k]]
+            if mods:
+                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+                if ids:
+                    modobj.button_install(cr, 1, ids)
+            
+            mods = [k for k in tools.config['update'] if tools.config['update'][k]]
+            if mods:
+                ids = modobj.search(cr, 1, ['&',('state', '=', 'installed'), ('name', 'in', mods)])
+                if ids:
+                    modobj.button_upgrade(cr, 1, ids)
+            
+            cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
+            cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
+        else:
+            cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade')")
+        module_list = [name for (name,) in cr.fetchall()]
+        graph = create_graph(module_list, force)
         
-        mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-        if mods:
-            ids = modobj.search(cr, 1, ['&',('state', '=', 'installed'), ('name', 'in', mods)])
-            if ids:
-                modobj.button_upgrade(cr, 1, ids)
-        
-        cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-        cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
-    else:
-        cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade')")
-    module_list = [name for (name,) in cr.fetchall()]
-    graph = create_graph(module_list, force)
-    
-    # the 'base' module has already been updated
-    base = graph['base']
-    base.state = 'installed'
-    for kind in ('init', 'demo', 'update'):
-        if hasattr(base, kind):
-            delattr(base, kind)
+        # the 'base' module has already been updated
+        base = graph['base']
+        base.state = 'installed'
+        for kind in ('init', 'demo', 'update'):
+            if hasattr(base, kind):
+                delattr(base, kind)
 
-    load_module_graph(cr, graph, status, report=report)
-    if report.get_report():
-        logger.notifyChannel('init', netsvc.LOG_INFO, report)
+        load_module_graph(cr, graph, status, report=report)
+        if report.get_report():
+            logger.notifyChannel('init', netsvc.LOG_INFO, report)
 
-    for kind in ('init', 'demo', 'update'):
-        tools.config[kind]={}
+        for kind in ('init', 'demo', 'update'):
+            tools.config[kind]={}
 
-    cr.commit()
-    if update_module:
-        cr.execute("select id,name from ir_module_module where state in ('to remove')")
-        for mod_id, mod_name in cr.fetchall():
-            pool = pooler.get_pool(cr.dbname)
-            cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
-            for rmod,rid in cr.fetchall():
-                uid = 1
-                pool.get(rmod).unlink(cr, uid, [rid])
-            cr.commit()
-        #
-        # TODO: remove menu without actions of childs
-        #
-        while True:
-            cr.execute('''delete from
-                    ir_ui_menu
-                where
-                    (id not in (select parent_id from ir_ui_menu where parent_id is not null))
-                and
-                    (id not in (select res_id from ir_values where model='ir.ui.menu'))
-                and
-                    (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
-            if not cr.rowcount:
-                break
-            else:
-                logger.notifyChannel('init', netsvc.LOG_INFO, 'removed %d unused menus' % (cr.rowcount,))
-
-        cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
         cr.commit()
-        #pooler.restart_pool(cr.dbname)
-    cr.close()
+        if update_module:
+            cr.execute("select id,name from ir_module_module where state in ('to remove')")
+            for mod_id, mod_name in cr.fetchall():
+                pool = pooler.get_pool(cr.dbname)
+                cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
+                for rmod,rid in cr.fetchall():
+                    uid = 1
+                    pool.get(rmod).unlink(cr, uid, [rid])
+                cr.commit()
+            #
+            # TODO: remove menu without actions of childs
+            #
+            while True:
+                cr.execute('''delete from
+                        ir_ui_menu
+                    where
+                        (id not in (select parent_id from ir_ui_menu where parent_id is not null))
+                    and
+                        (id not in (select res_id from ir_values where model='ir.ui.menu'))
+                    and
+                        (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                if not cr.rowcount:
+                    break
+                else:
+                    logger.notifyChannel('init', netsvc.LOG_INFO, 'removed %d unused menus' % (cr.rowcount,))
+
+            cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
+            cr.commit()
+    finally:
+        cr.close()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
