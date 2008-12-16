@@ -431,10 +431,7 @@ class account_bank_statement_reconcile(osv.osv):
     def name_get(self, cursor, user, ids, context=None):
         res= []
         for o in self.browse(cursor, user, ids, context=context):
-            td = ''
-            if o.total_amount:
-                td = 'P '
-            res.append((o.id, '%s[%.2f]' % (td, o.total_amount)))
+            res.append((o.id, '[%.2f]' % (o.total_entry - o.total_new,)))
         return res
 
     _columns = {

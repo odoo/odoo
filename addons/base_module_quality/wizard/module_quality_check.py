@@ -27,50 +27,75 @@ import netsvc
 import sys
 import tools
 import os
-import pylint
 
-form_check = '''<?xml version="1.0"?>
-<form string="Quality check">
-    <field name="test" />
-</form>'''
 
-fields_check = {
-    'test': {
-        'string':'Tests', 'type':'selection',  'required':True,
-        'selection': [('pylint', 'Pylint'), ('othertest','other')],
-        'default': lambda *args: 'pylint'
-    },
-    }
+#~ form_check = '''<?xml version="1.0"?>
+#~ <form string="Quality check">
+    #~ <field name="test" />
+#~ </form>'''
+
+#~ fields_check = {
+    #~ 'test': {
+        #~ 'string':'Tests', 'type':'selection',  'required':True,
+        #~ 'selection': [('pylint', 'Pylint'), ('othertest','other')],
+        #~ 'default': lambda *args: 'pylint'
+    #~ },
+    #~ }
+
 view_form = """<?xml version="1.0"?>
 <form string="Check quality">
-        <field name="module_info" nolabel="1" colspan="4" height="150" width="400"/>
+    <notebook>
+        <page string="Summary">
+            <field name="general_info" nolabel="1" colspan="4" height="350" width="400"/>
+        </page>
+    </notebook>
 </form>"""
+#TODO: utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?
+#TODO: remove the first screen which is unused
 
 view_field = {
-    "module_info": {'type': 'text', 'string': 'check quality',  'readonly':True},
+    "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
 }
+
+
+
 
 class wiz_quality_check(wizard.interface):
 
-    def _check(self, cr, uid, data, context):
-        if data['form']['test'] == 'pylint':
-            pool=pooler.get_pool(cr.dbname)
-            module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
-            from pylint_test import pylint_test
-            ad = tools.config['addons_path']
-            url = os.path.join(ad, module_data[0].name)
-            result = pylint_test._test_pylint(self, url)
-            string_ret = ''
-            for i in result:
-                string_ret = string_ret + i + ':\n' + result[i]
 
-        return {'module_info':string_ret}
+    def _check(self, cr, uid, data, context):
+        string_ret = ""
+        from tools import config
+        list_folders=os.listdir(config['addons_path']+'/base_module_quality/')
+        for item in list_folders:
+            path = config['addons_path']+'/base_module_quality/'+item
+            if os.path.exists(path+'/'+item+'.py') and item not in ['report','wizard', 'security']:
+                pool=pooler.get_pool(cr.dbname)
+                module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
+
+                ad = tools.config['addons_path']
+                module_path = os.path.join(ad, module_data[0].name)
+
+                from base_module_quality import base_module_quality
+
+                item2='base_module_quality.'+item+'.'+item
+                x = __import__(item2)
+                x2 = getattr(x,item)
+                x3 = getattr(x2,item)
+                val = x3.quality_test(str(module_path))
+
+                string_ret += val._result
+
+        return {'general_info':string_ret}
+
+
+
     states = {
+        #~ 'init': {
+            #~ 'actions': [],
+            #~ 'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}
+        #~ },
         'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}
-        },
-        'do': {
             'actions': [_check],
             'result': {'type':'form', 'arch':view_form, 'fields':view_field, 'state':[('end','Ok')]},
         },
