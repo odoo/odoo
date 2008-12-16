@@ -1155,6 +1155,12 @@
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
                     <notebook colspan="4">
+                    
+                    	<page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
+                            <separator colspan="4" string="Python Code"/>
+                            <field name="code" colspan="4" nolabel="1"/>
+                        </page>
+                        
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id"/>
