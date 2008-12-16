@@ -133,7 +133,6 @@ class browse_record(object):
             self._data[id] = {'id': id}
 
         self._cache = cache
-        pass
 
     def __getitem__(self, name):
         if name == 'id':
@@ -2059,7 +2058,8 @@ class orm(orm_template):
                         'where id in ('+str_d+')', sub_ids)
 
         for order, object, ids, fields in result_store:
-            self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
+            if object<>self._name:
+                self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
