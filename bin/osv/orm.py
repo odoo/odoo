@@ -133,7 +133,6 @@ class browse_record(object):
             self._data[id] = {'id': id}
 
         self._cache = cache
-        pass
 
     def __getitem__(self, name):
         if name == 'id':
@@ -919,6 +918,12 @@ class orm_template(object):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
         if not context:
             context = {}
+        
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s 
+
         def _inherit_apply(src, inherit):
             def _find(node, node2):
                 if node2.nodeType == node2.ELEMENT_NODE and node2.localName == 'xpath':
@@ -941,9 +946,11 @@ class orm_template(object):
                         if res:
                             return res
                 return None
+            
 
-            doc_src = dom.minidom.parseString(src)
-            doc_dest = dom.minidom.parseString(inherit)
+            netsvc.Logger().notifyChannel('orm', netsvc.LOG_DEBUG, type(src))
+            doc_src = dom.minidom.parseString(encode(src))
+            doc_dest = dom.minidom.parseString(encode(inherit))
             toparse = doc_dest.childNodes
             while len(toparse):
                 node2 = toparse.pop(0)
@@ -1058,7 +1065,7 @@ class orm_template(object):
             result['field_parent'] = False
             result['view_id'] = 0
 
-        doc = dom.minidom.parseString(result['arch'].encode('utf-8'))
+        doc = dom.minidom.parseString(encode(result['arch']))
         xarch, xfields = self.__view_look_dom_arch(cr, user, doc, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
@@ -2059,7 +2066,8 @@ class orm(orm_template):
                         'where id in ('+str_d+')', sub_ids)
 
         for order, object, ids, fields in result_store:
-            self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
+            if object<>self._name:
+                self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #

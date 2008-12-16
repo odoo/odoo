@@ -32,8 +32,6 @@ import sys
 import os
 import glob
 
-from stat import ST_MODE
-
 from distutils.core import setup, Command
 from distutils.command.install import install
 
