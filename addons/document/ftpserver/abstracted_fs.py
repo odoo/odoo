@@ -74,7 +74,7 @@ class abstracted_fs:
 
     # Ok
     def db_list(self):
-        return pooler.pool_dic.keys()
+        #return pooler.pool_dic.keys()
         s = netsvc.LocalService('db')
         result = s.list()
         self.db_name_list = []
@@ -95,8 +95,7 @@ class abstracted_fs:
                 if cr is not None:
                     cr.close()
                 #if db is not None:
-                #    pooler.close_db(db_name)
-        print 'Return', self.db_name_list
+                #    pooler.close_db(db_name)        
         return self.db_name_list
 
     # Ok
@@ -689,7 +688,7 @@ class abstracted_fs:
 
             # formatting is matched with proftpd ls output
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, file.path.split('/')[-1])
+                                                     size, mtime, file.path.encode('ascii','replace').split('/')[-1])
 
     # Ok
     def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):

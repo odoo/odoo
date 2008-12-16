@@ -37,6 +37,7 @@ import random
 import string
 from psycopg2 import Binary
 from tools import config
+import tools
 
 def random_name():
     random.seed()
@@ -497,6 +498,9 @@ class document_file(osv.osv):
                     result[id]=''
             else:
                 result[id] = ''
+            if context.get('bin_size', False):
+                result[id] = tools.human_size(len(result[id]))             
+
         return result
 
     #
@@ -539,7 +543,7 @@ class document_file(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'store_method': fields.selection([('db','Database'),('fs','Filesystem'),('link','Link')], "Storing Method"),
-        'datas': fields.function(_data_get,method=True,store=True,fnct_inv=_data_set,string='File Content',type="binary"),
+        'datas': fields.function(_data_get,method=True,fnct_inv=_data_set,string='File Content',type="binary"),
         'store_fname': fields.char('Stored Filename', size=200),
         'res_model': fields.char('Attached Model', size=64), #res_model
         'res_id': fields.integer('Attached ID'), #res_id
