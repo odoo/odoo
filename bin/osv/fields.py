@@ -426,6 +426,7 @@ class one2many(_column):
             context = {}
         if not values:
             return
+        print obj, id, field, values
         _table = obj.pool.get(self._obj)._table
         obj = obj.pool.get(self._obj)
         for act in values:
@@ -633,6 +634,7 @@ class function(_column):
         return res
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
+        print obj,name,value
         if not context:
             context = {}
         if self._fnct_inv:
