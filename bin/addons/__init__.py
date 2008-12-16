@@ -545,11 +545,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         status={}
 
     cr = db.cursor()
+    force = []
+    if force_demo:
+        force.append('demo')
+    pool = pooler.get_pool(cr.dbname)
     try:
-        force = []
-        if force_demo:
-            force.append('demo')
-        pool = pooler.get_pool(cr.dbname)
         report = tools.assertion_report()
         if update_module:
             basegraph = create_graph(['base'], force)
