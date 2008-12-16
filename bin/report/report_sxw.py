@@ -469,12 +469,16 @@ class rml_parse(object):
             if isinstance(newtext, list):
                 todo.append((key, newtext))
             else:
-                #if not isinstance(newtext, basestring):
-                newtext = str(newtext)
+                if not isinstance(newtext, basestring):
+                    newtext = str(newtext)
+		elif isinstance(newtext,unicode):
+		    pass
+		elif isinstance(newtext,str):
+		    newtext = newtext.decode('utf8')
                 # if there are two [[]] blocks the same, it will replace both
                 # but it's ok because it should evaluate to the same thing
                 # anyway
-                text = text.replace('[['+key+']]', newtext.decode('utf8'))
+                text = text.replace('[['+key+']]', newtext)
         self._node.data = text
         if len(todo):
             for key, newtext in todo:
