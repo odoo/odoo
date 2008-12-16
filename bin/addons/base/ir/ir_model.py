@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -233,7 +233,7 @@ class ir_model_fields(osv.osv):
         # MAY BE ADD A ALTER TABLE DROP ?
         #
         return super(ir_model_fields, self).unlink(cr, user, ids, context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         res = False
         if 'relation_id' in vals:
@@ -242,29 +242,29 @@ class ir_model_fields(osv.osv):
         if 'relation_field_id' in vals:
             field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
             vals['relation'] = field_data.name
-            
+
         res = super(ir_model_fields, self).write(cr, uid, ids, vals, context)
         return res
-    
+
     def create(self, cr, user, vals, context=None):
         if 'relation_id' in vals:
-            model_data = self.pool.get('ir.model').browse(cr,user,vals['relation_id'])
+            model_data = self.pool.get('ir.model').browse(cr, user, vals['relation_id'])
             vals['relation']=model_data.model
         if 'relation_field_id' in vals:
-            field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
+            field_data = self.pool.get('ir.model.fields').browse(cr, user, vals['relation_field_id'])
             vals['relation_field'] = field_data.name
         if 'model_id' in vals:
-            model_data=self.pool.get('ir.model').browse(cr,user,vals['model_id'])
-            vals['model']=model_data.model
+            model_data = self.pool.get('ir.model').browse(cr, user, vals['model_id'])
+            vals['model'] = model_data.model
         if context and context.get('manual',False):
-            vals['state']='manual'
+            vals['state'] = 'manual'
         res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+        if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
-                self.pool.get(vals['model'])._auto_init(cr,{})
+                self.pool.get(vals['model'])._auto_init(cr, {})
         return res
 ir_model_fields()
 
@@ -298,7 +298,7 @@ class ir_model_access(osv.osv):
             model_name = model.name
         else:
             model_name = model
-        
+
         if isinstance(group_ids, (int, long)):
             group_ids = [group_ids]
         for group_id in group_ids:
@@ -324,7 +324,7 @@ class ir_model_access(osv.osv):
 
     def check(self, cr, uid, model, mode='read', raise_exception=True):
         if uid==1:
-            # User root have all accesses 
+            # User root have all accesses
             # TODO: exclude xml-rpc requests
             return True
 
@@ -335,7 +335,7 @@ class ir_model_access(osv.osv):
             model_name = model.name
         else:
             model_name = model
-        
+
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
                    '  FROM ir_model_access a '
@@ -394,7 +394,7 @@ class ir_model_access(osv.osv):
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
         self.check()    # clear the cache of check function
         return res
-    
+
     def create(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
         self.check()
