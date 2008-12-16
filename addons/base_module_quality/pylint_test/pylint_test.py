@@ -23,36 +23,12 @@
 import netsvc
 from osv import fields, osv
 import os
+from tools import config
+
 from base_module_quality import base_module_quality
 
-#~ class _test_pylint(quality_check):
 
-    #~ def __init__(self, url, add_folder=None):
-        #~ print "dans le test"
-        #~ list_files = os.listdir(url)
-        #~ new_list = []
-        #~ subfolder = {}
-        #~ for i in list_files:
-            #~ if os.path.isdir(i):
-                #~ path = os.path.join(url, i)
-                #~ new_list.append(os.listdir(path))
-                #~ res = _test_pylint(self, path, add_folder=i)
-                #~ subfolder.update(res)
-        #~ dict_files = {}
-        #~ for file in list_files:
-            #~ if file.split('.')[-1] == 'py' and not file.startswith('__init__'):
-                #~ file_path = os.path.join(url, file)
-                #~ res = os.popen('pylint '+file_path+' | tail -4').read()
-                #~ if res.startswith('Global'):
-                    #~ if add_folder:
-                        #~ dict_files[add_folder + '/' + file] = res
-                    #~ else:
-                        #~ dict_files[file] = res
-        #~ dict_files.update(subfolder)
-        #~ print "dict_files", dict_files
-        #~ return dict_files
-
-class _test_pylint(base_module_quality.quality_check):
+class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self, module_path):
         self._result = """
@@ -63,6 +39,7 @@ Pylint Test:
 
  
 """
+        config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'
         list_files = os.listdir(module_path)
         new_list = []
         subfolder = {}
@@ -78,9 +55,8 @@ Pylint Test:
         print list_files
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
-#--rcfile=<file>     Specify a configuration file.
                 file_path = os.path.join(module_path, file)
-                res = os.popen('pylint  --persistent=n '+file_path).read()
+                res = os.popen('pylint  --rcfile='+config_file_path+' '+file_path).read()
                 n += 1
                 leftchar = -1
                 while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:

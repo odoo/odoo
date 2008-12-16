@@ -20,7 +20,29 @@
 #
 ##############################################################################
 
-#import pylint_test
+import netsvc
+from osv import fields, osv
+import os
+from tools import config
+
+from base_module_quality import base_module_quality
+
+
+class quality_test(base_module_quality.abstract_quality_check):
+
+    def __init__(self, module_path):
+        self._result = """
+Speed Test:
+------------
+
+    This test checks the speed of the module
+
+
+        to be continued...
+ 
+"""
+        return None
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

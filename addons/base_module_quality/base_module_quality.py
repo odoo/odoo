@@ -23,7 +23,7 @@
 import netsvc
 from osv import fields, osv
 
-class quality_check(object):
+class abstract_quality_check(object):
     '''
         This Class provide...
     '''
@@ -38,15 +38,6 @@ class quality_check(object):
         '''
         raise 'Not Implemented'
 
-    #~ def __get_result__(self, cr, uid, module_ids):
-        #~ '''
-        #~ '''
-        #~ return _result
-
-    #~ def __get_detailed_result__(self, cr, uid, module_ids):
-        #~ '''
-        #~ '''
-        #~ return _result_details
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
