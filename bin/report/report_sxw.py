@@ -613,7 +613,7 @@ class report_sxw(report_rml):
         else:
             ir_menu_report_obj = pool.get('ir.ui.menu')
             report_menu_ids = ir_menu_report_obj.search(cr, uid,
-                [('id', '=', ids)], context=context)
+                    [('id', 'in', ids)], context=context)
             if report_menu_ids:
                 report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
                     context=context)
