@@ -77,8 +77,10 @@ class wiz_quality_check(wizard.interface):
                 ad = tools.config['addons_path']
                 module_path = os.path.join(ad, module_data[0].name)
                 #import pylint_test
+                item='base_module_quality.'+item
                 x = __import__(item)
-                val = x.__init__(module_path)
+                val = x.__init__(str(module_path))
+                print "VALL",x._result
                 string_ret += val._result
 
         return {'general_info':string_ret}

@@ -23,6 +23,7 @@
 import netsvc
 from osv import fields, osv
 import os
+from base_module_quality import base_module_quality
 
 #~ class _test_pylint(quality_check):
 
@@ -54,7 +55,6 @@ import os
 class _test_pylint(base_module_quality.quality_check):
 
     def __init__(self, module_path):
-
         self._result = """
 Pylint Test:
 ------------
