@@ -16,10 +16,10 @@
                 <field name="section_id"/>
                 <field name="category2_id"/>
                 <field name="stage_id"/>
+                <field name="amount_revenue"/>
                 <field name="nbr"/>
                 <field name="delay_close"/>
                 <field name="state"/>
-                
             </tree>
         </field>
     </record>
@@ -34,6 +34,7 @@
                 <field name="section_id" select="1"/>
                 <field name="category2_id" select="1"/>
                 <field name="stage_id"/>
+                <field name="amount_revenue"/>
                 <field name="nbr" select="1"/>
                 <field name="state" select="1"/>
                 <field name="delay_close"/>
@@ -47,7 +48,7 @@
         <field name="arch" type="xml">
             <graph string="Cases by Section and Category2" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
-                <field name="nbr" operator="+"/>
+                <field name="amount_revenue" operator="+"/>
                 <field name="section_id" group="True"/>
             </graph>
         </field>
@@ -82,6 +83,7 @@
                 <field name="user_id"/>
                 <field name="section_id"/>
                 <field name="stage_id"/>
+                <field name="amount_revenue"/>
                 <field name="nbr"/>
                 <field name="delay_close"/>
                 <field name="state"/>
@@ -98,6 +100,7 @@
                 <field name="user_id"/>
                 <field name="section_id" select="1"/>
                 <field name="stage_id"/>
+                <field name="amount_revenue"/>
                 <field name="nbr" select="1"/>
                 <field name="state" select="1"/>
                 <field name="delay_close"/>
@@ -111,7 +114,7 @@
         <field name="arch" type="xml">
             <graph string="Cases by Section and Stage" type="bar" orientation="horizontal">
                 <field name="stage_id"/>
-                <field name="nbr" operator="+"/>
+                <field name="amount_revenue" operator="+"/>
                 <field name="section_id" group="True"/>
             </graph>
         </field>
