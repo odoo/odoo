@@ -54,11 +54,8 @@ class wizard_lang_install(wizard.interface):
             modobj.update_translations(cr, uid, mids, lang)
         return {}
 
-    def _get_language(sel, cr, uid, context):
-        return tools.scan_languages()
-
     fields_form = {
-        'lang': {'string':'Language', 'type':'selection', 'selection':_get_language,
+        'lang': {'string':'Language', 'type':'selection', 'selection':tools.scan_languages(),
         },
     }
 
