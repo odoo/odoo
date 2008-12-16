@@ -699,7 +699,11 @@ class related(function):
             for i in range(len(self.arg)):
                 field_detail = self._relations[i]
                 relation = field_detail['object']
-                if not t_data[self.arg[i]]:
+                try:
+                    if not t_data[self.arg[i]]:
+                        t_data = False
+                        break
+                except:
                     t_data = False
                     break
                 if field_detail['type'] in ('one2many', 'many2many'):

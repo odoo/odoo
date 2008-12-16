@@ -28,7 +28,7 @@ import os
 
 def _check_xml(self, cr, uid, ids, context={}):
     for view in self.browse(cr, uid, ids, context):
-        eview = etree.fromstring(view.arch)
+        eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng = etree.RelaxNG(file=frng)
         if not relaxng.validate(eview):
