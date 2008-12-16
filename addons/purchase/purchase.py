@@ -453,9 +453,10 @@ class purchase_order_line(osv.osv):
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id)['lang']
         context={'lang':lang}
+        context['partner_id'] = partner_id
 
-        prod = self.pool.get('product.product').read(cr, uid, product, ['supplier_taxes_id','name','seller_delay','uom_po_id','description_purchase'],context=context)
-        prod_uom_po = prod['uom_po_id'][0]
+        prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        prod_uom_po = prod.uom_po_id.id
         if not uom:
             uom = prod_uom_po
         if not date_order:
@@ -465,23 +466,32 @@ class purchase_order_line(osv.osv):
                     'uom': uom,
                     'date': date_order,
                     })[pricelist]
-        dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        context['partner_id'] = partner_id
-        prod_name = self.pool.get('product.product').browse(cr, uid,product, context=context).partner_ref
+
+        qty = 1
+        seller_delay = 0
+        for s in prod.seller_ids:
+            seller_delay = s.delay
+            if s.name.id == partner_id:
+                seller_delay = s.delay
+                qty = s.qty
+        dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        prod_name = prod.partner_ref
 
 
-        res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
+        res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
+            'date_planned': dt,'notes':prod.description_purchase,
+            'product_qty': qty,
+            'product_uom': uom}}
         domain = {}
 
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        taxes = self.pool.get('account.tax').browse(cr, uid,prod['supplier_taxes_id'])
+        taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
         res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
-      #  res['value']['taxes_id'] = [x.id for x in taxes]
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
-        res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])
+        res3 = prod.uom_id.category_id.id
         domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
-        if res2[0]['category_id'] != res3[0]['category_id']:
+        if res2[0]['category_id'][0] != res3:
             raise osv.except_osv(_('Wrong Product UOM !'), _('You have to select a product UOM in the same category than the purchase UOM of the product'))
 
         res['domain'] = domain
