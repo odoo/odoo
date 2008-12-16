@@ -602,6 +602,9 @@ class function(_column):
         if store:
             self._classic_read = True
             self._classic_write = True
+            if type=='binary':
+                self._symbol_get=lambda x:x and str(x)
+
         if type == 'float':
             self._symbol_c = float._symbol_c
             self._symbol_f = float._symbol_f
