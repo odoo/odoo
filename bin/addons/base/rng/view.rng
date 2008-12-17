@@ -19,6 +19,7 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="image"/>
                     <rng:ref name="form"/>
+                    <rng:ref name="vpaned"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
                 </rng:choice>
@@ -101,6 +102,15 @@
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
+    
+    <rng:define name="vpaned">
+        <rng:element name="vpaned">
+            <rng:optional><rng:attribute name="position"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="any" />
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
 
     <rng:define name="any">
         <rng:element>
@@ -134,6 +144,8 @@
                     <rng:ref name="button"/>
                     <rng:ref name="form" />
                     <rng:ref name="page" />
+                    <rng:ref name="hpaned"/>
+                    <rng:ref name="vpaned"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
