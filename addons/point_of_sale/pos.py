@@ -60,7 +60,9 @@ class pos_order(osv.osv):
         res = dict(cr.fetchall())
 
         for rec in self.browse(cr, uid, ids, context):
-            if rec.partner_id and rec.partner_id.property_account_tax:
+            if rec.partner_id \
+               and rec.partner_id.property_account_position \
+               and rec.partner_id.property_account_position.tax_ids:
                 res[rec.id] = res[rec.id] - rec.amount_tax
         return res
 
