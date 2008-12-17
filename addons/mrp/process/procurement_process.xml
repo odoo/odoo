@@ -154,6 +154,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurements&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement orders&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="process_process_procurementworkflow0"/>
             <field name="process_id" ref="purchase.process_process_purchaseworkflow0"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -171,7 +172,7 @@
         <record id="process_node_routing0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_routing_action"/>
             <field name="model_id" ref="mrp.model_mrp_routing"/>
-            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Routing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Define a routing to describe the manufacturing steps.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="product.process_process_productworkflow0"/>

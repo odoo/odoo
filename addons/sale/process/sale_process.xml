@@ -66,6 +66,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;One procurement for each product.&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="mrp.process_process_procurementworkflow0"/>
             <field name="process_id" ref="process_process_salesworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
