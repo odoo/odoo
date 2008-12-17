@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -30,7 +30,7 @@ import StringIO
 import tools
 import pooler
 
-from report.render import render 
+from report.render import render
 from report.interface import report_int
 from pychart import *
 
@@ -43,7 +43,7 @@ class external_pdf(render):
         render.__init__(self)
         self.pdf = pdf
         self.output_type='pdf'
-        
+
     def _render(self):
         return self.pdf
 
@@ -64,13 +64,13 @@ class report_custom(report_int):
             cost = row['planned_cost'] or 0
             revenue = row['planned_revenue'] or 0
             userid = row['user_id'] or 0
-        
+
             benefit = revenue - cost
             if benefit > maxbenef:
                 maxbenef = benefit
             if benefit < minbenef:
                 minbenef = benefit
-            
+
             tuple = (proba * 100,  benefit)
             responsible_data.setdefault(userid, [])
             responsible_data[userid].append(tuple)
@@ -82,19 +82,19 @@ class report_custom(report_int):
 
         minbenef -= maxbenef * 0.05
         maxbenef *= 1.2
-        
+
         ratio = 0.5
         minmaxdiff2 = (maxbenef - minbenef)/2
-        
+
         for l in responsible_data.itervalues():
             for i in range(len(l)):
                 percent, benef = l[i]
                 proba = percent/100
 
                 current_ratio = 1 + (ratio-1) * proba
-                
+
                 newbenef = minmaxdiff2 + ((benef - minbenef - minmaxdiff2) * current_ratio)
-                
+
                 l[i] = (percent, newbenef)
 
 #TODO:
@@ -103,23 +103,29 @@ class report_custom(report_int):
 
         pdf_string = StringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
-        
+
         chart_object.set_defaults(line_plot.T, line_style=None)
-        
+
         xaxis = axis.X(label=None, format="%d%%", tic_interval=20)
         yaxis = axis.Y()
+
+        x_range_a, x_range_b = (0,100)
+        y_range_a, y_range_b = (minbenef, maxbenef)
+        if y_range_a == 0.0:
+            y_range_a += 0.0001
 
         ar = area.T(
             size = (300,200),
             y_grid_interval = 10000,
             y_grid_style=None,
-            x_range = (0,100),
-            y_range = (minbenef, maxbenef),
+            x_range = (x_range_a, x_range_b),
+            y_range = (y_range_a, y_range_b),
             x_axis = xaxis,
             y_axis = None,
             legend = legend.T()
         )
 
+        #import pydb; pydb.debugger()
         for k, d in responsible_data.iteritems():
             fill = fill_style.Plain(bgcolor=color.T(r=random.random(), g=random.random(), b=random.random()))
             tick = tick_mark.Square(size=6, fill_style=fill)
@@ -131,7 +137,7 @@ class report_custom(report_int):
         ar = area.T(legend = legend.T(),
                     size = (200,100),
                     loc=(100,250),
-                    x_grid_interval = lambda min, max: [40,60,80,100], 
+                    x_grid_interval = lambda min, max: [40,60,80,100],
                     x_grid_style=line_style.gray70_dash1,
                     x_range = (33, 100),
                     x_axis = axis.X(label=None, minor_tic_interval=lambda min,max: [50, 70, 90], format=lambda x: ""),
