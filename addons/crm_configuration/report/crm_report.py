@@ -31,7 +31,7 @@ AVAILABLE_STATES = [
 
 def drop_view_if_exists(cr, viewname):
     cr.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
-    if cr.fetchone():
+    if cr.fetchone()[0]:
         cr.execute("DROP view %s" % (viewname,))
         cr.commit()
 
