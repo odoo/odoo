@@ -193,9 +193,7 @@ class ir_model_fields(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True),
-        'relation_id':fields.many2one('ir.model', 'Object Relation'),
         'relation': fields.char('Object Relation', size=64),
-        'relation_field_id':fields.many2one('ir.model.fields', 'Relation Field'),
         'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
@@ -234,25 +232,7 @@ class ir_model_fields(osv.osv):
         #
         return super(ir_model_fields, self).unlink(cr, user, ids, context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = False
-        if 'relation_id' in vals:
-            model_data = self.pool.get('ir.model').browse(cr, uid, vals['relation_id'])
-            vals['relation'] = model_data.model
-        if 'relation_field_id' in vals:
-            field_data = self.pool.get('ir.model.fields').browse(cr, uid, vals['relation_field_id'])
-            vals['relation'] = field_data.name
-
-        res = super(ir_model_fields, self).write(cr, uid, ids, vals, context)
-        return res
-
     def create(self, cr, user, vals, context=None):
-        if 'relation_id' in vals:
-            model_data = self.pool.get('ir.model').browse(cr, user, vals['relation_id'])
-            vals['relation']=model_data.model
-        if 'relation_field_id' in vals:
-            field_data = self.pool.get('ir.model.fields').browse(cr, user, vals['relation_field_id'])
-            vals['relation_field'] = field_data.name
         if 'model_id' in vals:
             model_data = self.pool.get('ir.model').browse(cr, user, vals['model_id'])
             vals['model'] = model_data.model

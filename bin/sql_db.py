@@ -222,6 +222,7 @@ class PoolManager(object):
 
     def close(db_name):
         if db_name in PoolManager._pools:
+            logger = netsvc.Logger()
             logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Closing all connections to %s' % (db_name,))
             PoolManager._pools[db_name].closeall()
             del PoolManager._pools[db_name]

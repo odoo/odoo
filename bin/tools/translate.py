@@ -338,10 +338,17 @@ def trans_generate(lang, modules, dbname=None):
         tuple = (module, type, name, id, source)
         if source and tuple not in _to_translate:
             _to_translate.append(tuple)
-
+    
+    def encode(s):
+        if isinstance(s, unicode):
+            return s.encode('utf8')
+        return s
 
     for (xml_name,model,res_id,module) in cr.fetchall():
-        xml_name = module+'.'+xml_name
+        module = encode(module)
+        model = encode(model)
+        xml_name = "%s.%s" % (module, encode(xml_name))
+
         if not pool.get(model):
             logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r" % (model,))
             continue
@@ -349,27 +356,32 @@ def trans_generate(lang, modules, dbname=None):
         if model=='ir.ui.view':
             d = xml.dom.minidom.parseString(obj.arch)
             for t in trans_parse_view(d.documentElement):
-                push_translation(module, 'view', obj.model, 0, t)
+                push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
-            service_name = 'wizard.'+obj.wiz_name
+            service_name = 'wizard.'+encode(obj.wiz_name)
             obj2 = netsvc._service[service_name]
             for state_name, state_def in obj2.states.iteritems():
                 if 'result' in state_def:
                     result = state_def['result']
                     if result['type'] != 'form':
                         continue
-                    name = obj.wiz_name + ',' + state_name
+                    name = "%s,%s" % (encode(obj.wiz_name), state_name)
+
+                    def_params = {
+                        'string': ('wizard_field', lambda s: [encode(s)]),
+                        'selection': ('selection', lambda s: [encode(e[1]) for e in s]),
+                        'help': ('help', lambda s: [encode(s)]),
+                    }
 
                     # export fields
                     for field_name, field_def in result['fields'].iteritems():
                         res_name = name + ',' + field_name
-                        if 'string' in field_def:
-                            source = field_def['string']
-                            push_translation(module, 'wizard_field', res_name, 0, source.encode('utf8'))
-                            
-                        if 'selection' in field_def:
-                            for key, val in field_def['selection']:
-                                push_translation(module, 'selection', res_name, 0, val.encode('utf8'))
+                       
+                        for fn in def_params:
+                            if fn in field_def:
+                                transtype, modifier = def_params[fn]
+                                for val in modifier(field_def[fn]):
+                                    push_translation(module, transtype, res_name, 0, val)
 
                     # export arch
                     arch = result['arch']
@@ -386,17 +398,17 @@ def trans_generate(lang, modules, dbname=None):
                         push_translation(module, 'wizard_button', res_name, 0, button_label)
 
         elif model=='ir.model.fields':
-            field_name = obj.name
+            field_name = encode(obj.name)
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
                 continue
             field_def = objmodel._columns[field_name]
 
-            name = obj.model + "," + field_name
-            push_translation(module, 'field', name, 0, field_def.string.encode('utf8'))
+            name = "%s,%s" % (encode(obj.model), field_name)
+            push_translation(module, 'field', name, 0, encode(field_def.string))
 
             if field_def.help:
-                push_translation(module, 'help', name, 0, field_def.help.encode('utf8'))
+                push_translation(module, 'help', name, 0, encode(field_def.help))
 
             if field_def.translate:
                 ids = objmodel.search(cr, uid, [])
@@ -410,14 +422,14 @@ def trans_generate(lang, modules, dbname=None):
                         ('res_id', '=', res_id),
                         ])
                     if not model_data_ids:
-                        push_translation(module, 'model', name, 0, obj_value[field_name])
+                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
                 for key, val in field_def.selection:
-                    push_translation(module, 'selection', name, 0, val.encode('utf8'))
+                    push_translation(module, 'selection', name, 0, encode(val))
 
         elif model=='ir.actions.report.xml':
-            name = obj.report_name
+            name = encode(obj.report_name)
             fname = ""
             if obj.report_rml:
                 fname = obj.report_rml
@@ -438,13 +450,13 @@ def trans_generate(lang, modules, dbname=None):
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
-            push_translation(module, 'constraint', model, 0, msg.encode('utf8'))
+            push_translation(module, 'constraint', model, 0, encode(msg))
 
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
                 trad = getattr(obj, field_name) or ''
-                push_translation(module, 'model', name, xml_name, trad)
+                push_translation(module, 'model', name, xml_name, encode(trad))
 
     # parse source code for _() calls
     def get_module_from_path(path):
@@ -470,14 +482,17 @@ def trans_generate(lang, modules, dbname=None):
                     '[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
                     code_string, re.M)
                 for i in iter:
-                    push_translation(module, 'code', frelativepath, 0, i.group(1).encode('utf8'))
+                    push_translation(module, 'code', frelativepath, 0, encode(i.group(1)))
 
 
     out = [["module","type","name","res_id","src","value"]] # header
     # translate strings marked as to be translated
     for module, type, name, id, source in _to_translate:
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
-        out.append([module, type, name, id, source, trans or ''])
+        out.append([module, type, name, id, source, encode(trans) or ''])
+    
+    from pprint import pformat
+    netsvc.Logger().notifyChannel('translation', netsvc.LOG_DEBUG, pformat(filter(lambda o:any(isinstance(x, unicode) for x in o), out)))
 
     cr.close()
     return out
@@ -492,7 +507,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) # FIXME translate message
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):

@@ -700,9 +700,9 @@
                                     <group colspan="2" col="2">
                                         <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
-                                        <field name="relation_id" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                        <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                                                   'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
-                                        <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
+                                        <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
                                                                              'readonly': [('ttype','!=','one2many')]}"/>
                                         <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                         <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
@@ -779,12 +779,9 @@
                         <page string="Properties">
                             <group colspan="2" col="2">
                                 <field name="ttype" select="2"/>
-                                <field name="relation_id" select="2" on_change="on_relation_change(relation_id)" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-<!--                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],-->
-<!--                                                                          'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>-->
-                                <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
-                                                                     'readonly': [('ttype','!=','one2many')]}"/>
+                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                 <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
                                 <field name="state"/>
@@ -1154,6 +1151,7 @@
                     <field name="state" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
+                    <field name="condition" colspan="4"/>
                     <notebook colspan="4">
                     
                     	<page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
@@ -1175,6 +1173,7 @@
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
                             <field name="email" domain="[('model_id','=',model_id)]"/>
+                            <field name="subject" colspan="4"/>
                             <field name="message" select="2" colspan="4"/>
                             <newline/>
                             <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
@@ -1190,7 +1189,7 @@
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="srcmodel_id" select="2"/>
+                            <field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','sms'), ('state','!=','code'), ('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>

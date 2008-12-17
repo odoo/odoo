@@ -387,6 +387,7 @@ class actions_server(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
+        'condition' : fields.char('Condition', size=256),
         'state': fields.selection([
             ('client_action','Client Action'),
             ('dummy','Dummy'),
@@ -406,6 +407,7 @@ class actions_server(osv.osv):
         'wkf_model_id': fields.many2one('ir.model', 'Workflow on'),
         'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On'),
         'email': fields.many2one('ir.model.fields', 'Contact'),
+        'subject': fields.char('Subject', size=1024, translate=True),
         'message': fields.text('Message', translate=True),
         'mobile': fields.many2one('ir.model.fields', 'Contact'),
         'sms': fields.char('SMS', size=160, translate=True),
@@ -418,6 +420,7 @@ class actions_server(osv.osv):
     }
     _defaults = {
         'state': lambda *a: 'dummy',
+        'condition': lambda *a: 'True',
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
@@ -500,13 +503,28 @@ class actions_server(osv.osv):
     #   ACTION_ID : Action to launch
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
+        
         for action in self.browse(cr, uid, ids, context):
+            obj_pool = self.pool.get(action.model_id.model)
+            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            cxt = {
+                'context':context, 
+                'object': obj, 
+                'time':time,
+                'cr': cr,
+                'pool' : self.pool,
+                'uid' : uid
+            }
+            expr = eval(str(action.condition), cxt)
+            if not expr:
+                continue
             
             if action.state=='client_action':
                 if not action.action_id:
-                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
-                return self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
-            
+                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !")) 
+                result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
+                return result
+
             if action.state=='python':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
@@ -522,14 +540,15 @@ class actions_server(osv.osv):
 
             if action.state == 'email':
                 user = config['email_from']
-                subject = action.name
                 address = self.get_email(cr, uid, action, context)
                 if not address:
                     raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
                 if not user:
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
                 
+                subject = self.merge_message(cr, uid, str(action.subject), action, context)
                 body = self.merge_message(cr, uid, str(action.message), action, context)
+                
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -556,11 +575,11 @@ class actions_server(osv.osv):
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
             
             if action.state == 'other':
-                res = None
+                res = []
                 for act in action.child_ids:
                     result = self.run(cr, uid, [act.id], context)
                     if result:
-                        res = result
+                        res.append(result)
                 return res
             
             if action.state == 'object_write':
@@ -585,7 +604,13 @@ class actions_server(osv.osv):
                 else:
                     obj_pool = self.pool.get(action.srcmodel_id.model)
                     id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.record_id.name])
-                    obj_pool.write(cr, uid, [int(id[0][action.record_id.name])], res)
+                    write_id = False
+                    if action.record_id.ttype in ('char', 'int', 'float'):
+                        write_id = int(id[0][action.record_id.name])
+                    elif action.record_id.ttype in ('many2one'):
+                        write_id = int(id[0][action.record_id.name][0])
+
+                    obj_pool.write(cr, uid, [write_id], res)
             
             if action.state == 'object_create':
                 res = {}
@@ -603,7 +628,8 @@ class actions_server(osv.osv):
                 res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
-                self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
+                if action.record_id:
+                    self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
 
         return False
 actions_server()

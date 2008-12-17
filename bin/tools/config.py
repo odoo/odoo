@@ -20,8 +20,12 @@
 #
 ##############################################################################
 
-import ConfigParser,optparse,os,sys
-import netsvc,logging
+import ConfigParser
+import optparse
+import os
+import sys
+import netsvc
+import logging
 import release
 
 class configmanager(object):
