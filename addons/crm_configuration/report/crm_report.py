@@ -38,6 +38,7 @@ class report_crm_case_section_categ2(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'category2_id':fields.many2one('crm.case.category2', 'Type', readonly=True),
         'stage_id':fields.many2one('crm.case.stage', 'Stage', readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),        
         'delay_close': fields.char('Delay Close', size=20, readonly=True),
@@ -56,6 +57,7 @@ class report_crm_case_section_categ2(osv.osv):
                     c.stage_id,
                     c.section_id,
                     count(*) as nbr,
+                    sum(planned_revenue) as amount_revenue,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c
@@ -74,6 +76,7 @@ class report_crm_case_section_stage(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
         'stage_id':fields.many2one('crm.case.stage', 'Stage', readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),        
         'delay_close': fields.char('Delay Close', size=20, readonly=True),
@@ -91,6 +94,7 @@ class report_crm_case_section_stage(osv.osv):
                     c.stage_id,
                     c.section_id,
                     count(*) as nbr,
+                    sum(planned_revenue) as amount_revenue,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c

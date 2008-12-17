@@ -235,7 +235,7 @@ class mrp_bom(osv.osv):
             return {'value': v}
         return {}
 
-    def _bom_find(self, cr, uid, product_id, product_uom, properties = []):
+    def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         bom_result = False
         # Why searching on BoM without parent ?
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))

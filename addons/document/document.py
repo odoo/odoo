@@ -37,6 +37,7 @@ import random
 import string
 from psycopg2 import Binary
 from tools import config
+import tools
 
 def random_name():
     random.seed()
@@ -363,7 +364,7 @@ class document_directory(osv.osv):
                 if not ressource_parent_type_id:
                     ressource_parent_type_id=directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
                 if not ressource_id:
-                    ressource_id=directory.ressource_id and directory.ressource_id.id or 0                
+                    ressource_id=directory.ressource_id and directory.ressource_id or 0                
                 res=self.search(cr,uid,[('id','<>',directory.id),('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
                 if len(res):
                     return False
@@ -497,6 +498,9 @@ class document_file(osv.osv):
                     result[id]=''
             else:
                 result[id] = ''
+            if context.get('bin_size', False):
+                result[id] = tools.human_size(len(result[id]))             
+
         return result
 
     #

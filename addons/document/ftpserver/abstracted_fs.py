@@ -26,14 +26,16 @@ class file_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
-        uid =self.uid
-        val = self.getvalue()
-        val2 = {
-            'datas': base64.encodestring(val),
-            'file_size': len(val),
-        }
-        pool.get('ir.attachment').write(cr, uid, [self.ressource_id], val2)
-        cr.commit()
+        try:
+            val = self.getvalue()
+            val2 = {
+                'datas': base64.encodestring(val),
+                'file_size': len(val),
+            }
+            pool.get('ir.attachment').write(cr, self.uid, [self.ressource_id], val2)
+        finally:
+            cr.commit()
+            cr.close()
         StringIO.StringIO.close(self, *args, **kwargs)
 
 class content_wrapper(StringIO.StringIO):
@@ -47,10 +49,12 @@ class content_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
-        getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+        try:
+            getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+        finally:
+            cr.commit()
+            cr.close()
         StringIO.StringIO.close(self, *args, **kwargs)
-        cr.commit()
-        cr.close()
 
 
 class abstracted_fs:
@@ -70,7 +74,7 @@ class abstracted_fs:
 
     # Ok
     def db_list(self):
-        return pooler.pool_dic.keys()
+        #return pooler.pool_dic.keys()
         s = netsvc.LocalService('db')
         result = s.list()
         self.db_name_list = []
@@ -91,8 +95,7 @@ class abstracted_fs:
                 if cr is not None:
                     cr.close()
                 #if db is not None:
-                #    pooler.close_db(db_name)
-        print 'Return', self.db_name_list
+                #    pooler.close_db(db_name)        
         return self.db_name_list
 
     # Ok
@@ -685,7 +688,7 @@ class abstracted_fs:
 
             # formatting is matched with proftpd ls output
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, file.path.split('/')[-1])
+                                                     size, mtime, file.path.encode('ascii','replace').split('/')[-1])
 
     # Ok
     def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):

@@ -21,6 +21,7 @@
 ##############################################################################
 import operator
 from osv import osv, fields
+from osv.orm import intersect
 from tools.translate import _
 
 

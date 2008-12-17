@@ -327,7 +327,7 @@
             <para style="terp_default_9">[[ l.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) or '0.00' ]]</para>
+            <para style="terp_default_9">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.quantity) or '0.00' ]]</para>
@@ -463,7 +463,7 @@
     <blockTable colWidths="530.0" style="Table_Main_Table">
       <tr>
         <td>
-          <para style="terp_default_8">[[ format(o.amount_tax  or removeParentNode('blockTable')) ]]</para>
+          <!-- <para style="terp_default_8">[[ format(o.amount_tax  or removeParentNode('blockTable')) ]]</para> -->
           <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
@@ -491,10 +491,10 @@
                 <para style="terp_default_Centre_8">[[ t.name ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.base) or '0.00' ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount) or  0.00 ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(t.amount) or  '0.00'  ]]</para>
               </td>
             </tr>
           </blockTable>

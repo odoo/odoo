@@ -22,22 +22,26 @@
 
 import netsvc
 from osv import fields, osv
+import os
+from tools import config
 
-class abstract_quality_check(object):
-    '''
-        This Class provide...
-    '''
+from base_module_quality import base_module_quality
 
-    _score = 0.0
-    _result = ""
-    _result_details = ""
 
-    def __init__(self, module_path=""):
-        '''
-        this method should do the test and fill the _score, _result and _result_details var
-        '''
-        raise 'Not Implemented'
+class quality_test(base_module_quality.abstract_quality_check):
 
+    def __init__(self, module_path):
+        self._result = """
+Speed Test:
+------------
+
+    This test checks the speed of the module
+
+
+        to be continued...
+ 
+"""
+        return None
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
