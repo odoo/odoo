@@ -410,12 +410,12 @@ class project_work(osv.osv):
     _order = "date desc"
     def create(self, cr, uid, vals, *args, **kwargs):
         if 'task_id' in vals:
-            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%s', (-vals.get('hours',0.0), vals['task_id']))
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2s where id=%s', (-vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids,vals,context={}):
         for work in self.browse(cr, uid, ids, context):
-            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2f) where id=%s', (-vals.get('hours',0.0), work.hours, work.task_id.id))
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2s) where id=%s', (-vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
