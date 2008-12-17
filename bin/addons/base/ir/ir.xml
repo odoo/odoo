@@ -1189,7 +1189,7 @@
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','sms'), ('state','!=','code'), ('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
+                           	<field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'),('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
@@ -1202,8 +1202,16 @@
                                     <field name="value" colspan="4"/>
                                 </form>
                             </field>
-                            <field name="record_id" attrs="{'invisible':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
+                            <field name="record_id" attrs="{'readonly':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
+                             <field name="write_id" attrs="{'readonly':[('state','!=','object_write')]}"/>
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
+                        </page>
+                        
+                        <page string="Iteration Actions" attrs="{'invisible':[('state','!=','loop')]}">
+                            <separator colspan="4" string="Iteration Action Configuration"/>
+                            <field name="loop_action" domain="[('state','!=','loop')]"/>
+                            <field name="expression" attrs="{'required':[('state','=','loop')]}"/>
+                            <label colspan="4" string="Define the expression that generate a list" align="0.0"/>
                         </page>
                         
                         <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
