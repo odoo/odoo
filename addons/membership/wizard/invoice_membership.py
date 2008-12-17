@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -60,15 +60,8 @@ def _invoice_membership(self, cr, uid, data, context):
 
     for partner_id in partner_ids:
         account_id = partner_obj.read(cr, uid, partner_id, ['property_account_receivable'])['property_account_receivable'][0]
-        invoice_id = invoice_obj.create(cr, uid, {
-            'partner_id' : partner_id,
-            'address_invoice_id': partner_address_ids[partner_id]['id'],
-            'account_id': account_id,
-            }
-        )
 
         line_value =  {
-            'invoice_id' : invoice_id,
             'product_id' : product_id,
             }
 
@@ -81,11 +74,19 @@ def _invoice_membership(self, cr, uid, data, context):
             tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
             line_value['invoice_line_tax_id'] = tax_tab
         invoice_line_id = invoice_line_obj.create(cr, uid, line_value)
+        invoice_id = invoice_obj.create(cr, uid, {
+            'partner_id' : partner_id,
+            'address_invoice_id': partner_address_ids[partner_id]['id'],
+            'account_id': account_id,
+            'invoice_line':[(6,0,[invoice_line_id])]
+            }
+        )
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
             invoice_obj.write(cr, uid, [invoice_id], {'tax_line':tax_tab})
             tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()[0]
             invoice_tax_obj.create(cr, uid, tax_value)
+
 
     value = {
             'domain': [

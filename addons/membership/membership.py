@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -225,11 +225,11 @@ membership_line()
 class Partner(osv.osv):
     '''Partner'''
 
-    def _membership_state_search_inv(self, cr, uid, ids, context=None):
-        data_inv = self.pool.get('account.invoice').browse(cr, uid, ids, context)
+    def _get_partner_id(self, cr, uid, ids, context=None):
+        data_inv = self.pool.get('membership.membership_line').browse(cr, uid, ids, context)
         list_partner = []
         for data in data_inv:
-            list_partner.append(data.partner_id.id)
+            list_partner.append(data.partner.id)
         return list_partner
 
     def _membership_state(self, cr, uid, ids, name, args, context=None):
@@ -237,7 +237,6 @@ class Partner(osv.osv):
         for id in ids:
             res[id] = 'none'
         today = time.strftime('%Y-%m-%d')
-
         for id in ids:
             partner_data = self.browse(cr,uid,id)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
@@ -437,7 +436,8 @@ class Partner(osv.osv):
 #       'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
 #           type='selection', selection=STATE, fnct_search=_membership_state_search),
         'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
-            type='selection',selection=STATE,store={'account.invoice':(_membership_state_search_inv,['state'], 10)}),
+            type='selection',selection=STATE,store={'membership.membership_line':(_get_partner_id,['state'], 10),
+                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
 #       'associate_member': fields.many2one('res.partner', 'Associate member'),
         'free_member': fields.boolean('Free member'),
         'membership_start': fields.function(_membership_start, method=True,
@@ -501,36 +501,53 @@ class Invoice(osv.osv):
 
     _inherit = 'account.invoice'
 
-
-    def action_move_create(self, cr, uid, ids, context=None):
-        '''Create membership.membership_line if the product is for membership'''
-        if context is None:
-            context = {}
+    def create(self, cr, uid, vals, context={}):
+        result = super(Invoice, self).create(cr, uid, vals, context)
+        a = self.browse(cr, uid, result)
         member_line_obj = self.pool.get('membership.membership_line')
-        partner_obj = self.pool.get('res.partner')
-        for invoice in self.browse(cr, uid, ids):
-
-            # fetch already existing member lines
-            former_mlines = member_line_obj.search(cr,uid,
-                    [('account_invoice_line','in',
-                        [ l.id for l in invoice.invoice_line])], context)
-            # empty them :
-            if former_mlines:
-                member_line_obj.write(cr,uid,former_mlines, {'account_invoice_line':False}, context)
-
-            for line in invoice.invoice_line:
-                if line.product_id and line.product_id.membership:
-                    date_from = line.product_id.membership_date_from
-                    date_to  = line.product_id.membership_date_to
-                    if invoice.date_invoice > date_from and invoice.date_invoice < date_to:
-                        date_from = invoice.date_invoice
-                    member_line_obj.create(cr, uid, {
-                        'partner': invoice.partner_id.id,
+        for i in a.invoice_line:
+            if i.product_id and i.product_id.membership:
+                    date_from = i.product_id.membership_date_from
+                    date_to  = i.product_id.membership_date_to
+                    if a.date_invoice > date_from and a.date_invoice < date_to:
+                        date_from = a.date_invoice
+                    line_id = member_line_obj.create(cr, uid, {
+                        'partner': a.partner_id.id,
                         'date_from': date_from,
                         'date_to': date_to,
-                        'account_invoice_line': line.id,
+                        'account_invoice_line': i.id,
                         })
-        return super(Invoice, self).action_move_create(cr, uid, ids, context)
+        return result
+
+#    def action_move_create(self, cr, uid, ids, context=None):
+#        '''Create membership.membership_line if the product is for membership'''
+#        if context is None:
+#            context = {}
+#        member_line_obj = self.pool.get('membership.membership_line')
+#        partner_obj = self.pool.get('res.partner')
+#        for invoice in self.browse(cr, uid, ids):
+#
+#            # fetch already existing member lines
+#            former_mlines = member_line_obj.search(cr,uid,
+#                    [('account_invoice_line','in',
+#                        [ l.id for l in invoice.invoice_line])], context)
+#            # empty them :
+#            if former_mlines:
+#                member_line_obj.write(cr,uid,former_mlines, {'account_invoice_line':False}, context)
+#
+#            for line in invoice.invoice_line:
+#                if line.product_id and line.product_id.membership:
+#                    date_from = line.product_id.membership_date_from
+#                    date_to  = line.product_id.membership_date_to
+#                    if invoice.date_invoice > date_from and invoice.date_invoice < date_to:
+#                        date_from = invoice.date_invoice
+#                    line_id = member_line_obj.create(cr, uid, {
+#                        'partner': invoice.partner_id.id,
+#                        'date_from': date_from,
+#                        'date_to': date_to,
+#                        'account_invoice_line': line.id,
+#                        })
+#        return super(Invoice, self).action_move_create(cr, uid, ids, context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
