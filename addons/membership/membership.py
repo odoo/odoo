@@ -333,24 +333,24 @@ class Partner(osv.osv):
                 res[partner.id] = False
         return res
 
-    def _membership_start_search(self, cr, uid, obj, name, args):
-        '''Search on membership start date'''
-        if not len(args):
-            return []
-        where = ' AND '.join(['date_from '+x[1]+' \''+str(x[2])+'\''
-            for x in args])
-        cr.execute('SELECT partner, MIN(date_from) \
-                FROM ( \
-                    SELECT partner, MIN(date_from) AS date_from \
-                    FROM membership_membership_line \
-                    GROUP BY partner \
-                ) AS foo \
-                WHERE '+where+' \
-                GROUP BY partner')
-        res = cr.fetchall()
-        if not res:
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+#    def _membership_start_search(self, cr, uid, obj, name, args):
+#        '''Search on membership start date'''
+#        if not len(args):
+#            return []
+#        where = ' AND '.join(['date_from '+x[1]+' \''+str(x[2])+'\''
+#            for x in args])
+#        cr.execute('SELECT partner, MIN(date_from) \
+#                FROM ( \
+#                    SELECT partner, MIN(date_from) AS date_from \
+#                    FROM membership_membership_line \
+#                    GROUP BY partner \
+#                ) AS foo \
+#                WHERE '+where+' \
+#                GROUP BY partner')
+#        res = cr.fetchall()
+#        if not res:
+#            return [('id', '=', '0')]
+#        return [('id', 'in', [x[0] for x in res])]
 
     def _membership_stop(self, cr, uid, ids, name, args, context=None):
         '''Return the stop date of membership'''
@@ -372,25 +372,25 @@ class Partner(osv.osv):
             else:
                 res[partner.id] = False
         return res
-
-    def _membership_stop_search(self, cr, uid, obj, name, args):
-        '''Search on membership stop date'''
-        if not len(args):
-            return []
-        where = ' AND '.join(['date_to '+x[1]+' \''+str(x[2])+'\''
-            for x in args])
-        cr.execute('SELECT partner, MAX(date_to) \
-                FROM ( \
-                    SELECT partner, MAX(date_to) AS date_to \
-                    FROM membership_membership_line \
-                    GROUP BY partner \
-                ) AS foo \
-                WHERE '+where+' \
-                GROUP BY partner')
-        res = cr.fetchall()
-        if not res:
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+#
+#    def _membership_stop_search(self, cr, uid, obj, name, args):
+#        '''Search on membership stop date'''
+#        if not len(args):
+#            return []
+#        where = ' AND '.join(['date_to '+x[1]+' \''+str(x[2])+'\''
+#            for x in args])
+#        cr.execute('SELECT partner, MAX(date_to) \
+#                FROM ( \
+#                    SELECT partner, MAX(date_to) AS date_to \
+#                    FROM membership_membership_line \
+#                    GROUP BY partner \
+#                ) AS foo \
+#                WHERE '+where+' \
+#                GROUP BY partner')
+#        res = cr.fetchall()
+#        if not res:
+#            return [('id', '=', '0')]
+#        return [('id', 'in', [x[0] for x in res])]
 
     def _membership_cancel(self, cr, uid, ids, name, args, context=None):
         '''Return the cancel date of membership'''
@@ -406,24 +406,24 @@ class Partner(osv.osv):
                 res[partner_id] = False
         return res
 
-    def _membership_cancel_search(self, cr, uid, obj, name, args):
-        '''Search on membership cancel date'''
-        if not len(args):
-            return []
-        where = ' AND '.join(['date_cancel '+x[1]+' \''+str(x[2])+'\''
-            for x in args])
-        cr.execute('SELECT partner, MIN(date_cancel) \
-                FROM ( \
-                    SELECT partner, MIN(date_cancel) AS date_cancel \
-                    FROM membership_membership_line \
-                    GROUP BY partner \
-                ) AS foo \
-                WHERE '+where+' \
-                GROUP BY partner')
-        res = cr.fetchall()
-        if not res:
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+#    def _membership_cancel_search(self, cr, uid, obj, name, args):
+#        '''Search on membership cancel date'''
+#        if not len(args):
+#            return []
+#        where = ' AND '.join(['date_cancel '+x[1]+' \''+str(x[2])+'\''
+#            for x in args])
+#        cr.execute('SELECT partner, MIN(date_cancel) \
+#                FROM ( \
+#                    SELECT partner, MIN(date_cancel) AS date_cancel \
+#                    FROM membership_membership_line \
+#                    GROUP BY partner \
+#                ) AS foo \
+#                WHERE '+where+' \
+#                GROUP BY partner')
+#        res = cr.fetchall()
+#        if not res:
+#            return [('id', '=', '0')]
+#        return [('id', 'in', [x[0] for x in res])]
 
 
 
@@ -440,15 +440,24 @@ class Partner(osv.osv):
                                                     'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
 #       'associate_member': fields.many2one('res.partner', 'Associate member'),
         'free_member': fields.boolean('Free member'),
+#        'membership_start': fields.function(_membership_start, method=True,
+#            string='Start membership date', type='date',
+#            fnct_search=_membership_start_search),
         'membership_start': fields.function(_membership_start, method=True,
-            string='Start membership date', type='date',
-            fnct_search=_membership_start_search),
+            string='Start membership date', type='date',store={'membership.membership_line':(_get_partner_id,['state'], 10),
+                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
+#        'membership_stop': fields.function(_membership_stop, method=True,
+#            string='Stop membership date', type='date',
+#            fnct_search=_membership_stop_search),
         'membership_stop': fields.function(_membership_stop, method=True,
-            string='Stop membership date', type='date',
-            fnct_search=_membership_stop_search),
+            string='Stop membership date', type='date',store={'membership.membership_line':(_get_partner_id,['state'], 10),
+                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
+#        'membership_cancel': fields.function(_membership_cancel, method=True,
+#            string='Cancel membership date', type='date',
+#            fnct_search=_membership_cancel_search),
         'membership_cancel': fields.function(_membership_cancel, method=True,
-            string='Cancel membership date', type='date',
-            fnct_search=_membership_cancel_search),
+            string='Cancel membership date', type='date',store={'membership.membership_line':(_get_partner_id,['state'], 10),
+                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
     }
     _defaults = {
         'free_member': lambda *a: False,
