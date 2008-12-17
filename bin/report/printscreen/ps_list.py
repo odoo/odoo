@@ -132,7 +132,7 @@ class report_printscreen_list(report_int):
 
         for f in fields_order:
             field = new_doc.createElement("field")
-            field_txt = new_doc.createTextNode(str(fields[f]['string'] or ''))
+            field_txt = new_doc.createTextNode(fields[f]['string'] or '')
             field.appendChild(field_txt)
             header.appendChild(field)
 
@@ -166,7 +166,7 @@ class report_printscreen_list(report_int):
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(str(line[f] or ''))
+                    txt = new_doc.createTextNode(line[f] or '')
                     if temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
 
@@ -203,7 +203,7 @@ class report_printscreen_list(report_int):
 
         styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
         style = libxslt.parseStylesheetDoc(styledoc)
-        doc = libxml2.parseDoc(new_doc.toxml())
+        doc = libxml2.parseDoc(new_doc.toxml(encoding='utf-8'))
         rml_obj = style.applyStylesheet(doc, None)
         rml = style.saveResultToString(rml_obj)
         self.obj = render.rml(rml, title=self.title)
