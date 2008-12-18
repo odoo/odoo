@@ -99,19 +99,24 @@ class report_tasks(report_int):
         int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d %m %Y')
 
         def _interval_get(*args):
-            result = []
+            result = set()
             for i in range(20):
                 d = DateTime.localtime(datas[0][0] + (((datas[-1][0]-datas[0][0])/20)*(i+1)))
                 res = DateTime.DateTime(d.year, d.month, d.day).ticks()
-                if (not result) or result[-1]<>res:
-                    result.append(res)
-            return result
+                result.add(res)
+
+            return list(result)
+
+        if datas[-1][0] == datas[0][0]:
+            x_range = (datas[0][0],datas[-1][0]+1)
+        else:
+            x_range = (datas[0][0],datas[-1][0])
 
         ar = area.T(x_grid_style=line_style.gray50_dash1,
             x_axis=axis.X(label="Date", format=int_to_date),
             y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
             x_grid_interval=_interval_get,
-            x_range = (datas[0][0],datas[-1][0]),
+            x_range = x_range,
             y_range = (0,max_hour),
             legend = None,
             size = (680,450))
