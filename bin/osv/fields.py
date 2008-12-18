@@ -284,10 +284,10 @@ class many2one(_column):
         _column.__init__(self, string=string, **args)
         self._obj = obj
 
-    #
-    # TODO: speed improvement
-    #
-    # name is the name of the relation field
+    def set_memory(self, cr, obj, id, field, values, user=None, context=None):
+        obj.datas.setdefault(id, {})
+        obj.datas[id][field] = values
+
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         result = {}
         for id in ids:
