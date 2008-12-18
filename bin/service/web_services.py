@@ -246,9 +246,9 @@ class db(netsvc.Service):
                 res = cr.fetchone()
                 db_user = res and res[0]
             if db_user:
-                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
+                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
             else:
-                cr.execute("select datname from pg_database where datname not in('template0', 'template1','postgres')")
+                cr.execute("select datname from pg_database where datname not in('template0', 'template1','postgres') order by datname")
             res = [name for (name,) in cr.fetchall()]
             cr.close()
         except:
