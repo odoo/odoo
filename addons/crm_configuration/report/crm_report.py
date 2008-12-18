@@ -86,7 +86,7 @@ class report_crm_case_section_stage(osv.osv):
     _order = 'stage_id, section_id'
     
     def init(self, cr):
-        drop_view_if_exists(cr, "report_crm_case_section_stage")
+        cr.drop_view_if_exists("report_crm_case_section_stage")
         cr.execute("""
               create view report_crm_case_section_stage as (
                 select
@@ -123,7 +123,7 @@ class report_crm_case_section_categ_stage(osv.osv):
     _order = 'stage_id, section_id, categ_id'
     
     def init(self, cr):
-        drop_view_if_exists(cr, "report_crm_case_section_categ_stage")
+        cr.drop_view_if_exists("report_crm_case_section_categ_stage")
         cr.execute("""
               create view report_crm_case_section_categ_stage as (
                 select
@@ -161,7 +161,7 @@ class report_crm_case_section_categ_categ2(osv.osv):
     _order = 'section_id, categ_id, category2_id'
     
     def init(self, cr):
-        drop_view_if_exists(cr, "report_crm_case_section_categ_categ2")
+        cr.drop_view_if_exists("report_crm_case_section_categ_categ2")
         cr.execute("""
               create view report_crm_case_section_categ_categ2 as (
                 select
