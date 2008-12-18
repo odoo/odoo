@@ -512,19 +512,19 @@ class Invoice(osv.osv):
 
     def create(self, cr, uid, vals, context={}):
         result = super(Invoice, self).create(cr, uid, vals, context)
-        a = self.browse(cr, uid, result)
+        invoice = self.browse(cr, uid, result)
         member_line_obj = self.pool.get('membership.membership_line')
-        for i in a.invoice_line:
-            if i.product_id and i.product_id.membership:
-                    date_from = i.product_id.membership_date_from
-                    date_to  = i.product_id.membership_date_to
-                    if a.date_invoice > date_from and a.date_invoice < date_to:
-                        date_from = a.date_invoice
+        for line in invoice.invoice_line:
+            if line.product_id and line.product_id.membership:
+                    date_from = line.product_id.membership_date_from
+                    date_to  = line.product_id.membership_date_to
+                    if invoice.date_invoice > date_from and invoice.date_invoice < date_to:
+                        date_from = invoice.date_invoice
                     line_id = member_line_obj.create(cr, uid, {
-                        'partner': a.partner_id.id,
+                        'partner': invoice.partner_id.id,
                         'date_from': date_from,
                         'date_to': date_to,
-                        'account_invoice_line': i.id,
+                        'account_invoice_line': line.id,
                         })
         return result
 
