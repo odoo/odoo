@@ -134,17 +134,8 @@ class LocalService(Service):
             Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
             raise
 
-
-
-class ServiceUnavailable(Exception):
-    pass
-
-
 def service_exist(name):
     return (name in _service) and bool(_service[name])
-
-
-
 
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
@@ -254,7 +245,6 @@ class xmlrpc(object):
     class RpcGateway(object):
         def __init__(self, name):
             self.name = name
-
 
 class GenericXMLRPCRequestHandler:
     def log(self, title, msg):
