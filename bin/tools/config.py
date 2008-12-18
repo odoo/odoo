@@ -20,8 +20,12 @@
 #
 ##############################################################################
 
-import ConfigParser,optparse,os,sys
-import netsvc,logging
+import ConfigParser
+import optparse
+import os
+import sys
+import netsvc
+import logging
 import release
 
 class configmanager(object):
@@ -66,7 +70,7 @@ class configmanager(object):
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
         }
         
-        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')]) 
+        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC')]) 
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version)

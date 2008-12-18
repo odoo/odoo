@@ -493,7 +493,7 @@ form: module.record_id""" % (xml_id,)
                     try:
                         npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
                     except:
-                        self.logger.notifyChannel('init', netsvc.LOG_ERROR, "addon: %s xml_id: %s" % (self.module, xml_id))
+                        self.logger.notifyChannel('init', netsvc.LOG_ERROR, "module: %s xml_id: %s" % (self.module, xml_id))
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
                     self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))

@@ -284,10 +284,10 @@ class many2one(_column):
         _column.__init__(self, string=string, **args)
         self._obj = obj
 
-    #
-    # TODO: speed improvement
-    #
-    # name is the name of the relation field
+    def set_memory(self, cr, obj, id, field, values, user=None, context=None):
+        obj.datas.setdefault(id, {})
+        obj.datas[id][field] = values
+
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         result = {}
         for id in ids:
@@ -426,6 +426,7 @@ class one2many(_column):
             context = {}
         if not values:
             return
+
         _table = obj.pool.get(self._obj)._table
         obj = obj.pool.get(self._obj)
         for act in values:
@@ -602,6 +603,9 @@ class function(_column):
         if store:
             self._classic_read = True
             self._classic_write = True
+            if type=='binary':
+                self._symbol_get=lambda x:x and str(x)
+
         if type == 'float':
             self._symbol_c = float._symbol_c
             self._symbol_f = float._symbol_f
@@ -688,15 +692,21 @@ class related(function):
         self._field_get2(cr, uid, obj, context)
         if not ids: return {}
         relation = obj._name
-        res = {}
+        res = {}.fromkeys(ids, False)
         objlst = obj.browse(cr, uid, ids)
         for data in objlst:
+            if not data:
+                continue
             t_data = data
             relation = obj._name
             for i in range(len(self.arg)):
                 field_detail = self._relations[i]
                 relation = field_detail['object']
-                if not t_data[self.arg[i]]:
+                try:
+                    if not t_data[self.arg[i]]:
+                        t_data = False
+                        break
+                except:
                     t_data = False
                     break
                 if field_detail['type'] in ('one2many', 'many2many'):

@@ -140,6 +140,12 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
         return res
 
+    def drop_view_if_exists(self, viewname):
+        self._obj.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
+        if self._obj.fetchone()[0]:
+            self._obj.execute("DROP view %s" % (viewname,))
+            self._obj.commit()
+
     def print_log(self):
         def process(type):
             sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
@@ -220,13 +226,15 @@ class PoolManager(object):
                 logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name,))
                 PoolManager._pools[db_name] = ConnectionPool(ThreadedConnectionPool(1, PoolManager.maxconn, PoolManager.dsn(db_name)), db_name)
             except Exception, e:
-                logger.notifyChannel('dbpool', netsvc.LOG_CRITICAL, 'Unable to connect to %s: %s' % (db_name, e.message))
+                logger.notifyChannel('dbpool', netsvc.LOG_ERROR, 'Unable to connect to %s: %s' %
+                                     (db_name, str(e)))
                 raise
         return PoolManager._pools[db_name]
     get = staticmethod(get)
 
     def close(db_name):
         if db_name in PoolManager._pools:
+            logger = netsvc.Logger()
             logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Closing all connections to %s' % (db_name,))
             PoolManager._pools[db_name].closeall()
             del PoolManager._pools[db_name]

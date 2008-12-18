@@ -325,12 +325,25 @@
         </record>
         <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
         
-        <record id="act_wizard_view" model="ir.ui.view">
+        <record id="act_wizard_view_tree" model="ir.ui.view">
+            <field name="name">ir.actions.wizard.tree</field>
+            <field name="model">ir.actions.wizard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Wizard">
+                    <field name="name" select="1"/>
+                    <field name="wiz_name" select="1"/>
+                    <field name="multi"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="act_wizard_view" model="ir.ui.view">
             <field name="name">ir.actions.wizard</field>
             <field name="model">ir.actions.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wizard">
+                <form string="Wizards">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                     <field name="wiz_name" select="1"/>
@@ -341,7 +354,7 @@
         </record>
         
         <record id="ir_action_wizard" model="ir.actions.act_window">
-            <field name="name">Wizard</field>
+            <field name="name">Wizards</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.wizard</field>
             <field name="view_type">form</field>
@@ -688,9 +701,9 @@
                                     <group colspan="2" col="2">
                                         <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
-                                        <field name="relation_id" select="2" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
+                                        <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                                                   'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
-                                        <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
+                                        <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
                                                                              'readonly': [('ttype','!=','one2many')]}"/>
                                         <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                         <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
@@ -767,12 +780,9 @@
                         <page string="Properties">
                             <group colspan="2" col="2">
                                 <field name="ttype" select="2"/>
-                                <field name="relation_id" select="2" on_change="on_relation_change(relation_id)" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
-<!--                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],-->
-<!--                                                                          'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>-->
-                                <field name="relation_field_id" domain="[('model_id','=',relation_id)]" attrs="{'required': [('ttype','=','one2many')],
-                                                                     'readonly': [('ttype','!=','one2many')]}"/>
+                                <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
                                 <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
                                 <field name="state"/>
@@ -1142,7 +1152,14 @@
                     <field name="state" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
+                    <field name="condition" colspan="4"/>
                     <notebook colspan="4">
+                    
+                    	<page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
+                            <separator colspan="4" string="Python Code"/>
+                            <field name="code" colspan="4" nolabel="1"/>
+                        </page>
+                        
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id"/>
@@ -1157,6 +1174,7 @@
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
                             <field name="email" domain="[('model_id','=',model_id)]"/>
+                            <field name="subject" colspan="4"/>
                             <field name="message" select="2" colspan="4"/>
                             <newline/>
                             <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
@@ -1172,7 +1190,7 @@
                         
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="srcmodel_id" select="2"/>
+                           	<field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'),('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
@@ -1185,8 +1203,16 @@
                                     <field name="value" colspan="4"/>
                                 </form>
                             </field>
-                            <field name="record_id" attrs="{'invisible':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
+                            <field name="record_id" attrs="{'readonly':[('state','!=','object_create')]}" domain="[('model_id','in',[model_id])]"/>
+                             <field name="write_id" attrs="{'readonly':[('state','!=','object_write')]}"/>
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
+                        </page>
+                        
+                        <page string="Iteration Actions" attrs="{'invisible':[('state','!=','loop')]}">
+                            <separator colspan="4" string="Iteration Action Configuration"/>
+                            <field name="loop_action" domain="[('state','!=','loop')]"/>
+                            <field name="expression" attrs="{'required':[('state','=','loop')]}"/>
+                            <label colspan="4" string="Define the expression that generate a list" align="0.0"/>
                         </page>
                         
                         <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
@@ -1210,6 +1236,7 @@
                 <tree string="Server Actions">
                     <field name="name"/>
                     <field name="state"/>
+                    <field name="sequence"/>
                 </tree>
             </field>
         </record>

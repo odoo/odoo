@@ -20,29 +20,27 @@
 #
 ##############################################################################
 
-import base64
-import xml.dom.minidom
-import os, time
-import ir, netsvc
-import osv
 from interface import  report_rml
-import re
-import tools
-import pooler
-import netsvc
-import warnings
-import locale
-import copy
 import StringIO
-import zipfile
-import os
+import base64
+import copy
+import ir
+import locale
 import mx.DateTime
+import netsvc
+import os
+import osv
+import pooler
+import re
+import time
+import tools
+import warnings
+import xml.dom.minidom
+import zipfile
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
 HM_FORMAT = '%H:%M:%S'
-
-import base64
 
 if not hasattr(locale, 'nl_langinfo'):
     locale.nl_langinfo = lambda *a: '%x'
@@ -469,15 +467,10 @@ class rml_parse(object):
             if isinstance(newtext, list):
                 todo.append((key, newtext))
             else:
-                if not isinstance(newtext, basestring):
-                    newtext = str(newtext)
-		elif isinstance(newtext,unicode):
-		    pass
-		elif isinstance(newtext,str):
-		    newtext = newtext.decode('utf8')
                 # if there are two [[]] blocks the same, it will replace both
                 # but it's ok because it should evaluate to the same thing
                 # anyway
+                newtext = tools.ustr(newtext)
                 text = text.replace('[['+key+']]', newtext)
         self._node.data = text
         if len(todo):

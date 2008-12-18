@@ -144,12 +144,16 @@ def service_exist(name):
 def get_rpc_paths():
     return map(lambda s: '/xmlrpc/%s' % s, _service)
 
+
+LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
+# add new log level below DEBUG
+logging.DEBUG_RPC = logging.DEBUG - 1
 
 def init_logger():
     from tools import config
@@ -188,6 +192,7 @@ def init_logger():
         background = lambda f: 40 + colors.index(f)
 
         mapping = {
+            'DEBUG_RPC': ('blue', 'white'),
             'DEBUG': ('blue', 'default'),
             'INFO': ('green', 'default'),
             'WARNING': ('yellow', 'default'),
@@ -203,6 +208,11 @@ def init_logger():
 class Logger(object):
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
+
+        if level == LOG_DEBUG_RPC and not hasattr(log, level):
+            fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
+            setattr(log, LOG_DEBUG_RPC, fct)
+
         level_method = getattr(log, level)
 
         result = str(msg).strip().split('\n')
@@ -297,7 +307,7 @@ class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
         except:
-            Logger().notifyChannel('init', LOG_ERROR, 'Address already in use')
+            Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
             sys.exit(1)
 
 class HttpDaemon(threading.Thread):
@@ -368,6 +378,10 @@ class TinySocketClientThread(threading.Thread):
         threading.Thread.__init__(self)
         self.sock = sock
         self.threads = threads
+        self._logger = Logger()
+
+    def log(self, msg):
+        self._logger.notifyChannel('NETRPC', LOG_DEBUG_RPC, msg)
 
     def run(self):
         import traceback
@@ -388,6 +402,7 @@ class TinySocketClientThread(threading.Thread):
                 self.threads.remove(self)
                 return False
             try:
+                self.log(msg)
                 s = LocalService(msg[0])
                 m = getattr(s, msg[1])
                 s._service._response = None
@@ -395,6 +410,7 @@ class TinySocketClientThread(threading.Thread):
                 res = s._service._response
                 if res != None:
                     r = res
+                self.log(r)
                 ts.mysend(r)
             except Exception, e:
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -403,7 +419,8 @@ class TinySocketClientThread(threading.Thread):
                     import pdb
                     tb = sys.exc_info()[2]
                     pdb.post_mortem(tb)
-                e = Exception(e.message)
+                e = Exception(str(e))
+                self.log(str(e))
                 ts.mysend(e, exception=True, traceback=tb_s)
             except:
                 pass

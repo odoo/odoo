@@ -461,7 +461,7 @@ class module(osv.osv):
             for lang in filter_lang:
                 f = os.path.join(tools.config['addons_path'], mod.name, 'i18n', lang + '.po')
                 if os.path.exists(f):
-                    logger.notifyChannel("init", netsvc.LOG_INFO, 'addon %s: loading translation file for language %s' % (mod.name, lang))
+                    logger.notifyChannel("init", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
 
 module()
