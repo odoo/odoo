@@ -79,6 +79,7 @@ class ir_translation(osv.osv):
             cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
             cr.commit()
 
+    @tools.cache(skiparg=3)
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = {}
         if ids:
