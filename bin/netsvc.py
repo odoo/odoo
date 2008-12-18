@@ -365,16 +365,17 @@ class TinySocketClientThread(threading.Thread):
                 return False
             try:
                 self.log(msg)
-                s = LocalService(msg[0])
-                m = getattr(s, msg[1])
-                s._service._response = None
-                r = m(*msg[2:])
-                res = s._service._response
+                service = LocalService(msg[0])
+                method = getattr(service, msg[1])
+                service._service._response = None
+                result_from_method = method(*msg[2:])
+                res = service._service._response
                 if res != None:
-                    r = res
-                self.log(r)
-                ts.mysend(r)
+                    result_from_method = res
+                self.log(result_from_method)
+                ts.mysend(result_from_method)
             except Exception, e:
+                print repr(e)
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 import tools
                 if tools.config['debug_mode']:
