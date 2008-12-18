@@ -582,6 +582,7 @@ class actions_server(osv.osv):
             if action.state == 'other':
                 res = []
                 for act in action.child_ids:
+                    context['active_id'] = context['active_ids'][0]
                     result = self.run(cr, uid, [act.id], context)
                     if result:
                         res.append(result)
@@ -651,6 +652,7 @@ class actions_server(osv.osv):
                 res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
+                cr.commit()
                 if action.record_id:
                     self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
 
