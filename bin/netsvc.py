@@ -263,7 +263,6 @@ class GenericXMLRPCRequestHandler:
 
     def _dispatch(self, method, params):
         import traceback
-        traceback.print_stack()
         try:
             self.log('method', method)
             self.log('params', params)
@@ -337,16 +336,11 @@ class HttpDaemon(threading.Thread):
     def stop(self):
         self.running = False
         if os.name != 'nt':
-            if hasattr(socket, 'SHUT_RDWR'):
-                if self.secure:
-                    self.server.socket.sock_shutdown(socket.SHUT_RDWR)
-                else:
-                    self.server.socket.shutdown(socket.SHUT_RDWR)
+            value = hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2
+            if self.secure:
+                self.server.socket.sock_shutdown(value)
             else:
-                if self.secure:
-                    self.server.socket.sock_shutdown(2)
-                else:
-                    self.server.socket.shutdown(2)
+                self.server.socket.shutdown(value)
         self.server.socket.close()
 
     def run(self):
