@@ -135,6 +135,12 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
         return res
 
+    def drop_view_if_exists(self, viewname):
+        self._obj.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
+        if self._obj.fetchone()[0]:
+            self._obj.execute("DROP view %s" % (viewname,))
+            self._obj.commit()
+
     def print_log(self):
         def process(type):
             sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
