@@ -163,6 +163,7 @@ setup(name             = name,
                           'openerp-server.report.render',
                           'openerp-server.report.render.rml2pdf',
                           'openerp-server.report.render.rml2html',
+			  'openerp-server.report.render.rml2txt',
                           'openerp-server.wizard', 
                           'openerp-server.workflow'] + \
                          list(find_addons()),
