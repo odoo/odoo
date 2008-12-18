@@ -76,9 +76,6 @@ if sys.platform == 'win32':
 #----------------------------------------------------------
 logger.notifyChannel("objects", netsvc.LOG_INFO, 'initialising distributed objects services')
 
-dispatcher = netsvc.Dispatcher()
-dispatcher.monitor(signal.SIGINT)
-
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
@@ -214,7 +211,6 @@ if tools.config['netrpc']:
     tinySocket.start()
 if tools.config['xmlrpc']:
     httpd.start()
-#dispatcher.run()
 
 while True:
     time.sleep(1)

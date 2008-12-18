@@ -24,7 +24,10 @@
 import time
 import threading
 
-import SimpleXMLRPCServer, signal, sys, xmlrpclib
+import SimpleXMLRPCServer
+import signal
+import sys
+import xmlrpclib
 import SocketServer
 import socket
 import logging
@@ -249,23 +252,6 @@ class Agent(object):
             timer.cancel()
     quit = classmethod(quit)
 
-
-class RpcGateway(object):
-    def __init__(self, name):
-        self.name = name
-
-
-class Dispatcher(object):
-    def __init__(self):
-        pass
-
-    def monitor(self, signal):
-        pass
-
-    def run(self):
-        pass
-
-
 class xmlrpc(object):
     class RpcGateway(object):
         def __init__(self, name):
@@ -273,22 +259,30 @@ class xmlrpc(object):
 
 
 class GenericXMLRPCRequestHandler:
+    def log(self, title, msg):
+        from pprint import pformat
+        Logger().notifyChannel('XMLRPC-%s' % title, LOG_DEBUG_RPC, pformat(msg))
+
     def _dispatch(self, method, params):
-#        print 'TERP-CALL : ',method, params
         import traceback
+        traceback.print_stack()
         try:
+            self.log('method', method)
+            self.log('params', params)
             n = self.path.split("/")[-1]
             s = LocalService(n)
             m = getattr(s, method)
             s._service._response = None
             r = m(*params)
+            self.log('result', r)
             res = s._service._response
-            if res != None:
+            if res is not None:
                 r = res
+            self.log('res',r)
             return r
         except Exception, e:
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                sys.exc_type, sys.exc_value, sys.exc_traceback))
+            self.log('exception', e)
+            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             s = str(e)
             import tools
             if tools.config['debug_mode']:
@@ -297,22 +291,7 @@ class GenericXMLRPCRequestHandler:
                 pdb.post_mortem(tb)
             raise xmlrpclib.Fault(s, tb_s)
 
-
-class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-    SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-
-class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
-
-    def server_bind(self):
-        try:
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
-        except:
-            Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
-            sys.exit(1)
-
 class HttpDaemon(threading.Thread):
-
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self)
         self.__port = port
@@ -330,14 +309,23 @@ class HttpDaemon(threading.Thread):
                         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                         SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
                     except:
-                        sys.stderr.write("ERROR: address already in use\n")
+                        Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
                         sys.exit(1)
 
-            self.server = SecureThreadedXMLRPCServer((interface, port),
-                    SecureXMLRPCRequestHandler, 0)
+            self.server = SecureThreadedXMLRPCServer((interface, port), SecureXMLRPCRequestHandler, 0)
         else:
-            self.server = SimpleThreadedXMLRPCServer((interface, port),
-                    SimpleXMLRPCRequestHandler, 0)
+            class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+                SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
+
+            class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
+                def server_bind(self):
+                    try:
+                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+                    except:
+                        Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
+                        sys.exit(1)
+            self.server = SimpleThreadedXMLRPCServer((interface, port), SimpleXMLRPCRequestHandler, 0)
 
     def attach(self, path, gw):
         pass
