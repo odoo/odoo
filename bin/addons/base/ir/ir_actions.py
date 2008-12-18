@@ -380,6 +380,7 @@ class actions_server(osv.osv):
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _sequence = 'ir_actions_id_seq'
+    _order = 'sequence'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
         'condition' : fields.char('Condition', size=256),
@@ -586,6 +587,7 @@ class actions_server(osv.osv):
                     result = self.run(cr, uid, [act.id], context)
                     if result:
                         res.append(result)
+                    
                 return res
             
             if action.state == 'loop':
@@ -631,6 +633,11 @@ class actions_server(osv.osv):
                     obj_pool = self.pool.get(action.srcmodel_id.model)
                     rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
                     id = eval(action.write_id, {'object': rec})
+                    try:
+                        id = int(id)
+                    except:
+                        raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
+                    
                     if type(id) != type(1):
                         raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
                     write_id = id
