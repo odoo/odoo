@@ -542,11 +542,20 @@ class cache(object):
         self.timeout = timeout
         self.skiparg = skiparg
         self.multi = multi
+        self.lasttime = time.time()
         self.cache = {}
 
     def __call__(self, fn):
         arg_names = inspect.getargspec(fn)[0][self.skiparg:]
+
         def cached_result(self2, cr=None, *args, **kwargs):
+            if time.time()-self.timeout > self.lasttime:
+                self.lasttime = time.time()
+                t = time.time()-self.timeout 
+                for key in self.cache:
+                    if self.cache[key][1]<t:
+                        del self.cache[key]
+
             if cr is None:
                 self.cache = {}
                 return True
@@ -563,22 +572,44 @@ class cache(object):
                     kwargs2[k] = tuple(kwargs2[k])
                 elif not is_hashable(kwargs2[k]):
                     kwargs2[k] = repr(kwargs2[k])
+
+            if self.multi:
+                kwargs3 = kwargs2.copy()
+                notincache = []
+                result = {}
+                for id in kwargs3[self.multi]:
+                    kwargs2[self.multi] = [id]
+                    kwargs4 = kwargs2.items()
+                    kwargs4.sort()
+
+                    # Work out key as a tuple of ('argname', value) pairs
+                    key = (('dbname', cr.dbname),) + tuple(kwargs4)
+                    if key in self.cache:
+                        result[id] = self.cache[key][0]
+                    else:
+                        notincache.append(id)
+
+
+
+                if notincache:
+                    kwargs2[self.multi] = notincache
+                    result2 = fn(self2, cr, *args[2:self.skip], **kwargs3)
+                    for id in result2:
+                        kwargs2[self.multi] = [id]
+                        kwargs4 = kwargs2.items()
+                        kwargs4.sort()
+                        key = (('dbname', cr.dbname),) + tuple(kwargs4)
+                        self.cache[key] = result2[id]
+                    result.updat(result2)
+                return result
+
             kwargs2 = kwargs2.items()
             kwargs2.sort()
 
-            # Work out key as a tuple of ('argname', value) pairs
             key = (('dbname', cr.dbname),) + tuple(kwargs2)
-
-            # Check cache and return cached value if possible
             if key in self.cache:
-                (value, last_time) = self.cache[key]
-                mintime = time.time() - self.timeout
-                if self.timeout <= 0 or mintime <= last_time:
-                    return value
+                return self.cache[key][0]
 
-            # Work out new value, cache it and return it
-            # FIXME Should copy() this value to avoid futur modifications of the cache ?
-            # FIXME What about exceptions ?
             result = fn(self2, cr, *args, **kwargs)
 
             self.cache[key] = (result, time.time())

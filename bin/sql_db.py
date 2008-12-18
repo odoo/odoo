@@ -136,10 +136,10 @@ class Cursor(object):
         return res
 
     def drop_view_if_exists(self, viewname):
-        self._obj.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
-        if self._obj.fetchone()[0]:
-            self._obj.execute("DROP view %s" % (viewname,))
-            self._obj.commit()
+        self.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
+        if self.fetchone()[0]:
+            self.execute("DROP view %s" % (viewname,))
+            self.commit()
 
     def print_log(self):
         def process(type):

@@ -1153,40 +1153,35 @@
                     <field name="sequence" select="2"/>
                     <field name="condition" colspan="4"/>
                     <notebook colspan="4">
-                    
-                    	<page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
+                        <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
                             <separator colspan="4" string="Python Code"/>
                             <field name="code" colspan="4" nolabel="1"/>
                         </page>
-                        
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
-                            <field name="wkf_model_id"/>
-                            <field name="trigger_obj_id" select="2" domain="[('model_id','=',model_id)]" on_change="on_trigger_obj_id(trigger_obj_id)"/>
-                            <field name="trigger_name" select="2"/>
+                            <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_obj_id" select="2" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_name" select="2" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
-                        
-                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
-                            <field name="action_id" select="2" colspan="4"/>
+                        <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
+                        	<separator colspan="4" string="Client Action Configuration"/>
+                            <field name="action_id" select="2" attrs="{'required':[('state','=','client_action')]}"/>
                         </page>
-                        
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
-                            <field name="email" domain="[('model_id','=',model_id)]"/>
-                            <field name="subject" colspan="4"/>
-                            <field name="message" select="2" colspan="4"/>
+                            <field name="email" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','email')]}"/>
+                            <field name="subject" colspan="4" attrs="{'required':[('state','=','email')]}"/>
+                            <field name="message" select="2" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e.[[ object.partner_id.name ]]" align="0.0"/>
                         </page>
-                        
                         <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
                             <separator colspan="4" string="SMS Configuration"/>
-                            <field name="mobile" domain="[('model_id','=',model_id)]"/>
-                            <field name="sms" colspan="4"/>
+                            <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','email')]}"/>
+                            <field name="sms" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <newline/>
                             <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
                         </page>
-                        
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
                            	<field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'),('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
@@ -1206,21 +1201,17 @@
                              <field name="write_id" attrs="{'readonly':[('state','!=','object_write')]}"/>
                             <label colspan="4" string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
-                        
                         <page string="Iteration Actions" attrs="{'invisible':[('state','!=','loop')]}">
                             <separator colspan="4" string="Iteration Action Configuration"/>
-                            <field name="loop_action" domain="[('state','!=','loop')]"/>
                             <field name="expression" attrs="{'required':[('state','=','loop')]}"/>
-                            <label colspan="4" string="Define the expression that generate a list" align="0.0"/>
+                            <field name="loop_action" domain="[('state','!=','loop')]" attrs="{'required':[('state','=','loop')]}"/>
                         </page>
-                        
                         <page string="Multi Actions" attrs="{'invisible':[('state','!=','other')]}">
                             <separator colspan="4" string="Other Actions Configuration"/>
                             <field name="child_ids" nolabel="1" colspan="4"/>
                             <label colspan="4" string="Only one client action will be execute, last
                                 clinent action will be consider in case of multiples clients actions" align="0.0"/>
                         </page>
-                        
                     </notebook>
                     <field name="type" readonly="1"/>
                 </form>
@@ -1273,28 +1264,28 @@
         </record>
         <menuitem action="action_model_grid_security" id="menu_ir_access_grid" parent="menu_security_access"/>
 
-		<record id="ir_actions_todo_tree" model="ir.ui.view">
+        <record id="ir_actions_todo_tree" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
-			<field name="name">Config Wizard Steps</field>
+            <field name="name">Config Wizard Steps</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>					
+                    <field name="name" select="1"/>                    
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
-					<field name="active" select="1"/>
+                    <field name="active" select="1"/>
                 </tree>
             </field>
         </record>
         <record id="config_wizard_step_view_form" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
-			<field name="name">Config Wizard Steps</field>
+            <field name="name">Config Wizard Steps</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
                     <field name="name" select="1"/>
-					<field name="active" select="1"/>
+                    <field name="active" select="1"/>
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
@@ -1307,7 +1298,7 @@
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
-			<field name="domain">[('type','=','configure')]</field>
+            <field name="domain">[('type','=','configure')]</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>

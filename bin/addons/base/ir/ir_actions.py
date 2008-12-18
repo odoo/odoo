@@ -364,7 +364,7 @@ server_object_lines()
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
-            
+
     def _select_signals(self, cr, uid, context={}):
         cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
                         " where w.id = a.wkf_id " \
@@ -376,14 +376,14 @@ class actions_server(osv.osv):
             if not rs[0] == None and not rs[1] == None:
                 res.append(rs)
         return res
-    
+
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence'
     _columns = {
         'name': fields.char('Action Name', required=True, size=64),
-        'condition' : fields.char('Condition', size=256),
+        'condition' : fields.char('Condition', size=256, required=True),
         'sub_condition' : fields.char('Condition', size=256),
         'state': fields.selection([
             ('client_action','Client Action'),

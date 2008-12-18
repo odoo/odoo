@@ -76,9 +76,6 @@ if sys.platform == 'win32':
 #----------------------------------------------------------
 logger.notifyChannel("objects", netsvc.LOG_INFO, 'initialising distributed objects services')
 
-dispatcher = netsvc.Dispatcher()
-dispatcher.monitor(signal.SIGINT)
-
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
@@ -162,7 +159,13 @@ if tools.config['xmlrpc']:
     interface = tools.config["interface"]
     secure = tools.config["secure"]
 
-    httpd = netsvc.HttpDaemon(interface, port, secure)
+    import OpenSSL
+
+    try:
+        httpd = netsvc.HttpDaemon(interface, port, secure)
+    except OpenSSL.SSL.Error, error:
+        logger.notifyChannel('xml-rpc-ssl', netsvc.LOG_CRITICAL, "Can't load the certificate and/or the private key files" )
+        sys.exit(1)
 
     if tools.config["xmlrpc"]:
         xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
@@ -214,7 +217,6 @@ if tools.config['netrpc']:
     tinySocket.start()
 if tools.config['xmlrpc']:
     httpd.start()
-#dispatcher.run()
 
 while True:
     time.sleep(1)
