@@ -71,9 +71,11 @@ class product_product(osv.osv):
 
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
 
+        uoms_o = {}
         product2uom = {}
         for product in self.browse(cr, uid, ids, context=context):
             product2uom[product.id] = product.uom_id.id
+            uoms_o[product.uom_id.id] = product.uom_id
 
         prod_ids_str = ','.join(map(str, ids))
         location_ids_str = ','.join(map(str, location_ids))
@@ -115,13 +117,22 @@ class product_product(osv.osv):
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
+        uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
+        if context.get('uom', False):
+            uoms += [context['uom']]
+
+        uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
+        if uoms:
+            uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
+        for o in uoms:
+            uoms_o[o.id] = o
         for amount, prod_id, prod_uom in results:
-            amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-                    context.get('uom', False) or product2uom[prod_id])
+            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
+                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
             res[prod_id] += amount
         for amount, prod_id, prod_uom in results2:
-            amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-                    context.get('uom', False) or product2uom[prod_id])
+            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
+                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
             res[prod_id] -= amount
         return res
 

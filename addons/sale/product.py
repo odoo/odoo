@@ -57,11 +57,13 @@ class product_product(osv.osv):
             _pricelist_calculate,
             method=True,
             string='Sale Pricelists',
+            store=True,
             type="text"),
         'pricelist_purchase':fields.function(
             _pricelist_calculate,
             method=True,
             string='Purchase Pricelists',
+            store=True,
             type="text"),
     }
 

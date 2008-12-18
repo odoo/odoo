@@ -109,17 +109,20 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit)
+
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
             return qty
-        if from_unit['factor_inv_data']:
-            amount = qty * from_unit['factor_inv_data']
+        if from_unit.factor_inv_data:
+            amount = qty * from_unit.factor_inv_data
         else:
-            amount = qty / from_unit['factor']
-        if to_uom_id:
-            if to_unit['factor_inv_data']:
-                amount = rounding(amount / to_unit['factor_inv_data'], to_unit['rounding'])
+            amount = qty / from_unit.factor
+        if to_unit:
+            if to_unit.factor_inv_data:
+                amount = rounding(amount / to_unit.factor_inv_data, to_unit.rounding)
             else:
-                amount = rounding(amount * to_unit['factor'], to_unit['rounding'])
+                amount = rounding(amount * to_unit.factor, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
