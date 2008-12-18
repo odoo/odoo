@@ -466,7 +466,7 @@ class account_move_line(osv.osv):
                     val['account_id'] =  id2
                 elif jt=='purchase':
                     val['account_id'] =  id1
-                if val['account_id']:
+                if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
         return {'value':val}
