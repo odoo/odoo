@@ -215,7 +215,7 @@ class PoolManager(object):
                 logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name,))
                 PoolManager._pools[db_name] = ConnectionPool(ThreadedConnectionPool(1, PoolManager.maxconn, PoolManager.dsn(db_name)), db_name)
             except Exception, e:
-                logger.notifyChannel('dbpool', netsvc.LOG_ERROR, 'Unable to connect to %s: %s' % (db_name, e.message))
+                logger.notifyChannel('dbpool', netsvc.LOG_ERROR, 'Unable to connect to %s: %s' % (db_name, str(e))
                 raise
         return PoolManager._pools[db_name]
     get = staticmethod(get)

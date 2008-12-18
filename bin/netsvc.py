@@ -403,7 +403,7 @@ class TinySocketClientThread(threading.Thread):
                     import pdb
                     tb = sys.exc_info()[2]
                     pdb.post_mortem(tb)
-                e = Exception(e.message)
+                e = Exception(str(e))
                 ts.mysend(e, exception=True, traceback=tb_s)
             except:
                 pass
