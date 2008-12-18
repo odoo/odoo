@@ -144,8 +144,6 @@ def service_exist(name):
     return (name in _service) and bool(_service[name])
 
 
-def get_rpc_paths():
-    return map(lambda s: '/xmlrpc/%s' % s, _service)
 
 
 LOG_DEBUG_RPC = 'debug_rpc'
@@ -291,41 +289,47 @@ class GenericXMLRPCRequestHandler:
                 pdb.post_mortem(tb)
             raise xmlrpclib.Fault(s, tb_s)
 
+
+#### XML-RPC SSL ####
+from ssl import SecureXMLRPCServer
+class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
+    SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
+
+class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
+    def server_bind(self):
+        try:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
+        except:
+            Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
+            sys.exit(1)
+
+#### XML-RPC ####
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+    SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
+
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
+    def server_bind(self):
+        try:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+        except:
+            Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
+            sys.exit(1)
+
 class HttpDaemon(threading.Thread):
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self)
         self.__port = port
         self.__interface = interface
         self.secure = secure
-        if secure:
-            from ssl import SecureXMLRPCServer
-
-            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-
-            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
-                def server_bind(self):
-                    try:
-                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                        SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
-                    except:
-                        Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
-                        sys.exit(1)
-
-            self.server = SecureThreadedXMLRPCServer((interface, port), SecureXMLRPCRequestHandler, 0)
+        if self.secure:
+            handler_class = SecureXMLRPCRequestHandler
+            server_class = SecureThreadedXMLRPCServer
         else:
-            class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-                SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-
-            class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
-                def server_bind(self):
-                    try:
-                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
-                    except:
-                        Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
-                        sys.exit(1)
-            self.server = SimpleThreadedXMLRPCServer((interface, port), SimpleXMLRPCRequestHandler, 0)
+            handler_class = SimpleXMLRPCRequestHandler
+            server_class = SimpleThreadedXMLRPCServer
+        self.server = server_class((interface, port), handler_class, 0)
 
     def attach(self, path, gw):
         pass
