@@ -491,9 +491,6 @@ def trans_generate(lang, modules, dbname=None):
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
     
-    from pprint import pformat
-    netsvc.Logger().notifyChannel('translation', netsvc.LOG_DEBUG, pformat(filter(lambda o:any(isinstance(x, unicode) for x in o), out)))
-
     cr.close()
     return out
 
