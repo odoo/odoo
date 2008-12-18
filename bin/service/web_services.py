@@ -20,20 +20,23 @@
 #
 ##############################################################################
 
-import base64, os, string
-
-import netsvc
-import pooler, security, ir, tools
+import base64 
 import logging
-
-import threading, thread
-
+import os
+import security
+import string
+import thread
+import threading
 import time
-import addons
 
-import sql_db
 from tools.translate import _
+import addons
+import ir
+import netsvc
+import pooler
 import release
+import sql_db
+import tools
 
 logging.basicConfig()
 
