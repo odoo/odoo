@@ -28,6 +28,7 @@ AVAILABLE_STATES = [
     ('done', 'Closed'),
     ('pending','Pending')
 ]
+
 class report_crm_case_section_categ2(osv.osv):
     _name = "report.crm.case.section.categ2"
     _description = "Cases by section and category2"
@@ -46,8 +47,9 @@ class report_crm_case_section_categ2(osv.osv):
     _order = 'category2_id, section_id'
     
     def init(self, cr):
+        cr.drop_view_if_exists("report_crm_case_section_categ2")
         cr.execute("""
-              create or replace view report_crm_case_section_categ2 as (
+              create view report_crm_case_section_categ2 as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date,'YYYY-MM')||'-01' as name,
@@ -84,8 +86,9 @@ class report_crm_case_section_stage(osv.osv):
     _order = 'stage_id, section_id'
     
     def init(self, cr):
+        cr.drop_view_if_exists("report_crm_case_section_stage")
         cr.execute("""
-              create or replace view report_crm_case_section_stage as (
+              create view report_crm_case_section_stage as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date,'YYYY-MM')||'-01' as name,
@@ -120,8 +123,9 @@ class report_crm_case_section_categ_stage(osv.osv):
     _order = 'stage_id, section_id, categ_id'
     
     def init(self, cr):
+        cr.drop_view_if_exists("report_crm_case_section_categ_stage")
         cr.execute("""
-              create or replace view report_crm_case_section_categ_stage as (
+              create view report_crm_case_section_categ_stage as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date,'YYYY-MM')||'-01' as name,
@@ -157,8 +161,9 @@ class report_crm_case_section_categ_categ2(osv.osv):
     _order = 'section_id, categ_id, category2_id'
     
     def init(self, cr):
+        cr.drop_view_if_exists("report_crm_case_section_categ_categ2")
         cr.execute("""
-              create or replace view report_crm_case_section_categ_categ2 as (
+              create view report_crm_case_section_categ_categ2 as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY-MM')||'-01' as name,

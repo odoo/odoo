@@ -20,8 +20,7 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
+
 import os
 from tools import config
 
@@ -30,8 +29,8 @@ from base_module_quality import base_module_quality
 
 class quality_test(base_module_quality.abstract_quality_check):
 
-    def __init__(self, module_path):
-        self._result = """
+    def __init__(self):
+        self.result = """
 Pylint Test:
 ------------
 
@@ -39,36 +38,41 @@ Pylint Test:
 
  
 """
+        self.bool_installed_only = False
+        return None
+
+    def run_test(self, module_path):
         config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'
         list_files = os.listdir(module_path)
-        new_list = []
-        subfolder = {}
         for i in list_files:
             path = os.path.join(module_path, i)
             if os.path.isdir(path):
                 for j in os.listdir(path):
                     list_files.append(os.path.join(i, j))
 
-        dict_files = {}
-        n =0 
+        n = 0 
         score = 0.0
-        print list_files
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
-                res = os.popen('pylint  --rcfile='+config_file_path+' '+file_path).read()
+                res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
                 n += 1
                 leftchar = -1
                 while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
-                    leftchar -=1
+                    leftchar -= 1
                 rightchar = -10
                 while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
-                    rightchar +=1
+                    rightchar += 1
 
-                score += float(res[leftchar+1:rightchar])
-                self._result_details += res
-                self._result += file+": "+ res[leftchar+1:rightchar]+"/10\n" 
-        self._score = score / n
+                try:
+                    score += float(res[leftchar+1:rightchar])
+                    self.result += file + ": " + res[leftchar+1:rightchar] + "/10\n" 
+                except:
+                    score += 0
+                    self.result += file + ": Unable to parse the result. Check the details.\n" 
+
+                self.result_details += res
+        self.score = n and score / n or score
         return None
 
 

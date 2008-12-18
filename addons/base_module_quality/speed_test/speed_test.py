@@ -30,8 +30,8 @@ from base_module_quality import base_module_quality
 
 class quality_test(base_module_quality.abstract_quality_check):
 
-    def __init__(self, module_path):
-        self._result = """
+    def __init__(self):
+        self.result = """
 Speed Test:
 ------------
 
@@ -41,8 +41,11 @@ Speed Test:
         to be continued...
  
 """
+        self.bool_installed_only = True
         return None
 
+    def run_test(self, module_path):
+        return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

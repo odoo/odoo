@@ -617,8 +617,9 @@ class account_analytic_account_summary_month(osv.osv):
             string='Total Time'),
         'month': fields.char('Month', size=25, readonly=True),
     }
+
     def init(self, cr):
-        cr.execute('DROP VIEW IF EXISTS account_analytic_analysis_summary_month')
+        cr.drop_view_if_exists('account_analytic_analysis_summary_month')
         cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
                 'SELECT ' \
                     '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \

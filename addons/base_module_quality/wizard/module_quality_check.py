@@ -21,14 +21,20 @@
 ##############################################################################
 import wizard
 import pooler
-import osv
-import netsvc
 
-import sys
 import tools
 import os
 
 
+#TODO: (utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?)
+#TODO: configure pylint
+#TODO: implement the speed test
+#TODO: implement the simple test
+#TODO: add cheks: do the class quality_check inherits the class abstract_quality_check? 
+#TODO: improve translability
+
+
+#To keep or not? to be discussed...
 #~ form_check = '''<?xml version="1.0"?>
 #~ <form string="Quality check">
     #~ <field name="test" />
@@ -50,47 +56,49 @@ view_form = """<?xml version="1.0"?>
         </page>
     </notebook>
 </form>"""
-#TODO: utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?
-#TODO: remove the first screen which is unused
+
 
 view_field = {
     "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
 }
 
 
-
-
 class wiz_quality_check(wizard.interface):
 
 
-    def _check(self, cr, uid, data, context):
+    def _check(self, cr, uid, data, context={}):
         string_ret = ""
         from tools import config
-        list_folders=os.listdir(config['addons_path']+'/base_module_quality/')
+        pool = pooler.get_pool(cr.dbname)
+        module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
+
+        list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         for item in list_folders:
             path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path+'/'+item+'.py') and item not in ['report','wizard', 'security']:
-                pool=pooler.get_pool(cr.dbname)
-                module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
-
+            if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
                 ad = tools.config['addons_path']
                 module_path = os.path.join(ad, module_data[0].name)
-
-                from base_module_quality import base_module_quality
-
-                item2='base_module_quality.'+item+'.'+item
+                item2 = 'base_module_quality.'+item+'.'+item
                 x = __import__(item2)
-                x2 = getattr(x,item)
-                x3 = getattr(x2,item)
-                val = x3.quality_test(str(module_path))
+                x2 = getattr(x, item)
+                x3 = getattr(x2, item)
+                val = x3.quality_test()
+                if not val.bool_installed_only or module_data[0].state == "installed":
+                    val.run_test(str(module_path))
+                else:
+                    val.result += "The module has to be installed before running this test."
 
-                string_ret += val._result
+                string_ret += val.result
+                print val.result_details
 
         return {'general_info':string_ret}
 
 
 
     states = {
+
+#To keep or not? to be discussed...
+
         #~ 'init': {
             #~ 'actions': [],
             #~ 'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}

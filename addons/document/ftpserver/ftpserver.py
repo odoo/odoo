@@ -1768,7 +1768,7 @@ class FTPHandler(asynchat.async_chat):
             self.__out_dtp_queue = (data, isproducer, file)
 
     def log(self, msg):
-        """Log a message, including additional identifying session data."""
+        """Log a message, including additional identifying session data."""        
         log("[%s]@%s:%s %s" %(self.username, self.remote_ip,
                               self.remote_port, msg))
 

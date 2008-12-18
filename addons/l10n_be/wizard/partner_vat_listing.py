@@ -46,9 +46,9 @@ fields = {
    }
 msg_form = """<?xml version="1.0"?>
 <form string="Notification">
-     <separator string="XML File has been Created."  colspan="4"/>
-     <field name="msg" colspan="4" nolabel="1"/>
-     <field name="file_save" />
+    <separator string="XML File has been Created."  colspan="4"/>
+    <field name="msg" colspan="4" nolabel="1"/>
+    <field name="file_save" />
 </form>"""
 
 msg_fields = {
