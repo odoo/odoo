@@ -21,26 +21,22 @@
 #
 ##############################################################################
 
-import time
-import threading
-
 import SimpleXMLRPCServer
-from ssl import SecureXMLRPCServer
-
-import signal
-import sys
-import xmlrpclib
 import SocketServer
-import socket
 import logging
 import logging.handlers
 import os
+import signal
+import socket
+import sys
+import threading
+import time
+import xmlrpclib
 
 _service = {}
 _group = {}
 _res_id = 1
 _res = {}
-
 
 class ServiceEndPointCall(object):
     def __init__(self, id, method):
@@ -280,7 +276,45 @@ class GenericXMLRPCRequestHandler:
                 pdb.post_mortem(tb)
             raise xmlrpclib.Fault(s, tb_s)
 
+# refactoring from Tryton (B2CK, Cedric Krier, Bertrand Chenal)
+class SSLSocket(object):
+    def __init__(self, socket):
+        if not hasattr(socket, 'sock_shutdown'):
+            from OpenSSL import SSL
+            ctx = SSL.Context(SSL.SSLv23_METHOD)
+            ctx.use_privatekey_file('server.pkey')
+            ctx.use_certificate_file('server.cert')
+            self.socket = SSL.Connection(ctx, socket)
+        else:
+            self.socket = socket
 
+    def shutdown(self, how):
+        return self.socket.sock_shutdown(how)
+
+    def __getattr__(self, name):
+        return getattr(self.socket, name)
+
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
+
+class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
+    def setup(self):
+        self.connection = SSLSocket(self.request)
+        self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
+        self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
+
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+
+class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
+    def __init__(self, server_address, HandlerClass, logRequests=1):
+        SimpleThreadedXMLRPCServer.__init__(self, server_address, HandlerClass, logRequests)
+        self.socket = SSLSocket(socket.socket(self.address_family, self.socket_type))
+        self.server_bind()
+        self.server_activate()
+# end of refactoring from Tryton
 
 class HttpDaemon(threading.Thread):
     def __init__(self, interface, port, secure=False):
@@ -288,22 +322,9 @@ class HttpDaemon(threading.Thread):
         self.__port = port
         self.__interface = interface
         self.secure = bool(secure)
-
-        base_handler_class = [SimpleXMLRPCServer.SimpleXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler][self.secure]
-        class OpenERPXMLRPCRequestHandler(GenericXMLRPCRequestHandler, base_handler_class):
-            base_handler_class.rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
-        
-        base_server_class = [SimpleXMLRPCServer.SimpleXMLRPCServer, SecureXMLRPCServer.SecureXMLRPCServer][self.secure]
-        class OpenERPThreadedXMLRPCServer(SocketServer.ThreadingMixIn, base_server_class):
-            def server_bind(self):
-                try:
-                    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                    base_server_class.server_bind(self)
-                except:
-                    Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
-                    sys.exit(1)
-        
-        self.server = OpenERPThreadedXMLRPCServer((interface, port), OpenERPXMLRPCRequestHandler, 0)
+        handler_class = (SimpleXMLRPCRequestHandler, SecureXMLRPCRequestHandler)[self.secure]
+        server_class = (SimpleThreadedXMLRPCServer, SecureThreadedXMLRPCServer)[self.secure]
+        self.server = server_class((interface, port), handler_class, 0)
 
     def attach(self, path, gw):
         pass
@@ -311,11 +332,7 @@ class HttpDaemon(threading.Thread):
     def stop(self):
         self.running = False
         if os.name != 'nt':
-            value = hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2
-            if self.secure:
-                self.server.socket.sock_shutdown(value)
-            else:
-                self.server.socket.shutdown(value)
+            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
         self.server.socket.close()
 
     def run(self):
