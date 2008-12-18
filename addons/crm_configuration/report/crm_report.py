@@ -29,12 +29,6 @@ AVAILABLE_STATES = [
     ('pending','Pending')
 ]
 
-def drop_view_if_exists(cr, viewname):
-    cr.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
-    if cr.fetchone()[0]:
-        cr.execute("DROP view %s" % (viewname,))
-        cr.commit()
-
 class report_crm_case_section_categ2(osv.osv):
     _name = "report.crm.case.section.categ2"
     _description = "Cases by section and category2"
@@ -53,7 +47,7 @@ class report_crm_case_section_categ2(osv.osv):
     _order = 'category2_id, section_id'
     
     def init(self, cr):
-        drop_view_if_exists(cr, "report_crm_case_section_categ2")
+        cr.drop_view_if_exists("report_crm_case_section_categ2")
         cr.execute("""
               create view report_crm_case_section_categ2 as (
                 select
