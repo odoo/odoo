@@ -257,13 +257,14 @@
 
         <!-- register on configuratuion -->
 
+    </data>
+    <data noupdate="1">
         <record id="config_wizard_step_user" model="ir.actions.todo">
             <field name="name">Create User</field>
             <field name="note">Create your users.
 You will be able to assign groups to users. Groups define the access rights of each users on the different objects of the system.
             </field>
             <field name="action_id" ref="action_config_user_form"/>
-            <field name="state">open</field>
             <field name="sequence">10</field>
         </record>
 
@@ -275,7 +276,6 @@ the simplified interface, which has less options and fields but is easier to
 understand. You will be able to switch to the extended view later.
             </field>
             <field name="action_id" ref="action_config_simple_view_form"/>
-            <field name="state">open</field>
             <field name="sequence">5</field>
         </record>
 

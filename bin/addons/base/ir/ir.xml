@@ -1154,7 +1154,7 @@
                     <field name="condition" colspan="4"/>
                     <notebook colspan="4">
                     
-                    	<page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
+                        <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
                             <separator colspan="4" string="Python Code"/>
                             <field name="code" colspan="4" nolabel="1"/>
                         </page>
@@ -1273,28 +1273,28 @@
         </record>
         <menuitem action="action_model_grid_security" id="menu_ir_access_grid" parent="menu_security_access"/>
 
-		<record id="ir_actions_todo_tree" model="ir.ui.view">
+        <record id="ir_actions_todo_tree" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
-			<field name="name">Config Wizard Steps</field>
+            <field name="name">Config Wizard Steps</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>					
+                    <field name="name" select="1"/>                    
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
-					<field name="active" select="1"/>
+                    <field name="active" select="1"/>
                 </tree>
             </field>
         </record>
         <record id="config_wizard_step_view_form" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
-			<field name="name">Config Wizard Steps</field>
+            <field name="name">Config Wizard Steps</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
                     <field name="name" select="1"/>
-					<field name="active" select="1"/>
+                    <field name="active" select="1"/>
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
@@ -1307,7 +1307,7 @@
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
-			<field name="domain">[('type','=','configure')]</field>
+            <field name="domain">[('type','=','configure')]</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
