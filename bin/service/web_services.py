@@ -462,11 +462,10 @@ class report_spool(netsvc.Service):
         self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
         def go(id, uid, ids, datas, context):
+            cr = pooler.get_db(db).cursor()
             try:
-                cr = pooler.get_db(db).cursor()
                 obj = netsvc.LocalService('report.'+object)
                 (result, format) = obj.create(cr, uid, ids, datas, context)
-                cr.close()
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
@@ -480,6 +479,7 @@ class report_spool(netsvc.Service):
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = exception
                 self._reports[id]['state'] = True
+            cr.close()
             return True
 
         thread.start_new_thread(go, (id, uid, ids, datas, context))
