@@ -85,6 +85,9 @@ def data_files():
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
+        files.append(('.', [opj('bin', 'import_xml.rng'),
+                            opj('bin', 'server.pkey'), 
+                            opj('bin', 'server.cert')]))
     else:
         man_directory = opj('share', 'man')
         files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -132,7 +135,8 @@ options = {
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
                      "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                     "pydot","asyncore","asynchat", "reportlab", "vobject", "HTMLParser"],
+                     "pydot","asyncore","asynchat", "reportlab", "vobject",
+                     "HTMLParser", "OpenSSL", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }

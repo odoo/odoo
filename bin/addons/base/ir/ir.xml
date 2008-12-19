@@ -704,8 +704,8 @@
                                                                                   'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                         <field name="relation_field" attrs="{'required': [('ttype','=','one2many')],
                                                                              'readonly': [('ttype','!=','one2many')]}"/>
-                                        <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
-                                        <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
+                                        <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
+                                        <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                         <field name="state"/>
                                         <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                                     </group>
@@ -782,8 +782,8 @@
                                 <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                                 <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
-                                <field name="selection" attrs="{'required': [('ttype','=','selection')], 'readonly': [('ttype','!=','selection')]}"/>
-                                <field name="size" attrs="{'required': [('ttype','=','char')], 'readonly': [('ttype','!=','char')]}"/>
+                                <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
+                                <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                 <field name="state"/>
                                 <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             </group>

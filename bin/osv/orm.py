@@ -1715,8 +1715,11 @@ class orm(orm_template):
                     'translate': (field['translate']),
                     #'select': int(field['select_level'])
                 }
+
                 if field['ttype'] == 'selection':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
+                elif field['ttype'] == 'reference':
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(selection=eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
                 elif field['ttype'] == 'one2many':
