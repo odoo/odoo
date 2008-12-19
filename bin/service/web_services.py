@@ -70,7 +70,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         cr.autocommit(True)
         time.sleep(0.2)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         cr.close()
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
@@ -149,7 +149,7 @@ class db(netsvc.Service):
         cr.autocommit(True)
         try:
             try:
-                cr.execute('DROP DATABASE ' + db_name)
+                cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
                 logger.notifyChannel("web-services", netsvc.LOG_ERROR,
                         'DROP DB: %s failed:\n%s' % (db_name, e))
@@ -198,7 +198,7 @@ class db(netsvc.Service):
         db = sql_db.db_connect('template1', serialize=1)
         cr = db.cursor()
         cr.autocommit(True)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         cr.close()
 
         cmd = ['pg_restore']
