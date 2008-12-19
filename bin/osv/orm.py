@@ -948,7 +948,6 @@ class orm_template(object):
                 return None
             
 
-            netsvc.Logger().notifyChannel('orm', netsvc.LOG_DEBUG, type(src))
             doc_src = dom.minidom.parseString(encode(src))
             doc_dest = dom.minidom.parseString(encode(inherit))
             toparse = doc_dest.childNodes
