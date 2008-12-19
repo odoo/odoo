@@ -324,7 +324,21 @@ class HttpDaemon(threading.Thread):
         self.secure = bool(secure)
         handler_class = (SimpleXMLRPCRequestHandler, SecureXMLRPCRequestHandler)[self.secure]
         server_class = (SimpleThreadedXMLRPCServer, SecureThreadedXMLRPCServer)[self.secure]
-        self.server = server_class((interface, port), handler_class, 0)
+
+        if self.secure:
+            from OpenSSL.SSL import Error as SSLError
+        else:
+            class SSLError(Exception): pass
+        
+        try: 
+            self.server = server_class((interface, port), handler_class, 0)
+        except SSLError, e:
+            Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can't load the certificate and/or the private key files")
+            sys.exit(1)
+        except Exception, e:
+            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when strarting the server daemon: %s" % (e,))
+            sys.exit(1)
+
 
     def attach(self, path, gw):
         pass
