@@ -1,337 +1,332 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
+        <record model="ir.ui.view" id="view_pos_pos_form">
+            <field name="name">pos.order</field>
+            <field name="model">pos.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sales Order POS">
+                    <notebook >
+                        <page string="Order lines">
+                            <field name="lines" colspan="4" nolabel="1">
+                                <tree string="Order lines" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
+                                    <field name="qty" />
+                                    <field name="discount" />
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal"/>
+                                </tree>
 
-	<record model="ir.ui.view" id="view_pos_pos_form">
-		<field name="name">pos.order</field>
-		<field name="model">pos.order</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Sales Order POS">
-				<notebook >
+                                <form string="Order lines">
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                    <field name="qty" />
+                                    <field name="discount" />
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal"/>
+                                </form>
+                            </field>
+                            <group colspan="4" col="7">
+                                <field name="amount_tax"/>
+                                <field name="amount_total"/>
 
+                                <button name="%(pos_discount)d"
+                                    string="D_iscount"
+                                    type="action" states="draft"/>
 
-					<page string="Order lines">
-					  <field name="lines" colspan="4" nolabel="1">
-					  <tree string="Order lines" editable="bottom">
-					      <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
-					      <field name="qty" />
-					      <field name="discount" />
-					      <field name="price_unit" />
-					      <field name="price_subtotal"/>
-					  </tree>
+                                <button name="dummy_button"
+                                    string="Compute"
+                                    type="object" />
 
-					  <form string="Order lines">
-					      <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-					      <field name="qty" />
-					      <field name="discount" />
-					      <field name="price_unit" />
-					      <field name="price_subtotal"/>
-					  </form>
-				     </field>
-					  <group colspan="4" col="7">
-						<field name="amount_tax"/>
-						<field name="amount_total"/>
+                            </group>
 
-						  <button name="%(pos_discount)d"
-								  string="D_iscount"
-								  type="action" states="draft"/>
+                            <separator colspan="4" string="Actions"/>
+                            <group colspan="4" col="9">
 
-						  <button name="dummy_button"
-								  string="Compute"
-								  type="object" />
+                                <field name="state" select="2"/>
 
-						</group>
+                                <button name="%(pos_add_product)d"
+                                    string="_Add product"
+                                    type="action" states="draft"/>
 
-					<separator colspan="4" string="Actions"/>
-						<group colspan="4" col="9">
+                                <button name="%(pos_payment)d"
+                                    string="Ma_ke Payment"
+                                    type="action" states="draft"/>
 
-						  <field name="state" select="2"/>
+                                <button name="cancel"
+                                    string="Cancel"
+                                    states="paid"/>
 
-						  <button name="%(pos_add_product)d"
-								  string="_Add product"
-								  type="action" states="draft"/>
+                                <button name="set_to_draft"
+                                    string="Set to draft"
+                                    states="cancel"
+                                    type="object" />
 
-						  <button name="%(pos_payment)d"
-								  string="Ma_ke Payment"
-								  type="action" states="draft"/>
-
-						  <button name="cancel"
-								  string="Cancel"
-								   states="paid"/>
-
-						  <button name="set_to_draft"
-									string="Set to draft"
-								   	states="cancel"
-									type="object" />
-
-						  <button name="%(pos_confirm)d"
-								  string="Close"
-								  type="action"
-								  states="paid"/>
-					</group>
-				   </page>
+                                <button name="%(pos_confirm)d"
+                                    string="Close"
+                                    type="action"
+                                    states="paid"/>
+                            </group>
+                        </page>
 
 
-				   <page string="Payment">
-					  <field name="payments" colspan="4" nolabel="1">
-					  <tree string="Payments" editable="bottom">
-					    <field name="journal_id" select="1" width="200"/>
-					    <field name="amount" />
-					  </tree>
-				      </field>
-						<separator string="Invoicing" colspan="4"/>
-					    <field name="nb_print"/>
-						<newline/>
-					    <field name="partner_id" />
-						<newline/>
-					    <field name="invoice_id"/>
-						<label/>
-						<button name="invoice" string="Create _Invoice" states="paid"/>
-						<newline/>
-					    <field name="sale_journal"/>
-					    <field name="account_receivable"/>
-				   </page>
+                        <page string="Payment">
+                            <field name="payments" colspan="4" nolabel="1">
+                                <tree string="Payments" editable="bottom">
+                                    <field name="journal_id" select="1" width="200"/>
+                                    <field name="amount" />
+                                </tree>
+                            </field>
+                            <separator string="Invoicing" colspan="4"/>
+                            <field name="nb_print"/>
+                            <newline/>
+                            <field name="partner_id" />
+                            <newline/>
+                            <field name="invoice_id"/>
+                            <label/>
+                            <button name="invoice" string="Create _Invoice" states="paid"/>
+                            <newline/>
+                            <field name="sale_journal"/>
+                            <field name="account_receivable"/>
+                        </page>
 
-				   <page string="Other">
-					    <field name="pricelist_id" domain="[('type','=','sale')]"/>
-					    <field name="shop_id" />
-						<field name="name" select="1"/>
-						<field name="date_order" select="1"/>
-						<field name="date_validity" />
-						<field name="user_id" />
+                        <page string="Other">
+                            <field name="pricelist_id" domain="[('type','=','sale')]"/>
+                            <field name="shop_id" />
+                            <field name="name" select="1"/>
+                            <field name="date_order" select="1"/>
+                            <field name="date_validity" />
+                            <field name="user_id" />
 
-						<separator string="Notes" colspan="4"/>
-						<field name="note" nolabel="1" colspan="4"/>
-						<separator string="Pickings" colspan="4"/>
-						<field name="pickings" nolabel="1" colspan="4"/>
+                            <separator string="Notes" colspan="4"/>
+                            <field name="note" nolabel="1" colspan="4"/>
+                            <separator string="Pickings" colspan="4"/>
+                            <field name="pickings" nolabel="1" colspan="4"/>
 
-				   </page>
-				</notebook>
+                        </page>
+                    </notebook>
 
-			</form>
-		</field>
-	</record>
-
-
-	<record model="ir.actions.act_window" id="action_pos_pos_form">
-		<field name="name">Point of Sale</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">pos.order</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_pos_pos_form"/>
-		<field name="domain">[ ('date_order','>=',time.strftime('%Y-%m-%d')) ]</field>
-	</record>
+                </form>
+            </field>
+        </record>
 
 
-	<record model="ir.ui.view" id="view_pos_order_tree">
-		<field name="name">Sales</field>
-		<field name="model">pos.order</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="POS Orders">
-				<field name="name"/>
-				<field name="date_order"/>
-				<field name="user_id"/>
-				<field name="invoice_id"/>
-				<field name="last_out_picking"/>
-				<field name="state"/>
-				<field name="amount_total" sum="Amount total"/>
-			</tree>
-		</field>
-	</record>
-	<menuitem name="Point of Sale" id="menu_point_root" />
-	<menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_pos_form"/>
-	<wizard 
-		string="Wizard default journals"
-		model="pos.config.journal"
-		name="pos.config.journal"
-		menu="False"
-		id="wizard_default_journal"/>
-
-	<menuitem name="Configuration" parent="menu_point_root" id="menu_point_config"/>
-	<menuitem
-		name="Default journals" parent="menu_point_config"
-		string="Default journals"
-		action="wizard_default_journal"
-		type="wizard"
-		id="menu_wizard_default_journal" />
-
-<!-- 	<record model="ir.actions.act_window" id="action_pos_order_tree"> -->
-<!-- 		<field name="name">pos.order</field> -->
-<!-- 		<field name="type">ir.actions.act_window</field> -->
-<!-- 		<field name="res_model">pos.order</field> -->
-<!-- 		<field name="view_type">form</field> -->
-<!-- 		<field name="view_mode">tree,form</field> -->
-<!-- 		<field name="view_id" ref="pos.view_pos_order_tree"/> -->
-<!-- 		<field name="domain">[('invoice_id','=',False)]</field> -->
-<!-- 	</record> -->
-<!-- 	<menuitem name="Point of Sale/Point of Sale/Orders not invoiced" id="menu_action_pos_order_tree" action="action_pos_order_tree"/> -->
-
-	<record model="ir.actions.act_window" id="action_pos_order_tree2">
-		<field name="name">Point of Sale</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">pos.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_pos_order_tree"/>
-		<field name="domain">[('date_order','=', time.strftime('%Y-%m-%d'))]</field>
-	</record>
-	
-	<menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/>
-
-	<record model="ir.actions.act_window" id="action_pos_order_tree3">
-		<field name="name">Point of Sale</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">pos.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_pos_order_tree"/>
-	</record>
-	<menuitem name="All orders" parent="menu_point_ofsale" id="menu_action_pos_order_tree3" action="action_pos_order_tree3"/>
+        <record model="ir.actions.act_window" id="action_pos_pos_form">
+            <field name="name">Point of Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_pos_pos_form"/>
+            <field name="domain">[ ('date_order','>=',time.strftime('%Y-%m-%d')) ]</field>
+        </record>
 
 
-	<record model="ir.ui.view" id="view_pos_order_line">
-		<field name="name">Sale lines</field>
-		<field name="model">pos.order.line</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="POS Order lines">
-		      <field name="product_id" readonly="1"/>
-		      <field name="qty" readonly="1" sum="Total qty"/>
-		      <field name="discount" readonly="1"/>
-		      <field name="price_unit" readonly="1"/>
-		      <field name="price_subtotal" readonly="1" sum="Sum of subtotals"/>
-		      <field name="create_date" readonly="1"/>
-			</tree>
-		</field>
-	</record>
+        <record model="ir.ui.view" id="view_pos_order_tree">
+            <field name="name">Sales</field>
+            <field name="model">pos.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="POS Orders">
+                    <field name="name"/>
+                    <field name="date_order"/>
+                    <field name="user_id"/>
+                    <field name="invoice_id"/>
+                    <field name="last_out_picking"/>
+                    <field name="state"/>
+                    <field name="amount_total" sum="Amount total"/>
+                </tree>
+            </field>
+        </record>
+        <menuitem name="Point of Sale" id="menu_point_root" />
+        <menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_pos_form"/>
+        <wizard 
+            string="Wizard default journals"
+            model="pos.config.journal"
+            name="pos.config.journal"
+            menu="False"
+            id="wizard_default_journal"/>
 
-	<record model="ir.ui.view" id="view_pos_order_line_form">
-		<field name="name">Sale line</field>
-		<field name="model">pos.order.line</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="POS Order line">
-		      <field name="product_id" readonly="1" select="1"/>
-		      <field name="qty" readonly="1" select="1"/>
-		      <field name="discount" readonly="1" select="2"/>
-		      <field name="price_unit" readonly="1" select="2"/>
-		      <field name="price_subtotal" readonly="1" />
-		      <field name="create_date" readonly="1" select="1"/>
-			</form>
-		</field>
-	</record>
+        <menuitem name="Configuration" parent="menu_point_root" id="menu_point_config"/>
+        <menuitem
+            name="Default journals" parent="menu_point_config"
+            string="Default journals"
+            action="wizard_default_journal"
+            type="wizard"
+            id="menu_wizard_default_journal" />
 
-	<record model="ir.actions.act_window" id="action_pos_order_line">
-		<field name="name">Sale line</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">pos.order.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="view_pos_order_line"/>
-	</record>
-	<menuitem name="POS Lines" parent="menu_point_root" id="menu_action_pos_order_line" action="action_pos_order_line"/>
+        <!-- 	<record model="ir.actions.act_window" id="action_pos_order_tree"> -->
+            <!-- 		<field name="name">pos.order</field> -->
+            <!-- 		<field name="type">ir.actions.act_window</field> -->
+            <!-- 		<field name="res_model">pos.order</field> -->
+            <!-- 		<field name="view_type">form</field> -->
+            <!-- 		<field name="view_mode">tree,form</field> -->
+            <!-- 		<field name="view_id" ref="pos.view_pos_order_tree"/> -->
+            <!-- 		<field name="domain">[('invoice_id','=',False)]</field> -->
+            <!-- 	</record> -->
+        <!-- 	<menuitem name="Point of Sale/Point of Sale/Orders not invoiced" id="menu_action_pos_order_tree" action="action_pos_order_tree"/> -->
 
-	<record model="ir.actions.act_window" id="action_pos_order_line_day">
-		<field name="name">Sale line</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">pos.order.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="view_pos_order_line"/>
-		<field name="domain">[('create_date','like',time.strftime('%Y-%m-%d'))]</field>
-	</record>
-	<menuitem name="POS Lines of the day" parent="menu_action_pos_order_line" id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
+        <record model="ir.actions.act_window" id="action_pos_order_tree2">
+            <field name="name">Point of Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_pos_order_tree"/>
+            <field name="domain">[('date_order','=', time.strftime('%Y-%m-%d'))]</field>
+        </record>
 
+        <menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/>
 
-	<!-- report -->
-
-	<record model="ir.ui.view" id="view_pos_trans_user_form">
-	<field name="name">report.trans.pos.user.form</field>
-	<field name="model">report.transaction.pos</field>
-	<field name="type">form</field>
-	<field name="arch" type="xml">
-		<form string="POS ">
-			<field name="user_id" select="1"/>
-			<field name="journal_id" select="1"/>
-			<field name="date_create" select="1"/>
-			<field name="no_trans" select="2"/>
-			<field name="amount" select="2"/>
-			<field name="invoice_id" select="2"/>
-			</form>
-		</field>
-	</record>
+        <record model="ir.actions.act_window" id="action_pos_order_tree3">
+            <field name="name">Point of Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_pos_order_tree"/>
+        </record>
+        <menuitem name="All orders" parent="menu_point_ofsale" id="menu_action_pos_order_tree3" action="action_pos_order_tree3"/>
 
 
-	<record model="ir.ui.view" id="view_trans_pos_user_tree">
-		<field name="name">Sales by user</field>
-		<field name="model">report.transaction.pos</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="POS">
-			<field name="date_create"/>
-			<field name="user_id"/>
-			<field name="journal_id"/>
-			<field name="no_trans" sum="Total Transaction"/>
-			<field name="amount" sum="Amount total"/>
-			<field name="invoice_id"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_trans_pos_tree_today">
-		<field name="name">Sales by user</field>
-		<field name="res_model">report.transaction.pos</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('date_create','=',time.strftime('%Y-%m-%d'))]</field>
-	</record>
-	<menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep"/>
-	<menuitem name="Sales of the day" parent="menu_point_rep" action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
-<!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree_today"> -->
-<!-- 		<field name="name">Sales by user</field> -->
-<!-- 		<field name="res_model">report.transaction.pos</field> -->
-<!-- 		<field name="view_type">form</field> -->
-<!-- 		<field name="view_mode">tree</field> -->
-<!-- 		<field name="domain">[('date_create','=',time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field> -->
-<!-- 	</record> -->
-<!-- 	<menuitem name="Point of Sale/Reporting/Sales of the day/My sales of the day" action="action_trans_pos_user_tree_today" id="menu_trans_pos_user_tree_today"/> -->
+        <record model="ir.ui.view" id="view_pos_order_line">
+            <field name="name">Sale lines</field>
+            <field name="model">pos.order.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="POS Order lines">
+                    <field name="product_id" readonly="1"/>
+                    <field name="qty" readonly="1" sum="Total qty"/>
+                    <field name="discount" readonly="1"/>
+                    <field name="price_unit" readonly="1"/>
+                    <field name="price_subtotal" readonly="1" sum="Sum of subtotals"/>
+                    <field name="create_date" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_order_line_form">
+            <field name="name">Sale line</field>
+            <field name="model">pos.order.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="POS Order line">
+                    <field name="product_id" readonly="1" select="1"/>
+                    <field name="qty" readonly="1" select="1"/>
+                    <field name="discount" readonly="1" select="2"/>
+                    <field name="price_unit" readonly="1" select="2"/>
+                    <field name="price_subtotal" readonly="1" />
+                    <field name="create_date" readonly="1" select="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_pos_order_line">
+            <field name="name">Sale line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_pos_order_line"/>
+        </record>
+        <menuitem name="POS Lines" parent="menu_point_root" id="menu_action_pos_order_line" action="action_pos_order_line"/>
+
+        <record model="ir.actions.act_window" id="action_pos_order_line_day">
+            <field name="name">Sale line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_pos_order_line"/>
+            <field name="domain">[('create_date','like',time.strftime('%Y-%m-%d'))]</field>
+        </record>
+        <menuitem name="POS Lines of the day" parent="menu_action_pos_order_line" id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
 
 
-	<record model="ir.actions.act_window" id="action_trans_pos_tree_month">
-		<field name="name">Sales by user</field>
-		<field name="res_model">report.transaction.pos</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('date_create','like',time.strftime('%Y-%m'))]</field>
-	</record>
-	<menuitem name="Sales of the month" parent="menu_point_rep" action="action_trans_pos_tree_month" id="menu_trans_pos_tree_month"/>
-<!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree_month"> -->
-<!-- 		<field name="name">Sales by user</field> -->
-<!-- 		<field name="res_model">report.transaction.pos</field> -->
-<!-- 		<field name="view_type">form</field> -->
-<!-- 		<field name="view_mode">tree,form</field> -->
-<!-- 		<field name="domain">[('date_create','like',time.strftime('%Y-%m')),('user_id','=',uid)]</field> -->
-<!-- 	</record> -->
-<!-- 	<menuitem name="Point of Sale/Reporting/Sales of the month/My sales of the month" action="action_trans_pos_user_tree_month" id="menu_trans_pos_user_tree_month"/> -->
+        <!-- report -->
+
+        <record model="ir.ui.view" id="view_pos_trans_user_form">
+            <field name="name">report.trans.pos.user.form</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="POS ">
+                    <field name="user_id" select="1"/>
+                    <field name="journal_id" select="1"/>
+                    <field name="date_create" select="1"/>
+                    <field name="no_trans" select="2"/>
+                    <field name="amount" select="2"/>
+                    <field name="invoice_id" select="2"/>
+                </form>
+            </field>
+        </record>
 
 
-	<record model="ir.actions.act_window" id="action_trans_pos_tree">
-		<field name="name">Sales by user</field>
-		<field name="res_model">report.transaction.pos</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="All the sales" parent="menu_point_rep" action="action_trans_pos_tree" id="menu_trans_pos_tree"/>
-<!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree"> -->
-<!-- 		<field name="name">Sales by user</field> -->
-<!-- 		<field name="res_model">report.transaction.pos</field> -->
-<!-- 		<field name="view_type">form</field> -->
-<!-- 		<field name="view_mode">tree</field> -->
-<!-- 		<field name="domain">[('user_id','=',uid)]</field> -->
-<!-- 	</record> -->
-<!-- 	<menuitem name="Point of Sale/Reporting/All the sales/All my sales " action="action_trans_pos_user_tree" id="menu_trans_pos_user_tree"/> -->
+        <record model="ir.ui.view" id="view_trans_pos_user_tree">
+            <field name="name">Sales by user</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="POS">
+                    <field name="date_create"/>
+                    <field name="user_id"/>
+                    <field name="journal_id"/>
+                    <field name="no_trans" sum="Total Transaction"/>
+                    <field name="amount" sum="Amount total"/>
+                    <field name="invoice_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_trans_pos_tree_today">
+            <field name="name">Sales by user</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('date_create','=',time.strftime('%Y-%m-%d'))]</field>
+        </record>
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep"/>
+        <menuitem name="Sales of the day" parent="menu_point_rep" action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
+        <!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree_today"> -->
+            <!-- 		<field name="name">Sales by user</field> -->
+            <!-- 		<field name="res_model">report.transaction.pos</field> -->
+            <!-- 		<field name="view_type">form</field> -->
+            <!-- 		<field name="view_mode">tree</field> -->
+            <!-- 		<field name="domain">[('date_create','=',time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field> -->
+            <!-- 	</record> -->
+        <!-- 	<menuitem name="Point of Sale/Reporting/Sales of the day/My sales of the day" action="action_trans_pos_user_tree_today" id="menu_trans_pos_user_tree_today"/> -->
 
 
-</data>
+        <record model="ir.actions.act_window" id="action_trans_pos_tree_month">
+            <field name="name">Sales by user</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_create','like',time.strftime('%Y-%m'))]</field>
+        </record>
+        <menuitem name="Sales of the month" parent="menu_point_rep" action="action_trans_pos_tree_month" id="menu_trans_pos_tree_month"/>
+        <!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree_month"> -->
+            <!-- 		<field name="name">Sales by user</field> -->
+            <!-- 		<field name="res_model">report.transaction.pos</field> -->
+            <!-- 		<field name="view_type">form</field> -->
+            <!-- 		<field name="view_mode">tree,form</field> -->
+            <!-- 		<field name="domain">[('date_create','like',time.strftime('%Y-%m')),('user_id','=',uid)]</field> -->
+            <!-- 	</record> -->
+        <!-- 	<menuitem name="Point of Sale/Reporting/Sales of the month/My sales of the month" action="action_trans_pos_user_tree_month" id="menu_trans_pos_user_tree_month"/> -->
+
+
+        <record model="ir.actions.act_window" id="action_trans_pos_tree">
+            <field name="name">Sales by user</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem name="All the sales" parent="menu_point_rep" action="action_trans_pos_tree" id="menu_trans_pos_tree"/>
+        <!-- 	<record model="ir.actions.act_window" id="action_trans_pos_user_tree"> -->
+            <!-- 		<field name="name">Sales by user</field> -->
+            <!-- 		<field name="res_model">report.transaction.pos</field> -->
+            <!-- 		<field name="view_type">form</field> -->
+            <!-- 		<field name="view_mode">tree</field> -->
+            <!-- 		<field name="domain">[('user_id','=',uid)]</field> -->
+            <!-- 	</record> -->
+        <!-- 	<menuitem name="Point of Sale/Reporting/All the sales/All my sales " action="action_trans_pos_user_tree" id="menu_trans_pos_user_tree"/> -->
+    </data>
 </openerp>
