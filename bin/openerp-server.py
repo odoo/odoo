@@ -154,23 +154,16 @@ if tools.config['xmlrpc']:
     try:
         port = int(tools.config["port"])
     except Exception:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["port"],))
+        logger.notifyChannel("init", netsvc.LOG_CRITICAL, "invalid port: %r" % (tools.config["port"],))
         sys.exit(1)
     interface = tools.config["interface"]
     secure = tools.config["secure"]
 
-    import OpenSSL
+    httpd = netsvc.HttpDaemon(interface, port, secure)
 
-    try:
-        httpd = netsvc.HttpDaemon(interface, port, secure)
-    except OpenSSL.SSL.Error, error:
-        logger.notifyChannel('xml-rpc-ssl', netsvc.LOG_CRITICAL, "Can't load the certificate and/or the private key files" )
-        sys.exit(1)
-
-    if tools.config["xmlrpc"]:
-        xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
-        httpd.attach("/xmlrpc", xml_gw)
-        logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC%s services, port %s" % ((tools.config['secure'] and ' Secure' or ''), port))
+    xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
+    httpd.attach("/xmlrpc", xml_gw)
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC%s services, port %s" % ((tools.config['secure'] and ' Secure' or ''), port))
 
 #
 #if tools.config["soap"]:
