@@ -73,14 +73,12 @@ class configmanager(object):
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
-            
+            'secure' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
         }
 
         hasSSL = check_ssl()
-        if hasSSL:
-            self.options['secure'] = False
 
         loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC')]) 
 
