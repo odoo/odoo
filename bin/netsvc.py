@@ -21,6 +21,11 @@
 #
 ##############################################################################
 
+#    The refactoring about the OpenSSL support come from Tryton
+#    Copyright (C) 2007-2008 Cédric Krier.
+#    Copyright (C) 2007-2008 Bertrand Chenal.
+#    Copyright (C) 2008 B2CK SPRL.
+
 import SimpleXMLRPCServer
 import SocketServer
 import logging
@@ -276,7 +281,6 @@ class GenericXMLRPCRequestHandler:
                 pdb.post_mortem(tb)
             raise xmlrpclib.Fault(s, tb_s)
 
-# refactoring from Tryton (B2CK, Cedric Krier, Bertrand Chenal)
 class SSLSocket(object):
     def __init__(self, socket):
         if not hasattr(socket, 'sock_shutdown'):
@@ -314,7 +318,6 @@ class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
         self.socket = SSLSocket(socket.socket(self.address_family, self.socket_type))
         self.server_bind()
         self.server_activate()
-# end of refactoring from Tryton
 
 class HttpDaemon(threading.Thread):
     def __init__(self, interface, port, secure=False):
