@@ -366,10 +366,10 @@ def trans_generate(lang, modules, dbname=None):
                     if result['type'] != 'form':
                         continue
                     name = "%s,%s" % (encode(obj.wiz_name), state_name)
-
+                    
                     def_params = {
                         'string': ('wizard_field', lambda s: [encode(s)]),
-                        'selection': ('selection', lambda s: [encode(e[1]) for e in s]),
+                        'selection': ('selection', lambda s: [encode(e[1]) for e in (callable(s) and s(None, cr, uid, {}) or s)]),
                         'help': ('help', lambda s: [encode(s)]),
                     }
 
@@ -444,9 +444,9 @@ def trans_generate(lang, modules, dbname=None):
                 d = xml.dom.minidom.parseString(xmlstr)
                 for t in parse_func(d.documentElement):
                     push_translation(module, report_type, name, 0, t)
-            except IOError:
+            except IOError, xml.dom.expatbuilder.expat.ExpatError:
                 if fname:
-                    logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
+                    logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
