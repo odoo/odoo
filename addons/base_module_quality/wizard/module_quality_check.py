@@ -30,29 +30,17 @@ import os
 #TODO: configure pylint
 #TODO: implement the speed test
 #TODO: implement the simple test
-#TODO: add cheks: do the class quality_check inherits the class abstract_quality_check? 
+#TODO: add cheks: do the class quality_check inherits the class abstract_quality_check?
 #TODO: improve translability
 
 
 #To keep or not? to be discussed...
-#~ form_check = '''<?xml version="1.0"?>
-#~ <form string="Quality check">
-    #~ <field name="test" />
-#~ </form>'''
-
-#~ fields_check = {
-    #~ 'test': {
-        #~ 'string':'Tests', 'type':'selection',  'required':True,
-        #~ 'selection': [('pylint', 'Pylint'), ('othertest','other')],
-        #~ 'default': lambda *args: 'pylint'
-    #~ },
-    #~ }
 
 view_form = """<?xml version="1.0"?>
 <form string="Check quality">
     <notebook>
         <page string="Summary">
-            <field name="general_info" nolabel="1" colspan="4" height="350" width="400"/>
+            <field name="general_info" nolabel="1" colspan="4" height="350" width="800"/>
         </page>
     </notebook>
 </form>"""
@@ -71,8 +59,8 @@ class wiz_quality_check(wizard.interface):
         from tools import config
         pool = pooler.get_pool(cr.dbname)
         module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
-
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
+        module_name = module_data[0].name
         for item in list_folders:
             path = config['addons_path']+'/base_module_quality/'+item
             if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
@@ -83,17 +71,15 @@ class wiz_quality_check(wizard.interface):
                 x2 = getattr(x, item)
                 x3 = getattr(x2, item)
                 val = x3.quality_test()
-                if not val.bool_installed_only or module_data[0].state == "installed":
+                if (not val.bool_installed_only or module_data[0].state == "installed") and item == 'method_test':
+                    val.run_test(str(module_path), module_name, cr, uid)
+                elif not val.bool_installed_only or module_data[0].state == "installed" :
                     val.run_test(str(module_path))
                 else:
                     val.result += "The module has to be installed before running this test."
-
                 string_ret += val.result
-                print val.result_details
 
         return {'general_info':string_ret}
-
-
 
     states = {
 
@@ -107,8 +93,8 @@ class wiz_quality_check(wizard.interface):
             'actions': [_check],
             'result': {'type':'form', 'arch':view_form, 'fields':view_field, 'state':[('end','Ok')]},
         },
+        }
 
-    }
 wiz_quality_check('base.module.quality')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
