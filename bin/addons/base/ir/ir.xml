@@ -1152,7 +1152,7 @@
 	                    <field name="model_id" select="1"/>
 	                    <field name="state" select="1"/>
 	                    <field name="sequence" select="2"/>
-	                    <field name="condition" colspan="3"/>
+	                    <field name="condition"/>
 	                </group>
                     <notebook colspan="4">
                         <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
@@ -1228,6 +1228,7 @@
                 <tree string="Server Actions">
                     <field name="name"/>
                     <field name="state"/>
+                    <field name="model_id"/>
                     <field name="sequence"/>
                 </tree>
             </field>
