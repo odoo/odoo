@@ -65,8 +65,7 @@ class wizard_info_get(wizard.interface):
                 'module_download': '\n'.join(url)}
 
     def _check_upgrade_module(self,cr,uid,data,context):
-        db, pool = pooler.get_db_and_pool(cr.dbname)
-        cr = db.cursor()
+        pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.module.module')
         ids = mod_obj.search(cr, uid, [
             ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
@@ -76,8 +75,7 @@ class wizard_info_get(wizard.interface):
             return 'end'
 
     def _upgrade_module(self, cr, uid, data, context):
-        db, pool = pooler.get_db_and_pool(cr.dbname)
-        cr = db.cursor()
+        pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.module.module')
         ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         unmet_packages = []
@@ -158,8 +156,7 @@ class wizard_info_get_simple(wizard.interface):
                 'module_download': '\n'.join(url)}
 
     def _check_upgrade_module(self,cr,uid,data,context):
-        db, pool = pooler.get_db_and_pool(cr.dbname)
-        cr = db.cursor()
+        pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.module.module')
         ids = mod_obj.search(cr, uid, [
             ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
@@ -169,8 +166,7 @@ class wizard_info_get_simple(wizard.interface):
             return 'end'
 
     def _upgrade_module(self, cr, uid, data, context):
-        db, pool = pooler.get_db_and_pool(cr.dbname)
-        cr = db.cursor()
+        pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.module.module')
         ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         unmet_packages = []
