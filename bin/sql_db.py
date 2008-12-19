@@ -82,7 +82,10 @@ class Cursor(object):
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.autocommit(False)
         self.dbname = pool.dbname
-    
+        
+        from inspect import stack
+        self.__caller = tuple(stack()[2][1:3])
+        
     def __del__(self):
         if hasattr(self, '_obj'):
             # Oops. 'self' has not been closed explicitly.
@@ -90,35 +93,24 @@ class Cursor(object):
             # but the database connection is not put back into the connection
             # pool, preventing some operation on the database like dropping it.
             # This can also lead to a server overload.
-            log('Cursor not closed explicitly', netsvc.LOG_WARNING)
+            msg = "Cursor not closed explicitly\n"  \
+                  "Cursor was created at %s:%s" % self.__caller
+
+            log(msg, netsvc.LOG_WARNING)
             self.close()
 
     @check
     def execute(self, query, params=None):
-        if params is None:
-            params=()
-        if not isinstance(params, (tuple, list)):
-            params = (params,)
-
-        def base_string(s):
-            if isinstance(s, unicode):
-                return s.encode('utf-8')
-            return s
-        p=map(base_string, params)
-        query = base_string(query)
-
         if '%d' in query or '%f' in query:
-            #import traceback
-            #traceback.print_stack()
             log(query, netsvc.LOG_WARNING)
             log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
-            if p:
+            if params:
                 query = query.replace('%d', '%s').replace('%f', '%s')
 
         if self.sql_log:
             now = mdt.now()
         
-        res = self._obj.execute(query, p or None)
+        res = self._obj.execute(query, params)
 
         if self.sql_log:
             log("query: %s" % self._obj.query)
@@ -158,6 +150,7 @@ class Cursor(object):
         process('from')
         process('into')
         self.count = 0
+        self.sql_log = False
 
     @check
     def close(self):
