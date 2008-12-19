@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Values -->
+        
+        <record id="values_view_form_action" model="ir.ui.view">
+            <field name="name">ir.values.form.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Connect Events to Actions">
+                    <field name="name" select="1" required="1"/>
+                    <newline/>
+                    <group col="2" colspan="2">
+                        <separator string="Action Source" colspan="2"/>
+                        <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                        <field name="model" select="1" required="1"/>
+                        <field name="res_id"/>
+                        <field name="key2" select="2" required="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Action To Launch" colspan="2"/>
+                        <field name="action_id" on_change="onchange_action_id(action_id)"/>
+                        <field name="value_unpickle" required="1"/>
+                        <field name="object" readonly="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="act_values_form_action" model="ir.actions.act_window">
+            <field name="name">Connect Actions To Client Events</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.values</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="values_view_form_action"/>
+            <field name="domain">[('key','=','action')]</field>
+            <field name="context">{'read':'default','default_object':1}</field>
+        </record>
+        
+        <menuitem action="act_values_form_action" id="menu_values_form_action" parent="base.menu_custom_action"/>
+        
         
         <!-- Values -->
         

@@ -101,6 +101,7 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None):
+        self.count+=1
         if '%d' in query or '%f' in query:
             log(query, netsvc.LOG_WARNING)
             log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
