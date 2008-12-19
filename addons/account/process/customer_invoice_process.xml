@@ -18,11 +18,10 @@
         <record id="process_node_analytic0" model="process.node">
             <field name="menu_id" ref="account.account_analytic_def_account"/>
             <field name="model_id" ref="account.model_account_analytic_account"/>
-            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Analytic&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic costs to reinvoice purchases, timesheets, ...&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
-            <field name="subflow_id" ref="process_process_invoiceworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
