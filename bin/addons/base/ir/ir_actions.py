@@ -416,7 +416,7 @@ class actions_server(osv.osv):
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
         'record_id':fields.many2one('ir.model.fields', 'Create Id', help="Provide the field name from where the record id stores after the create operations, if its empty, you can not track the new record"),
         'write_id':fields.char('Write Id', size=256, help="Provide the field name from where the record id refer for the write operation, if its empty it will refer to the active id of the object"),
-        'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="select the action, which will be executes"),
+        'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="select the action, which will be executes. Loop action will not be avaliable inside loop"),
         'expression':fields.char('Loop Expression', size=512, help="enter the field/expression that will return the list, i.e. select the sale order in Object, and we can have loop on sales order line. Expression = `object.order_line`"),
     }
     _defaults = {

@@ -1147,11 +1147,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action">
-                    <field name="name" select="1"/>
-                    <field name="state" select="1"/>
-                    <field name="model_id" select="1"/>
-                    <field name="sequence" select="2"/>
-                    <field name="condition" colspan="4"/>
+                	<group col="6" colspan="4">
+	                    <field name="name" select="1"/>
+	                    <field name="model_id" select="1"/>
+	                    <field name="state" select="1"/>
+	                    <field name="sequence" select="2"/>
+	                    <field name="condition" colspan="3"/>
+	                </group>
                     <notebook colspan="4">
                         <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
                             <separator colspan="4" string="Python Code"/>
