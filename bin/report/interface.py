@@ -212,7 +212,7 @@ from report_sxw import report_sxw
 def register_all(db):
     opj = os.path.join
     cr = db.cursor()
-    cr.execute("SELECT * FROM ir_act_report_xml WHERE auto ORDER BY id")
+    cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
     result = cr.dictfetchall()
     cr.close()
     for r in result:
