@@ -28,6 +28,15 @@ import netsvc
 import logging
 import release
 
+def check_ssl():
+    try:
+        from OpenSSL import SSL
+        import socket
+
+        return hasattr(socket, 'ssl')
+    except:
+        return False
+
 class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
@@ -58,7 +67,6 @@ class configmanager(object):
             'import_partial': "",
             'pidfile': None,
             'logfile': None,
-            'secure': False,
             'smtp_server': 'localhost',
             'smtp_user': False,
             'smtp_port':25,
@@ -69,7 +77,11 @@ class configmanager(object):
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
         }
-        
+
+        hasSSL = check_ssl()
+        if hasSSL:
+            self.options['secure'] = False
+
         loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC')]) 
 
         version = "%s %s" % (release.description, release.version)
@@ -96,7 +108,8 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option('--log-level', dest='log_level', type='choice', choices=loglevels.keys(), help='specify the level of the logging. Accepted values: ' + str(loglevels.keys()))
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), help="specify the level at which a failed assertion will stop the server. Accepted values: " + str(loglevels.keys()))
-        parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+        if hasSSL:
+            parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
         
         parser.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
