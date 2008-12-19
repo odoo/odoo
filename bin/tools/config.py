@@ -170,9 +170,16 @@ class configmanager(object):
         # the same for the pidfile
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
-        
-        for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'smtp_port', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path'):
+
+        keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
+                'db_port', 'logfile', 'pidfile', 'smtp_ssl', 'smtp_port', 
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
+                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
+
+        if hasSSL:
+            keys.append('secure')
+
+        for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
