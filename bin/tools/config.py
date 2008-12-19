@@ -109,13 +109,15 @@ class configmanager(object):
         if hasSSL:
             parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
         
-        parser.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
-        parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
-        parser.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
-        parser.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
-        parser.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
-        parser.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        group = optparse.OptionGroup(parser, "SMTP Configuration")
+        group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
+        group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
+        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
+        group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
+        group.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        parser.add_option_group(group)
         
         group = optparse.OptionGroup(parser, "Modules related options")
         group.add_option("-g", "--upgrade", action="store_true", dest="upgrade", default=False, help="Upgrade/install/uninstall modules")
