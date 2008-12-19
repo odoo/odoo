@@ -49,19 +49,45 @@ class ir_values(osv.osv):
             value = pickle.dumps(eval(value))
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
 
+    def onchange_object_id(self, cr, uid, ids, object_id, context={}):
+        if not object_id: return {}
+        act = self.pool.get('ir.model').browse(cr, uid, object_id, context=context)
+        return {
+                'value': {'model': act.model}
+        }
+
+    def onchange_action_id(self, cr, uid, ids, action_id, context={}):
+        if not action_id: return {}
+        act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
+        return {
+                'value': {'value_unpickle': act.type+','+str(act.id)}
+        }
+
     _columns = {
         'name': fields.char('Name', size=128),
-        'model': fields.char('Object', size=128),
+        'model_id': fields.many2one('ir.model', 'Object', size=128,
+            help="This field is not used, it only helps you to select a good model."),
+        'model': fields.char('Object Name', size=128),
+        'action_id': fields.many2one('ir.actions.actions', 'Action',
+            help="This field is not used, it only helps you to select the right action."),
         'value': fields.text('Value'),
         'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Value'),
         'object': fields.boolean('Is Object'),
-        'key': fields.char('Type', size=128),
-        'key2': fields.char('Value', size=256),
+        'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128),
+        'key2': fields.selection([
+            ('client_action_multi', 'Wizard in Forms'),
+            ('client_action_relate', 'Relate on Object'),
+            ('client_print_multi', 'Print'),
+            ('tree_but_action', 'Wizard in Tree'),
+            ('tree_but_open', 'Open on Tree'),
+            ('','/')
+        ], string='Event Type', size=256,
+            help="The kind of action or button in the client side that will trigger the action."),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Meta Datas'),
-        'res_id': fields.integer('Resource ID'),
+        'res_id': fields.integer('Object ID', help="Keep 0 if the action must appear on all resources."),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company')
     }

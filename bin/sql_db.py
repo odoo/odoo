@@ -95,6 +95,7 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None):
+        self.count+=1
         if params is None:
             params=()
         if not isinstance(params, (tuple, list)):
