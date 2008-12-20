@@ -9,6 +9,8 @@
                 <form string="Sales Order POS">
                     <notebook >
                         <page string="Order lines">
+                            <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
+                            <field name="pricelist_id" domain="[('type','=','sale')]"/>
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
@@ -73,14 +75,15 @@
                         <page string="Payment">
                             <field name="payments" colspan="4" nolabel="1">
                                 <tree string="Payments" editable="bottom">
-                                    <field name="journal_id" select="1" width="200"/>
+                                    <field name="payment_id" />
+                                    <field name="payment_nb" />
+                                    <field name="payment_name" width="200" />
+                                    <field name="payment_date" />
                                     <field name="amount" />
                                 </tree>
                             </field>
                             <separator string="Invoicing" colspan="4"/>
                             <field name="nb_print"/>
-                            <newline/>
-                            <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                             <newline/>
                             <field name="invoice_id"/>
                             <label/>
@@ -91,7 +94,6 @@
                         </page>
 
                         <page string="Other">
-                            <field name="pricelist_id" domain="[('type','=','sale')]"/>
                             <field name="shop_id" />
                             <field name="name" select="1"/>
                             <field name="date_order" select="1"/>

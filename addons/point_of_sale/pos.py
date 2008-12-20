@@ -408,18 +408,28 @@ class pos_order(osv.osv):
 
         return True
 
-    def add_payment(self, cr, uid, order_id, amount, journal, context=None):
+    def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
 
         order = self.browse(cr, uid, order_id, context)
         if order.invoice_wanted and not order.partner_id:
             raise osv.except_osv("Error", "Cannot create invoice without a partner.")
 
-        payment_id = self.pool.get('pos.payment').create(cr, uid, {
+        args = {
             'order_id': order_id,
-            'journal_id': journal,
-            'amount': amount,
-            })
+            'journal_id': data['journal'],
+            'amount': data['amount'],
+            'payment_id': data['payment_id'],
+            }
+
+        if 'payment_date' in data.keys():
+            args['payment_date'] = data['payment_date']
+        if 'payment_name' in data.keys():
+            args['payment_name'] = data['payment_name']
+        if 'payment_nb' in data.keys():
+            args['payment_nb'] = data['payment_nb']
+
+        payment_id = self.pool.get('pos.payment').create(cr, uid, args )
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'pos.order', order_id, 'payment', cr)
@@ -826,11 +836,16 @@ class pos_payment(osv.osv):
         'name': fields.char('Description', size=64),
         'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
         'journal_id': fields.many2one('account.journal', "Journal", required=True),
+        'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
+        'payment_nb': fields.char('Piece number', size=32),
+        'payment_name': fields.char('Payment name', size=32),
+        'payment_date': fields.date('Payment date', required=True),
         'amount': fields.float('Amount', required=True),
     }
     _defaults = {
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.payment'),
         'journal_id': _journal_default,
+        'payment_date':  lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def create(self, cr, user, vals, context={}):
