@@ -139,8 +139,6 @@ class base_module_record(osv.osv):
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
                     name = self.pool.get(fields[key]['relation']).browse(cr, uid, val).name
-                    if isinstance(name, basestring):
-                        name = name.decode('utf8')
                     field.setAttribute("search", "[('name','=','"+name+"')]")
                 else:
                     field.setAttribute("ref", id)
@@ -184,8 +182,6 @@ class base_module_record(osv.osv):
                     val = str(val)
 
                 val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
-                if isinstance(val, basestring):
-                    val = val.decode('utf8')
                 field.setAttribute(u"eval",  val)
                 record.appendChild(field)
         return record_list, noupdate
