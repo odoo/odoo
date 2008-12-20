@@ -24,6 +24,7 @@ import time
 import netsvc
 from osv import fields, osv
 from mx import DateTime
+from tools.translate import _
 
 
 class pos_config_journal(osv.osv):
@@ -810,6 +811,52 @@ class pos_order_line(osv.osv):
         if 'product_id' in values and not values['product_id']:
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context)
+
+    def _scan_product(self, cr, uid, ean, qty, order):
+        # search pricelist_id
+        pricelist_id = self.pool.get('pos.order').read(cr, uid, [order], ['pricelist_id'] )
+        if not pricelist_id:
+            return False
+
+        new_line = True
+
+        product_id = self.pool.get('product.product').search(cr, uid, [('ean13','=', ean)])
+        if not product_id:
+           return false
+
+        # search price product
+        product = self.pool.get('product.product').read(cr, uid, product_id)
+        product_name = product[0]['name']
+        price = self.price_by_product(cr, uid, 0, pricelist_id[0]['pricelist_id'][0], product_id[0], 1)
+
+        order_line_ids = self.search(cr, uid, [('name','=',product_name),('order_id','=',order)])
+        if order_line_ids:
+            new_line = False
+            order_line_id = order_line_ids[0]
+            qty += self.read(cr, uid, order_line_ids[0], ['qty'])['qty']
+
+        if new_line:
+            vals = {'product_id': product_id[0],
+                    'price_unit': price,
+                    'qty': qty,
+                    'name': product_name,
+                    'order_id': order,
+                   }
+            line_id = self.create(cr, uid, vals)
+            if not line_id:
+                raise wizard.except_wizard(_('Error'), _('Create line failed !'))
+        else:
+            vals = {
+                'qty': qty,
+                'price_unit': price
+            }
+            line_id = self.write(cr, uid, order_line_id, vals)
+            if not line_id:
+                raise wizard.except_wizard(_('Error'), _('Modify line failed !'))
+            line_id = order_line_id
+
+        price_line = float(qty)*float(price)
+        return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
 
 pos_order_line()
 
