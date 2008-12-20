@@ -80,7 +80,7 @@
                             <separator string="Invoicing" colspan="4"/>
                             <field name="nb_print"/>
                             <newline/>
-                            <field name="partner_id" />
+                            <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                             <newline/>
                             <field name="invoice_id"/>
                             <label/>
