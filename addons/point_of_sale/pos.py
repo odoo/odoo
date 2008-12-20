@@ -536,7 +536,7 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed_taxes = account_tax_obj.compute_inv(
-                    cr, uid, taxes, line.product_id.list_price, line.qty)
+                    cr, uid, taxes, line.price_subtotal, line.qty)
 
                 for tax in computed_taxes:
                     tax_amount += round(tax['amount'], 2)
