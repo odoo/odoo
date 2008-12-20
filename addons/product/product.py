@@ -271,8 +271,9 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
-
+    
     def _get_uom_id(self, cr, uid, *args):
         cr.execute('select id from product_uom order by id limit 1')
         res = cr.fetchone()
@@ -284,6 +285,9 @@ class product_template(osv.osv):
         return False
 
     _defaults = {
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',

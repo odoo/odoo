@@ -860,6 +860,9 @@ class account_invoice(osv.osv):
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
+
+        # Update the stored value
+        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 account_invoice()
 

@@ -107,7 +107,7 @@ class node_class(object):
             where.append( ('parent_id','=',self.object.id) )
             where.append( ('res_id','=',False) )
         if nodename:
-            where.append( (fobj._rec_name,'=like',nodename) )        
+            where.append( (fobj._rec_name,'like',nodename) )        
         ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ], context=self.context)
         if self.object and self.root and (self.object.type=='ressource'):
             ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ], context=self.context)
@@ -118,7 +118,7 @@ class node_class(object):
         pool = pooler.get_pool(self.cr.dbname)
         where = []
         if nodename:
-            where.append(('name','=like',nodename))
+            where.append(('name','like',nodename))
         if (self.object and self.object.type=='directory') or not self.object2:
             where.append(('parent_id','=',self.object and self.object.id or False))
         else:
@@ -144,7 +144,7 @@ class node_class(object):
             fobj = pool.get('ir.attachment')
             vargs = [('parent_id','=',False),('res_id','=',False)]
             if nodename:
-                vargs.append(('name','=like',nodename))
+                vargs.append(('name','like',nodename))
             file_ids=fobj.search(self.cr,self.uid,vargs)
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
@@ -174,7 +174,7 @@ class node_class(object):
                 for invalid in INVALID_CHARS:
                     if nodename.find(INVALID_CHARS[invalid]) :
                         nodename=nodename.replace(INVALID_CHARS[invalid],invalid)
-                where.append(('name','=like',nodename))
+                where.append(('name','like',nodename))
             ids = obj.search(self.cr, self.uid, where, self.context)
             res = obj.browse(self.cr, self.uid, ids,self.context)
             for r in res:
@@ -290,7 +290,7 @@ class document_directory(osv.osv):
     def _get_childs(self, cr, uid, node, nodename=False, context={}):
         where = []
         if nodename:
-            where.append(('name','=like',nodename))
+            where.append(('name','like',nodename))
         if object:
             where.append(('parent_id','=',object.id))
         ids = self.search(cr, uid, where, context)
@@ -485,19 +485,15 @@ class document_file(osv.osv):
     _inherit = 'ir.attachment'
     def _data_get(self, cr, uid, ids, name, arg, context):
         result = {}
-        cr.execute('select id,store_method,datas,store_fname,link from ir_attachment where id in ('+','.join(map(str,ids))+')')
-        for id,m,d,r,l in cr.fetchall():
-            if m=='db':
-                result[id] = d
-            elif m=='fs':
-                try:
-                    path = os.path.join(os.getcwd(), 'filestore', cr.dbname)
-                    value = file(os.path.join(path,r), 'rb').read()
-                    result[id] = base64.encodestring(value)
-                except:
-                    result[id]=''
-            else:
-                result[id] = ''
+        cr.execute('select id,store_fname,link from ir_attachment where id in ('+','.join(map(str,ids))+')')
+        for id,r,l in cr.fetchall():            
+	    try:
+	        path = os.path.join(os.getcwd(), 'filestore', cr.dbname)
+	        value = file(os.path.join(path,r), 'rb').read()
+	        result[id] = base64.encodestring(value)
+	    except:
+	        result[id]=''
+            
             if context.get('bin_size', False):
                 result[id] = tools.human_size(len(result[id]))             
 
@@ -509,26 +505,24 @@ class document_file(osv.osv):
     def _data_set(self, cr, obj, id, name, value, uid=None, context={}):
         if not value:
             return True
-        if (not context) or context.get('store_method','fs')=='fs':
-            path = os.path.join(os.getcwd(), "filestore", cr.dbname)
-            if not os.path.isdir(path):
-                os.makedirs(path)
-            flag = None
-            # This can be improved
-            for dirs in os.listdir(path):
-                if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
-                    flag = dirs
-                    break
-            flag = flag or create_directory(path)
-            filename = random_name()
-            fname = os.path.join(path, flag, filename)
-            fp = file(fname,'wb')
-            v = base64.decodestring(value)
-            fp.write(v)
-            filesize = os.stat(fname).st_size
-            cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))
-        else:
-            cr.execute('update ir_attachment set datas=%s,store_method=%s where id=%s', (Binary(value),'db',id))
+        #if (not context) or context.get('store_method','fs')=='fs':
+        path = os.path.join(os.getcwd(), "filestore", cr.dbname)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        flag = None
+        # This can be improved
+        for dirs in os.listdir(path):
+            if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
+                flag = dirs
+                break
+        flag = flag or create_directory(path)
+        filename = random_name()
+        fname = os.path.join(path, flag, filename)
+        fp = file(fname,'wb')
+        v = base64.decodestring(value)
+        fp.write(v)
+        filesize = os.stat(fname).st_size
+        cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))        
         return True
 
     _columns = {
@@ -543,7 +537,7 @@ class document_file(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'store_method': fields.selection([('db','Database'),('fs','Filesystem'),('link','Link')], "Storing Method"),
-        'datas': fields.function(_data_get,method=True,store=True,fnct_inv=_data_set,string='File Content',type="binary"),
+        'datas': fields.function(_data_get,method=True,fnct_inv=_data_set,string='File Content',type="binary"),
         'store_fname': fields.char('Stored Filename', size=200),
         'res_model': fields.char('Attached Model', size=64), #res_model
         'res_id': fields.integer('Attached ID'), #res_id
@@ -595,8 +589,8 @@ class document_file(osv.osv):
         cr.commit()
         try:
             for f in self.browse(cr, uid, ids, context=context):
-                if 'datas' not in vals:
-                    vals['datas']=f.datas
+                #if 'datas' not in vals:
+                #    vals['datas']=f.datas
                 res = content_index(base64.decodestring(vals['datas']), f.datas_fname, f.file_type or None)
                 super(document_file,self).write(cr, uid, ids, {
                     'index_content': res
@@ -635,11 +629,11 @@ class document_file(osv.osv):
                         vals['partner_id']=obj['partner_id']
 
         datas=None
-        if vals.get('datas',False) and vals.get('link',False) :
+        if vals.get('link',False) :
             import urllib
             datas=base64.encodestring(urllib.urlopen(vals['link']).read())
         else:
-            datas=vals['datas']
+            datas=vals.get('datas',False)
         vals['file_size']= len(datas)
         if not self._check_duplication(cr,uid,vals):
             raise except_orm('ValidateError', 'File name must be unique!')
@@ -657,12 +651,12 @@ class document_file(osv.osv):
 
     def unlink(self,cr, uid, ids, context={}):
         for f in self.browse(cr, uid, ids, context):
-            if f.store_method=='fs':
-                try:
-                    path = os.path.join(os.getcwd(), cr.dbname, 'filestore',f.store_fname)
-                    os.unlink(path)
-                except:
-                    pass
+            #if f.store_method=='fs':
+            try:
+                path = os.path.join(os.getcwd(), cr.dbname, 'filestore',f.store_fname)
+                os.unlink(path)
+            except:
+                pass
         return super(document_file, self).unlink(cr, uid, ids, context)
 document_file()
 

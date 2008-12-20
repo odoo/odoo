@@ -553,6 +553,7 @@
                                     <group>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -646,6 +647,7 @@
                                     <group>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -838,6 +840,7 @@
                                     <group>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -1013,7 +1016,7 @@
                                     <newline/>
                                     <newline/>
                                     <field groups="base.group_extended" name="product_packaging"/>
-                                    <newline/>
+                                    <newline/>                                    
                                     <field name="prodlot_id" select="1"
                                         context="{'location_id':location_id, 'product_id':product_id}"
                                         domain="[('product_id','=',product_id)]"
@@ -1027,6 +1030,7 @@
                                     <group>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
                                     </group>
                                 </form>
                             </field>
@@ -1202,6 +1206,7 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="UOM"/>
+                    <field name="picking_id" select="1"/>
                     <field name="prodlot_id"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
@@ -1232,6 +1237,7 @@
                     <field name="priority"/>
                     <field name="address_id" select="2" context="{'context_display':'partner'}"/>
                     <newline/>
+                    <field name="picking_id" select="2"/>
                     <field name="prodlot_id" select="2"
                         context="{'location_id':location_id, 'product_id':product_id}"
                         domain="[('product_id','=',product_id)]"
