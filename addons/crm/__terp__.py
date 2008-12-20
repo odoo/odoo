@@ -25,8 +25,9 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/CRM & SRM",
-    "description": """The Open ERP case and request tracker enables a group of
-people to intelligently and efficiently manage tasks, issues, and requests.
+    "description": """The generic Open ERP Customer Relationship Management
+system enables a group of people to intelligently and efficiently manage
+leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
