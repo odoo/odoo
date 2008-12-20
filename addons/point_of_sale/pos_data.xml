@@ -15,5 +15,18 @@
 <!-- 		<field name="perm_unlink">True</field> -->
 <!-- 	</record> -->
 
+    <function
+        eval="('default',False,'pricelist_id', [('pos.order', False)], ref('product.list0'), True, False, False, False, True)"
+        id="pos_pricelist_set"
+        model="ir.values"
+        name="set"/>
+
+    <function
+        eval="('default',False,'shop_id', [('pos.order', False)], ref('sale.shop'), True, False, False, False, True)"
+        id="pos_shop_set"
+        model="ir.values"
+        name="set"/>
+
+
 </data>
 </openerp>
