@@ -631,6 +631,8 @@ def ustr(value):
 
     if (value is None) or (value is False):
         return value
+    if not value:
+        return u''
     if isinstance(value, unicode):
         return value
 
