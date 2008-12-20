@@ -629,6 +629,8 @@ def ustr(value):
     @return: unicode string
     """
 
+    if (value is None) or (value is False):
+        return value
     if isinstance(value, unicode):
         return value
 

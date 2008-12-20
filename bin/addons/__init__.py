@@ -512,11 +512,12 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
             package_todo.append(package.name)
             ver = release.major_version + '.' + package.data.get('version', '1.0')
             # update the installed version in database...
-            cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
-            cr.commit()
+            #cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
 
             # Set new modules and dependencies
             modobj = pool.get('ir.module.module')
+            modobj.write(cr, 1, [mid], {'state':'installed', 'latest_version':ver})
+            cr.commit()
 
             # Update translations for all installed languages
             if modobj:

@@ -81,10 +81,10 @@ class wizard_info_get(wizard.interface):
         unmet_packages = []
         mod_dep_obj = pool.get('ir.module.module.dependency')
         for mod in mod_obj.browse(cr, uid, ids):
-            depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])            
-            for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):                
+            depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])
+            for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):
                 if dep_mod.state in ('unknown','uninstalled'):
-                    unmet_packages.append(dep_mod.name)        
+                    unmet_packages.append(dep_mod.name)
         if len(unmet_packages):
             raise wizard.except_wizard('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
         mod_obj.download(cr, uid, ids, context=context)

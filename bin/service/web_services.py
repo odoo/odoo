@@ -92,8 +92,8 @@ class db(netsvc.Service):
                         mids = modobj.search(cr, 1, [('state', '=', 'installed')])
                         modobj.update_translations(cr, 1, mids, lang)
 
-                    cr.execute('UPDATE res_users SET password=%s, active=True WHERE login=%s', (
-                        user_password, 'admin'))
+                    cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+                        user_password, lang, 'admin'))
                     cr.execute('SELECT login, password, name ' \
                                '  FROM res_users ' \
                                ' ORDER BY login')
