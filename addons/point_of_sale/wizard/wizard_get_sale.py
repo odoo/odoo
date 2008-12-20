@@ -43,7 +43,7 @@ def _sale_complete(self, cr, uid, data, context):
 
     pick = pool.get('stock.picking').browse(cr, uid, data['form']['picking_id'], context)
 
-    order.write(cr, uid, data['id'], {
+    pool.get('pos.order').write(cr, uid, data['id'], {
         'last_out_picking': data['form']['picking_id'],
         'partner_id': pick.address_id and pick.address_id.partner_id.id
     })
