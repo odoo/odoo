@@ -27,9 +27,6 @@
     !error "Do not forget to specify the version of OpenERP - /DVERSION=<VERSION>"
 !endif 
 
-;--------------------------------
-;Include Modern UI
-
 !include "MUI.nsh"
 
 ;--------------------------------
@@ -45,7 +42,7 @@ SetCompress auto
 InstallDir "$PROGRAMFILES\OpenERP Server"
 
 ;Get installation folder from registry if available
-InstallDirRegKey HKCU "Software\OpenERP Server" ""
+InstallDirRegKey HKLM "Software\OpenERP Server" ""
 
 BrandingText "OpenERP Server ${VERSION}"
 
@@ -80,7 +77,7 @@ Var STARTMENU_FOLDER
 !insertmacro MUI_PAGE_DIRECTORY
 
 ;Start Menu Folder Page Configuration
-!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKLM" 
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\OpenERP Server"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "OpenERP Server"
 
@@ -115,7 +112,7 @@ Var STARTMENU_FOLDER
 ;Installer Sections
 Function .onInit 
     ClearErrors
-    ReadRegStr $0 HKCU "Software\OpenERP Server" ""
+    ReadRegStr $0 HKLM "Software\OpenERP Server" ""
     IfErrors DoInstall 0
         MessageBox MB_OK "Can not install the Open ERP Server because a previous installation already exists on this system. Please uninstall your current installation and relaunch this setup wizard."
         Quit
@@ -137,11 +134,15 @@ Section "OpenERP Server" SecOpenERPServer
     File "win32\stop.bat"
 
     ;Store installation folder
-    WriteRegStr HKCU "Software\OpenERP Server" "" $INSTDIR
+    WriteRegStr HKLM "Software\OpenERP Server" "" $INSTDIR
 
+!ifndef ALLINONE
     ;Create uninstaller
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server" "DisplayName" "OpenERP Server ${VERSION}"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server" "UninstallString" "$INSTDIR\Uninstall.exe"
+!else
+    WriteRegStr HKLM  "Software\OpenERP AllInOne" "UninstallServer" "$INSTDIR\Uninstall.exe"
+!endif
     WriteUninstaller "$INSTDIR\Uninstall.exe"
 
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
@@ -152,7 +153,9 @@ Section "OpenERP Server" SecOpenERPServer
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
+!ifndef ALLINONE
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+!endif
 	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
 	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
     !insertmacro MUI_STARTMENU_WRITE_END
@@ -186,7 +189,9 @@ Section "Uninstall"
 
     Delete "$SMPROGRAMS\$MUI_TEMP\Forum.url"
     Delete "$SMPROGRAMS\$MUI_TEMP\Translation.url"
+!ifndef ALLINONE
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
+!endif 
     Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP Server.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
@@ -208,8 +213,12 @@ Section "Uninstall"
 
     startMenuDeleteLoopDone:
 
+!ifndef ALLINONE
         DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server"
-        DeleteRegKey /ifempty HKCU "Software\OpenERP Server"
+!else 
+        DeleteRegKey HKLM "Software\OpenERP AllInOne\UninstallServer"
+!endif
+        DeleteRegKey /ifempty HKLM "Software\OpenERP Server"
 
 SectionEnd
 
