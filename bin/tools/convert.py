@@ -270,6 +270,8 @@ form: module.record_id""" % (xml_id,)
             res['report_sxw_content'] = sxw_content
         if rec.hasAttribute('header'):
             res['header'] = eval(rec.getAttribute('header'))
+        if rec.hasAttribute('report_type'):
+            res['report_type'] = rec.getAttribute('report_type')
         res['multi'] = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
         xml_id = rec.getAttribute('id').encode('utf8')
         self._test_xml_id(xml_id)
