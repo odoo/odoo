@@ -192,7 +192,7 @@ def init_logger():
 
     # add the handler to the root logger
     logger.addHandler(handler)
-    logger.setLevel(config['log_level'])
+    logger.setLevel(config['log_level'] or '0')
 
     if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
         # change color of level names
@@ -228,9 +228,6 @@ class Logger(object):
  
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
-
-        if level == LOG_NOTSET:
-            return
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
