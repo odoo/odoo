@@ -100,6 +100,10 @@ def data_files():
 
         openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
 
+        files.append((openerp_site_packages, [opj('bin', 'import_xml.rng'),
+                                              opj('bin', 'server.pkey'),
+                                              opj('bin', 'server.cert')]))
+
         for addon in find_addons():
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
