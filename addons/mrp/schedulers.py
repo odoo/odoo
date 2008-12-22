@@ -203,6 +203,8 @@ class mrp_procurement(osv.osv):
                         location_id = op.warehouse_id.lot_stock_id
                     else:
                         continue
+                    if qty<=0:
+                        continue
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': 'OP:'+str(op.id),
                         'date_planned': newdate.strftime('%Y-%m-%d'),
