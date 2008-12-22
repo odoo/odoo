@@ -464,6 +464,29 @@ class module(osv.osv):
                     logger.notifyChannel("init", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        # Override the write method because we want to show a warning when the description field is empty !
+        if isinstance( ids, (long, int) ):
+            ids = [ids]
+        if 'description' in vals and not vals['description']:
+            logger = netsvc.Logger()
+            for mod in self.browse(cr, uid, ids):
+                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
+
+        return super(module, self).write(cr, uid, ids, vals, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        # Override the create method because we want to show a warning when the description field is empty !
+        module_id = super(module, self).create(cr, uid, vals, context=context)
+
+        if 'description' in vals and not vals['description']:
+            logger = netsvc.Logger()
+            for mod in self.browse(cr, uid, [module_id]):
+                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
+
+        return module_id 
+
+
 module()
 
 class module_dependency(osv.osv):
