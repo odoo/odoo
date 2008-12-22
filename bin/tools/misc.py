@@ -647,6 +647,7 @@ def ustr(value):
 
 def get_languages():
     languages={
+        'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
@@ -666,12 +667,14 @@ def get_languages():
         'it_IT': u'Italian / Italiano',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'nl_NL': u'Dutch / Nederlands',
+        'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portugese (BR) / português (BR)',
         'pt_PT': u'Portugese / português',
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
         'sl_SL': u'Slovenian / slovenščina',
         'sv_SE': u'Swedish / svenska',
+        'tr_TR': u'Turkish / Türkçe',
         'uk_UK': u'Ukrainian / украї́нська мо́ва',
         'zh_CN': u'Chinese (CN) / 简体中文' ,
         'zh_TW': u'Chinese (TW) / 正體字',
