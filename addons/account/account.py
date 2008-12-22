@@ -179,7 +179,7 @@ class account_account(osv.osv):
     def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
         #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
         mapping = {
-            'balance': "COALESCE(SUM(l.debit) - SUM(l.credit), 0) as balance ",
+            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
             'debit': "COALESCE(SUM(l.debit), 0) as debit ",
             'credit': "COALESCE(SUM(l.credit), 0) as credit "
         }
