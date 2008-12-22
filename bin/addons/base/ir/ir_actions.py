@@ -384,7 +384,6 @@ class actions_server(osv.osv):
     _columns = {
         'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name i.e. One Sales Order -> Many Invoice"),
         'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be test before execute action,  i.e : object.list_price > object.cost_price"),
-        'sub_condition' : fields.char('Condition', size=256),
         'state': fields.selection([
             ('client_action','Client Action'),
             ('dummy','Dummy'),
@@ -422,7 +421,6 @@ class actions_server(osv.osv):
     _defaults = {
         'state': lambda *a: 'dummy',
         'condition': lambda *a: 'True',
-        'sub_condition': lambda *a: 'True',
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
