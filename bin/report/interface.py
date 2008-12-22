@@ -165,7 +165,7 @@ class report_rml(report_int):
                     res = service.execute(cr.dbname, uid, 'ir.translation',
                             '_get_source', self.name2, 'xsl', lang, child.content)
                     if res:
-                        child.setContent(res)
+                        child.setContent(res.encode('utf-8'))
                 look_down(child.children, lang)
                 child = child.next
 
