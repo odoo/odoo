@@ -255,7 +255,7 @@ LangString DESC_SecOpenERPServer ${LANG_ENGLISH} "OpenERP Server."
 LangString DESC_SecOpenERPServer ${LANG_FRENCH} "Serveur OpenERP."
 
 LangString CannotInstallServerText ${LANG_ENGLISH} "Can not install the Open ERP Server because a previous installation already exists on this system. Please uninstall your current installation and relaunch this setup wizard."
-LangString CannotInstallServerText ${LANG_FRENCH} "Ne peut pas installer le serveur Open ERP parce qu'une installation existe déjà sur ce système. S'il vous plait, désinstallez votre installation actuelle et relancer l'installeur."
+LangString CannotInstallServerText ${LANG_FRENCH} "Ne peut pas installer le serveur Open ERP parce qu'une installation existe dÃ©jÃ  sur ce systÃ¨me. S'il vous plait, dÃ©sinstallez votre installation actuelle et relancer l'installeur."
 
 
 ;Assign language strings to sections
