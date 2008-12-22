@@ -212,9 +212,6 @@ class configmanager(object):
         for arg in keys:
             self.options[arg] = getattr(opt, arg)
 
-        print "cert_file: %s" % self.options.get('secure_cert_file', 'No')
-        print "pkey_file: %s" % self.options.get('secure_pkey_file', 'No')
-        
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = loglevels[opt.assert_exit_level]
 
