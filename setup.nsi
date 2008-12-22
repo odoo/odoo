@@ -242,7 +242,7 @@ Function LaunchLink
 FunctionEnd
 
 LangString LicenseText ${LANG_ENGLISH} "Usually, a proprietary license is provided with the software: limited number of users, limited in time usage, etc. This Open Source license is the opposite: it garantees you the right to use, copy, study, distribute and modify Open ERP for free."
-LangString LicenseText ${LANG_FRENCH} "Normalement, une licence propriÃ©taire est fournie avec le logiciel: limitation du nombre d'utilisateurs, limitation dans le temps, etc. Cette licence Open Source est l'opposÃ©: Elle vous garantie le droit d'utiliser, de copier, d'Ã©tudier, de distribuer et de modifier Open ERP librement."
+LangString LicenseText ${LANG_FRENCH} "Normalement, une licence propriétaire est fournie avec le logiciel: limitation du nombre d'utilisateurs, limitation dans le temps, etc. Cette licence Open Source est l'opposé: Elle vous garantie le droit d'utiliser, de copier, d'étudier, de distribuer et de modifier Open ERP librement."
 
 LangString LicenseNext ${LANG_ENGLISH} "Next >"
 LangString LicenseNext ${LANG_FRENCH} "Suivant >"
@@ -255,7 +255,7 @@ LangString DESC_SecOpenERPServer ${LANG_ENGLISH} "OpenERP Server."
 LangString DESC_SecOpenERPServer ${LANG_FRENCH} "Serveur OpenERP."
 
 LangString CannotInstallServerText ${LANG_ENGLISH} "Can not install the Open ERP Server because a previous installation already exists on this system. Please uninstall your current installation and relaunch this setup wizard."
-LangString CannotInstallServerText ${LANG_FRENCH} "Ne peut pas installer le serveur Open ERP parce qu'une installation existe dÃƒÂ©jÃƒÂ  sur ce systÃƒÂ¨me. S'il vous plait, dÃƒÂ©sinstallez votre installation actuelle et relancer l'installeur."
+LangString CannotInstallServerText ${LANG_FRENCH} "Ne peut pas installer le serveur Open ERP parce qu'une installation existe déjà  sur ce système. S'il vous plait, désinstallez votre installation actuelle et relancer l'installeur."
 
 
 ;Assign language strings to sections
