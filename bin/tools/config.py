@@ -41,7 +41,6 @@ class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
             'email_from':False,
-            'verbose': False,
             'interface': '',    # this will bind the server to all interfaces
             'port': '8069',
             'netinterface': '',
@@ -74,22 +73,22 @@ class configmanager(object):
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
             'secure' : False,
+            'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
         }
 
         hasSSL = check_ssl()
 
-        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC')]) 
+        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
+                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC', 'NOTSET')]) 
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version)
         
         parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
         parser.add_option("-s", "--save", action="store_true", dest="save", default=False, help="save configuration to ~/.openerp_serverrc")
-        parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="enable debugging")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
-        parser.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         
         parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
         parser.add_option("-p", "--port", dest="port", help="specify the TCP port")
@@ -104,16 +103,26 @@ class configmanager(object):
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, help="stop the server after it initializes")
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        parser.add_option('--log-level', dest='log_level', type='choice', choices=loglevels.keys(), help='specify the level of the logging. Accepted values: ' + str(loglevels.keys()))
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), help="specify the level at which a failed assertion will stop the server. Accepted values: " + str(loglevels.keys()))
         if hasSSL:
             parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
         
+        # Logging Group
+        group = optparse.OptionGroup(parser, "Logging Configuration")
+        group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
+        group.add_option("--syslog", action="store_true", dest="syslog",
+                         default=False, help="Send the log to the syslog server")
+        group.add_option('--log-level', dest='log_level', type='choice', choices=loglevels.keys(), 
+                         help='specify the level of the logging. Accepted values: ' + str(loglevels.keys()))
+        parser.add_option_group(group)
+
+        # SMTP Group
         group = optparse.OptionGroup(parser, "SMTP Configuration")
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
-        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        if hasSSL:
+            group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         group.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
@@ -183,13 +192,13 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        for arg in ('language', 'translate_out', 'translate_in', 
-            'upgrade', 'verbose', 'debug_mode', 
-            'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc'):
+        for arg in ('language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
+            'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog'):
             self.options[arg] = getattr(opt, arg)
         
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = loglevels[opt.assert_exit_level]
+
         if opt.log_level:
             self.options['log_level'] = loglevels[opt.log_level]
             

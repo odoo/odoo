@@ -36,6 +36,7 @@ import sys
 import threading
 import time
 import xmlrpclib
+import release
 
 _service = {}
 _group = {}
@@ -139,6 +140,7 @@ class LocalService(Service):
 def service_exist(name):
     return (name in _service) and bool(_service[name])
 
+LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_INFO = 'info'
@@ -153,7 +155,24 @@ def init_logger():
     from tools import config
     import os
 
+    logger = logging.getLogger()
+
+    if config['syslog']:
+        # SysLog Handler
+        if os.name == 'nt':
+            sysloghandler = logging.handlers.NTEventLogHandler("%s %s" %
+                                                         (release.description,
+                                                          release.version))
+        else:
+            sysloghandler = logging.handlers.SysLogHandler('/dev/log')
+        formatter = logging.Formatter('%(application)s:%(uncoloredlevelname)s:%(name)s:%(message)s')
+        sysloghandler.setFormatter(formatter)
+        logger.addHandler(sysloghandler)
+
+    # create a format for log messages and dates
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
     if config['logfile']:
+        # LogFile Handler
         logf = config['logfile']
         try:
             dirname = os.path.dirname(logf)
@@ -164,19 +183,17 @@ def init_logger():
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
             handler = logging.StreamHandler(sys.stdout)
     else:
+        # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
 
-    # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %H:%M:%S %Y')
 
     # tell the handler to use this format
     handler.setFormatter(formatter)
 
     # add the handler to the root logger
-    logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel(config['log_level'])
+    logger.addHandler(handler)
+    logger.setLevel(config['log_level'])
 
-    
     if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
         # change color of level names
         # uses of ANSI color codes
@@ -201,21 +218,37 @@ def init_logger():
 
 
 class Logger(object):
+    def uncoloredlevelname(self, level):
+        # The level'names are globals to all loggers, so we must strip-off the
+        # color formatting for some specific logger (i.e: syslog)
+        levelname = logging.getLevelName(getattr(logging, level.upper(), 0))
+        if levelname.startswith("\x1b["):
+            return levelname[10:-4]
+        return levelname
+ 
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
+
+        if level == LOG_NOTSET:
+            return
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
             setattr(log, LOG_DEBUG_RPC, fct)
+
+        extra = {
+            'uncoloredlevelname': self.uncoloredlevelname(level), 
+            'application' : "%s %s" % (release.description, release.version),
+        }
 
         level_method = getattr(log, level)
 
         result = str(msg).strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
-                level_method('[%02d]: %s' % (idx+1, s,))
+                level_method('[%02d]: %s' % (idx+1, s,), extra=extra)
         elif result:
-            level_method(result[0])
+            level_method(result[0], extra=extra)
 
 init_logger()
 

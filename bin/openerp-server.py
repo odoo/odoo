@@ -55,6 +55,14 @@ __version__ = release.version
 import netsvc
 logger = netsvc.Logger()
 
+def atexit_callback():
+    logger.notifyChannel('shutdown', netsvc.LOG_INFO, "Shutdown Server!")
+    #logger.notifyChannel('pan! pan!', netsvc.LOG_INFO, "Killed Server ;-)")
+
+import atexit
+
+atexit.register(atexit_callback)
+
 #-----------------------------------------------------------------------
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
