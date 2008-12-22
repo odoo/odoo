@@ -34,6 +34,7 @@ class report_timesheet_user(osv.osv):
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
+        cr.drop_view_if_exists('report_timesheet_user')
         cr.execute("""
             create or replace view report_timesheet_user as (
                 select
