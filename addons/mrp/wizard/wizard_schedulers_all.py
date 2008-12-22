@@ -40,6 +40,7 @@ def _procure_calculation_all(self, db_name, uid, data, context):
     automatic = data['form']['automatic']
     proc_obj.run_scheduler(cr, uid, automatic=automatic, use_new_cursor=cr.dbname,\
             context=context)
+    cr.close()
     return {}
 
 def _procure_calculation(self, cr, uid, data, context):
