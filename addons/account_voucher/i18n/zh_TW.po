@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:52:59+0000\n"
-"PO-Revision-Date: 2008-11-28 16:52:59+0000\n"
+"POT-Creation-Date: 2008-12-22 17:52:06+0000\n"
+"PO-Revision-Date: 2008-12-22 17:52:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,11 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "On Account of :"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_amt
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
 msgid "Voucher Report"
 msgstr ""
 
@@ -69,13 +68,11 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Particulars"
 msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "State :"
 msgstr ""
 
@@ -86,7 +83,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,state:0
 msgid "Draft"
 msgstr ""
@@ -99,7 +95,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Ref. :"
 msgstr ""
 
@@ -120,7 +115,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "PRO-FORMA"
 msgstr ""
 
@@ -163,7 +157,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "-"
 msgstr ""
 
@@ -223,7 +216,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid ":"
 msgstr ""
 
@@ -239,7 +231,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,state:0
 msgid "Posted"
 msgstr ""
@@ -266,8 +257,8 @@ msgid "Name"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
-msgid "Voucher Report (Cr/Dr)"
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
+msgid "New Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -282,7 +273,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Dated :"
 msgstr ""
 
@@ -300,7 +290,6 @@ msgid "Credit"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
 #: field:account.voucher,amount:0
 #: field:account.voucher.line,amount:0
 msgid "Amount"
@@ -313,7 +302,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Through :"
 msgstr ""
 
@@ -324,13 +312,7 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Receiver's Signature"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
-msgid "New Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -346,7 +328,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "No."
 msgstr ""
 
@@ -397,7 +378,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Amount (in words) :"
 msgstr ""
 
@@ -407,7 +387,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_posted_cash_rec_voucher_form
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_rec_voucher_form
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,type:0
 msgid "Cash Receipt Voucher"
 msgstr ""
@@ -419,7 +398,6 @@ msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Canceled"
 msgstr ""
 
@@ -444,7 +422,6 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_pay_voucher_form
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,type:0
 msgid "Bank Payment Voucher"
 msgstr ""
@@ -452,7 +429,6 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,type:0
 msgid "Cash Payment Voucher"
 msgstr ""
@@ -473,20 +449,13 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_rec_voucher_form
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 #: selection:account.voucher,type:0
 msgid "Bank Receipt Voucher"
 msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
-#: rml:voucher.cash_amount:0
 msgid "Authorised Signatory"
-msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-msgid "Account :"
 msgstr ""
 
 #. module: account_voucher

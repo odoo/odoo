@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:55:41+0000\n"
-"PO-Revision-Date: 2008-11-28 16:55:41+0000\n"
+"POT-Creation-Date: 2008-12-22 17:54:00+0000\n"
+"PO-Revision-Date: 2008-12-22 17:54:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,17 +18,17 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr ""
+msgstr "Naam Planning"
 
 #. module: delivery
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Het object moet starten met x_ en moet geen speciale karakters bevatten!"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr ""
+msgstr "Leveringsplanning"
 
 #. module: delivery
 #: view:res.partner:0
@@ -38,33 +38,39 @@ msgstr "Verkopen & Inkopen"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
 
 #. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave opbouw"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr ""
 
 #. module: delivery
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr ""
+msgstr "De BTW lijkt niet correct te zijn."
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "No grid avaible !"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
-msgstr ""
+msgstr "Transporteur"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -74,75 +80,69 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr ""
+msgstr "Provincies"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "Vast"
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
-
-#. module: delivery
-#, python-format
-#: code:addons/delivery/delivery.py:0
-msgid "No price avaible !"
-msgstr ""
+msgstr "Planningsregel"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr ""
+msgstr "Aflever Tarieven"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
-msgstr ""
+msgstr "Concept Facturen aanmaken bij Ontvangst"
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "No grid matching for this carrier !"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery line of grid"
-msgstr ""
+msgstr "Afleveringsregel Planning"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packings to be invoiced"
-msgstr ""
+msgstr "Te factureren verpakkingen"
 
 #. module: delivery
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout, ongeldige EAN-code"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr ""
+msgstr "Planning"
 
 #. module: delivery
 #: view:res.partner:0
@@ -153,94 +153,94 @@ msgstr ""
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr ""
+msgstr "Planningsdefinitie"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packings."
-msgstr ""
+msgstr "Deze leveringsmethode zal worden gebruikt wanneer de verpakking worden gefactureerd"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Hoogte x Volume"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "="
-msgstr ""
+msgstr "="
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "Te leveren Product"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Condition"
-msgstr ""
+msgstr "Voorwaarde"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Levering"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
-msgstr ""
+msgstr "Transport- en afleverplanning"
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Kostprijs"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Destination"
-msgstr ""
+msgstr "Afleveradres"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: delivery
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Fout: UOS moet in een andere categorie staan dan de maateenheid"
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr ""
+msgstr "Landen"
 
 #. module: delivery
 #: view:sale.order:0
 msgid "Notes"
-msgstr "Notities"
+msgstr "Opmerkingen"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "Variabele Factor"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr ""
+msgstr "Variabel"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "Operator"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
@@ -248,7 +248,7 @@ msgstr ""
 #: field:stock.picking,carrier_id:0
 #: view:delivery.carrier:0
 msgid "Carrier"
-msgstr ""
+msgstr "Transporteur"
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,delivery:0
@@ -258,7 +258,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr ""
+msgstr "Maximumwaarde"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -268,56 +268,62 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "Postcode Afzender"
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "Order not in draft state !"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr ""
+msgstr "Transportplanning"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Gewicht"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Volgorde"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "Verkoopprijs"
 
 #. module: delivery
+#: code:addons/delivery/stock.py:0
 #, python-format
-#: code:addons/delivery/delivery.py:0
-msgid "No line matched this order in the choosed delivery grids !"
+msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
+msgstr "Poscode Afleverradres"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid "Complete this field if you plan to invoice the shipping based on packings made."
-msgstr ""
+msgstr "Vul dit veld in als er gefactureerd moet worden op basis van de gemaakte verpakkingen"
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -327,51 +333,45 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr ""
+msgstr "Planningsregels"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr ""
+msgstr "Afleverplanningen"
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
 #: field:res.partner,property_delivery_carrier:0
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Method"
-msgstr ""
-
-#. module: delivery
-#, python-format
-#: code:addons/delivery/stock.py:0
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Verzendwijze"
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/stock.py:0
+#, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
-msgstr ""
+msgstr "Verzendwijze"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
-msgstr ""
+msgstr "Prijs"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
-msgstr ""
+msgstr "Soort Prijs"
 

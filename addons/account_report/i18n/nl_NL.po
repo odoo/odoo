@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:55:41+0000\n"
-"PO-Revision-Date: 2008-11-28 16:55:41+0000\n"
+"POT-Creation-Date: 2008-12-22 17:54:00+0000\n"
+"PO-Revision-Date: 2008-12-22 17:54:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -167,8 +167,8 @@ msgid "Good"
 msgstr ""
 
 #. module: account_report
-#, python-format
 #: code:addons/account_report/account.py:0
+#, python-format
 msgid "Error !"
 msgstr ""
 
@@ -180,7 +180,12 @@ msgstr ""
 #. module: account_report
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave opbouw"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "= Badness Indicator Limit:"
+msgstr ""
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -243,11 +248,6 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,status:0
 msgid "Status"
-msgstr ""
-
-#. module: account_report
-#: rml:accounting.report:0
-msgid "Amount"
 msgstr ""
 
 #. module: account_report
@@ -353,8 +353,8 @@ msgid "Legend of operators"
 msgstr ""
 
 #. module: account_report
-#, python-format
 #: code:addons/account_report/account.py:0
+#, python-format
 msgid "You can not delete an indicator history record. You may have to delete the concerned Indicator!"
 msgstr ""
 
@@ -379,7 +379,12 @@ msgstr ""
 #. module: account_report
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Het object moet starten met x_ en moet geen speciale karakters bevatten!"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
+#. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based On Fiscal Years"
+msgstr ""
 
 #. module: account_report
 #: wizard_view:print.indicators,init:0
@@ -439,6 +444,11 @@ msgid "Fiscal Statements reporting"
 msgstr ""
 
 #. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based on Fiscal Periods"
+msgstr ""
+
+#. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Print Indicators with PDF"
 msgstr ""
@@ -495,7 +505,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "= Badness Indicator Limit:"
+#: rml:accounting.report:0
+msgid "Amount"
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:55:41+0000\n"
-"PO-Revision-Date: 2008-11-28 16:55:41+0000\n"
+"POT-Creation-Date: 2008-12-22 17:54:00+0000\n"
+"PO-Revision-Date: 2008-12-22 17:54:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Order ref."
 
 #. module: sale
 #: view:sale.order:0
@@ -28,18 +28,18 @@ msgstr "Vraag opnieuw aan"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "You invoice has been successfully created !"
-msgstr ""
+msgstr "De factuur is succesvol gemaakt!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Sale Procurement"
-msgstr ""
+msgstr "Uitlevering verkoop"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Leveringsopdracht"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -65,12 +65,17 @@ msgstr "Volgende planning"
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr ""
+msgstr "Vervolgstappen om een order uit te leveren."
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
+msgstr "De factuur wordt gemaakt waneer 'Maak factuur' wordt aangeklikt na akkoord geven verkooporder. Deze handeling verplaatst de verkooporder naar de facturen."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "Bevestig offerte-aanvraag"
 
 #. module: sale
 #: view:sale.order:0
@@ -81,7 +86,7 @@ msgstr "Automatische melding"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "Inpakken"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_shipping
@@ -106,7 +111,7 @@ msgstr "Aangepaste levering"
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr ""
+msgstr "Verzending vanaf magazijn naar afnemer."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -116,7 +121,7 @@ msgstr "Klant ref"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "Bevestig"
 
 #. module: sale
 #: view:sale.order:0
@@ -131,7 +136,7 @@ msgstr "Subtotaal"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
 msgid "Whenever confirm button is clicked, the draft state is moved to manual. that is, quotation is moved to  sale order."
-msgstr ""
+msgstr "Wanneer de 'bevestig' knop is ingedrukt, dan is de concept-status verplaatst naar een verkooporder"
 
 #. module: sale
 #: rml:sale.order:0
@@ -149,9 +154,11 @@ msgid "Origin"
 msgstr "Brondocument"
 
 #. module: sale
-#: view:product.product:0
-msgid "Sale Pricelists           Min.Qty        Price"
-msgstr ""
+#: model:process.node,name:sale.process_node_quotation0
+#: model:process.node,note:sale.process_node_saleorder0
+#: model:process.node,name:sale.process_node_saleorder0
+msgid "Ok"
+msgstr "Akkoord"
 
 #. module: sale
 #: view:sale.order:0
@@ -166,7 +173,7 @@ msgstr "Factureer op basis van pakbonnen"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Leveringsopdracht:"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -177,10 +184,10 @@ msgid "Sale Order"
 msgstr "Verkooporder"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "You must first cancel all packings attached to this sale order."
-msgstr ""
+msgstr "Eerst moeten alle pakbonnen geannuleerd worden van deze verkooporder"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -189,15 +196,15 @@ msgid "Taxes"
 msgstr "Belastingen"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Foutieve handeling!"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Netto totaal :"
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -235,7 +242,7 @@ msgstr "Maak Facturen"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
-msgstr ""
+msgstr "De bevestiging van de paklijst zorgt voor de leveringsopdracht. Dit kan gedaan worden door op de 'Bevestig' button te klikken."
 
 #. module: sale
 #: view:sale.order:0
@@ -245,22 +252,22 @@ msgstr "Referentie"
 #. module: sale
 #: model:process.process,name:sale.process_process_salesworkflow0
 msgid "Sales Workflow"
-msgstr ""
+msgstr "Verkoopproces"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Alles ineens"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr ""
+msgstr "Verkrijging is aangemaakt na goedkeuring van de verkooporder."
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Offerte / Order"
 
 #. module: sale
 #: view:sale.order:0
@@ -281,7 +288,7 @@ msgstr "Dit geeft de status van de offerte-aanvraag of verkooporder."
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
@@ -295,10 +302,10 @@ msgid "Order Line"
 msgstr "Orderregel"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
 msgid "You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+msgstr "Je kunt geen aanbetaling aanmaken bij een verkooporder welke is gezet op 'automatisch factureren na levering'."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -319,7 +326,7 @@ msgstr "Alle verkooporders"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "Bevestig"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -334,7 +341,7 @@ msgstr "Verzonden aantallen"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "Factuur gebaseerd op verkooporders."
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -344,7 +351,7 @@ msgstr "Magazijn"
 #. module: sale
 #: rml:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "Order nr."
 
 #. module: sale
 #: field:sale.order,order_line:0
@@ -355,7 +362,7 @@ msgstr "Orderregels"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Korting. (%)"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -377,7 +384,7 @@ msgstr "Bedrag voor belastingen"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
 msgid "Packing list is created when 'Assign' is being clicked after confirming the sale order. This transaction moves the sale order to packing list."
-msgstr ""
+msgstr "Paklijsten worden aangemaakt waneer de 'toewijzing' is aangeklikt."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -393,18 +400,18 @@ msgstr "Afleveradres :"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
 msgid "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it will automatic create after delivery."
-msgstr ""
+msgstr "Wanneer de instelling 'Automatisch factureren na levering' wordt aangeklikt dat worden de facturen automatisch aangemaakt na levering."
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fout !"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sale Order Procurement"
-msgstr ""
+msgstr "Aanvraag verkooporders"
 
 #. module: sale
 #: view:sale.order:0
@@ -414,7 +421,7 @@ msgstr "Handmatige omschrijving"
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Hoeveelheid (eenheid)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
@@ -424,22 +431,15 @@ msgid "Sales Order Lines"
 msgstr "Verkooporder regels"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "You must first cancel all invoices attached to this sale order."
-msgstr ""
+msgstr "Eerst moeten alle facturen ongedaan worden gemaakt die zijn gekoppelde aan deze verkooporder."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Bestelde hoeveelheden"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -479,9 +479,14 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr ""
+
+#. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave opbouw"
 
 #. module: sale
 #: field:sale.order,invoice_ids:0
@@ -492,7 +497,7 @@ msgstr "Factuur"
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Volledige levering"
 
 #. module: sale
 #: view:sale.order:0
@@ -502,7 +507,7 @@ msgstr "Naar Concept"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Orderdatum"
 
 #. module: sale
 #: view:sale.order:0
@@ -521,19 +526,6 @@ msgid "Manual in progress"
 msgstr "Handmatig in bewerking"
 
 #. module: sale
-#: help:sale.order,order_policy:0
-msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
-"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
-"  - The 'Invoice after delivery' choice will generate the draft invoice after the packing list have been finished.\n"
-"  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."
-msgstr "De verzendmethode wordt gebruikt om de facturatie en levering te stroomlijnen.\n"
-"  - De 'Betaal voor levering' optie zal eerst de factuur aanmaken en maakt de pakbon pas aan na betaling.\n"
-"  - De 'Verzenden en handmatig factureren' zal de pakbon direct aanmaken en de facturatie zal pas geschieden als de gebruiker dit aanklikt.\n"
-"  - De 'Facturatie na levering' optie zal de factuur automatisch aanmaken wanneer de paklijst is afgehandeld.\n"
-"  - De 'Facturatie op basis van paklijsten' optie wordt gebruikt wanneer de facturatie synchroon moet lopen met de uitlevering van de individuele produchten."
-
-#. module: sale
 #: field:sale.shop,payment_account_id:0
 #: view:sale.shop:0
 msgid "Payment accounts"
@@ -548,7 +540,7 @@ msgstr "Verzenduitzondering"
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "concept-factuur"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -573,6 +565,15 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: sale
+#: help:sale.order,order_policy:0
+msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
+"  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."
+msgstr ""
+
+#. module: sale
 #: selection:sale.order,state:0
 msgid "In progress"
 msgstr "In bewerking"
@@ -583,15 +584,15 @@ msgid "Net Price"
 msgstr "Netto-prijs"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "invalid mode for test_state"
 msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Procurement for each line"
-msgstr ""
+msgstr "Levering voor elke regel"
 
 #. module: sale
 #: rml:sale.shipping:0
@@ -602,7 +603,7 @@ msgstr "Gewicht"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "Facturen"
 
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
@@ -615,15 +616,15 @@ msgid "Shipping Default Policy"
 msgstr ""
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Could not cancel sale order !"
-msgstr ""
+msgstr "Verkooporder kan niet geannuleerd worden!"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Verpakking"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -633,7 +634,7 @@ msgstr "Verwijderd"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "Product meeteenheid"
 
 #. module: sale
 #: rml:sale.shipping:0
@@ -653,7 +654,7 @@ msgstr "Dit is de lijst van facturen welke zijn gegenereerd op basis van de verk
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Belastingen :"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -672,6 +673,11 @@ msgid "Uninvoiced Lines"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid "This Configuration step use to set default picking policy when make sale order"
+msgstr ""
+
+#. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
 #: wizard_button:sale.order.line.make_invoice,init,invoice:0
 #: wizard_view:sale.order.make_invoice,init:0
@@ -682,7 +688,7 @@ msgstr "Maak facturen"
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
@@ -693,7 +699,7 @@ msgstr "Mijn verkooporders met uitgestelde levering"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Sales Configuration"
-msgstr ""
+msgstr "Verkoopinstellingen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
@@ -714,7 +720,7 @@ msgstr "De verkooporder zal automatisch de conceptfactuur aanmaken. Bestelde en 
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Overdoos"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -724,7 +730,7 @@ msgstr "Gerelateerde pakbonnen"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr ""
+msgstr "Stel verkooplogistiek in"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -749,17 +755,12 @@ msgstr "Productverkopen"
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Fout: UOS moet in een andere categorie staan dan de maateenheid"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
 msgstr "Onze verkoper"
-
-#. module: sale
-#: view:product.product:0
-msgid "Purchase Pricelists       Min.Qty      Price"
-msgstr ""
 
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
@@ -780,18 +781,18 @@ msgstr "Verkooporders"
 #. module: sale
 #: help:sale.order,picking_policy:0
 msgid "If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."
-msgstr ""
+msgstr "Wanneer er niet voldoende voorraad aanwezig is om alles te leveren moet er dan deels worden geleverd of niet."
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr ""
 
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr ""
+msgstr "Verkoopprijslijsten"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -801,7 +802,7 @@ msgstr "Rechtstreekse levering"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Verzenddatum"
 
 #. module: sale
 #: field:sale.order.line,property_ids:0
@@ -818,7 +819,7 @@ msgstr "Offerte-aanvraag"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance Product"
-msgstr ""
+msgstr "Voorlopig product"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree10
@@ -850,7 +851,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Deellevering"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -859,20 +860,15 @@ msgid "Sales Order in Progress"
 msgstr "Lopende verkooporders"
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Payment before delivery"
-msgstr "Betaling voor levering"
-
-#. module: sale
-#, python-format
 #: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
+msgstr "Toekennen"
 
 #. module: sale
 #: rml:sale.order:0
@@ -899,7 +895,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "BTW :"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -975,6 +971,7 @@ msgstr "Verkooppunt"
 #: wizard_button:sale.order.make_invoice,init,end:0
 #: selection:sale.order,state:0
 #: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
@@ -1010,17 +1007,17 @@ msgstr "Historie"
 #: wizard_view:sale.advance_payment_inv,init:0
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Payment"
-msgstr ""
+msgstr "Vooruitbetaling"
 
 #. module: sale
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Het object moet starten met x_ en moet geen speciale karakters bevatten!"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
 msgid "Confirm sale order and Create invoice."
-msgstr ""
+msgstr "Bevestig de verkooporder en maak factuur"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1033,8 +1030,8 @@ msgid "Manual Designation"
 msgstr "Handmatig Benoemen"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
+#: selection:sale.order.line,state:0
+msgid "Exception"
 msgstr ""
 
 #. module: sale
@@ -1078,7 +1075,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "Sale Invoice"
-msgstr ""
+msgstr "Verkoopfactuur"
 
 #. module: sale
 #: field:sale.order,incoterm:0
@@ -1120,7 +1117,7 @@ msgstr "Prijs"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Deliver"
-msgstr ""
+msgstr "Lever"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1135,23 +1132,23 @@ msgstr ""
 #. module: sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout, ongeldige EAN-code"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Could not cancel this sale order !"
-msgstr ""
+msgstr "Deze verkooporder kan niet worden geannuleerd"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "Forceer toewijzing"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr ""
+msgstr "Annuleer toewijzing"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1183,14 +1180,20 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You can not cancel a sale order line that has already been invoiced !"
+msgstr ""
+
+#. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr ""
+msgstr "Inkoopprijslijst"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 msgid "Invoice after delivery"
-msgstr ""
+msgstr "Factureer na levering"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1206,7 +1209,7 @@ msgstr "Factureer op"
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
-msgstr ""
+msgstr "Nieuwe offerte"
 
 #. module: sale
 #: view:sale.order:0
@@ -1218,11 +1221,6 @@ msgstr "Totaalbedrag"
 #: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Besteldatum"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Automatic Invoice after delivery"
-msgstr "Automatisch factureren na levering"
 
 #. module: sale
 #: rml:sale.shipping:0
@@ -1242,7 +1240,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1270,6 +1268,11 @@ msgid "Payment Term"
 msgstr "Betalingsconditie"
 
 #. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Payment Before Delivery"
+msgstr ""
+
+#. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
 msgid "In sale order , procuerement for each line and it comes into the procurement order"
 msgstr ""
@@ -1283,12 +1286,12 @@ msgstr "Provincies"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "After confirming order, Create the invoice."
-msgstr ""
+msgstr "Na akkoord order direct factureren"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "Offerte-aanvraag nr."
 
 #. module: sale
 #: field:sale.order,picked_rate:0

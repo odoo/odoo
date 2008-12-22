@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
-"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,14 +27,24 @@ msgid "Convert to Quote"
 msgstr ""
 
 #. module: sale_crm
+#: help:crm.case.make_order,init,partner_id:0
+msgid "Use this partner if there is no partner on the case"
+msgstr ""
+
+#. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
 msgid "Create"
 msgstr "Crea"
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "All at once"
 msgstr ""
+
+#. module: sale_crm
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_crmopportunityquotation
@@ -44,7 +54,7 @@ msgstr ""
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractanalytic0
 msgid "Analytic account"
-msgstr ""
+msgstr "Compte analític"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmquotation0
@@ -82,6 +92,11 @@ msgid "Opportunity convert into quotation"
 msgstr ""
 
 #. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Direct Delivery"
+msgstr ""
+
+#. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
 msgstr ""
@@ -97,9 +112,14 @@ msgid "Customer"
 msgstr ""
 
 #. module: sale_crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: help:crm.case.make_order,init,close:0
+msgid "Check this to close the case after having created the sale order."
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
+msgstr ""
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0

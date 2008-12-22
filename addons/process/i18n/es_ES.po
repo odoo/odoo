@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:07:08+0000\n"
-"PO-Revision-Date: 2008-11-28 17:07:08+0000\n"
+"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
+"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,19 +36,19 @@ msgstr ""
 #. module: process
 #: field:process.node,menu_id:0
 msgid "Related Menu"
-msgstr ""
+msgstr "Menú relacionado"
 
 #. module: process
 #: field:process.transition,action_ids:0
 #: view:process.process:0
 #: view:process.node:0
 msgid "Buttons"
-msgstr ""
+msgstr "Botones"
 
 #. module: process
 #: selection:process.node,kind:0
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: process
 #: view:process.process:0
@@ -75,7 +75,7 @@ msgstr ""
 #: field:process.process,node_ids:0
 #: view:process.process:0
 msgid "Nodes"
-msgstr ""
+msgstr "Nodos"
 
 #. module: process
 #: field:process.node,condition_ids:0
@@ -92,12 +92,12 @@ msgstr ""
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Workflow Trigger"
-msgstr ""
+msgstr "Disparador del flujo de trabajo"
 
 #. module: process
 #: field:process.transition,note:0
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
@@ -108,7 +108,7 @@ msgstr ""
 #: field:process.condition,model_id:0
 #: field:process.node,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "Objecto"
 
 #. module: process
 #: field:process.transition,source_node_id:0
@@ -118,17 +118,17 @@ msgstr ""
 #. module: process
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
-msgstr ""
+msgstr "Transiciones flujo de trabajo"
 
 #. module: process
 #: field:process.process,active:0
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
-msgstr ""
+msgstr "Expresión de los estados"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
@@ -140,7 +140,7 @@ msgstr ""
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Dummy"
-msgstr ""
+msgstr "De relleno"
 
 #. module: process
 #: constraint:ir.ui.view:0
@@ -164,21 +164,21 @@ msgstr ""
 #. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
-msgstr ""
+msgstr "Transiciones iniciales"
 
 #. module: process
 #: field:process.node,note:0
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: process
 #: field:process.transition.action,transition_id:0
 #: view:process.process:0
 #: view:process.node:0
 msgid "Transition"
-msgstr ""
+msgstr "Transición"
 
 #. module: process
 #: view:process.process:0
@@ -191,28 +191,28 @@ msgstr ""
 #: selection:process.node,kind:0
 #: field:process.node,subflow_id:0
 msgid "Subflow"
-msgstr ""
+msgstr "Subflujo"
 
 #. module: process
 #: view:process.process:0
 #: view:process.node:0
 msgid "Extra Information"
-msgstr ""
+msgstr "Información extra"
 
 #. module: process
 #: field:process.transition.action,action:0
 msgid "Action ID"
-msgstr ""
+msgstr "ID de la acción"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Action"
-msgstr ""
+msgstr "Acción"
 
 #. module: process
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
-msgstr ""
+msgstr "Inicio flujo de trabajo"
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -222,7 +222,7 @@ msgstr ""
 #. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: process
 #: view:process.transition:0
@@ -232,7 +232,7 @@ msgstr ""
 #. module: process
 #: field:process.node,transition_out:0
 msgid "Ending Transitions"
-msgstr ""
+msgstr "Transiciones finales"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -242,16 +242,11 @@ msgid "Process Transitions"
 msgstr ""
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Process"
-msgstr ""
-
-#. module: process
 #: view:process.process:0
 #: view:process.node:0
 #: view:process.transition:0
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #. module: process
 #: model:ir.model,name:process.model_process_process
@@ -269,22 +264,27 @@ msgstr ""
 #. module: process
 #: field:process.node,kind:0
 msgid "Kind of Node"
-msgstr ""
+msgstr "Clase de nodo"
 
 #. module: process
 #: view:process.process:0
 #: view:process.node:0
 msgid "Outgoing Transitions"
+msgstr "Transiciones salientes"
+
+#. module: process
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Processes"
 msgstr ""
 
 #. module: process
 #: view:process.process:0
 #: view:process.node:0
 msgid "Transitions"
-msgstr ""
+msgstr "Transiciones"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Object Method"
-msgstr ""
+msgstr "Método objeto"
 

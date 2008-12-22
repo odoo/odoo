@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
-"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr "Indicador"
 #. module: account_report
 #: wizard_field:print.indicators.pdf,init,file:0
 msgid "Select a PDF File"
-msgstr ""
+msgstr "Seleccioneu un fitxer PDF"
 
 #. module: account_report
 #: selection:account.report.report,type:0
@@ -40,7 +40,7 @@ msgstr "Operadors:"
 #. module: account_report
 #: help:account.report.report,disp_graph:0
 msgid "If the field is set to True,information will be printed as a Graph; as an array otherwise."
-msgstr ""
+msgstr "Si el camp està a Cert, la informació s'imprimirà com un gràfic; en cas contrari com una taula."
 
 #. module: account_report
 #: field:account.report.report,parent_id:0
@@ -50,12 +50,12 @@ msgstr "Pare"
 #. module: account_report
 #: rml:print.indicators:0
 msgid "("
-msgstr ""
+msgstr "("
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Account Debit:"
-msgstr ""
+msgstr "Deure del compte:"
 
 #. module: account_report
 #: selection:account.report.report,type:0
@@ -70,7 +70,7 @@ msgstr "Notes"
 #. module: account_report
 #: view:account.report.report:0
 msgid "= Goodness Indicator Limit:"
-msgstr ""
+msgstr "= Límit indicador de bona situació:"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -92,7 +92,7 @@ msgstr "Dolent"
 #. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Select the PDF file on which Indicators will be printed."
-msgstr ""
+msgstr "Seleccioneu un fitxer PDF"
 
 #. module: account_report
 #: field:account.report.report,child_ids:0
@@ -102,12 +102,12 @@ msgstr "Fills"
 #. module: account_report
 #: view:account.report.report:0
 msgid "> Goodness Indicator Limit:"
-msgstr ""
+msgstr "> Límit indicador de bona situació:"
 
 #. module: account_report
 #: field:account.report.report,badness_limit:0
 msgid "Badness Indicator Limit"
-msgstr ""
+msgstr "Límit indicador de mala situació"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -117,17 +117,17 @@ msgstr "Molt dolent"
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.account_report_history_record_structure
 msgid "Indicator history"
-msgstr ""
+msgstr "Historial de l'indicador"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "credit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "credit(['ACCOUNT_CODE',],exercicifiscal)"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Report Amount:"
-msgstr ""
+msgstr "Import de l'informe:"
 
 #. module: account_report
 #: model:ir.actions.report.xml,name:account_report.fiscal_statements
@@ -137,13 +137,13 @@ msgstr "Apunts fiscals"
 #. module: account_report
 #: wizard_button:print.indicators,init,next:0
 msgid "Next"
-msgstr ""
+msgstr "Següent"
 
 #. module: account_report
 #: rml:print.indicators:0
 #: model:ir.actions.report.xml,name:account_report.report_print_indicators
 msgid "Indicators"
-msgstr ""
+msgstr "Indicadors"
 
 #. module: account_report
 #: field:account.report.report,type:0
@@ -153,12 +153,12 @@ msgstr "Tipus"
 #. module: account_report
 #: model:ir.actions.report.xml,name:account_report.report_indicator_pdf
 msgid "Print Indicators in PDF"
-msgstr ""
+msgstr "Imprimeix indicadors en PDF"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Account Tax Code:"
-msgstr ""
+msgstr "Códi compte impostos:"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -167,15 +167,15 @@ msgid "Good"
 msgstr "Bo"
 
 #. module: account_report
-#, python-format
 #: code:addons/account_report/account.py:0
+#, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error!"
 
 #. module: account_report
 #: view:account.report.history:0
 msgid "Account Report History"
-msgstr ""
+msgstr "Historial de l'informe del compte"
 
 #. module: account_report
 #: constraint:ir.ui.view:0
@@ -183,39 +183,44 @@ msgid "Invalid XML for View Architecture!"
 msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: account_report
+#: view:account.report.report:0
+msgid "= Badness Indicator Limit:"
+msgstr "= Límit indicador de mala situació:"
+
+#. module: account_report
 #: rml:print.indicators:0
 msgid "Notes :"
-msgstr ""
+msgstr "Notes :"
 
 #. module: account_report
 #: help:account.report.report,disp_tree:0
 msgid "When the indicators will be printed, if one indicator is set with this field to True, then it will display one more graph with all its children in tree"
-msgstr ""
+msgstr "Quan els indicadors s'imprimeixin, si un indicador s'estableix amb aquest camp a Cert, llavors mostrarà un gràfic més amb tots els seus fills en arbre"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "debit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "debit(['ACCOUNT_CODE',],exercicifiscal)"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Account Credit:"
-msgstr ""
+msgstr "Haver del compte:"
 
 #. module: account_report
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
-msgstr ""
+msgstr "﻿Seleccioneu els criteris en que els indicadors es basaran per imprimir-se."
 
 #. module: account_report
 #: help:account.report.report,badness_limit:0
 msgid "This Value depicts the limit of badness."
-msgstr ""
+msgstr "﻿Aquest valor descriu el límit de mala situació."
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "< Badness Indicator Limit:"
-msgstr ""
+msgstr "< Límit indicador de mala situació:"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -246,19 +251,14 @@ msgid "Status"
 msgstr "Posició"
 
 #. module: account_report
-#: rml:accounting.report:0
-msgid "Amount"
-msgstr "Import"
-
-#. module: account_report
 #: selection:account.report.report,status:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Example: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"
-msgstr ""
+msgstr "Exemple: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"
 
 #. module: account_report
 #: field:account.report.report,active:0
@@ -268,12 +268,12 @@ msgstr "Actiu"
 #. module: account_report
 #: field:account.report.report,disp_tree:0
 msgid "Display Tree"
-msgstr ""
+msgstr "Mostra arbre"
 
 #. module: account_report
 #: field:account.report.report,disp_graph:0
 msgid "Display as a Graph"
-msgstr ""
+msgstr "Mostra com un gràfic"
 
 #. module: account_report
 #: model:ir.model,name:account_report.model_account_report_report
@@ -283,22 +283,22 @@ msgstr "Informe de comptabilitat"
 #. module: account_report
 #: view:account.report.report:0
 msgid "Account Balance:"
-msgstr ""
+msgstr "Balanç del compte:"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
 msgid "This Value depicts the limit of goodness."
-msgstr ""
+msgstr "﻿Aquest valor descriu el límit de bona situació."
 
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Expression :"
-msgstr ""
+msgstr "Expressió :"
 
 #. module: account_report
 #: model:ir.ui.menu,name:account_report.menu_account_report_history_record
 msgid "All Indicators History"
-msgstr ""
+msgstr "Historial de tots els indicadors"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -318,7 +318,7 @@ msgstr "Informe de comptabilitat"
 #. module: account_report
 #: wizard_field:print.indicators,init,select_base:0
 msgid "Choose Criteria"
-msgstr ""
+msgstr "Seleccioneu els criteris"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -330,7 +330,7 @@ msgstr "Codi"
 #. module: account_report
 #: field:account.report.history,tmp:0
 msgid "temp"
-msgstr ""
+msgstr "temp"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -340,7 +340,7 @@ msgstr "+ - * / ( )"
 #. module: account_report
 #: field:account.report.history,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Període"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -353,17 +353,17 @@ msgid "Legend of operators"
 msgstr "Llegenda d'operadors"
 
 #. module: account_report
-#, python-format
 #: code:addons/account_report/account.py:0
+#, python-format
 msgid "You can not delete an indicator history record. You may have to delete the concerned Indicator!"
-msgstr ""
+msgstr "No podeu eliminar un registre de l'historial de l'indicador. potser heu d'eliminar l'indicador implicat!"
 
 #. module: account_report
 #: wizard_button:print.indicators.pdf,init,end:0
 #: wizard_button:print.indicators,init,end:0
 #: wizard_button:print.indicators,next,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_form
@@ -374,7 +374,7 @@ msgstr "Nou informe de comptabilitat"
 #. module: account_report
 #: view:account.report.report:0
 msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "balance(['ACCOUNT_CODE',],exercicifiscal)"
 
 #. module: account_report
 #: constraint:ir.model:0
@@ -382,18 +382,23 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based On Fiscal Years"
+msgstr ""
+
+#. module: account_report
 #: wizard_view:print.indicators,init:0
 #: wizard_view:print.indicators,next:0
 #: model:ir.actions.wizard,name:account_report.wizard_print_indicators
 #: model:ir.ui.menu,name:account_report.menu_wizard_print_indicators
 msgid "Print Indicators"
-msgstr ""
+msgstr "Imprimeix indicadors"
 
 #. module: account_report
 #: wizard_button:print.indicators.pdf,init,print:0
 #: wizard_button:print.indicators,next,print:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimeix"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -404,7 +409,7 @@ msgstr "Data impressió:"
 #. module: account_report
 #: model:ir.actions.wizard,name:account_report.wizard_indicators_with_pdf
 msgid "Indicators in PDF"
-msgstr ""
+msgstr "Indicadors en PDF"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -420,17 +425,17 @@ msgstr "Informe de comptabilitat"
 #. module: account_report
 #: field:account.report.report,goodness_limit:0
 msgid "Goodness Indicator Limit"
-msgstr ""
+msgstr "Límit indicador de bona situació"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."
-msgstr ""
+msgstr "﻿Nota: El segon argument 'exercicifiscal' i 'període' son arguments opcionals. Si el valor es -1, es considera l'exercici fiscal o període anterior."
 
 #. module: account_report
 #: rml:print.indicators:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_fiscal
@@ -439,9 +444,14 @@ msgid "Fiscal Statements reporting"
 msgstr "Informe apunts fiscals"
 
 #. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based on Fiscal Periods"
+msgstr ""
+
+#. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Print Indicators with PDF"
-msgstr ""
+msgstr "Imprimeix indicadors en PDF"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_indicator
@@ -459,17 +469,17 @@ msgstr "Nom"
 #. module: account_report
 #: wizard_field:print.indicators,next,base_selection:0
 msgid "Select Criteria"
-msgstr ""
+msgstr "Selecciona criteris"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
-msgstr ""
+msgstr "tax_code(['ACCOUNT_TAX_CODE',],període)"
 
 #. module: account_report
 #: field:account.report.history,fiscalyear_id:0
 msgid "Fiscal Year"
-msgstr ""
+msgstr "Exercici fiscal"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree
@@ -482,7 +492,7 @@ msgstr "Informe a mida"
 #. module: account_report
 #: selection:account.report.report,type:0
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -495,7 +505,7 @@ msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "= Badness Indicator Limit:"
-msgstr ""
+#: rml:accounting.report:0
+msgid "Amount"
+msgstr "Import"
 

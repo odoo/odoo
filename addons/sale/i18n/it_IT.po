@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:00:06+0000\n"
-"PO-Revision-Date: 2008-11-28 17:00:06+0000\n"
+"POT-Creation-Date: 2008-12-22 17:57:17+0000\n"
+"PO-Revision-Date: 2008-12-22 17:57:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -68,6 +68,11 @@ msgid "Steps To Deliver a Sale Order"
 msgstr ""
 
 #. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
+msgstr ""
+
+#. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
 msgstr ""
@@ -116,7 +121,7 @@ msgstr "Rif. Cliente"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "Convalida"
 
 #. module: sale
 #: view:sale.order:0
@@ -149,8 +154,10 @@ msgid "Origin"
 msgstr "Origine"
 
 #. module: sale
-#: view:product.product:0
-msgid "Sale Pricelists           Min.Qty        Price"
+#: model:process.node,name:sale.process_node_quotation0
+#: model:process.node,note:sale.process_node_saleorder0
+#: model:process.node,name:sale.process_node_saleorder0
+msgid "Ok"
 msgstr ""
 
 #. module: sale
@@ -177,8 +184,8 @@ msgid "Sale Order"
 msgstr "Ordine di Vendita"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "You must first cancel all packings attached to this sale order."
 msgstr ""
 
@@ -189,8 +196,8 @@ msgid "Taxes"
 msgstr "Tasse"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Invalid action !"
 msgstr ""
 
@@ -295,8 +302,8 @@ msgid "Order Line"
 msgstr "Riga Ordine"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
 msgid "You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."
 msgstr ""
 
@@ -319,7 +326,7 @@ msgstr "Tutti gli Ordini di Vendita"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -396,8 +403,8 @@ msgid "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it
 msgstr ""
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Error !"
 msgstr ""
 
@@ -424,8 +431,8 @@ msgid "Sales Order Lines"
 msgstr "Righe Ordine di Vendita"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
 
@@ -433,13 +440,6 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Quantità Ordinate"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -477,6 +477,11 @@ msgstr "Listino Prezzi"
 #: model:ir.ui.menu,name:sale.menu_shop_configuration
 msgid "Configuration"
 msgstr "Configurazione"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr ""
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -521,19 +526,6 @@ msgid "Manual in progress"
 msgstr "Progressione Manuale"
 
 #. module: sale
-#: help:sale.order,order_policy:0
-msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
-"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
-"  - The 'Invoice after delivery' choice will generate the draft invoice after the packing list have been finished.\n"
-"  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."
-msgstr "Le Politiche di Spedizione vengono applicate per sincronizzare le operazioni di Fatturazione e Consegna.\n"
-"  - La voce 'Pagamento Anticipato' genererà prima la Fattura, e solo dopo il pagamento verrà prodotto un ordine di Preparazione Merci\n"
-"  - La voce 'Spedizione e Fatturazione Manuale' creerà automaticamente l'ordine di Preparazione Merci, mentre attenderà che un utente attivi manualmente il pulsante 'Fattura' per creare una Bozza di Fattura\n"
-"  - La voce 'Fattura dopo Consegna' genererà una Bozza di Fattura solo ad ordine evaso\n"
-"  - La voce 'Fattura da Preparazione Merci' viene utilizzata per creare una Fattura durante il processo di Preparazione Merci"
-
-#. module: sale
 #: field:sale.shop,payment_account_id:0
 #: view:sale.shop:0
 msgid "Payment accounts"
@@ -573,6 +565,15 @@ msgid "Discount (%)"
 msgstr "Sconto (5)"
 
 #. module: sale
+#: help:sale.order,order_policy:0
+msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
+"  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."
+msgstr ""
+
+#. module: sale
 #: selection:sale.order,state:0
 msgid "In progress"
 msgstr "In corso"
@@ -583,8 +584,8 @@ msgid "Net Price"
 msgstr "Prezzo Netto"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "invalid mode for test_state"
 msgstr ""
 
@@ -615,8 +616,8 @@ msgid "Shipping Default Policy"
 msgstr ""
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Could not cancel sale order !"
 msgstr ""
 
@@ -669,6 +670,11 @@ msgstr "Stato Ordine"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid "This Configuration step use to set default picking policy when make sale order"
 msgstr ""
 
 #. module: sale
@@ -757,11 +763,6 @@ msgid "Our Salesman"
 msgstr "Il Nostro Venditore"
 
 #. module: sale
-#: view:product.product:0
-msgid "Purchase Pricelists       Min.Qty      Price"
-msgstr ""
-
-#. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
 msgid "Create Advance Invoice"
 msgstr ""
@@ -783,8 +784,8 @@ msgid "If you don't have enough stock available to deliver all at once, do you a
 msgstr ""
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr ""
 
@@ -859,13 +860,8 @@ msgid "Sales Order in Progress"
 msgstr "Ordini di Vendita in esecuzione"
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Payment before delivery"
-msgstr "Pagamento Anticipato"
-
-#. module: sale
-#, python-format
 #: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
 msgid "Error"
 msgstr ""
 
@@ -975,6 +971,7 @@ msgstr "Negozio di Vendita"
 #: wizard_button:sale.order.make_invoice,init,end:0
 #: selection:sale.order,state:0
 #: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
@@ -1033,8 +1030,8 @@ msgid "Manual Designation"
 msgstr "Assegnazione Manuale"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
+#: selection:sale.order.line,state:0
+msgid "Exception"
 msgstr ""
 
 #. module: sale
@@ -1138,8 +1135,8 @@ msgid "Error: Invalid ean code"
 msgstr "Errore: codice EAN non valido"
 
 #. module: sale
-#, python-format
 #: code:addons/sale/sale.py:0
+#, python-format
 msgid "Could not cancel this sale order !"
 msgstr ""
 
@@ -1183,6 +1180,12 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You can not cancel a sale order line that has already been invoiced !"
+msgstr ""
+
+#. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
 msgstr ""
@@ -1218,11 +1221,6 @@ msgstr "Importo Totale"
 #: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Ordinato per data"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Automatic Invoice after delivery"
-msgstr "Fatturazione Automatica dopo Consegna"
 
 #. module: sale
 #: rml:sale.shipping:0
@@ -1268,6 +1266,11 @@ msgstr "Sequenza"
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Termini di pagamento"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Payment Before Delivery"
+msgstr ""
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
