@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution   
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -26,7 +26,7 @@
 import re
 
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
-replace = {'pre':'c', 'preview':'c','-':'final-','rc':'c','dev':'@'}.get
+replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@'}.get
 
 def _parse_version_parts(s):
     for part in component_re.split(s):
@@ -82,15 +82,16 @@ def parse_version(s):
     return tuple(parts)
 
 if __name__ == '__main__':
-	pvs = []
-	for v in ('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0'):
-		pv = parse_version(v)
-		print v, pv
-		pvs.append(pv)
+        pvs = []
+        for v in ('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0_rc2', '5.0.0'):
+                pv = parse_version(v)
+                print v, pv
+                pvs.append(pv)
 
-	def cmp(a, b):
-		assert(a < b)
-		return b
+        def cmp(a, b):
+                print a, b
+                assert(a < b)
+                return b
 
-	reduce(cmp, pvs)
-	
+        reduce(cmp, pvs)
+        
