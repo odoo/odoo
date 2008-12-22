@@ -188,9 +188,6 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
-        if opt.secure_cert_file or opt.secure_pkey_file:
-            opt.secure = True
-
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'logfile', 'pidfile', 'smtp_ssl', 'smtp_port', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
