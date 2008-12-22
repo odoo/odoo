@@ -783,7 +783,10 @@ def debug(what):
     st = stack()[1]
     param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
     while param.count(')') > param.count('('): param = param[:param.rfind(')')]
-    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, "%s = %s" % (param, pformat(what)))
+    what = pformat(what)
+    if param != what:
+        what = "%s = %s" % (param, what)
+    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, what)
 
 
 icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
