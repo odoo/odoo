@@ -166,7 +166,7 @@ class report_printscreen_list(report_int):
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(line[f] or '')
+                    txt = new_doc.createTextNode(str(line[f] or ''))
                     if temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
 
