@@ -22,6 +22,7 @@
 import operator
 from osv import osv, fields
 from osv.orm import intersect
+from tools.sql 
 from tools.translate import _
 
 
@@ -619,7 +620,7 @@ class account_analytic_account_summary_month(osv.osv):
     }
 
     def init(self, cr):
-        cr.drop_view_if_exists('account_analytic_analysis_summary_month')
+        tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_month')
         cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
                 'SELECT ' \
                     '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
