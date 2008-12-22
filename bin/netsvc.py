@@ -314,9 +314,10 @@ class SSLSocket(object):
     def __init__(self, socket):
         if not hasattr(socket, 'sock_shutdown'):
             from OpenSSL import SSL
+            import tools
             ctx = SSL.Context(SSL.SSLv23_METHOD)
-            ctx.use_privatekey_file('server.pkey')
-            ctx.use_certificate_file('server.cert')
+            ctx.use_privatekey_file(tools.config['secure_pkey_file'])
+            ctx.use_certificate_file(tools.config['secure_cert_file'])
             self.socket = SSL.Connection(ctx, socket)
         else:
             self.socket = socket

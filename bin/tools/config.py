@@ -105,7 +105,15 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), help="specify the level at which a failed assertion will stop the server. Accepted values: " + str(loglevels.keys()))
         if hasSSL:
-            parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+            group = optparse.OptionGroup(parser, "SSL Configuration")
+            group.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+            group.add_option("--cert-file", dest="secure_cert_file",
+                              default="server.cert", 
+                              help="specify the certificate file for the SSL connection")
+            group.add_option("--pkey-file", dest="secure_pkey_file", 
+                              default="server.pkey",
+                              help="specify the private key file for the SSL connection")
+            parser.add_option_group(group)
         
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
@@ -180,21 +188,32 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
+        if opt.secure_cert_file or opt.secure_pkey_file:
+            opt.secure = True
+
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'logfile', 'pidfile', 'smtp_ssl', 'smtp_port', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
         if hasSSL:
-            keys.append('secure')
+            keys.extend(['secure_cert_file', 'secure_pkey_file'])
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        for arg in ('language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
-            'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog'):
+        keys = ['language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
+                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
+
+        if hasSSL:
+            keys.append('secure')
+
+        for arg in keys:
             self.options[arg] = getattr(opt, arg)
+
+        print "cert_file: %s" % self.options.get('secure_cert_file', 'No')
+        print "pkey_file: %s" % self.options.get('secure_pkey_file', 'No')
         
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = loglevels[opt.assert_exit_level]
