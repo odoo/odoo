@@ -22,7 +22,7 @@
 import operator
 from osv import osv, fields
 from osv.orm import intersect
-from tools.sql 
+import tools.sql 
 from tools.translate import _
 
 
