@@ -4,7 +4,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    The refactoring about the OpenSSL support come from Tryton
+#    Copyright (C) 2007-2008 Cédric Krier.
+#    Copyright (C) 2007-2008 Bertrand Chenal.
+#    Copyright (C) 2008 B2CK SPRL.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,21 +24,24 @@
 #
 ##############################################################################
 
-import time
-import threading
 
-import SimpleXMLRPCServer, signal, sys, xmlrpclib
+import SimpleXMLRPCServer
 import SocketServer
-import socket
 import logging
 import logging.handlers
 import os
+import signal
+import socket
+import sys
+import threading
+import time
+import xmlrpclib
+import release
 
 _service = {}
 _group = {}
 _res_id = 1
 _res = {}
-
 
 class ServiceEndPointCall(object):
     def __init__(self, id, method):
@@ -131,20 +137,10 @@ class LocalService(Service):
             Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
             raise
 
-
-
-class ServiceUnavailable(Exception):
-    pass
-
-
 def service_exist(name):
     return (name in _service) and bool(_service[name])
 
-
-def get_rpc_paths():
-    return map(lambda s: '/xmlrpc/%s' % s, _service)
-
-
+LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_INFO = 'info'
@@ -159,7 +155,24 @@ def init_logger():
     from tools import config
     import os
 
+    logger = logging.getLogger()
+
+    if config['syslog']:
+        # SysLog Handler
+        if os.name == 'nt':
+            sysloghandler = logging.handlers.NTEventLogHandler("%s %s" %
+                                                         (release.description,
+                                                          release.version))
+        else:
+            sysloghandler = logging.handlers.SysLogHandler('/dev/log')
+        formatter = logging.Formatter('%(application)s:%(uncoloredlevelname)s:%(name)s:%(message)s')
+        sysloghandler.setFormatter(formatter)
+        logger.addHandler(sysloghandler)
+
+    # create a format for log messages and dates
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
     if config['logfile']:
+        # LogFile Handler
         logf = config['logfile']
         try:
             dirname = os.path.dirname(logf)
@@ -170,17 +183,16 @@ def init_logger():
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
             handler = logging.StreamHandler(sys.stdout)
     else:
+        # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
 
-    # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %H:%M:%S %Y')
 
     # tell the handler to use this format
     handler.setFormatter(formatter)
 
     # add the handler to the root logger
-    logging.getLogger().addHandler(handler)
-    logging.getLogger().setLevel(config['log_level'])
+    logger.addHandler(handler)
+    logger.setLevel(config['log_level'] or '0')
 
     if (not isinstance(handler, logging.FileHandler)) and os.name != 'nt':
         # change color of level names
@@ -206,6 +218,14 @@ def init_logger():
 
 
 class Logger(object):
+    def uncoloredlevelname(self, level):
+        # The level'names are globals to all loggers, so we must strip-off the
+        # color formatting for some specific logger (i.e: syslog)
+        levelname = logging.getLevelName(getattr(logging, level.upper(), 0))
+        if levelname.startswith("\x1b["):
+            return levelname[10:-4]
+        return levelname
+ 
     def notifyChannel(self, name, level, msg):
         log = logging.getLogger(name)
 
@@ -213,14 +233,19 @@ class Logger(object):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
             setattr(log, LOG_DEBUG_RPC, fct)
 
+        extra = {
+            'uncoloredlevelname': self.uncoloredlevelname(level), 
+            'application' : "%s %s" % (release.description, release.version),
+        }
+
         level_method = getattr(log, level)
 
         result = str(msg).strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
-                level_method('[%02d]: %s' % (idx+1, s,))
+                level_method('[%02d]: %s' % (idx+1, s,), extra=extra)
         elif result:
-            level_method(result[0])
+            level_method(result[0], extra=extra)
 
 init_logger()
 
@@ -248,46 +273,35 @@ class Agent(object):
             timer.cancel()
     quit = classmethod(quit)
 
-
-class RpcGateway(object):
-    def __init__(self, name):
-        self.name = name
-
-
-class Dispatcher(object):
-    def __init__(self):
-        pass
-
-    def monitor(self, signal):
-        pass
-
-    def run(self):
-        pass
-
-
 class xmlrpc(object):
     class RpcGateway(object):
         def __init__(self, name):
             self.name = name
 
-
 class GenericXMLRPCRequestHandler:
+    def log(self, title, msg):
+        from pprint import pformat
+        Logger().notifyChannel('XMLRPC-%s' % title, LOG_DEBUG_RPC, pformat(msg))
+
     def _dispatch(self, method, params):
-#        print 'TERP-CALL : ',method, params
         import traceback
         try:
+            self.log('method', method)
+            self.log('params', params)
             n = self.path.split("/")[-1]
             s = LocalService(n)
             m = getattr(s, method)
             s._service._response = None
             r = m(*params)
+            self.log('result', r)
             res = s._service._response
-            if res != None:
+            if res is not None:
                 r = res
+            self.log('res',r)
             return r
         except Exception, e:
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                sys.exc_type, sys.exc_value, sys.exc_traceback))
+            self.log('exception', e)
+            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             s = str(e)
             import tools
             if tools.config['debug_mode']:
@@ -296,47 +310,68 @@ class GenericXMLRPCRequestHandler:
                 pdb.post_mortem(tb)
             raise xmlrpclib.Fault(s, tb_s)
 
+class SSLSocket(object):
+    def __init__(self, socket):
+        if not hasattr(socket, 'sock_shutdown'):
+            from OpenSSL import SSL
+            import tools
+            ctx = SSL.Context(SSL.SSLv23_METHOD)
+            ctx.use_privatekey_file(tools.config['secure_pkey_file'])
+            ctx.use_certificate_file(tools.config['secure_cert_file'])
+            self.socket = SSL.Connection(ctx, socket)
+        else:
+            self.socket = socket
+
+    def shutdown(self, how):
+        return self.socket.sock_shutdown(how)
+
+    def __getattr__(self, name):
+        return getattr(self.socket, name)
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-    SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
+    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
+
+class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
+    def setup(self):
+        self.connection = SSLSocket(self.request)
+        self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
+        self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
 
 class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
-
     def server_bind(self):
-        try:
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
-        except:
-            Logger().notifyChannel('init', LOG_CRITICAL, 'Address already in use')
-            sys.exit(1)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+
+class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
+    def __init__(self, server_address, HandlerClass, logRequests=1):
+        SimpleThreadedXMLRPCServer.__init__(self, server_address, HandlerClass, logRequests)
+        self.socket = SSLSocket(socket.socket(self.address_family, self.socket_type))
+        self.server_bind()
+        self.server_activate()
 
 class HttpDaemon(threading.Thread):
-
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self)
         self.__port = port
         self.__interface = interface
-        self.secure = secure
-        if secure:
-            from ssl import SecureXMLRPCServer
+        self.secure = bool(secure)
+        handler_class = (SimpleXMLRPCRequestHandler, SecureXMLRPCRequestHandler)[self.secure]
+        server_class = (SimpleThreadedXMLRPCServer, SecureThreadedXMLRPCServer)[self.secure]
 
-            class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-                SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
-
-            class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
-                def server_bind(self):
-                    try:
-                        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                        SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
-                    except:
-                        sys.stderr.write("ERROR: address already in use\n")
-                        sys.exit(1)
-
-            self.server = SecureThreadedXMLRPCServer((interface, port),
-                    SecureXMLRPCRequestHandler, 0)
+        if self.secure:
+            from OpenSSL.SSL import Error as SSLError
         else:
-            self.server = SimpleThreadedXMLRPCServer((interface, port),
-                    SimpleXMLRPCRequestHandler, 0)
+            class SSLError(Exception): pass
+        
+        try: 
+            self.server = server_class((interface, port), handler_class, 0)
+        except SSLError, e:
+            Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can't load the certificate and/or the private key files")
+            sys.exit(1)
+        except Exception, e:
+            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when strarting the server daemon: %s" % (e,))
+            sys.exit(1)
+
 
     def attach(self, path, gw):
         pass
@@ -344,16 +379,7 @@ class HttpDaemon(threading.Thread):
     def stop(self):
         self.running = False
         if os.name != 'nt':
-            if hasattr(socket, 'SHUT_RDWR'):
-                if self.secure:
-                    self.server.socket.sock_shutdown(socket.SHUT_RDWR)
-                else:
-                    self.server.socket.shutdown(socket.SHUT_RDWR)
-            else:
-                if self.secure:
-                    self.server.socket.sock_shutdown(2)
-                else:
-                    self.server.socket.shutdown(2)
+            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
         self.server.socket.close()
 
     def run(self):
@@ -403,16 +429,17 @@ class TinySocketClientThread(threading.Thread):
                 return False
             try:
                 self.log(msg)
-                s = LocalService(msg[0])
-                m = getattr(s, msg[1])
-                s._service._response = None
-                r = m(*msg[2:])
-                res = s._service._response
+                service = LocalService(msg[0])
+                method = getattr(service, msg[1])
+                service._service._response = None
+                result_from_method = method(*msg[2:])
+                res = service._service._response
                 if res != None:
-                    r = res
-                self.log(r)
-                ts.mysend(r)
+                    result_from_method = res
+                self.log(result_from_method)
+                ts.mysend(result_from_method)
             except Exception, e:
+                print repr(e)
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 import tools
                 if tools.config['debug_mode']:

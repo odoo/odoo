@@ -85,6 +85,9 @@ def data_files():
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
+        files.append(('.', [opj('bin', 'import_xml.rng'),
+                            opj('bin', 'server.pkey'), 
+                            opj('bin', 'server.cert')]))
     else:
         man_directory = opj('share', 'man')
         files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -96,6 +99,10 @@ def data_files():
         files.append((opj(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
 
         openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+
+        files.append((openerp_site_packages, [opj('bin', 'import_xml.rng'),
+                                              opj('bin', 'server.pkey'),
+                                              opj('bin', 'server.cert')]))
 
         for addon in find_addons():
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
@@ -132,7 +139,8 @@ options = {
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
                      "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
-                     "pydot","asyncore","asynchat", "reportlab", "vobject", "HTMLParser"],
+                     "pydot","asyncore","asynchat", "reportlab", "vobject",
+                     "HTMLParser", "OpenSSL", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
@@ -155,7 +163,6 @@ setup(name             = name,
                           'openerp-server.addons',
                           'openerp-server.ir',
                           'openerp-server.osv',
-                          'openerp-server.ssl',
                           'openerp-server.service', 
                           'openerp-server.tools',
                           'openerp-server.report',

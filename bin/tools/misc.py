@@ -542,11 +542,20 @@ class cache(object):
         self.timeout = timeout
         self.skiparg = skiparg
         self.multi = multi
+        self.lasttime = time.time()
         self.cache = {}
 
     def __call__(self, fn):
         arg_names = inspect.getargspec(fn)[0][self.skiparg:]
+
         def cached_result(self2, cr=None, *args, **kwargs):
+            if time.time()-self.timeout > self.lasttime:
+                self.lasttime = time.time()
+                t = time.time()-self.timeout 
+                for key in self.cache:
+                    if self.cache[key][1]<t:
+                        del self.cache[key]
+
             if cr is None:
                 self.cache = {}
                 return True
@@ -563,22 +572,44 @@ class cache(object):
                     kwargs2[k] = tuple(kwargs2[k])
                 elif not is_hashable(kwargs2[k]):
                     kwargs2[k] = repr(kwargs2[k])
+
+            if self.multi:
+                kwargs3 = kwargs2.copy()
+                notincache = []
+                result = {}
+                for id in kwargs3[self.multi]:
+                    kwargs2[self.multi] = [id]
+                    kwargs4 = kwargs2.items()
+                    kwargs4.sort()
+
+                    # Work out key as a tuple of ('argname', value) pairs
+                    key = (('dbname', cr.dbname),) + tuple(kwargs4)
+                    if key in self.cache:
+                        result[id] = self.cache[key][0]
+                    else:
+                        notincache.append(id)
+
+
+
+                if notincache:
+                    kwargs2[self.multi] = notincache
+                    result2 = fn(self2, cr, *args[2:self.skip], **kwargs3)
+                    for id in result2:
+                        kwargs2[self.multi] = [id]
+                        kwargs4 = kwargs2.items()
+                        kwargs4.sort()
+                        key = (('dbname', cr.dbname),) + tuple(kwargs4)
+                        self.cache[key] = result2[id]
+                    result.updat(result2)
+                return result
+
             kwargs2 = kwargs2.items()
             kwargs2.sort()
 
-            # Work out key as a tuple of ('argname', value) pairs
             key = (('dbname', cr.dbname),) + tuple(kwargs2)
-
-            # Check cache and return cached value if possible
             if key in self.cache:
-                (value, last_time) = self.cache[key]
-                mintime = time.time() - self.timeout
-                if self.timeout <= 0 or mintime <= last_time:
-                    return value
+                return self.cache[key][0]
 
-            # Work out new value, cache it and return it
-            # FIXME Should copy() this value to avoid futur modifications of the cache ?
-            # FIXME What about exceptions ?
             result = fn(self2, cr, *args, **kwargs)
 
             self.cache[key] = (result, time.time())
@@ -598,6 +629,10 @@ def ustr(value):
     @return: unicode string
     """
 
+    if (value is None) or (value is False):
+        return value
+    if not value:
+        return u''
     if isinstance(value, unicode):
         return value
 
@@ -612,6 +647,7 @@ def ustr(value):
 
 def get_languages():
     languages={
+        'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
@@ -631,12 +667,14 @@ def get_languages():
         'it_IT': u'Italian / Italiano',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'nl_NL': u'Dutch / Nederlands',
+        'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portugese (BR) / português (BR)',
         'pt_PT': u'Portugese / português',
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
         'sl_SL': u'Slovenian / slovenščina',
         'sv_SE': u'Swedish / svenska',
+        'tr_TR': u'Turkish / Türkçe',
         'uk_UK': u'Ukrainian / украї́нська мо́ва',
         'zh_CN': u'Chinese (CN) / 简体中文' ,
         'zh_TW': u'Chinese (TW) / 正體字',
@@ -748,7 +786,10 @@ def debug(what):
     st = stack()[1]
     param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
     while param.count(')') > param.count('('): param = param[:param.rfind(')')]
-    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, "%s = %s" % (param, pformat(what)))
+    what = pformat(what)
+    if param != what:
+        what = "%s = %s" % (param, what)
+    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, what)
 
 
 icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',

@@ -27,9 +27,6 @@
     !error "Do not forget to specify the version of OpenERP - /DVERSION=<VERSION>"
 !endif 
 
-;--------------------------------
-;Include Modern UI
-
 !include "MUI.nsh"
 
 ;--------------------------------
@@ -45,7 +42,7 @@ SetCompress auto
 InstallDir "$PROGRAMFILES\OpenERP Server"
 
 ;Get installation folder from registry if available
-InstallDirRegKey HKCU "Software\OpenERP Server" ""
+InstallDirRegKey HKLM "Software\OpenERP Server" ""
 
 BrandingText "OpenERP Server ${VERSION}"
 
@@ -63,6 +60,12 @@ Var STARTMENU_FOLDER
 
 !define MUI_ABORTWARNING
 
+!define REGKEY "SOFTWARE\$(^Name)"
+!define MUI_LANGDLL_REGISTRY_ROOT HKLM
+!define MUI_LANGDLL_REGISTRY_KEY ${REGKEY}
+!define MUI_LANGDLL_REGISTRY_VALUENAME InstallerLanguage
+
+!insertmacro MUI_RESERVEFILE_LANGDLL
 ;--------------------------------
 ;Pages
 
@@ -73,14 +76,15 @@ Var STARTMENU_FOLDER
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 !define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-slogan.bmp"
-!define MUI_LICENSEPAGE_TEXT_BOTTOM "Usually, a proprietary license provides with the software: limited number of users, limited in time usage, etc. This Open Source license is the opposite: it garantees you the right to use, copy, study, distribute and modify Open ERP for free."
+!define MUI_LICENSEPAGE_TEXT_BOTTOM "$(LicenseText)"
+!define MUI_LICENSEPAGE_BUTTON "$(LicenseNext)"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "doc\License.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 
 ;Start Menu Folder Page Configuration
-!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKLM" 
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\OpenERP Server"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "OpenERP Server"
 
@@ -91,7 +95,7 @@ Var STARTMENU_FOLDER
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_CHECKED
-!define MUI_FINISHPAGE_RUN_TEXT "Start OpenERP Server"
+!define MUI_FINISHPAGE_RUN_TEXT "$(FinishPageText)" 
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
 !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
@@ -106,6 +110,7 @@ Var STARTMENU_FOLDER
 ;Languages
 
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "French"
 
 !macro CreateInternetShortcut FILENAME URL
 	WriteINIStr "${FILENAME}.url" "InternetShortcut" "URL" "${URL}"
@@ -114,10 +119,26 @@ Var STARTMENU_FOLDER
 ;--------------------------------
 ;Installer Sections
 Function .onInit 
+!ifndef ALLINONE
+    ;Language selection dialog
+    Push ""
+    Push ${LANG_ENGLISH}
+    Push English
+    Push ${LANG_FRENCH}
+    Push French
+    Push A ; A means auto count languages
+    ; for the auto count to work the first empty push (Push "") must remain
+    LangDLL::LangDialog "Installer Language" "Please select the language of the installer"
+
+    Pop $LANGUAGE
+    StrCmp $LANGUAGE "cancel" 0 +2
+        Abort
+!endif
+
     ClearErrors
-    ReadRegStr $0 HKCU "Software\OpenERP Server" ""
+    ReadRegStr $0 HKLM "Software\OpenERP Server" ""
     IfErrors DoInstall 0
-        MessageBox MB_OK "Can not install the Open ERP Server because a previous installation already exists on this system. Please uninstall your current installation and relaunch this setup wizard."
+        MessageBox MB_OK "$(CannotInstallServerText)"
         Quit
     DoInstall:
 FunctionEnd
@@ -137,11 +158,15 @@ Section "OpenERP Server" SecOpenERPServer
     File "win32\stop.bat"
 
     ;Store installation folder
-    WriteRegStr HKCU "Software\OpenERP Server" "" $INSTDIR
+    WriteRegStr HKLM "Software\OpenERP Server" "" $INSTDIR
 
+!ifndef ALLINONE
     ;Create uninstaller
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server" "DisplayName" "OpenERP Server ${VERSION}"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server" "UninstallString" "$INSTDIR\Uninstall.exe"
+!else
+    WriteRegStr HKLM  "Software\OpenERP AllInOne" "UninstallServer" "$INSTDIR\Uninstall.exe"
+!endif
     WriteUninstaller "$INSTDIR\Uninstall.exe"
 
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
@@ -152,7 +177,9 @@ Section "OpenERP Server" SecOpenERPServer
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
+!ifndef ALLINONE
         CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+!endif
 	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
 	!insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
     !insertmacro MUI_STARTMENU_WRITE_END
@@ -164,13 +191,6 @@ SectionEnd
 
 ;Descriptions
 
-;Language strings
-LangString DESC_SecOpenERPServer ${LANG_ENGLISH} "OpenERP Server."
-
-;Assign language strings to sections
-!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenERPServer} $(DESC_SecOpenERPServer)
-!insertmacro MUI_FUNCTION_DESCRIPTION_END
  
 ;--------------------------------
 ;Uninstaller Section
@@ -186,7 +206,9 @@ Section "Uninstall"
 
     Delete "$SMPROGRAMS\$MUI_TEMP\Forum.url"
     Delete "$SMPROGRAMS\$MUI_TEMP\Translation.url"
+!ifndef ALLINONE
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
+!endif 
     Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP Server.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
@@ -208,8 +230,12 @@ Section "Uninstall"
 
     startMenuDeleteLoopDone:
 
+!ifndef ALLINONE
         DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OpenERP Server"
-        DeleteRegKey /ifempty HKCU "Software\OpenERP Server"
+!else 
+        DeleteRegKey HKLM "Software\OpenERP AllInOne\UninstallServer"
+!endif
+        DeleteRegKey /ifempty HKLM "Software\OpenERP Server"
 
 SectionEnd
 
@@ -217,3 +243,24 @@ Function LaunchLink
     nsExec::Exec "net start openerp-service"
 FunctionEnd
 
+LangString LicenseText ${LANG_ENGLISH} "Usually, a proprietary license is provided with the software: limited number of users, limited in time usage, etc. This Open Source license is the opposite: it garantees you the right to use, copy, study, distribute and modify Open ERP for free."
+LangString LicenseText ${LANG_FRENCH} "Normalement, une licence propriétaire est fournie avec le logiciel: limitation du nombre d'utilisateurs, limitation dans le temps, etc. Cette licence Open Source est l'opposé: Elle vous garantie le droit d'utiliser, de copier, d'étudier, de distribuer et de modifier Open ERP librement."
+
+LangString LicenseNext ${LANG_ENGLISH} "Next >"
+LangString LicenseNext ${LANG_FRENCH} "Suivant >"
+
+LangString FinishPageText ${LANG_ENGLISH} "Start OpenERP Server"
+LangString FinishPageText ${LANG_FRENCH} "Lancer le serveur OpenERP"
+
+;Language strings
+LangString DESC_SecOpenERPServer ${LANG_ENGLISH} "OpenERP Server."
+LangString DESC_SecOpenERPServer ${LANG_FRENCH} "Serveur OpenERP."
+
+LangString CannotInstallServerText ${LANG_ENGLISH} "Can not install the Open ERP Server because a previous installation already exists on this system. Please uninstall your current installation and relaunch this setup wizard."
+LangString CannotInstallServerText ${LANG_FRENCH} "Ne peut pas installer le serveur Open ERP parce qu'une installation existe déjà  sur ce système. S'il vous plait, désinstallez votre installation actuelle et relancer l'installeur."
+
+
+;Assign language strings to sections
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenERPServer} $(DESC_SecOpenERPServer)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END

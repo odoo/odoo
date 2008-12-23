@@ -669,10 +669,7 @@ form: module.record_id""" % (xml_id,)
         rec_id = rec.getAttribute("id").encode('ascii')
         self._test_xml_id(rec_id)
 
-#       if not rec_id and not self.isnoupdate(data_node):
-#           print "Warning", rec_model
-
-        if self.isnoupdate(data_node) and not self.mode in ('init','update'):
+        if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:
                 id = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, rec_model, self.module, rec_id)
@@ -737,7 +734,7 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
         if rec_id:
             self.idref[rec_id] = int(id)
-        if config.get('i mport_partial', False):
+        if config.get('import_partial', False):
             cr.commit()
         return rec_model, id
 

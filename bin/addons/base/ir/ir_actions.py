@@ -365,7 +365,7 @@ server_object_lines()
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
-            
+
     def _select_signals(self, cr, uid, context={}):
         cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
                         " where w.id = a.wkf_id " \
@@ -377,15 +377,14 @@ class actions_server(osv.osv):
             if not rs[0] == None and not rs[1] == None:
                 res.append(rs)
         return res
-    
+
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64),
-        'condition' : fields.char('Condition', size=256),
-        'sub_condition' : fields.char('Condition', size=256),
+        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name i.e. One Sales Order -> Many Invoice"),
+        'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be test before execute action,  i.e : object.list_price > object.cost_price"),
         'state': fields.selection([
             ('client_action','Client Action'),
             ('dummy','Dummy'),
@@ -397,18 +396,18 @@ class actions_server(osv.osv):
             ('object_create','Create Object'),
             ('object_write','Write Object'),
             ('other','Multi Actions'),
-        ], 'Action Type', required=True, size=32),
-        'code':fields.text('Python Code'),
-        'sequence': fields.integer('Sequence'),
-        'model_id': fields.many2one('ir.model', 'Object', required=True),
-        'action_id': fields.many2one('ir.actions.actions', 'Client Action'),
-        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128),
-        'wkf_model_id': fields.many2one('ir.model', 'Workflow on'),
-        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On'),
-        'email': fields.char('Email Address', size=512),
-        'subject': fields.char('Subject', size=1024, translate=True),
-        'message': fields.text('Message', translate=True),
-        'mobile': fields.char('Mobile No', size=512),
+        ], 'Action Type', required=True, size=32, help="Type of the Action that is to be execute"),
+        'code':fields.text('Python Code', help="python code to be execute"),
+        'sequence': fields.integer('Sequence', help="Important when you deal with the multi action, the execution order will be decided based on this, low number higher priority"),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, help="select the obect on which the action will work (read, write, create)"),
+        'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Ation Window, Report, Wizard to be execute"),
+        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be "),
+        'wkf_model_id': fields.many2one('ir.model', 'Workflow on', help="Workflow to be execute on which model"),
+        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On', help="select the object from the model on which the workflow will execute"),
+        'email': fields.char('Email Address', size=512, help="provides the fiels that will refer to the tiny to fetch the email address, i.e. you select the invoice, then `object.invoice_address_id.email` is the field which give the correct address"),
+        'subject': fields.char('Subject', size=1024, translate=True, help="Specify the subject, you can use the fields from the object. like `Hello [[ object.partner_id.name ]]`"),
+        'message': fields.text('Message', translate=True, help="Specify the Message, you can use the fields from the object. like `Dear [[ object.partner_id.name ]]`"),
+        'mobile': fields.char('Mobile No', size=512, help="provides the fiels that will refer to the tiny to fetch the mobile number, i.e. you select the invoice, then `object.invoice_address_id.mobile` is the field which give the correct mobile number"),
         'sms': fields.char('SMS', size=160, translate=True),
         'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
@@ -417,13 +416,12 @@ class actions_server(osv.osv):
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
         'record_id':fields.many2one('ir.model.fields', 'Create Id', help="Provide the field name from where the record id stores after the create operations, if its empty, you can not track the new record"),
         'write_id':fields.char('Write Id', size=256, help="Provide the field name from where the record id refer for the write operation, if its empty it will refer to the active id of the object"),
-        'loop_action':fields.many2one('ir.actions.server', 'Loop Action'),
-        'expression':fields.char('Loop Expression', size=512),
+        'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="select the action, which will be executes. Loop action will not be avaliable inside loop"),
+        'expression':fields.char('Loop Expression', size=512, help="enter the field/expression that will return the list, i.e. select the sale order in Object, and we can have loop on sales order line. Expression = `object.order_line`"),
     }
     _defaults = {
         'state': lambda *a: 'dummy',
         'condition': lambda *a: 'True',
-        'sub_condition': lambda *a: 'True',
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables

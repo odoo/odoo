@@ -20,20 +20,23 @@
 #
 ##############################################################################
 
-import base64, os, string
-
-import netsvc
-import pooler, security, ir, tools
+import base64 
 import logging
-
-import threading, thread
-
+import os
+import security
+import string
+import thread
+import threading
 import time
-import addons
 
-import sql_db
 from tools.translate import _
+import addons
+import ir
+import netsvc
+import pooler
 import release
+import sql_db
+import tools
 
 logging.basicConfig()
 
@@ -89,8 +92,8 @@ class db(netsvc.Service):
                         mids = modobj.search(cr, 1, [('state', '=', 'installed')])
                         modobj.update_translations(cr, 1, mids, lang)
 
-                    cr.execute('UPDATE res_users SET password=%s, active=True WHERE login=%s', (
-                        user_password, 'admin'))
+                    cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+                        user_password, lang, 'admin'))
                     cr.execute('SELECT login, password, name ' \
                                '  FROM res_users ' \
                                ' ORDER BY login')
@@ -459,11 +462,10 @@ class report_spool(netsvc.Service):
         self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
         def go(id, uid, ids, datas, context):
+            cr = pooler.get_db(db).cursor()
             try:
-                cr = pooler.get_db(db).cursor()
                 obj = netsvc.LocalService('report.'+object)
                 (result, format) = obj.create(cr, uid, ids, datas, context)
-                cr.close()
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
@@ -477,6 +479,7 @@ class report_spool(netsvc.Service):
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = exception
                 self._reports[id]['state'] = True
+            cr.close()
             return True
 
         thread.start_new_thread(go, (id, uid, ids, datas, context))

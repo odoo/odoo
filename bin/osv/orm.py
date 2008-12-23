@@ -129,7 +129,7 @@ class browse_record(object):
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
 
-        if not id in self._data:
+        if id not in self._data:
             self._data[id] = {'id': id}
 
         self._cache = cache
@@ -137,7 +137,7 @@ class browse_record(object):
     def __getitem__(self, name):
         if name == 'id':
             return self._id
-        if not name in self._data[self._id]:
+        if name not in self._data[self._id]:
             # build the list of fields we will fetch
 
             # fetch the definition of the field which was asked for
@@ -166,7 +166,7 @@ class browse_record(object):
             # otherwise we fetch only that field
             else:
                 ffields = [(name, col)]
-            ids = filter(lambda id: not name in self._data[id], self._data.keys())
+            ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the data
             fffields = map(lambda x: x[0], ffields)
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
@@ -311,11 +311,11 @@ class orm_template(object):
     _invalids = set()
 
     def _field_create(self, cr, context={}):
-        cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
+        cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s,%s)", (model_id, self._name, self._description, self.__doc__, 'base'))
+            cr.execute("INSERT INTO ir_model (id,model, name, info,state) VALUES (%s, %s, %s, %s, %s)", (model_id, self._name, self._description, self.__doc__, 'base'))
         else:
             model_id = cr.fetchone()[0]
         if 'module' in context:
@@ -959,7 +959,6 @@ class orm_template(object):
                 return None
             
 
-            netsvc.Logger().notifyChannel('orm', netsvc.LOG_DEBUG, type(src))
             doc_src = dom.minidom.parseString(encode(src))
             doc_dest = dom.minidom.parseString(encode(inherit))
             toparse = doc_dest.childNodes
@@ -1726,8 +1725,11 @@ class orm(orm_template):
                     'translate': (field['translate']),
                     #'select': int(field['select_level'])
                 }
+
                 if field['ttype'] == 'selection':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
+                elif field['ttype'] == 'reference':
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(selection=eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
                 elif field['ttype'] == 'one2many':

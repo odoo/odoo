@@ -426,7 +426,6 @@ class one2many(_column):
             context = {}
         if not values:
             return
-
         _table = obj.pool.get(self._obj)._table
         obj = obj.pool.get(self._obj)
         for act in values:
