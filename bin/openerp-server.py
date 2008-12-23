@@ -158,7 +158,7 @@ if tools.config['xmlrpc']:
     try:
         port = int(tools.config["port"])
     except:
-        logger.notifyChannel("init", netsvc.LOG_CRITICAL, 
+        logger.notifyChannel("init", netsvc.LOG_CRITICAL,
                              "invalid port: %r" % (tools.config["port"],))
         sys.exit(1)
     interface = tools.config["interface"]
@@ -169,8 +169,8 @@ if tools.config['xmlrpc']:
     xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
     httpd.attach("/xmlrpc", xml_gw)
     logger.notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting XML-RPC%s services, port %s" % (
-                             (tools.config['secure'] and ' Secure' or ''), port))
+                         "starting XML-RPC%s services, port %s" % 
+                         ((tools.config['secure'] and ' Secure' or ''), port))
 
 #
 #if tools.config["soap"]:
@@ -206,8 +206,8 @@ def handler(signum, _):
     if tools.config['xmlrpc']:
         httpd.stop()
     netsvc.Agent.quit()
-    if config['pidfile']:
-        os.unlink(config['pidfile'])
+    if tools.config['pidfile']:
+        os.unlink(tools.config['pidfile'])
     logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
                          "Shutdown Server! - %s" % ( SIGNALS[signum], ))
     sys.exit(0)
@@ -215,9 +215,8 @@ def handler(signum, _):
 for signum in SIGNALS:
     signal.signal(signum, handler)
 
-from tools import config
-if config['pidfile']:
-    fd = open(config['pidfile'], 'w')
+if tools.config['pidfile']:
+    fd = open(tools.config['pidfile'], 'w')
     pidtext = "%d" % (os.getpid())
     fd.write(pidtext)
     fd.close()
