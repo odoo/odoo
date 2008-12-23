@@ -552,9 +552,9 @@ class cache(object):
             if time.time()-self.timeout > self.lasttime:
                 self.lasttime = time.time()
                 t = time.time()-self.timeout 
-                for key in self.cache:
-                    if self.cache[key][1]<t:
-                        del self.cache[key]
+                old_keys = [key for key in self.cache if self.cache[key][1] < t]
+                for key in old_keys:
+                    del self.cache[key]
 
             if cr is None:
                 self.cache = {}
