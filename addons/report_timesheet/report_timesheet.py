@@ -22,6 +22,8 @@
 
 from osv import fields,osv
 
+import tools.sql
+
 class report_timesheet_user(osv.osv):
     _name = "report_timesheet.user"
     _description = "Timesheet per day"
@@ -34,6 +36,7 @@ class report_timesheet_user(osv.osv):
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'report_timesheet_user')
         cr.execute("""
             create or replace view report_timesheet_user as (
                 select
