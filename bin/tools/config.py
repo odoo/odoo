@@ -189,12 +189,12 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_ssl', 'smtp_port', 
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
         if hasSSL:
-            keys.extend(['secure_cert_file', 'secure_pkey_file'])
+            keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
 
         for arg in keys:
             if getattr(opt, arg):
