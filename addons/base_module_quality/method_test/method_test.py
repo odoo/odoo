@@ -42,18 +42,20 @@ Method Test:
         return None
 
     def run_test(self, module_path, module_name=None, cr=None, uid=None):
+        model_list = []
         pool = pooler.get_pool(cr.dbname)
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
+        model_obj = pool.get('ir.model.data')
+        ids2 = model_obj.search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
+        model_data = model_obj.browse(cr, uid, ids2)
+        for model in model_data:
+            model_list.append(model.res_id)
         obj_list = []
-        for mod in pool.get('ir.model.data').browse(cr, uid, ids2):
-            object_name = mod.name.split('_')
-            object_name.pop(0)
-            object_name = '.'.join(object_name)
-            obj_list.append(str(object_name))
-        result={}
+        for mod in pool.get('ir.model').browse(cr, uid, model_list):
+            obj_list.append(str(mod.model))
+        result = {}
         self.result += "Module Name:" + module_name + '\n' + '===============\n'
         for obj in obj_list:
-            temp=[]
+            temp = []
             try:
                 res = pool.get(obj).search(cr, uid, [])
                 temp.append('Ok')
@@ -70,11 +72,11 @@ Method Test:
             except:
                 temp.append('Exception')
             result[obj] = temp
-        self.result+=("%-40s %-12s \t %-16s %-12s")%('Object Name'.ljust(40),'search','fields_view_get','read')
-        self.result+='\n'
+        self.result += ("%-40s %12s %16s %12s")%('Object Name'.ljust(40),'search','fields_view_get','read')
+        self.result += '\n'
         for res in result:
-            self.result+=("%-40s %-12s \t %-16s \t %-12s")%(res.ljust(40),result[res][0],result[res][1],result[res][2])
-            self.result+="\n"
+            self.result += ("%-40s %12s %16s %12s")%(res.ljust(40),result[res][0],result[res][1],result[res][2])
+            self.result += "\n"
         return None
 
 
