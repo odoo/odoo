@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:07:08+0000\n"
-"PO-Revision-Date: 2008-11-28 17:07:08+0000\n"
+"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
+"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "New Holidays Request"
-msgstr ""
+msgstr "Nueva petición de vacaciones"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
@@ -28,7 +28,7 @@ msgstr "Todas las peticiones de vacaciones"
 #. module: hr_holidays
 #: field:hr.holidays.per.user,remaining_leaves:0
 msgid "Remaining Leaves"
-msgstr ""
+msgstr "Vacaciones disponibles"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
@@ -48,17 +48,17 @@ msgstr "Marrón"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "del"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Off-Days' Summary"
-msgstr ""
+msgstr "Resumen días de ausencia"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
-msgstr ""
+msgstr "Vacaciones empleado"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -74,7 +74,7 @@ msgstr "Vacaciones"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "hasta"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -89,7 +89,7 @@ msgstr "Verde claro"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_employeedeclaration0
 msgid "Employee Declaration"
-msgstr ""
+msgstr "Declaración empleado"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -101,11 +101,16 @@ msgstr "Validada"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
 msgid "Refused Request"
-msgstr ""
+msgstr "Petición rechazada"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
+msgstr "Aprobado"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Both"
 msgstr ""
 
 #. module: hr_holidays
@@ -139,17 +144,17 @@ msgstr "Estado vacaciones"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_refusedrequest0
 msgid "Request is refused."
-msgstr ""
+msgstr "Petición es rechazada."
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Holidays Management"
-msgstr ""
+msgstr "Gestión de vacaciones"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Análisis desde"
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -159,7 +164,7 @@ msgstr "Resumen de las vacaciones"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_setholiday0
 msgid "Holiday is set in the calendar."
-msgstr ""
+msgstr "Las vacaciones son fijadas en el calendario."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -184,7 +189,7 @@ msgstr "Vacaciones permitidas"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
 msgid "Legal Declaration Document to declare new employee"
-msgstr ""
+msgstr "Documento de declaración oficial para declarar nuevo empleado"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -202,6 +207,8 @@ msgid "Define holiday status"
 msgstr "Definir Estado Vacaciones"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
 #: selection:hr.holidays,state:0
 msgid "Confirmed"
 msgstr "Confirmada"
@@ -209,7 +216,7 @@ msgstr "Confirmada"
 #. module: hr_holidays
 #: model:process.process,name:hr_holidays.process_process_holidaysworkflow0
 msgid "Holidays Workflow"
-msgstr ""
+msgstr "Flujo de vacaciones"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,date_from:0
@@ -231,12 +238,12 @@ msgstr "Sección"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_approved0
 msgid "His manager approves the request"
-msgstr ""
+msgstr "Su responsable aprueba la petición"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
 msgid "Encoding of annual available holidays."
-msgstr ""
+msgstr "Codificación de vacaciones disponibles anuales."
 
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
@@ -290,7 +297,7 @@ msgstr "Id empleado"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
 msgid "If holidays available, employee can take it and fill it."
-msgstr ""
+msgstr "Si hay vacaciones disponibles, el empleado puede cogerla y rellenarla."
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary.employee,notify:0
@@ -322,7 +329,7 @@ msgstr "Vacaciones por empleado"
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to override Limit"
-msgstr ""
+msgstr "Permite superar el límite"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -337,7 +344,7 @@ msgstr "Violeta"
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_calendar0
 msgid "Calendar"
-msgstr ""
+msgstr "Calendario"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_from:0
@@ -353,17 +360,17 @@ msgstr "Notificación"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidaysrequest0
 msgid "Employee fills in a request for holidays"
-msgstr ""
+msgstr "Empleado rellena una petición de vacaciones"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
 msgid "Employee get holidays"
-msgstr ""
+msgstr "Empleado obtiene vacaciones"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_calendar0
 msgid "The holiday is set in the calendar"
-msgstr ""
+msgstr "Las vacaciones son fijadas en el calendario"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -389,7 +396,7 @@ msgstr "Mis peticiones de vacaciones rechazadas"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_setholiday0
 msgid "Set Holiday"
-msgstr ""
+msgstr "Fijar vacaciones"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
@@ -422,6 +429,11 @@ msgid "Color of the status"
 msgstr "Color del tipo"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.per.user,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr "Vacaciones realizadas"
@@ -429,7 +441,7 @@ msgstr "Vacaciones realizadas"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
-msgstr ""
+msgstr "vacaciones."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -444,18 +456,18 @@ msgstr "Usuario"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
 msgid "Document for employee"
-msgstr ""
+msgstr "Documento para empleado"
 
 #. module: hr_holidays
 #: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #. module: hr_holidays
 #: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
 msgid "Reufse"
-msgstr ""
+msgstr "Rechazar"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
@@ -475,7 +487,7 @@ msgstr "Imprimir el resumen de vacaciones del empleado"
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
 msgid "Holiday manager"
-msgstr "Gestor de vacaciones"
+msgstr "Responsable de vacaciones"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -485,12 +497,12 @@ msgstr "Azul claro"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
 msgid "Approved Request"
-msgstr ""
+msgstr "Petición aprobada"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
 msgid "Holidays Request"
-msgstr ""
+msgstr "Petición de vacaciones"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
@@ -500,7 +512,7 @@ msgstr "Peticiones esperando validación"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: hr_holidays
 #: wizard_button:hr.holidays.summary,init,end:0
@@ -513,6 +525,12 @@ msgstr "Cancelar"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
 msgid "Holidays def Request"
+msgstr "Petición define vacaciones"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Validated"
 msgstr ""
 
 #. module: hr_holidays
@@ -561,12 +579,12 @@ msgstr "Rechazada"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_approvedrequest0
 msgid "Request is approved."
-msgstr ""
+msgstr "Petición es aprobada."
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysdefinition0
 msgid "Holidays Definition"
-msgstr ""
+msgstr "Definición vacaciones"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,holiday_type:0
@@ -582,17 +600,17 @@ msgstr "Caso"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidays0
 msgid "Encode number of available holidays"
-msgstr ""
+msgstr "Codifica número de vacaciones disponibles"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_legaldeclaration0
 msgid "Secretariat Social"
-msgstr ""
+msgstr "Secretaría social"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,notify:0
 msgid "You have to select at least 1 Department. Try again."
-msgstr ""
+msgstr "Debe seleccionar por lo menos 1 departamento. Inténtelo de nuevo."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
@@ -612,5 +630,5 @@ msgstr "Rosa claro"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0
 msgid "His manager refuses the request"
-msgstr ""
+msgstr "Su responsable rechaza la petición"
 

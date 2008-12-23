@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:01:47+0000\n"
-"PO-Revision-Date: 2008-11-28 17:01:47+0000\n"
+"POT-Creation-Date: 2008-12-22 17:58:36+0000\n"
+"PO-Revision-Date: 2008-12-22 17:58:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,9 +31,24 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
 
 #. module: wiki
+#: view:wizard.wiki.history.show_diff:0
+msgid "Wiki Differance"
+msgstr ""
+
+#. module: wiki
 #: wizard_view:wiki.create.menu,init:0
 #: wizard_view:wiki.make.index,init:0
 msgid "Menu Information"
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.wizard,name:wiki.wizard_open_page
+msgid "Open Page"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups.link,action_id:0
+msgid "Menu"
 msgstr ""
 
 #. module: wiki
@@ -42,8 +57,8 @@ msgid "Child Groups"
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:wiki.wiki:0
+msgid "Modifications"
 msgstr ""
 
 #. module: wiki
@@ -53,12 +68,19 @@ msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
+#: view:wiki.wiki.history:0
 msgid "Wiki History"
 msgstr ""
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document_configuration
 msgid "Wiki Configuration"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.wiki.history,summary:0
+#: field:wiki.wiki,summary:0
+msgid "Summary"
 msgstr ""
 
 #. module: wiki
@@ -73,6 +95,11 @@ msgid "Title"
 msgstr ""
 
 #. module: wiki
+#: field:wiki.groups,notes:0
+msgid "Description"
+msgstr ""
+
+#. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
 msgstr ""
@@ -83,8 +110,10 @@ msgid "Create a Menu"
 msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_parent_id:0
-msgid "Parent Menu"
+#: model:ir.actions.act_window,name:wiki.action_wiki
+#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
+#: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
+msgid "Wiki Pages"
 msgstr ""
 
 #. module: wiki
@@ -98,8 +127,8 @@ msgid "Tags"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,create_uid:0
-msgid "Author"
+#: wizard_field:wiki.create.menu,init,page:0
+msgid "Group Home Page"
 msgstr ""
 
 #. module: wiki
@@ -128,11 +157,6 @@ msgid "Document Management"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,toc:0
-msgid "Table of Contents ?"
-msgstr ""
-
-#. module: wiki
 #: field:wiki.wiki.history,create_date:0
 msgid "Date"
 msgstr ""
@@ -143,11 +167,12 @@ msgid "Want to create a Index on Selected Pages ? "
 msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
-msgid "History"
+#: view:wiki.groups:0
+msgid "Configuration"
 msgstr ""
 
 #. module: wiki
+#: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
 msgstr ""
@@ -163,10 +188,8 @@ msgid "Text area"
 msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.action_wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
-msgid "Wiki Pages"
+#: wizard_field:wiki.create.menu,init,menu_parent_id:0
+msgid "Parent Menu"
 msgstr ""
 
 #. module: wiki
@@ -185,14 +208,14 @@ msgid "Notes"
 msgstr ""
 
 #. module: wiki
+#: field:wiki.groups.link,group_id:0
 #: field:wiki.groups,parent_id:0
 msgid "Parent Group"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki.history,summary:0
-#: field:wiki.wiki,summary:0
-msgid "Summary"
+#: model:ir.model,name:wiki.model_wiki_wiki
+msgid "wiki.wiki"
 msgstr ""
 
 #. module: wiki
@@ -206,14 +229,24 @@ msgid "Modify By"
 msgstr ""
 
 #. module: wiki
+#: field:wiki.wiki,create_uid:0
+msgid "Author"
+msgstr ""
+
+#. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
 msgstr ""
 
 #. module: wiki
-#: view:wizard.wiki.history.show_diff:0
-msgid "Wiki Differance"
+#: model:ir.model,name:wiki.model_wiki_groups_link
+msgid "Wiki Groups Links"
 msgstr ""
+
+#. module: wiki
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Invalido XML para Arquitetura da View"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -226,13 +259,8 @@ msgid "Menu Name"
 msgstr ""
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wiki_wiki
-msgid "Wiki Page"
-msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,notes:0
-msgid "Description"
+#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
+msgid "History"
 msgstr ""
 
 #. module: wiki
@@ -244,11 +272,6 @@ msgstr ""
 #. module: wiki
 #: field:wiki.wiki,text_area:0
 msgid "Content"
-msgstr ""
-
-#. module: wiki
-#: view:wiki.groups:0
-msgid "Configuration"
 msgstr ""
 
 #. module: wiki
@@ -281,7 +304,13 @@ msgstr ""
 #: model:ir.model,name:wiki.model_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
+#: view:wiki.groups:0
 msgid "Wiki Groups"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.wiki,toc:0
+msgid "Table of Contents"
 msgstr ""
 
 #. module: wiki

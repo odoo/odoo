@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:03:36+0000\n"
-"PO-Revision-Date: 2008-11-28 17:03:36+0000\n"
+"POT-Creation-Date: 2008-12-22 17:59:57+0000\n"
+"PO-Revision-Date: 2008-12-22 17:59:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,11 +38,6 @@ msgstr ""
 #: model:process.node,name:base_contact.process_node_contacts0
 msgid "Contacts"
 msgstr "Adresa"
-
-#. module: base_contact
-#: field:res.partner.job,sequence_partner:0
-msgid "Sequence (Partner)"
-msgstr ""
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -105,8 +100,8 @@ msgid "Contact Functions"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.job,sequence_contact:0
-msgid "Sequence (Contact)"
+#: help:res.partner.job,sequence_partner:0
+msgid "Order of importance of this job title in the list of job title of the linked partner"
 msgstr ""
 
 #. module: base_contact
@@ -134,6 +129,16 @@ msgstr ""
 #: field:res.partner.contact,country_id:0
 msgid "Nationality"
 msgstr ""
+
+#. module: base_contact
+#: help:res.partner.job,sequence_contact:0
+msgid "Order of importance of this address in the list of addresses of the linked contact"
+msgstr ""
+
+#. module: base_contact
+#: view:res.partner:0
+msgid "Categories"
+msgstr "Categorii"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
@@ -192,11 +197,6 @@ msgid "Functions and Addresses"
 msgstr ""
 
 #. module: base_contact
-#: help:res.partner.job,sequence_partner:0
-msgid "order of importance of this job title in the list of job title of the linked partner"
-msgstr ""
-
-#. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_res_partner_job
 #: model:ir.ui.menu,name:base_contact.menu_action_res_partner_job
 msgid "Contact's Jobs"
@@ -223,11 +223,6 @@ msgid "Function to address"
 msgstr ""
 
 #. module: base_contact
-#: help:res.partner.job,sequence_contact:0
-msgid "order of importance of this address in the list of addresses of the linked contact"
-msgstr ""
-
-#. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Partner Contacts"
 msgstr ""
@@ -244,8 +239,9 @@ msgid "Partner Contact"
 msgstr ""
 
 #. module: base_contact
-#: model:process.node,note:base_contact.process_node_addresses0
-msgid "Working and private addresses."
+#: field:res.partner.job,sequence_contact:0
+#: field:res.partner.job,sequence_partner:0
+msgid "Sequence"
 msgstr ""
 
 #. module: base_contact
@@ -292,6 +288,11 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_function0
 msgid "Jobs at a same partner address."
+msgstr ""
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_addresses0
+msgid "Working and private addresses."
 msgstr ""
 
 #. module: base_contact

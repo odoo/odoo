@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
-"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
+"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,9 @@ msgid "Service"
 msgstr "Service"
 
 #. module: product
-#: help:product.template,purchase_ok:0
-msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
-msgstr "Détermine si le produit est visible dans la liste des produits à l'intérieure d'une sélection dans une ligne d'ordre de commande."
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Price Min. Margin"
+msgstr "Marge minimale sur le prix"
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -96,6 +96,12 @@ msgid "Consumable"
 msgstr "Consommable"
 
 #. module: product
+#: model:product.category,name:product.product_category_7
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Onsite Intervention"
+msgstr "Intervention sur site"
+
+#. module: product
 #: wizard_field:product.price_list,init,price_list:0
 msgid "PriceList"
 msgstr ""
@@ -106,8 +112,8 @@ msgid "Dello Computer"
 msgstr ""
 
 #. module: product
-#, python-format
 #: code:addons/product/product.py:0
+#, python-format
 msgid "Products: "
 msgstr ""
 
@@ -145,6 +151,16 @@ msgstr ""
 #: field:product.product,price:0
 msgid "Customer Price"
 msgstr "Prix client"
+
+#. module: product
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
+msgstr "Détermine si le produit est visible dans la liste des produits à l'intérieur d'une sélection dans une ligne d'ordre de commande."
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -230,9 +246,10 @@ msgid "Silent fan"
 msgstr "Ventilateur silencieux"
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
-msgstr "Vous en pouvez pas avoir 2 listes de prix avec des dates qui se chevauchent"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -242,7 +259,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rules Test Match"
-msgstr "Test d'appliquation de la regle"
+msgstr "Test d’application de la règle"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -268,15 +285,15 @@ msgid "Fixed"
 msgstr "Fixé"
 
 #. module: product
-#, python-format
 #: code:addons/product/pricelist.py:0
+#, python-format
 msgid "Warning !"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Price Min. Margin"
-msgstr "Marge minimale sur le prix"
+#: help:product.pricelist.item,product_id:0
+msgid "Set a product if this rule only apply to one product. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -345,7 +362,7 @@ msgstr "Liste de prix du fournisseur"
 #. module: product
 #: help:product.template,procure_method:0
 msgid "'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."
-msgstr "'Livraison sur stock': au besoin, livre à partir du stock ou attend un approvisionnement. 'Fabrication à la commande': au besoin, achete ou produit d'après la commande"
+msgstr "'Livraison sur stock': au besoin, livre à partir du stock ou attend un approvisionnement. 'Fabrication à la commande': au besoin, achète ou produit d'après la commande"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -591,6 +608,12 @@ msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr ""
+
+#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr "Box"
@@ -615,7 +638,7 @@ msgstr "Listes de prix"
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
-msgstr "Détermine si le produit peut être visible dans la liste des produit à l'intérieur d'une sélection d'une ligne de commande."
+msgstr "Détermine si le produit peut être visible dans la liste des produits à l'intérieur d'une sélection d'une ligne de commande."
 
 #. module: product
 #: view:res.partner:0
@@ -845,6 +868,12 @@ msgid "Sets the price so that it is a multiple of this value.\n"
 msgstr ""
 
 #. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d unit"
+msgstr ""
+
+#. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
 msgstr "Précision d'arrondi"
@@ -970,12 +999,6 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
-msgstr "Intervention sur site"
-
-#. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr ""
@@ -1092,11 +1115,9 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Séquence"
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
 
 #. module: product
 #: constraint:product.template:0
@@ -1184,6 +1205,12 @@ msgid "Quantity-3"
 msgstr ""
 
 #. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d units"
+msgstr ""
+
+#. module: product
 #: wizard_field:product.price_list,init,qty1:0
 msgid "Quantity-1"
 msgstr ""
@@ -1239,11 +1266,6 @@ msgstr "Autre information"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Prix unitaire"
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty (months)"
-msgstr "Garantie (mois)"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -1349,9 +1371,9 @@ msgid "Variants"
 msgstr "Variantes"
 
 #. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+#: field:product.template,warranty:0
+msgid "Warranty (months)"
+msgstr "Garantie (mois)"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -1469,6 +1491,11 @@ msgid "The weight of a full of products palet or box."
 msgstr ""
 
 #. module: product
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
+msgstr "Vous en pouvez pas avoir 2 listes de prix avec des dates qui se chevauchent"
+
+#. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
 msgstr "Stock virtuel"
@@ -1501,9 +1528,11 @@ msgid "Unit"
 msgstr "Unité"
 
 #. module: product
-#: help:product.pricelist.item,product_id:0
-msgid "Set a product if this rule only apply to one product. Keep empty for all products"
-msgstr ""
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
 
 #. module: product
 #: field:product.template,list_price:0

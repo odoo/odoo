@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
-"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"POT-Creation-Date: 2008-12-22 17:51:28+0000\n"
+"PO-Revision-Date: 2008-12-22 17:51:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,8 +58,8 @@ msgid "Report"
 msgstr "报表"
 
 #. module: base_report_designer
-#, python-format
 #: code:addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#, python-format
 msgid "Report does not contain the sxw content!"
 msgstr ""
 
@@ -74,11 +74,6 @@ msgstr ""
 #: wizard_view:base_report_designer.modify,send_form:0
 msgid "Get a report"
 msgstr "获取报表"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Tiny ERP using this wizard."
-msgstr "此为您请求报表的模板。将其保存为.SXW文件，并用OpenOffice打开。不要忘记安装TinyOpenOffice工具包，利用工具包中的工具修改报表。完成后使用此向导回传给Tiny ERP服务器。"
 
 #. module: base_report_designer
 #: wizard_button:base_report_designer.modify,get_form,get_form_result:0
@@ -96,11 +91,22 @@ msgid "Report designer"
 msgstr "报表设计器"
 
 #. module: base_report_designer
+#: wizard_view:base_report_designer.modify,get_form_result:0
+msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Open ERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
 #: wizard_button:base_report_designer.modify,send_form,send_form_result:0
 msgid "Update the report"
 msgstr "上传报表"
 
 #. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
+msgid "Create a new report"
+msgstr ""
+
+#. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
 #: model:ir.actions.wizard,name:base_report_designer.wizard_report_designer_modify
 msgid "Modify an existing report"
 msgstr ""

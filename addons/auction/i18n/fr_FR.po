@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
-"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
+"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,9 +41,16 @@ msgid "Seller"
 msgstr "Vendeur"
 
 #. module: auction
-#: wizard_field:auction.lots.sms_send,init,text:0
-msgid "SMS Message"
-msgstr "Message SMS"
+#: selection:auction.lots.send.aie,init,numerotation:0
+#: selection:auction.lots.send.aie,date_ask,numerotation:0
+msgid "Provisoire"
+msgstr ""
+
+#. module: auction
+#: selection:auction.lots.send.aie,init,numerotation:0
+#: selection:auction.lots.send.aie,date_ask,numerotation:0
+msgid "Definitive (ordre catalogue)"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree1_my
@@ -62,9 +69,10 @@ msgid "Auction Reporting on buyer view"
 msgstr ""
 
 #. module: auction
-#: field:report.buyer.auction2,net_revenue:0
-msgid "Net Revenue"
-msgstr "Revenu net"
+#: field:report.auction.object.date,obj_num:0
+#: field:report.auction.view2,obj_number:0
+msgid "# of Objects"
+msgstr "# d'objets"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_action_bids_form
@@ -216,6 +224,11 @@ msgid "Object Type"
 msgstr "Type de l'objet"
 
 #. module: auction
+#: wizard_field:auction.lots.sms_send,init,text:0
+msgid "SMS Message"
+msgstr "Message SMS"
+
+#. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Contemporary Art"
 msgstr "Art Contemporain"
@@ -230,6 +243,11 @@ msgstr "Réf"
 #: field:report.auction.view,nseller:0
 msgid "No of sellers"
 msgstr "Nb de vendeurs"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "ned"
+msgstr ""
 
 #. module: auction
 #: constraint:hr.attendance:0
@@ -385,10 +403,9 @@ msgid "Exit"
 msgstr "Quitter"
 
 #. module: auction
-#: field:report.auction.object.date,obj_num:0
-#: field:report.auction.view2,obj_number:0
-msgid "# of Objects"
-msgstr "# d'objets"
+#: field:report.buyer.auction2,net_revenue:0
+msgid "Net Revenue"
+msgstr "Revenu net"
 
 #. module: auction
 #: view:report.buyer.auction:0
@@ -526,6 +543,11 @@ msgid "Maximum Price"
 msgstr "Prix maximum"
 
 #. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "eng"
+msgstr ""
+
+#. module: auction
 #: view:report.buyer.auction2:0
 msgid "Auction buyer reporting tree view2"
 msgstr ""
@@ -544,6 +566,11 @@ msgstr ""
 #: field:auction.lots,statement_id:0
 msgid "Payment"
 msgstr "Paiement"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "fr"
+msgstr ""
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -1282,6 +1309,11 @@ msgid "Results with buyer"
 msgstr "Résultats des acheteurs"
 
 #. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "de"
+msgstr ""
+
+#. module: auction
 #: wizard_button:auction.lots.auction_move,init,set_date:0
 msgid "Move to Auction date"
 msgstr "Déplacer à la date de l'Enchère"
@@ -1802,7 +1834,7 @@ msgstr "Nom de l'acheteur"
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_manager_menu
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #. module: auction
 #: xsl:report.auction.ach_bordereau:0

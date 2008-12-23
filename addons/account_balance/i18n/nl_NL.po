@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:55:41+0000\n"
-"PO-Revision-Date: 2008-11-28 16:55:41+0000\n"
+"POT-Creation-Date: 2008-12-22 17:54:00+0000\n"
+"PO-Revision-Date: 2008-12-22 17:54:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,23 @@ msgid "Show Debit/Credit Information"
 msgstr ""
 
 #. module: account_balance
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,period_manner:0
 msgid "Entries Selection Based on"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "Notification"
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr ""
+
+#. module: account_balance
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
 msgstr ""
 
 #. module: account_balance
@@ -73,6 +82,11 @@ msgid "Select Period(s)"
 msgstr ""
 
 #. module: account_balance
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Compare Selected Years In Terms Of"
 msgstr ""
@@ -83,13 +97,14 @@ msgid "Select Fiscal Year(s)(Maximum Three Years)"
 msgstr ""
 
 #. module: account_balance
-#: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
-msgid "Account balance-Compare Years"
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
 msgstr ""
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,zero_years:0
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "You have to select 'Landscape' option. Please Check it."
+msgid "Notification"
 msgstr ""
 
 #. module: account_balance
@@ -98,8 +113,13 @@ msgid "Show Report in Landscape Form"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "You can select maximum 3 years. Please check again."
+#: help:account.balance.account.balance.report,init,periods:0
+msgid "All periods if empty"
+msgstr ""
+
+#. module: account_balance
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "With balance is not equal to 0"
 msgstr ""
 
 #. module: account_balance
@@ -113,8 +133,13 @@ msgid "Select Period"
 msgstr ""
 
 #. module: account_balance
-#: wizard_field:account.balance.account.balance.report,init,periods:0
-msgid "Periods"
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr ""
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "3. You have selected 'Percentage' option with more than 2 years, but you have not selected landscape format."
 msgstr ""
 
 #. module: account_balance
@@ -127,6 +152,16 @@ msgstr ""
 #: rml:account.balance.account.balance:0
 #: rml:account.account.balance.landscape:0
 msgid "Total:"
+msgstr ""
+
+#. module: account_balance
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Cash"
+msgstr ""
+
+#. module: account_balance
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
 msgstr ""
 
 #. module: account_balance
@@ -155,19 +190,29 @@ msgid "(If you do not select Fiscal year it will take all open fiscal year)"
 msgstr ""
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,select_account:0
 msgid "Select Reference Account(for  % comparision)"
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid "3. You have selected 'Percentage' option with more than 2 years, but you have not selected landscape format."
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "With movements"
 msgstr ""
 
 #. module: account_balance
 #: rml:account.balance.account.balance:0
 #: rml:account.account.balance.landscape:0
 msgid "Code"
+msgstr ""
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
 msgstr ""
 
 #. module: account_balance
@@ -182,6 +227,11 @@ msgid "Account Information"
 msgstr ""
 
 #. module: account_balance
+#: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,fiscalyear:0
 msgid "Fiscal year"
 msgstr ""
@@ -192,8 +242,8 @@ msgid "2. You have not selected 'Percentage' option, but you have selected more 
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,init:0
-msgid "Report Options"
+#: wizard_field:account.balance.account.balance.report,init,periods:0
+msgid "Periods"
 msgstr ""
 
 #. module: account_balance

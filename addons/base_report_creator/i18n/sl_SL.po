@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:05:22+0000\n"
-"PO-Revision-Date: 2008-11-28 17:05:22+0000\n"
+"POT-Creation-Date: 2008-12-22 18:01:20+0000\n"
+"PO-Revision-Date: 2008-12-22 18:01:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,8 +27,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
 
 #. module: base_report_creator
-#: field:base_report_creator.report,view_graph_type:0
-msgid "Graph Type"
+#: field:base_report_creator.report.fields,group_method:0
+msgid "Grouping Method"
 msgstr ""
 
 #. module: base_report_creator
@@ -125,6 +125,11 @@ msgstr ""
 #. module: base_report_creator
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
+msgstr ""
+
+#. module: base_report_creator
+#: field:base_report_creator.report,view_graph_type:0
+msgid "Graph Type"
 msgstr ""
 
 #. module: base_report_creator
@@ -238,6 +243,11 @@ msgid "Parent Menu"
 msgstr ""
 
 #. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Fields"
+msgstr ""
+
+#. module: base_report_creator
 #: field:base_report_creator.report,type:0
 msgid "Report Type"
 msgstr ""
@@ -306,11 +316,6 @@ msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Fields"
-msgstr ""
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Authorized Groups (empty for all)"
 msgstr ""
 
@@ -345,13 +350,9 @@ msgid "Report Filters"
 msgstr ""
 
 #. module: base_report_creator
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: selection:base_report_creator.report.filter,condition:0
 msgid "AND"
-msgstr ""
-
-#. module: base_report_creator
-#: selection:base_report_creator.report.filter,condition:0
-msgid "OR"
 msgstr ""
 
 #. module: base_report_creator
@@ -402,8 +403,9 @@ msgid "Calendar Mode"
 msgstr ""
 
 #. module: base_report_creator
-#: field:base_report_creator.report.fields,group_method:0
-msgid "Grouping Method"
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
+#: selection:base_report_creator.report.filter,condition:0
+msgid "OR"
 msgstr ""
 
 #. module: base_report_creator

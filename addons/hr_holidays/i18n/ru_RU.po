@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:04:29+0000\n"
-"PO-Revision-Date: 2008-11-28 17:04:29+0000\n"
+"POT-Creation-Date: 2008-12-22 18:00:38+0000\n"
+"PO-Revision-Date: 2008-12-22 18:00:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "Коричневый"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "из"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -74,7 +74,7 @@ msgstr "Отпуска"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -106,6 +106,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Both"
 msgstr ""
 
 #. module: hr_holidays
@@ -149,7 +154,7 @@ msgstr ""
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Анализировать с"
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -202,6 +207,8 @@ msgid "Define holiday status"
 msgstr "Установить статус отпуска"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
 #: selection:hr.holidays,state:0
 msgid "Confirmed"
 msgstr "Подтверждено"
@@ -422,6 +429,11 @@ msgid "Color of the status"
 msgstr "Цвет статуса"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.per.user,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr ""
@@ -429,7 +441,7 @@ msgstr ""
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
-msgstr ""
+msgstr "отпусков."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -490,7 +502,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
 msgid "Holidays Request"
-msgstr ""
+msgstr "Заявление на отпуск"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
@@ -513,6 +525,12 @@ msgstr "Отменить"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
 msgid "Holidays def Request"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Validated"
 msgstr ""
 
 #. module: hr_holidays

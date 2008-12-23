@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:00:56+0000\n"
-"PO-Revision-Date: 2008-11-28 17:00:56+0000\n"
+"POT-Creation-Date: 2008-12-22 17:57:56+0000\n"
+"PO-Revision-Date: 2008-12-22 17:57:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgid "Service"
 msgstr ""
 
 #. module: product
-#: help:product.template,purchase_ok:0
-msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Price Min. Margin"
 msgstr ""
 
 #. module: product
@@ -96,6 +96,12 @@ msgid "Consumable"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_7
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Onsite Intervention"
+msgstr ""
+
+#. module: product
 #: wizard_field:product.price_list,init,price_list:0
 msgid "PriceList"
 msgstr ""
@@ -106,8 +112,8 @@ msgid "Dello Computer"
 msgstr ""
 
 #. module: product
-#, python-format
 #: code:addons/product/product.py:0
+#, python-format
 msgid "Products: "
 msgstr ""
 
@@ -144,6 +150,16 @@ msgstr ""
 #. module: product
 #: field:product.product,price:0
 msgid "Customer Price"
+msgstr ""
+
+#. module: product
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
 msgstr ""
 
 #. module: product
@@ -230,8 +246,9 @@ msgid "Silent fan"
 msgstr ""
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
 msgstr ""
 
 #. module: product
@@ -255,7 +272,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Produktai"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -268,14 +285,14 @@ msgid "Fixed"
 msgstr ""
 
 #. module: product
-#, python-format
 #: code:addons/product/pricelist.py:0
+#, python-format
 msgid "Warning !"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Price Min. Margin"
+#: help:product.pricelist.item,product_id:0
+msgid "Set a product if this rule only apply to one product. Keep empty for all products"
 msgstr ""
 
 #. module: product
@@ -309,7 +326,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "Nustatymai"
 
 #. module: product
 #: view:product.product:0
@@ -591,6 +608,12 @@ msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr ""
+
+#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr ""
@@ -845,6 +868,12 @@ msgid "Sets the price so that it is a multiple of this value.\n"
 msgstr ""
 
 #. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d unit"
+msgstr ""
+
+#. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
 msgstr ""
@@ -969,12 +998,6 @@ msgid "Active"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
-msgstr ""
-
-#. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr ""
@@ -1091,10 +1114,8 @@ msgid "Variable"
 msgstr ""
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
 
 #. module: product
@@ -1183,6 +1204,12 @@ msgid "Quantity-3"
 msgstr ""
 
 #. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d units"
+msgstr ""
+
+#. module: product
 #: wizard_field:product.price_list,init,qty1:0
 msgid "Quantity-1"
 msgstr ""
@@ -1237,11 +1264,6 @@ msgstr ""
 #. module: product
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
-msgstr ""
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty (months)"
 msgstr ""
 
 #. module: product
@@ -1347,8 +1369,8 @@ msgid "Variants"
 msgstr ""
 
 #. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
+#: field:product.template,warranty:0
+msgid "Warranty (months)"
 msgstr ""
 
 #. module: product
@@ -1467,6 +1489,11 @@ msgid "The weight of a full of products palet or box."
 msgstr ""
 
 #. module: product
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
+msgstr ""
+
+#. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
 msgstr ""
@@ -1499,8 +1526,10 @@ msgid "Unit"
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,product_id:0
-msgid "Set a product if this rule only apply to one product. Keep empty for all products"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: product

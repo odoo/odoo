@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:07:08+0000\n"
-"PO-Revision-Date: 2008-11-28 17:07:08+0000\n"
+"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
+"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,17 +23,17 @@ msgstr "Fecha planificada si fija"
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr ""
+msgstr "Moneda de la empresa"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr ""
+msgstr "Total en moneda de la compañía"
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr ""
+msgstr "Seleccione el modo de pago a aplicar."
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -57,7 +57,7 @@ msgstr "Órdenes de pago a validar"
 #: help:account.invoice,amount_to_pay:0
 msgid "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
-msgstr "El importe que se debería pagar en la fecha actual\n"
+msgstr "El importe que se debería haber pagado en la fecha actual\n"
 "menos el importe que ya está en la orden de pago"
 
 #. module: account_payment
@@ -110,7 +110,7 @@ msgstr "Cancelado"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "Nueva orden de pago"
 
 #. module: account_payment
 #: rml:payement.order:0
@@ -156,7 +156,7 @@ msgstr "Fecha vencimiento factura"
 #. module: account_payment
 #: help:payment.order,date_planned:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
+msgstr "Seleccione una fecha si ha seleccionado que la fecha preferida sea fija."
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -185,10 +185,10 @@ msgid "Entry line"
 msgstr "Línea del asiento"
 
 #. module: account_payment
-#, python-format
 #: code:addons/account_payment/account_move_line.py:0
+#, python-format
 msgid "Error !"
-msgstr ""
+msgstr "¡Error!"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -241,7 +241,7 @@ msgstr "Importe total monetario"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr ""
+msgstr "Realizar pagos"
 
 #. module: account_payment
 #: field:payment.line,state:0
@@ -267,7 +267,7 @@ msgstr "Comunicación"
 #. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
-msgstr ""
+msgstr "Dirección de la empresa principal"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -278,7 +278,7 @@ msgstr "Información"
 #. module: account_payment
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr ""
+msgstr "Tipo de pago"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -289,7 +289,7 @@ msgstr "Importe pagado en la moneda de la empresa"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft payment order"
-msgstr "Orden de pago borrador"
+msgstr "Órdenes de pago borrador"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -302,18 +302,18 @@ msgstr "Línea de pago"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
+msgstr "El mensaje de pago realizado a comunicar."
 
 #. module: account_payment
-#, python-format
 #: code:addons/account_payment/account_move_line.py:0
+#, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "No se ha definido la empresa en la línea de entrada"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "Dirección del cliente que ordena."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -348,7 +348,7 @@ msgstr "Referencia:"
 #. module: account_payment
 #: help:payment.line,move_line_id:0
 msgid "This Entry Line will be referred for the information of the ordering customer."
-msgstr ""
+msgstr "﻿Esta línea de entrada se atribuirá por la información del cliente que ordena."
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -373,7 +373,7 @@ msgstr "Importe líneas de pago"
 #. module: account_payment
 #: help:payment.type,code:0
 msgid "Specify the Code for Payment Type"
-msgstr ""
+msgstr "Indique el código para el tipo de pago"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -388,7 +388,7 @@ msgstr "Importe en la moneda de la compañía"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr ""
+msgstr "El cliente que ordena"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -410,7 +410,7 @@ msgstr "Su referencia"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 #: view:payment.order:0
 msgid "Payment order"
-msgstr "Orden de pago"
+msgstr "Órdenes de pago"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -436,12 +436,12 @@ msgstr "Cancelar"
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid "Used as the message between ordering customer and current company.Depicts 'What do you want to say to the receipent about this oder?'"
-msgstr ""
+msgstr "Utilizado como el mensaje entre cliente que ordena y la actual compañía. Describe '¿Qué quiere decirle al receptor sobre esta orden?'"
 
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Modo de pago"
 
 #. module: account_payment
 #: constraint:ir.model:0
@@ -487,7 +487,7 @@ msgstr "Cuenta bancaria destino"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Diario de caja para el modo de pago"
 
 #. module: account_payment
 #: rml:payement.order:0
@@ -498,12 +498,12 @@ msgstr "Cuenta bancaria"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "Confirmar pagos"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
 msgid "Company Currency"
-msgstr ""
+msgstr "Moneda de la compañía"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -521,7 +521,7 @@ msgstr "Pago"
 #. module: account_payment
 #: help:payment.order,date_prefered:0
 msgid "Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."
-msgstr ""
+msgstr "Seleccione una opción para la orden de pago: 'Fecha fija' para una fecha especificada por usted. 'Directamente' para la ejecución directa. 'Fecha vencimiento' para la fecha programada de ejecución."
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -541,10 +541,10 @@ msgid "Entry Information"
 msgstr "Información del asiento"
 
 #. module: account_payment
-#, python-format
 #: code:addons/account_payment/account_move_line.py:0
+#, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
+msgstr "Empresa '+ line.partner_id.name+ ' no tiene una cuenta bancaria definida"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
@@ -566,7 +566,7 @@ msgstr "Tipo de pago"
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Cuenta bancaria para el modo de pago"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
@@ -576,7 +576,7 @@ msgstr "_Añadir"
 #. module: account_payment
 #: help:payment.mode,type:0
 msgid "Select the Payment Type for the Payment Mode."
-msgstr ""
+msgstr "Seleccione el tipo de pago para el modo de pago."
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
