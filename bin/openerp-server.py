@@ -34,7 +34,7 @@ GNU Public Licence.
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import sys, os, signal
+import sys, os, signal,pwd
 #----------------------------------------------------------
 # ubuntu 8.04 has obsoleted `pyxml` package and installs here.
 # the path needs to be updated before any `import xml`
@@ -48,6 +48,12 @@ if os.path.exists(_oldxml):
 import release
 __author__ = release.author
 __version__ = release.version
+
+# We DON't log this using the standard logger, because we might mess
+# with the logfile's permissions. Just do a quick exit here.
+if pwd.getpwuid(os.getuid())[0] == 'root' :
+	sys.stderr.write("Attempted to run OpenERP server as root. This is not good, aborting.\n")
+        sys.exit(1)
 
 #----------------------------------------------------------
 # get logger
