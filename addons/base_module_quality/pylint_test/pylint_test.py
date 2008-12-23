@@ -41,7 +41,7 @@ Pylint Test:
         self.bool_installed_only = False
         return None
 
-    def run_test(self, module_path):
+    def run_test(self, cr, uid, module_path):
         config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'
         list_files = os.listdir(module_path)
         for i in list_files:

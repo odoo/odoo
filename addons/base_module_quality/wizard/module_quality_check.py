@@ -21,81 +21,94 @@
 ##############################################################################
 import wizard
 import pooler
+from osv import osv, fields
 
 import tools
 import os
 
 
 #TODO: (utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?)
-#TODO: configure pylint
 #TODO: implement the speed test
-#TODO: implement the simple test
 #TODO: add cheks: do the class quality_check inherits the class abstract_quality_check?
 #TODO: improve translability
+#TODO: clean
 
 
 #To keep or not? to be discussed...
 
-view_form = """<?xml version="1.0"?>
-<form string="Check quality">
-    <notebook>
-        <page string="Summary">
-            <field name="general_info" nolabel="1" colspan="4" height="350" width="800"/>
-        </page>
-    </notebook>
-</form>"""
+#~ view_form = """<?xml version="1.0"?>
+#~ <form string="Check quality">
+    #~ <notebook>
+        #~ <page string="Summary">
+            #~ <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+        #~ </page>
+    #~ </notebook>
+#~ </form>"""
 
 
-view_field = {
-    "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
-}
+#~ view_field = {
+    #~ "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
+#~ }
 
 
-class wiz_quality_check(wizard.interface):
+class wiz_quality_check(osv.osv_memory):
+
+#    general_info = ""
+    _name = 'wizard.quality.check'
 
 
     def _check(self, cr, uid, data, context={}):
         string_ret = ""
         from tools import config
+        print data
+        data['ids'] = data.get('module_id', False)
         pool = pooler.get_pool(cr.dbname)
-        module_data = pool.get('ir.module.module').browse(cr, uid, data['ids'])
+        module_data = pool.get('ir.module.module').browse(cr, uid, [data['ids']])
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         module_name = module_data[0].name
         for item in list_folders:
             path = config['addons_path']+'/base_module_quality/'+item
             if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
                 ad = tools.config['addons_path']
+                if module_data[0].name == 'base':
+                    ad = tools.config['root_path']+'/addons'
                 module_path = os.path.join(ad, module_data[0].name)
                 item2 = 'base_module_quality.'+item+'.'+item
                 x = __import__(item2)
                 x2 = getattr(x, item)
                 x3 = getattr(x2, item)
                 val = x3.quality_test()
-                if (not val.bool_installed_only or module_data[0].state == "installed") and item == 'method_test':
-                    val.run_test(str(module_path), module_name, cr, uid)
-                elif not val.bool_installed_only or module_data[0].state == "installed" :
-                    val.run_test(str(module_path))
+                if (not val.bool_installed_only or module_data[0].state == "installed"):
+                    val.run_test(cr, uid, str(module_path))
                 else:
                     val.result += "The module has to be installed before running this test."
                 string_ret += val.result
+        return string_ret
 
-        return {'general_info':string_ret}
+#    def _general_info(self, cr, uid, data, context={}):
+#        return self.general_info
 
-    states = {
+    #~ states = {
 
+        #~ 'init': {
+            #~ 'actions': [_check],
+            #~ 'result': {'type':'form', 'arch':view_form, 'fields':view_field, 'state':[('end','Ok')]},
+        #~ },
+        #~ }
 #To keep or not? to be discussed...
 
         #~ 'init': {
             #~ 'actions': [],
             #~ 'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}
         #~ },
-        'init': {
-            'actions': [_check],
-            'result': {'type':'form', 'arch':view_form, 'fields':view_field, 'state':[('end','Ok')]},
-        },
-        }
+    _columns = {
+        'general_info': fields.text('General Info', readonly="1",),
+    }
+    _defaults = {
+        'general_info': _check
+    }
 
-wiz_quality_check('base.module.quality')
+wiz_quality_check()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

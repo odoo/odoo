@@ -49,7 +49,7 @@ class abstract_quality_check(object):
         '''
         raise 'Not Implemented'
 
-    def run_test(self, module_path=""):
+    def run_test(self, cr, uid, module_path=""):
         '''
         this method should do the test and fill the score, result and result_details var
         '''
