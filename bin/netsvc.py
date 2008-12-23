@@ -318,6 +318,7 @@ class SSLSocket(object):
             ctx = SSL.Context(SSL.SSLv23_METHOD)
             ctx.use_privatekey_file(tools.config['secure_pkey_file'])
             ctx.use_certificate_file(tools.config['secure_cert_file'])
+
             self.socket = SSL.Connection(ctx, socket)
         else:
             self.socket = socket
@@ -327,6 +328,21 @@ class SSLSocket(object):
 
     def __getattr__(self, name):
         return getattr(self.socket, name)
+    
+class doesitgohere():
+    def recv(self, bufsize):
+	""" Another bugfix: SSL's recv() may raise
+	recoverable exceptions, which simply need us to retry
+	the call
+	"""
+	while True:
+	    try:
+		return self.socket.recv(bufsize)
+	    except SSL.WantReadError:
+	        pass
+	    except SSL.WantWriteError:
+		pass
+
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
@@ -338,9 +354,19 @@ class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
         self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
 
 class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
+    encoding = None
+    allow_none = False
+
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+
+    def handle_error(self, request, client_address):
+        """ Override the error handler
+        """
+        import traceback
+	Logger().notifyChannel("init", LOG_ERROR,"Server error in request from %s:\n%s" %
+		(client_address,traceback.format_exc()))
 
 class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
     def __init__(self, server_address, HandlerClass, logRequests=1):
@@ -348,6 +374,14 @@ class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
         self.socket = SSLSocket(socket.socket(self.address_family, self.socket_type))
         self.server_bind()
         self.server_activate()
+
+    def handle_error(self, request, client_address):
+        """ Override the error handler
+        """
+	import traceback
+	e_type, e_value, e_traceback = sys.exc_info()
+	Logger().notifyChannel("init", LOG_ERROR,"SSL Request handler error in request from %s: %s\n%s" % 
+			(client_address,str(e_type),traceback.format_exc()))
 
 class HttpDaemon(threading.Thread):
     def __init__(self, interface, port, secure=False):

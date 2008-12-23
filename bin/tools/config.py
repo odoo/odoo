@@ -191,20 +191,19 @@ class configmanager(object):
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'logfile', 'pidfile', 'smtp_port', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
+                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
+		'netrpc', 'xmlrpc', 'syslog', 'without_demo']
 
         if hasSSL:
             keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
+            keys.append('secure')
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
-                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
-
-        if hasSSL:
-            keys.append('secure')
+                'stop_after_init']
 
         for arg in keys:
             self.options[arg] = getattr(opt, arg)
