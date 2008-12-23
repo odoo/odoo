@@ -55,14 +55,6 @@ __version__ = release.version
 import netsvc
 logger = netsvc.Logger()
 
-def atexit_callback():
-    logger.notifyChannel('shutdown', netsvc.LOG_INFO, "Shutdown Server!")
-    #logger.notifyChannel('pan! pan!', netsvc.LOG_INFO, "Killed Server ;-)")
-
-import atexit
-
-atexit.register(atexit_callback)
-
 #-----------------------------------------------------------------------
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
@@ -201,6 +193,7 @@ def handler(signum, frame):
     netsvc.Agent.quit()
     if config['pidfile']:
         os.unlink(config['pidfile'])
+    logger.notifyChannel('shutdown', netsvc.LOG_INFO, "Shutdown Server!")
     sys.exit(0)
 
 from tools import config
@@ -210,8 +203,8 @@ if config['pidfile']:
     fd.write(pidtext)
     fd.close()
 
-signal.signal(signal.SIGINT, handler)
-signal.signal(signal.SIGTERM, handler)
+for sign in ('SIGINT', 'SIGTERM', 'SIGUSR1', 'SIGQUIT'):
+    signal.signal(getattr(signal, sign), handler)
 
 logger.notifyChannel("web-services", netsvc.LOG_INFO, 'the server is running, waiting for connections...')
 if tools.config['netrpc']:
