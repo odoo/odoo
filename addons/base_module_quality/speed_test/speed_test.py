@@ -35,12 +35,10 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         self.result = """
-===Speed Test===
-
+===Speed Test===:
 
 This test checks the speed of the module.
 
- 
 """
         self.bool_installed_only = True
         return None
@@ -111,7 +109,7 @@ This test checks the speed of the module.
                 self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, "", "", "", "Warning! Object has no demo data")
 
 
-        self.result += '\n|}'
+        self.result += '\n|}\n'
         self.score = obj_counter and score/obj_counter or 0.0
         return None
 
