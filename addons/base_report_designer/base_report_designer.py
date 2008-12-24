@@ -31,13 +31,18 @@ import tools
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
 
-    def sxwtorml(self,cr, uid, file_sxw):
+    def sxwtorml(self,cr, uid, file_sxw,file_type):
         '''
         The use of this function is to get rml file from sxw file.
         '''
         sxwval = StringIO(base64.decodestring(file_sxw))
-        fp = tools.file_open('normalized_odt2rml.xsl',
-                subdir='/home/dsh/my-work/bazaar/odt-sxw2ml')
+        if file_type=='sxw':
+            fp = tools.file_open('normalized_oo2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='odt':
+            fp = tools.file_open('normalized_odt2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        
         return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
     def upload_report(self, cr, uid, report_id, file_sxw,file_type, context):
@@ -46,11 +51,12 @@ class report_xml(osv.osv):
         '''
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO(base64.decodestring(file_sxw))
-        fp = tools.file_open('normalized_oo2rml.xsl',
-                subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='sxw':
+            fp = tools.file_open('normalized_oo2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
         if file_type=='odt':
             fp = tools.file_open('normalized_odt2rml.xsl',
-                    subdir='/home/dsh/my-work/bazaar/odt-sxw2ml')
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
         report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw),
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())),
