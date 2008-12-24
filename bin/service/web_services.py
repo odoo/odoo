@@ -82,8 +82,8 @@ class db(netsvc.Service):
                     cr.commit()
                     cr.close()
                     cr = None
-                    pool = pooler.get_pool(db_name, demo, serv.actions[id],
-                            update_module=True)
+                    pool = pooler.restart_pool(db_name, demo, serv.actions[id],
+                            update_module=True)[1]
 
                     cr = sql_db.db_connect(db_name).cursor()
 

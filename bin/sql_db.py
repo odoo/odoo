@@ -227,7 +227,9 @@ def db_connect(db_name, serialize=0):
     return PoolManager.get(db_name)
 
 def close_db(db_name):
-    return PoolManager.close(db_name)
+    PoolManager.close(db_name)
+    tools.cache.clean_cache_for_db(db_name)
+    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
