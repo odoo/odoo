@@ -292,8 +292,10 @@ class rml_parse(object):
             pp=self._node
         self._node = pp
         lst=''
-        if type(text)==type(''):
+        if isinstance(text,(str,unicode)):
             lst = text.split('\n')
+#            lst = str(text).split('\n') # This is also acceptable, isn't it?
+            
         if lst  and (not len(lst)):
             return None
         nodes = []
