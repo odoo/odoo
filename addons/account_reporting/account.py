@@ -115,10 +115,6 @@ class account_report_bs(osv.osv):
             ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
-    ]
-
 account_report_bs()
 
 

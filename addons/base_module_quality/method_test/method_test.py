@@ -31,50 +31,60 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         self.result = """
-Method Test:
-------------
+===Method Test===:
 
-    This test checks if the class method has exception or not.
-
+This test checks if the module classes are raising exception when calling basic methods or no.
 
 """
-        self.bool_installed_only = False
+        self.bool_installed_only = True
         return None
 
-    def run_test(self, module_path, module_name=None, cr=None, uid=None):
+    def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
+        module_name = module_path.split('/')[-1]
         ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
+        model_list = []
+        model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
+        for model in model_data:
+            model_list.append(model.res_id)
         obj_list = []
-        for mod in pool.get('ir.model.data').browse(cr, uid, ids2):
-            object_name = mod.name.split('_')
-            object_name.pop(0)
-            object_name = '.'.join(object_name)
-            obj_list.append(str(object_name))
+        for mod in pool.get('ir.model').browse(cr, uid, model_list):
+            obj_list.append(str(mod.model))
         result={}
-        self.result += "Module Name:" + module_name + '\n' + '===============\n'
+        ok_count = 0
+        ex_count = 0
+
         for obj in obj_list:
-            temp=[]
+            temp = []
             try:
                 res = pool.get(obj).search(cr, uid, [])
                 temp.append('Ok')
+                ok_count += 1
             except:
                 temp.append('Exception')
+                ex_count += 1
             try:
                 res1 = pool.get(obj).fields_view_get(cr, uid,)
                 temp.append('Ok')
+                ok_count += 1
             except:
                 temp.append('Exception')
+                ex_count += 1
             try:
                 res2 = pool.get(obj).read(cr, uid, [])
                 temp.append('Ok')
+                ok_count += 1
             except:
                 temp.append('Exception')
+                ex_count += 1
             result[obj] = temp
-        self.result+=("%-40s %-12s \t %-16s %-12s")%('Object Name'.ljust(40),'search','fields_view_get','read')
-        self.result+='\n'
+        self.result += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % ('Object Name'.ljust(40), 'search()'.ljust(16), 'fields_view_get()'.ljust(20), 'read()'.ljust(16))
+
         for res in result:
-            self.result+=("%-40s %-12s \t %-16s \t %-12s")%(res.ljust(40),result[res][0],result[res][1],result[res][2])
-            self.result+="\n"
+            self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, result[res][0],result[res][1], result[res][2])
+
+        self.result += '\n|}'
+        self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
         return None
 
 

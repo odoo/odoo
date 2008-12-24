@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<wizard id="base_module_quality" model="ir.module.module" name="base.module.quality" string="Check the Quality of module"/>
+		<!--<wizard id="base_module_quality" model="ir.module.module" name="base.module.quality" string="Check the Quality of module"/>-->
+
+        <record id="view_wizard_quality_check" model="ir.ui.view">
+            <field name="name">Results of Quality Checks</field>
+            <field name="model">wizard.quality.check</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Result">
+                    <separator string="Summary" colspan="4"/>
+                    <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+                </form>
+            </field>
+        </record>
+        <act_window
+            id="act_view_wiz_quality_check"
+            name="Wizard Quality Check"
+            res_model="wizard.quality.check"
+            src_model="ir.module.module"
+            target="new"
+            view_mode="form"
+            context="{'module_id': active_id}"
+        />
     </data>
+
 </openerp>
