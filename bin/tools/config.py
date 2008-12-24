@@ -76,6 +76,7 @@ class configmanager(object):
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
+            'cache_timeout': 100000, 
         }
 
         hasSSL = check_ssl()
@@ -100,6 +101,8 @@ class configmanager(object):
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo", help="load demo data for a module (use \"all\" for all modules)", default=False)
         parser.add_option("-u", "--update", dest="update", help="update a module (use \"all\" for all modules)")
+        parser.add_option("--cache-timeout", dest="cache_timeout", help="set the timeout for the cache system", default=100000, type="int")
+        
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, help="stop the server after it initializes")
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
@@ -186,7 +189,7 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
