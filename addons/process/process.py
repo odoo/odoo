@@ -50,6 +50,7 @@ class process_process(osv.osv):
     _columns = {
         'name': fields.char('Name', size=30,required=True, translate=True),
         'active': fields.boolean('Active'),
+        'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'note': fields.text('Notes', translate=True),
         'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')
     }
@@ -59,24 +60,27 @@ class process_process(osv.osv):
 
     def search_by_model(self, cr, uid, res_model, context):
         pool = pooler.get_pool(cr.dbname)
+        model_ids = (res_model or None) and pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
 
-        model_ids = pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
-        if not model_ids:
-            return []
-
-        nodes = pool.get('process.node').search(cr, uid, [('model_id', 'in', model_ids)])
-        if not nodes:
-            return []
-
-        nodes = pool.get('process.node').browse(cr, uid, nodes, context)
-
-        unique = []
+        domain = (model_ids or []) and [('model_id', 'in', model_ids)]
         result = []
-        
-        for node in nodes:
-            if node.process_id.id not in unique:
-                result.append((node.process_id.id, node.process_id.name))
-                unique.append(node.process_id.id)
+
+        # search all processes
+        res = pool.get('process.process').search(cr, uid, domain)
+        if res:
+            res = pool.get('process.process').browse(cr, uid, res, context)
+            for process in res:
+                result.append((process.id, process.name))
+
+            return result
+
+        # else search process nodes
+        res = pool.get('process.node').search(cr, uid, domain)
+        if res:
+            res = pool.get('process.node').browse(cr, uid, res, context)
+            for node in res:
+                if (node.process_id.id, node.process_id.name) not in result:
+                    result.append((node.process_id.id, node.process_id.name))
 
         return result
 
@@ -85,20 +89,26 @@ class process_process(osv.osv):
         pool = pooler.get_pool(cr.dbname)
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
-        current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
-        current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
-        
-        expr_context = Env(current_object, current_user)
-        
-        notes = process.note
+        title = process.name
+
+        expr_context = {}
+        states = {}
+        perm = None
+
+        if res_model:
+            states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
+
+        if res_id:
+            current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
+            current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
+            expr_context = Env(current_object, current_user)
+            title = _("%s - Resource: %s, State: %s") % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
+            perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
+
+        notes = process.note or "N/A"
         nodes = {}
         start = []
         transitions = {}
-
-        states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
-        title = "%s - Resource: %s, State: %s" % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
-
-        perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
 
         for node in process.node_ids:
             data = {}
@@ -126,7 +136,6 @@ class process_process(osv.osv):
                 try:
                     data['active'] = eval(node.model_states, expr_context)
                 except Exception, e:
-                    # waring: invalid state expression
                     pass
 
             if not data['active']:
@@ -212,10 +221,11 @@ class process_process(osv.osv):
                             except:
                                 pass
 
-        for nid, node in nodes.items():
-            if not node['gray'] and (node['active'] or node['model'] == res_model):
-                update_relatives(nid, res_id, res_model)
-                break
+        if res_id:
+            for nid, node in nodes.items():
+                if not node['gray'] and (node['active'] or node['model'] == res_model):
+                    update_relatives(nid, res_id, res_model)
+                    break
 
         # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))

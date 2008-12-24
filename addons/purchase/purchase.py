@@ -43,39 +43,24 @@ class purchase_order(osv.osv):
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
 
-    def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        cur_obj=self.pool.get('res.currency')
-        for purchase in self.browse(cr, uid, ids):
-            res[purchase.id] = 0.0
-            for line in purchase.order_line:
-                res[purchase.id] += line.price_subtotal
-            cur = purchase.pricelist_id.currency_id
-            res[purchase.id] = cur_obj.round(cr, uid, cur, res[purchase.id])
-
-        return res
-
-    def _amount_tax(self, cr, uid, ids, field_name, arg, context):
+    def _amount_all(self, cr, uid, ids, field_name, arg, context):
         res = {}
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
-            val = 0.0
+            res[order.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': 0.0,
+                'amount_total': 0.0,
+            }
+            val = val1 = 0.0
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
                 for c in self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id):
                     val+= c['amount']
-            res[order.id]=cur_obj.round(cr, uid, cur, val)
-        return res
-
-    def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
-        tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
-        cur_obj=self.pool.get('res.currency')
-        for id in ids:
-            order=self.browse(cr, uid, [id])[0]
-            cur=order.pricelist_id.currency_id
-            res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
+                val1 += line.price_subtotal
+            res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
@@ -144,6 +129,12 @@ class purchase_order(osv.osv):
                 res[r] = 100.0 * res[r][0] / res[r][1]
         return res
 
+    def _get_order(self, cr, uid, ids, context={}):
+        result = {}
+        for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64,
@@ -181,9 +172,18 @@ class purchase_order(osv.osv):
                 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
-        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+            store={
+                'purchase.order.line': (_get_order, None, 10),
+            }, multi="sums"),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+            store={
+                'purchase.order.line': (_get_order, None, 10),
+            }, multi="sums"),
+        'amount_total': fields.function(_amount_all, method=True, string='Total',
+            store={
+                'purchase.order.line': (_get_order, None, 10),
+            }, multi="sums"),
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),

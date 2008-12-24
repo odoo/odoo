@@ -47,20 +47,13 @@ This test checks the speed of the module.
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
         self.result+=('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % ('Object Name'.ljust(40), 'Size (S)'.ljust(10), '1'.ljust(10), 'S/2'.ljust(10), 'S'.ljust(10), 'Complexity'.ljust(20))
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
-        model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
-        model_list = []
-        for model in model_data:
-            model_list.append(model.res_id)
-        obj_list = []
-        for mod in pool.get('ir.model').browse(cr, uid, model_list):
-            obj_list.append(str(mod.model))
-
+        obj_list = self.get_objects(cr, uid, module_name)
         obj_counter = 0
         score = 0
-        for obj in obj_list:
+        obj_ids = self.get_ids(cr, uid, obj_list)
+        for obj in obj_ids:
             obj_counter += 1
-            ids = pool.get(obj).search(cr, uid, [])
+            ids = obj_ids[obj]
             ids = ids[:100]
             size = len(ids)
             if size:
@@ -68,12 +61,10 @@ This test checks the speed of the module.
                 pool.get(obj).read(cr, uid, ids[0])
                 c2 = time.time()
                 base_time = c2 - c1
-
                 c1 = time.time()
                 pool.get(obj).read(cr, uid, ids[:size/2])
                 c2 = time.time()
                 halfsize_time = c2 - c1
-
                 c1 = time.time()
                 pool.get(obj).read(cr, uid, ids)
                 c2 = time.time()
