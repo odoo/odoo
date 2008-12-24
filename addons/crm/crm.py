@@ -181,6 +181,7 @@ class crm_case_section(osv.osv):
                     'object': True
                 })
         return True
+    
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []

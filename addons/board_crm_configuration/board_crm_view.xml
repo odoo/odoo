@@ -22,7 +22,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm_configuration.crm_case_tree_view_leads"/>
-			<field name="domain">[('section_id', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="domain">[('section_id.name', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_my_meetings">
@@ -30,7 +30,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm_configuration.crm_case_tree_view_meet"/>
-			<field name="domain">[('section_id', '=', 'Meetings'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="domain">[('section_id.name', '=', 'Meetings'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 			
 		<act_window name="My Cases"
@@ -45,7 +45,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_lead_stage_graph1"/>
-			<field name="domain">[('section_id', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="domain">[('section_id.name', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 					
 		<record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -53,7 +53,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_case_user_graph1"/>
-			<field name="domain">[('section_id', '=', 'Opportunities'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="domain">[('section_id.name', '=', 'Opportunities'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>	
 		
 		<record model="ir.actions.act_window" id="act_jobs_requests">
@@ -61,7 +61,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_case_user_graph1"/>
-			<field name="domain">[('section_id','=','Jobs'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="domain">[('section_id.name','=','Jobs'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 					
 		<record model="ir.ui.view" id="board_crm_form">
