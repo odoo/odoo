@@ -82,18 +82,6 @@ logger.notifyChannel("objects", netsvc.LOG_INFO, 'initialising distributed objec
 import pooler
 
 #----------------------------------------------------------
-# launch modules install/upgrade/removes if needed
-#----------------------------------------------------------
-if tools.config['upgrade']:
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'Upgrading new modules...')
-    import tools.upgrade
-    (toinit, toupdate) = tools.upgrade.upgrade()
-    for m in toinit:
-        tools.config['init'][m] = 1
-    for m in toupdate:
-        tools.config['update'][m] = 1
-
-#----------------------------------------------------------
 # import basic modules
 #----------------------------------------------------------
 import osv

@@ -136,9 +136,6 @@ class configmanager(object):
         group.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
         parser.add_option_group(group)
         
-        group = optparse.OptionGroup(parser, "Modules related options")
-        group.add_option("-g", "--upgrade", action="store_true", dest="upgrade", default=False, help="Upgrade/install/uninstall modules")
-
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", help="specify the database name")
         group.add_option("-r", "--db_user", dest="db_user", help="specify the database user name")
