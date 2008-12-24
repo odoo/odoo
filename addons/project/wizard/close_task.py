@@ -44,7 +44,7 @@ def email_send(cr, uid, ids, to_adr, description, context={}):
             from_adr = task.user_id.address_id.email
             signature = task.user_id.signature
         else:
-            raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))
+            raise wizard.except_wizard(_('Error'), _("Couldn't send mail because your email address is not configured!"))
 
         if to_adr:
             val = {
@@ -60,7 +60,7 @@ def email_send(cr, uid, ids, to_adr, description, context={}):
             body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
             email(from_adr, [to_adr], subject, body.encode('utf-8'), email_bcc=[from_adr])
         else:
-            raise osv.except_osv(_('Error'), _("Couldn't send mail because the contact for this task (%s) has no email address!") % contact.name)
+            raise wizard.except_wizard(_('Error'), _("Couldn't send mail because the contact for this task (%s) has no email address!") % contact.name)
 
 class wizard_close(wizard.interface):
     def _check_complete(self, cr, uid, data, context):

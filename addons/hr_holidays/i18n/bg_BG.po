@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:50:20+0000\n"
-"PO-Revision-Date: 2008-11-28 16:50:20+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,11 @@ msgid "Approved"
 msgstr ""
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Both"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
 msgstr ""
@@ -202,6 +207,8 @@ msgid "Define holiday status"
 msgstr ""
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
 #: selection:hr.holidays,state:0
 msgid "Confirmed"
 msgstr ""
@@ -221,7 +228,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: model:process.transition.action,name:hr_holidays.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждение"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,section_id:0
@@ -422,6 +429,11 @@ msgid "Color of the status"
 msgstr ""
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.per.user,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr ""
@@ -513,6 +525,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
 msgid "Holidays def Request"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Validated"
 msgstr ""
 
 #. module: hr_holidays

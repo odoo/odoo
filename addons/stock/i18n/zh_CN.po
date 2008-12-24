@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
-"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"POT-Creation-Date: 2008-12-22 17:51:29+0000\n"
+"PO-Revision-Date: 2008-12-22 17:51:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Stock"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -112,6 +118,12 @@ msgid "Products Received"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Productions"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Incoming Products"
@@ -122,6 +134,12 @@ msgstr ""
 #: field:stock.tracking,serial:0
 msgid "Reference"
 msgstr "参考"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Receptions"
+msgstr ""
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
@@ -265,6 +283,11 @@ msgid "Control invoices on receptions"
 msgstr ""
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_FIRST"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 msgid "Internal Moves"
@@ -303,6 +326,11 @@ msgstr "序号"
 #: view:stock.location:0
 msgid "Additional Information"
 msgstr "附加信息"
+
+#. module: stock
+#: selection:stock.invoice_onshipping,init,type:0
+msgid "Customer Refund"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -389,10 +417,9 @@ msgid "Recipient"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form_new
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form_new
-msgid "New Physical Inventory"
-msgstr ""
+#: field:product.template,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr "存货地点"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -468,12 +495,6 @@ msgid "IT Suppliers"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form_draft
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form_draft
-msgid "Draft Physical Inventories"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form3
 #: model:ir.ui.menu,name:stock.menu_action_move_form3
 msgid "Draft Moves"
@@ -490,14 +511,19 @@ msgid "Sales & Purchases"
 msgstr ""
 
 #. module: stock
+#: selection:stock.invoice_onshipping,init,type:0
+msgid "Customer Invoice"
+msgstr ""
+
+#. module: stock
 #: model:process.node,name:stock.process_node_packinginvoice0
 msgid "Out Packing"
 msgstr ""
 
 #. module: stock
-#: field:product.template,property_stock_inventory:0
-msgid "Inventory Location"
-msgstr "存货地点"
+#: field:stock.location,child_ids:0
+msgid "Contains"
+msgstr "包含"
 
 #. module: stock
 #: help:product.product,track_production:0
@@ -669,12 +695,6 @@ msgid "Tracking/Serial"
 msgstr "跟踪号（序列号）"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form
-msgid "Physical Inventory"
-msgstr ""
-
-#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_SELECT_FONT"
 msgstr ""
@@ -687,6 +707,12 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Deliveries"
 msgstr ""
 
 #. module: stock
@@ -710,8 +736,8 @@ msgid "Packing List:"
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
+#, python-format
 msgid "UserError"
 msgstr ""
 
@@ -721,8 +747,8 @@ msgid "Stock Move"
 msgstr "库存调拨"
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
+#, python-format
 msgid "You can only delete draft moves."
 msgstr ""
 
@@ -836,6 +862,8 @@ msgstr "一般信息"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
 msgid "None"
 msgstr ""
 
@@ -899,6 +927,12 @@ msgid "This account will be used to value the input stock"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Invoice state"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
 #: model:ir.ui.menu,name:stock.menu_action_move_form2
 #: view:stock.move:0
@@ -948,6 +982,12 @@ msgid "Counter-Part Locations Properties"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Delivered Qty"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_FILL"
 msgstr ""
@@ -988,14 +1028,14 @@ msgid "From Packing list, Create invoice."
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/wizard/inventory_merge.py:0
+#, python-format
 msgid "Merging is only allowed on draft inventories."
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/wizard/inventory_merge.py:0
+#, python-format
 msgid "Please select at least two inventories."
 msgstr ""
 
@@ -1015,6 +1055,12 @@ msgstr ""
 #: field:stock.picking.move.wizard,address_id:0
 msgid "Dest. Address"
 msgstr "目标地址"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form
+msgid "Periodical Inventory"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1048,9 +1094,15 @@ msgid "Qty"
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
+#, python-format
 msgid "You can not remove a lot line !"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form_draft
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form_draft
+msgid "Draft Periodical Inventories"
 msgstr ""
 
 #. module: stock
@@ -1090,6 +1142,12 @@ msgstr ""
 #: wizard_button:stock.fill_inventory,init,fill_inventory:0
 #: model:ir.actions.wizard,name:stock.wizard_fill_inventory
 msgid "Fill Inventory"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Provide the quantities of the returned products."
 msgstr ""
 
 #. module: stock
@@ -1161,6 +1219,11 @@ msgid "STOCK_HARDDISK"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.act_relate_picking
+msgid "Related Picking"
+msgstr ""
+
+#. module: stock
 #: field:stock.incoterms,name:0
 #: field:stock.move,name:0
 #: field:stock.picking.move.wizard,name:0
@@ -1192,6 +1255,17 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_COPY"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Qty"
+msgstr ""
+
+#. module: stock
+#: selection:stock.invoice_onshipping,init,type:0
+msgid "Supplier Refund"
 msgstr ""
 
 #. module: stock
@@ -1230,8 +1304,8 @@ msgid "STOCK_REFRESH"
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/product.py:0
+#, python-format
 msgid "Products: "
 msgstr ""
 
@@ -1333,8 +1407,20 @@ msgid "Fill From Unreceived Products"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "P&L Qty"
+msgstr ""
+
+#. module: stock
 #: field:stock.move,move_dest_id:0
 msgid "Dest. Move"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form_new
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form_new
+msgid "New Periodical Inventory"
 msgstr ""
 
 #. module: stock
@@ -1400,8 +1486,8 @@ msgid "Planned Date"
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
 msgid "No production sequence defined"
 msgstr ""
 
@@ -1520,8 +1606,9 @@ msgid "Lot"
 msgstr ""
 
 #. module: stock
-#: wizard_view:inventory.merge.stock.zero,init:0
-msgid "Set Stock to Zero"
+#: model:ir.actions.act_window,name:stock.action_location_tree
+#: model:ir.ui.menu,name:stock.menu_action_location_tree
+msgid "Stock Locations Structure"
 msgstr ""
 
 #. module: stock
@@ -1530,9 +1617,9 @@ msgid "Quantity (UOS)"
 msgstr "数量（销售计量单位）"
 
 #. module: stock
-#: field:stock.location,usage:0
-msgid "Location type"
-msgstr "用途"
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_STOP"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -1574,8 +1661,8 @@ msgid "Properties"
 msgstr "属性"
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
+#, python-format
 msgid "Error, no partner !"
 msgstr ""
 
@@ -1651,7 +1738,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_GOTO_FIRST"
+msgid "STOCK_REDO"
 msgstr ""
 
 #. module: stock
@@ -1666,8 +1753,8 @@ msgid "Date done"
 msgstr "完成日期"
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
+#, python-format
 msgid "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
 
@@ -1738,6 +1825,12 @@ msgstr "自动装箱"
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
 msgstr "产品销售计量单位"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1848,6 +1941,12 @@ msgid "Track Outging Lots"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Return lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.model,name:stock.model_report_stock_lines_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
@@ -1904,9 +2003,9 @@ msgid "Non European Customers"
 msgstr ""
 
 #. module: stock
-#, python-format
 #: code:addons/stock/stock.py:0
 #: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
 msgid "Error!"
 msgstr ""
 
@@ -1995,9 +2094,8 @@ msgid "Merge inventories"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_location_tree
-#: model:ir.ui.menu,name:stock.menu_action_location_tree
-msgid "Stock Locations Structure"
+#: selection:stock.invoice_onshipping,init,type:0
+msgid "Supplier Invoice"
 msgstr ""
 
 #. module: stock
@@ -2037,9 +2135,9 @@ msgid "Configuration"
 msgstr "设置"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_STOP"
-msgstr ""
+#: field:stock.location,usage:0
+msgid "Location type"
+msgstr "用途"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2161,9 +2259,26 @@ msgid "Track Production Lots"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Unplanned Qty"
+msgstr ""
+
+#. module: stock
+#: wizard_view:inventory.merge.stock.zero,init:0
+msgid "Set Stock to Zero"
+msgstr ""
+
+#. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
 msgstr "采购地点"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur P&L"
+msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -2190,6 +2305,12 @@ msgstr "追踪"
 #. module: stock
 #: field:stock.picking,date:0
 msgid "Date Order"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "to be invoiced"
 msgstr ""
 
 #. module: stock
@@ -2261,11 +2382,6 @@ msgid "Low Level"
 msgstr "低层"
 
 #. module: stock
-#: field:stock.location,child_ids:0
-msgid "Contains"
-msgstr "包含"
-
-#. module: stock
 #: rml:stock.picking.list:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
@@ -2287,6 +2403,12 @@ msgstr ""
 #: model:ir.actions.wizard,name:stock.action_lot2
 msgid "Upstream traceability"
 msgstr "向上追溯"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Produced Qty"
+msgstr ""
 
 #. module: stock
 #: field:product.category,property_stock_account_output_categ:0
@@ -2338,11 +2460,6 @@ msgstr ""
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Move State"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REDO"
 msgstr ""
 
 #. module: stock

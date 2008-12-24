@@ -23,6 +23,7 @@
 import pooler
 import netsvc
 import wizard
+import time
 
 
 def _get_journal(self, cr, uid, context):
@@ -38,6 +39,10 @@ payment_form = """<?xml version="1.0"?>
 <form string="Add payment :">
     <field name="amount" />
     <field name="journal"/>
+    <field name="payment_id" />
+    <field name="payment_date" />
+    <field name="payment_nb" />
+    <field name="payment_name" />
     <field name="invoice_wanted" />
 </form>
 """
@@ -50,6 +55,10 @@ payment_fields = {
             'selection': _get_journal,
             'required': True,
         },
+    'payment_id': {'string': 'Payment Term', 'type': 'many2one', 'relation': 'account.payment.term', 'required': True},
+    'payment_date': {'string': 'Payment date', 'type': 'date', 'required': True},
+    'payment_name': {'string': 'Payment name', 'type': 'char', 'size': '32'},
+    'payment_nb': {'string': 'Piece number', 'type': 'char', 'size': '32'},
     }
 
 
@@ -95,20 +104,23 @@ def _pre_init(self, cr, uid, data, context):
     #invoice_wanted_checked = not not order.partner_id # not not -> boolean
     invoice_wanted_checked = False
 
-    return {'journal': journal, 'amount': amount, 'invoice_wanted': invoice_wanted_checked}
+    # select the current date
+    current_date = time.strftime('%Y-%m-%d')
+
+    return {'journal': journal, 'amount': amount, 'invoice_wanted': invoice_wanted_checked, 'payment_date': current_date}
 
 
 def _add_pay(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('pos.order')
-    amount = data['form']['amount']
-    journal = data['form']['journal']
-    invoice_wanted = data['form']['invoice_wanted'] == 1
+    result = data['form']
+
+    invoice_wanted = data['form']['invoice_wanted']
 
     # add 'invoice_wanted' in 'pos.order'
     order_obj.write(cr, uid, [data['id']], {'invoice_wanted': invoice_wanted})
 
-    order_obj.add_payment(cr, uid, data['id'], amount, journal, context=context)
+    order_obj.add_payment(cr, uid, data['id'], result, context=context)
     return {}
 
 

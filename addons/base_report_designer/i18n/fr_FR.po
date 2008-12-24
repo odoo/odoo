@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
-"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
+"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,8 +58,8 @@ msgid "Report"
 msgstr "Rapport"
 
 #. module: base_report_designer
-#, python-format
 #: code:addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#, python-format
 msgid "Report does not contain the sxw content!"
 msgstr ""
 
@@ -74,11 +74,6 @@ msgstr ""
 #: wizard_view:base_report_designer.modify,send_form:0
 msgid "Get a report"
 msgstr "Recevoir un rapport"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Tiny ERP using this wizard."
-msgstr "Ceci est le patron de votre rapport demandé. Sauvegardé le comme fichier .SXW et ouvrer le avec OpenOffice. N'oubliez pas d'installer le packet Tiny OpenOffice pour le modifier. Une fois qu'il est modifié, rechargez le dans OpenERP en utilisant cet assistant."
 
 #. module: base_report_designer
 #: wizard_button:base_report_designer.modify,get_form,get_form_result:0
@@ -96,11 +91,22 @@ msgid "Report designer"
 msgstr "Report Designer"
 
 #. module: base_report_designer
+#: wizard_view:base_report_designer.modify,get_form_result:0
+msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Open ERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
 #: wizard_button:base_report_designer.modify,send_form,send_form_result:0
 msgid "Update the report"
 msgstr "Mettre à jour le rapport"
 
 #. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
+msgid "Create a new report"
+msgstr ""
+
+#. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
 #: model:ir.actions.wizard,name:base_report_designer.wizard_report_designer_modify
 msgid "Modify an existing report"
 msgstr "Modifier un Rapport Existant"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
-"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,18 @@ msgid "Assigned tasks"
 msgstr "Tasques assignades"
 
 #. module: project
-#: model:ir.actions.report.xml,name:project.report_project_desc
-msgid "Project Description"
-msgstr "Descripció del projecte"
+#: help:project.task.delegate,init,name:0
+msgid "New title of the task delegated to the user."
+msgstr ""
 
 #. module: project
-#, python-format
-#: code:addons/project/wizard/close_task.py:0
-msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
+#: field:project.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Tasques delegades"
+
+#. module: project
+#: view:config.compute.remaining:0
+msgid "Change Remaining Hours"
 msgstr ""
 
 #. module: project
@@ -57,6 +61,7 @@ msgid "Progress"
 msgstr "Progrés"
 
 #. module: project
+#: help:config.compute.remaining,remaining_hours:0
 #: help:project.task,remaining_hours:0
 msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
 msgstr ""
@@ -83,6 +88,12 @@ msgid "My Running Projects"
 msgstr ""
 
 #. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
+msgstr ""
+
+#. module: project
 #: field:project.project,warn_customer:0
 msgid "Warn Partner"
 msgstr ""
@@ -100,9 +111,14 @@ msgid "My Tasks"
 msgstr "Les meves tasques"
 
 #. module: project
-#: wizard_field:project.task.delegate,init,prefix:0
-msgid "Your Task Title"
+#: view:config.compute.remaining:0
+msgid "Update"
 msgstr ""
+
+#. module: project
+#: wizard_view:project.task.delegate,init:0
+msgid "Delegate this task to a user"
+msgstr "Delega aquesta tasca a un usuari"
 
 #. module: project
 #: help:project.project,members:0
@@ -112,7 +128,7 @@ msgstr ""
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr ""
+msgstr "Canvia a pendent"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -162,9 +178,9 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: project
-#: view:project.task:0
-msgid "Reactivate"
-msgstr ""
+#: view:project.project:0
+msgid "Administration"
+msgstr "Administració"
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -243,8 +259,8 @@ msgid "Delegates tasks to the other user"
 msgstr ""
 
 #. module: project
-#, python-format
 #: code:addons/project/project.py:0
+#, python-format
 msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
 msgstr ""
 
@@ -259,6 +275,11 @@ msgid "If you check this, the user will have a popup when closing a task that pr
 msgstr ""
 
 #. module: project
+#: help:project.task.delegate,init,include_info:0
+msgid "Reinclude the description of the task in the task of the user."
+msgstr ""
+
+#. module: project
 #: field:project.project,category_id:0
 msgid "Analytic Account"
 msgstr "Compte analític"
@@ -269,6 +290,7 @@ msgid "Done by"
 msgstr "Realitzat per"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.ui.menu,name:project.menu_action_view_task
 msgid "All Tasks"
@@ -291,8 +313,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: project
-#, python-format
 #: code:addons/project/project.py:0
+#, python-format
 msgid " (copy)"
 msgstr ""
 
@@ -306,6 +328,11 @@ msgstr "Hores planejades"
 #: view:project.project:0
 msgid "Task: %(name)s"
 msgstr "Tasca: %(name)s"
+
+#. module: project
+#: view:project.task:0
+msgid "Extra Info"
+msgstr "Informació extra"
 
 #. module: project
 #: view:project.project:0
@@ -363,9 +390,9 @@ msgid "Parent Project"
 msgstr ""
 
 #. module: project
-#: field:project.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Tasques delegades"
+#: help:project.task.delegate,init,prefix:0
+msgid "New title of your own task to validate the work done."
+msgstr ""
 
 #. module: project
 #: field:project.task,type:0
@@ -434,9 +461,9 @@ msgid "My Projects"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Extra Info"
-msgstr "Informació extra"
+#: help:project.task.delegate,init,planned_hours:0
+msgid "Estimated time to close this task by the delegated user."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
@@ -591,9 +618,14 @@ msgid "Information"
 msgstr "Informació"
 
 #. module: project
-#: view:project.project:0
-msgid "Administration"
-msgstr "Administració"
+#: view:project.task:0
+msgid "Review"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,init,planned_hours_me:0
+msgid "Estimated time for you to validate the work done by the user to whom you delegate this task."
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.close,mail_ask,email:0
@@ -623,6 +655,7 @@ msgid "Project Manager"
 msgstr ""
 
 #. module: project
+#: selection:project.task.delegate,init,state:0
 #: selection:project.project,state:0
 #: selection:project.task,state:0
 #: view:project.project:0
@@ -634,6 +667,11 @@ msgstr "Pendent"
 #: field:project.task,state:0
 msgid "Status"
 msgstr "Posició"
+
+#. module: project
+#: help:project.task.delegate,init,state:0
+msgid "New state of your own task. Pending will be reopened automatically when the delegated task is closed."
+msgstr ""
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -654,6 +692,11 @@ msgstr ""
 #. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Reactivate"
 msgstr ""
 
 #. module: project
@@ -687,7 +730,7 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
-msgstr ""
+msgstr "Obre tasca"
 
 #. module: project
 #: field:project.task,parent_id:0
@@ -716,8 +759,8 @@ msgid "This will set the unit of measure used in projects and tasks.\n"
 msgstr ""
 
 #. module: project
-#, python-format
 #: code:addons/project/wizard/close_task.py:0
+#, python-format
 msgid "Error"
 msgstr ""
 
@@ -737,15 +780,15 @@ msgid "Computed as: Total Time - Estimated Time. It gives the difference of the 
 msgstr ""
 
 #. module: project
-#, python-format
 #: code:addons/project/wizard/close_task.py:0
+#, python-format
 msgid "Couldn't send mail because your email address is not configured!"
 msgstr ""
 
 #. module: project
-#: wizard_view:project.task.delegate,init:0
-msgid "Delegate this task to a user"
-msgstr "Delega aquesta tasca a un usuari"
+#: wizard_field:project.task.delegate,init,prefix:0
+msgid "Your Task Title"
+msgstr ""
 
 #. module: project
 #: field:project.task,date_close:0
@@ -794,12 +837,13 @@ msgid "Date Start: %(date_start)s"
 msgstr "Data d'inici: %(date_start)s"
 
 #. module: project
-#, python-format
 #: code:addons/project/project.py:0
+#, python-format
 msgid "Operation Done"
 msgstr ""
 
 #. module: project
+#: selection:project.task.delegate,init,state:0
 #: selection:project.project,state:0
 #: selection:project.task,state:0
 #: view:project.project:0
@@ -811,6 +855,7 @@ msgstr "Realitzat"
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 #: view:project.project:0
+#: view:config.compute.remaining:0
 #: view:project.task:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
@@ -825,11 +870,11 @@ msgstr ""
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
 msgid "Open"
-msgstr ""
+msgstr "Obert"
 
 #. module: project
-#, python-format
 #: code:addons/project/project.py:0
+#, python-format
 msgid "You can not delete a project with tasks. I suggest you to desactivate it."
 msgstr ""
 
@@ -854,7 +899,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: project
+#: field:config.compute.remaining,remaining_hours:0
 #: field:project.task,remaining_hours:0
+#: view:config.compute.remaining:0
 msgid "Remaining Hours"
 msgstr ""
 
@@ -886,6 +933,16 @@ msgstr "Envia correu al client"
 #. module: project
 #: field:project.project,warn_manager:0
 msgid "Warn Manager"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,init,user_id:0
+msgid "User you want to delegate this task to."
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_config_compute_remaining
+msgid "config.compute.remaining"
 msgstr ""
 
 #. module: project
@@ -933,7 +990,7 @@ msgstr ""
 #. module: project
 #: wizard_field:project.task.delegate,init,include_info:0
 msgid "Copy Description"
-msgstr ""
+msgstr "Copia descripció"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -946,8 +1003,8 @@ msgid "If you check this field, the project manager will receive a request each 
 msgstr ""
 
 #. module: project
-#, python-format
 #: code:addons/project/project.py:0
+#, python-format
 msgid "Operation Not Permited !"
 msgstr ""
 

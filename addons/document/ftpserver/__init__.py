@@ -9,7 +9,7 @@ PORT = config.get('ftp_server_port', 8021)
 HOST = ''
 
 class ftp_server(threading.Thread):
-    def log(self, level, message):
+    def log(self, level, message):        
         logger = netsvc.Logger()
         logger.notifyChannel('FTP', level, message)
 

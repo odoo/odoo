@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
-"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
+"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,10 +32,9 @@ msgid "All payable entries"
 msgstr "Toutes les entrées payables"
 
 #. module: account_followup
-#, python-format
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-msgid "No Follow up Defined"
-msgstr ""
+#: view:account.move.line:0
+msgid "Partner entries"
+msgstr "Entrées partenaires"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -79,14 +78,14 @@ msgid "Follow-Up"
 msgstr "Suivis"
 
 #. module: account_followup
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "Débit"
+
+#. module: account_followup
 #: wizard_view:account_followup.followup.print.all,sendmail:0
 msgid "Mail"
 msgstr "Message"
-
-#. module: account_followup
-#: wizard_field:account_followup.followup.print.all,sendmail,mail_sent:0
-msgid "Number of Mail sent"
-msgstr "Nombre de Messages envoyés"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -137,14 +136,20 @@ msgid "Customer account statement"
 msgstr "Relevé de compte"
 
 #. module: account_followup
+#: wizard_view:account_followup.followup.print.all,next:0
+msgid "%(heading)s: Move line header"
+msgstr "%(heading)s: entête de la ligne de Mouvement"
+
+#. module: account_followup
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: account_followup
-#: field:account_followup.stat,debit:0
-msgid "Debit"
-msgstr "Débit"
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "No Follow up Defined"
+msgstr ""
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,email_subject:0
@@ -158,18 +163,13 @@ msgstr "Payé"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid "Exception made if there was a mistake of ours, it seems that the following bills staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days."
-msgstr "Sauf erreur de notre part, il ressort de nos comptes que les montants suivants demeurent impayés à ce jour. Nous vous invitons dès lors à faire le nécessaire pour procéder à ce paiement afin qu'il nous parvienne dans les 10 jours."
+msgid "."
+msgstr "."
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,sendmail,end:0
 msgid "Ok"
 msgstr "Ok"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "."
-msgstr "."
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -233,9 +233,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39."
-msgstr "Si votre paiement a croisé le présent rappel, veuillez considérer celui-ci comme nul et non-avenu. N'hésitez pas à prendre contact avec notre service comptabilité si besoin."
+#: wizard_field:account_followup.followup.print.all,sendmail,mail_sent:0
+msgid "Number of Mail sent"
+msgstr "Nombre de Messages envoyés"
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
@@ -279,8 +279,8 @@ msgid "Mail not sent to following Partners , Email not available !"
 msgstr "Message non envoyé aux Partenaires suivants, adresse Email non disponible !"
 
 #. module: account_followup
-#, python-format
 #: code:addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
 msgid "You must define at least one follow up for your company !"
 msgstr ""
 
@@ -305,9 +305,9 @@ msgid "Error Messages"
 msgstr "Messages d'erreur"
 
 #. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(heading)s: Move line header"
-msgstr "%(heading)s: entête de la ligne de Mouvement"
+#: rml:account_followup.followup.print:0
+msgid "According to our accounting, the following Invoices are unpaid. Could you please verify on your side, and take appropriate measures to pay the balance due in the next 8 days."
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,name:0
@@ -387,6 +387,11 @@ msgid "Latest Follow-up"
 msgstr "Date de suivi"
 
 #. module: account_followup
+#: rml:account_followup.followup.print:0
+msgid "If the payment has been very recently made i.e. as this reminder was issued, consider this reminder as void. Do not hesitate to contact our accounting department for further queries."
+msgstr ""
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup statistics"
 msgstr "Statistiques de rappel"
@@ -400,11 +405,6 @@ msgstr "Crédit"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total débit"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr "Entrées partenaires"
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -443,12 +443,12 @@ msgid "Balance"
 msgstr "Balance"
 
 #. module: account_followup
-#: field:account_followup.followup,company_id:0
-msgid "Company"
-msgstr "Entreprise"
-
-#. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
 msgstr "Dernier suivi"
+
+#. module: account_followup
+#: field:account_followup.followup,company_id:0
+msgid "Company"
+msgstr "Entreprise"
 

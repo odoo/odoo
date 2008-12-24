@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
-"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,view_graph_type:0
-msgid "Graph Type"
-msgstr "Tipus gràfic"
+#: field:base_report_creator.report.fields,group_method:0
+msgid "Grouping Method"
+msgstr "Mètode agrupació"
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
@@ -128,6 +128,11 @@ msgid "Create Menu for Report"
 msgstr "Crea menú per l'informe"
 
 #. module: base_report_creator
+#: field:base_report_creator.report,view_graph_type:0
+msgid "Graph Type"
+msgstr "Tipus gràfic"
+
+#. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
 msgid "Vertical"
 msgstr "Vertical"
@@ -215,7 +220,7 @@ msgstr "Condició"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
-msgstr ""
+msgstr "Compta"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -236,6 +241,11 @@ msgstr "Eix X"
 #: wizard_field:base_report_creator.report.menu.create,init,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menú pare"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Fields"
+msgstr "Camps"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,type:0
@@ -306,11 +316,6 @@ msgstr "Orientació gràfic"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Fields"
-msgstr "Camps"
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Authorized Groups (empty for all)"
 msgstr "Grups autoritzats (buit per tots)"
 
@@ -345,14 +350,10 @@ msgid "Report Filters"
 msgstr "Filtres informe"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: selection:base_report_creator.report.filter,condition:0
 msgid "AND"
 msgstr "I"
-
-#. module: base_report_creator
-#: selection:base_report_creator.report.filter,condition:0
-msgid "OR"
-msgstr "O"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -402,9 +403,10 @@ msgid "Calendar Mode"
 msgstr "Mode calendari"
 
 #. module: base_report_creator
-#: field:base_report_creator.report.fields,group_method:0
-msgid "Grouping Method"
-msgstr "Mètode agrupació"
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
+#: selection:base_report_creator.report.filter,condition:0
+msgid "OR"
+msgstr "O"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:50:20+0000\n"
-"PO-Revision-Date: 2008-11-28 16:50:20+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,13 +51,19 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Невалиден XML за преглед на архитектурата"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr ""
+
+#. module: delivery
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
 msgstr ""
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "No grid avaible !"
 msgstr ""
 
@@ -82,20 +88,14 @@ msgid "Fixed"
 msgstr ""
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
-
-#. module: delivery
-#, python-format
-#: code:addons/delivery/delivery.py:0
-msgid "No price avaible !"
 msgstr ""
 
 #. module: delivery
@@ -111,8 +111,8 @@ msgid "Generate Draft Invoices On Receptions"
 msgstr ""
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "No grid matching for this carrier !"
 msgstr ""
 
@@ -271,8 +271,8 @@ msgid "Start Zip"
 msgstr ""
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
 msgid "Order not in draft state !"
 msgstr ""
 
@@ -299,14 +299,20 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/stock.py:0
 #, python-format
-#: code:addons/delivery/delivery.py:0
-msgid "No line matched this order in the choosed delivery grids !"
+msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
 
 #. module: delivery
@@ -342,19 +348,13 @@ msgid "Delivery Method"
 msgstr ""
 
 #. module: delivery
-#, python-format
-#: code:addons/delivery/stock.py:0
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
-
-#. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
 msgstr ""
 
 #. module: delivery
-#, python-format
 #: code:addons/delivery/stock.py:0
+#, python-format
 msgid "Warning"
 msgstr ""
 

@@ -150,7 +150,7 @@ class abstracted_fs:
 
     # Ok
     def fs2ftp(self, node):
-        res = node and ('/' + node.cr.dbname + '/' + node.path) or '/'
+        res = node and ('/' + node.cr.dbname + '/' + node.path.encode('ascii','replace').replace('?','_')) or '/'
         return res
 
     # Ok
@@ -688,7 +688,7 @@ class abstracted_fs:
 
             # formatting is matched with proftpd ls output
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, file.path.encode('ascii','replace').split('/')[-1])
+                                                     size, mtime, file.path.encode('ascii','replace').replace('?','_').split('/')[-1])
 
     # Ok
     def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):

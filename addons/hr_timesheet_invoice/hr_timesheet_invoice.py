@@ -61,7 +61,8 @@ class account_analytic_account(osv.osv):
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
             help="Check this field if you plan to automatically generate invoices based " \
-            "on the costs in this analytic account: timesheets, expenses, ..."),
+            "on the costs in this analytic account: timesheets, expenses, ..." \
+            "You can configure an automatic invoice rate on analytic accounts."),
     }
     _defaults = {
         'pricelist_id': lambda self,cr, uid, ctx: ctx.get('pricelist_id', False),

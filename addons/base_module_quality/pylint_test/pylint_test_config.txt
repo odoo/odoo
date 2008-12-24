@@ -56,8 +56,7 @@ load-plugins=
 #enable-msg=
 
 # Disable the message(s) with the given id(s).
-#disable-msg=
-
+disable-msg=C0103,F0401,E0611,R0903,W0232,W0102,E1002,R0913,R0904
 
 [REPORTS]
 
@@ -66,7 +65,7 @@ load-plugins=
 output-format=text
 
 # Include message's id in output
-include-ids=no
+include-ids=yes
 
 # Put messages in a separate file for each module / package specified on the
 # command line instead of printing them on stdout. Reports (if any) will be

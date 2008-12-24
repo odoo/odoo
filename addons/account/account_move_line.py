@@ -466,7 +466,7 @@ class account_move_line(osv.osv):
                     val['account_id'] =  id2
                 elif jt=='purchase':
                     val['account_id'] =  id1
-                if val['account_id']:
+                if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
         return {'value':val}
@@ -857,8 +857,8 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals['ref'],
                     })]
-            else:
-                raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
+            #else:
+            #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
 
         #if not 'currency_id' in vals:
         #    vals['currency_id'] = account.company_id.currency_id.id

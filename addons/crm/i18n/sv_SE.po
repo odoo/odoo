@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:07:56+0000\n"
-"PO-Revision-Date: 2008-11-28 17:07:56+0000\n"
+"POT-Creation-Date: 2008-12-22 18:03:24+0000\n"
+"PO-Revision-Date: 2008-12-22 18:03:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -98,8 +98,8 @@ msgid "Rules"
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "Warning !"
 msgstr ""
 
@@ -163,8 +163,8 @@ msgid "The partner category that will be added to partners that match the segmen
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "You can not escalate this case.\nYou are already at the top level."
 msgstr ""
 
@@ -185,13 +185,18 @@ msgid "Value"
 msgstr "Värde"
 
 #. module: crm
+#: field:crm.case,planned_cost:0
+msgid "Planned Costs"
+msgstr "Planerade kostnader"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_case_history
 msgid "Case history"
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "Error!"
 msgstr ""
 
@@ -229,6 +234,11 @@ msgstr ""
 #: wizard_field:crm.case.section.menu,design_menu,menu16_option:0
 #: wizard_field:crm.case.section.menu,design_menu,menu16:0
 msgid "All Unclosed and Unassigned "
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
+msgid "Note"
 msgstr ""
 
 #. module: crm
@@ -348,6 +358,12 @@ msgid "Configuration"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Send"
+msgstr ""
+
+#. module: crm
 #: view:crm.case.rule:0
 msgid "Special Keywords to Be Used in The Body"
 msgstr ""
@@ -431,8 +447,8 @@ msgid "Profiling"
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "Error !"
 msgstr ""
 
@@ -499,6 +515,8 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_to:0
 #: selection:crm.case,state:0
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Pending"
 msgstr ""
 
@@ -580,6 +598,26 @@ msgid "%(case_date)s = Creation date"
 msgstr ""
 
 #. module: crm
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "New Form"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
 msgstr ""
@@ -595,6 +633,11 @@ msgid "Set responsible to"
 msgstr ""
 
 #. module: crm
+#: view:crm.case:0
+msgid "General"
+msgstr ""
+
+#. module: crm
 #: view:crm.case.rule:0
 msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
 msgstr ""
@@ -605,8 +648,8 @@ msgid "Update The Proposed Menus To Be Created"
 msgstr ""
 
 #. module: crm
-#: field:crm.segmentation,partner_id:0
-msgid "Max Partner ID processed"
+#: help:crm.case.section,reply_to:0
+msgid "The email address wich is the 'Reply-To' of all email sent by Open ERP for cases in this section"
 msgstr ""
 
 #. module: crm
@@ -645,14 +688,40 @@ msgid "Segmentation"
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "You can not delete this case. You should better cancel it."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "done"
 msgstr ""
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
 msgid "Minimum Priority"
+msgstr ""
+
+#. module: crm
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "Calendar"
 msgstr ""
 
 #. module: crm
@@ -688,6 +757,8 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Historize"
 msgstr ""
 
@@ -697,9 +768,24 @@ msgid "%(partner)s = Partner name"
 msgstr ""
 
 #. module: crm
-#: field:crm.case,planned_cost:0
-msgid "Planned Costs"
-msgstr "Planerade kostnader"
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "New With Calendar"
+msgstr ""
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -707,8 +793,23 @@ msgid "Not Running"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.rule:0
-msgid "Note"
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "List With Calendar"
 msgstr ""
 
 #. module: crm
@@ -797,12 +898,14 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Escalate"
 msgstr ""
 
 #. module: crm
-#, python-format
 #: code:addons/crm/crm.py:0
+#, python-format
 msgid "You must put a Partner eMail to use this action!"
 msgstr ""
 
@@ -819,6 +922,12 @@ msgstr ""
 #. module: crm
 #: field:crm.case,planned_revenue:0
 msgid "Planned Revenue"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "draft"
 msgstr ""
 
 #. module: crm
@@ -842,6 +951,12 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "cancel"
 msgstr ""
 
 #. module: crm
@@ -880,8 +995,23 @@ msgid "Months"
 msgstr ""
 
 #. module: crm
-#: help:crm.case.section,reply_to:0
-msgid "The email address wich is the 'Reply-To' of all email sent by Tiny ERP for cases in this section"
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "Don't Create"
 msgstr ""
 
 #. module: crm
@@ -892,6 +1022,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case,date:0
 #: field:crm.case.log,date:0
+#: selection:crm.case.rule,trg_date_type:0
 msgid "Date"
 msgstr "Datum"
 
@@ -970,6 +1101,8 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_to:0
 #: selection:crm.case,state:0
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Cancel"
 msgstr ""
 
@@ -979,6 +1112,8 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_to:0
 #: selection:crm.case,state:0
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Close"
 msgstr ""
 
@@ -993,6 +1128,8 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_to:0
 #: selection:crm.case,state:0
 #: view:crm.case:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Open"
 msgstr ""
 
@@ -1014,6 +1151,11 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,code:0
 msgid "Section Code"
+msgstr ""
+
+#. module: crm
+#: field:crm.segmentation,partner_id:0
+msgid "Max Partner ID processed"
 msgstr ""
 
 #. module: crm
@@ -1079,6 +1221,12 @@ msgid "Description"
 msgstr "Beskrivning"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "open"
+msgstr ""
+
+#. module: crm
 #: view:crm.case.section:0
 msgid "Complete this if you use the mail gateway."
 msgstr ""
@@ -1130,6 +1278,8 @@ msgstr ""
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
 #: selection:crm.case,state:0
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Draft"
 msgstr ""
 
@@ -1148,6 +1298,8 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_case
 #: field:crm.case.log,case_id:0
 #: model:res.request.link,name:crm.req_link_case
+#: code:addons/crm/crm.py:0
+#, python-format
 msgid "Case"
 msgstr ""
 
@@ -1184,8 +1336,23 @@ msgid "Communication history"
 msgstr ""
 
 #. module: crm
-#: view:crm.case:0
-msgid "General"
+#: selection:crm.case.section.menu,design_menu,menu8_option:0
+#: selection:crm.case.section.menu,design_menu,menu12_option:0
+#: selection:crm.case.section.menu,design_menu,menu14_option:0
+#: selection:crm.case.section.menu,design_menu,menu2_option:0
+#: selection:crm.case.section.menu,design_menu,menu15_option:0
+#: selection:crm.case.section.menu,design_menu,menu5_option:0
+#: selection:crm.case.section.menu,design_menu,menu4_option:0
+#: selection:crm.case.section.menu,design_menu,menu6_option:0
+#: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: selection:crm.case.section.menu,design_menu,menu10_option:0
+#: selection:crm.case.section.menu,design_menu,menu11_option:0
+#: selection:crm.case.section.menu,design_menu,menu13_option:0
+#: selection:crm.case.section.menu,design_menu,menu7_option:0
+#: selection:crm.case.section.menu,design_menu,menu1_option:0
+#: selection:crm.case.section.menu,design_menu,menu3_option:0
+msgid "List"
 msgstr ""
 
 #. module: crm

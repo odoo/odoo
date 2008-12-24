@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:51:13+0000\n"
-"PO-Revision-Date: 2008-11-28 16:51:13+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,9 @@ msgid "Service"
 msgstr "Servei"
 
 #. module: product
-#: help:product.template,purchase_ok:0
-msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
-msgstr "Indica si el producte és visible en la llista de productes dins d'una selecció des d'una línia de comanda de compra."
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Price Min. Margin"
+msgstr "Marge preu mín."
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -96,6 +96,12 @@ msgid "Consumable"
 msgstr "Consumible"
 
 #. module: product
+#: model:product.category,name:product.product_category_7
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Onsite Intervention"
+msgstr "Intervenció en el mateix lloc"
+
+#. module: product
 #: wizard_field:product.price_list,init,price_list:0
 msgid "PriceList"
 msgstr ""
@@ -106,8 +112,8 @@ msgid "Dello Computer"
 msgstr ""
 
 #. module: product
-#, python-format
 #: code:addons/product/product.py:0
+#, python-format
 msgid "Products: "
 msgstr ""
 
@@ -145,6 +151,16 @@ msgstr ""
 #: field:product.product,price:0
 msgid "Customer Price"
 msgstr "Preu client"
+
+#. module: product
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
+msgstr "Indica si el producte és visible en la llista de productes dins d'una selecció des d'una línia de comanda de compra."
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -230,9 +246,10 @@ msgid "Silent fan"
 msgstr "Ventilador silenciós"
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
-msgstr "No podeu tenir 2 versions de tarifes que es superposin!"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -268,15 +285,15 @@ msgid "Fixed"
 msgstr "Fix"
 
 #. module: product
-#, python-format
 #: code:addons/product/pricelist.py:0
+#, python-format
 msgid "Warning !"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Price Min. Margin"
-msgstr "Marge preu mín."
+#: help:product.pricelist.item,product_id:0
+msgid "Set a product if this rule only apply to one product. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -570,7 +587,7 @@ msgstr "Tarifa de venda"
 #. module: product
 #: help:res.partner,property_product_pricelist:0
 msgid "This pricelist will be used, instead of the default one,                     for sales to the current partner"
-msgstr "Aquesta tarifa serà utilitzada en lloc de la per defecte per les vendes a l'empresa actual"
+msgstr "Aquesta tarifa serà utilitzada, en comptes de la tarifa per defecte, per les vendes a l'empresa actual"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist
@@ -588,6 +605,12 @@ msgstr "Tipus de producte"
 #. module: product
 #: help:product.price.type,currency_id:0
 msgid "The currency the field is expressed in."
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
 msgstr ""
 
 #. module: product
@@ -691,7 +714,7 @@ msgstr ""
 #. module: product
 #: field:product.template,loc_rack:0
 msgid "Rack"
-msgstr ""
+msgstr "Prestatge"
 
 #. module: product
 #: wizard_view:product.price_list,init:0
@@ -785,7 +808,7 @@ msgstr "PC Bàsic"
 #. module: product
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr ""
+msgstr "Fila"
 
 #. module: product
 #: field:product.template,categ_id:0
@@ -842,6 +865,12 @@ msgstr "Taxa"
 msgid "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that ends by 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d unit"
 msgstr ""
 
 #. module: product
@@ -970,12 +999,6 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
-msgstr "Intervenció en el mateix lloc"
-
-#. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr "Marge de preu variant"
@@ -1092,16 +1115,14 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Seqüència"
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
 
 #. module: product
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Error: La UdM por defecte i la UdM de compra han d'estar en la mateixa categoria."
+msgstr "Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa categoria."
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -1184,6 +1205,12 @@ msgid "Quantity-3"
 msgstr ""
 
 #. module: product
+#: code:addons/product/report/product_pricelist.py:0
+#, python-format
+msgid "%d units"
+msgstr ""
+
+#. module: product
 #: wizard_field:product.price_list,init,qty1:0
 msgid "Quantity-1"
 msgstr ""
@@ -1239,11 +1266,6 @@ msgstr "Altra informació"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Preu un."
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty (months)"
-msgstr "Garantia (mesos)"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -1349,9 +1371,9 @@ msgid "Variants"
 msgstr "Variant"
 
 #. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+#: field:product.template,warranty:0
+msgid "Warranty (months)"
+msgstr "Garantia (mesos)"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -1470,6 +1492,11 @@ msgid "The weight of a full of products palet or box."
 msgstr ""
 
 #. module: product
+#: constraint:product.pricelist.version:0
+msgid "You can not have 2 pricelist version that overlaps!"
+msgstr "No podeu tenir 2 versions de tarifes que es superposin!"
+
+#. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
 msgstr "Estoc virtual"
@@ -1502,9 +1529,11 @@ msgid "Unit"
 msgstr "Unitat de venda"
 
 #. module: product
-#: help:product.pricelist.item,product_id:0
-msgid "Set a product if this rule only apply to one product. Keep empty for all products"
-msgstr ""
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Seqüència"
 
 #. module: product
 #: field:product.template,list_price:0

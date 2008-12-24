@@ -109,17 +109,20 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit)
+
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
             return qty
-        if from_unit['factor_inv_data']:
-            amount = qty * from_unit['factor_inv_data']
+        if from_unit.factor_inv_data:
+            amount = qty * from_unit.factor_inv_data
         else:
-            amount = qty / from_unit['factor']
-        if to_uom_id:
-            if to_unit['factor_inv_data']:
-                amount = rounding(amount / to_unit['factor_inv_data'], to_unit['rounding'])
+            amount = qty / from_unit.factor
+        if to_unit:
+            if to_unit.factor_inv_data:
+                amount = rounding(amount / to_unit.factor_inv_data, to_unit.rounding)
             else:
-                amount = rounding(amount * to_unit['factor'], to_unit['rounding'])
+                amount = rounding(amount * to_unit.factor, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -268,8 +271,9 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
-
+    
     def _get_uom_id(self, cr, uid, *args):
         cr.execute('select id from product_uom order by id limit 1')
         res = cr.fetchone()
@@ -281,6 +285,9 @@ class product_template(osv.osv):
         return False
 
     _defaults = {
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',

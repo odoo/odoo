@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:57:27+0000\n"
-"PO-Revision-Date: 2008-11-28 16:57:27+0000\n"
+"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
+"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,12 +48,12 @@ msgstr "Brun"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "du"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Off-Days' Summary"
-msgstr ""
+msgstr "Résumé des Congés"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
@@ -74,7 +74,7 @@ msgstr "Vacances"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "à"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -106,6 +106,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Both"
 msgstr ""
 
 #. module: hr_holidays
@@ -149,7 +154,7 @@ msgstr ""
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Analyser de"
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -202,6 +207,8 @@ msgid "Define holiday status"
 msgstr "Définir les types de congés"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
 #: selection:hr.holidays,state:0
 msgid "Confirmed"
 msgstr "Confirmé"
@@ -422,6 +429,11 @@ msgid "Color of the status"
 msgstr "Couleur du Statut"
 
 #. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.per.user,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr "Congés déjà pris"
@@ -429,7 +441,7 @@ msgstr "Congés déjà pris"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
-msgstr ""
+msgstr "Vacances"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -490,7 +502,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
 msgid "Holidays Request"
-msgstr ""
+msgstr "Demandes de Vacances"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
@@ -513,6 +525,12 @@ msgstr "Annuler"
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
 msgid "Holidays def Request"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Validated"
 msgstr ""
 
 #. module: hr_holidays

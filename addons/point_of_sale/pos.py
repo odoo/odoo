@@ -24,6 +24,7 @@ import time
 import netsvc
 from osv import fields, osv
 from mx import DateTime
+from tools.translate import _
 
 
 class pos_config_journal(osv.osv):
@@ -44,7 +45,17 @@ class pos_order(osv.osv):
     _order = "date_order, create_date desc"
     _order = "date_order desc"
 
-    wf_service = netsvc.LocalService("workflow")
+    def unlink(self, cr, uid, ids, context={}):
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.state<>'draft':
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a point of sale which is already confirmed !'))
+        return super(pos_order, self).unlink(cr, uid, ids, context=context)
+
+    def onchange_partner_pricelist(self, cr, uid, ids, part, context={}):
+        if not part:
+            return {}
+        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id 
+        return {'value':{'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
         id_set = ",".join(map(str, ids))
@@ -60,7 +71,9 @@ class pos_order(osv.osv):
         res = dict(cr.fetchall())
 
         for rec in self.browse(cr, uid, ids, context):
-            if rec.partner_id and rec.partner_id.property_account_tax:
+            if rec.partner_id \
+               and rec.partner_id.property_account_position \
+               and rec.partner_id.property_account_position.tax_ids:
                 res[rec.id] = res[rec.id] - rec.amount_tax
         return res
 
@@ -338,7 +351,8 @@ class pos_order(osv.osv):
                         'location_dest_id': stock_dest_id,
                     })
 
-            self.wf_service.trg_validate(uid, 'stock.picking',
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking',
                     picking_id, 'button_confirm', cr)
             self.pool.get('stock.picking').force_assign(cr,
                     uid, [picking_id], context)
@@ -373,7 +387,8 @@ class pos_order(osv.osv):
             clone_id = picking_obj.copy(
                 cr, uid, order.last_out_picking.id, {'type': 'in'})
             # Confirm the picking
-            self.wf_service.trg_validate(uid, 'stock.picking',
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking',
                 clone_id, 'button_confirm', cr)
             clone_list.append(clone_id)
             # Remove the ref to last picking and delete the payments
@@ -394,21 +409,32 @@ class pos_order(osv.osv):
 
         return True
 
-    def add_payment(self, cr, uid, order_id, amount, journal, context=None):
+    def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
 
         order = self.browse(cr, uid, order_id, context)
         if order.invoice_wanted and not order.partner_id:
             raise osv.except_osv("Error", "Cannot create invoice without a partner.")
 
-        payment_id = self.pool.get('pos.payment').create(cr, uid, {
+        args = {
             'order_id': order_id,
-            'journal_id': journal,
-            'amount': amount,
-            })
+            'journal_id': data['journal'],
+            'amount': data['amount'],
+            'payment_id': data['payment_id'],
+            }
 
-        self.wf_service.trg_validate(uid, 'pos.order', order_id, 'payment', cr)
-        self.wf_service.trg_write(uid, 'pos.order', order_id, cr)
+        if 'payment_date' in data.keys():
+            args['payment_date'] = data['payment_date']
+        if 'payment_name' in data.keys():
+            args['payment_name'] = data['payment_name']
+        if 'payment_nb' in data.keys():
+            args['payment_nb'] = data['payment_nb']
+
+        payment_id = self.pool.get('pos.payment').create(cr, uid, args )
+
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'pos.order', order_id, 'payment', cr)
+        wf_service.trg_write(uid, 'pos.order', order_id, cr)
         return payment_id
 
     def add_product(self, cr, uid, order_id, product_id, qty, context=None):
@@ -428,7 +454,8 @@ class pos_order(osv.osv):
             'qty': qty,
             'price_unit': price,
             })
-        self.wf_service.trg_write(uid, 'pos.order', order_id, cr)
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
         return order_line_id
 
@@ -502,7 +529,8 @@ class pos_order(osv.osv):
                 inv_line_ref.create(cr, uid, inv_line, context)
 
         for i in inv_ids:
-            self.wf_service.trg_validate(uid, 'account.invoice', i, 'invoice_open', cr)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.invoice', i, 'invoice_open', cr)
         return inv_ids
 
     def create_account_move(self, cr, uid, ids, context=None):
@@ -534,7 +562,7 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed_taxes = account_tax_obj.compute_inv(
-                    cr, uid, taxes, line.product_id.list_price, line.qty)
+                    cr, uid, taxes, line.price_unit, line.qty)
 
                 for tax in computed_taxes:
                     tax_amount += round(tax['amount'], 2)
@@ -784,6 +812,52 @@ class pos_order_line(osv.osv):
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context)
 
+    def _scan_product(self, cr, uid, ean, qty, order):
+        # search pricelist_id
+        pricelist_id = self.pool.get('pos.order').read(cr, uid, [order], ['pricelist_id'] )
+        if not pricelist_id:
+            return False
+
+        new_line = True
+
+        product_id = self.pool.get('product.product').search(cr, uid, [('ean13','=', ean)])
+        if not product_id:
+           return false
+
+        # search price product
+        product = self.pool.get('product.product').read(cr, uid, product_id)
+        product_name = product[0]['name']
+        price = self.price_by_product(cr, uid, 0, pricelist_id[0]['pricelist_id'][0], product_id[0], 1)
+
+        order_line_ids = self.search(cr, uid, [('name','=',product_name),('order_id','=',order)])
+        if order_line_ids:
+            new_line = False
+            order_line_id = order_line_ids[0]
+            qty += self.read(cr, uid, order_line_ids[0], ['qty'])['qty']
+
+        if new_line:
+            vals = {'product_id': product_id[0],
+                    'price_unit': price,
+                    'qty': qty,
+                    'name': product_name,
+                    'order_id': order,
+                   }
+            line_id = self.create(cr, uid, vals)
+            if not line_id:
+                raise wizard.except_wizard(_('Error'), _('Create line failed !'))
+        else:
+            vals = {
+                'qty': qty,
+                'price_unit': price
+            }
+            line_id = self.write(cr, uid, order_line_id, vals)
+            if not line_id:
+                raise wizard.except_wizard(_('Error'), _('Modify line failed !'))
+            line_id = order_line_id
+
+        price_line = float(qty)*float(price)
+        return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
+
 pos_order_line()
 
 
@@ -807,13 +881,18 @@ class pos_payment(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=64),
-        'order_id': fields.many2one('pos.order', 'Order Ref', required=True),
+        'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
         'journal_id': fields.many2one('account.journal', "Journal", required=True),
+        'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
+        'payment_nb': fields.char('Piece number', size=32),
+        'payment_name': fields.char('Payment name', size=32),
+        'payment_date': fields.date('Payment date', required=True),
         'amount': fields.float('Amount', required=True),
     }
     _defaults = {
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.payment'),
         'journal_id': _journal_default,
+        'payment_date':  lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def create(self, cr, user, vals, context={}):

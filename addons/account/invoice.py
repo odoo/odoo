@@ -448,10 +448,10 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
         acc_obj = self.pool.get('account.account')
+        self.button_compute(cr, uid, ids, context={}, set_total=True)
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
-            self.button_compute(cr, uid, ids, context={},set_total=True)
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
             if not inv.date_invoice:
@@ -860,6 +860,9 @@ class account_invoice(osv.osv):
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
+
+        # Update the stored value
+        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 account_invoice()
 

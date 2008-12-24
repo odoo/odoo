@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 17:02:42+0000\n"
-"PO-Revision-Date: 2008-11-28 17:02:42+0000\n"
+"POT-Creation-Date: 2008-12-22 17:59:16+0000\n"
+"PO-Revision-Date: 2008-12-22 17:59:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,view_graph_type:0
-msgid "Graph Type"
-msgstr "Tipo de gráfico"
+#: field:base_report_creator.report.fields,group_method:0
+msgid "Grouping Method"
+msgstr "Método de agrupamento"
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
@@ -126,6 +126,11 @@ msgstr "Adicionar filtro"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
 msgstr "Criar menu para relatório"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,view_graph_type:0
+msgid "Graph Type"
+msgstr "Tipo de gráfico"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -238,6 +243,11 @@ msgid "Parent Menu"
 msgstr "Menu ascendente"
 
 #. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Fields"
+msgstr "Campos"
+
+#. module: base_report_creator
 #: field:base_report_creator.report,type:0
 msgid "Report Type"
 msgstr "Tipo de relatório"
@@ -306,11 +316,6 @@ msgstr "Orientação do gráfico"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Fields"
-msgstr "Campos"
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Authorized Groups (empty for all)"
 msgstr "Grupos autorizados (vazio para todos)"
 
@@ -345,14 +350,10 @@ msgid "Report Filters"
 msgstr "Filtro de relatórios"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: selection:base_report_creator.report.filter,condition:0
 msgid "AND"
 msgstr "E"
-
-#. module: base_report_creator
-#: selection:base_report_creator.report.filter,condition:0
-msgid "OR"
-msgstr "OU"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -402,9 +403,10 @@ msgid "Calendar Mode"
 msgstr "Modo de calendário"
 
 #. module: base_report_creator
-#: field:base_report_creator.report.fields,group_method:0
-msgid "Grouping Method"
-msgstr "Método de agrupamento"
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
+#: selection:base_report_creator.report.filter,condition:0
+msgid "OR"
+msgstr "OU"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0

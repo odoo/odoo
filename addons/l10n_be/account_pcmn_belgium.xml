@@ -6434,6 +6434,7 @@
             <!-- Tax Code Configuration -->
         <record id="vat_code_chart_root" model="account.tax.code.template">
             <field name="name">Plan de Taxes Belge</field>
+            <field name="parent_id" eval="False"/>
         </record>
         <record id="vat_code_op_base" model="account.tax.code.template">
             <field name="name">I. Valeur des operations</field>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:52:05+0000\n"
-"PO-Revision-Date: 2008-11-28 16:52:05+0000\n"
+"POT-Creation-Date: 2008-12-22 17:51:28+0000\n"
+"PO-Revision-Date: 2008-12-22 17:51:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,13 +27,23 @@ msgid "Convert to Quote"
 msgstr ""
 
 #. module: sale_crm
-#: wizard_button:sale_crm.make_case,init,create:0
-msgid "Create"
+#: help:crm.case.make_order,init,partner_id:0
+msgid "Use this partner if there is no partner on the case"
 msgstr ""
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
+#: wizard_button:sale_crm.make_case,init,create:0
+msgid "Create"
+msgstr "新建"
+
+#. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "All at once"
+msgstr ""
+
+#. module: sale_crm
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: sale_crm
@@ -44,7 +54,7 @@ msgstr ""
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractanalytic0
 msgid "Analytic account"
-msgstr ""
+msgstr "分析帐号"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmquotation0
@@ -82,6 +92,11 @@ msgid "Opportunity convert into quotation"
 msgstr ""
 
 #. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Direct Delivery"
+msgstr ""
+
+#. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
 msgstr ""
@@ -97,14 +112,19 @@ msgid "Customer"
 msgstr ""
 
 #. module: sale_crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: help:crm.case.make_order,init,close:0
+msgid "Check this to close the case after having created the sale order."
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
 msgstr ""
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0
 msgid "User Responsible"
-msgstr ""
+msgstr "当事人"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
@@ -119,7 +139,7 @@ msgstr ""
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,products:0
 msgid "Products"
-msgstr ""
+msgstr "产品"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,close:0
@@ -130,12 +150,12 @@ msgstr ""
 #: wizard_view:sale_crm.make_case,init:0
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_make_case_wizard
 msgid "Make Case"
-msgstr ""
+msgstr "建立案例"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "商店"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmopportunity0
@@ -155,7 +175,7 @@ msgstr ""
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,name:0
 msgid "Case Description"
-msgstr ""
+msgstr "案例说明"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,analytic_account:0
@@ -172,5 +192,5 @@ msgstr ""
 #: wizard_button:sale_crm.make_case,init,end:0
 #: wizard_button:crm.case.make_order,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-11-28 16:50:19+0000\n"
-"PO-Revision-Date: 2008-11-28 16:50:19+0000\n"
+"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
+"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,8 +58,8 @@ msgid "Report"
 msgstr "Справка"
 
 #. module: base_report_designer
-#, python-format
 #: code:addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#, python-format
 msgid "Report does not contain the sxw content!"
 msgstr ""
 
@@ -74,11 +74,6 @@ msgstr "Оформление на справка"
 #: wizard_view:base_report_designer.modify,send_form:0
 msgid "Get a report"
 msgstr "Вземи справка"
-
-#. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
-msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Tiny ERP using this wizard."
-msgstr "Това е образеца на поръчаната от Вас справка. Запазете го като .SXW файл и го отворете с OpenOffice. Не забравяйте да инсталирате пакета \"Tiny OpenOffice\". След като е променен качето го в Tiny ERP използвайки помошника(wizard)."
 
 #. module: base_report_designer
 #: wizard_button:base_report_designer.modify,get_form,get_form_result:0
@@ -96,11 +91,22 @@ msgid "Report designer"
 msgstr "Оформление на справки"
 
 #. module: base_report_designer
+#: wizard_view:base_report_designer.modify,get_form_result:0
+msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Open ERP using this wizard."
+msgstr ""
+
+#. module: base_report_designer
 #: wizard_button:base_report_designer.modify,send_form,send_form_result:0
 msgid "Update the report"
 msgstr "Обнови справка"
 
 #. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
+msgid "Create a new report"
+msgstr ""
+
+#. module: base_report_designer
+#: selection:base_report_designer.modify,init,operation:0
 #: model:ir.actions.wizard,name:base_report_designer.wizard_report_designer_modify
 msgid "Modify an existing report"
 msgstr "Промени съществуваща справка"
