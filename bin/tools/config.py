@@ -197,7 +197,7 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        keys = ['language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
+        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 
                 'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
 
         if hasSSL:
