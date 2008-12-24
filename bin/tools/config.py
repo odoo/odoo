@@ -42,9 +42,9 @@ class configmanager(object):
         self.options = {
             'email_from':False,
             'interface': '',    # this will bind the server to all interfaces
-            'port': '8069',
+            'port': 8069,
             'netinterface': '',
-            'netport': '8070',
+            'netport': 8070,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -91,9 +91,9 @@ class configmanager(object):
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
         
         parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
-        parser.add_option("-p", "--port", dest="port", help="specify the TCP port")
+        parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
         parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
-        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc")
+        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
         parser.add_option("--no-netrpc", dest="netrpc", action="store_false", default=True, help="disable netrpc")
         parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", default=True, help="disable xmlrpc")
         
@@ -128,7 +128,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "SMTP Configuration")
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
-        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
+        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
         if hasSSL:
             group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
@@ -142,7 +142,7 @@ class configmanager(object):
         group.add_option("-w", "--db_password", dest="db_password", help="specify the database password") 
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path") 
         group.add_option("--db_host", dest="db_host", help="specify the database host") 
-        group.add_option("--db_port", dest="db_port", help="specify the database port") 
+        group.add_option("--db_port", dest="db_port", help="specify the database port", type="int") 
         group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
         group.add_option("-P", "--import-partial", dest="import_partial", help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)

@@ -143,12 +143,7 @@ if tools.config["stop_after_init"]:
 #----------------------------------------------------------
 
 if tools.config['xmlrpc']:
-    try:
-        port = int(tools.config["port"])
-    except:
-        logger.notifyChannel("init", netsvc.LOG_CRITICAL,
-                             "invalid port: %r" % (tools.config["port"],))
-        sys.exit(1)
+    port = int(tools.config['port'])
     interface = tools.config["interface"]
     secure = tools.config["secure"]
 
@@ -168,14 +163,8 @@ if tools.config['xmlrpc']:
 #
 
 if tools.config['netrpc']:
-    try:
-        netport = int(tools.config["netport"])
-    except:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, 
-                             "invalid port '%s'!" % (tools.config["netport"],))
-        sys.exit(1)
+    netport = int(tools.config['netport'])
     netinterface = tools.config["netinterface"]
-
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
     logger.notifyChannel("web-services", netsvc.LOG_INFO, 
                          "starting NET-RPC service, port %d" % (netport,))
