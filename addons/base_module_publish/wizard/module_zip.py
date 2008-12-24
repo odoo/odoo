@@ -42,7 +42,7 @@ def _zippy(archive, fromurl, path, src=True):
         else:
             exclude = ['py','pyo','pyc']
         if (path.split('.')[-1] not in exclude) or (os.path.basename(path)=='__terp__.py'):
-            archive.write(os.path.join(fromurl, path).encode(), path.encode())
+            archive.write(os.path.join(fromurl, path).encode('utf8'), path.encode('utf8'))
     return True
 
 def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
@@ -60,7 +60,7 @@ def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
     if os.path.isdir(os.path.join(ad, name)):
         archname = StringIO.StringIO('wb')
         archive = PyZipFile(archname, "w", ZIP_DEFLATED)
-        archive.writepy(os.path.join(ad, name).encode())
+        archive.writepy(os.path.join(ad, name).encode('utf8'))
         _zippy(archive, ad, name, src=src)
         archive.close()
         val =archname.getvalue()

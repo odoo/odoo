@@ -64,8 +64,8 @@
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Trigger Invoice&quot;&quot;&quot;" name="name"/>
-            <field name="subflow_id" search="[('name','=','sale.order.basic')]"/>
-            <field eval="&quot;&quot;&quot;Trigger invoices from sale order lines (sale subflow)&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
+            <field eval="&quot;&quot;&quot;Trigger invoices from sale order lines&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_tasksworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>

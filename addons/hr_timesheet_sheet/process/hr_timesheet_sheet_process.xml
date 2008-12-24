@@ -41,8 +41,9 @@
             <field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
             <field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Timesheet Confirming&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Timesheet sheet confirm at the end of the period&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="process_process_hrtimesheetworkflow0"/>
             <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -72,7 +73,6 @@
     
             
         <record id="process_node_attendance0" model="process.node">
-            <field name="menu_id" ref="hr_attendance.menu_si_so"/>
             <field name="model_id" ref="hr.model_hr_employee"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Attendance&quot;&quot;&quot;" name="name"/>
@@ -129,9 +129,10 @@
         <record id="process_node_invoiceonwork0" model="process.node">
             <field name="menu_id" ref="account.menu_finance_invoice"/>
             <field name="model_id" ref="account.model_account_invoice"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Invoice on Work&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Invoice based on timesheet&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
             <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -149,7 +150,7 @@
             <field name="role_id" ref="res_roles_hr0"/>
         </record>
     
-        <record id="process_transition_attendance0" model="process.transition">
+        <record id="process_transition_attendancetimesheet0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Attendance&quot;&quot;&quot;" name="name"/>
@@ -158,7 +159,7 @@
             <field model="process.node" name="source_node_id" ref="process_node_attendance0"/>
         </record>
     
-        <record id="process_transition_timesheet0" model="process.transition">
+        <record id="process_transition_timesheetdraft0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
