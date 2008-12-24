@@ -24,6 +24,11 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Custom",
+    "description": """
+Adds a reporting menu in products that computes sales, purchases, margins
+and others interresting indicators based on invoices. The wizard to launch
+the report has several options to help you get the data you need.
+""",
     "depends":["base","product","account"],
     "demo_xml":[],
     "update_xml":["product_margin_view.xml"],
