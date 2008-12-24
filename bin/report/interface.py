@@ -81,6 +81,7 @@ class report_rml(report_int):
             'html': self.create_html,
             'raw': self.create_raw,
             'sxw': self.create_sxw,
+            'odt': self.create_odt,
         }
 
     def create(self, cr, uid, ids, datas, context):
@@ -206,6 +207,10 @@ class report_rml(report_int):
 
     def create_sxw(self, path, logo=None, title=None):
         return path
+    
+    def create_odt(self, data, logo=None, title=None):
+        return data    
+    
 
 from report_sxw import report_sxw
 

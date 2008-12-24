@@ -295,7 +295,6 @@ class rml_parse(object):
         if isinstance(text,(str,unicode)):
             lst = text.split('\n')
 #            lst = str(text).split('\n') # This is also acceptable, isn't it?
-            
         if lst  and (not len(lst)):
             return None
         nodes = []
@@ -620,7 +619,7 @@ class report_sxw(report_rml):
             rml = tools.file_open(self.tmpl, subdir=None).read()
             report_type= data.get('report_type', report_type)
 
-        if report_type == 'sxw' and report_xml:
+        if report_type in ['sxw','odt'] and report_xml:
             context['parents'] = sxw_parents
             sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
             sxw_z = zipfile.ZipFile(sxw_io, mode='r')
@@ -670,7 +669,10 @@ class report_sxw(report_rml):
 
             if self.header:
                 #Add corporate header/footer
-                rml = tools.file_open('custom/corporate_sxw_header.xml').read()
+                if report_type=='odt':
+                    rml = tools.file_open('custom/corporate_odt_header.xml').read()
+                if report_type=='sxw':
+                    rml = tools.file_open('custom/corporate_sxw_header.xml').read()
                 rml_parser = self.parser(cr, uid, self.name2, context)
                 rml_parser.parents = sxw_parents
                 rml_parser.tag = sxw_tag
@@ -709,7 +711,6 @@ class report_sxw(report_rml):
                 }, context=context
             )
             cr.commit()
-
         return (pdf, report_type)
 
 
