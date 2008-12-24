@@ -1353,12 +1353,11 @@ class orm_memory(orm_template):
         return result
 
 class orm(orm_template):
-
     _sql_constraints = []
-
     _log_access = True
     _table = None
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
         logger.notifyChannel('init', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
