@@ -2232,7 +2232,10 @@ class orm(orm_template):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                if vals[self._parent_name]:
+                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                else:
+                    cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
                 res = cr.fetchone()
                 if res:
                     pleft,pright = res

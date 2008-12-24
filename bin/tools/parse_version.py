@@ -71,7 +71,7 @@ def parse_version(s):
     contain them.
     """
     parts = []
-    for part in _parse_version_parts(s.lower()):
+    for part in _parse_version_parts((s or '0.1').lower()):
         if part.startswith('*'):
             if part<'*final':   # remove '-' before a prerelease tag
                 while parts and parts[-1]=='*final-': parts.pop()
