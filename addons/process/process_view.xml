@@ -17,6 +17,7 @@
                 <group colspan="4" string="Details">
                     <field name="name" select="1"/>
                     <field name="active" select="2"/>
+                    <field name="model_id" select="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Nodes">
@@ -120,6 +121,7 @@
         <field name="arch" type="xml">
             <tree string="Process">
                 <field name="name"/>
+                <field name="model_id" select="1"/>
                 <field name="active"/>
             </tree>
         </field>

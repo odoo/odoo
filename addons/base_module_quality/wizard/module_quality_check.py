@@ -60,7 +60,6 @@ class wiz_quality_check(osv.osv_memory):
     def _check(self, cr, uid, data, context={}):
         string_ret = ""
         from tools import config
-        print data
         data['ids'] = data.get('module_id', False)
         pool = pooler.get_pool(cr.dbname)
         module_data = pool.get('ir.module.module').browse(cr, uid, [data['ids']])

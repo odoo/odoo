@@ -151,6 +151,8 @@ class DomApi(DomApiGeneral):
         self.buildStylePropertiesDict()
         if self.styles_dom.getElementsByTagName("style:page-master").__len__()<>0:
             self.page_master = self.styles_dom.getElementsByTagName("style:page-master")[0]
+        if  self.styles_dom.getElementsByTagName("style:page-layout").__len__()<>0 :
+			self.page_master = self.styles_dom.getElementsByTagName("style:page-layout")[0]        
         self.document = self.content_dom.getElementsByTagName("office:document-content")[0]
 
     def buildStylePropertiesDict(self):
@@ -265,7 +267,7 @@ class DomApi(DomApiGeneral):
 
         childs = self.style_dict[style_name].childNodes
         for c in childs:
-            if c.nodeType == c.ELEMENT_NODE and c.nodeName == "style:properties":
+            if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties")>0 :
                 for attr in c._attrs.keys():
                     res[attr] = c.getAttribute(attr).encode("latin-1")
         return res
@@ -357,8 +359,12 @@ if __name__ == "__main__":
 
     fname = sys.argv[1]
     f = StringIO.StringIO(file(fname).read())
-
-    xsl = file(os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]), 'normalized_oo2rml.xsl')).read()
+    xsl_file = 'normalized_oo2rml.xsl'
+    z = zipfile.ZipFile(fname,"r")
+    mimetype = z.read('mimetype')
+    if mimetype.split('/')[-1] == 'vnd.oasis.opendocument.text' :
+		xsl_file = 'normalized_odt2rml.xsl'
+    xsl = file(os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]), xsl_file)).read()
     result = sxw2rml(f, xsl, output=opt.output, save_pict=False)
 
     print result
