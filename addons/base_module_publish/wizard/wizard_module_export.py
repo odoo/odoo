@@ -52,7 +52,7 @@ finish_fields = {
 
 class move_module_wizard(wizard.interface):
     def createzip(self, cr, uid, data, context):
-        return module_zip.createzip(cr, uid, data['id'], context, src=data['form']['include_src'])
+       return module_zip.createzip(cr, uid, data['id'], context, src=data['form']['include_src'])
 
     states = {
         'init': {

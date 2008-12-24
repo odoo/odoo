@@ -64,6 +64,8 @@
         "mrp_wizard.xml", 
         "mrp_report.xml",
         "company_view.xml",
+        "process/stockable_product_process.xml",
+        "process/service_product_process.xml",
         "process/procurement_process.xml",
     ],
     "active": False,
