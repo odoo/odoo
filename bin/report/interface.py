@@ -86,6 +86,7 @@ class report_rml(report_int):
 
     def create(self, cr, uid, ids, datas, context):
         xml = self.create_xml(cr, uid, ids, datas, context)
+        xml = tools.ustr(xml).encode('utf8')
         if datas.get('report_type', 'pdf') == 'raw':
             return xml
         rml = self.create_rml(cr, xml, uid, context)
