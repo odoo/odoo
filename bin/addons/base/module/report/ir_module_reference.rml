@@ -3,18 +3,6 @@
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="42.0" width="511" height="758"/>
-      	<header>
-			<pageGraphics>
-				<setFont name="Helvetica-Bold" size="9"/>
-				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawRightString x="20cm" y="28.1cm"> Reference Guide </drawRightString>
-			    <lineMode width="0.7"/>
-				<stroke color="black"/>
-				<lines>1cm 28cm 20cm 28cm</lines>
-				
-			</pageGraphics>
-		</header>
-
     </pageTemplate>
   </template>
   <stylesheet>
@@ -66,6 +54,10 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="depen_tbl">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
     <blockTableStyle id="Tableau3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -104,44 +96,45 @@
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_11" fontName="Helvetica-Bold" fontSize="11.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_8_underline" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
-    <para style="Standard">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="19.0,220.0,12.0" repeatRows="1" style="Table1">
+    <blockTable colWidths="139.0,220.0,152.0" repeatRows="1" style="Table1">
       <tr>
         <td>
           <para style="terp_header_Centre">
+            <font color="white"> </font>
           </para>
         </td>
-       <td>
-          <para style="terp_default_11">Introspection report on objects</para>
+        <td>
+          <para style="terp_header_Centre">Introspection report on objects</para>
         </td>
         <td>
           <para style="terp_header_Centre">
+            <font color="white"> </font>
           </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
         </td>
       </tr>
     </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
     <section>
-      <para style="Text body">[[ repeatIn(objects, 'module') ]]</para>
+      <para style="Text body">[[ repeatIn(objects,'module') ]]</para>
       <blockTable colWidths="102.0,102.0,102.0,102.0,102.0" style="module_tbl_heading">
         <tr>
           <td>
@@ -180,10 +173,41 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_9">
+      <para style="terp_default_Bold_8">
         <font color="white"> </font>
       </para>
-      <para style="terp_default_9">[[ module.description ]]</para>
+      <para style="terp_default_8_underline">Reports :</para>
+      <para style="terp_default_8">[[ format(module.reports_by_module) ]]</para>
+      <para style="terp_default_8">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_8_underline">Menu :</para>
+      <para style="terp_default_8">[[ format(module.menus_by_module) ]]</para>
+      <para style="terp_default_8">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_8_underline">View :</para>
+      <para style="terp_default_8">[[ format(module.views_by_module) ]]</para>
+      <para style="terp_default_8">
+        <font color="white"> </font>
+      </para>
+      <blockTable colWidths="510.0" style="depen_tbl">
+        <tr>
+          <td>
+            <para style="terp_default_8_underline">Dependencies :</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="terp_default_8">[[ repeatIn(module.dependencies_id,'dependencies_id') ]]</para>
+            <para style="terp_default_8">[[ dependencies_id.name ]] - [[ dependencies_id.state ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="terp_default_8">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_8">[[ module.description ]]</para>
       <section>
         <para style="terp_default_9">
           <font color="white"> </font>
