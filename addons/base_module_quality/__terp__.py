@@ -34,7 +34,7 @@ This module's aim is to check the quality of other modules.
 
 """,
     "init_xml" : [],
-    "update_xml" : ["base_module_quality_wizard.xml"],
+    "update_xml" : ["base_module_quality_wizard.xml", "security/ir.model.access.csv",],
     "category" : "Tiny Specific Modules/Base module quality",
     "active": False,
     "installable": True

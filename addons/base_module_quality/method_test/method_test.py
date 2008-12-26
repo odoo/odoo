@@ -42,15 +42,8 @@ This test checks if the module classes are raising exception when calling basic 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
-        model_list = []
-        model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
-        for model in model_data:
-            model_list.append(model.res_id)
-        obj_list = []
-        for mod in pool.get('ir.model').browse(cr, uid, model_list):
-            obj_list.append(str(mod.model))
-        result={}
+        obj_list = self.get_objects(cr, uid, module_name)
+        result = {}
         ok_count = 0
         ex_count = 0
 

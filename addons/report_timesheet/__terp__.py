@@ -24,6 +24,8 @@
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
+    "description": '''Module to add timesheet views like
+    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account''',
     "depends" : ["hr_timesheet",'hr_timesheet_invoice'],
     "category" : "Generic Modules/Human Resources",
     "init_xml" : [],

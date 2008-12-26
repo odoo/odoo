@@ -22,8 +22,14 @@
 {
     "name" : "Auction module",
     "version" : "1.0",
+    "author" : "Tiny",
     "category" : "Generic Modules/Auction",
     "depends" : ["base","account","hr_attendance"],
+    "description": '''This module provides functionality to 
+     manage artists, articles, sellers, buyers and auction.
+     Manage bids, track of sold, paid and unpaid objects.
+     Delivery Management. 
+    ''',
     "update_xml" : [
         # FIXME: review security rules...
         "security/ir.model.access.csv",

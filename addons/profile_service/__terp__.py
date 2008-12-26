@@ -24,6 +24,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for service companies",
     "depends":[
         "hr",
         "project",

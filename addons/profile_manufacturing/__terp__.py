@@ -24,6 +24,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for manufacturing industries",
     "depends":["mrp", "sale", "delivery","board_manufacturing","product_margin"],
     "demo_xml":[],
     "update_xml":[

@@ -60,15 +60,13 @@ class process_process(osv.osv):
 
     def search_by_model(self, cr, uid, res_model, context):
         pool = pooler.get_pool(cr.dbname)
+        model_ids = (res_model or None) and pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
 
-        model_ids = pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
-        if not model_ids:
-            return []
-
+        domain = (model_ids or []) and [('model_id', 'in', model_ids)]
         result = []
 
         # search all processes
-        res = pool.get('process.process').search(cr, uid, [('model_id', 'in', model_ids)])
+        res = pool.get('process.process').search(cr, uid, domain)
         if res:
             res = pool.get('process.process').browse(cr, uid, res, context)
             for process in res:
@@ -76,9 +74,9 @@ class process_process(osv.osv):
             return result
 
         # else search process nodes
-        res = pool.get('process.node').search(cr, uid, [('model_id', 'in', model_ids)])
+        res = pool.get('process.node').search(cr, uid, domain)
         if res:
-            res = pool.get('process.node').browse(cr, uid, res, context)        
+            res = pool.get('process.node').browse(cr, uid, res, context)
             for node in res:
                 if (node.process_id.id, node.process_id.name) not in result:
                     result.append((node.process_id.id, node.process_id.name))
@@ -92,12 +90,14 @@ class process_process(osv.osv):
         pool = pooler.get_pool(cr.dbname)
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
-        states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
-
         title = process.name
 
         expr_context = {}
+        states = {}
         perm = None
+
+        if res_model:
+            states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
 
         if res_id:
             current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]

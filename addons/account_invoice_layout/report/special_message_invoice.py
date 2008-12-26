@@ -97,7 +97,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
 
     def spcl_msg(self, form):
         account_msg_data = pooler.get_pool(self.cr.dbname).get('notify.message').browse(self.cr, self.uid, form['message'])
-        msg = account_msg_data.msg
+        msg = account_msg_data.msg        
         return msg
 
 

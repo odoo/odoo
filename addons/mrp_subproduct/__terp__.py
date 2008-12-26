@@ -27,6 +27,14 @@
     "depends" : ["base","mrp"],
     "category" : "Generic Modules/Production",
     "init_xml" : [],
+    "description": """
+This module allows you to produce several products from one production order.
+You can configure sub-products in the bill of material.
+Without this module:
+    A + B + C -> D
+With this module:
+    A + B + C -> D + E
+    """,
     "demo_xml" : [],
     "update_xml" : [
         "mrp_subproduct_view.xml",

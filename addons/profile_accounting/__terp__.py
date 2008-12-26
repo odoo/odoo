@@ -24,6 +24,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for Accounting",
     "depends":["account","report_analytic","board_account","account_followup"],
     "demo_xml":[],
     "update_xml":[

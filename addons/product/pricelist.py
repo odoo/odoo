@@ -91,6 +91,16 @@ class product_pricelist(osv.osv):
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
     }
+    
+    def name_get(self, cr, uid, ids, context={}):
+        result= []
+        
+        for pl in self.browse(cr, uid, ids, context):
+            name = str(pl.name) + ' ('+ str(pl.currency_id.name) + ')'
+            result.append((pl.id,name))
+        return result
+    
+
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
         if not comp:
