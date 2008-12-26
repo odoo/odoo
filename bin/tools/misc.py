@@ -664,6 +664,29 @@ def ustr(value):
 
     return unicode(value, 'utf-8')
 
+# to be compatible with python 2.4
+import __builtin__
+if not hasattr(__builtin__, 'all'):
+    def all(iterable):
+        for element in iterable:
+            if not element:
+               return False
+        return True
+        
+    __builtin__.all = all
+    del all
+    
+if not hasattr(__builtin__, 'any'):
+    def any(iterable):
+        for element in iterable:
+            if element:
+               return True
+        return False
+        
+    __builtin__.any = any
+    del any
+
+
 
 def get_languages():
     languages={
