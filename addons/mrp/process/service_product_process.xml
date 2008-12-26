@@ -8,23 +8,13 @@
 	
 		<record id="process_process_serviceproductworkflow0" model="process.process">
 			<field eval="&quot;&quot;&quot;Service Product Workflow&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="1" name="active"/>
 		</record>
 		
 		<!--
 			Process Node
 		-->
-		
-		<record id="process_node_serviceproduct1" model="process.node">
-			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;If Product type is service&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;Service Product&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_serviceproductworkflow0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-			<field eval="1" name="flow_start"/>
-		</record>
 		
 		<record id="process_node_serviceonorder0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
@@ -41,7 +31,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;If Procurement is make to stock&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Do nothing&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>
 			<field name="process_id" ref="process_process_serviceproductworkflow0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
@@ -63,24 +53,6 @@
 		<!--
 			Process Transition
 		-->
-		
-		<record id="process_transition_servicemto0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Serivce Stockable Order&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If product type is service and procure method is Make to order&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_serviceonorder0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_serviceproduct1"/>
-		</record>
-	
-		<record id="process_transition_servicemts0" model="process.transition">
-			<field eval="[(6,0,[])]" name="role_ids"/>
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Service Make to Stock&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If Product type is service and procure method is Make to stock&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_servicemts0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_serviceproduct1"/>
-		</record>
 		
 		<record id="process_transition_servicerfq0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
