@@ -157,7 +157,7 @@ class report_printscreen_list(report_int):
                     line[f]= line[f][1]
 
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
-                    line[f] = '( '+str(len(line[f])) + ' )'
+                    line[f] = '( '+tools.ustr(len(line[f])) + ' )'
                 if fields[f]['type'] == 'float':
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]='%.2f'%(line[f])
@@ -166,7 +166,7 @@ class report_printscreen_list(report_int):
                 col.setAttribute('para','yes')
                 col.setAttribute('tree','no')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(str(line[f] or ''))
+                    txt = new_doc.createTextNode(tools.ustr(line[f] or ''))
                     if temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
 
