@@ -115,7 +115,6 @@ class Service(object):
         self._response = s(self._response_process_id)
 
     def abortResponse(self, error, description, origin, details):
-        import tools
         if not tools.config['debug_mode']:
             raise Exception("%s -- %s\n\n%s"%(origin, description, details))
         else:
@@ -152,12 +151,11 @@ LOG_CRITICAL = 'critical'
 logging.DEBUG_RPC = logging.DEBUG - 1
 
 def init_logger():
-    from tools import config
     import os
 
     logger = logging.getLogger()
 
-    if config['syslog']:
+    if tools.config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
             sysloghandler = logging.handlers.NTEventLogHandler("%s %s" %
@@ -171,9 +169,9 @@ def init_logger():
 
     # create a format for log messages and dates
     formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
-    if config['logfile']:
+    if tools.config['logfile']:
         # LogFile Handler
-        logf = config['logfile']
+        logf = tools.config['logfile']
         try:
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
@@ -192,7 +190,7 @@ def init_logger():
 
     # add the handler to the root logger
     logger.addHandler(handler)
-    logger.setLevel(config['log_level'] or '0')
+    logger.setLevel(tools.config['log_level'] or '0')
 
     if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
         # change color of level names
@@ -240,13 +238,14 @@ class Logger(object):
 
         level_method = getattr(log, level)
 
-        result = str(msg).strip().split('\n')
+        result = tools.ustr(msg).strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
                 level_method('[%02d]: %s' % (idx+1, s,), extra=extra)
         elif result:
             level_method(result[0], extra=extra)
 
+import tools
 init_logger()
 
 class Agent(object):
@@ -303,7 +302,6 @@ class GenericXMLRPCRequestHandler:
             self.log('exception', e)
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             s = str(e)
-            import tools
             if tools.config['debug_mode']:
                 import pdb
                 tb = sys.exc_info()[2]
@@ -314,7 +312,6 @@ class SSLSocket(object):
     def __init__(self, socket):
         if not hasattr(socket, 'sock_shutdown'):
             from OpenSSL import SSL
-            import tools
             ctx = SSL.Context(SSL.SSLv23_METHOD)
             ctx.use_privatekey_file(tools.config['secure_pkey_file'])
             ctx.use_certificate_file(tools.config['secure_cert_file'])
@@ -441,7 +438,6 @@ class TinySocketClientThread(threading.Thread):
             except Exception, e:
                 print repr(e)
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                import tools
                 if tools.config['debug_mode']:
                     import pdb
                     tb = sys.exc_info()[2]
