@@ -24,6 +24,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for Auction house",
     "depends":["auction", "board_auction","account","hr_timesheet_sheet"],
     "demo_xml":[],
     "update_xml":[],

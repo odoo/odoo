@@ -24,6 +24,7 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for CRM",
     "depends":[
         "crm_vertical", "board_crm_configuration",
     ], 

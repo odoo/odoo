@@ -24,6 +24,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Others",
+    "description": '''Module allows to create new documents and add subscription on that document.''',
     "depends" : ["base"],
     "init_xml" : [],
     "demo_xml" : [],
