@@ -24,6 +24,7 @@
     "version":"0.1",
     "author":"Tiny",
     "category":"Profile",
+    "description": "Profile for Associates",
     "depends":["membership", "board_association"],
     "demo_xml":[],
     "update_xml":[

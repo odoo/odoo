@@ -68,7 +68,7 @@ class account_invoice(osv.osv):
         tt = type2journal.get(type_inv, 'sale')
         result = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
-            raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
+            raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal of type '%s' !") % (tt,))
         return result[0]
 
     def _get_type(self, cr, uid, context={}):
@@ -448,7 +448,7 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
         acc_obj = self.pool.get('account.account')
-        self.button_compute(cr, uid, ids, context={}, set_total=True)
+        self.button_compute(cr, uid, ids, context={}, set_total=False)
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -598,14 +598,34 @@ class account_invoice(osv.osv):
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
+
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
+
+            if inv.journal_id.group_invoice_lines:
+                line2 = {}
+                for x, y, l in line:
+                    tmp = str(l['account_id'])
+                    tmp += '-'+str('tax_code_id' in l and l['tax_code_id'] or "False")
+                    tmp += '-'+str('product_id' in l and l['product_id'] or "False")
+                    tmp += '-'+str('analytic_account_id' in l and l['analytic_account_id'] or "False")
+
+                    if tmp in line2:
+                        am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
+                        line2[tmp]['debit'] = (am > 0) and am or 0.0
+                        line2[tmp]['credit'] = (am < 0) and -am or 0.0
+                        line2[tmp]['tax_amount'] += l['tax_amount']
+                        line2[tmp]['analytic_lines'] += l['analytic_lines']
+                    else:
+                        line2[tmp] = l
+                line = []
+                for key, val in line2.items():
+                    line.append((0,0,val))
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Can not create invoice move on centralized journal'))
-
             move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:

@@ -20,12 +20,14 @@
 #
 ##############################################################################
 {
-    "name" : "Sales Management - Reporting",
+    "name" : "Purchase Management - Reporting",
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "depends" : ["purchase"],
     "category" : "Generic Modules/Sales & Purchases",
+    "description": '''Module to add views like
+    Purchase By Product, Purchase By Category of Product, All Months, Current Month.''',
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [

@@ -37,6 +37,7 @@ With this module:
     """,
     "demo_xml" : [],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "mrp_subproduct_view.xml",
     ],
     "active": False,

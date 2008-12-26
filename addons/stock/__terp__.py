@@ -26,6 +26,10 @@
     "website" : "http://www.openerp.com",
     "depends" : ["product", "account"],
     "category" : "Generic Modules/Inventory Control",
+    "description": '''Module provides Inventory Management, define warehouse, stock location, Pickings, 
+    Incoming products, Outgoing products, Internal movements of product, Traceability.
+    Reports for stock like lots by location, Stock Forecast, Item Labels, Picking List etc.. 
+     ''',
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [

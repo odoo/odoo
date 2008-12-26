@@ -63,6 +63,7 @@
     "author" : "Seath Solutions Ltd",
     "website": "http://www.seathsolutions.com",
     "category" : "Localisation/Account Charts",
+    "description": "This is the base module to manage the accounting chart for United Kingdom in Open ERP.",
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],

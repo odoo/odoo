@@ -43,6 +43,7 @@ Basic Accounting, plus new things which available are:
     ],
     
     "update_xml" : [
+        "security/ir.model.access.csv",
         "account_voucher_sequence.xml",
         "account_view.xml",
         "account_report.xml",
