@@ -192,36 +192,36 @@ class PoolManager(object):
     _dsn = None
     maxconn =  int(tools.config['db_maxconn']) or 64
     
-    def dsn(db_name):
-        if PoolManager._dsn is None:
-            PoolManager._dsn = ''
+    @classmethod 
+    def dsn(cls, db_name):
+        if cls._dsn is None:
+            cls._dsn = ''
             for p in ('host', 'port', 'user', 'password'):
                 cfg = tools.config['db_' + p]
                 if cfg:
-                    PoolManager._dsn += '%s=%s ' % (p, cfg)
-        return '%s dbname=%s' % (PoolManager._dsn, db_name)
-    dsn = staticmethod(dsn)
+                    cls._dsn += '%s=%s ' % (p, cfg)
+        return '%s dbname=%s' % (cls._dsn, db_name)
 
-    def get(db_name):
-        if db_name not in PoolManager._pools:
+    @classmethod
+    def get(cls, db_name):
+        if db_name not in cls._pools:
             logger = netsvc.Logger()
             try:
                 logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Connecting to %s' % (db_name,))
-                PoolManager._pools[db_name] = ConnectionPool(ThreadedConnectionPool(1, PoolManager.maxconn, PoolManager.dsn(db_name)), db_name)
+                cls._pools[db_name] = ConnectionPool(ThreadedConnectionPool(1, cls.maxconn, cls.dsn(db_name)), db_name)
             except Exception, e:
                 logger.notifyChannel('dbpool', netsvc.LOG_ERROR, 'Unable to connect to %s: %s' %
                                      (db_name, str(e)))
                 raise
-        return PoolManager._pools[db_name]
-    get = staticmethod(get)
+        return cls._pools[db_name]
 
-    def close(db_name):
-        if db_name in PoolManager._pools:
+    @classmethod
+    def close(cls, db_name):
+        if db_name in cls._pools:
             logger = netsvc.Logger()
             logger.notifyChannel('dbpool', netsvc.LOG_INFO, 'Closing all connections to %s' % (db_name,))
-            PoolManager._pools[db_name].closeall()
-            del PoolManager._pools[db_name]
-    close = staticmethod(close)
+            cls._pools[db_name].closeall()
+            del cls._pools[db_name]
 
 def db_connect(db_name, serialize=0):
     return PoolManager.get(db_name)
