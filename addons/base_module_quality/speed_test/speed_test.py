@@ -34,74 +34,75 @@ from base_module_quality import base_module_quality
 class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
-        self.result = """
-===Speed Test===:
-
-This test checks the speed of the module.
-
-"""
+        super(quality_test, self).__init__()
+#        self.result = """
+#===Speed Test===:
+#
+#This test checks the speed of the module.
+#
+#"""
         self.bool_installed_only = True
         return None
-
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-        self.result+=('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % ('Object Name'.ljust(40), 'Size (S)'.ljust(10), '1'.ljust(10), 'S/2'.ljust(10), 'S'.ljust(10), 'Complexity'.ljust(20))
+#        self.result+=('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % ('Object Name'.ljust(40), 'Size-Number of Records (S)'.ljust(10), '1'.ljust(10), 'S/2'.ljust(10), 'S'.ljust(10), 'Complexity using query'.ljust(20))
+        header_list = ['Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
         obj_list = self.get_objects(cr, uid, module_name)
         obj_counter = 0
         score = 0
         obj_ids = self.get_ids(cr, uid, obj_list)
+        detail = ""
+        list1 = []
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
             ids = ids[:100]
             size = len(ids)
             if size:
-                c1 = time.time()
+                c1 = cr.count
+
                 pool.get(obj).read(cr, uid, ids[0])
-                c2 = time.time()
-                base_time = c2 - c1
-                c1 = time.time()
+                pool.get(obj).read(cr, uid, ids[0])
+                code_base_complexity = cr.count - c1
+
                 pool.get(obj).read(cr, uid, ids[:size/2])
-                c2 = time.time()
-                halfsize_time = c2 - c1
-                c1 = time.time()
+                pool.get(obj).read(cr, uid, ids[:size/2])
+                code_half_complexity = cr.count - c1
+
                 pool.get(obj).read(cr, uid, ids)
-                c2 = time.time()
-                size_time = c2 - c1
+                pool.get(obj).read(cr, uid, ids)
+                code_size_complexity = cr.count - c1
+
                 if size < 5:
                     self.score += -2
-                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, base_time, halfsize_time, size_time, "Warning! Not enough demo data")
+#                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data")
+                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data"]
+                    list1.append(list)
                 else:
-                    tolerated_margin = 5/100
-                    complexity = "not recognized"
-                    if min(size_time,base_time,halfsize_time) != base_time:
+                    if code_size_complexity <= (code_base_complexity + size):
                         complexity = "O(1)"
-                        score += 10
-
+                        score = 10
                     else:
-                        k1 = (halfsize_time - base_time)*1000 / ((size/2) - 1)
-                        k2 = (size_time - base_time)*1000 / ((size) - 1)
-                        tmp = k1 * tolerated_margin
-                        if (k1 - tmp) < k2 and k2 <  (k1 + tmp):
-                            complexity = "O(n)"
-                            if round(tmp) == 0:
-                                complexity = "O(1)"
-                                score += 10
-                            else:
-                                score += 5
-                        else:
-                            complexity = "O(n²) or worst"
-                            score += 0
-
-                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, base_time, halfsize_time, size_time, complexity)
+                        complexity = "O(n) or worst"
+                        score = 0
+#                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity)
+                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
+                    list1.append(list)
             else:
                 score += -5
-                self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, "", "", "", "Warning! Object has no demo data")
-
-
-        self.result += '\n|}\n'
+#                self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, "", "", "", "Warning! Object has no demo data")
+                list = [obj, size, "", "", "", "Warning! Object has no demo data"]
+                list1.append(list)
+#        self.result += '\n|}\n'
         self.score = obj_counter and score/obj_counter or 0.0
+        summary = """
+===Speed Test===:
+
+    This test checks the speed of the module.
+
+"""+ "Score: " + str(self.score) + "/10\n"
+        self.result = self.format_table(test='speed', header=header_list, data_list=[[summary],list1])
         return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

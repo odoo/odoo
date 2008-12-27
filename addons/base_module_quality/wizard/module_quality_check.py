@@ -56,9 +56,9 @@ class wiz_quality_check(osv.osv_memory):
 #    general_info = ""
     _name = 'wizard.quality.check'
 
-
     def _check(self, cr, uid, data, context={}):
         string_ret = ""
+        string_detail = ""
         from tools import config
         data['ids'] = data.get('module_id', False)
         pool = pooler.get_pool(cr.dbname)
@@ -72,7 +72,7 @@ class wiz_quality_check(osv.osv_memory):
                 if module_data[0].name == 'base':
                     ad = tools.config['root_path']+'/addons'
                 module_path = os.path.join(ad, module_data[0].name)
-                item2 = 'base_module_quality.'+item+'.'+item
+                item2 = 'base_module_quality.' + item +'.' + item
                 x = __import__(item2)
                 x2 = getattr(x, item)
                 x3 = getattr(x2, item)
@@ -81,8 +81,13 @@ class wiz_quality_check(osv.osv_memory):
                     val.run_test(cr, uid, str(module_path))
                 else:
                     val.result += "The module has to be installed before running this test."
-                string_ret += val.result
+                string_ret += val.result['summary'][0]
+                string_detail += val.result['detail'][0]
+        self.string_detail = string_detail
         return string_ret
+
+    def _check_detail(self, cr, uid, data, context={}):
+        return self.string_detail
 
 #    def _general_info(self, cr, uid, data, context={}):
 #        return self.general_info
@@ -102,9 +107,12 @@ class wiz_quality_check(osv.osv_memory):
         #~ },
     _columns = {
         'general_info': fields.text('General Info', readonly="1",),
+        'detail' : fields.text('Detail', readonly="1",),
+        'verbose_detail' : fields.text('Verbose Detail', readonly="1",)
     }
     _defaults = {
-        'general_info': _check
+        'general_info': _check,
+        'detail': _check_detail
     }
 
 wiz_quality_check()
