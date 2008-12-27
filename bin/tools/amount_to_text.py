@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -120,7 +120,7 @@ def _100_to_text_nl(number):
             else:
                 units = units_nl[number % 10]
                 if units[-1] == 'e':
-                    joinword = 'ën'
+                    joinword = 'Ã«n'
                 else:
                     joinword = 'en'
                 return units+joinword+tens_nl[number / 10]
