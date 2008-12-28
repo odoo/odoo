@@ -42,9 +42,9 @@ class configmanager(object):
         self.options = {
             'email_from':False,
             'interface': '',    # this will bind the server to all interfaces
-            'port': '8069',
+            'port': 8069,
             'netinterface': '',
-            'netport': '8070',
+            'netport': 8070,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -76,6 +76,7 @@ class configmanager(object):
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
+            'cache_timeout': 100000, 
         }
 
         hasSSL = check_ssl()
@@ -87,26 +88,34 @@ class configmanager(object):
         parser = optparse.OptionParser(version=version)
         
         parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
-        parser.add_option("-s", "--save", action="store_true", dest="save", default=False, help="save configuration to ~/.openerp_serverrc")
+        parser.add_option("-s", "--save", action="store_true", dest="save", default=False, 
+                          help="save configuration to ~/.openerp_serverrc")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
         
         parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
-        parser.add_option("-p", "--port", dest="port", help="specify the TCP port")
+        parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
         parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
-        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc")
+        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
         parser.add_option("--no-netrpc", dest="netrpc", action="store_false", default=True, help="disable netrpc")
         parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", default=True, help="disable xmlrpc")
-        
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
-        parser.add_option("--without-demo", dest="without_demo", help="load demo data for a module (use \"all\" for all modules)", default=False)
-        parser.add_option("-u", "--update", dest="update", help="update a module (use \"all\" for all modules)")
+        parser.add_option("--without-demo", dest="without_demo", 
+                          help="load demo data for a module (use \"all\" for all modules)", default=False)
+        parser.add_option("-u", "--update", dest="update", 
+                          help="update a module (use \"all\" for all modules)")
+        parser.add_option("--cache-timeout", dest="cache_timeout", 
+                          help="set the timeout for the cache system", default=100000, type="int")
+        
         # stops the server from launching after initialization
-        parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, help="stop the server after it initializes")
+        parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, 
+                          help="stop the server after it initializes")
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), help="specify the level at which a failed assertion will stop the server. Accepted values: " + str(loglevels.keys()))
+        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(), 
+                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (loglevels.keys(),))
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+            group.add_option("-S", "--secure", dest="secure", action="store_true", 
+                             help="launch server over https instead of http", default=False)
             group.add_option("--cert-file", dest="secure_cert_file",
                               default="server.cert", 
                               help="specify the certificate file for the SSL connection")
@@ -128,7 +137,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "SMTP Configuration")
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
-        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
+        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
         if hasSSL:
             group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
@@ -136,18 +145,17 @@ class configmanager(object):
         group.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
         parser.add_option_group(group)
         
-        group = optparse.OptionGroup(parser, "Modules related options")
-        group.add_option("-g", "--upgrade", action="store_true", dest="upgrade", default=False, help="Upgrade/install/uninstall modules")
-
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", help="specify the database name")
         group.add_option("-r", "--db_user", dest="db_user", help="specify the database user name")
         group.add_option("-w", "--db_password", dest="db_password", help="specify the database password") 
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path") 
         group.add_option("--db_host", dest="db_host", help="specify the database host") 
-        group.add_option("--db_port", dest="db_port", help="specify the database port") 
-        group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("-P", "--import-partial", dest="import_partial", help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
+        group.add_option("--db_port", dest="db_port", help="specify the database port", type="int") 
+        group.add_option("--db_maxconn", dest="db_maxconn", default='64', 
+                         help="specify the the maximum number of physical connections to posgresql")
+        group.add_option("-P", "--import-partial", dest="import_partial", 
+                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -156,11 +164,17 @@ class configmanager(object):
             "Option '-l' is mandatory in case of importation"
             )
 
-        group.add_option('-l', "--language", dest="language", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-        group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
-        group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-        group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
-        group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.", action="callback", callback=self._check_addons_path, nargs=1, type="string")
+        group.add_option('-l', "--language", dest="language", 
+                         help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+        group.add_option("--i18n-export", dest="translate_out", 
+                         help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
+        group.add_option("--i18n-import", dest="translate_in", 
+                         help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+        group.add_option("--modules", dest="translate_modules", 
+                         help="specify modules to export. Use in combination with --i18n-export")
+        group.add_option("--addons-path", dest="addons_path", 
+                         help="specify an alternative addons path.", 
+                         action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
         (opt, args) = parser.parse_args()
@@ -189,7 +203,7 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
 		'netrpc', 'xmlrpc', 'syslog', 'without_demo']
@@ -202,7 +216,7 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        keys = ['language', 'translate_out', 'translate_in', 'upgrade', 'debug_mode', 
+        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 
                 'stop_after_init']
 
         for arg in keys:
@@ -219,18 +233,9 @@ class configmanager(object):
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             self.options['addons_path'] = os.path.join(self.options['root_path'], 'addons')
 
-        init = {}
-        if opt.init:
-            for i in opt.init.split(','):
-                init[i] = 1
-        self.options['init'] = init
+        self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
-
-        update = {}
-        if opt.update:
-            for i in opt.update.split(','):
-                update[i] = 1
-        self.options['update'] = update
+        self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()

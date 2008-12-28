@@ -346,7 +346,7 @@ class module(osv.osv):
             mod_sort = {}
             for m in modules:
                 name, version, extension = m[0], m[1], m[-1]
-                if version == 'x': # 'x' version was a mistake
+                if not version or version == 'x': # 'x' version was a mistake
                     version = '0'
                 if name in mod_sort:
                     if parse_version(version) <= parse_version(mod_sort[name][0]):
@@ -367,7 +367,7 @@ class module(osv.osv):
                 else:
                     id = ids[0]
                     installed_version = self.read(cr, uid, id, ['latest_version'])['latest_version']
-                    if installed_version == 'x': # 'x' version was a mistake
+                    if not installed_version or installed_version == 'x': # 'x' version was a mistake
                         installed_version = '0'
                     if parse_version(version) > parse_version(installed_version):
                         self.write(cr, uid, id, { 'url': url })

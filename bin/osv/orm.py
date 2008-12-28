@@ -1364,12 +1364,11 @@ class orm_memory(orm_template):
         return result
 
 class orm(orm_template):
-
     _sql_constraints = []
-
     _log_access = True
     _table = None
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
         logger.notifyChannel('init', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
@@ -2244,7 +2243,10 @@ class orm(orm_template):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                if vals[self._parent_name]:
+                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                else:
+                    cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
                 res = cr.fetchone()
                 if res:
                     pleft,pright = res

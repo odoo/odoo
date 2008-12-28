@@ -119,6 +119,7 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
 	    ('txt', 'txt'),
+            ('odt', 'odt'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'attachment': fields.char('Save As Attachment Prefix', size=32, help='This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports')

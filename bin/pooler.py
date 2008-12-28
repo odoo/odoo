@@ -50,9 +50,10 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
     return db, pool
 
 
-def restart_pool(db_name, force_demo=False, update_module=False):
-    del pool_dic[db_name]
-    return get_db_and_pool(db_name, force_demo, update_module=update_module)
+def restart_pool(db_name, force_demo=False, status=None, update_module=False):
+    if db_name in pool_dic:
+        del pool_dic[db_name]
+    return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
 
 
 def get_db_only(db_name):

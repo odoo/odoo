@@ -81,11 +81,13 @@ class report_rml(report_int):
             'html': self.create_html,
             'raw': self.create_raw,
             'sxw': self.create_sxw,
-		'txt': self.create_txt,
+	    'txt': self.create_txt,
+            'odt': self.create_odt,
         }
 
     def create(self, cr, uid, ids, datas, context):
         xml = self.create_xml(cr, uid, ids, datas, context)
+        xml = tools.ustr(xml).encode('utf8')
         if datas.get('report_type', 'pdf') == 'raw':
             return xml
         rml = self.create_rml(cr, xml, uid, context)
@@ -212,6 +214,10 @@ class report_rml(report_int):
 
     def create_sxw(self, path, logo=None, title=None):
         return path
+    
+    def create_odt(self, data, logo=None, title=None):
+        return data    
+    
 
 from report_sxw import report_sxw
 

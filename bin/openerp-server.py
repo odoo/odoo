@@ -61,14 +61,6 @@ if pwd.getpwuid(os.getuid())[0] == 'root' :
 import netsvc
 logger = netsvc.Logger()
 
-def atexit_callback():
-    logger.notifyChannel('shutdown', netsvc.LOG_INFO, "Shutdown Server!")
-    #logger.notifyChannel('pan! pan!', netsvc.LOG_INFO, "Killed Server ;-)")
-
-import atexit
-
-atexit.register(atexit_callback)
-
 #-----------------------------------------------------------------------
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
@@ -94,18 +86,6 @@ logger.notifyChannel("objects", netsvc.LOG_INFO, 'initialising distributed objec
 # connect to the database and initialize it with base if needed
 #---------------------------------------------------------------
 import pooler
-
-#----------------------------------------------------------
-# launch modules install/upgrade/removes if needed
-#----------------------------------------------------------
-if tools.config['upgrade']:
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'Upgrading new modules...')
-    import tools.upgrade
-    (toinit, toupdate) = tools.upgrade.upgrade()
-    for m in toinit:
-        tools.config['init'][m] = 1
-    for m in toupdate:
-        tools.config['update'][m] = 1
 
 #----------------------------------------------------------
 # import basic modules
@@ -139,7 +119,9 @@ if tools.config["translate_out"]:
         msg = "language %s" % (tools.config["language"],)
     else:
         msg = "new language"
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for %s to %s' % (msg, tools.config["translate_out"]))
+    logger.notifyChannel("init", netsvc.LOG_INFO, 
+                         'writing translation file for %s to %s' % (msg, 
+                                                                    tools.config["translate_out"]))
 
     fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
     buf = file(tools.config["translate_out"], "w")
@@ -150,7 +132,9 @@ if tools.config["translate_out"]:
     sys.exit(0)
 
 if tools.config["translate_in"]:
-    tools.trans_load(tools.config["db_name"], tools.config["translate_in"], tools.config["language"])
+    tools.trans_load(tools.config["db_name"], 
+                     tools.config["translate_in"], 
+                     tools.config["language"])
     sys.exit(0)
 
 #----------------------------------------------------------------------------------
@@ -165,11 +149,7 @@ if tools.config["stop_after_init"]:
 #----------------------------------------------------------
 
 if tools.config['xmlrpc']:
-    try:
-        port = int(tools.config["port"])
-    except Exception:
-        logger.notifyChannel("init", netsvc.LOG_CRITICAL, "invalid port: %r" % (tools.config["port"],))
-        sys.exit(1)
+    port = int(tools.config['port'])
     interface = tools.config["interface"]
     secure = tools.config["secure"]
 
@@ -177,7 +157,9 @@ if tools.config['xmlrpc']:
 
     xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
     httpd.attach("/xmlrpc", xml_gw)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC%s services, port %s" % ((tools.config['secure'] and ' Secure' or ''), port))
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, 
+                         "starting XML-RPC%s services, port %s" % 
+                         ((tools.config['secure'] and ' Secure' or ''), port))
 
 #
 #if tools.config["soap"]:
@@ -187,39 +169,44 @@ if tools.config['xmlrpc']:
 #
 
 if tools.config['netrpc']:
-    try:
-        netport = int(tools.config["netport"])
-    except Exception:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["netport"],))
-        sys.exit(1)
+    netport = int(tools.config['netport'])
     netinterface = tools.config["netinterface"]
-
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting NET-RPC service, port "+str(netport))
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, 
+                         "starting NET-RPC service, port %d" % (netport,))
 
+SIGNALS = dict(
+    [(getattr(signal, sign), sign) for sign in ('SIGINT', 'SIGTERM', 'SIGUSR1', 'SIGQUIT')]
+)
 
-def handler(signum, frame):
-    from tools import config
+def handler(signum, _):
+    """
+    :param signum: the signal number
+    :param _: 
+    """
     if tools.config['netrpc']:
         tinySocket.stop()
     if tools.config['xmlrpc']:
         httpd.stop()
     netsvc.Agent.quit()
-    if config['pidfile']:
-        os.unlink(config['pidfile'])
+    if tools.config['pidfile']:
+        os.unlink(tools.config['pidfile'])
+    logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
+                         "Shutdown Server! - %s" % ( SIGNALS[signum], ))
     sys.exit(0)
 
-from tools import config
-if config['pidfile']:
-    fd = open(config['pidfile'], 'w')
+for signum in SIGNALS:
+    signal.signal(signum, handler)
+
+if tools.config['pidfile']:
+    fd = open(tools.config['pidfile'], 'w')
     pidtext = "%d" % (os.getpid())
     fd.write(pidtext)
     fd.close()
 
-signal.signal(signal.SIGINT, handler)
-signal.signal(signal.SIGTERM, handler)
+logger.notifyChannel("web-services", netsvc.LOG_INFO, 
+                     'the server is running, waiting for connections...')
 
-logger.notifyChannel("web-services", netsvc.LOG_INFO, 'the server is running, waiting for connections...')
 if tools.config['netrpc']:
     tinySocket.start()
 if tools.config['xmlrpc']:

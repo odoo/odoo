@@ -536,14 +536,34 @@ class cache(object):
     Use it as a decorator of the function you plan to cache
     Timeout: 0 = no timeout, otherwise in seconds
     """
-
-    def __init__(self, timeout=10000, skiparg=2, multi=None):
+    
+    __caches = []
+    
+    def __init__(self, timeout=None, skiparg=2, multi=None):
         assert skiparg >= 2 # at least self and cr
-        self.timeout = timeout
+        if timeout is None:
+            self.timeout = config['cache_timeout']
+        else:
+            self.timeout = timeout
         self.skiparg = skiparg
         self.multi = multi
         self.lasttime = time.time()
         self.cache = {}
+        
+        cache.__caches.append(self)
+
+    @classmethod        
+    def clean_cache_for_db(cls, dbname):
+        def get_dbname_from_key(key):
+            for e in key:
+                if e[0] == 'dbname':
+                    return e[1]
+            return None
+
+        for cache in cls.__caches:
+            keys_to_del = [key for key in cache.cache if get_dbname_from_key(key) == dbname]
+            for key in keys_to_del:
+                del cache.cache[key]
 
     def __call__(self, fn):
         arg_names = inspect.getargspec(fn)[0][self.skiparg:]
@@ -552,7 +572,7 @@ class cache(object):
             if time.time()-self.timeout > self.lasttime:
                 self.lasttime = time.time()
                 t = time.time()-self.timeout 
-                for key in self.cache:
+                for key in self.cache.keys():
                     if self.cache[key][1]<t:
                         del self.cache[key]
 
@@ -629,10 +649,6 @@ def ustr(value):
     @return: unicode string
     """
 
-    if (value is None) or (value is False):
-        return value
-    if not value:
-        return u''
     if isinstance(value, unicode):
         return value
 
@@ -643,6 +659,29 @@ def ustr(value):
         value = str(value)
 
     return unicode(value, 'utf-8')
+
+# to be compatible with python 2.4
+import __builtin__
+if not hasattr(__builtin__, 'all'):
+    def all(iterable):
+        for element in iterable:
+            if not element:
+               return False
+        return True
+        
+    __builtin__.all = all
+    del all
+    
+if not hasattr(__builtin__, 'any'):
+    def any(iterable):
+        for element in iterable:
+            if element:
+               return True
+        return False
+        
+    __builtin__.any = any
+    del any
+
 
 
 def get_languages():
