@@ -40,13 +40,14 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.bool_installed_only = True
         return None
 
-    def run_test(self, cr, uid, module_path):
+    def run_test(self, cr, uid, module_path, module_state):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
         obj_list = self.get_objects(cr, uid, module_name)
         result = {}
         ok_count = 0
         ex_count = 0
+        error = False
         for obj in obj_list:
             temp = []
             try:
@@ -77,12 +78,20 @@ class quality_test(base_module_quality.abstract_quality_check):
 #            self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, result[res][0],result[res][1], result[res][2])
 #        self.result += '\n|}'
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
-        summary = """\n ===Method Test===:
+        if not self.bool_installed_only or module_state=="installed":
+            summary = """
+===Method Test===:
 
 This test checks if the module classes are raising exception when calling basic methods or no.
 
 """ + "Score: " + str(self.score) + "/10\n"
-        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result])
+        else:
+            summary ="""  \n===Method Test===:
+
+The module has to be installed before running this test.\n\n """
+            header_list = ""
+            error = True
+        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,error])
         return None
 
 

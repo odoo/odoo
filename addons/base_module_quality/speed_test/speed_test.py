@@ -43,7 +43,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #"""
         self.bool_installed_only = True
         return None
-    def run_test(self, cr, uid, module_path):
+    def run_test(self, cr, uid, module_path, module_state):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
 #        self.result+=('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % ('Object Name'.ljust(40), 'Size-Number of Records (S)'.ljust(10), '1'.ljust(10), 'S/2'.ljust(10), 'S'.ljust(10), 'Complexity using query'.ljust(20))
@@ -54,6 +54,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         obj_ids = self.get_ids(cr, uid, obj_list)
         detail = ""
         list1 = []
+        error = False
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
@@ -96,13 +97,20 @@ class quality_test(base_module_quality.abstract_quality_check):
                 list1.append(list)
 #        self.result += '\n|}\n'
         self.score = obj_counter and score/obj_counter or 0.0
-        summary = """
+        if not self.bool_installed_only or module_state=="installed":
+            summary = """
 ===Speed Test===:
 
     This test checks the speed of the module.
 
 """+ "Score: " + str(self.score) + "/10\n"
-        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1])
+        else:
+            summary ="""  \n===Speed Test===:
+
+The module has to be installed before running this test.\n\n """
+            header_list = ""
+            error = True
+        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1, error])
         return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
