@@ -49,7 +49,7 @@ class report_custom(report_rml):
         for l in lots:
 #           l['id_cont'] = str(i)
             if l['obj_price']==0:
-                price_french = 'retiré'
+                price_french = 'retirï¿½'
             else:
                 price_french = int_to_text(int(l['obj_price'] or 0.0))+' eur'
             i+=1
