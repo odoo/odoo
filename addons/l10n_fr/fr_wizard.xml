@@ -7,11 +7,29 @@
         <menuitem action="wizard_chart_report" id="menu_fr_chart_report" parent="account.menu_finance_reporting" type="wizard"/>
 
 		<record id="config_call_account_template" model="ir.actions.todo">
-        <field name="name">Generate Chart of Accounts from a Chart Template</field>
-        <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
-This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
-        <field name="action_id" ref="account.action_wizard_multi_chart"/>
-    </record>
+	        <field name="name">Generate Chart of Accounts from a Chart Template</field>
+	        <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
+	This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
+	        <field name="action_id" ref="account.action_wizard_multi_chart"/>
+  		</record>
+  		
+  		<wizard  id="wizard_l10n_fr_cdr_report"
+	     string="Compte de resultat" 
+	     model="account.move.line"
+	     name="l10n.fr.cdr.report"
+	     keyword="client_print_multi"
+	     />
+	     
+	    <menuitem id="menu_action_cdr" action="wizard_l10n_fr_cdr_report" type="wizard" parent="l10n_fr.menu_synthesis" />
+	     
+   		<wizard  id="wizard_l10n_fr_bilan_report"
+	     string="Bilan" 
+	     model="account.move.line"
+	     name="l10n.fr.bilan.report"
+	     keyword="client_print_multi"
+	     />
+	     
+		<menuitem id="menu_action_bilan" action="wizard_l10n_fr_bilan_report" type="wizard" parent="l10n_fr.menu_synthesis" />
 
     </data>
 </openerp>

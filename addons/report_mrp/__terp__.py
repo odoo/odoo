@@ -26,7 +26,8 @@
     "website": "http://www.openerp.com",
     "depends": ["mrp"],
     "category": "Generic Modules/Production",
-    "description": "A module that adds new reports based on MRP cases.",
+    "description": """A module that adds new reports based on MRP cases.
+    Workcenter loads, Weekly Stock value variation""",
     "init_xml": [],
     "demo_xml": [],
     "update_xml": [

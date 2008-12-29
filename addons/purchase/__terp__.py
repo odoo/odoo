@@ -26,7 +26,8 @@
     "website" : "http://www.openerp.com",
     "depends" : ["base", "account", "stock", "process"],
     "category" : "Generic Modules/Sales & Purchases",
-    "description": "Module for purchase management",
+    "description": """Module for purchase management
+    Request for quotation, Create Supplier Invoice, Print Order...""",
     "init_xml" : [],
     "demo_xml" : ["purchase_demo.xml", 
                   #"purchase_unit_test.xml"

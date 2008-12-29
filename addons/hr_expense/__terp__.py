@@ -37,7 +37,7 @@
     * Payment of the invoice to the employee
 
     This module also use the analytic accounting and is compatible with
-    the invoice on timesheet module so that you will be able to automatcally
+    the invoice on timesheet module so that you will be able to automatically
     re-invoice your customer's expenses if your work by project.
     """,
     "init_xml" : [],

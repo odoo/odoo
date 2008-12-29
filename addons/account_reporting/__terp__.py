@@ -24,7 +24,8 @@
     "version" : "1.0",
     "depends" : ["account"],
     "author" : "Tiny",
-    "description": """Financial and accounting reporting""",
+    "description": """Financial and accounting reporting
+    Balance Sheet Report""",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [ ],
     "demo_xml" : [ ],

@@ -67,22 +67,24 @@ def _populate_statement(obj, cursor, user, data, context):
 
     for line in line_obj.browse(cursor, user, line_ids, context=context):
         ctx = context.copy()
-        ctx['date'] = line.value_date
+        ctx['date'] = line.ml_maturity_date # was value_date earlier,but this field exists no more now
         amount = currency_obj.compute(cursor, user, line.currency.id,
                 statement.currency.id, line.amount_currency, context=ctx)
-        reconcile_id = statement_reconcile_obj.create(cursor, user, {
-            'line_ids': [(6, 0, [line.move_line_id.id])]
-            }, context=context)
-        statement_line_obj.create(cursor, user, {
-            'name': line.order_id.reference or '?',
-            'amount': - amount,
-            'type': 'supplier',
-            'partner_id': line.partner_id.id,
-            'account_id': line.move_line_id.account_id.id,
-            'statement_id': statement.id,
-            'ref': line.reference,
-            'reconcile_id': reconcile_id,
-            }, context=context)
+
+        if line.move_line_id:
+            reconcile_id = statement_reconcile_obj.create(cursor, user, {
+                'line_ids': [(6, 0, [line.move_line_id.id])]
+                }, context=context)
+            statement_line_obj.create(cursor, user, {
+                'name': line.order_id.reference or '?',
+                'amount': - amount,
+                'type': 'supplier',
+                'partner_id': line.partner_id.id,
+                'account_id': line.move_line_id.account_id.id,
+                'statement_id': statement.id,
+                'ref': line.communication,
+                'reconcile_id': reconcile_id,
+                }, context=context)
     return {}
 
 

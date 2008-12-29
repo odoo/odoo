@@ -26,7 +26,7 @@ from osv import osv, fields
 import tools
 import os
 
-
+from base_module_quality import base_module_quality
 #TODO: (utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?)
 #TODO: implement the speed test
 #TODO: add cheks: do the class quality_check inherits the class abstract_quality_check?
@@ -56,33 +56,30 @@ class wiz_quality_check(osv.osv_memory):
 #    general_info = ""
     _name = 'wizard.quality.check'
 
-
     def _check(self, cr, uid, data, context={}):
         string_ret = ""
+        string_detail = ""
         from tools import config
         data['ids'] = data.get('module_id', False)
         pool = pooler.get_pool(cr.dbname)
         module_data = pool.get('ir.module.module').browse(cr, uid, [data['ids']])
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         module_name = module_data[0].name
-        for item in list_folders:
-            path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
-                ad = tools.config['addons_path']
-                if module_data[0].name == 'base':
-                    ad = tools.config['root_path']+'/addons'
-                module_path = os.path.join(ad, module_data[0].name)
-                item2 = 'base_module_quality.'+item+'.'+item
-                x = __import__(item2)
-                x2 = getattr(x, item)
-                x3 = getattr(x2, item)
-                val = x3.quality_test()
-                if (not val.bool_installed_only or module_data[0].state == "installed"):
-                    val.run_test(cr, uid, str(module_path))
-                else:
-                    val.result += "The module has to be installed before running this test."
-                string_ret += val.result
+        abstract_obj = base_module_quality.abstract_quality_check()
+        for test in abstract_obj.tests:
+            ad = tools.config['addons_path']
+            if module_data[0].name == 'base':
+                ad = tools.config['root_path']+'/addons'
+            module_path = os.path.join(ad, module_data[0].name)
+            val = test.quality_test()
+            val.run_test(cr, uid, str(module_path), str(module_data[0].state))
+            string_ret += val.result['summary']
+            string_detail += val.result['detail']
+        self.string_detail = string_detail
         return string_ret
+
+    def _check_detail(self, cr, uid, data, context={}):
+        return self.string_detail
 
 #    def _general_info(self, cr, uid, data, context={}):
 #        return self.general_info
@@ -102,9 +99,12 @@ class wiz_quality_check(osv.osv_memory):
         #~ },
     _columns = {
         'general_info': fields.text('General Info', readonly="1",),
+        'detail' : fields.text('Detail', readonly="1",),
+        'verbose_detail' : fields.text('Verbose Detail', readonly="1",)
     }
     _defaults = {
-        'general_info': _check
+        'general_info': _check,
+        'detail': _check_detail
     }
 
 wiz_quality_check()

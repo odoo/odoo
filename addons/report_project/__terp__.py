@@ -26,7 +26,8 @@
     "website" : "http://www.openerp.com",
     "depends" : ["project", "report_task"],
     "category" : "Generic Modules/Sales & Purchases",
-    "description": "A module that adds some reports on the sales",
+    "description": """A module that adds some reports on projects.
+    Closed Tasks (By User and By Project), Finished Task (By User and By Project)""",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [

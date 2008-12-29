@@ -9,8 +9,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Result">
-                    <separator string="Summary" colspan="4"/>
-                    <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+                	<notebook>
+                		<page string="Summary">
+<!--		                    <separator string="Summary" colspan="4"/>-->
+        		            <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+        		        </page>
+		        		<page string="Detail">
+<!--		                    <separator string="Detail" colspan="4"/>-->
+        		            <field name="detail" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+        		        </page>
+        		        <page string="Verbose detail">
+<!--        		        	<separator string="Verbose detail" colspan="4"/>-->
+                			<field name="verbose_detail" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
+                		</page>
+                	</notebook>
                 </form>
             </field>
         </record>
