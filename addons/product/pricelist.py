@@ -26,6 +26,7 @@ from osv import fields, osv
 from _common import rounding
 import time
 from tools import config
+from tools.misc import ustr
 from tools.translate import _
 
 class price_type(osv.osv):
@@ -96,13 +97,13 @@ class product_pricelist(osv.osv):
         result= []
         
         for pl in self.browse(cr, uid, ids, context):
-            name = str(pl.name) + ' ('+ str(pl.currency_id.name) + ')'
+            name = "%s (%s)" % (ustr(pl.name), ustr(pl.currency_id.name))
             result.append((pl.id,name))
         return result
     
 
     def _get_currency(self, cr, uid, ctx):
-        comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+        comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
         if not comp:
             comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)
