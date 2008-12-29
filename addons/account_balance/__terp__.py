@@ -30,9 +30,9 @@
 
     1. You can compare the balance sheet for different years.
 
-    2. You can set the cash or percentage comparision between two years.
+    2. You can set the cash or percentage comparison between two years.
 
-    3. You can set the referencial account for the percentage comparision for particular years.
+    3. You can set the referential account for the percentage comparison for particular years.
 
     4. You can select periods as an actual date or periods as creation date.
 

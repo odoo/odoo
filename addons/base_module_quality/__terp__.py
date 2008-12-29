@@ -27,11 +27,9 @@
     "description": """"
 This module's aim is to check the quality of other modules.
 
-    It defines a wizard on the list of modules in OpenERP, which allow you to evaluate them on different critera such as: the respect of OpenERP coding standards, the speed efficency...
+    It defines a wizard on the list of modules in OpenERP, which allow you to evaluate them on different criteria such as: the respect of OpenERP coding standards, the speed efficiency...
 
-
-    This module also provide generic framework to define your own quality test. For further info, coders may take a look into base_module_quality\README.txt
-
+    This module also provides generic framework to define your own quality test. For further info, coders may take a look into base_module_quality\README.txt
 """,
     "init_xml" : [],
     "update_xml" : ["base_module_quality_wizard.xml", "security/ir.model.access.csv",],

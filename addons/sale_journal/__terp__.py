@@ -35,9 +35,9 @@
         "picking_journal_view_report.xml"
     ],
     "description" : """
-    The sale journal modules allows you to categorize your
+    The sale journal modules allows you to categorise your
     sales and deliveries (packing lists) between different journals.
-    This module is very helpfull for bigger companies that
+    This module is very helpful for bigger companies that
     works by departments.
 
     You can use journal for different purposes, some examples:
@@ -48,7 +48,7 @@
     * draft, open, cancel, done.
 
     Batch operations can be processed on the different journals to
-    confirm all sales at once, to validate or invoice packings, ...
+    confirm all sales at once, to validate or invoice packing, ...
 
     It also supports batch invoicing methods that can be configured by
     partners and sales orders, examples:

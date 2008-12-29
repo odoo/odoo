@@ -33,7 +33,7 @@ the analytic account.
 
 Lots of reporting on time and employee tracking are provided.
 
-It is completly integrated with the cost accounting module. It allows you
+It is completely integrated with the cost accounting module. It allows you
 to set up a management by affair.
     """,
     "depends" : ["account", "hr", "base", "hr_attendance", "process"],

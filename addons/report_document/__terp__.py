@@ -27,8 +27,8 @@
     "category" : "Generic Modules/Document Management",
     "description": """
     Reporting for the Document Management module:
-    * Files by my
-    * Files by all users
+    * My Files
+    * All users Files 
     """,
     "init_xml" : [],
     "demo_xml" : [],

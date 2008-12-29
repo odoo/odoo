@@ -27,7 +27,7 @@
     "website": "http://www.openerp.com",
     "description": """This is a complete document management system:
     * FTP Interface
-    * User Authentification
+    * User Authentication
     * Document Indexation
 """,
     "depends" : ["base","process"],

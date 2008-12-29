@@ -35,7 +35,7 @@ This version works for creating and updating existing records. It recomputes
 dependencies and links for all types of widgets (many2one, many2many, ...).
 It also support workflows and demo/update data.
 
-This should help you to easily create reuseable and publishable modules
+This should help you to easily create reusable and publishable modules
 for custom configurations and demo/testing data.
 
 How to use it:

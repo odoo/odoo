@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "report_account_analytic",
-    "description": """Modifiy the account analytic view to show
+    "description": """Modify account analytic view to show
 important data for project manager of services companies.
 Add menu to show relevant information for each manager.""",
     "version" : "1.0",

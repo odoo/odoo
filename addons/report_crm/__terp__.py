@@ -26,7 +26,8 @@
     "website" : "http://www.openerp.com",
     "depends" : ["crm"],
     "category" : "Generic Modules/CRM & SRM",
-    "description": "A module that adds new reports based on CRM cases.",
+    "description": """A module that adds new reports based on CRM cases.
+    Case By section, Case By category""",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [

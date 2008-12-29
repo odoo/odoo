@@ -27,8 +27,8 @@
     "website" : "http://www.openerp.com",
     "depends" : ["account",'hr_timesheet'],
     "description": """
-Module to generate invoices based on costs (human ressources, expenses, ...).
-You can define pricelists in analytic account, make some theorical revenue
+Module to generate invoices based on costs (human resources, expenses, ...).
+You can define price lists in analytic account, make some theoretical revenue
 reports, eso.""",
     "init_xml" : [],
     "demo_xml" : [
