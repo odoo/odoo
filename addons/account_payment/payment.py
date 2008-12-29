@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields
 from osv import osv
 import time
@@ -110,7 +109,7 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Prefered date", change_default=True, required=True,help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+            ], "Preferred date", change_default=True, required=True,help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
     }
@@ -401,13 +400,13 @@ class payment_line(osv.osv):
 #       'reference': fields.function(select_by_name, string="Ref", method=True,
 #           type='char'),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Maturity Date'),
-        'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref'),
+        'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref.'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text",help='Address of the Main Partner'),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text",help='Address of the Ordering Customer.'),
 #        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 #       'value_date': fields.function(_value_date, string='Value Date',
 #           method=True, type='date'),
-        'date': fields.date('Payment Date',help="If no payment date is specified, the bank will treat this payment line direclty"),
+        'date': fields.date('Payment Date',help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created' ,readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
     }
@@ -430,6 +429,7 @@ class payment_line(osv.osv):
         if move_line_id:
             line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
             data['amount_currency']=line.amount_to_pay
+
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
                                        company_currency, context)
             if res:
@@ -460,12 +460,12 @@ class payment_line(osv.osv):
 
         return {'value': data}
 
-    def onchange_amount(self,cr,uid,ids,amount,currency,cmpny_currency,context=None):
-        if not amount:
-            return {}
+    def onchange_amount(self, cr, uid, ids, amount, currency, cmpny_currency, context=None):
+        if (not amount) or (not cmpny_currency):
+            return {'value': {'amount':False}}
         res = {}
         currency_obj = self.pool.get('res.currency')
-        company_amount = currency_obj.compute(cr, uid, currency, cmpny_currency,amount)
+        company_amount = currency_obj.compute(cr, uid, currency, cmpny_currency, amount)
         res['amount'] = company_amount
         return {'value': res}
 
