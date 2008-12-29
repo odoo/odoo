@@ -21,6 +21,8 @@
 ##############################################################################
 
 import wizard_chart_report
+import wizard_bilan
+import wizard_cdr
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

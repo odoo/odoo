@@ -48,7 +48,7 @@
     """,
     "init_xml" : ["fr_data.xml"],
     "update_xml" : ["l10n_fr_view.xml","types.xml", "plan-99-03_societe.xml",
-                     "taxes.xml","fr_wizard.xml"],
+                     "taxes.xml","fr_wizard.xml",],
     "demo_xml" : [],
     "installable": True
 }
