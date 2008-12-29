@@ -81,8 +81,8 @@ class wiz_quality_check(osv.osv_memory):
                     val.run_test(cr, uid, str(module_path))
                 else:
                     val.result += "The module has to be installed before running this test."
-                string_ret += val.result['summary'][0]
-                string_detail += val.result['detail'][0]
+                string_ret += val.result['summary']
+                string_detail += val.result['detail']
         self.string_detail = string_detail
         return string_ret
 

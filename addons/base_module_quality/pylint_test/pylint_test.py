@@ -81,7 +81,7 @@ class quality_test(base_module_quality.abstract_quality_check):
     This test checks if the module satisfy the current coding standard used by OpenERP.
 
 """ + "Score: " + str(self.score) + "/10\n"
-        self.result = self.format_table(test='pylint', data_list=[[summary],[detail]])
+        self.result = self.format_table(test='pylint', data_list=[summary,detail])
         return None
 
 

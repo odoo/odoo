@@ -102,7 +102,7 @@ class quality_test(base_module_quality.abstract_quality_check):
     This test checks the speed of the module.
 
 """+ "Score: " + str(self.score) + "/10\n"
-        self.result = self.format_table(test='speed', header=header_list, data_list=[[summary],list1])
+        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1])
         return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

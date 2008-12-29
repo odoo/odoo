@@ -100,10 +100,10 @@ class abstract_quality_check(object):
             detail = ""
             detail += "\n===Method Test===\n"
             detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % (header[0].ljust(40), header[1].ljust(16), header[2].ljust(20), header[3].ljust(16))
-            for res in data_list[1][0]:
-                detail += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, data_list[1][0][res][0], data_list[1][0][res][1], data_list[1][0][res][2])
-            res_format['summary'] = [data_list[0][0]]
-            res_format['detail'] = [detail + '\n|}']
+            for res in data_list[1]:
+                detail += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, data_list[1][res][0], data_list[1][res][1], data_list[1][res][2])
+            res_format['summary'] = data_list[0]
+            res_format['detail'] = detail + '\n|}'
         elif test=='pylint':
             res_format['summary'] = data_list[0]
             res_format['detail'] = data_list[1]
@@ -114,7 +114,7 @@ class abstract_quality_check(object):
             for data in data_list[1]:
                 detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
             res_format['summary'] = data_list[0]
-            res_format['detail'] = [detail  + '\n|}\n']
+            res_format['detail'] = detail  + '\n|}\n'
         return res_format
 
 

@@ -82,7 +82,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 This test checks if the module classes are raising exception when calling basic methods or no.
 
 """ + "Score: " + str(self.score) + "/10\n"
-        self.result = self.format_table(test='method', header=header_list, data_list=[[summary],[result]])
+        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result])
         return None
 
 
