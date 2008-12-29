@@ -84,8 +84,6 @@ class process_process(osv.osv):
         return result
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
-        if not res_model:
-            res_model = (self.browse(cr, uid, [id])[0]).model_id.model
 
         pool = pooler.get_pool(cr.dbname)
         
