@@ -179,6 +179,7 @@ class configmanager(object):
 
         (opt, args) = parser.parse_args()
 
+        assert not (bool(opt.syslog) and bool(opt.logfile)), "the syslog and logfile options are exclusive"
         assert not (opt.translate_in and (not opt.language or not opt.db_name)), "the i18n-import option cannot be used without the language (-l) and the database (-d) options"
         assert not (opt.translate_out and (not opt.db_name)), "the i18n-export option cannot be used without the database (-d) option"
 
