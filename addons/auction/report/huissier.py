@@ -25,9 +25,8 @@ from osv.osv import osv, orm
 from report.interface import report_rml
 #FIXME: use the one from tools and delete the one from report
 from report.int_to_text import int_to_text
-
-def toxml(val):
-    return val.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;').decode('utf-8').encode('latin1', 'replace')
+from tools import to_xml as toxml
+from tools import ustr
 
 class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
@@ -38,7 +37,7 @@ class report_custom(report_rml):
         lots = pool.get('auction.lots').browse(cr, uid, ids)
         auction = lots[0].auction_id
 
-        xml = '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        xml = '''<?xml version="1.0" encoding="UTF-8"?>
 <report>
     <auction>
         <name>%s</name>
@@ -49,7 +48,7 @@ class report_custom(report_rml):
         for l in lots:
 #           l['id_cont'] = str(i)
             if l['obj_price']==0:
-                price_french = 'retir�'
+                price_french = u'retiré'
             else:
                 price_french = int_to_text(int(l['obj_price'] or 0.0))+' eur'
             i+=1
@@ -59,10 +58,9 @@ class report_custom(report_rml):
         <lot_desc>%s</lot_desc>
         <price>%s</price>
         <obj_price>%s</obj_price>
-    </object>''' % (i, l['obj_num'], toxml(l['name']), price_french, str(l['obj_price'] or '/'))
+    </object>''' % (i, l['obj_num'], ustr(toxml(l['name'])), ustr(price_french), ustr(l['obj_price'] or '/'))
         xml += '</report>'
         
-#       file('/tmp/terp.xml','wb+').write(xml)
         return xml
 
 report_custom('report.flagey.huissier', 'auction.lots', '', 'addons/auction/report/huissier.xsl')

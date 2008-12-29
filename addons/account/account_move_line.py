@@ -61,6 +61,8 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context={}):
         for obj_line in self.browse(cr, uid, ids, context):
             if obj_line.analytic_account_id:
+                if not obj_line.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name,))
                 amt = (obj_line.credit or  0.0) - (obj_line.debit or 0.0)
                 vals_lines={
                     'name': obj_line.name,
