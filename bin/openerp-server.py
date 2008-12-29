@@ -34,7 +34,9 @@ GNU Public Licence.
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import sys, os, signal
+import sys
+import os
+import signal
 #----------------------------------------------------------
 # ubuntu 8.04 has obsoleted `pyxml` package and installs here.
 # the path needs to be updated before any `import xml`
