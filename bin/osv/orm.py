@@ -94,6 +94,9 @@ class browse_null(object):
 
     def __nonzero__(self):
         return False
+    
+    def __unicode__(self):
+        return u''
 
 
 #
