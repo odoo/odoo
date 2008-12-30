@@ -66,6 +66,9 @@ class wiz_quality_check(osv.osv_memory):
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         module_name = module_data[0].name
         abstract_obj = base_module_quality.abstract_quality_check()
+        score_sum = 0.0
+        ponderation_sum = 0.0
+        final_score = ""
         for test in abstract_obj.tests:
             ad = tools.config['addons_path']
             if module_data[0].name == 'base':
@@ -73,13 +76,19 @@ class wiz_quality_check(osv.osv_memory):
             module_path = os.path.join(ad, module_data[0].name)
             val = test.quality_test()
             val.run_test(cr, uid, str(module_path), str(module_data[0].state))
-            string_ret += val.result['summary']
-            string_detail += val.result['detail']
+            string_ret += val.result['summary'] #summary tab
+            string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
+            string_detail += val.result['detail'] # detail tab
+            score_sum += (val.add_quatation(val.score, 10) * val.ponderation)
+            ponderation_sum += val.ponderation
+        final_score = str(score_sum / ponderation_sum * 100) + "%"
+        string_ret += "\n\nPonderation Result for module:" + final_score
         self.string_detail = string_detail
-        return string_ret
+        return ""
 
     def _check_detail(self, cr, uid, data, context={}):
         return self.string_detail
+
 
 #    def _general_info(self, cr, uid, data, context={}):
 #        return self.general_info
@@ -98,16 +107,27 @@ class wiz_quality_check(osv.osv_memory):
             #~ 'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}
         #~ },
     _columns = {
-        'general_info': fields.text('General Info', readonly="1",),
-        'detail' : fields.text('Detail', readonly="1",),
-        'verbose_detail' : fields.text('Verbose Detail', readonly="1",)
+#        'general_info': fields.text('General Info', readonly="1",),
+#        'detail' : fields.text('Detail', readonly="0",),
+        'verbose_detail' : fields.one2many('quality.check.detail', 'quality_check', 'Verbose Detail', readonly="0",)
     }
     _defaults = {
-        'general_info': _check,
-        'detail': _check_detail
+#        'general_info': _check,
+#        'detail': _check_detail
+        'verbose_detail': _check,
     }
 
 wiz_quality_check()
+
+class quality_check_detail(osv.osv_memory):
+    _name = 'quality.check.detail'
+    _rec_name = 'quality_check'
+    _columns = {
+        'quality_check': fields.many2one('wizard.quality.check', 'Quality'),
+        'general_info': fields.text('General Info', readonly="1",),
+        'detail' : fields.text('Detail', readonly="1",),
+    }
+quality_check_detail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

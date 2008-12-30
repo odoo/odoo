@@ -38,6 +38,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #
 #"""
         self.bool_installed_only = False
+        self.ponderation = 1.0
         return None
 
     def run_test(self, cr, uid, module_path, module_state):
@@ -82,7 +83,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
 This test checks if the module satisfy the current coding standard used by OpenERP.
 
-""" + "Score: " + str(self.score) + "/10\n"
+""" #+ "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Pylint Test===:
 

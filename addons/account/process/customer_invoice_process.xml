@@ -8,6 +8,7 @@
         
         <record id="process_process_invoiceworkflow0" model="process.process">
             <field eval="1" name="active"/>
+             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;Customer Invoice Workflow&quot;&quot;&quot;" name="name"/>
         </record>
         
@@ -61,13 +62,14 @@
         <record id="process_node_bankstatement0" model="process.node">
             <field name="menu_id" ref="account.menu_bank_statement_tree"/>
             <field name="model_id" ref="account.model_account_bank_statement"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Statement encoding produces payment entries&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_invoiceworkflow0"/>
+            <field name="subflow_id" ref="process_process_statementworkflow0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
-        </record>
+  		</record>
     
         <record id="process_node_paymententries0" model="process.node">
             <field name="menu_id" ref="account.menu_action_move_line_form"/>
@@ -101,6 +103,19 @@
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
+        
+        <record id="process_node_accountingstatemententries0" model="process.node">
+            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Accounting Statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Accounting entries at statement's confirmation&quot;&quot;&quot;" name="note"/>
+            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
+            <field name="process_id" ref="process_process_statementworkflow0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'valid')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+        
 
         <!--    
             Process Transition
@@ -112,6 +127,15 @@
         
         <record id="account.t5" model="workflow.transition">
             <field name="role_id" ref="res_roles_invoice0"/>
+        </record>
+        
+        <record id="process_transition_confirmstatementfromdraft0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Confirm statement from draft&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Confirm statement with/without reconciliation from draft statement&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_accountingstatemententries0"/>
+            <field model="process.node" name="source_node_id" ref="account.process_node_draftstatement0"/>
         </record>
     
         <record id="process_transition_analyticinvoice0" model="process.transition">

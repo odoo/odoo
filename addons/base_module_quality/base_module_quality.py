@@ -66,6 +66,10 @@ class abstract_quality_check(object):
         #False => the module can be uninstalled.
         self.bool_installed_only = True
 
+
+        #This variable is use to make result of test should have more weight (Some tests are more critical than others)
+        self.ponderation = 0.0
+
         self.tests = []
         self.list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         for item in self.list_folders:
@@ -133,6 +137,9 @@ class abstract_quality_check(object):
                     res_format['detail'] = detail  + '\n|}\n'
             res_format['summary'] = data_list[0]
         return res_format
+
+    def add_quatation(self, x, y):
+        return x/y
 
 
 

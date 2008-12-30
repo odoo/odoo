@@ -42,6 +42,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #
 #"""
         self.bool_installed_only = True
+        self.ponderation = 1.0
         return None
     def run_test(self, cr, uid, module_path, module_state):
         pool = pooler.get_pool(cr.dbname)
@@ -101,9 +102,9 @@ class quality_test(base_module_quality.abstract_quality_check):
             summary = """
 ===Speed Test===:
 
-    This test checks the speed of the module.
+This test checks the speed of the module.
 
-"""+ "Score: " + str(self.score) + "/10\n"
+"""#+ "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Speed Test===:
 
