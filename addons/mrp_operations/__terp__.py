@@ -30,7 +30,7 @@
      This module adds state, date_start,date_stop in production order operation lines
      (in the "Workcenters" tab)
      State: draft, confirm, done, cancel
-     When finnishing/confirming,cancelling production orders set all state lines to the according state
+     When finishing/confirming,cancelling production orders set all state lines to the according state
      Create menus:
          Production Management > All Operations
          Production Management > All Operations > Operations To Do (state="confirm")
@@ -48,7 +48,7 @@
     must become done.
 
     The field delay is the delay(stop date - start date).
-    So that we can compare the theoric delay and real delay.
+    So that we can compare the theoretic delay and real delay.
 
     """,
     "init_xml" : [],

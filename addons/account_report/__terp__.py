@@ -24,7 +24,10 @@
     "version" : "1.0",
     "depends" : ["account"],
     "author" : "Tiny",
-    "description": """Financial and accounting reporting""",
+    "description": """Financial and accounting reporting
+    Fiscal statements
+    Indicators
+    """,
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [ ],

@@ -41,13 +41,14 @@
     * We have the account templates which can be helpful to generate Charts of Accounts.
     * On that particular wizard,You will be asked to pass the name of the company,the chart template to follow,the no. of digits to generate the code for your account and Bank account,currency  to create Journals.
         Thus,the pure copy of Chart Template is generated.
-    * This is the same wizard that runs from Financial Managament/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+    * This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
 
     * This module installs :
         The Tax Code chart and taxes for French Accounting.
     """,
-    "init_xml" : [],
-    "update_xml" : ["types.xml", "plan-99-03_societe.xml", "taxes.xml","fr_wizard.xml"],
+    "init_xml" : ["fr_data.xml"],
+    "update_xml" : ["l10n_fr_view.xml","types.xml", "plan-99-03_societe.xml",
+                     "taxes.xml","fr_wizard.xml",],
     "demo_xml" : [],
     "installable": True
 }

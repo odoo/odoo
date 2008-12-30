@@ -27,7 +27,7 @@
     "depends" : ["project"],
     "description": """
 This module implements all concepts defined by the Getting Things Done
-methodology. This world-wide used methodology is used for personnal
+methodology. This world-wide used methodology is used for personal
 time management improvement.
 
 Getting Things Done (commonly abbreviated as GTD) is an action management

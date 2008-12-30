@@ -26,7 +26,7 @@ from osv import osv, fields
 import tools
 import os
 
-
+from base_module_quality import base_module_quality
 #TODO: (utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?)
 #TODO: implement the speed test
 #TODO: add cheks: do the class quality_check inherits the class abstract_quality_check?
@@ -65,24 +65,16 @@ class wiz_quality_check(osv.osv_memory):
         module_data = pool.get('ir.module.module').browse(cr, uid, [data['ids']])
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         module_name = module_data[0].name
-        for item in list_folders:
-            path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
-                ad = tools.config['addons_path']
-                if module_data[0].name == 'base':
-                    ad = tools.config['root_path']+'/addons'
-                module_path = os.path.join(ad, module_data[0].name)
-                item2 = 'base_module_quality.' + item +'.' + item
-                x = __import__(item2)
-                x2 = getattr(x, item)
-                x3 = getattr(x2, item)
-                val = x3.quality_test()
-                if (not val.bool_installed_only or module_data[0].state == "installed"):
-                    val.run_test(cr, uid, str(module_path))
-                else:
-                    val.result += "The module has to be installed before running this test."
-                string_ret += val.result['summary'][0]
-                string_detail += val.result['detail'][0]
+        abstract_obj = base_module_quality.abstract_quality_check()
+        for test in abstract_obj.tests:
+            ad = tools.config['addons_path']
+            if module_data[0].name == 'base':
+                ad = tools.config['root_path']+'/addons'
+            module_path = os.path.join(ad, module_data[0].name)
+            val = test.quality_test()
+            val.run_test(cr, uid, str(module_path), str(module_data[0].state))
+            string_ret += val.result['summary']
+            string_detail += val.result['detail']
         self.string_detail = string_detail
         return string_ret
 

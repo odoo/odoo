@@ -30,6 +30,8 @@
     Third party accounting
     Taxes management
     Budgets
+    Customer and Supplier Invoices
+    Bank statements
     """,
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",

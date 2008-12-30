@@ -28,7 +28,7 @@
     "description":"""
 Manages product's path in locations.
 
-This module may be usefull for different purposes:
+This module may be useful for different purposes:
 * Manages the product in his whole manufacturing chain
 * Manages different default locations by products
 * Define paths within the warehouse to route products based on operations:
