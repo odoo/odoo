@@ -137,7 +137,7 @@ class LocalService(Service):
             raise
 
 def service_exist(name):
-    return (name in _service) and bool(_service[name])
+    return _service.get(name, False)
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
@@ -229,6 +229,9 @@ class Logger(object):
                 level_method('[%02d]: %s' % (idx+1, s,))
         elif result:
             level_method(result[0])
+
+    def shutdown(self):
+        logging.shutdown()
 
 import tools
 init_logger()

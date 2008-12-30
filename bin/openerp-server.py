@@ -189,6 +189,7 @@ def handler(signum, _):
         os.unlink(tools.config['pidfile'])
     logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
                          "Shutdown Server! - %s" % ( SIGNALS[signum], ))
+    logger.shutdown()
     sys.exit(0)
 
 for signum in SIGNALS:
