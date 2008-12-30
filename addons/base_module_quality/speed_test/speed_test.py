@@ -101,7 +101,7 @@ class quality_test(base_module_quality.abstract_quality_check):
             summary = """
 ===Speed Test===:
 
-    This test checks the speed of the module.
+This test checks the speed of the module.
 
 """+ "Score: " + str(self.score) + "/10\n"
         else:
