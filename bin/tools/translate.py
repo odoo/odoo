@@ -354,7 +354,7 @@ def trans_generate(lang, modules, dbname=None):
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
         if model=='ir.ui.view':
-            d = xml.dom.minidom.parseString(obj.arch)
+            d = xml.dom.minidom.parseString(encode(obj.arch))
             for t in trans_parse_view(d.documentElement):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':

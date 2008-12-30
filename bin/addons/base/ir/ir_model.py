@@ -111,6 +111,10 @@ class ir_model_grid(osv.osv):
         result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
         allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
         acc_obj = self.pool.get('ir.model.access')
+        
+        if not isinstance(result,list):
+            result=[result]
+            
         for res in result:
             rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
             rules_br = acc_obj.browse(cr, uid, rules, context=context)
