@@ -583,6 +583,9 @@ class document_file(osv.osv):
         default.update({'name': name+ " (copy)"})
         return super(document_file,self).copy(cr,uid,id,default,context)
     def write(self, cr, uid, ids, vals, context=None):     
+        res=self.search(cr,uid,[('id','in',ids)])
+        if not len(res):
+            return False
         if not self._check_duplication(cr,uid,vals,ids,'write'):
             raise except_orm('ValidateError', 'File name must be unique!')   
         result = super(document_file,self).write(cr,uid,ids,vals,context=context)
