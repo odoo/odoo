@@ -1,7 +1,7 @@
 {
     "name" : "Document Management - Wiki",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "Tiny & Axelor",
     "description": """
     The base module to manage documents(wiki) 
     
