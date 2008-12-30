@@ -284,24 +284,21 @@ class rml_parse(object):
             oldtag = self.tag
         self._node.data = ''
         node = self._find_parent(self._node, [oldtag])
+        ns = None
         if node:
             pp = node.parentNode
             ns = node.nextSibling
             pp.removeChild(node)
-        else:
-            pp=self._node
-        self._node = pp
-        lst=''
-        if isinstance(text,(str,unicode)):
-            lst = text.split('\n')
-#            lst = str(text).split('\n') # This is also acceptable, isn't it?
-        if lst  and (not len(lst)):
+            self._node = pp
+            
+        lst = tools.ustr(text).split('\n')
+        if not (text and lst):
             return None
         nodes = []
         for i in range(len(lst)):
             newnode = node.cloneNode(1)
             newnode.tagName=rml_tag
-            newnode.__dict__['childNodes'][0].__dict__['data'] = lst[i].decode('utf8')
+            newnode.childNodes[0].data = lst[i]
             if ns:
                 pp.insertBefore(newnode, ns)
             else:
