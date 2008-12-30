@@ -64,8 +64,8 @@ class quality_test(base_module_quality.abstract_quality_check):
             if size:
                 c1 = cr.count
 
-                pool.get(obj).read(cr, uid, ids[0])
-                pool.get(obj).read(cr, uid, ids[0])
+                pool.get(obj).read(cr, uid, [ids[0]])
+                pool.get(obj).read(cr, uid, [ids[0]])
                 code_base_complexity = cr.count - c1
 
                 pool.get(obj).read(cr, uid, ids[:size/2])
