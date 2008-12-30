@@ -1,0 +1,14 @@
+#
+# This file is used by 'python setup.py bdist_rpm'
+# You should not execute/call this file yourself.
+#
+# This script is used as the 'install' part of the RPM .spec file.
+#
+# Need to overwrite the install-part of the RPM to append the
+# compression-suffix onto the filenames for the man-pages.
+#
+python setup.py install --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
+
+SUFFIX=gz
+mv INSTALLED_FILES INSTALLED_FILES.orig
+sed "s!\(/share/man/.*\)!\1.$SUFFIX!" INSTALLED_FILES.orig > INSTALLED_FILES
