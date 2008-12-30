@@ -61,9 +61,9 @@
         "project/project_report.xml",
         "product_view.xml",
         "account_assert_test.xml",
+        "process/statement_process.xml",
         "process/customer_invoice_process.xml",
         "process/supplier_invoice_process.xml",
-        "process/statement_process.xml",
     ],
     "translations" : {
         "fr": "i18n/french_fr.csv"

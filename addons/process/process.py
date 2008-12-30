@@ -71,7 +71,6 @@ class process_process(osv.osv):
             res = pool.get('process.process').browse(cr, uid, res, context)
             for process in res:
                 result.append((process.id, process.name))
-
             return result
 
         # else search process nodes
@@ -85,7 +84,7 @@ class process_process(osv.osv):
         return result
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
-        
+
         pool = pooler.get_pool(cr.dbname)
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
