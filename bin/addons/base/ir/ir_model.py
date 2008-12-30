@@ -550,7 +550,7 @@ class ir_model_data(osv.osv):
         if not modules:
             return True
         modules = list(modules)    
-        module_in = "%s" * len(modules)
+        module_in = ",".join(["%s"] * len(modules))
         cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
         for (id, name, model, res_id,module) in cr.fetchall():
