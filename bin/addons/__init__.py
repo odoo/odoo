@@ -595,10 +595,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
         if update_module:
-            cr.execute("select id,name from ir_module_module where state in ('to remove')")
+            cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
             for mod_id, mod_name in cr.fetchall():
                 pool = pooler.get_pool(cr.dbname)
-                cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
+                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod,rid in cr.fetchall():
                     uid = 1
                     pool.get(rmod).unlink(cr, uid, [rid])
@@ -615,6 +615,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                         (id not in (select res_id from ir_values where model='ir.ui.menu'))
                     and
                         (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                cr.commit()
                 if not cr.rowcount:
                     break
                 else:

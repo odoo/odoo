@@ -545,8 +545,9 @@ class ir_model_data(osv.osv):
     def _process_end(self, cr, uid, modules):
         if not modules:
             return True
-        module_str = ["'%s'" % m for m in modules]
-        cr.execute('select id,name,model,res_id,module from ir_model_data where module in ('+','.join(module_str)+') and not noupdate')
+        modules = list(modules)    
+        module_in = "%s" * len(modules)
+        cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:
