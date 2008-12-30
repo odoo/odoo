@@ -25,7 +25,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Base",
-    "depends" : ["base"],
+    "depends" : ["base","account"],
     "update_xml" : ["base_vat_data.xml"],
     "active": False,
     "installable": True

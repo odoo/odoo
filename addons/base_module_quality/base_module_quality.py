@@ -136,6 +136,9 @@ class abstract_quality_check(object):
                     detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
                     res_format['detail'] = detail  + '\n|}\n'
             res_format['summary'] = data_list[0]
+        elif test=='terp':
+            res_format['summary'] = data_list[0]
+            res_format['detail'] = data_list[1]    
         return res_format
 
     def add_quatation(self, x, y):

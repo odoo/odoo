@@ -81,7 +81,7 @@ class quality_test(base_module_quality.abstract_quality_check):
             summary ="""
 ===Pylint Test===:
 
-This test checks if the module satisfy the current coding standard used by OpenERP.
+This test checks if the module satisfies the current coding standard used by OpenERP.
 
 """ #+ "Score: " + str(self.score) + "/10\n"
         else:
