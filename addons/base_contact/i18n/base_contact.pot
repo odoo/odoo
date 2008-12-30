@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:06:55+0000\n"
-"PO-Revision-Date: 2008-12-22 18:06:55+0000\n"
+"POT-Creation-Date: 2008-12-30 13:19:55+0000\n"
+"PO-Revision-Date: 2008-12-30 13:19:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,13 +50,18 @@ msgid "First Name"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
+#: model:ir.model,name:base_contact.model_res_partner_job
+msgid "Contact Partner Function"
 msgstr ""
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.job,function_id:0
+msgid "Partner Function"
 msgstr ""
 
 #. module: base_contact
@@ -186,11 +191,6 @@ msgid "Extra Information"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.job,function_id:0
-msgid "Job Title"
-msgstr ""
-
-#. module: base_contact
 #: field:res.partner.contact,job_ids:0
 #: view:res.partner.contact:0
 msgid "Functions and Addresses"
@@ -255,6 +255,11 @@ msgid "base_contact workflow"
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.job,state:0
+msgid "State"
+msgstr ""
+
+#. module: base_contact
 #: view:res.partner.contact:0
 #: view:res.partner.job:0
 msgid "General"
@@ -268,11 +273,6 @@ msgstr ""
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "General Information"
-msgstr ""
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_job
-msgid "Contact Job Title"
 msgstr ""
 
 #. module: base_contact
