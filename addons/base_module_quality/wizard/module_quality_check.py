@@ -66,6 +66,9 @@ class wiz_quality_check(osv.osv_memory):
         list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         module_name = module_data[0].name
         abstract_obj = base_module_quality.abstract_quality_check()
+        score_sum = 0.0
+        ponderation_sum = 0.0
+        final_score = ""
         for test in abstract_obj.tests:
             ad = tools.config['addons_path']
             if module_data[0].name == 'base':
@@ -73,8 +76,13 @@ class wiz_quality_check(osv.osv_memory):
             module_path = os.path.join(ad, module_data[0].name)
             val = test.quality_test()
             val.run_test(cr, uid, str(module_path), str(module_data[0].state))
-            string_ret += val.result['summary']
-            string_detail += val.result['detail']
+            string_ret += val.result['summary'] #summary tab
+            string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
+            string_detail += val.result['detail'] # detail tab
+            score_sum += (val.add_quatation(val.score, 10) * val.ponderation)
+            ponderation_sum += val.ponderation
+        final_score = str(score_sum / ponderation_sum * 100) + "%"
+        string_ret += "\n\nPonderation Result for module:" + final_score
         self.string_detail = string_detail
         return ""
 
