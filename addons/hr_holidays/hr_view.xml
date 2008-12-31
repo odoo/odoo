@@ -8,7 +8,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee holidays">
+                <form string="Employee Holidays">
                     <field name="name" select="1"/>
                     <field name="holiday_status" select="1"/>
                     <field name="date_from" select="1"/>
@@ -17,8 +17,8 @@
                         <page string="General">
                             <field name="employee_id" select="1" />
                             <field name="number_of_days"/>
-                            <field name="notes" colspan="4"/>
                             <field name="manager_id"/>
+                            <field name="notes" colspan="4"/>
                             <newline/>
                             <field name="state" select="1" colspan="2"/>
                             <group colspan="2">
@@ -36,10 +36,10 @@
 
         <record model="ir.ui.view" id="view_holiday">
             <field name="name">hr.holidays.tree</field>
-            <field name="model">hr.holidays</field>            
+            <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Employee holidays">
+                <tree string="Employee Holidays">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="number_of_days" string="Number of Days"/>
@@ -51,10 +51,40 @@
             </field>
         </record>
 
+		<!-- holidays log -->
+        <record model="ir.ui.view" id="holiday_log_form">
+            <field name="name">hr.holidays.log.form</field>
+            <field name="model">hr.holidays.log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Log Holidays">
+                    <field name="name" select="1"/>
+                    <field name="employee_id" select="2"/>
+                    <field name="holiday_status"  select="1" />
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="holiday_log_tree">
+            <field name="name">>hr.holidays.log.tree</field>
+            <field name="model">hr.holidays.log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Log Holidays">
+	                <field name="holiday_req_id" />
+                	<field name="date" />
+                	<field name="employee_id" />
+                    <field name="name" />
+                    <field name="holiday_status" />
+                    <field name="nb_holidays" />
+                </tree>
+            </field>
+        </record>
+
+
         <!-- holidays status -->
         <record model="ir.ui.view" id="edit_holiday_status_form">
             <field name="name">hr.holidays.status.form</field>
-            <field name="model">hr.holidays.status</field>            
+            <field name="model">hr.holidays.status</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Define holiday status">
@@ -68,15 +98,15 @@
         </record>
         <record model="ir.ui.view" id="view_holiday_status_tree">
             <field name="name">hr.holidays.status.tree</field>
-            <field name="model">hr.holidays.status</field>            
+            <field name="model">hr.holidays.status</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Holiday status">
                     <field name="name"/>
                     <field name="color_name" />
                     <field name="section_id" />
-                    <field name="limit" select="2"/>
-                    <field name="active" select="2"/>
+                    <field name="limit" />
+                    <field name="active" />
                 </tree>
             </field>
         </record>
@@ -98,17 +128,24 @@
             <field name="model">hr.holidays.per.user</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Holidays Per Employee">
-                    <field name="employee_id" select="1" />
-                    <field name="holiday_status" select="1" />
-                    <newline/>
-                    <field name="max_leaves" select="2"  colspan="2" />
-                    <field name="leaves_taken" select="2" colspan="2" />
-                    <newline/>
-                    <field name="remaining_leaves" select="2" colspan="2" />
-                    <field name="active" select="2"/>
-                    <newline/>
-                    <field name="notes" colspan="4" select="2"/>
+            	<form string="Holidays Per Employee">
+	            	<notebook>
+	            		<page string="General Information">
+		                    <field name="employee_id" select="1" />
+		                    <field name="holiday_status" select="1" />
+		                    <newline/>
+		                    <field name="max_leaves" select="2" />
+		                    <field name="leaves_taken" select="2" />
+		                    <newline/>
+		                    <field name="remaining_leaves" select="2" colspan="2" />
+		                    <field name="active" select="2"/>
+		                    <newline/>
+		                    <field name="notes" colspan="4" select="2"/>
+		              	</page>
+		              	<page string="History" >
+		              		<field name="history" nolabel="1"/>
+		              	</page>
+	                </notebook>
                 </form>
             </field>
         </record>
@@ -122,7 +159,7 @@
                     <field name="holiday_status"/>
                     <field name="max_leaves"/>
                     <field name="remaining_leaves"/>
-                    <field name="active" select="2"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
