@@ -41,7 +41,7 @@ class mrp_procurement(osv.osv):
 
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': procurement.origin+': '+procurement.name,
+                'name': (procurement.origin or procurement.product_id.name) +': '+(procurement.name or ''),
                 'date_deadline': procurement.date_planned,
                 'planned_hours': procurement.product_qty,
                 'remaining_hours': procurement.product_qty,
