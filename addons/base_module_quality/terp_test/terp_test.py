@@ -53,30 +53,30 @@ class quality_test(base_module_quality.abstract_quality_check):
         detail = "\n===TERP Test===\n"
         summary = "\n===TERP Test===:\n"
         error = False
-        
+
         if '__terp__.py' not in list_files:
             no_terp = True
-        
+
         if no_terp:
-            summary += """  
+            summary += """
 The module does not contain the __terp__.py file.\n\n """
             header_list = ""
             error = True
             self.result = self.format_table(test='terp', data_list=[summary, detail, error])
             return None
-        
+
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
 
         terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
-        
+
         for key in terp_keys:
             if key in res:
                 feel_good_factor += 1
                 if isinstance(res[key],(str,unicode)):
                     if not res[key]:
                         feel_bad_factor += 1
-                    else:    
+                    else:
                         if key == 'description' and res[key] and len(str(res[key]))>=25:
                             feel_good_factor += 1
                             if res['description'].count('\n') >= 4:# description contains minimum 5 lines
@@ -87,22 +87,22 @@ The module does not contain the __terp__.py file.\n\n """
                             if result:
                                 feel_good_factor += 1
             else:
-                feel_bad_factor += 1     
-        
-        self.score = str(round((feel_good_factor * 10) / float(feel_good_factor + feel_bad_factor),2))
+                feel_bad_factor += 1
+
+        self.score = round((feel_good_factor * 10) / float(feel_good_factor + feel_bad_factor),2)
 #        if not self.bool_installed_only or module_state=="installed":
         summary += """
 This test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP.
 
 """ + "Score: " + str(self.score) + "/10\n"
-            
+
 #        else:
-#            summary += """ 
+#            summary += """
 #The module has to be installed before running this test.\n\n """
 #            header_list = ""
 #            error = True
-        
-        detail += "__terp__.py : "+ str(self.score) + "/10\n"     
+
+        detail += "__terp__.py : "+ str(self.score) + "/10\n"
         self.result = self.format_table(test='terp', data_list=[summary, detail, error])
         return None
 
