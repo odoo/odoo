@@ -77,7 +77,8 @@ class wiz_quality_check(osv.osv_memory):
             val = test.quality_test()
             val.run_test(cr, uid, str(module_path), str(module_data[0].state))
             string_ret += val.result['summary'] #summary tab
-            string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
+            if not val.error:
+                string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
             string_detail += val.result['detail'] # detail tab
             score_sum += (val.add_quatation(val.score, 10) * val.ponderation)
             ponderation_sum += val.ponderation

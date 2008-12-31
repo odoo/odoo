@@ -54,7 +54,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 0.0
         detail = ""
         detail  = "\n===Pylint Test===\n"
-        error = False
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
@@ -89,8 +88,8 @@ This test checks if the module satisfies the current coding standard used by Ope
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='pylint', data_list=[summary,detail,error])
+            self.error = True
+        self.result = self.format_table(test='pylint', data_list=[summary,detail,self.error])
         return None
 
 

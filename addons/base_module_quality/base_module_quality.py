@@ -70,6 +70,9 @@ class abstract_quality_check(object):
         #This variable is use to make result of test should have more weight (Some tests are more critical than others)
         self.ponderation = 0.0
 
+        #Specify test got an error on module
+        self.error = False
+
         self.tests = []
         self.list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         for item in self.list_folders:
@@ -138,7 +141,7 @@ class abstract_quality_check(object):
             res_format['summary'] = data_list[0]
         elif test=='terp':
             res_format['summary'] = data_list[0]
-            res_format['detail'] = data_list[1]    
+            res_format['detail'] = data_list[1]
         return res_format
 
     def add_quatation(self, x, y):

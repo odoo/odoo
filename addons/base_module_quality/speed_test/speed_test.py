@@ -55,7 +55,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         obj_ids = self.get_ids(cr, uid, obj_list)
         detail = ""
         list1 = []
-        error = False
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
@@ -110,8 +109,8 @@ This test checks the speed of the module.
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1, error])
+            self.error = True
+        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1,self.error])
         return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
