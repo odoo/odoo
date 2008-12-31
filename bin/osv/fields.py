@@ -713,6 +713,7 @@ class related(function):
                 else:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
+                # This should be improved, calling name_get
                 res[data.id] = (t_data.id,t_data.name)
             else:
                 res[data.id] = t_data

@@ -552,7 +552,7 @@ class cache(object):
         
         cache.__caches.append(self)
 
-    @classmethod        
+    @classmethod
     def clean_cache_for_db(cls, dbname):
         def get_dbname_from_key(key):
             for e in key:
