@@ -48,7 +48,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         result = {}
         ok_count = 0
         ex_count = 0
-        error = False
         for obj in obj_list:
             temp = []
             try:
@@ -91,8 +90,8 @@ This test checks if the module classes are raising exception when calling basic 
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,error])
+            self.error = True
+        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,self.error])
         return None
 
 

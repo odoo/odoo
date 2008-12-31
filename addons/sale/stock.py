@@ -158,6 +158,7 @@ class stock_picking(osv.osv):
                     price_unit = sale_line.price_unit
                     discount = sale_line.discount
                     tax_ids = sale_line.tax_id
+                    tax_ids = map(lambda x: x.id, tax_ids)
 
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)
