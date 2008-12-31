@@ -2070,8 +2070,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account for this bank journal
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
             dig = obj_multi.code_digits
-	    print ">>>>",dig
-	    print ">>>",ref_acc_bank.code.ljust(dig,'0')
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
