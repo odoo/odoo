@@ -47,6 +47,12 @@ class hr_timesheet_group(osv.osv):
         while todo>0:
             cr.execute("select hour_from,hour_to from hr_timesheet where dayofweek='%s' and tgroup_id=%s order by hour_from", (dt_from.day_of_week,id))
             for (hour_from,hour_to) in cr.fetchall():
+                
+                import math
+
+                hour_from = '%02d:%02d' % (math.floor(abs(hour_from)),round(abs(hour_from)%1+0.01,2) * 60)
+                hour_to = '%02d:%02d' % (math.floor(abs(hour_to)),round(abs(hour_to)%1+0.01,2) * 60)
+                
                 h1,m1 = map(int,hour_from.split(':'))
                 h2,m2 = map(int,hour_to.split(':'))
                 d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,h1,m1)
