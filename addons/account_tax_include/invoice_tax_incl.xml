@@ -21,7 +21,7 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
-                <field name="invoice_line" position="before">
+                <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" position="before">
                     <field name="price_type"/>
                 </field>
             </field>
@@ -33,7 +33,7 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
-                <field name="invoice_line" position="before">
+                <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1" position="before">
                     <field name="price_type"/>
                 </field>
             </field>
