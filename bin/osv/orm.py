@@ -2334,8 +2334,15 @@ class orm(orm_template):
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
-
-        cr.execute("SELECT nextval('"+self._sequence+"')")
+        
+        # Try-except added to filter the creation of those records whose filds are readonly.
+        # Example : any dashboard which has all the fields readonly.(due to Views(database views))
+        try:        
+            cr.execute("SELECT nextval('"+self._sequence+"')")
+        except:
+            raise except_orm(_('UserError'),
+                        _('You cannot perform this operation.'))    
+        
         id_new = cr.fetchone()[0]
         for table in tocreate:
             id = self.pool.get(table).create(cr, user, tocreate[table])
