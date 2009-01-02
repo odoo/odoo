@@ -409,11 +409,15 @@ class project_work(osv.osv):
     }
     _order = "date desc"
     def create(self, cr, uid, vals, *args, **kwargs):
+        if 'hours' in vals and (not vals['hours']):
+            vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids,vals,context={}):
+        if 'hours' in vals and (not vals['hours']):
+            vals['hours'] = 0.00
         for work in self.browse(cr, uid, ids, context):
             cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)
