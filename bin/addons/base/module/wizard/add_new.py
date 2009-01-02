@@ -57,7 +57,15 @@ class wizard_install_module(wizard.interface):
             terp = mod_obj.get_module_info(module)
             if not terp.get('installable', True):
                 continue
-            imp.load_module(module, *imp.find_module(module))
+            
+            # XXX check if this code is correct...
+            fm = imp.find_module(module)
+            try:
+                imp.load_module(module, *fm)
+            finally:
+                if fm[0]:
+                    fm[0].close()
+
             mod_id = mod_obj.create(cr, uid, {
                 'name': module, 
                 'state': 'uninstalled',

@@ -326,7 +326,12 @@ def register_class(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            imp.load_module(m, *imp.find_module(m, [ad, _ad]))
+            fm = imp.find_module(m, [ad, _ad])
+            try:
+                imp.load_module(m, *fm)
+            finally:
+                if fm[0]:
+                    fm[0].close()
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
