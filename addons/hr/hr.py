@@ -84,11 +84,27 @@ hr_timesheet_group()
 class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
+    
     _columns = {
         'name' : fields.char("Category", size=64, required=True),
         'parent_id': fields.many2one('hr.employee.category', 'Parent category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Childs Categories')
     }
+    
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from hr_employee_category where id in ('+','.join(map(str,ids))+')')
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+    
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
+    ]
+    
 hr_employee_category()
 
 class hr_employee(osv.osv):
@@ -122,6 +138,20 @@ class hr_employee(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
+    
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from hr_employee where id in ('+','.join(map(str,ids))+')')
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+    
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id'])
+    ]
     
 hr_employee()
 

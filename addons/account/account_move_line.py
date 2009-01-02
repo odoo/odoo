@@ -782,7 +782,7 @@ class account_move_line(osv.osv):
             context['journal_id'] = vals['journal_id']
         if 'period_id' in vals and 'period_id' not in context:
             context['period_id'] = vals['period_id']
-        if 'journal_id' not in context and 'move_id' in vals:
+        if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
