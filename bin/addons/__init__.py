@@ -38,6 +38,11 @@ from osv import fields
 import zipfile
 import release
 
+import re
+import base64
+from zipfile import PyZipFile, ZIP_DEFLATED
+import StringIO
+
 logger = netsvc.Logger()
 
 _ad = os.path.abspath(opj(tools.config['root_path'], 'addons'))     # default addons path (base)
@@ -171,6 +176,45 @@ def get_module_filetree(module, dir='.'):
         current[lst.pop(0)] = None
     
     return tree
+
+
+def get_module_as_zip(modulename, b64enc=True, src=True):
+    
+    RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
+    
+    def _zippy(archive, path, src=True):
+        path = os.path.abspath(path)
+        base = os.path.basename(path)
+        for f in tools.osutil.listdir(path, True):
+            bf = os.path.basename(f)
+            if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not path.endswith('.py')):
+                archive.write(os.path.join(path, f), os.path.join(base, f))
+    
+    ap = get_module_path(str(modulename))
+    if not ap:
+        raise Exception('Unable to find path for module %s' % modulename)
+    
+    ap = ap.encode('utf8') 
+    if os.path.isfile(ap + '.zip'):
+        val = file(ap + '.zip', 'rb').read()
+    else:
+        archname = StringIO.StringIO('wb')
+        archive = PyZipFile(archname, "w", ZIP_DEFLATED)
+        archive.writepy(ap)
+        _zippy(archive, ap, src=src)
+        archive.close()
+        val = archname.getvalue()
+        archname.close()
+
+    ### debug
+    f = file('/tmp/mod.zip', 'wb')
+    f.write(val)
+    f.close()
+
+    if b64enc:
+        val = base64.encodestring(val)
+    return val
+
 
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.

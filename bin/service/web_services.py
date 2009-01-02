@@ -286,6 +286,7 @@ class common(netsvc.Service):
         self.exportMethod(self.login)
         self.exportMethod(self.logout)
         self.exportMethod(self.timezone_get)
+        self.exportMethod(self.get_migration_scripts)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -349,6 +350,39 @@ GNU Public Licence.
 
     def timezone_get(self, db, login, password):
         return time.tzname[0]
+
+
+    def get_migration_scripts(self, password, contract_id, contract_password):
+        security.check_super(password)
+         
+        from tools.maintenance import remote_contract
+        rc = remote_contract(contract_id, contract_password)
+        if not rc.id:
+            raise Exception('This contract does not exist or is not active') 
+        if rc.status != 'full':
+            raise Exception('Can not get updates for a partial contract')
+
+        l = netsvc.Logger()
+        l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
+
+        zips = rc.retrieve_updates(rc.id)
+        
+        from shutil import rmtree
+        for module in zips:
+            l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
+            mp = addons.get_module_path(module)
+            if mp:
+                if os.path.isdir(mp):
+                    rmtree(os.path.realpath(mp))
+                else:
+                    os.unlink(mp + '.zip')
+
+            mp = os.path.join(tools.config['addons_path'], module + '.zip')
+
+            zip = open(mp, 'w')
+            zip.write(base64.decodestring(zips[module]))
+            zip.close()
+        
 common()
 
 class objects_proxy(netsvc.Service):

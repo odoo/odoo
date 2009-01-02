@@ -35,7 +35,7 @@ import math
 from pprint import pprint as pp
 
 from tools import config, debug
-import xmlrpclib
+from tools.maintenance import remote_contract
 
 class maintenance_contract_module(osv.osv):
     _name ="maintenance.contract.module"
@@ -91,8 +91,6 @@ class maintenance_contract(osv.osv):
             # TODO schedule a retry
             return False
         return True
-        
- 
 
     def _valid_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -142,12 +140,8 @@ class maintenance_contract_wizard(osv.osv_memory):
 
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
 
-        login, password, remote_db, remote_server, port = 'admin', 'admin', 'trunk', 'localhost', 8069
+        contract_info = remote_contact(contract['name'], contract['password'], modules)
 
-        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/common' % (remote_server, port))
-        ruid = rpc.login(remote_db, login, password)
-        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remote_server, port))
-        contract_info = rpc.execute(remote_db, ruid, password, 'maintenance.maintenance', 'check_contract', modules, contract )
         is_ok = contract_info['status'] in ('partial', 'full')
         if is_ok:
             if contract_info['modules_with_contract']:
