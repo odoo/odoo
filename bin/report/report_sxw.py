@@ -455,7 +455,7 @@ class rml_parse(object):
                         if len(source_string):
                             translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
                             if translated_string:
-                                piece_list[pn] = piece_list[pn].replace(source_string, translated_string.decode('utf8'))
+                                piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
                 text = ''.join(piece_list)
         for key in res:
             newtext = self._eval(key)
