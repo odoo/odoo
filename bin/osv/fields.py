@@ -713,10 +713,17 @@ class related(function):
                 else:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
-                # This should be improved, calling name_get
-                res[data.id] = (t_data.id,t_data.name)
+                res[data.id] = t_data.id
             else:
                 res[data.id] = t_data
+
+        if self._type=='many2one':
+            ids = filter(None, res.values())
+            if ids:
+                ng = dict(obj.pool.get(self._obj).name_get(cr, uid, ids, context=context))
+                for r in res:
+                    if res[r]:
+                        res[r] = (res[r], ng[res[r]])
         return res
 
     def __init__(self, *arg, **args):
