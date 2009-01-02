@@ -53,6 +53,7 @@ class db(netsvc.Service):
         self.exportMethod(self.list_lang)
         self.exportMethod(self.change_admin_password)
         self.exportMethod(self.server_version)
+        self.exportMethod(self.migrate_databases)
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
@@ -273,7 +274,21 @@ class db(netsvc.Service):
             Used by the client to verify the compatibility with its own version
         """
         return release.version
+
+    def migrate_databases(self, password, databases):
+        security.check_super(password)
+        l = netsvc.Logger()
+        for db in databases:
+            try:
+                l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
+                tools.config['update']['base'] = True
+                pooler.restart_pool(db, force_demo=False, update_module=True) 
+            except Exception, e:
+                tools.debug(e)
+                raise
 db()
+
+class MigrationException(Exception): pass
 
 class common(netsvc.Service):
     def __init__(self,name="common"):
@@ -354,35 +369,42 @@ GNU Public Licence.
 
     def get_migration_scripts(self, password, contract_id, contract_password):
         security.check_super(password)
-         
-        from tools.maintenance import remote_contract
-        rc = remote_contract(contract_id, contract_password)
-        if not rc.id:
-            raise Exception('This contract does not exist or is not active') 
-        if rc.status != 'full':
-            raise Exception('Can not get updates for a partial contract')
-
         l = netsvc.Logger()
-        l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
+        try: 
+            from tools.maintenance import remote_contract
+            rc = remote_contract(contract_id, contract_password)
+            if not rc.id:
+                raise MigrationException('This contract does not exist or is not active') 
+            if rc.status != 'full':
+                raise MigrationException('Can not get updates for a partial contract')
 
-        zips = rc.retrieve_updates(rc.id)
-        
-        from shutil import rmtree
-        for module in zips:
-            l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
-            mp = addons.get_module_path(module)
-            if mp:
-                if os.path.isdir(mp):
-                    rmtree(os.path.realpath(mp))
-                else:
-                    os.unlink(mp + '.zip')
+            l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
-            mp = os.path.join(tools.config['addons_path'], module + '.zip')
+            zips = rc.retrieve_updates(rc.id)
+            
+            from shutil import rmtree
+            for module in zips:
+                l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
+                mp = addons.get_module_path(module)
+                if mp:
+                    if os.path.isdir(mp):
+                        rmtree(os.path.realpath(mp))
+                    else:
+                        os.unlink(mp + '.zip')
 
-            zip = open(mp, 'w')
-            zip.write(base64.decodestring(zips[module]))
-            zip.close()
-        
+                mp = os.path.join(tools.config['addons_path'], module + '.zip')
+
+                zip = open(mp, 'w')
+                zip.write(base64.decodestring(zips[module]))
+                zip.close()
+        except MigrationException, e:
+            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+        except Exception, e:
+            import traceback
+            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
+            l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
+            raise
+ 
 common()
 
 class objects_proxy(netsvc.Service):
