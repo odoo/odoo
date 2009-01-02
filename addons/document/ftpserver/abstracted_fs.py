@@ -619,7 +619,7 @@ class abstracted_fs:
         elif self.isfile(path):
             basedir, filename = os.path.split(path.path)
             self.lstat(path)  # raise exc in case of problems
-            return self.format_list(basedir, [filename])
+            return self.format_list(basedir, [path])
 
 
     # Ok
