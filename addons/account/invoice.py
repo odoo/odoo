@@ -859,7 +859,7 @@ class account_invoice(osv.osv):
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
-        # Update the stored value
+        # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 account_invoice()
