@@ -856,6 +856,9 @@ class orm_template(object):
     def __view_look_dom_arch(self, cr, user, node, context=None):
         fields_def = self.__view_look_dom(cr, user, node, context=context)
 
+        rolesobj = self.pool.get('res.roles')
+        usersobj = self.pool.get('res.users')
+
         buttons = xpath.Evaluate('//button', node)
         if buttons:
             for button in buttons:
@@ -865,13 +868,12 @@ class orm_template(object):
                 ok = True
 
                 if user != 1:   # admin user has all roles
-                    serv = netsvc.LocalService('object_proxy')
-                    user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
-                    cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+                    user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
+                    cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
                     roles = cr.fetchall()
                     for role in roles:
                         if role[0]:
-                            ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+                            ok = ok and rolesobj.check(cr, user, user_roles, role[0])
 
                 if not ok:
                     button.setAttribute('readonly', '1')
