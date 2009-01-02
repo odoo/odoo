@@ -23,7 +23,7 @@
 import os, sys, imp
 from os.path import join as opj
 import itertools
-from sets import Set
+# from sets import Set
 import zipimport
 
 import osv
@@ -65,7 +65,7 @@ class Graph(dict):
 
     def __iter__(self):
         level = 0
-        done = Set(self.keys())
+        done = set(self.keys())
         while done:
             level_modules = [(name, module) for name, module in self.items() if module.depth==level]
             for name, module in level_modules:
@@ -225,7 +225,7 @@ def create_graph(module_list, force=None):
                 packages.append((module, info.get('depends', []), info))
     
     dependencies = dict([(p, deps) for p, deps, data in packages])
-    current, later = Set([p for p, dep, data in packages]), Set()
+    current, later = set([p for p, dep, data in packages]), set()
     while packages and current > later:
         package, deps, data = packages[0]
 
