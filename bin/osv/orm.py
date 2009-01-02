@@ -2140,7 +2140,7 @@ class orm(orm_template):
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
             if field in self._columns:
-                if self._columns[field]._classic_write:
+                if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
                         upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                         upd1.append(self._columns[field]._symbol_set[1](vals[field]))
