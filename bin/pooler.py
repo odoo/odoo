@@ -43,10 +43,9 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         finally:
             cr.close()
 
-        if not update_module:
-            import report
-            report.interface.register_all(db)
-            pool.get('ir.cron')._poolJobs(db.dbname)
+        import report
+        report.interface.register_all(db)
+        pool.get('ir.cron')._poolJobs(db.dbname)
     return db, pool
 
 
