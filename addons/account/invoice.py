@@ -837,7 +837,7 @@ class account_invoice(osv.osv):
             'ref':invoice.number,
         }
 
-        name = invoice.invoice_line[0].name
+        name = invoice.invoice_line and invoice.invoice_line[0].name or invoice.number
         l1['name'] = name
         l2['name'] = name
 
