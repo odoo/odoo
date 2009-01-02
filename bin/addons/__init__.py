@@ -646,6 +646,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 for rmod,rid in cr.fetchall():
                     uid = 1
                     pool.get(rmod).unlink(cr, uid, [rid])
+                cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
             # TODO: remove menu without actions of childs
