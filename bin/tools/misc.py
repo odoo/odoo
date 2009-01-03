@@ -688,6 +688,7 @@ def get_languages():
     languages={
         'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български',
+        'bs_BS': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
         'de_DE': u'German / Deutsch',
