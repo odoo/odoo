@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-30 13:19:55+0000\n"
-"PO-Revision-Date: 2008-12-30 13:19:55+0000\n"
+"POT-Creation-Date: 2009-01-03 02:18:25+0000\n"
+"PO-Revision-Date: 2009-01-03 02:18:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -301,12 +301,6 @@ msgid "Normal"
 msgstr ""
 
 #. module: base
-#: field:workflow.activity,in_transitions:0
-#: view:workflow.activity:0
-msgid "Incoming transitions"
-msgstr ""
-
-#. module: base
 #: field:ir.ui.view_sc,user_id:0
 msgid "User Ref."
 msgstr ""
@@ -381,8 +375,8 @@ msgid "Sender's email"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom,type:0
-msgid "Tabular"
+#: selection:module.lang.install,init,lang:0
+msgid "bs_BS"
 msgstr ""
 
 #. module: base
@@ -739,9 +733,9 @@ msgid "ir.ui.menu"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:osv/orm.py:0
 #, python-format
-msgid "\"%s\" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
+msgid "ConcurrencyException"
 msgstr ""
 
 #. module: base
@@ -762,6 +756,11 @@ msgstr ""
 #. module: base
 #: field:res.partner,ean13:0
 msgid "EAN13"
+msgstr ""
+
+#. module: base
+#: view:res.users:0
+msgid "Roles are used to defined available actions, provided by workflows."
 msgstr ""
 
 #. module: base
@@ -959,6 +958,11 @@ msgid "Custom Object"
 msgstr ""
 
 #. module: base
+#: view:ir.values:0
+msgid "Values for Event Type"
+msgstr ""
+
+#. module: base
 #: field:res.lang,date_format:0
 msgid "Date Format"
 msgstr ""
@@ -1115,8 +1119,8 @@ msgid "The selected language has been successfully installed. You must change th
 msgstr ""
 
 #. module: base
-#: view:res.users:0
-msgid "Roles are used to defined available actions, provided by workflows."
+#: view:res.lang:0
+msgid "%B - Full month name."
 msgstr ""
 
 #. module: base
@@ -1189,8 +1193,8 @@ msgid "Partner contacts"
 msgstr ""
 
 #. module: base
-#: field:workflow.transition,trigger_model:0
-msgid "Trigger Object"
+#: field:res.users,address_id:0
+msgid "Address"
 msgstr ""
 
 #. module: base
@@ -1267,8 +1271,9 @@ msgid "Low Level Objects"
 msgstr ""
 
 #. module: base
-#: field:res.partner.event,planned_cost:0
-msgid "Planned Cost"
+#: code:osv/orm.py:0
+#, python-format
+msgid "The create method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -1811,8 +1816,8 @@ msgid "Print format"
 msgstr ""
 
 #. module: base
-#: field:res.users,address_id:0
-msgid "Address"
+#: selection:res.config.view,view:0
+msgid "Simplified Interface"
 msgstr ""
 
 #. module: base
@@ -1866,6 +1871,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
 msgid "ir.model.data"
+msgstr ""
+
+#. module: base
+#: code:osv/orm.py:0
+#, python-format
+msgid "UserError"
 msgstr ""
 
 #. module: base
@@ -1933,6 +1944,12 @@ msgid "Draft"
 msgstr ""
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid "Can not create the module file:\n %s"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,field_child1:0
 msgid "field child1"
 msgstr ""
@@ -1962,14 +1979,13 @@ msgid "From"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "This method does not exist anymore"
+#: selection:res.partner.event,partner_type:0
+msgid "Retailer"
 msgstr ""
 
 #. module: base
-#: selection:res.partner.event,partner_type:0
-msgid "Retailer"
+#: view:ir.values:0
+msgid "client_action_multi, client_action_relate"
 msgstr ""
 
 #. module: base
@@ -1995,11 +2011,6 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
-msgstr ""
-
-#. module: base
-#: selection:ir.values,key2:0
-msgid "Print"
 msgstr ""
 
 #. module: base
@@ -2032,6 +2043,11 @@ msgstr ""
 #. module: base
 #: view:ir.module.module:0
 msgid "Defined Reports"
+msgstr ""
+
+#. module: base
+#: selection:ir.report.custom,type:0
+msgid "Tabular"
 msgstr ""
 
 #. module: base
@@ -2194,6 +2210,11 @@ msgid "Module Repository"
 msgstr ""
 
 #. module: base
+#: view:ir.actions.server:0
+msgid "Trigger Configuration"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_UNINDENT"
 msgstr ""
@@ -2263,8 +2284,8 @@ msgid "Recursion error in modules dependencies !"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Open on Tree"
+#: view:ir.rule:0
+msgid "Manual domain setup"
 msgstr ""
 
 #. module: base
@@ -2411,8 +2432,8 @@ msgid "STOCK_GO_BACK"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
 #: code:addons/base/ir/ir_model.py:0
+#: code:osv/orm.py:0
 #, python-format
 msgid "AccessError"
 msgstr ""
@@ -2667,9 +2688,9 @@ msgid "Creator"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:osv/orm.py:0
 #, python-format
-msgid "Not implemented get_memory method !"
+msgid "You cannot perform this operation."
 msgstr ""
 
 #. module: base
@@ -3300,9 +3321,9 @@ msgid "STOCK_STOP"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid "ConcurrencyException"
+msgid "\"%s\" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
 msgstr ""
 
 #. module: base
@@ -3534,8 +3555,9 @@ msgid "Channels"
 msgstr ""
 
 #. module: base
-#: view:res.partner.event:0
-msgid "Document Link"
+#: code:osv/fields.py:0
+#, python-format
+msgid "Not implemented get_memory method !"
 msgstr ""
 
 #. module: base
@@ -3572,8 +3594,8 @@ msgid "Schedule for Installation"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Wizard in Tree"
+#: view:ir.sequence:0
+msgid "Year without century: %(y)s"
 msgstr ""
 
 #. module: base
@@ -3798,11 +3820,6 @@ msgid "STOCK_COLOR_PICKER"
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
-msgid "Manual domain setup"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-product"
 msgstr ""
@@ -3820,20 +3837,15 @@ msgid "Kind"
 msgstr ""
 
 #. module: base
-#: view:res.partner.bank:0
-msgid "Bank accounts"
+#: code:osv/orm.py:0
+#, python-format
+msgid "This method does not exist anymore"
 msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Tree can only be used in tabular reports"
-msgstr ""
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid "Can not create the module file:\n %s"
 msgstr ""
 
 #. module: base
@@ -3845,8 +3857,8 @@ msgid "Tree"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Relate on Object"
+#: view:res.partner.bank:0
+msgid "Bank accounts"
 msgstr ""
 
 #. module: base
@@ -4077,11 +4089,6 @@ msgstr ""
 #. module: base
 #: selection:ir.report.custom,state:0
 msgid "Unsubscribed"
-msgstr ""
-
-#. module: base
-#: view:ir.sequence:0
-msgid "Year without century: %(y)s"
 msgstr ""
 
 #. module: base
@@ -4466,11 +4473,6 @@ msgstr ""
 #. module: base
 #: field:ir.cron,args:0
 msgid "Arguments"
-msgstr ""
-
-#. module: base
-#: selection:ir.values,key2:0
-msgid "Wizard in Forms"
 msgstr ""
 
 #. module: base
@@ -5330,8 +5332,8 @@ msgid "Action Source"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "/"
+#: view:ir.values:0
+msgid "tree_but_action, client_print_multi"
 msgstr ""
 
 #. module: base
@@ -5524,6 +5526,11 @@ msgid "STOCK_PREFERENCES"
 msgstr ""
 
 #. module: base
+#: view:res.lang:0
+msgid "%c - Appropriate date and time representation."
+msgstr ""
+
+#. module: base
 #: field:ir.module.module,shortdesc:0
 msgid "Short description"
 msgstr ""
@@ -5572,6 +5579,11 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DELETE"
+msgstr ""
+
+#. module: base
+#: field:res.partner.event,planned_cost:0
+msgid "Planned Cost"
 msgstr ""
 
 #. module: base
@@ -5794,6 +5806,12 @@ msgid "This field is not used, it only helps you to select a good model."
 msgstr ""
 
 #. module: base
+#: field:workflow.activity,in_transitions:0
+#: view:workflow.activity:0
+msgid "Incoming transitions"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
@@ -5857,6 +5875,11 @@ msgid "Access Menu"
 msgstr ""
 
 #. module: base
+#: field:workflow.transition,trigger_model:0
+msgid "Trigger Object"
+msgstr ""
+
+#. module: base
 #: view:ir.sequence:0
 msgid "Month: %(month)s"
 msgstr ""
@@ -5872,9 +5895,14 @@ msgid "Mobile No"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/res/res_currency.py:0
+#: code:addons/base/res/res_user.py:0
+#: code:addons/base/module/module.py:0
+#: code:report/custom.py:0
 #, python-format
-msgid "The create method is not implemented on this object !"
+msgid "Error"
 msgstr ""
 
 #. module: base
@@ -5923,11 +5951,6 @@ msgid "Create a Menu"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%B - Full month name."
-msgstr ""
-
-#. module: base
 #: view:ir.cron:0
 msgid "Action to trigger"
 msgstr ""
@@ -5938,8 +5961,8 @@ msgid "Searchable"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%c - Appropriate date and time representation."
+#: view:res.partner.event:0
+msgid "Document Link"
 msgstr ""
 
 #. module: base
@@ -6082,11 +6105,6 @@ msgid "sxw"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Trigger Configuration"
-msgstr ""
-
-#. module: base
 #: selection:ir.actions.url,target:0
 msgid "This Window"
 msgstr ""
@@ -6153,17 +6171,6 @@ msgstr ""
 #. module: base
 #: selection:res.partner.address,type:0
 msgid "Delivery"
-msgstr ""
-
-#. module: base
-#: code:report/custom.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid "Error"
 msgstr ""
 
 #. module: base
@@ -6263,11 +6270,6 @@ msgstr ""
 #. module: base
 #: wizard_view:base.module.import,import:0
 msgid "Module successfully imported !"
-msgstr ""
-
-#. module: base
-#: selection:res.config.view,view:0
-msgid "Simplified Interface"
 msgstr ""
 
 #. module: base
