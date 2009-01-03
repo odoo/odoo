@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
+"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
+"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "Full"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
-msgstr "Fulla de serveis és validada pel responsable del projecte"
+msgstr "Full de serveis és validat pel responsable del projecte"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
@@ -65,12 +65,13 @@ msgstr "Avui"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
 msgid "Confirm timesheet sheet"
-msgstr "Confirma fulla de serveis"
+msgstr "Confirma full de serveis"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheet0
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetconfirming0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "Timesheet"
 msgstr "Full d'assistència"
 
@@ -87,7 +88,7 @@ msgstr "Data fins"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet sheet"
-msgstr "Fulla de serveis esborrany"
+msgstr "Full de serveis esborrany"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_current
@@ -125,12 +126,12 @@ msgstr "Refusar"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "Validated Timesheet"
-msgstr "Fulla de serveis validada"
+msgstr "Full de serveis validat"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date wich is in the timesheet dates !"
-msgstr "Heu de seleccionar una data actual que estigui en les dates de la fulla de serveis!"
+msgstr "Heu de seleccionar una data actual que estigui en les dates del full de serveis!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -144,40 +145,40 @@ msgid "Total Difference"
 msgstr "Diferència total"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetconfirming0
-msgid "Timesheet Confirming"
-msgstr ""
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_phonecallencoding0
+msgid "Phone call encoding"
+msgstr "Codificació trucada telefònica"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
-msgstr "Fulla de serveis per dia"
+msgstr "Full de serveis per dia"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Atenció!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Defines the task work entry into timesheet line"
-msgstr ""
+msgstr "Definiu la tasca de treball en línia full de serveis"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
 msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "﻿Diferència permesa entre el registre d'entrada/sortida i el càlcul del temps per una fulla de servei. Estableix el seu valor a 0 si no vol cap control."
+msgstr "﻿Diferència permesa entre el registre d'entrada/sortida i el càlcul del temps per un full de servei. Estableix el seu valor a 0 si no vol cap control."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Timesheet by Days"
-msgstr "Fulla de serveis per dies"
+msgstr "Full de serveis per dies"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "timesheet is confirmed at the end of the week / month"
-msgstr ""
+msgstr "Full de serveis serà confirmada al final de la setmana / mes"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -197,12 +198,12 @@ msgstr "Data des de"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "At the end of the period (week/month)"
-msgstr ""
+msgstr "Al final del període (setmana/mes)"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_analyticcost0
 msgid "Analytic cost"
-msgstr ""
+msgstr "Cost analític"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -212,7 +213,7 @@ msgstr "Confirmada"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_attendance:0
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendance0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance"
 msgstr "Assistència"
 
@@ -230,17 +231,17 @@ msgstr "Línies full de serveis"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheetline0
 msgid "Encode your timesheet line"
-msgstr ""
+msgstr "Codifiqueu la vostra línia de full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "Confirm Timesheet"
-msgstr ""
+msgstr "Confirma full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "Control by the project manager"
-msgstr ""
+msgstr "Control pel responsable del projecte"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -250,14 +251,14 @@ msgstr "Nou"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheetconfirming0
 msgid "Timesheet sheet confirm at the end of the period"
-msgstr ""
+msgstr "Full de serveis confirmat al final del període"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
@@ -273,12 +274,12 @@ msgstr "Línies de la full d'assistència"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr ""
+msgstr "Verifiqueu que la diferència total del full de serveis és menor que %.2f!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
 msgid "Confirm timesheet at the end of the period"
-msgstr ""
+msgstr "Confirma full de serveis al final del període"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -319,13 +320,13 @@ msgstr "Fulls de serveis per període"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign In"
-msgstr "Registrar entrada"
+msgstr "Registra entrada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_current
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current
 msgid "My Department's Timesheet"
-msgstr ""
+msgstr "Full de serveis del meu departament"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -335,7 +336,7 @@ msgstr "Anar a:"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_phonecall0
 msgid "Phone call"
-msgstr ""
+msgstr "Trucada telefònica"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
@@ -347,12 +348,12 @@ msgstr "Total full de serveis"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_reviewofwork0
 msgid "Review of work"
-msgstr ""
+msgstr "Revisió de treball"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
-msgid "Timesheet Line"
-msgstr ""
+#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice on Work"
+msgstr "Factura sobre treball"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -362,13 +363,13 @@ msgstr "Mes"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Encode Your hours and Sign in / out"
-msgstr ""
+msgstr "Codifica vostres hores i registra entrada/sortida"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_review0
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_reviewtimesheet0
 msgid "Review"
-msgstr ""
+msgstr "Revisió"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -394,7 +395,7 @@ msgstr "Fulles de serveis a confirmar"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign out from an other date than today"
-msgstr ""
+msgstr "No podeu registrar sortida en altre data que no sigui avui"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -404,7 +405,7 @@ msgstr "Posició"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Defines employee's timesheet entry"
-msgstr ""
+msgstr "Definiu entrada full de serveis de l'empleat"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
@@ -414,7 +415,7 @@ msgstr "Estat actual"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Invoice on timesheet"
-msgstr ""
+msgstr "Factura sobre full de serveis"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -435,22 +436,17 @@ msgstr "Data"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "No podeu modificar una entrada en un full de serveis confirmat!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Invoice based on timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
-msgid "Review of your work at the end of the day"
-msgstr ""
+msgstr "Factura basada en full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Creates invoice based on timesheet"
-msgstr ""
+msgstr "Crea factura basada en full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
@@ -461,7 +457,7 @@ msgstr "Fulles de serveis a validar"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetworkflow0
 msgid "Hr Timesheet Workflow"
-msgstr ""
+msgstr "Flux full de serveis RRHH"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
@@ -477,32 +473,32 @@ msgstr "Període"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "Confirmed Timesheet"
-msgstr ""
+msgstr "Full de serveis confirmat"
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendance0
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance entry moves into the timesheet"
-msgstr ""
+msgstr "Converteixi entrada d'assistència/servei en full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_createanalyticcose0
 msgid "Creates your analytic cost accoording to quantity"
-msgstr ""
+msgstr "Crea el vostre cost analític d'acord amb quantitat"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice on Work"
-msgstr ""
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
+msgid "Timesheet Line"
+msgstr "Línia del full de assistència"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr "Fulla de serveis per comptes"
+msgstr "Full de serveis per comptes"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_unvalidate
@@ -513,18 +509,18 @@ msgstr "Fulls de serveis no validats"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
 msgid "Whatever time u spent for phone call"
-msgstr ""
+msgstr "Qualsevol temps que dediqueu a la trucada telefònica"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Validate Timesheet"
-msgstr ""
+msgstr "Valida full de serveis"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_confirm
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_confirm
 msgid "My Department's Timesheet to Confirm"
-msgstr ""
+msgstr "Full de serveis del meu departament a confirmar"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
@@ -536,7 +532,7 @@ msgstr "Serveis"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_createanalyticcose0
 msgid "Create Analytic cost"
-msgstr ""
+msgstr "Crea cost analític"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
@@ -546,7 +542,7 @@ msgstr "Descripció"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
-msgstr "Registrar sortida"
+msgstr "Registra sortida"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -563,7 +559,7 @@ msgstr "Diferència"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 msgid "hr_timesheet_sheet.sheet"
-msgstr "Fulla de serveis"
+msgstr "Full de serveis"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -571,14 +567,14 @@ msgid "Absent"
 msgstr "Absent"
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheet0
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "timesheet entry is into draft state."
-msgstr ""
+msgstr "entrada full de serveis està en estat esborrany."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_analyticcost0
 msgid "Analytic cost is created"
-msgstr ""
+msgstr "Cost analític és creat"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
@@ -588,12 +584,12 @@ msgstr "Taxa factura"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_phonecallencoding0
 msgid "Encode how much time u spent on phone call"
-msgstr ""
+msgstr "Codifica quant temps dedica en trucades telefòniques"
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_phonecallencoding0
-msgid "Phone call encoding"
-msgstr ""
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
+msgid "Review of your work at the end of the day"
+msgstr "Reviseu el vostre treball al final del dia"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -630,5 +626,5 @@ msgstr "Total"
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_validate
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_validate
 msgid "My Department's Timesheet to Validate"
-msgstr ""
+msgstr "Full de serveis del meu departament a validar"
 

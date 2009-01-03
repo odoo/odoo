@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
+"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
+"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,13 +28,18 @@ msgstr "Data factura:"
 #. module: account_invoice_layout
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
 msgstr "Títol"
+
+#. module: account_invoice_layout
+#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+msgid "Invoices with Layout and Message"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -52,9 +57,9 @@ msgid "Supplier Invoice"
 msgstr "Factura de proveïdor"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
-msgid "Invoice + Message"
-msgstr "Factura + Missatge"
+#: help:notify.message,msg:0
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Aquesta notificació apareixerà en la part inferior de les factures quan siguin impreses."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -163,7 +168,6 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoice"
 msgstr "Factura"
 
@@ -203,6 +207,11 @@ msgid "Total (excl. taxes):"
 msgstr "Total (impostos excl.):"
 
 #. module: account_invoice_layout
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
 msgstr "Pressupost"
@@ -236,11 +245,6 @@ msgstr "Línia de separació"
 #: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Impost"
-
-#. module: account_invoice_layout
-#: help:notify.message,msg:0
-msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr "Aquesta notificació apareixerà en la part inferior de les factures quan siguin impreses."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0

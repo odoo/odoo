@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:00:38+0000\n"
-"PO-Revision-Date: 2008-12-22 18:00:38+0000\n"
+"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
+"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,8 +56,15 @@ msgid "Off-Days' Summary"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: hr_holidays
@@ -137,6 +144,7 @@ msgstr "Примечания"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
+#: field:hr.holidays.log,holiday_status:0
 #: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
 msgstr "Стаус отпусков"
@@ -247,6 +255,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,employee_id:0
+#: field:hr.holidays.log,employee_id:0
 #: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "Сотрудник"
@@ -265,6 +274,11 @@ msgstr ""
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Пшеничный"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,nb_holidays:0
+msgid "Number of Holidays Requested"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -332,9 +346,19 @@ msgid "Allow to override Limit"
 msgstr ""
 
 #. module: hr_holidays
+#: field:hr.holidays.log,holiday_user_id:0
+msgid "Holidays user"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Lavender"
 msgstr "Бледно-лиловый"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_log
+msgid "hr.holidays.log"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -459,9 +483,8 @@ msgid "Document for employee"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,active:0
-#: field:hr.holidays.status,active:0
-msgid "Active"
+#: field:hr.holidays.log,date:0
+msgid "Date"
 msgstr ""
 
 #. module: hr_holidays
@@ -490,13 +513,36 @@ msgid "Holiday manager"
 msgstr ""
 
 #. module: hr_holidays
+#: field:hr.holidays.per.user,active:0
+#: field:hr.holidays.status,active:0
+msgid "Active"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.log,name:0
+msgid "Action"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
 msgstr "Светло-синий"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You can not cancel this holiday request. first You have to make its case in draft state."
+msgstr ""
+
+#. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
 msgid "Approved Request"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,history:0
+#: view:hr.holidays.per.user:0
+msgid "History"
 msgstr ""
 
 #. module: hr_holidays
@@ -512,6 +558,11 @@ msgstr "Заявления на отпуск в ожидании проверк�
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+msgid "General Information"
 msgstr ""
 
 #. module: hr_holidays
@@ -544,11 +595,6 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Employee holidays"
-msgstr "Отпуска сотрудника"
-
-#. module: hr_holidays
 #: wizard_button:hr.holidays.summary,init,checkdept:0
 #: wizard_button:hr.holidays.summary.employee,init,checkemp:0
 msgid "Print"
@@ -559,6 +605,11 @@ msgstr "Распечатать"
 #: model:ir.ui.menu,name:hr_holidays.menu_holidays_summary
 msgid "Print Summary of Holidays"
 msgstr "Распечатать сводку отпустков"
+
+#. module: hr_holidays
+#: view:hr.holidays.log:0
+msgid "Log Holidays"
+msgstr ""
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,depts:0
@@ -616,6 +667,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
 msgid "My Holidays Request Validated"
 msgstr "Мои проверенные заявления на отпуск"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,holiday_req_id:0
+msgid "Holiday Request ID"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

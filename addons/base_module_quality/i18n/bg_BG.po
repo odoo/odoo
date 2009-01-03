@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
+"POT-Creation-Date: 2009-01-03 02:00:56+0000\n"
+"PO-Revision-Date: 2009-01-03 02:00:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,59 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.base_module_quality
-msgid "Check the Quality of module"
+#: field:quality.check.detail,general_info:0
+msgid "General Info"
 msgstr ""
 
 #. module: base_module_quality
-#: wizard_button:base.module.quality,init,end:0
-msgid "Ok"
-msgstr ""
-
-#. module: base_module_quality
-#: wizard_view:base.module.quality,init:0
-msgid "Check quality"
-msgstr ""
-
-#. module: base_module_quality
-#: wizard_view:base.module.quality,init:0
+#: view:quality.check.detail:0
 msgid "Summary"
+msgstr ""
+
+#. module: base_module_quality
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Невалиден XML за преглед на архитектурата"
+
+#. module: base_module_quality
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
+
+#. module: base_module_quality
+#: field:quality.check.detail,detail:0
+#: view:quality.check.detail:0
+msgid "Detail"
+msgstr ""
+
+#. module: base_module_quality
+#: field:wizard.quality.check,verbose_detail:0
+msgid "Verbose Detail"
+msgstr ""
+
+#. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_quality_check_detail
+msgid "quality.check.detail"
+msgstr ""
+
+#. module: base_module_quality
+#: view:wizard.quality.check:0
+#: view:quality.check.detail:0
+msgid "Result"
+msgstr ""
+
+#. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_wizard_quality_check
+msgid "wizard.quality.check"
+msgstr ""
+
+#. module: base_module_quality
+#: view:wizard.quality.check:0
+msgid "Verbose detail"
+msgstr ""
+
+#. module: base_module_quality
+#: field:quality.check.detail,quality_check:0
+msgid "Quality"
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:57:17+0000\n"
-"PO-Revision-Date: 2008-12-22 17:57:17+0000\n"
+"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
+"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,6 +61,16 @@ msgstr "Differenza tra l'importo da pagare\n"
 "e l'importo dell'ordine di pagamento"
 
 #. module: account_payment
+#: help:payment.line,date:0
+msgid "If no payment date is specified, the bank will treat this payment line directly"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_prefered:0
+msgid "Preferred date"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
 msgstr "Libero"
@@ -86,13 +96,13 @@ msgid "_Add to payment order"
 msgstr "_Aggiungi all'ordine di pagamento"
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Importo"
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 msgid "Execution date:"
 msgstr "Data esecuzione:"
 
@@ -113,7 +123,7 @@ msgid "New Payment Order"
 msgstr ""
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
 msgstr "Riferimento"
@@ -175,9 +185,21 @@ msgid "Transaction Information"
 msgstr "Informazione di transazione"
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
+#: view:payment.mode:0
+msgid "Payment Mode"
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Totale debiti"
+
+#. module: account_payment
+#: field:payment.line,ml_inv_ref:0
+msgid "Invoice Ref."
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -249,7 +271,7 @@ msgid "Communication Type"
 msgstr "Tipo di comunicazione"
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 #: field:payment.line,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -277,6 +299,7 @@ msgstr "Informazione"
 
 #. module: account_payment
 #: help:payment.type,name:0
+#: view:payment.type:0
 msgid "Payment Type"
 msgstr ""
 
@@ -336,12 +359,12 @@ msgid "Payment Lines"
 msgstr "Righe pagamento"
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 msgid "Date"
 msgstr "Data"
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 msgid "Reference:"
 msgstr "Riferimento:"
 
@@ -389,11 +412,6 @@ msgstr "Totale in valuta dell'azienda"
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
 msgstr ""
-
-#. module: account_payment
-#: field:payment.line,ml_inv_ref:0
-msgid "Invoice Ref"
-msgstr "Rif. fattura"
 
 #. module: account_payment
 #: field:payment.type,code:0
@@ -454,7 +472,7 @@ msgid "Pay"
 msgstr "Paga"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
 msgstr "Ordine di pagamento"
@@ -490,7 +508,7 @@ msgid "Cash Journal for the Payment Mode"
 msgstr ""
 
 #. module: account_payment
-#: rml:payement.order:0
+#: rml:payment.order:0
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
 msgstr "Conto bancario"
@@ -503,11 +521,6 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,company_currency:0
 msgid "Company Currency"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.line,date:0
-msgid "If no payment date is specified, the bank will treat this payment line direclty"
 msgstr ""
 
 #. module: account_payment
@@ -559,7 +572,6 @@ msgstr "Ordine"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
 #: field:payment.mode,type:0
-#: view:payment.type:0
 msgid "Payment type"
 msgstr "Tipo di pagamento"
 
@@ -579,16 +591,8 @@ msgid "Select the Payment Type for the Payment Mode."
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Prefered date"
-msgstr "Data preferita"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.model,name:account_payment.model_payment_mode
 #: field:payment.order,mode:0
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
 msgid "Payment mode"
 msgstr "Modalità di pagamento"
 

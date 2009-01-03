@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:59:17+0000\n"
-"PO-Revision-Date: 2008-12-22 17:59:17+0000\n"
+"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
+"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,11 @@ msgid "Title"
 msgstr "Título"
 
 #. module: account_invoice_layout
+#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+msgid "Invoices with Layout and Message"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Desc.(%)"
@@ -52,9 +57,9 @@ msgid "Supplier Invoice"
 msgstr "Factura do fornecedor"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
-msgid "Invoice + Message"
-msgstr ""
+#: help:notify.message,msg:0
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Esta notificação aparecera no rodapé da factura quando imprimida."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -163,7 +168,6 @@ msgstr "XML inválido para a arquitectura de vista"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoice"
 msgstr "Factura"
 
@@ -203,6 +207,11 @@ msgid "Total (excl. taxes):"
 msgstr "Total (taxas excluídas)"
 
 #. module: account_invoice_layout
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
 msgstr "Factura rascunho"
@@ -236,11 +245,6 @@ msgstr "Linha separadora"
 #: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Taxa"
-
-#. module: account_invoice_layout
-#: help:notify.message,msg:0
-msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr "Esta notificação aparecera no rodapé da factura quando imprimida."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0

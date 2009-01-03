@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:59:57+0000\n"
-"PO-Revision-Date: 2008-12-22 17:59:57+0000\n"
+"POT-Creation-Date: 2009-01-03 02:11:49+0000\n"
+"PO-Revision-Date: 2009-01-03 02:11:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,8 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheet0
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetconfirming0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "Timesheet"
 msgstr ""
 
@@ -144,8 +145,8 @@ msgid "Total Difference"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetconfirming0
-msgid "Timesheet Confirming"
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_phonecallencoding0
+msgid "Phone call encoding"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -212,7 +213,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_attendance:0
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendance0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance"
 msgstr ""
 
@@ -350,8 +351,8 @@ msgid "Review of work"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
-msgid "Timesheet Line"
+#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice on Work"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -443,11 +444,6 @@ msgid "Invoice based on timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
-msgid "Review of your work at the end of the day"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Creates invoice based on timesheet"
 msgstr ""
@@ -480,7 +476,7 @@ msgid "Confirmed Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendance0
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance entry moves into the timesheet"
 msgstr ""
 
@@ -490,8 +486,8 @@ msgid "Creates your analytic cost accoording to quantity"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice on Work"
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
+msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -571,7 +567,7 @@ msgid "Absent"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheet0
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "timesheet entry is into draft state."
 msgstr ""
 
@@ -591,8 +587,8 @@ msgid "Encode how much time u spent on phone call"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_phonecallencoding0
-msgid "Phone call encoding"
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
+msgid "Review of your work at the end of the day"
 msgstr ""
 
 #. module: hr_timesheet_sheet

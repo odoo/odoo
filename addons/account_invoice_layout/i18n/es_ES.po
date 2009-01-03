@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
-"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
+"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
+"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,11 @@ msgid "Title"
 msgstr "Título"
 
 #. module: account_invoice_layout
+#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+msgid "Invoices with Layout and Message"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Desc. (%)"
@@ -52,9 +57,9 @@ msgid "Supplier Invoice"
 msgstr "Factura de proveedor"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
-msgid "Invoice + Message"
-msgstr "Factura + Mensaje"
+#: help:notify.message,msg:0
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Esta notificación aparecerá en la parte inferior de las facturas cuando sean impresas."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -89,7 +94,7 @@ msgstr "Impuestos:"
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr "Seq."
+msgstr "Sec."
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
@@ -163,7 +168,6 @@ msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoice"
 msgstr "Factura"
 
@@ -203,6 +207,11 @@ msgid "Total (excl. taxes):"
 msgstr "Total (sin impuestos):"
 
 #. module: account_invoice_layout
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
 msgstr "Factura borrador"
@@ -236,11 +245,6 @@ msgstr "Línea de separación"
 #: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Impuesto"
-
-#. module: account_invoice_layout
-#: help:notify.message,msg:0
-msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr "Esta notificación aparecerá en la parte inferior de las facturas cuando sean impresas."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0

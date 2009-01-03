@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:00:38+0000\n"
-"PO-Revision-Date: 2008-12-22 18:00:38+0000\n"
+"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
+"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,11 @@ msgid "Title"
 msgstr "Название"
 
 #. module: account_invoice_layout
+#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+msgid "Invoices with Layout and Message"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Скидка (%)"
@@ -52,9 +57,9 @@ msgid "Supplier Invoice"
 msgstr "Счета поставщиков"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
-msgid "Invoice + Message"
-msgstr ""
+#: help:notify.message,msg:0
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Данное уведомление будет выведено при печати в нижней части счета."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -163,7 +168,6 @@ msgstr "Неправильный XML для просмотра архитект�
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoice"
 msgstr "Счет"
 
@@ -203,6 +207,11 @@ msgid "Total (excl. taxes):"
 msgstr "Всего (до налогов)"
 
 #. module: account_invoice_layout
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
 msgstr "Черновик счета"
@@ -236,11 +245,6 @@ msgstr "Разделительная линия"
 #: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Налог"
-
-#. module: account_invoice_layout
-#: help:notify.message,msg:0
-msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr "Данное уведомление будет выведено при печати в нижней части счета."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
