@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -133,7 +133,7 @@ class crm_menu_config_wizard(osv.osv_memory):
             lst = ('data','menu','demo')
         res = self.read(cr,uid,ids)[0]
         idref = {}
-        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk','claims','phonecall', 'document_ics']:
+        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk','claims','phonecall']:
             if (not res[section]):
                 continue
             for fname in lst:

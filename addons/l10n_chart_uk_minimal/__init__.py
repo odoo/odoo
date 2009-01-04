@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Seath Solutions Ltd. All Rights Reserved.
+# Copyright (c) 2004-2009 Seath Solutions Ltd. All Rights Reserved.
 # Geoff Gardiner, Seath Solutions Ltd (http://www.seathsolutions.com/)
 # $Id$
 #
