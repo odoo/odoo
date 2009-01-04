@@ -103,6 +103,12 @@ class board_board(osv.osv):
         'view_id': fields.many2one('ir.ui.view', 'Board View'),
         'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
     }
+    
+    # the following lines added to let the button on dashboard work.
+    _defaults = {
+        'name': lambda *args: 'Dashboard'
+    }
+    
 board_board()
 
 class board_line(osv.osv):

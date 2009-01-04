@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:59:57+0000\n"
-"PO-Revision-Date: 2008-12-22 17:59:57+0000\n"
+"POT-Creation-Date: 2009-01-03 02:11:49+0000\n"
+"PO-Revision-Date: 2009-01-03 02:11:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,18 +21,35 @@ msgid "Receivable"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_equity
-msgid "Equity"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_immobilisations
-msgid "Immobilisations"
+#: field:l10n.fr.report,code:0
+msgid "Code"
+msgstr ""
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_stocks
+msgid "Actif circulant"
+msgstr ""
+
+#. module: l10n_fr
+#: model:ir.actions.todo,note:l10n_fr.config_call_account_template
+msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"	This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
 msgstr ""
 
 #. module: l10n_fr
 #: wizard_button:account.chart.report,init,pdf:0
 msgid "Print Balance Sheet"
+msgstr ""
+
+#. module: l10n_fr
+#: model:ir.actions.wizard,name:l10n_fr.wizard_l10n_fr_cdr_report
+#: model:ir.ui.menu,name:l10n_fr.menu_action_cdr
+msgid "Compte de resultat"
 msgstr ""
 
 #. module: l10n_fr
@@ -46,6 +63,22 @@ msgid "Income"
 msgstr ""
 
 #. module: l10n_fr
+#: wizard_button:l10n.fr.bilan.report,init,report:0
+#: wizard_button:l10n.fr.cdr.report,init,report:0
+msgid "Print"
+msgstr ""
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
+msgstr ""
+
+#. module: l10n_fr
+#: wizard_view:l10n.fr.bilan.report,init:0
+msgid "Select year"
+msgstr ""
+
+#. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_dettes
 msgid "Dettes long terme"
 msgstr ""
@@ -56,13 +89,36 @@ msgid "Provisions"
 msgstr ""
 
 #. module: l10n_fr
+#: model:ir.actions.act_window,name:l10n_fr.action_l10n_fr_line_tree
+#: model:ir.ui.menu,name:l10n_fr.menu_l10n_fr_line_tree
+#: view:l10n.fr.line:0
+msgid "Entrées"
+msgstr ""
+
+#. module: l10n_fr
 #: wizard_field:account.chart.report,init,company_id:0
 msgid "Company"
 msgstr ""
 
 #. module: l10n_fr
+#: model:ir.actions.wizard,name:l10n_fr.wizard_l10n_fr_bilan_report
+#: model:ir.ui.menu,name:l10n_fr.menu_action_bilan
+msgid "Bilan"
+msgstr ""
+
+#. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_payable
 msgid "Payable"
+msgstr ""
+
+#. module: l10n_fr
+#: view:l10n.fr.report:0
+msgid "Rapport"
+msgstr ""
+
+#. module: l10n_fr
+#: field:l10n.fr.line,report_id:0
+msgid "Report"
 msgstr ""
 
 #. module: l10n_fr
@@ -76,13 +132,44 @@ msgid "Engagements"
 msgstr ""
 
 #. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_l10n_fr_line
+msgid "Report Lines for l10n_fr"
+msgstr ""
+
+#. module: l10n_fr
 #: wizard_field:account.chart.report,init,target_move:0
 msgid "Target Moves"
 msgstr ""
 
 #. module: l10n_fr
+#: model:ir.ui.menu,name:l10n_fr.menu_synthesis
+msgid "Documents de synthèse"
+msgstr ""
+
+#. module: l10n_fr
+#: field:l10n.fr.line,definition:0
+msgid "Definition"
+msgstr ""
+
+#. module: l10n_fr
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: l10n_fr
+#: field:l10n.fr.line,name:0
+#: field:l10n.fr.report,name:0
+msgid "Name"
+msgstr ""
+
+#. module: l10n_fr
 #: selection:account.chart.report,init,target_move:0
 msgid "All Posted Entries"
+msgstr ""
+
+#. module: l10n_fr
+#: field:l10n.fr.report,line_ids:0
+msgid "Lines"
 msgstr ""
 
 #. module: l10n_fr
@@ -101,8 +188,19 @@ msgid "Comptes spéciaux"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stocks
-msgid "Actif circulant"
+#: model:ir.actions.act_window,name:l10n_fr.action_l10n_fr_report_tree
+#: model:ir.ui.menu,name:l10n_fr.menu_l10n_fr_report_tree
+msgid "Rapports"
+msgstr ""
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_equity
+msgid "Equity"
+msgstr ""
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_immobilisations
+msgid "Immobilisations"
 msgstr ""
 
 #. module: l10n_fr
@@ -121,19 +219,23 @@ msgid "Expense"
 msgstr ""
 
 #. module: l10n_fr
+#: wizard_view:l10n.fr.cdr.report,init:0
+msgid "Select period"
+msgstr ""
+
+#. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_view
 msgid "View"
 msgstr ""
 
 #. module: l10n_fr
-#: model:ir.actions.todo,note:l10n_fr.config_call_account_template
-msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
-"This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
+#: model:account.account.type,name:l10n_fr.account_type_stock
+msgid "Stocks"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stock
-msgid "Stocks"
+#: model:ir.ui.menu,name:l10n_fr.menu_synthesis_config
+msgid "Configuration"
 msgstr ""
 
 #. module: l10n_fr
@@ -149,17 +251,26 @@ msgstr ""
 
 #. module: l10n_fr
 #: wizard_field:account.chart.report,init,fiscalyear:0
+#: wizard_field:l10n.fr.bilan.report,init,fiscalyear:0
+#: wizard_field:l10n.fr.cdr.report,init,fiscalyear:0
 msgid "Fiscal year"
 msgstr ""
 
 #. module: l10n_fr
 #: wizard_button:account.chart.report,init,end:0
+#: wizard_button:l10n.fr.bilan.report,init,end:0
+#: wizard_button:l10n.fr.cdr.report,init,end:0
 msgid "Cancel"
 msgstr ""
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_cloture
 msgid "Cloture"
+msgstr ""
+
+#. module: l10n_fr
+#: field:l10n.fr.line,code:0
+msgid "Variable Name"
 msgstr ""
 
 #. module: l10n_fr

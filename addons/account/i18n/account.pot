@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-30 13:19:55+0000\n"
-"PO-Revision-Date: 2008-12-30 13:19:55+0000\n"
+"POT-Creation-Date: 2009-01-03 02:18:25+0000\n"
+"PO-Revision-Date: 2009-01-03 02:18:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,9 +122,8 @@ msgid "Starting date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/wizard_refund.py:0
-#, python-format
-msgid "Can not %s draft invoice."
+#: view:account.invoice:0
+msgid "Compute Taxes"
 msgstr ""
 
 #. module: account
@@ -877,6 +876,12 @@ msgid "Move Lines"
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "Can not %s draft invoice."
+msgstr ""
+
+#. module: account
 #: view:account.model:0
 msgid "Create entries"
 msgstr ""
@@ -1323,6 +1328,11 @@ msgid "Value"
 msgstr ""
 
 #. module: account
+#: model:process.node,name:account.process_node_invoiceinvoice0
+msgid "Create Invoice"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.invoice.pay,addendum,writeoff_acc_id:0
 #: wizard_field:account.move.line.reconcile,addendum,writeoff_acc_id:0
 msgid "Write-Off account"
@@ -1560,8 +1570,9 @@ msgid "Open for reconciliation"
 msgstr ""
 
 #. module: account
-#: model:process.node,name:account.process_node_invoiceinvoice0
-msgid "Create Invoice"
+#: code:addons/account/account.py:0
+#, python-format
+msgid "Purchase Journal"
 msgstr ""
 
 #. module: account
@@ -1633,11 +1644,6 @@ msgid "Close Period"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0
-msgid "Reset taxes"
-msgstr ""
-
-#. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
 msgstr ""
@@ -1682,12 +1688,12 @@ msgid "Unreconciliation"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:0
 #: code:addons/account/invoice.py:0
 #: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
+#: code:addons/account/account.py:0
 #: code:addons/account/wizard/wizard_open_closed_fiscalyear.py:0
 #: code:addons/account/wizard/wizard_journal.py:0
+#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "UserError"
 msgstr ""
@@ -3528,10 +3534,10 @@ msgstr ""
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_analytic_line.py:0
-#: code:addons/account/account.py:0
 #: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/wizard_refund.py:0
+#: code:addons/account/account.py:0
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
+#: code:addons/account/wizard/wizard_refund.py:0
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -3737,8 +3743,8 @@ msgid "Invoice Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #: code:addons/account/wizard/wizard_open_closed_fiscalyear.py:0
+#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The journal must have centralised counterpart"
 msgstr ""
@@ -3826,11 +3832,6 @@ msgid "Balance:"
 msgstr ""
 
 #. module: account
-#: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
-msgid "Confirm statement from draft"
-msgstr ""
-
-#. module: account
 #: rml:account.overdue:0
 msgid "Customer account statement"
 msgstr ""
@@ -3888,12 +3889,6 @@ msgstr ""
 #: field:account.payment.term,active:0
 #: field:account.tax,active:0
 msgid "Active"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "Purchase Journal"
 msgstr ""
 
 #. module: account
@@ -4565,6 +4560,11 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_config_wizard
 msgid "account.config.wizard"
+msgstr ""
+
+#. module: account
+#: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
+msgid "Confirm statement from draft"
 msgstr ""
 
 #. module: account
@@ -5375,7 +5375,6 @@ msgid "Check this option if the user can make a reconciliation of the entries in
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0
 #: view:account.bank.statement:0
 #: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0
@@ -5416,8 +5415,8 @@ msgid "Bad account !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:0
 #: code:addons/account/account_move_line.py:0
+#: code:addons/account/account.py:0
 #: code:addons/account/wizard/wizard_open_closed_fiscalyear.py:0
 #, python-format
 msgid "Error"

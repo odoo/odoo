@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:00:38+0000\n"
-"PO-Revision-Date: 2008-12-22 18:00:38+0000\n"
+"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
+"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,11 +97,6 @@ msgid "Work from"
 msgstr "Работа с"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr ""
-
-#. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
@@ -116,11 +111,6 @@ msgstr ""
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Женский"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_jobshiring0
-msgid "Process to search, interview and evaluate new candidates"
-msgstr ""
 
 #. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
@@ -269,11 +259,6 @@ msgid "Note"
 msgstr "Примечание"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeejob0
-msgid "After confirming job, he will be a employee"
-msgstr ""
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Контактная информация"
@@ -311,11 +296,6 @@ msgid "Day of week"
 msgstr "День недели"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_employeejob0
-msgid "Employee Job"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
 msgstr ""
@@ -324,6 +304,11 @@ msgstr ""
 #: field:hr.employee,active:0
 msgid "Active"
 msgstr "Активен"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -336,6 +321,12 @@ msgid "Employee Complete Form"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Категории сотрудника"
+
+#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Компании"
@@ -346,14 +337,8 @@ msgid "Wednesday"
 msgstr "Среда"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Категории сотрудника"
-
-#. module: hr
-#: model:process.node,name:hr.process_node_jobshiring0
-msgid "Jobs hiring"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
 msgstr ""
 
 #. module: hr

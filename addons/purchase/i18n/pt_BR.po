@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:58:36+0000\n"
-"PO-Revision-Date: 2008-12-22 17:58:36+0000\n"
+"POT-Creation-Date: 2009-01-03 02:10:25+0000\n"
+"PO-Revision-Date: 2009-01-03 02:10:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,6 +95,11 @@ msgstr ""
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Fax :"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_productrecept0
+msgid "Create invoice from product recept"
 msgstr ""
 
 #. module: purchase
@@ -242,6 +247,11 @@ msgid "From Order: a draft invoice will be pre-generated based on the purchase o
 msgstr ""
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Invoice based on deliveries"
+msgstr ""
+
+#. module: purchase
 #: rml:purchase.order:0
 msgid "Net Price"
 msgstr ""
@@ -269,6 +279,11 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: purchase
+#: model:process.node,name:purchase.process_node_productrecept0
+msgid "Product Receipt"
+msgstr ""
+
+#. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 msgid "Confirm"
 msgstr ""
@@ -276,6 +291,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Invoice Control"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
 msgstr ""
 
 #. module: purchase
@@ -523,6 +544,11 @@ msgid "Request for quotation is proposed by the system."
 msgstr ""
 
 #. module: purchase
+#: model:process.transition,name:purchase.process_transition_packinginvoice0
+msgid "Packing Invoice"
+msgstr ""
+
+#. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
 msgid "Creates invoice from packin list"
 msgstr ""
@@ -541,6 +567,11 @@ msgstr ""
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinginvoice0
+msgid "Out Packing"
 msgstr ""
 
 #. module: purchase
@@ -669,14 +700,17 @@ msgstr "Embarcado"
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotation"
 msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Tél. :"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_productrecept0
+msgid "Control invoices on receptions"
 msgstr ""
 
 #. module: purchase
@@ -706,6 +740,11 @@ msgstr ""
 #: field:purchase.order.line,name:0
 msgid "Description"
 msgstr "Descrição"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_productrecept0
+msgid "Product recept invoice"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -799,6 +838,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 msgid "Purchase Management"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_packinginvoice0
+msgid "From Packing list, Create invoice."
 msgstr ""
 
 #. module: purchase

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:57:17+0000\n"
-"PO-Revision-Date: 2008-12-22 17:57:17+0000\n"
+"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
+"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Rif. Ordine"
 
 #. module: sale
 #: view:sale.order:0
@@ -28,18 +28,18 @@ msgstr "Ricrea Approvvigionamento"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "You invoice has been successfully created !"
-msgstr ""
+msgstr "La tua fattura è stata creata con successo!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Sale Procurement"
-msgstr ""
+msgstr "Vendita appalti"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Ordine di consegna"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -65,17 +65,17 @@ msgstr "In attesa di programmazione"
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr ""
+msgstr "Procedura per fornire un ordine di vendita"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
-msgstr ""
+msgstr "La fattura viene creata quanto 'Crea fattura' viene cliccato dopo aver confermato l'ordine di vendita. Questa transazione sposta l'ordine di vendita per le fatture."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "Confirm Quotation"
 
 #. module: sale
 #: view:sale.order:0
@@ -86,7 +86,7 @@ msgstr "Definizione Automatica"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "Imballaggio"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_shipping
@@ -111,7 +111,7 @@ msgstr "Approvvigionamento corretto"
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr ""
+msgstr "Consegna, dal magazzino al cliente."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -154,13 +154,6 @@ msgid "Origin"
 msgstr "Origine"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Spostamenti Stock"
@@ -173,12 +166,13 @@ msgstr "fattura da Preparazione Merci"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Ordine di consegna:"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: field:stock.picking,sale_id:0
 #: view:sale.order:0
+#: model:process.node,name:sale.process_node_saleorder0
 #: model:res.request.link,name:sale.req_link_sale_order
 msgid "Sale Order"
 msgstr "Ordine di Vendita"
@@ -187,7 +181,7 @@ msgstr "Ordine di Vendita"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all packings attached to this sale order."
-msgstr ""
+msgstr "Si deve prima cancellare tutti gli imballaggi associati a questo ordine di vendita."
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -199,12 +193,12 @@ msgstr "Tasse"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Azione non valida !"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Totale netto:"
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -242,7 +236,7 @@ msgstr "Crea fatture"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
-msgstr ""
+msgstr "Confermando l'elenco degli imballaggi vengono spostati agli ordini di consegna. Questo può essere fatto cliccando sul pulsante 'Convalida'."
 
 #. module: sale
 #: view:sale.order:0
@@ -252,7 +246,7 @@ msgstr "Riferimento"
 #. module: sale
 #: model:process.process,name:sale.process_process_salesworkflow0
 msgid "Sales Workflow"
-msgstr ""
+msgstr "Flusso vendite"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -611,6 +605,11 @@ msgid "Packing Default Policy"
 msgstr ""
 
 #. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
+msgstr ""
+
+#. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
 msgstr ""
@@ -670,7 +669,7 @@ msgstr "Stato Ordine"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
-msgstr ""
+msgstr "RIghe non fatturate"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -694,7 +693,7 @@ msgstr "Errore: l'unità di misura predefinita e l'unità di misura d'acquisto d
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
-msgstr "Le Mie Vendita in Eccezione di Soedizione"
+msgstr "Le Mie Vendita in Eccezione di Spedizione"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -813,6 +812,7 @@ msgstr "Proprietà"
 
 #. module: sale
 #: selection:sale.order,state:0
+#: model:process.node,name:sale.process_node_quotation0
 msgid "Quotation"
 msgstr "Preventivo"
 
