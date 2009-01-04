@@ -3,10 +3,10 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    The refactoring about the OpenSSL support come from Tryton
-#    Copyright (C) 2007-2008 Cédric Krier.
-#    Copyright (C) 2007-2008 Bertrand Chenal.
+#    Copyright (C) 2007-2009 Cédric Krier.
+#    Copyright (C) 2007-2009 Bertrand Chenal.
 #    Copyright (C) 2008 B2CK SPRL.
 #
 #    This program is free software: you can redistribute it and/or modify
