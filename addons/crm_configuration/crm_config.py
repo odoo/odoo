@@ -26,6 +26,7 @@ from osv import fields,osv,orm
 import os
 import mx.DateTime
 import base64
+import pooler
 
 #AVAILABLE_STATES = [
 #    ('draft','Unreviewed'),
@@ -123,15 +124,16 @@ class crm_menu_config_wizard(osv.osv_memory):
         'opportunity': lambda *args: True,
         'phonecall': lambda *args: True,
     }
-    def action_create(self, cr, uid, ids, *args):
-        modid = self.pool.get('ir.module.module').search(cr, uid, [('name','=','crm_configuration')])
-        moddemo = self.pool.get('ir.module.module').browse(cr, uid, modid[0]).demo
+    def action_create(self, cr, uid, ids, context=None):
+        module_proxy = self.pool.get('ir.module.module')
+        modid = module_proxy.search(cr, uid, [('name','=','crm_configuration')])
+        moddemo = module_proxy.browse(cr, uid, modid[0]).demo
         lst= ('data','menu')
         if moddemo:
             lst = ('data','menu','demo')
         res = self.read(cr,uid,ids)[0]
         idref = {}
-        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk','claims','phonecall'] :
+        for section in ['meeting','lead','opportunity','jobs','bugs','fund','helpdesk','claims','phonecall', 'document_ics']:
             if (not res[section]):
                 continue
             for fname in lst:
@@ -142,6 +144,13 @@ class crm_menu_config_wizard(osv.osv_memory):
                     fp = None
                 if fp:
                     tools.convert_xml_import(cr, 'crm_configuration', fp,  idref, 'init', noupdate=True)
+
+        if res['document_ics']:
+            ids = module_proxy.search(cr, uid, [('name', '=', 'document_ics')])
+            module_proxy.button_install(cr, uid, ids, context=context)
+            cr.commit()
+            db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
