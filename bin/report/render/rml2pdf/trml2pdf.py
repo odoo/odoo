@@ -40,7 +40,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
-import StringIO
+import cStringIO
 import xml.dom.minidom
 import copy
 
@@ -355,22 +355,22 @@ class _rml_canvas(object):
 
             if node.hasAttribute('name'):
                 image_data = self.images[node.getAttribute('name')]
-                s = StringIO.StringIO(image_data)
+                s = cStringIO.StringIO(image_data)
             else:
                 import base64
                 image_data = base64.decodestring(node.firstChild.nodeValue)
                 if not image_data: return False
-                s = StringIO.StringIO(image_data)
+                s = cStringIO.StringIO(image_data)
         else:
             if node.getAttribute('file') in self.images:
-                s = StringIO.StringIO(self.images[node.getAttribute('file')])
+                s = cStringIO.StringIO(self.images[node.getAttribute('file')])
             else:
                 try:
                     u = urllib.urlopen(str(node.getAttribute('file')))
-                    s = StringIO.StringIO(u.read())
+                    s = cStringIO.StringIO(u.read())
                 except:
                     u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
-                    s = StringIO.StringIO(u.read())
+                    s = cStringIO.StringIO(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 
@@ -639,7 +639,7 @@ class _rml_flowable(object):
                 else:
                     import base64
                     image_data = base64.decodestring(node.firstChild.nodeValue)
-                image = StringIO.StringIO(image_data)
+                image = cStringIO.StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
                 return platypus.Image(node.getAttribute('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
@@ -794,7 +794,7 @@ def parseString(data, fout=None, images={}, path='.',title=None):
         fp.close()
         return fout
     else:
-        fp = StringIO.StringIO()
+        fp = cStringIO.StringIO()
         r.render(fp)
         return fp.getvalue()
 

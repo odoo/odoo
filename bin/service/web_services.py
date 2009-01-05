@@ -105,7 +105,7 @@ class db(netsvc.Service):
                 except Exception, e:
                     serv.actions[id]['clean'] = False
                     serv.actions[id]['exception'] = e
-                    from StringIO import StringIO
+                    from cStringIO import StringIO
                     import traceback
                     e_str = StringIO()
                     traceback.print_exc(file=e_str)

@@ -20,8 +20,11 @@
 #
 ##############################################################################
 import re
-import StringIO,xml.dom.minidom
-import osv,ir,pooler
+import cStringIO
+import xml.dom.minidom
+import osv
+import ir
+import pooler
 
 import csv
 import os.path
@@ -804,7 +807,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
     pool = pooler.get_pool(cr.dbname)
 
-    input = StringIO.StringIO(csvcontent)
+    input = cStringIO.StringIO(csvcontent)
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
     fname_partial = ""

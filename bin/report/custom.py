@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-import os, time
+import os
+import time
 import netsvc
 
 import tools
@@ -37,7 +38,7 @@ import libxml2
 import libxslt
 from pychart import *
 import misc
-import StringIO
+import cStringIO
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -358,7 +359,7 @@ class report_custom(report_int):
 
     def _create_lines(self, cr, uid, ids, report, fields, results, context):
         service = netsvc.LocalService("object_proxy")
-        pdf_string = StringIO.StringIO()
+        pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
         can.show(80,380,'/16/H'+report['title'])
@@ -461,7 +462,7 @@ class report_custom(report_int):
 
     def _create_bars(self, cr, uid, ids, report, fields, results, context):
         service = netsvc.LocalService("object_proxy")
-        pdf_string = StringIO.StringIO()
+        pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
         can.show(80,380,'/16/H'+report['title'])
@@ -558,7 +559,7 @@ class report_custom(report_int):
         return True
 
     def _create_pie(self, cr, uid, ids, report, fields, results, context):
-        pdf_string = StringIO.StringIO()
+        pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         ar = area.T(size=(350,350), legend=legend.T(),
                     x_grid_style = None, y_grid_style = None)

@@ -41,7 +41,7 @@ import release
 import re
 import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
-import StringIO
+import cStringIO
 
 logger = netsvc.Logger()
 
@@ -198,7 +198,7 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
     if os.path.isfile(ap + '.zip'):
         val = file(ap + '.zip', 'rb').read()
     else:
-        archname = StringIO.StringIO('wb')
+        archname = cStringIO.StringIO('wb')
         archive = PyZipFile(archname, "w", ZIP_DEFLATED)
         archive.writepy(ap)
         _zippy(archive, ap, src=src)

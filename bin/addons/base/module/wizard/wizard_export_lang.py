@@ -23,7 +23,7 @@
 import wizard
 import tools
 import base64
-import StringIO
+import cStringIO
 import csv
 import pooler
 from osv import fields,osv
@@ -49,7 +49,7 @@ class wizard_export_lang(osv.osv_memory):
         this = self.browse(cr, uid, ids)[0]
         mods = map(lambda m: m.name, this.modules) or ['all']
         mods.sort()
-        buf=StringIO.StringIO()
+        buf=cStringIO.StringIO()
         tools.trans_export(this.lang, mods, buf, this.format, dbname=cr.dbname)
         if this.format == 'csv':
             this.advice = _("Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it.")
