@@ -46,7 +46,6 @@ class Service(object):
         SERVICES[name] = self
         self.__name = name
         self._methods = {}
-        self._response = None
 
     def joinGroup(self, name):
         GROUPS.setdefault(name, {})[self.__name] = self
@@ -71,6 +70,8 @@ class LocalService(Service):
         except KeyError, keyError:
             Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
             raise
+    def __call__(self, method, *params):
+        return getattr(self, method)(*params)
 
 def service_exist(name):
     return SERVICES.get(name, False)
@@ -219,13 +220,7 @@ class OpenERPDispatcher:
             self.log('service', service_name)
             self.log('method', method)
             self.log('params', params)
-            service = LocalService(service_name)
-            method_call = getattr(service, method)
-            service._service.response = None
-            result = method_call(*params)
-            response = service._service._response
-            if response is not None:
-                result = response
+            result = LocalService(service_name)(method, *params)
             self.log('result', result)
             return result
         except Exception, e:
