@@ -34,8 +34,10 @@ class quality_test(base_module_quality.abstract_quality_check):
         This test checks the quality of __terp__.py file in the selected module.
         '''
         super(quality_test, self).__init__()
-        self.bool_installed_only = True
+        self.bool_installed_only = False
         self.no_terp = False
+        self.ponderation = 2
+
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -76,7 +78,7 @@ class quality_test(base_module_quality.abstract_quality_check):
             else:
                 feel_bad_factor += 1
 
-        self.score = round((feel_good_factor * 10) / float(feel_good_factor + feel_bad_factor),2)
+        self.score = round((feel_good_factor) / float(feel_good_factor + feel_bad_factor),2)
         self.result += "__terp__.py : "+ str(self.score) + "/10\n"
         return None
 
@@ -92,7 +94,7 @@ The module does not contain the __terp__.py file.\n\n """
     """ + "Score: " + str(self.score) + "/10\n"
         return summary
 
-    def get_result_detail(self):
+    def get_result_details(self):
         detail = "\n===TERP Test===\n" + self.result
         return detail
 

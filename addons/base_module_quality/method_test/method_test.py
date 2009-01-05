@@ -67,26 +67,22 @@ class quality_test(base_module_quality.abstract_quality_check):
                 ex_count += 1
             self.result_det[obj] = temp
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
+        self.result = self.get_result()
+        self.result_details = self.get_result_details()
+
         return None
 
-    def get_result(self, cr, uid, module_path, module_state):
-        self.run_test(cr, uid, module_path)
-        if not self.bool_installed_only or module_state=="installed":
-            summary = """
+
+    def get_result(self):
+        summary = """
 ===Method Test===:
 
 This test checks if the module classes are raising exception when calling basic methods or no.
 
 """ + "Score: " + str(self.score) + "/10\n"
-        else:
-            summary ="""  \n===Method Test===:
-
-The module has to be installed before running this test.\n\n """
-            header_list = ""
-            self.error = True
         return summary
 
-    def get_result_detail(self):
+    def get_result_details(self):
         header_list = ['method', 'Object Name', 'search()', 'fields_view_get', 'read']
         detail = "\n===Method Test===\n"
         if not self.error:

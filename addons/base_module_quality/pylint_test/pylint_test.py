@@ -31,6 +31,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
+        self.name = _("Pylint Test")
         self.bool_installed_only = False
         self.ponderation = 1.0
         return None
@@ -49,7 +50,11 @@ class quality_test(base_module_quality.abstract_quality_check):
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
-                res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
+                try:
+                    res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
+                except:
+                    self.result += _("Error. Is pylint correctly installed?")+"\n"
+                    break
                 n += 1
                 leftchar = -1
                 while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
@@ -57,18 +62,19 @@ class quality_test(base_module_quality.abstract_quality_check):
                 rightchar = -10
                 while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
                     rightchar += 1
-
                 try:
                     score += float(res[leftchar+1:rightchar])
                     self.result += file + ": " + res[leftchar+1:rightchar] + "/10\n"
                 except:
                     score += 0
-                    self.result += file + ": Unable to parse the result. Check the details.\n"
+                    self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                 self.result_details += res
-        self.score = n and score / n or score
+
+        average_score = n and score / n or score
+        self.score = (average_score + 10) /20
         return None
 
-    def get_result(self, cr, uid, module_path, module_state):
+    def get_result(self, cr, uid, module_path):
         self.run_test(cr, uid, module_path)
         if not self.bool_installed_only or module_state=="installed":
             summary ="""
@@ -85,7 +91,7 @@ The module has to be installed before running this test.\n\n """
             self.error = True
         return summary
 
-    def get_result_detail(self):
+    def get_result_details(self):
         detail = "\n===Pylint Test===\n" + self.result
         return detail
 
