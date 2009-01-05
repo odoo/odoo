@@ -86,7 +86,7 @@ class abstract_quality_check(object):
                 self.tests.append(x3)
 #        raise 'Not Implemented'
 
-    def run_test(self, cr, uid, module_path="", module_state=""):
+    def run_test(self, cr, uid, module_path=""):
         '''
         this method should do the test and fill the score, result and result_details var
         '''
@@ -114,40 +114,22 @@ class abstract_quality_check(object):
             result_ids[obj] = ids
         return result_ids
 
-    def format_table(self, test='', header=[], data_list=[]):
-        res_format = {}
-        if test=='method':
-            detail = ""
-            detail += "\n===Method Test===\n"
-            res_format['detail'] = detail
-            if not data_list[2]:
-                detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % (header[0].ljust(40), header[1].ljust(16), header[2].ljust(20), header[3].ljust(16))
-                for res in data_list[1]:
-                    detail += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, data_list[1][res][0], data_list[1][res][1], data_list[1][res][2])
-                res_format['detail'] = detail + '\n|}'
-            res_format['summary'] = data_list[0]
-        elif test=='pylint':
-            res_format['summary'] = data_list[0]
-            res_format['detail'] = data_list[1]
-        elif test=='speed':
-            detail = ""
-            detail += "\n===Speed Test===\n"
-            res_format['detail'] = detail
-            if not data_list[2]:
-                detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % (header[0].ljust(40), header[1].ljust(10), header[2].ljust(10), header[3].ljust(10), header[4].ljust(10), header[5].ljust(20))
-                for data in data_list[1]:
-                    detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
-                    res_format['detail'] = detail  + '\n|}\n'
-            res_format['summary'] = data_list[0]
-        elif test=='terp':
-            res_format['summary'] = data_list[0]
-            res_format['detail'] = data_list[1]
-        return res_format
+    def format_table(self, header=[], data_list=[]):
+        detail = ""
+        if header[0]=='method':
+            detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % (header[1].ljust(40), header[2].ljust(16), header[3].ljust(20), header[4].ljust(16))
+            for res in data_list[0]:
+                detail += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, data_list[0][res][0], data_list[0][res][1], data_list[0][res][2])
+            detail = detail + '\n|}'
+        elif header[0]=='speed':
+            detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % (header[1].ljust(40), header[2].ljust(10), header[3].ljust(10), header[4].ljust(10), header[5].ljust(10), header[6].ljust(20))
+            for data in data_list[0]:
+                detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
+                detail = detail  + '\n|}\n'
+        return detail
 
     def add_quatation(self, x, y):
         return x/y
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

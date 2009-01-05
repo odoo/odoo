@@ -31,21 +31,15 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
-#        self.result = """
-#===Method Test===:
-#
-#This test checks if the module classes are raising exception when calling basic methods or no.
-#
-#"""
         self.bool_installed_only = True
         self.ponderation = 1.0
+        self.result_det = {}
         return None
 
-    def run_test(self, cr, uid, module_path, module_state):
+    def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
         obj_list = self.get_objects(cr, uid, module_name)
-        result = {}
         ok_count = 0
         ex_count = 0
         for obj in obj_list:
@@ -71,29 +65,33 @@ class quality_test(base_module_quality.abstract_quality_check):
             except:
                 temp.append('Exception')
                 ex_count += 1
-            result[obj] = temp
-#        self.result += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % ('Object Name'.ljust(40), 'search()'.ljust(16), 'fields_view_get()'.ljust(20), 'read()'.ljust(16))
-        header_list = ['Object Name', 'search()', 'fields_view_get', 'read']
-#        for res in result:
-#            self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, result[res][0],result[res][1], result[res][2])
-#        self.result += '\n|}'
+            self.result_det[obj] = temp
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
+        return None
+
+    def get_result(self, cr, uid, module_path, module_state):
+        self.run_test(cr, uid, module_path)
         if not self.bool_installed_only or module_state=="installed":
             summary = """
 ===Method Test===:
 
 This test checks if the module classes are raising exception when calling basic methods or no.
 
-""" #+ "Score: " + str(self.score) + "/10\n"
+""" + "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Method Test===:
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
             self.error = True
-        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,self.error])
-        return None
+        return summary
 
+    def get_result_detail(self):
+        header_list = ['method', 'Object Name', 'search()', 'fields_view_get', 'read']
+        detail = "\n===Method Test===\n"
+        if not self.error:
+            detail += self.format_table(header=header_list, data_list=[self.result_det])
+        return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

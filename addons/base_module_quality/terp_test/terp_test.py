@@ -35,10 +35,10 @@ class quality_test(base_module_quality.abstract_quality_check):
         '''
         super(quality_test, self).__init__()
         self.bool_installed_only = True
+        self.no_terp = False
         return None
 
-    def run_test(self, cr, uid, module_path, module_state):
-        no_terp = False
+    def run_test(self, cr, uid, module_path):
         list_files = os.listdir(module_path)
         for i in list_files:
             path = os.path.join(module_path, i)
@@ -50,20 +50,8 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 0.0
         feel_good_factor = 0
         feel_bad_factor = 0
-        detail = "\n===TERP Test===\n"
-        summary = "\n===TERP Test===:\n"
-
         if '__terp__.py' not in list_files:
-            no_terp = True
-
-        if no_terp:
-            summary += """
-The module does not contain the __terp__.py file.\n\n """
-            header_list = ""
-            self.error = True
-            self.result = self.format_table(test='terp', data_list=[summary, detail, self.error])
-            return None
-
+            self.no_terp = True
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
 
@@ -89,20 +77,25 @@ The module does not contain the __terp__.py file.\n\n """
                 feel_bad_factor += 1
 
         self.score = round((feel_good_factor * 10) / float(feel_good_factor + feel_bad_factor),2)
-#        if not self.bool_installed_only or module_state=="installed":
-        summary += """
-This test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP.
-
-"""
-#        else:
-#            summary += """
-#The module has to be installed before running this test.\n\n """
-#            header_list = ""
-#            error = True
-
-        detail += "__terp__.py : "+ str(self.score) + "/10\n"
-        self.result = self.format_table(test='terp', data_list=[summary, detail, self.error])
+        self.result += "__terp__.py : "+ str(self.score) + "/10\n"
         return None
+
+    def get_result(self, cr, uid, module_path, module_state):
+        self.run_test(cr, uid, module_path)
+        summary = "\n===TERP Test===:\n"
+        if self.no_terp:
+           summary += """
+The module does not contain the __terp__.py file.\n\n """
+        else:
+            summary += """
+    This test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP.
+    """ + "Score: " + str(self.score) + "/10\n"
+        return summary
+
+    def get_result_detail(self):
+        detail = "\n===TERP Test===\n" + self.result
+        return detail
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

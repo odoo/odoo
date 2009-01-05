@@ -75,11 +75,10 @@ class wiz_quality_check(osv.osv_memory):
                 ad = tools.config['root_path']+'/addons'
             module_path = os.path.join(ad, module_data[0].name)
             val = test.quality_test()
-            val.run_test(cr, uid, str(module_path), str(module_data[0].state))
-            string_ret += val.result['summary'] #summary tab
-            if not val.error:
-                string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
-            string_detail += val.result['detail'] # detail tab
+            string_ret += val.get_result(cr, uid, str(module_path), str(module_data[0].state)) #result['summary'] #summary tab
+            string_detail += val.get_result_detail()#result['detail'] # detail tab
+#            if not val.error:
+#                string_ret += "Score: " + str(val.score) + "/10\n" #val.score = val.score * val.ponderation ???
             score_sum += (val.add_quatation(val.score, 10) * val.ponderation)
             ponderation_sum += val.ponderation
         final_score = str(score_sum / ponderation_sum * 100) + "%"
