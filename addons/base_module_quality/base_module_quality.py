@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -65,6 +65,13 @@ class abstract_quality_check(object):
         #True => the module have to be installed.
         #False => the module can be uninstalled.
         self.bool_installed_only = True
+
+
+        #This variable is use to make result of test should have more weight (Some tests are more critical than others)
+        self.ponderation = 0.0
+
+        #Specify test got an error on module
+        self.error = False
 
         self.tests = []
         self.list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
@@ -132,7 +139,13 @@ class abstract_quality_check(object):
                     detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
                     res_format['detail'] = detail  + '\n|}\n'
             res_format['summary'] = data_list[0]
+        elif test=='terp':
+            res_format['summary'] = data_list[0]
+            res_format['detail'] = data_list[1]
         return res_format
+
+    def add_quatation(self, x, y):
+        return x/y
 
 
 

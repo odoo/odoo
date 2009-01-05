@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -2073,7 +2073,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
-                'code': str(int(ref_acc_bank.code.ljust(dig,'0')) + current_num),
+                'code': str(ref_acc_bank.code.ljust(dig,'0') + str(current_num)),
                 'type': 'other',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,

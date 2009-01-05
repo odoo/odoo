@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -38,9 +38,17 @@ section_fields = {
     'menu_parent_id': {'string':'Parent Menu', 'type':'many2one', 'relation':'ir.ui.menu', 'required':True},
 }
 
+def check_views(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    board = pool.get('board.board').browse(cr, uid, data['id'])
+    if not board.line_ids:
+        raise wizard.except_wizard('User Error!',"Please Insert Dashboard View(s) !")    
+    return data['form']
+
 def board_menu_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     board = pool.get('board.board').browse(cr, uid, data['id'])
+
     action_id = pool.get('ir.actions.act_window').create(cr, uid, {
         'name': board.name,
         'view_type':'form',
@@ -54,12 +62,13 @@ def board_menu_create(self, cr, uid, data, context):
         'icon': 'STOCK_SELECT_COLOR',
         'action': 'ir.actions.act_window,'+str(action_id)
     }, context)
+        
     return {}
 
 class wizard_section_menu_create(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
+            'actions': [check_views], 
             'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
         },
         'create_menu': {

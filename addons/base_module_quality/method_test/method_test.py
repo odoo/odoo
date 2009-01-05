@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #
 #"""
         self.bool_installed_only = True
+        self.ponderation = 1.0
         return None
 
     def run_test(self, cr, uid, module_path, module_state):
@@ -47,7 +48,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         result = {}
         ok_count = 0
         ex_count = 0
-        error = False
         for obj in obj_list:
             temp = []
             try:
@@ -84,14 +84,14 @@ class quality_test(base_module_quality.abstract_quality_check):
 
 This test checks if the module classes are raising exception when calling basic methods or no.
 
-""" + "Score: " + str(self.score) + "/10\n"
+""" #+ "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Method Test===:
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,error])
+            self.error = True
+        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,self.error])
         return None
 
 

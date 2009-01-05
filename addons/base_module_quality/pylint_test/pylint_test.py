@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #
 #"""
         self.bool_installed_only = False
+        self.ponderation = 1.0
         return None
 
     def run_test(self, cr, uid, module_path, module_state):
@@ -53,7 +54,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 0.0
         detail = ""
         detail  = "\n===Pylint Test===\n"
-        error = False
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
@@ -80,16 +80,16 @@ class quality_test(base_module_quality.abstract_quality_check):
             summary ="""
 ===Pylint Test===:
 
-This test checks if the module satisfy the current coding standard used by OpenERP.
+This test checks if the module satisfies the current coding standard used by OpenERP.
 
-""" + "Score: " + str(self.score) + "/10\n"
+""" #+ "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Pylint Test===:
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='pylint', data_list=[summary,detail,error])
+            self.error = True
+        self.result = self.format_table(test='pylint', data_list=[summary,detail,self.error])
         return None
 
 

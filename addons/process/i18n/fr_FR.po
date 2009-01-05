@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:55:18+0000\n"
-"PO-Revision-Date: 2008-12-22 17:55:18+0000\n"
+"POT-Creation-Date: 2009-01-03 02:06:17+0000\n"
+"PO-Revision-Date: 2009-01-03 02:06:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -107,6 +107,7 @@ msgstr ""
 #. module: process
 #: field:process.condition,model_id:0
 #: field:process.node,model_id:0
+#: field:process.process,model_id:0
 msgid "Object"
 msgstr "Objet"
 
@@ -203,6 +204,12 @@ msgstr "Information supplémentaire"
 #: field:process.transition.action,action:0
 msgid "Action ID"
 msgstr "ID de l'Action"
+
+#. module: process
+#: code:addons/process/process.py:0
+#, python-format
+msgid "%s - Resource: %s, State: %s"
+msgstr ""
 
 #. module: process
 #: selection:process.transition.action,state:0

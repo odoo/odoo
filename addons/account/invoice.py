@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -382,30 +382,8 @@ class account_invoice(osv.osv):
         return True
 
     def button_compute(self, cr, uid, ids, context={}, set_total=False):
-        ait_obj = self.pool.get('account.invoice.tax')
-        cur_obj = self.pool.get('res.currency')
+        self.button_reset_taxes(cr, uid, ids, context)
         for inv in self.browse(cr, uid, ids):
-            company_currency = inv.company_id.currency_id.id
-            compute_taxes = ait_obj.compute(cr, uid, inv.id)
-            if not inv.tax_line:
-                for tax in compute_taxes.values():
-                    ait_obj.create(cr, uid, tax)
-            else:
-                tax_key = []
-                for tax in inv.tax_line:
-                    if tax.manual:
-                        continue
-                    key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
-                    tax_key.append(key)
-                    if not key in compute_taxes:
-                        ait_obj.unlink(cr, uid, [tax.id])
-                        continue
-                    compute_taxes[key]['base'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
-                    if abs(compute_taxes[key]['base'] - tax.base) > inv.company_id.currency_id.rounding:
-                        ait_obj.write(cr, uid, [tax.id], compute_taxes[key])
-                for key in compute_taxes:
-                    if not key in tax_key:
-                        ait_obj.create(cr, uid, compute_taxes[key])
             if set_total:
                 self.pool.get('account.invoice').write(cr, uid, [inv.id], {'check_total': inv.amount_total})
         return True
@@ -859,7 +837,7 @@ class account_invoice(osv.osv):
             'ref':invoice.number,
         }
 
-        name = invoice.invoice_line[0].name
+        name = invoice.invoice_line and invoice.invoice_line[0].name or invoice.number
         l1['name'] = name
         l2['name'] = name
 
@@ -881,7 +859,7 @@ class account_invoice(osv.osv):
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
-        # Update the stored value
+        # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 account_invoice()

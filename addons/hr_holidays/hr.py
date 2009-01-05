@@ -87,6 +87,31 @@ class hr_holidays(osv.osv):
     }
     _order = 'date_from desc'
 
+    def create(self, cr, uid, vals, *args, **kwargs):
+        id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
+        self._create_log(cr, uid, [id_holiday])
+        return id_holiday
+
+    def _create_log(self, cr, uid, ids):
+        holidays_user_obj = self.pool.get('hr.holidays.per.user')
+        list_request = []
+        holidays_data = self.browse(cr, uid, ids[0])
+        datas = {
+         'employee_id' : holidays_data.employee_id.id,
+         'name' : holidays_data.state,
+         'holiday_status' : holidays_data.holiday_status.id,
+         'holiday_req_id' : holidays_data.id,
+         'nb_holidays' : holidays_data.number_of_days
+         }
+        ids_log = self.pool.get('hr.holidays.log').create(cr, uid, datas)
+        ids_user_hdays = holidays_user_obj.search(cr, uid, [('employee_id', '=', holidays_data.employee_id.id),('holiday_status', '=', holidays_data.holiday_status.id)])
+        for hdays in holidays_user_obj.browse(cr, uid, ids_user_hdays):
+            for req in hdays.history:
+                list_request.append(req.id)
+        list_request.append(ids_log)
+        holidays_user_obj.write(cr, uid, ids_user_hdays, {'history' : [(6,0,list_request)]})
+        return True
+
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
         result = {}
         if date_from:
@@ -108,19 +133,19 @@ class hr_holidays(osv.osv):
             'state':'draft',
             'manager_id': False
         })
+        self._create_log(cr, uid, ids)
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
         self.check_holidays(cr,uid,ids)
-
         vals = {
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids2:
             vals['manager_id'] = ids2[0]
-
         self.write(cr, uid, ids, vals)
+        self._create_log(cr, uid, ids)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -132,6 +157,7 @@ class hr_holidays(osv.osv):
             'state':'confirm',
             'user_id': user,
         })
+        self._create_log(cr, uid, ids)
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
@@ -140,6 +166,7 @@ class hr_holidays(osv.osv):
             'state':'refuse',
             'manager_id':ids2[0]
         })
+        self._create_log(cr, uid, ids)
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
@@ -150,17 +177,22 @@ class hr_holidays(osv.osv):
                     obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
                     self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken - record.number_of_days})
                 if record.case_id:
-                    self.pool.get('crm.case').unlink(cr,uid,record.case_id.id)
+                    if record.case_id.state <> 'draft':
+                        raise osv.except_osv(_('Warning !'),
+                    _('You can not cancel this holiday request. first You have to make its case in draft state.'))
+                    else:
+                        self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
-
+        self._create_log(cr, uid, ids)
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft'
         })
+        self._create_log(cr, uid, ids)
         return True
 
     def check_holidays(self,cr,uid,ids):
@@ -212,9 +244,17 @@ class hr_holidays_per_user(osv.osv):
     _description = "Holidays Per User"
 
     def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
+        obj_holiday = self.pool.get('hr.holidays')
+        days = 0.0
         result = {}
-        for r in self.read(cr, uid, ids, ['max_leaves','leaves_taken']):
-            result[r['id']] = r['max_leaves'] - r['leaves_taken']
+        for holiday_user in self.browse(cr, uid, ids):
+            ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
+            if ids_request:
+                holidays = obj_holiday.browse(cr, uid, ids_request)
+                for holiday in holidays:
+                    days += holiday.number_of_days
+            days = holiday_user.max_leaves - days
+            result[holiday_user.id] = days
         return result
 
     _columns = {
@@ -226,6 +266,7 @@ class hr_holidays_per_user(osv.osv):
         'active' : fields.boolean('Active'),
         'notes' : fields.text('Notes'),
         'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
+        'history' : fields.one2many('hr.holidays.log', 'holiday_user_id', 'History')
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -238,6 +279,24 @@ class hr_holidays_per_user(osv.osv):
         return super(osv.osv,self).create(cr, uid, vals, *args, **kwargs)
 
 hr_holidays_per_user()
+
+class holiday_user_log(osv.osv):
+    _name = 'hr.holidays.log'
+    _description = 'hr.holidays.log'
+    _order = "holiday_req_id desc"
+    _columns = {
+        'name' : fields.char('Action', size=64, readonly=True),
+        'holiday_req_id' : fields.char('Holiday Request ID', size=64),
+        'nb_holidays' : fields.float('Number of Holidays Requested'),
+        'employee_id' : fields.many2one('hr.employee', 'Employee', readonly=True),
+        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", readonly=True),
+        'holiday_user_id' : fields.many2one('hr.holidays.per.user', 'Holidays user'),
+        'date': fields.datetime('Date'),
+                }
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+    }
+holiday_user_log()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

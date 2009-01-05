@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
-"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
+"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
+"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,11 +97,6 @@ msgid "Work from"
 msgstr "Trabajo Desde"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr "Crear usuario OpenERP"
-
-#. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
@@ -116,11 +111,6 @@ msgstr "Jerarquía de empleados"
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Mujer"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_jobshiring0
-msgid "Process to search, interview and evaluate new candidates"
-msgstr "Proceso para buscar, entrevistar y evaluar nuevos candidatos"
 
 #. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
@@ -250,7 +240,7 @@ msgstr "martes"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr "hr.department"
+msgstr "hr.departamento"
 
 #. module: hr
 #: field:hr.employee,user_id:0
@@ -267,11 +257,6 @@ msgstr "Categoría"
 #: field:hr.department,note:0
 msgid "Note"
 msgstr "Nota"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_employeejob0
-msgid "After confirming job, he will be a employee"
-msgstr "Después de confirmar el trabajo, él será un empleado"
 
 #. module: hr
 #: view:hr.employee:0
@@ -311,11 +296,6 @@ msgid "Day of week"
 msgstr "Dia de la semana"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_employeejob0
-msgid "Employee Job"
-msgstr "Trabajo empleado"
-
-#. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
 msgstr "Núm. Seg. Social"
@@ -324,6 +304,11 @@ msgstr "Núm. Seg. Social"
 #: field:hr.employee,active:0
 msgid "Active"
 msgstr "Activo"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -336,6 +321,12 @@ msgid "Employee Complete Form"
 msgstr "Formulario completo de empleado"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Categorías de empleado"
+
+#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Empresas"
@@ -346,15 +337,9 @@ msgid "Wednesday"
 msgstr "Miercoles"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Categorías de empleado"
-
-#. module: hr
-#: model:process.node,name:hr.process_node_jobshiring0
-msgid "Jobs hiring"
-msgstr "Solicitud de trabajo"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
+msgstr "Crear usuario OpenERP"
 
 #. module: hr
 #: field:hr.timesheet,date_from:0

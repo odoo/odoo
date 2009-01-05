@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 #
 #"""
         self.bool_installed_only = True
+        self.ponderation = 1.0
         return None
     def run_test(self, cr, uid, module_path, module_state):
         pool = pooler.get_pool(cr.dbname)
@@ -54,7 +55,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         obj_ids = self.get_ids(cr, uid, obj_list)
         detail = ""
         list1 = []
-        error = False
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
@@ -63,8 +63,8 @@ class quality_test(base_module_quality.abstract_quality_check):
             if size:
                 c1 = cr.count
 
-                pool.get(obj).read(cr, uid, ids[0])
-                pool.get(obj).read(cr, uid, ids[0])
+                pool.get(obj).read(cr, uid, [ids[0]])
+                pool.get(obj).read(cr, uid, [ids[0]])
                 code_base_complexity = cr.count - c1
 
                 pool.get(obj).read(cr, uid, ids[:size/2])
@@ -101,16 +101,16 @@ class quality_test(base_module_quality.abstract_quality_check):
             summary = """
 ===Speed Test===:
 
-    This test checks the speed of the module.
+This test checks the speed of the module.
 
-"""+ "Score: " + str(self.score) + "/10\n"
+"""#+ "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Speed Test===:
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
-            error = True
-        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1, error])
+            self.error = True
+        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1,self.error])
         return None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

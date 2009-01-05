@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
+"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
+"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Moviments creats"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "No. Of Cycles"
-msgstr ""
+msgstr "Núm. de cicles"
 
 #. module: mrp
 #: help:mrp.procurement.compute.all,init,automatic:0
@@ -36,21 +36,16 @@ msgid "Revision"
 msgstr "Revisió"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockableorder0
-msgid "Stockable Order"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "Calcula nomé regles d'estoc mínim"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr ""
+msgstr "Excepcions de proveïments"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -63,11 +58,6 @@ msgid "Finnished Products"
 msgstr "Productes acabats"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_maketostock1
-msgid "If Procurement is make to stock"
-msgstr ""
-
-#. module: mrp
 #: rml:bom.structure:0
 msgid "UoM"
 msgstr "UdM"
@@ -75,7 +65,7 @@ msgstr "UdM"
 #. module: mrp
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "No utilitzat en càlculs, només amb la finalitat d'informar."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -126,12 +116,17 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
-msgstr ""
+msgstr "Conjunt / Paquet"
+
+#. module: mrp
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: mrp
 #: help:res.company,security_lead:0
 msgid "This is the days added to what you promise to customers for security purpose"
-msgstr ""
+msgstr "Aquests són els dies afegits als que els prometeu als clients per raons de seguretat"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -156,12 +151,12 @@ msgstr "Temps després producció"
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid "Number of operation this workcenter can do in parallel. If this workcenter represent a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
+msgstr "Número d'operacions que aquest centre de producció pot realitzar en paral·lel. Si aquest centre de producció tingues un equip de 5 treballadors, la capacitat per cicle seria de 5."
 
 #. module: mrp
 #: wizard_button:product.product.procurement,init,create:0
 msgid "Ask New Products"
-msgstr ""
+msgstr "Sol·licita nous productes"
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,time_unit:0
@@ -198,19 +193,24 @@ msgid "Packing Exception"
 msgstr "Excepció d'empaquetament"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_requestforquotation2
+#: model:process.node,note:mrp.process_node_orderrfq0
 msgid "A purchase order is created for a sub-contracting demand."
-msgstr ""
+msgstr "Una ordre de compra és creada per subcontractar la demanda."
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Ubicació destí"
 
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Analytic Accounting"
 msgstr "Comptabilitat analítica"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_servicemts0
+msgid "Do nothing"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -221,7 +221,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Partner Ref"
-msgstr ""
+msgstr "Ref. empresa"
 
 #. module: mrp
 #: help:mrp.procurement.orderpoint.compute,init,automatic:0
@@ -241,7 +241,7 @@ msgstr "Béns planificats"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
 msgid "you can see the minimum stock rules from product"
-msgstr ""
+msgstr "puedeu veure les regles d'estoc mínim des de producte"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -267,24 +267,24 @@ msgid "Status"
 msgstr "Posició"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableproductionorder0
+#: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "Stockable Production Order"
-msgstr ""
+msgstr "Ordre producció estocable"
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr ""
+msgstr "Referència a una ubicació en una plan. externa"
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute,init:0
 msgid "This wizard will schedule procurements."
-msgstr ""
+msgstr "Aquest assistent planificarà proveïments."
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockablerequest0
+#: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "Stockable Request"
-msgstr ""
+msgstr "Sol·licitud estocable"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -293,15 +293,20 @@ msgid "Workcenter name"
 msgstr ""
 
 #. module: mrp
-#: help:stock.warehouse.orderpoint,product_max_qty:0
-#: help:stock.warehouse.orderpoint,product_min_qty:0
-msgid "When the virtual stock goes belong the Min Quantity, Open ERP generates a procurement to bring the virtual stock to the Max Quantity."
+#: model:process.node,name:mrp.process_node_serviceonorder0
+msgid "Service on Order"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockablemaketostock0
+#: help:stock.warehouse.orderpoint,product_max_qty:0
+#: help:stock.warehouse.orderpoint,product_min_qty:0
+msgid "When the virtual stock goes belong the Min Quantity, Open ERP generates a procurement to bring the virtual stock to the Max Quantity."
+msgstr "﻿Quan l'estoc virtual disminueix per sota de la quantitat mínima, OpenERP genera un proveïment per que l'estoc virtual sigui la quantitat màxima."
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Stockable Make to Stock"
-msgstr ""
+msgstr "Estocable obtingut per estoc"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
@@ -321,7 +326,7 @@ msgstr "Quantitat"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procure Service Product"
-msgstr ""
+msgstr "Proveir producte servei"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -348,7 +353,7 @@ msgstr "Producció planificada de productes"
 #. module: mrp
 #: field:mrp.workcenter,timesheet_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "Horari treball"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -361,9 +366,9 @@ msgid "Production orders"
 msgstr "Ordres de producció"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableproductionorder0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid "If Procure method is Make to order and supply method is produce"
-msgstr ""
+msgstr "Si mètode de proveïment és obtenir sota comanda i mètode de subministre és produir"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -374,12 +379,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity. For integer only values, put 1.0"
-msgstr ""
+msgstr "Arrodoniment aplicat a la quantitat de producte. Per a valors sempre enters introduïu 1.0"
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Bill Of Material"
-msgstr ""
+msgstr "Llista de Material"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -387,15 +392,15 @@ msgid "BoM Lines"
 msgstr "Línies de les llistes de materials"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockablemaketostock0
-#: model:process.transition,note:mrp.process_transition_stockablerequest0
+#: model:process.transition,note:mrp.process_transition_stockmts0
+#: model:process.transition,note:mrp.process_transition_stockrfq0
 msgid "If Product type is Stockable and procure method is make to stock"
-msgstr ""
+msgstr "Si el tipus de producte és estocable i el mètode de proveïment és obtenir per estoc"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,product_id:0
 msgid "product"
-msgstr ""
+msgstr "producte"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -405,7 +410,7 @@ msgstr "màx"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Product to stock rules"
-msgstr ""
+msgstr "Producte a regles d'estoc"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
@@ -421,7 +426,7 @@ msgstr "Imprimeix cost del producte"
 #. module: mrp
 #: wizard_view:product.product.procurement,done:0
 msgid "Make Procurement"
-msgstr ""
+msgstr "Realitza proveïment"
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
@@ -432,17 +437,17 @@ msgstr "Data modificació"
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid "Complete this only if you want automatic analytic accounting entries on production orders."
-msgstr ""
+msgstr "Ompliu-lo només si voleu crear entrades automàtiques de comptabilitat analítica segons ordres de producció."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for products used in raw materials."
-msgstr ""
+msgstr "Ubicació on el sistema cercarà productes utilitzats en les matèries primeres."
 
 #. module: mrp
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Termini de temps de compra"
 
 #. module: mrp
 #: field:mrp.routing,location_id:0
@@ -452,7 +457,7 @@ msgstr "Ubicació de producció"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Change Qty"
-msgstr ""
+msgstr "Canvia Qtat."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -465,24 +470,24 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableproductstock0
+#: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Stockable Product Stock"
-msgstr ""
+msgstr "Estoc de producte estocable"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr ""
+msgstr "Estructura LdM del producte"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Production Procure Products"
-msgstr ""
+msgstr "Productes per proveir la producció"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
-msgstr ""
+msgstr "Proveïment és converteix en l'ordre de compra esborrany."
 
 #. module: mrp
 #: field:mrp.property,composition:0
@@ -521,15 +526,20 @@ msgid "Reservation"
 msgstr "Reserva"
 
 #. module: mrp
+#: model:process.process,name:mrp.process_process_serviceproductworkflow0
+msgid "Service Product Workflow"
+msgstr ""
+
+#. module: mrp
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturity Lead Time"
-msgstr ""
+msgstr "Termini d'entrega de fabricació"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action4
 msgid "Exceptions Procurements to Fix"
-msgstr ""
+msgstr "Excepcions de proveïments a corregir"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
@@ -551,27 +561,27 @@ msgstr "Operacions del centre de producció"
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2_gantt
 #: model:ir.ui.menu,name:mrp.menu_production_orders_start_gantt
 msgid "Production Orders Planning"
-msgstr ""
+msgstr "Planificació ordres de producció"
 
 #. module: mrp
 #: help:mrp.workcenter,time_efficiency:0
 msgid "Factor that multiplies all times expressed in the workcenter."
-msgstr ""
+msgstr "Factor que multiplica tos els temps expressats en el centre de producció."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr ""
+msgstr "Temps en hores per realitzar un cicle."
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableproductstock0
+#: model:process.transition,note:mrp.process_transition_stockproduct0
 msgid "Product type is Stockable and procure method is make to stock"
-msgstr ""
+msgstr "Tipus de producte és estocable i mètode de proveïment és obtenir per estoc"
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
 msgid "This is the internal picking list take bring the raw materials to the production plan."
-msgstr ""
+msgstr "Aquesta és la llista de empaquetat interna que porta les matèries primeres a la producció planificada."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -609,9 +619,10 @@ msgid "Type"
 msgstr "Tipus"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockableproduct0
+#: model:process.node,note:mrp.process_node_stockproduct0
+#: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable and consumable"
-msgstr ""
+msgstr "Per estocables i consumibles"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
@@ -632,17 +643,18 @@ msgstr "Nom producte"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Acció no vàlida!"
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Printing date"
-msgstr ""
+msgstr "Data impressió"
 
 #. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: model:process.node,name:mrp.process_node_orderrfq0
+#: model:process.node,name:mrp.process_node_rfq0
+msgid "RFQ"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,revision_type:0
@@ -656,14 +668,14 @@ msgid "Hours Cost"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_productionorder1
+#: model:process.node,note:mrp.process_node_production0
 msgid "Production orders are created for the product manufacturing."
-msgstr ""
+msgstr "Es creen ordres de producció per la fabricació del producte."
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "WorkCenter"
-msgstr ""
+msgstr "Centre de producció"
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -680,7 +692,7 @@ msgstr "Urgent"
 #: field:mrp.bom,child_complete_ids:0
 #: field:mrp.bom,child_ids:0
 msgid "BoM Hyerarchy"
-msgstr ""
+msgstr "Jerarquia LdM"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -688,14 +700,20 @@ msgid "Procurement Lines"
 msgstr "Línies de proveïment"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemaketostock0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid "If Product type is service and procure method is Make to stock"
+msgstr "Si el tipus de producte és servei i el mètode de proveïment és obtenir per estoc"
+
+#. module: mrp
+#: model:process.process,name:mrp.process_process_stockableproductworkflow0
+msgid "Stockable Product Workflow"
 msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
+#: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "If Product type is service"
-msgstr ""
+msgstr "Si el tipus de producte és servei"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -712,7 +730,7 @@ msgstr "Dies de seguretat"
 #: field:mrp.production,cycle_total:0
 #: view:mrp.production:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Total cicles"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -737,17 +755,17 @@ msgstr "Excepció"
 #. module: mrp
 #: wizard_view:product.product.procurement,init:0
 msgid "This wizard will planify the procurement for this product. This procurement may generate task, production orders or purchase orders."
-msgstr ""
+msgstr "Aquest assistent planificarà el proveïment per aquest producte. El proveïment pot generar tasques, ordres de producció o ordres de compra."
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_maketostock0
+#: model:process.node,note:mrp.process_node_mts0
 msgid "The system waits for requested products in stock."
-msgstr ""
+msgstr "El sistema espera els productes sol·licitats en estoc."
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_serivcestockableorder0
+#: model:process.transition,name:mrp.process_transition_servicemto0
 msgid "Serivce Stockable Order"
-msgstr ""
+msgstr "Ordre servei estocable"
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0
@@ -760,9 +778,10 @@ msgid "Properties categories"
 msgstr "Categories de propietats"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockableproduct0
+#: model:process.node,name:mrp.process_node_stockproduct0
+#: model:process.node,name:mrp.process_node_stockproduct1
 msgid "Stockable Product"
-msgstr ""
+msgstr "Producte estocable"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -780,7 +799,7 @@ msgstr "Codi"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "No. Of Hours"
-msgstr ""
+msgstr "Núm. d'hores"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
@@ -790,9 +809,9 @@ msgid "Property Group"
 msgstr "Grup de propietat"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
-msgid "An entry is being made from billing material to routing."
-msgstr ""
+#: field:mrp.bom,bom_id:0
+msgid "Parent BoM"
+msgstr "Llista de materials (LdM) pare"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -803,7 +822,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Qty"
-msgstr ""
+msgstr "Qtat."
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -835,14 +854,14 @@ msgid "Machine"
 msgstr "Fabricació"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_maketostock1
+#: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr ""
+msgstr "Obtenir per estoc"
 
 #. module: mrp
 #: field:mrp.workcenter,name:0
 msgid "Workcenter Name"
-msgstr ""
+msgstr "Nom centre de producció"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -857,7 +876,7 @@ msgstr "mín"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid "Description of the workcenter. Explain here what's a cycle according to this workcenter."
-msgstr ""
+msgstr "Descripció del centre de producció. Descriu aquí que és un cicle segons aquest centre de producció."
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -867,7 +886,7 @@ msgstr "-"
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finnished products."
-msgstr ""
+msgstr "Ubicació on el sistema emmagatzemarà els productes finalitzats."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -890,7 +909,7 @@ msgstr "sota comanda"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
 #: model:ir.ui.menu,name:mrp.mrp_Sched_all
 msgid "Compute All Schedulers"
-msgstr ""
+msgstr "Calcula totes les planificacions"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -913,7 +932,7 @@ msgstr "Nom"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Create Procurement"
-msgstr ""
+msgstr "Crea proveïment"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -929,7 +948,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycle"
-msgstr ""
+msgstr "Número de cicles"
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
@@ -952,9 +971,9 @@ msgid "Time Efficiency"
 msgstr "Eficiència temporal"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockablestock0
+#: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
-msgstr ""
+msgstr "Estoc productes estocables"
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
@@ -970,7 +989,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
 msgid "A cycle is defined in the workcenter definition."
-msgstr ""
+msgstr "Dins de la definició d'un centre de producció es defineix un cicle."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,init,measure_unit:0
@@ -980,7 +999,7 @@ msgstr ""
 #. module: mrp
 #: wizard_field:product.product.procurement,init,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitat de mesura"
 
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
@@ -998,12 +1017,6 @@ msgid "Per week"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_requestforquotation1
-#: model:process.node,name:mrp.process_node_requestforquotation2
-msgid "Request For Quotation"
-msgstr ""
-
-#. module: mrp
 #: wizard_button:mrp.procurement.compute.all,init,compute:0
 #: wizard_button:mrp.procurement.compute,init,compute:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
@@ -1011,19 +1024,19 @@ msgid "Compute Procurements"
 msgstr "Calcula proveïments"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockablestock0
+#: model:process.node,note:mrp.process_node_stock0
 msgid "Wait for available products for reservation"
-msgstr ""
+msgstr "Espera productes disponibles per a reservar-los"
 
 #. module: mrp
 #: wizard_button:change_production_qty,confirm,validate:0
 msgid "Validate"
-msgstr ""
+msgstr "Valida"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
 msgid "Procurement Purchase"
-msgstr ""
+msgstr "Compra de proveïment"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1050,7 +1063,7 @@ msgstr "Número de productes a produir"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material routing"
-msgstr ""
+msgstr "Processos productius del material"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
@@ -1060,7 +1073,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
 msgid "Minimum stock rule"
-msgstr ""
+msgstr "Regla d'estoc mínim"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1078,14 +1091,14 @@ msgid "Orderpoint minimum rule"
 msgstr "Regla mínima generació ordre"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_servicemaketostock0
+#: model:process.transition,name:mrp.process_transition_servicemts0
 msgid "Service Make to Stock"
-msgstr ""
+msgstr "Servei obtenir per estoc"
 
 #. module: mrp
 #: field:mrp.production,sale_ref:0
 msgid "Sale Ref"
-msgstr ""
+msgstr "Ref. venda"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1109,7 +1122,7 @@ msgstr "Nou proveïment"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr ""
+msgstr "Núm. ordre producció :"
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
@@ -1119,34 +1132,34 @@ msgstr "Reparació"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Dies de seguritat per cada operació de fabricació."
 
 #. module: mrp
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,date_planned:0
 #: field:mrp.production,date_planned_date:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Data prevista"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "Procurement orders"
-msgstr ""
+msgstr "Ordres de proveïment"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_maketostock0
+#: model:process.node,name:mrp.process_node_mts0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Obtenir per estoc"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_serivcestockableorder0
+#: model:process.transition,note:mrp.process_transition_servicemto0
 msgid "If product type is service and procure method is Make to order"
-msgstr ""
+msgstr "Si el tipus de producte és servei i el mètode de proveïment és obtenir sota comada"
 
 #. module: mrp
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range"
-msgstr ""
+msgstr "Marge planificador"
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -1169,12 +1182,12 @@ msgstr "Estructura dels costos del producte"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "Minimum Stock Procure"
-msgstr ""
+msgstr "Proveïr estoc mínim"
 
 #. module: mrp
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "Aquest és el termini/seguretat de temps per cada ordre de compra."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1189,7 +1202,7 @@ msgstr "Data inicial"
 #. module: mrp
 #: model:process.process,name:mrp.process_process_procurementworkflow0
 msgid "Procurement Workflow"
-msgstr ""
+msgstr "Flux de proveïment"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -1204,28 +1217,28 @@ msgstr "índexs alfabètics"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Procurement for raw materials."
-msgstr ""
+msgstr "Proveïment per matèria primeres."
 
 #. module: mrp
 #: rml:mrp.production.order:0
 #: field:mrp.procurement,note:0
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procure Stockable Product"
-msgstr ""
+msgstr "Proveïment producte estocable"
 
 #. module: mrp
 #: field:mrp.bom,method:0
 msgid "Method"
-msgstr ""
+msgstr "Mètode"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
 msgid "Keep empty if you produce at the location where the finnished products are needed.Put a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "Deixeu-ho buit si produïu en la ubicació on els productes acabats són necessaris. Indiqueu una ubicació si produïu en una ubicació fixa. Pot ser una ubicació d'empresa si subcontracteu les operacions de fabricació."
 
 #. module: mrp
 #: wizard_view:product_price,init:0
@@ -1235,7 +1248,7 @@ msgstr "Cost"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
 msgid "Define a routing to describe the manufacturing steps."
-msgstr ""
+msgstr "Defineix un procés productiu per descriure els passos de fabricació"
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1248,7 +1261,7 @@ msgstr "Actiu"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Proveir products"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1277,12 +1290,12 @@ msgstr "Informació extra"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_billofmaterial0
 msgid "Define the product structure, with sub-products and/or components."
-msgstr ""
+msgstr "Defineix l'estructura del producte, amb subproductes i/o components."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Procurement is created if the product quantity is lower than the minimum limit."
-msgstr ""
+msgstr "Es crea el proveïment si la quantitat de producte és menor que el límit mínim."
 
 #. module: mrp
 #: field:mrp.procurement,date_close:0
@@ -1308,12 +1321,12 @@ msgstr "Ordres de producció esperant productes"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "SO Number"
-msgstr ""
+msgstr "Número venda"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_change_production_qty
 msgid "Change Product Qty."
-msgstr ""
+msgstr "Canvia Qtat. producte"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -1324,7 +1337,7 @@ msgstr "Realitzat"
 #. module: mrp
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will by rounded up to this multiple."
-msgstr ""
+msgstr "La quantitat proveïda serà arrodonida cap amunt a aquest múltiple."
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,logic:0
@@ -1334,12 +1347,12 @@ msgstr "Mode de demanar de nou"
 #. module: mrp
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "Central document to procure products"
-msgstr ""
+msgstr "Document central per proveir productes"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1375,7 +1388,7 @@ msgstr "Producte"
 #: field:mrp.production,hour_total:0
 #: view:mrp.production:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Total hores"
 
 #. module: mrp
 #: field:mrp.bom,product_uos:0
@@ -1396,7 +1409,8 @@ msgstr "UdM producte"
 #: help:mrp.procurement,origin:0
 msgid "Reference of the document that created this procurement.\n"
 "This is automatically completed by Open ERP."
-msgstr ""
+msgstr "﻿Referència del document que ha creat aquest proveïment.\n"
+"Aquest és completat automàticament per OpenERP."
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1412,7 +1426,7 @@ msgstr "Data final"
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validesa d'aquesta LdM o component. Deixar-lo buit si sempre és vàlid."
 
 #. module: mrp
 #: field:mrp.procurement,product_uos:0
@@ -1452,22 +1466,22 @@ msgstr "Producció dels centres de producció"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
 msgid "From minimum stock rules, it goes for procure product."
-msgstr ""
+msgstr "Des de regles d'estoc mínim, va a poveir el producte."
 
 #. module: mrp
 #: help:mrp.procurement,procure_method:0
 msgid "If you encode manually a procurement, you probably want to use a make to order method."
-msgstr ""
+msgstr "Si codifica manualment un proveïment, probablement vol utilitzar un mètode per obtenir sota comanda."
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Source Location"
-msgstr ""
+msgstr "Ubicació origen"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableorderrequest0
+#: model:process.transition,name:mrp.process_transition_servicerfq0
 msgid "Stockable Order Request"
-msgstr ""
+msgstr "Sol·licitud ordre estocable"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1486,20 +1500,20 @@ msgid "numeric indices"
 msgstr "índexs numèrics"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableorderrequest0
+#: model:process.transition,note:mrp.process_transition_servicerfq0
 msgid "If Procure method is Make to order and supply method is buy"
-msgstr ""
+msgstr "Si mètode de proveïment és obtenir sota comanda i mètode de subministre és comprar"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
 msgid "if Product type is Stockable in procurement order"
-msgstr ""
+msgstr "Si el tipus de producte és estocable en ordre de proveïment"
 
 #. module: mrp
 #: rml:mrp.production.order:0
 #: view:mrp.production:0
 msgid "Work Orders"
-msgstr ""
+msgstr "Ordres de producció"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1525,7 +1539,7 @@ msgstr "LdM"
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid "Use a phantom bill of material in raw materials lines that have to be automatically computed in on eproduction order and not one per level.If you put \"Phantom/Set\" at the root level of a bill of material it is considered as a set or pack: the products are replaced by the components between the sale order to the picking without going through the production order.The normal BoM will generate one production order per BoM level."
-msgstr ""
+msgstr "Utilitzeu una llista de materials fantasma en línies de matèries primeres que s'hagin de calcular automàticament en una ordre de producció i no una per nivell. Si indiqueu \"Fantasma/Conjunt\" en el nivell arrel d'una llista de materials és considerada com un conjunt o paquet: Els productes seran reemplaçats pels components entre la comanda de venda i l'empaquetat sense generar l'ordre de producció. La LdM normal generarà una ordre de producció per nivell de LdM."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
@@ -1546,19 +1560,19 @@ msgstr "Temps per 1 cicle(hores)"
 #. module: mrp
 #: wizard_view:product.product.procurement,done:0
 msgid "Your procurement request has been sent !"
-msgstr ""
+msgstr "La vostra petició de proveïment s'ha enviat!"
 
 #. module: mrp
 #: wizard_view:product.product.procurement,init:0
 msgid "Internal Procurement Request"
-msgstr ""
+msgstr "Sol·licitud de proveïment interna"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
 #: field:mrp.production.workcenter.line,production_id:0
+#: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
-#: model:process.node,name:mrp.process_node_productionorder1
 msgid "Production Order"
 msgstr "Ordre de producció"
 
@@ -1577,7 +1591,7 @@ msgstr "Categories de propietats"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
-msgstr ""
+msgstr "Calcula només proveïments"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1588,7 +1602,7 @@ msgstr "Estructura LdM"
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Vàlid fins"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action11
@@ -1599,7 +1613,7 @@ msgstr "Excepcions de proveïment temporals"
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Vàlid des de"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1641,7 +1655,7 @@ msgstr "Utilització del centre de producció"
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."
-msgstr ""
+msgstr "Eficiència en la producció. Un factor de 0.9 significa una pèrdua del 10% en la producció."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -1654,19 +1668,19 @@ msgid "Recreate Picking"
 msgstr "Torna a crear albarà"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockableorder0
+#: model:process.node,note:mrp.process_node_serviceonorder0
 msgid "If procurement is make to order"
-msgstr ""
+msgstr "Si proveïment és obtenir sota comanda"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
-msgstr ""
+msgstr "En ordre"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Regla d'estoc mínim"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1677,22 +1691,22 @@ msgstr "Configuració"
 #. module: mrp
 #: view:res.company:0
 msgid "MRP & Logistic Scheduler"
-msgstr ""
+msgstr "Planificador MRP & Logística"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "Proveïments automàtics"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Total Qty"
-msgstr ""
+msgstr "Qtat. total"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Número d'hores"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1719,7 +1733,7 @@ msgstr "Procés productiu pare"
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr ""
+msgstr "Temps en hores per la configuració."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1749,9 +1763,9 @@ msgid "New Production Order"
 msgstr "Nova ordre de producció"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_requestforquotation1
+#: model:process.node,note:mrp.process_node_rfq0
 msgid "A Request for Quotation is created and sent to the supplier."
-msgstr ""
+msgstr "Una sol·licitud de pressupost és creada i enviada al proveïdor."
 
 #. module: mrp
 #: field:mrp.bom.revision,last_indice:0
@@ -1778,7 +1792,7 @@ msgstr "Esborrany"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "........."
-msgstr ""
+msgstr "........."
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -1789,7 +1803,7 @@ msgstr "Normal"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
 msgid "When any procuere products, it comes into the prpcurement orders"
-msgstr ""
+msgstr "Quan algú abateix productes, es converteix en les ordres de proveïment"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1803,19 +1817,19 @@ msgid "Procurement Reason"
 msgstr "Motiu del proveïment"
 
 #. module: mrp
-#: field:mrp.bom,bom_id:0
-msgid "Parent BoM"
-msgstr "Llista de materials (LdM) pare"
+#: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
+msgid "An entry is being made from billing material to routing."
+msgstr "Es crea una entrada ﻿des de material facturable a procés productiu."
 
 #. module: mrp
 #: help:mrp.workcenter,timesheet_id:0
 msgid "The normal working time of the workcenter."
-msgstr ""
+msgstr "L'horari de treball normal del centre de producció."
 
 #. module: mrp
 #: help:res.company,schedule_range:0
 msgid "This is the time frame analysed by the scheduler when computing procurements. All procurement that are not between today and today+range are skipped for futur computation."
-msgstr ""
+msgstr "﻿Aquest és l'interval temporal analitzat pel planificador al calcular proveïments. Tots els proveïments que no estiguin entre avui i avui+interval són omesos pels càlculs futurs."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -1828,7 +1842,7 @@ msgstr "Llista de materials (LdM)"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procureserviceproduct0
 msgid "In procurement order, if product type is service"
-msgstr ""
+msgstr "En ordre de proveïment, si el tipus de producte és servei"
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
@@ -1847,12 +1861,12 @@ msgstr "Informació general"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Productions"
-msgstr ""
+msgstr "Produccions"
 
 #. module: mrp
 #: wizard_button:product.product.procurement,done,end:0
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1863,7 +1877,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,sale_name:0
 msgid "Sale Name"
-msgstr ""
+msgstr "Nombre venda"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1874,7 +1888,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Create minimum stock rules"
-msgstr ""
+msgstr "Crea regles d'estoc mínim"
 
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
@@ -1889,8 +1903,9 @@ msgstr "Producció"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_serviceproduct0
+#: model:process.node,name:mrp.process_node_serviceproduct1
 msgid "Service Product"
-msgstr ""
+msgstr "Producte servei"
 
 #. module: mrp
 #: field:mrp.procurement,close_move:0
@@ -1900,7 +1915,7 @@ msgstr "Moviment de tancament al final"
 #. module: mrp
 #: wizard_view:change_production_qty,confirm:0
 msgid "Change Product Qty"
-msgstr ""
+msgstr "Canvia Qtat. producte"
 
 #. module: mrp
 #: field:mrp.bom.revision,description:0
@@ -1928,7 +1943,7 @@ msgstr "En procés"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "Fabricació"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
@@ -1950,7 +1965,7 @@ msgstr "Càrrega del centre de producció"
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
-msgstr ""
+msgstr "Temps en hores per la neteja."
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1960,12 +1975,12 @@ msgstr "Detalls de proveïment"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
 msgid "You can see its bill of material which are used to make product"
-msgstr ""
+msgstr "Podeu veure la vostra llista de material que s'utilitza per fabricar el producte"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
-msgstr ""
+msgstr "En estoc"
 
 #. module: mrp
 #: rml:mrp.production.order:0

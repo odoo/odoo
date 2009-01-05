@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
+"POT-Creation-Date: 2009-01-03 02:00:56+0000\n"
+"PO-Revision-Date: 2009-01-03 02:00:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,13 +154,6 @@ msgid "Origin"
 msgstr ""
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr ""
@@ -179,6 +172,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_order
 #: field:stock.picking,sale_id:0
 #: view:sale.order:0
+#: model:process.node,name:sale.process_node_saleorder0
 #: model:res.request.link,name:sale.req_link_sale_order
 msgid "Sale Order"
 msgstr ""
@@ -611,6 +605,11 @@ msgid "Packing Default Policy"
 msgstr ""
 
 #. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
+msgstr ""
+
+#. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
 msgstr ""
@@ -813,6 +812,7 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
+#: model:process.node,name:sale.process_node_quotation0
 msgid "Quotation"
 msgstr ""
 

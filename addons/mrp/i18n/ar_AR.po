@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:04:48+0000\n"
-"PO-Revision-Date: 2008-12-22 18:04:48+0000\n"
+"POT-Creation-Date: 2009-01-03 02:00:15+0000\n"
+"PO-Revision-Date: 2009-01-03 02:00:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,11 +36,6 @@ msgid "Revision"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockableorder0
-msgid "Stockable Order"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
@@ -60,11 +55,6 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finnished Products"
-msgstr ""
-
-#. module: mrp
-#: model:process.node,note:mrp.process_node_maketostock1
-msgid "If Procurement is make to stock"
 msgstr ""
 
 #. module: mrp
@@ -126,6 +116,11 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
+msgstr ""
+
+#. module: mrp
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: mrp
@@ -198,7 +193,7 @@ msgid "Packing Exception"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_requestforquotation2
+#: model:process.node,note:mrp.process_node_orderrfq0
 msgid "A purchase order is created for a sub-contracting demand."
 msgstr ""
 
@@ -210,6 +205,11 @@ msgstr ""
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Analytic Accounting"
+msgstr ""
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_servicemts0
+msgid "Do nothing"
 msgstr ""
 
 #. module: mrp
@@ -267,7 +267,7 @@ msgid "Status"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableproductionorder0
+#: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "Stockable Production Order"
 msgstr ""
 
@@ -282,7 +282,7 @@ msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockablerequest0
+#: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "Stockable Request"
 msgstr ""
 
@@ -293,13 +293,18 @@ msgid "Workcenter name"
 msgstr ""
 
 #. module: mrp
+#: model:process.node,name:mrp.process_node_serviceonorder0
+msgid "Service on Order"
+msgstr ""
+
+#. module: mrp
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 #: help:stock.warehouse.orderpoint,product_min_qty:0
 msgid "When the virtual stock goes belong the Min Quantity, Open ERP generates a procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockablemaketostock0
+#: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Stockable Make to Stock"
 msgstr ""
 
@@ -361,7 +366,7 @@ msgid "Production orders"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableproductionorder0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid "If Procure method is Make to order and supply method is produce"
 msgstr ""
 
@@ -387,8 +392,8 @@ msgid "BoM Lines"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockablemaketostock0
-#: model:process.transition,note:mrp.process_transition_stockablerequest0
+#: model:process.transition,note:mrp.process_transition_stockmts0
+#: model:process.transition,note:mrp.process_transition_stockrfq0
 msgid "If Product type is Stockable and procure method is make to stock"
 msgstr ""
 
@@ -465,7 +470,7 @@ msgid "Author"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableproductstock0
+#: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Stockable Product Stock"
 msgstr ""
 
@@ -521,6 +526,11 @@ msgid "Reservation"
 msgstr ""
 
 #. module: mrp
+#: model:process.process,name:mrp.process_process_serviceproductworkflow0
+msgid "Service Product Workflow"
+msgstr ""
+
+#. module: mrp
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturity Lead Time"
 msgstr ""
@@ -564,7 +574,7 @@ msgid "Time in hours for doing one cycle."
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableproductstock0
+#: model:process.transition,note:mrp.process_transition_stockproduct0
 msgid "Product type is Stockable and procure method is make to stock"
 msgstr ""
 
@@ -609,7 +619,8 @@ msgid "Type"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockableproduct0
+#: model:process.node,note:mrp.process_node_stockproduct0
+#: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable and consumable"
 msgstr ""
 
@@ -640,8 +651,9 @@ msgid "Printing date"
 msgstr ""
 
 #. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:process.node,name:mrp.process_node_orderrfq0
+#: model:process.node,name:mrp.process_node_rfq0
+msgid "RFQ"
 msgstr ""
 
 #. module: mrp
@@ -656,7 +668,7 @@ msgid "Hours Cost"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_productionorder1
+#: model:process.node,note:mrp.process_node_production0
 msgid "Production orders are created for the product manufacturing."
 msgstr ""
 
@@ -688,12 +700,18 @@ msgid "Procurement Lines"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemaketostock0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid "If Product type is service and procure method is Make to stock"
 msgstr ""
 
 #. module: mrp
+#: model:process.process,name:mrp.process_process_stockableproductworkflow0
+msgid "Stockable Product Workflow"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
+#: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "If Product type is service"
 msgstr ""
 
@@ -740,12 +758,12 @@ msgid "This wizard will planify the procurement for this product. This procureme
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_maketostock0
+#: model:process.node,note:mrp.process_node_mts0
 msgid "The system waits for requested products in stock."
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_serivcestockableorder0
+#: model:process.transition,name:mrp.process_transition_servicemto0
 msgid "Serivce Stockable Order"
 msgstr ""
 
@@ -760,7 +778,8 @@ msgid "Properties categories"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockableproduct0
+#: model:process.node,name:mrp.process_node_stockproduct0
+#: model:process.node,name:mrp.process_node_stockproduct1
 msgid "Stockable Product"
 msgstr ""
 
@@ -790,8 +809,8 @@ msgid "Property Group"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
-msgid "An entry is being made from billing material to routing."
+#: field:mrp.bom,bom_id:0
+msgid "Parent BoM"
 msgstr ""
 
 #. module: mrp
@@ -835,7 +854,7 @@ msgid "Machine"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_maketostock1
+#: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
 msgstr ""
 
@@ -952,7 +971,7 @@ msgid "Time Efficiency"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_stockablestock0
+#: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
 msgstr ""
 
@@ -998,12 +1017,6 @@ msgid "Per week"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_requestforquotation1
-#: model:process.node,name:mrp.process_node_requestforquotation2
-msgid "Request For Quotation"
-msgstr ""
-
-#. module: mrp
 #: wizard_button:mrp.procurement.compute.all,init,compute:0
 #: wizard_button:mrp.procurement.compute,init,compute:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
@@ -1011,7 +1024,7 @@ msgid "Compute Procurements"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockablestock0
+#: model:process.node,note:mrp.process_node_stock0
 msgid "Wait for available products for reservation"
 msgstr ""
 
@@ -1078,7 +1091,7 @@ msgid "Orderpoint minimum rule"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_servicemaketostock0
+#: model:process.transition,name:mrp.process_transition_servicemts0
 msgid "Service Make to Stock"
 msgstr ""
 
@@ -1134,12 +1147,12 @@ msgid "Procurement orders"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_maketostock0
+#: model:process.node,name:mrp.process_node_mts0
 msgid "Make to Stock"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_serivcestockableorder0
+#: model:process.transition,note:mrp.process_transition_servicemto0
 msgid "If product type is service and procure method is Make to order"
 msgstr ""
 
@@ -1465,7 +1478,7 @@ msgid "Source Location"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockableorderrequest0
+#: model:process.transition,name:mrp.process_transition_servicerfq0
 msgid "Stockable Order Request"
 msgstr ""
 
@@ -1486,7 +1499,7 @@ msgid "numeric indices"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockableorderrequest0
+#: model:process.transition,note:mrp.process_transition_servicerfq0
 msgid "If Procure method is Make to order and supply method is buy"
 msgstr ""
 
@@ -1557,8 +1570,8 @@ msgstr ""
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
 #: field:mrp.production.workcenter.line,production_id:0
+#: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
-#: model:process.node,name:mrp.process_node_productionorder1
 msgid "Production Order"
 msgstr ""
 
@@ -1654,7 +1667,7 @@ msgid "Recreate Picking"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_stockableorder0
+#: model:process.node,note:mrp.process_node_serviceonorder0
 msgid "If procurement is make to order"
 msgstr ""
 
@@ -1749,7 +1762,7 @@ msgid "New Production Order"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_requestforquotation1
+#: model:process.node,note:mrp.process_node_rfq0
 msgid "A Request for Quotation is created and sent to the supplier."
 msgstr ""
 
@@ -1803,8 +1816,8 @@ msgid "Procurement Reason"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,bom_id:0
-msgid "Parent BoM"
+#: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
+msgid "An entry is being made from billing material to routing."
 msgstr ""
 
 #. module: mrp
@@ -1889,6 +1902,7 @@ msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_serviceproduct0
+#: model:process.node,name:mrp.process_node_serviceproduct1
 msgid "Service Product"
 msgstr ""
 

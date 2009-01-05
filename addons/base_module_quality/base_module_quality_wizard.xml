@@ -10,18 +10,26 @@
             <field name="arch" type="xml">
                 <form string="Result">
                 	<notebook>
+        		        <page string="Verbose detail">
+                			<field name="verbose_detail" string="Verbose detail" nolabel="1" colspan="4" height="350" width="800"/>
+                		</page>
+                	</notebook>
+                </form>
+            </field>
+        </record>
+        <record id="view_wizard_quality_detail" model="ir.ui.view">
+            <field name="name">Results of Quality Checks with detail</field>
+            <field name="model">quality.check.detail</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Result">
+                	<notebook>
                 		<page string="Summary">
-<!--		                    <separator string="Summary" colspan="4"/>-->
         		            <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
         		        </page>
 		        		<page string="Detail">
-<!--		                    <separator string="Detail" colspan="4"/>-->
         		            <field name="detail" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
         		        </page>
-        		        <page string="Verbose detail">
-<!--        		        	<separator string="Verbose detail" colspan="4"/>-->
-                			<field name="verbose_detail" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
-                		</page>
                 	</notebook>
                 </form>
             </field>

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Base",
-    "depends" : ["base"],
+    "depends" : ["base","account"],
     "update_xml" : ["base_vat_data.xml"],
     "active": False,
     "installable": True

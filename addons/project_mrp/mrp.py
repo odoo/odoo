@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ class mrp_procurement(osv.osv):
 
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': procurement.origin+': '+procurement.name,
+                'name': (procurement.origin or procurement.product_id.name) +': '+(procurement.name or ''),
                 'date_deadline': procurement.date_planned,
                 'planned_hours': procurement.product_qty,
                 'remaining_hours': procurement.product_qty,

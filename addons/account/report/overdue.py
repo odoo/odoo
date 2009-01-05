@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -38,11 +38,25 @@ class Overdue(report_sxw.rml_parse):
         })
 
     def _adr_get(self, partner, type):
+        res = []
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
         adr_id = addresses and addresses[type] or False
-        return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
+        result = {
+                  'name': False,
+                  'street': False,
+                  'city' : False,
+                  'zip' : False,
+                  'country_id' : False,
+                 }
+        if adr_id:
+            result = res_partner_address.read(self.cr, self.uid, [adr_id])
+            result[0]['country_id'] = result[0]['country_id'] and result[0]['country_id'][1] or False
+            return result   
+         
+        res.append(result)
+        return res
 
     def _tel_get(self,partner):
         if not partner:

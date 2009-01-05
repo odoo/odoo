@@ -26,6 +26,7 @@ class file_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
+        cr.commit()
         try:
             val = self.getvalue()
             val2 = {
@@ -49,6 +50,7 @@ class content_wrapper(StringIO.StringIO):
     def close(self, *args, **kwargs):
         db,pool = pooler.get_db_and_pool(self.dbname)
         cr = db.cursor()
+        cr.commit()
         try:
             getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
         finally:
@@ -617,7 +619,7 @@ class abstracted_fs:
         elif self.isfile(path):
             basedir, filename = os.path.split(path.path)
             self.lstat(path)  # raise exc in case of problems
-            return self.format_list(basedir, [filename])
+            return self.format_list(basedir, [path])
 
 
     # Ok

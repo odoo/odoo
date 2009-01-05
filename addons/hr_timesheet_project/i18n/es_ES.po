@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:02:43+0000\n"
-"PO-Revision-Date: 2008-12-22 18:02:43+0000\n"
+"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
+"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_timesheet_project
-#: model:process.node,note:hr_timesheet_project.process_node_taskwork0
-msgid "Work on task"
-msgstr "Trabajo en tareas"
-
-#. module: hr_timesheet_project
 #: model:process.node,name:hr_timesheet_project.process_node_timesheettask0
-msgid "Timesheet_task"
-msgstr "Hoja_servicios_tarea"
+msgid "Timesheet task"
+msgstr ""
 
 #. module: hr_timesheet_project
 #: model:process.node,name:hr_timesheet_project.process_node_taskwork0
@@ -46,14 +41,19 @@ msgid "Task encoding"
 msgstr "Codificación tarea"
 
 #. module: hr_timesheet_project
+#: model:process.transition,note:hr_timesheet_project.process_transition_tasktimesheet0
+msgid "Moves task entry into the timesheet line"
+msgstr "Convierte tarea en la línea de hoja de servicios"
+
+#. module: hr_timesheet_project
 #: model:process.transition,name:hr_timesheet_project.process_transition_tasktimesheet0
 msgid "Task timesheet"
 msgstr "Hoja de servicios tarea"
 
 #. module: hr_timesheet_project
-#: model:process.transition,note:hr_timesheet_project.process_transition_tasktimesheet0
-msgid "Moves task entry into the timesheet line"
-msgstr "Convierte tarea en la línea de hoja de servicios"
+#: model:process.node,name:hr_timesheet_project.process_node_workontask0
+msgid "Work on Task"
+msgstr "Trabajo en tareas"
 
 #. module: hr_timesheet_project
 #: model:process.transition,note:hr_timesheet_project.process_transition_taskencoding0
@@ -81,7 +81,7 @@ msgid "Hours From Tasks"
 msgstr "Horas desde tareas"
 
 #. module: hr_timesheet_project
-#: model:process.node,name:hr_timesheet_project.process_node_workontask0
-msgid "Work on Task"
+#: model:process.node,note:hr_timesheet_project.process_node_taskwork0
+msgid "Work on task"
 msgstr "Trabajo en tareas"
 

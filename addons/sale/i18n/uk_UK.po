@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:04:06+0000\n"
-"PO-Revision-Date: 2008-12-22 18:04:06+0000\n"
+"POT-Creation-Date: 2009-01-03 02:16:57+0000\n"
+"PO-Revision-Date: 2009-01-03 02:16:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,13 +154,6 @@ msgid "Origin"
 msgstr "Походження"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Складські Переміщення"
@@ -173,12 +166,13 @@ msgstr "Інвойс з пакетів"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Orden de entrega :"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: field:stock.picking,sale_id:0
 #: view:sale.order:0
+#: model:process.node,name:sale.process_node_saleorder0
 #: model:res.request.link,name:sale.req_link_sale_order
 msgid "Sale Order"
 msgstr "Заявка на продаж"
@@ -187,7 +181,7 @@ msgstr "Заявка на продаж"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all packings attached to this sale order."
-msgstr ""
+msgstr "Primero debe cancelar todos los albaranes relacionados con este pedido de venta."
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -252,12 +246,12 @@ msgstr "Стосуєтья"
 #. module: sale
 #: model:process.process,name:sale.process_process_salesworkflow0
 msgid "Sales Workflow"
-msgstr ""
+msgstr "Flujo de ventas"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Todo a la vez"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
@@ -611,6 +605,11 @@ msgid "Packing Default Policy"
 msgstr ""
 
 #. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
+msgstr ""
+
+#. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
 msgstr ""
@@ -813,6 +812,7 @@ msgstr "Властивості"
 
 #. module: sale
 #: selection:sale.order,state:0
+#: model:process.node,name:sale.process_node_quotation0
 msgid "Quotation"
 msgstr "Комерційна пропозиція"
 

@@ -90,16 +90,14 @@
     <blockTable colWidths="286.0,224.0" style="Tableau2">
       <tr>
         <td>
-          <para style="P11">
-            <font color="white"> </font>
-          </para>
+            <para style="P7">[[ repeatIn(adr_get(o, 'invoice'),'addr') ]]</para>
         </td>
         <td>
           <para style="P16">[[ o.name ]]</para>
-          <para style="P17">[[ adr_get(o, 'invoice')['name'] ]]</para>
-          <para style="P17">[[ adr_get(o, 'invoice')['street'] ]]</para>
-          <para style="P17">[[ adr_get(o, 'invoice')['zip'] ]] [[ adr_get(o, 'invoice')['city'] ]]</para>
-          <para style="P17">[[ adr_get(o, 'invoice')['country_id'] and adr_get(o, 'invoice')['country_id'][1] ]]</para>
+          <para style="P17">[[ addr['name'] ]]</para>
+          <para style="P17">[[ addr['street'] ]]</para>
+          <para style="P17">[[ addr['zip'] ]] [[ addr['city'] ]]</para>
+          <para style="P17">[[ addr['country_id'] ]]</para>
           <para style="P17">
             <font color="white"> </font>
           </para>
