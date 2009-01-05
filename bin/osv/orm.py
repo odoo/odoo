@@ -1133,8 +1133,6 @@ class orm_template(object):
         raise _('The copy method is not implemented on this object !')
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        if not context:
-            context = {}
         res = {}
         res2 = {}
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
@@ -1154,14 +1152,12 @@ class orm_template(object):
             res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
-                res[lang] = {'code': lang}
+                res[lang]['code'] = lang
             for f in res2[lang]:
                 res[lang][f] = res2[lang][f]
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        if not context:
-            context = {}
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
         for lang in langs:
             for field in vals:
