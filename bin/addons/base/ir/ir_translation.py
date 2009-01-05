@@ -104,6 +104,7 @@ class ir_translation(osv.osv):
                     'and name=%s ' \
                     'and res_id in ('+','.join(map(str,ids))+')',
                 (lang,tt,name))
+        cr.commit()
         for id in ids:
             self.create(cr, uid, {
                 'lang':lang,
