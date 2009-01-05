@@ -286,6 +286,7 @@ class db(netsvc.Service):
             except Exception, e:
                 tools.debug(e)
                 raise
+        return True
 db()
 
 class MigrationException(Exception): pass
@@ -397,6 +398,8 @@ GNU Public Licence.
                 zip = open(mp, 'w')
                 zip.write(base64.decodestring(zips[module]))
                 zip.close()
+
+            return True
         except MigrationException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
