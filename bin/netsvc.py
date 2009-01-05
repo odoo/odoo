@@ -38,81 +38,22 @@ import time
 import xmlrpclib
 import release
 
-_service = {}
-_group = {}
-_res_id = 1
-_res = {}
-
-class ServiceEndPointCall(object):
-    def __init__(self, id, method):
-        self._id = id
-        self._meth = method
-
-    def __call__(self, *args):
-        _res[self._id] = self._meth(*args)
-        return self._id
-
-
-class ServiceEndPoint(object):
-    def __init__(self, name, id):
-        self._id = id
-        self._meth = {}
-        s = _service[name]
-        for m in s._method:
-            self._meth[m] = s._method[m]
-
-    def __getattr__(self, name):
-        return ServiceEndPointCall(self._id, self._meth[name])
-
+SERVICES = {}
+GROUPS = {}
 
 class Service(object):
-    _serviceEndPointID = 0
-
     def __init__(self, name, audience=''):
-        _service[name] = self
+        SERVICES[name] = self
         self.__name = name
-        self._method = {}
-        self.exportedMethods = None
-        self._response_process = None
-        self._response_process_id = None
+        self._methods = {}
         self._response = None
 
     def joinGroup(self, name):
-        if not name in _group:
-            _group[name] = {}
-        _group[name][self.__name] = self
+        GROUPS.setdefault(name, {})[self.__name] = self
 
-    def exportMethod(self, m):
-        if callable(m):
-            self._method[m.__name__] = m
-
-    def serviceEndPoint(self, s):
-        if Service._serviceEndPointID >= 2**16:
-            Service._serviceEndPointID = 0
-        Service._serviceEndPointID += 1
-        return ServiceEndPoint(s, self._serviceEndPointID)
-
-    def conversationId(self):
-        return 1
-
-    def processResponse(self, s, id):
-        self._response_process, self._response_process_id = s, id
-
-    def processFailure(self, s, id):
-        pass
-
-    def resumeResponse(self, s):
-        pass
-
-    def cancelResponse(self, s):
-        pass
-
-    def suspendResponse(self, s):
-        if self._response_process:
-            self._response_process(self._response_process_id,
-                                   _res[self._response_process_id])
-        self._response_process = None
-        self._response = s(self._response_process_id)
+    def exportMethod(self, method):
+        if callable(method):
+            self._methods[method.__name__] = method
 
     def abortResponse(self, error, description, origin, details):
         if not tools.config['debug_mode']:
@@ -120,24 +61,19 @@ class Service(object):
         else:
             raise
 
-    def currentFailure(self, s):
-        pass
-
-
 class LocalService(Service):
     def __init__(self, name):
         self.__name = name
         try:
-            s = _service[name]
-            self._service = s
-            for m in s._method:
-                setattr(self, m, s._method[m])
+            self._service = SERVICES[name]
+            for method_name, method_definition in self._service._methods.items():
+                setattr(self, method_name, method_definition)
         except KeyError, keyError:
             Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
             raise
 
 def service_exist(name):
-    return _service.get(name, False)
+    return SERVICES.get(name, False)
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
@@ -268,26 +204,30 @@ class xmlrpc(object):
         def __init__(self, name):
             self.name = name
 
-class GenericXMLRPCRequestHandler:
+class OpenERPDispatcherException(Exception):
+    def __init__(self, exception, traceback):
+        self.exception = exception
+        self.traceback = traceback
+
+class OpenERPDispatcher:
     def log(self, title, msg):
         from pprint import pformat
-        Logger().notifyChannel('XMLRPC-%s' % title, LOG_DEBUG_RPC, pformat(msg))
+        Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
 
-    def _dispatch(self, method, params):
+    def dispatch(self, service_name, method, params):
         try:
+            self.log('service', service_name)
             self.log('method', method)
             self.log('params', params)
-            n = self.path.split("/")[-1]
-            s = LocalService(n)
-            m = getattr(s, method)
-            s._service._response = None
-            r = m(*params)
-            self.log('result', r)
-            res = s._service._response
-            if res is not None:
-                r = res
-            self.log('res',r)
-            return r
+            service = LocalService(service_name)
+            method_call = getattr(service, method)
+            service._service.response = None
+            result = method_call(*params)
+            response = service._service._response
+            if response is not None:
+                result = response
+            self.log('result', result)
+            return result
         except Exception, e:
             self.log('exception', e)
             tb = sys.exc_info()
@@ -295,7 +235,15 @@ class GenericXMLRPCRequestHandler:
             if tools.config['debug_mode']:
                 import pdb
                 pdb.post_mortem(tb[2])
-            raise xmlrpclib.Fault(str(e), tb_s)
+            raise OpenERPDispatcherException(e, tb_s)
+
+class GenericXMLRPCRequestHandler(OpenERPDispatcher):
+    def _dispatch(self, method, params):
+        try:
+            service_name = self.path.split("/")[-1]
+            return self.dispatch(service_name, method, params)
+        except OpenERPDispatcherException, e:
+            raise xmlrpclib.Fault(str(e.exception), e.traceback)
 
 class SSLSocket(object):
     def __init__(self, socket):
@@ -315,7 +263,7 @@ class SSLSocket(object):
         return getattr(self.socket, name)
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, _service)
+    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, SERVICES.keys())
 
 class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
     def setup(self):
@@ -348,11 +296,10 @@ class HttpDaemon(threading.Thread):
             from OpenSSL.SSL import Error as SSLError
         else:
             class SSLError(Exception): pass
-        
-        try: 
+        try:
             self.server = server_class((interface, port), handler_class, 0)
         except SSLError, e:
-            Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can't load the certificate and/or the private key files")
+            Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can not load the certificate and/or the private key files")
             sys.exit(1)
         except Exception, e:
             Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when strarting the server daemon: %s" % (e,))
@@ -385,19 +332,13 @@ class HttpDaemon(threading.Thread):
         #signal.alarm(0)          # Disable the alarm
 
 import tiny_socket
-class TinySocketClientThread(threading.Thread):
+class TinySocketClientThread(threading.Thread, OpenERPDispatcher):
     def __init__(self, sock, threads):
         threading.Thread.__init__(self)
         self.sock = sock
         self.threads = threads
-        self._logger = Logger()
-
-    def log(self, msg):
-        from pprint import pformat
-        self._logger.notifyChannel('NETRPC', LOG_DEBUG_RPC, pformat(msg))
 
     def run(self):
-        import time
         import select
         self.running = True
         try:
@@ -414,27 +355,12 @@ class TinySocketClientThread(threading.Thread):
                 self.threads.remove(self)
                 return False
             try:
-                self.log(msg)
-                service = LocalService(msg[0])
-                method = getattr(service, msg[1])
-                service._service._response = None
-                result_from_method = method(*msg[2:])
-                res = service._service._response
-                if res != None:
-                    result_from_method = res
-                self.log(result_from_method)
-                ts.mysend(result_from_method)
-            except Exception, e:
-                self.log(e)
-                tb = sys.exc_info()
-                tb_s = "".join(traceback.format_exception(*tb))
-                if tools.config['debug_mode']:
-                    import pdb
-                    pdb.post_mortem(tb[2])
-                e = Exception(tools.ustr(e)) # avoid problems of pickeling
-                ts.mysend(e, exception=True, traceback=tb_s)
-            except:
-                pass
+                result = self.dispatch(msg[0], msg[1], msg[2:])
+                ts.mysend(result)
+            except OpenERPDispatcherException, e:
+                new_e = Exception(tools.ustr(e.exception)) # avoid problems of pickeling
+                ts.mysend(new_e, exception=True, traceback=e.traceback)
+
             self.sock.close()
             self.threads.remove(self)
             return True
@@ -481,8 +407,4 @@ class TinySocketServerThread(threading.Thread):
         except:
             return False
 
-
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

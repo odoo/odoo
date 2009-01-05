@@ -87,7 +87,6 @@ class osv_pool(netsvc.Service):
         self._init_parent = {}
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.joinGroup('web-services')
-        self.exportMethod(self.exportedMethods)
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.execute)
