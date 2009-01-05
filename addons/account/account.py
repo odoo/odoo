@@ -1594,7 +1594,7 @@ class account_config_wizard(osv.osv_memory):
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
-        res.sort(lambda x,y: cmp(x[1],y[1]))
+        res.sort(key=lambda x: x[1])
         return res
 
     _columns = {
@@ -1621,25 +1621,12 @@ class account_config_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    def install_account_chart(self, cr, uid,ids, context=None):
+    def install_account_chart(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
-            id = res['charts']
-            def install(id):
+            chart_id = res['charts']
+            if chart_id > 0:
                 mod_obj = self.pool.get('ir.module.module')
-                mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
-                mod_obj.download(cr, uid, [id], context=context)
-                cr.commit()
-                cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%s and m.state='uninstalled'",(id,))
-                ret = cr.fetchall()
-                if len(ret):
-                    for r in ret:
-                        install(r[0])
-                else:
-                    mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
-                    mod_obj.download(cr, uid, [id], context=context)
-                    cr.commit()
-            if id>0:
-                install(id)
+                mod_obj.button_install(cr, uid, [chart_id], context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
