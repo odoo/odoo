@@ -35,26 +35,17 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
-#        self.result = """
-#===Speed Test===:
-#
-#This test checks the speed of the module.
-#
-#"""
         self.bool_installed_only = True
         self.ponderation = 1.0
+        self.listdata = []
         return None
-    def run_test(self, cr, uid, module_path, module_state):
+    def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-#        self.result+=('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % ('Object Name'.ljust(40), 'Size-Number of Records (S)'.ljust(10), '1'.ljust(10), 'S/2'.ljust(10), 'S'.ljust(10), 'Complexity using query'.ljust(20))
-        header_list = ['Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
         obj_list = self.get_objects(cr, uid, module_name)
         obj_counter = 0
         score = 0
         obj_ids = self.get_ids(cr, uid, obj_list)
-        detail = ""
-        list1 = []
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
@@ -77,9 +68,8 @@ class quality_test(base_module_quality.abstract_quality_check):
 
                 if size < 5:
                     self.score += -2
-#                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data")
                     list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data"]
-                    list1.append(list)
+                    self.listdata.append(list)
                 else:
                     if code_size_complexity <= (code_base_complexity + size):
                         complexity = "O(1)"
@@ -87,31 +77,39 @@ class quality_test(base_module_quality.abstract_quality_check):
                     else:
                         complexity = "O(n) or worst"
                         score = 0
-#                    self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity)
                     list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
-                    list1.append(list)
+                    self.listdata.append(list)
             else:
                 score += -5
-#                self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (obj, size, "", "", "", "Warning! Object has no demo data")
                 list = [obj, size, "", "", "", "Warning! Object has no demo data"]
-                list1.append(list)
-#        self.result += '\n|}\n'
+                self.listdata.append(list)
         self.score = obj_counter and score/obj_counter or 0.0
+        return None
+
+    def get_result(self, cr, uid, module_path, module_state):
+        self.run_test(cr, uid, module_path)
         if not self.bool_installed_only or module_state=="installed":
             summary = """
 ===Speed Test===:
 
 This test checks the speed of the module.
 
-"""#+ "Score: " + str(self.score) + "/10\n"
+""" + "Score: " + str(self.score) + "/10\n"
         else:
             summary ="""  \n===Speed Test===:
 
 The module has to be installed before running this test.\n\n """
             header_list = ""
             self.error = True
-        self.result = self.format_table(test='speed', header=header_list, data_list=[summary,list1,self.error])
-        return None
+        return summary
+
+    def get_result_detail(self):
+        header_list = ['speed', 'Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
+        detail = ""
+        detail += "\n===Speed Test===\n"
+        if not self.error:
+            detail += self.format_table(header=header_list, data_list=[self.listdata])
+        return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
