@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -75,14 +75,7 @@ class ir_values(osv.osv):
             method=True, type='text', string='Value'),
         'object': fields.boolean('Is Object'),
         'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128),
-        'key2': fields.selection([
-            ('client_action_multi', 'Wizard in Forms'),
-            ('client_action_relate', 'Relate on Object'),
-            ('client_print_multi', 'Print'),
-            ('tree_but_action', 'Wizard in Tree'),
-            ('tree_but_open', 'Open on Tree'),
-            ('','/')
-        ], string='Event Type', size=256,
+        'key2': fields.char('Event Type', size=256,
             help="The kind of action or button in the client side that will trigger the action."),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,

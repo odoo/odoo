@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,8 @@ class groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get()
-        self.pool.get('ir.model.access').check()
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
+        self.pool.get('ir.model.access').check.clear_cache(cr.dbname)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -165,9 +165,9 @@ class users(osv.osv):
             if ok:
                 uid = 1
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
-        self.company_get()
+        self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get()
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return res
 
     def unlink(self, cr, uid, ids):

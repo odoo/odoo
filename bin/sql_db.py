@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -233,7 +233,7 @@ def db_connect(db_name, serialize=0):
 
 def close_db(db_name):
     PoolManager.close(db_name)
-    tools.cache.clean_cache_for_db(db_name)
+    tools.cache.clean_caches_for_db(db_name)
     
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

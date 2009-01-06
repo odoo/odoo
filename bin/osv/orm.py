@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -867,6 +867,9 @@ class orm_template(object):
     def __view_look_dom_arch(self, cr, user, node, context=None):
         fields_def = self.__view_look_dom(cr, user, node, context=context)
 
+        rolesobj = self.pool.get('res.roles')
+        usersobj = self.pool.get('res.users')
+
         buttons = xpath.Evaluate('//button', node)
         if buttons:
             for button in buttons:
@@ -876,13 +879,12 @@ class orm_template(object):
                 ok = True
 
                 if user != 1:   # admin user has all roles
-                    serv = netsvc.LocalService('object_proxy')
-                    user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
-                    cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+                    user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
+                    cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
                     roles = cr.fetchall()
                     for role in roles:
                         if role[0]:
-                            ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+                            ok = ok and rolesobj.check(cr, user, user_roles, role[0])
 
                 if not ok:
                     button.setAttribute('readonly', '1')
@@ -1142,8 +1144,6 @@ class orm_template(object):
         raise _('The copy method is not implemented on this object !')
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        if not context:
-            context = {}
         res = {}
         res2 = {}
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
@@ -1163,14 +1163,12 @@ class orm_template(object):
             res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
-                res[lang] = {'code': lang}
+                res[lang]['code'] = lang
             for f in res2[lang]:
                 res[lang][f] = res2[lang][f]
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        if not context:
-            context = {}
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
         for lang in langs:
             for field in vals:
@@ -2151,7 +2149,7 @@ class orm(orm_template):
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
             if field in self._columns:
-                if self._columns[field]._classic_write:
+                if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
                         upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
                         upd1.append(self._columns[field]._symbol_set[1](vals[field]))
@@ -2345,8 +2343,15 @@ class orm(orm_template):
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
-
-        cr.execute("SELECT nextval('"+self._sequence+"')")
+        
+        # Try-except added to filter the creation of those records whose filds are readonly.
+        # Example : any dashboard which has all the fields readonly.(due to Views(database views))
+        try:        
+            cr.execute("SELECT nextval('"+self._sequence+"')")
+        except:
+            raise except_orm(_('UserError'),
+                        _('You cannot perform this operation.'))    
+        
         id_new = cr.fetchone()[0]
         for table in tocreate:
             id = self.pool.get(table).create(cr, user, tocreate[table])

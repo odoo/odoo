@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -401,8 +401,6 @@ class res_partner_bank(osv.osv):
         'state': fields.selection(_bank_type_get, 'Bank type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
-        'state_id': fields.many2one('res.country.state', 'State',
-            domain="[('country_id', '=', country_id)]"),
     }
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(

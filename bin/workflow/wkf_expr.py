@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -25,22 +25,8 @@ import netsvc
 import osv as base
 import pooler
 
-
-class EnvCall(object):
-
-    def __init__(self,wf_service,d_arg):
-        self.wf_service=wf_service
-        self.d_arg=d_arg
-
-    def __call__(self,*args):
-        arg=self.d_arg+args
-        return self.wf_service.execute_cr(*arg)
-
-
 class Env(dict):
-
-    def __init__(self, wf_service, cr, uid, model, ids):
-        self.wf_service = wf_service
+    def __init__(self, cr, uid, model, ids):
         self.cr = cr
         self.uid = uid
         self.model = model
@@ -52,13 +38,6 @@ class Env(dict):
         if (key in self.columns) or (key in dir(self.obj)):
             res = self.obj.browse(self.cr, self.uid, self.ids[0])
             return res[key]
-            #res=self.wf_service.execute_cr(self.cr, self.uid, self.model, 'read',\
-            #       self.ids, [key])[0][key]
-            #super(Env, self).__setitem__(key, res)
-            #return res
-        #elif key in dir(self.obj):
-        #   return EnvCall(self.wf_service, (self.cr, self.uid, self.model, key,\
-        #           self.ids))
         else:
             return super(Env, self).__getitem__(key)
 
@@ -75,13 +54,11 @@ def _eval_expr(cr, ident, workitem, action):
         elif line =='False':
             ret=False
         else:
-            wf_service = netsvc.LocalService("object_proxy")
-            env = Env(wf_service, cr, uid, model, ids)
+            env = Env(cr, uid, model, ids)
             ret = eval(line, env)
     return ret
 
 def execute_action(cr, ident, workitem, activity):
-    wf_service = netsvc.LocalService("object_proxy")
     obj = pooler.get_pool(cr.dbname).get('ir.actions.server')
     ctx = {'active_id':ident[2], 'active_ids':[ident[2]]}
     result = obj.run(cr, ident[0], [activity['action_id']], ctx)
@@ -97,9 +74,9 @@ def check(cr, workitem, ident, transition, signal):
 
     uid = ident[0]
     if transition['role_id'] and uid != 1:
-        serv = netsvc.LocalService('object_proxy')
-        user_roles = serv.execute_cr(cr, uid, 'res.users', 'read', [uid], ['roles_id'])[0]['roles_id']
-        ok = ok and serv.execute_cr(cr, uid, 'res.roles', 'check', user_roles, transition['role_id'])
+        pool = pooler.get_pool(cr.dbname)
+        user_roles = pool.get('res.users').read(cr, uid, [uid], ['roles_id'])[0]['roles_id']
+        ok = ok and pool.get('res.roles').check(cr, uid, user_roles, transition['role_id'])
     ok = ok and _eval_expr(cr, ident, workitem, transition['condition'])
     return ok
 
