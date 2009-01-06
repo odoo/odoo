@@ -176,6 +176,7 @@ class module(osv.osv):
         'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
+        'certificat' : fields.char('Certificat', size=64, readonly=True),
     }
 
     _defaults = {
@@ -186,7 +187,29 @@ class module(osv.osv):
     _order = 'name'
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the module must be unique !')
+        ('name_uniq', 'unique (name)', 'The name of the module must be unique !'),
+        ('certificat_uniq', 'unique (certificat)', 'The certificat ID of the module must be unique !')
+    ]
+
+    def _check_certificat(self, cr, uid, ids):
+        if not ids:
+            return True
+
+        logger = netsvc.Logger()
+        for mod in self.browse(cr, uid, ids):
+            if not mod.certificat:
+                logger.notifyChannel('', netsvc.LOG_WARNING, 'module %s: no certificat' % mod.name)
+            else:
+                try:
+                    val = long(mod.certificat) % 97 == 29
+                    if not val:
+                        raise Exception('Invalid Certificat')
+                except Exception, ex:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_certificat, "Your certificat is wrong !", ['certificat']),
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -309,6 +332,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
+                    'certificat': terp.get('certificat', ''),
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
@@ -328,6 +352,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
+                    'certificat': terp.get('certificat', ''),
                 })
                 res[1] += 1
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
@@ -408,6 +433,7 @@ class module(osv.osv):
                 'author': terp.get('author', 'Unknown'),
                 'website': terp.get('website', ''),
                 'license': terp.get('license', 'GPL-2'),
+                'certificat': terp.get('certificat', ''),
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
@@ -484,8 +510,7 @@ class module(osv.osv):
             for mod in self.browse(cr, uid, [module_id]):
                 logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
 
-        return module_id 
-
+        return module_id
 
 module()
 
