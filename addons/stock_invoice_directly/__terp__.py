@@ -19,22 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Invoice Picking Directly",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["delivery", "stock"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "description": """
+    'name': 'Invoice Picking Directly',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
         When you send or deliver goods, this module automatically launch
         the invoicing wizard if the delivery is to be invoiced.
     """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['delivery', 'stock'],
+    'init_xml': [],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

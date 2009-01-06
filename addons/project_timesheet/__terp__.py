@@ -19,23 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Project Timesheet",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Human Resources",
-    "description": """
+    'name': 'Project Timesheet',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """
         This module lets you transfer the entries under tasks defined for Project Management to
         the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
 
     """,
-    "depends" : ["base", "project", "hr_timesheet"],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'project', 'hr_timesheet'],
+    'init_xml': [],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

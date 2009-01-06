@@ -19,21 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "IBAN",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Base",
-    "depends" : ["base"],
-    "description": """
+    'name': 'IBAN',
+    'version': '1.0',
+    'category': 'Generic Modules/Base',
+    'description': """
 This module install the base for IBAN bank accounts. 
 
     """,
-    "update_xml" : ["base_iban_view.xml"],
-    "init_xml" : ["base_iban_data.xml"],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'depends': ['base'],
+    'init_xml': ['base_iban_data.xml'],
+    'update_xml': ['base_iban_view.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,15 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Products & Pricelists",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Inventory Control",
-    "depends" : ["base", "process"],
-    "init_xml" : [],
-    "demo_xml" : ["product_demo.xml"],
-    "description": """
+    'name': 'Products & Pricelists',
+    'version': '1.0',
+    'category': 'Generic Modules/Inventory Control',
+    'description': """
     This is the base module to manage products and pricelists in Open ERP.
 
     Products support variants, different pricing methods, suppliers
@@ -45,18 +43,22 @@
 
     Print product labels with barcode.
     """,
-    "update_xml" : [
-        "security/product_security.xml",
-        "security/ir.model.access.csv",
-        "product_data.xml",
-        "product_report.xml",
-        "product_view.xml", "pricelist_view.xml",
-        "partner_view.xml", "product_wizard.xml",
-        "process/product_process.xml"
-        ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'depends': ['base', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/product_security.xml',
+        'security/ir.model.access.csv',
+        'product_data.xml',
+        'product_report.xml',
+        'product_view.xml',
+        'pricelist_view.xml',
+        'partner_view.xml',
+        'product_wizard.xml',
+        'process/product_process.xml'
+    ],
+    'demo_xml': ['product_demo.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Event",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Association",
-    "description": """Organization and management of events.
+    'name': 'Event',
+    'version': '0.1',
+    'category': 'Generic Modules/Association',
+    'description': """Organization and management of events.
 
     This module allow you
         * to manage your events and their registrations
@@ -37,20 +38,18 @@
     - You can access predefined reports about number of registration per event or per event category in :
                 Events \ Reporting
 """,
-    "depends" : [
-        "crm","base_contact","account"
+    'author': 'Tiny',
+    'depends': ['crm', 'base_contact', 'account'],
+    'init_xml': ['event_data.xml'],
+    'update_xml': [
+        'event_wizard.xml',
+        'event_view.xml',
+        'event_sequence.xml',
+        'security/event_security.xml',
+        'security/ir.model.access.csv'
     ],
-    "demo_xml" : ["event_demo.xml"],
-    "init_xml" : ["event_data.xml"],
-    "update_xml" : [
-        "event_wizard.xml",
-        "event_view.xml",
-        "event_sequence.xml",
-        "security/event_security.xml",
-        "security/ir.model.access.csv",
-    ],
-    "active" : False,
-    "installable" : True,
+    'demo_xml': ['event_demo.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

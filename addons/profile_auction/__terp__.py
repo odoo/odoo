@@ -19,17 +19,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Auction house profile",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Profile",
-    "description": "Profile for Auction house",
-    "depends":["auction", "board_auction","account","hr_timesheet_sheet"],
-    "demo_xml":[],
-    "update_xml":[],
-    "active":False,
-    "installable":True,
+    'name': 'Auction house profile',
+    'version': '1.0',
+    'category': 'Profile',
+    'description': """Profile for Auction house""",
+    'author': 'Tiny',
+    'depends': ['auction', 'board_auction', 'account', 'hr_timesheet_sheet'],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

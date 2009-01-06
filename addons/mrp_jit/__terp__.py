@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"MRP JIT",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Generic Modules/Production",
-    "description": """
+    'name': 'MRP JIT',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
     This module allows Just In Time computation of all procurement.
 
     If you install this module, you will not have to run the schedulers anymore.
@@ -35,11 +36,11 @@
     as possible. In that case, you can not use priorities anymore on the different
     pickings.
     """,
-    "depends":["mrp","sale"],
-    "demo_xml":[],
-    "update_xml":["mrp_jit.xml"],
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['mrp', 'sale'],
+    'update_xml': ['mrp_jit.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

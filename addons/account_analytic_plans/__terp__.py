@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Multiple-plans management in Analytic Accounting",
-    "version" : "1.0",
-    "depends" : ["account", "account_analytic_default"],
-    "author" : "Tiny",
-    "description": """This module allows to use several analytic plans, according to the general journal,
+    'name': 'Multiple-plans management in Analytic Accounting',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """This module allows to use several analytic plans, according to the general journal,
 so that multiple analytic lines are created when the invoice or the entries
 are confirmed.
 
@@ -52,19 +53,18 @@ Plan2:
 So when this line of invoice will be confirmed, it will generate 3 analytic lines,
 for one account entry.
         """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account', 'account_analytic_default'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'model_wizard.xml',
+        'account_analytic_plans_view.xml',
+        'account_analytic_plans_report.xml'
     ],
-    "demo_xml" : [
-    ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-    "model_wizard.xml","account_analytic_plans_view.xml",
-    "account_analytic_plans_report.xml"],
-
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

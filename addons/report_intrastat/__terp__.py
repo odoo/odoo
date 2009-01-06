@@ -19,24 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Intrastat Reporting - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["base", "product", "stock", "sale", "purchase"],
-    "category" : "Generic Modules/Inventory Control",
-    "description": "A module that adds intrastat reports.",
-    "init_xml" : ["report_intrastat_data.xml",],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_intrastat_view.xml",
-        "intrastat_report.xml",
+    'name': 'Intrastat Reporting - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Inventory Control',
+    'description': """A module that adds intrastat reports.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
+    'init_xml': ['report_intrastat_data.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'report_intrastat_view.xml',
+        'intrastat_report.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Manufacturing Resource Planning",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product","process"],
-    "description": """
+    'name': 'Manufacturing Resource Planning',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
     This is the base module to manage the manufacturing process in Open ERP.
 
     Features:
@@ -53,24 +52,25 @@
     * Print a production order
     * Stock forecasts
     """,
-    "init_xml" : [],
-    "demo_xml" : ["mrp_demo.xml","mrp_order_point.xml"],
-    "update_xml" : [
-        "security/mrp_security.xml",
-        "security/ir.model.access.csv",
-        "mrp_workflow.xml", 
-        "mrp_data.xml",
-        "mrp_view.xml", 
-        "mrp_wizard.xml", 
-        "mrp_report.xml",
-        "company_view.xml",
-        "process/stockable_product_process.xml",
-        "process/service_product_process.xml",
-        "process/procurement_process.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'hr', 'purchase', 'product', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/mrp_security.xml',
+        'security/ir.model.access.csv',
+        'mrp_workflow.xml',
+        'mrp_data.xml',
+        'mrp_view.xml',
+        'mrp_wizard.xml',
+        'mrp_report.xml',
+        'company_view.xml',
+        'process/stockable_product_process.xml',
+        'process/service_product_process.xml',
+        'process/procurement_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

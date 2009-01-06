@@ -19,23 +19,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Audit Trail",
-    "version" : "1.0",
-    "depends" : ["base","account","purchase","mrp"],
-    "website" : "http://www.openerp.com",
-    "author" : "Tiny",
-    "init_xml" : [],
-    "description": """Allows the administrator to track every user operations on all objects of the system.
+    'name': 'Audit Trail',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """Allows the administrator to track every user operations on all objects of the system.
     Subscribe Rules for read, write, create and delete on objects and check logs""",
-    "category" : "Generic Modules/Others",
-    "update_xml" : ["audittrail_view.xml", 
-                    "security/ir.model.access.csv",
-                    "security/audittrail_security.xml",
-                   ],
-    "demo_xml" : ["audittrail_demo.xml"],
-    "active" : False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'account', 'purchase', 'mrp'],
+    'init_xml': [],
+    'update_xml': [
+        'audittrail_view.xml',
+        'security/ir.model.access.csv',
+        'security/audittrail_security.xml'
+    ],
+    'demo_xml': ['audittrail_demo.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

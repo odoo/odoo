@@ -19,30 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Auction module",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Auction",
-    "depends" : ["base","account","hr_attendance"],
-    "description": '''This module provides functionality to 
+    'name': 'Auction module',
+    'version': '1.0',
+    'category': 'Generic Modules/Auction',
+    'description': """This module provides functionality to 
      manage artists, articles, sellers, buyers and auction.
      Manage bids, track of sold, paid and unpaid objects.
      Delivery Management. 
-    ''',
-    "update_xml" : [
-        # FIXME: review security rules...
-        "security/ir.model.access.csv",
-        "auction_view.xml",
-        "auction_report.xml",
-        "auction_wizard.xml",
+    """,
+    'author': 'Tiny',
+    'depends': ['base', 'account', 'hr_attendance'],
+    'init_xml': ['auction_sequence.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'auction_view.xml',
+        'auction_report.xml',
+        'auction_wizard.xml'
     ],
-    "demo_xml" : [
-        "auction_demo.xml"
-    ],
-    "init_xml" : ["auction_sequence.xml"],
-    "active": False,
-    "installable": True
+    'demo_xml': ['auction_demo.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

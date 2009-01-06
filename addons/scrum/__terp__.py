@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Scrum, Agile Development Method",
-    "version": "1.0",
-    "author" : "Tiny",
-    "depends" : ["project", "process"],
-    "category" : "Enterprise Specific Modules/Information Technology",
-    "init_xml" : [],
-    "description": """
+    'name': 'Scrum, Agile Development Method',
+    'version': '1.0',
+    'category': 'Enterprise Specific Modules/Information Technology',
+    'description': """
     This modules implements all concepts defined by the scrum project
     management methodology for IT companies:
     * Project with sprints, product owner, scrum master
@@ -48,17 +47,18 @@
     More information on the methodology:
     * http://controlchaos.com
     """,
-    "demo_xml" : ["scrum_demo.xml"],
-    "update_xml": [
-        "security/ir.model.access.csv",
-        "scrum_view.xml",
-        "scrum_report.xml",
-        "scrum_wizard.xml",
-        "process/scrum_process.xml",
+    'author': 'Tiny',
+    'depends': ['project', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'scrum_view.xml',
+        'scrum_report.xml',
+        'scrum_wizard.xml',
+        'process/scrum_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['scrum_demo.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

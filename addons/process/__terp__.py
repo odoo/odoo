@@ -19,25 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Enterprise Process",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
-    "description": """
+    'name': 'Enterprise Process',
+    'version': '1.0',
+    'category': 'Generic Modules/Base',
+    'description': """
 This module allows you to manage your process for the end-users.
     """,
-    "depends" : ["base"],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        'process_view.xml',
-      ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'process_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

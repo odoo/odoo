@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
+
+
 {
-    "name" : "Human Resources: Holidays management",
-    "version" : "0.1",
-    "author" : "Tiny & Axelor",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "description": """Human Resources: Holidays tracking and workflow
+    'name': 'Human Resources: Holidays management',
+    'version': '0.1',
+    'category': 'Generic Modules/Human Resources',
+    'description': """Human Resources: Holidays tracking and workflow
 
     This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.
 
@@ -24,20 +24,20 @@
                 Administration \ Users \ Users
             for example, you maybe will do it for the user 'admin'.
 """,
-    "depends" : ["hr","crm_configuration", "process"],
-    "init_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "hr_workflow.xml",
-        "hr_view.xml",
-        "hr_holidays_report.xml",
-        "hr_holidays_wizard.xml",
-        "process/hr_holidays_process.xml"
+    'author': 'Tiny & Axelor',
+    'website': 'http://www.openerp.com',
+    'depends': ['hr', 'crm_configuration', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'hr_workflow.xml',
+        'hr_view.xml',
+        'hr_holidays_report.xml',
+        'hr_holidays_wizard.xml',
+        'process/hr_holidays_process.xml'
     ],
-#    "demo_xml" : ["hr_bel_holidays_2008.xml",],
-    "demo_xml" : [],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

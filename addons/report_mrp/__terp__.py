@@ -19,23 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name": "MRP Management - Reporting",
-    "version": "1.0",
-    "author": "Tiny",
-    "website": "http://www.openerp.com",
-    "depends": ["mrp"],
-    "category": "Generic Modules/Production",
-    "description": """A module that adds new reports based on MRP cases.
+    'name': 'MRP Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """A module that adds new reports based on MRP cases.
     Workcenter loads, Weekly Stock value variation""",
-    "init_xml": [],
-    "demo_xml": [],
-    "update_xml": [
-        "security/ir.model.access.csv",
-        "report_mrp_view.xml",
-    ],
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['mrp'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_mrp_view.xml'],
+    'demo_xml': [],
+    'installable': True,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

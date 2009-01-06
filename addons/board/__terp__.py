@@ -19,20 +19,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Dashboard main module",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Base",
-    "depends":["base"],
-    "demo_xml":[],
-    "update_xml":[
-        "security/ir.model.access.csv",
-        "board_view.xml"],
-    "description": "Base module for all dashboards.",
-    "active":False,
-    "installable":True,
+    'name': 'Dashboard main module',
+    'version': '1.0',
+    'category': 'Board/Base',
+    'description': """Base module for all dashboards.""",
+    'author': 'Tiny',
+    'depends': ['base'],
+    'update_xml': ['security/ir.model.access.csv', 'board_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

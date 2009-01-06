@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Stock No Auto-Picking",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Generic Modules/Production",
-    "description": """
+    'name': 'Stock No Auto-Picking',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
     This module allows an intermediate picking process to provide raw materials
     to production orders.
 
@@ -33,11 +34,11 @@
     which is sub-contracted to "No Auto-Picking" and put the location of the
     supplier in the routing of the assembly operation.
     """,
-    "depends":["mrp"],
-    "demo_xml":[],
-    "update_xml":["stock_no_autopicking_view.xml"],
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['mrp'],
+    'update_xml': ['stock_no_autopicking_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

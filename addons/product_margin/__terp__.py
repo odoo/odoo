@@ -19,21 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Margins in Product",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Custom",
-    "description": """
+    'name': 'Margins in Product',
+    'version': '1.0',
+    'category': 'Custom',
+    'description': """
 Adds a reporting menu in products that computes sales, purchases, margins
 and others interesting indicators based on invoices. The wizard to launch
 the report has several options to help you get the data you need.
 """,
-    "depends":["base","product","account"],
-    "demo_xml":[],
-    "update_xml":["product_margin_view.xml"],
-    "active": False,
-    "installable": True,
+    'author': 'Tiny',
+    'depends': ['base', 'product', 'account'],
+    'update_xml': ['product_margin_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

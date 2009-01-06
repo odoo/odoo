@@ -19,15 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Belgium - Plan Comptable Minimum Normalise",
-    "version" : "1.1",
-    "author" : "Tiny",
-    "category" : "Localisation/Account Charts",
-    "depends" : ["account", "account_report", "base_vat", "base_iban",
-        "account_chart"],
-    "init_xml" : [],
-    "description": """
+    'name': 'Belgium - Plan Comptable Minimum Normalise',
+    'version': '1.1',
+    'category': 'Localisation/Account Charts',
+    'description': """
     This is the base module to manage the accounting chart for Belgium in Open ERP.
 
     After Installing this module,The Configuration wizard for accounting is launched.
@@ -41,13 +39,11 @@
     * Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Path to access : Financial Management/Reporting/Listing of VAT Customers.
 
     """,
-    "demo_xml" : [
-#        "account_demo.xml",
-#        "account.report.report.csv"
-    ],
-    "update_xml" : ["account_pcmn_belgium.xml","l10n_be_wizard.xml", "l10n_be_sequence.xml"],
-    "installable": True
+    'author': 'Tiny',
+    'depends': ['account', 'account_report', 'base_vat', 'base_iban', 'account_chart'],
+    'init_xml': [],
+    'update_xml': ['account_pcmn_belgium.xml', 'l10n_be_wizard.xml', 'l10n_be_sequence.xml'],
+    'demo_xml': [],
+    'installable': True,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

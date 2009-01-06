@@ -19,17 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Dashboard for CRM Configuration",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/CRM",
-    "depends":["board","crm_configuration"],
-    "demo_xml":["board_crm_demo.xml"],
-    "update_xml":["board_crm_statistical_view.xml",
-                  "board_crm_view.xml"
-                  ],
-    "description": """
+    'name': 'Dashboard for CRM Configuration',
+    'version': '1.0',
+    'category': 'Board/CRM',
+    'description': """
 This module implements a dashboard for CRM that includes:
     * My Leads (list)
     * Leads by Stage (graph)
@@ -38,8 +34,11 @@ This module implements a dashboard for CRM that includes:
     * My Cases (list)
     * Jobs Tracking (graph)
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['board', 'crm_configuration'],
+    'update_xml': ['board_crm_statistical_view.xml', 'board_crm_view.xml'],
+    'demo_xml': ['board_crm_demo.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,23 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Board for project users",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Projects & Services",
-    "depends":[
-        "project",
-        "report_timesheet",
-        "board",
-        "report_analytic_planning",
-        "report_analytic_line",
-        "report_task",
-        "hr_timesheet_sheet"
-    ],
-    "demo_xml":["board_project_demo.xml"],
-    "update_xml":["board_project_view.xml", "board_project_manager_view.xml"],
-    "description": """
+    'name': 'Board for project users',
+    'version': '1.0',
+    'category': 'Board/Projects & Services',
+    'description': """
 This module implements a dashboard for project member that includes:
     * List of my open tasks
     * List of my next deadlines
@@ -43,9 +33,19 @@ This module implements a dashboard for project member that includes:
     * Graph of my timesheet
     * Graph of my work analysis
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': [
+        'project',
+        'report_timesheet',
+        'board',
+        'report_analytic_planning',
+        'report_analytic_line',
+        'report_task',
+        'hr_timesheet_sheet'
+    ],
+    'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],
+    'demo_xml': ['board_project_demo.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

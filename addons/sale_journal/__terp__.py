@@ -19,22 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Managing sales and deliveries by journal",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Sales & Purchases",
-    "website": "http://www.openerp.com",
-    "depends" : ["stock","sale"],
-    "demo_xml" : ['sale_journal_demo.xml'],
-    "init_xml" : ['sale_journal_data.xml'],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "sale_journal_view.xml",
-        "picking_journal_view.xml",
-        "picking_journal_view_report.xml"
-    ],
-    "description" : """
+    'name': 'Managing sales and deliveries by journal',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
     The sale journal modules allows you to categorise your
     sales and deliveries (packing lists) between different journals.
     This module is very helpful for bigger companies that
@@ -57,8 +48,18 @@
 
     Some statistics by journals are provided.
     """,
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'sale'],
+    'init_xml': ['sale_journal_data.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'sale_journal_view.xml',
+        'picking_journal_view.xml',
+        'picking_journal_view_report.xml'
+    ],
+    'demo_xml': ['sale_journal_demo.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

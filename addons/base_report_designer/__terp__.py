@@ -19,22 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Report designer interface module",
-    "description" : """
+    'name': 'Report designer interface module',
+    'version': '0.1',
+    'category': 'Generic Modules/Base',
+    'description': """
 This module adds wizards to import/export documents to be edited in
 OpenOffice.
 """,
-    "version" : "0.1",
-    "depends" : ["base"],
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
-    "init_xml" : [ ],
-    "demo_xml" : ["base_report_data.xml"],
-    "update_xml" : [ "base_report_designer_wizard.xml" ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['base_report_designer_wizard.xml'],
+    'demo_xml': ['base_report_data.xml'],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

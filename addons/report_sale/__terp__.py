@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Sales Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["sale"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "description": """
+    'name': 'Sales Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
     Reporting for the sale module:
     * Sales order by product (my/this month/all)
     * Sales order by category of product (my/this month/all)
@@ -37,16 +36,17 @@
     * Uninvoiced Sales
     * Uninvoiced but shipped Sales
     """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_sale_view.xml",
-        "report_sale_graph.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['sale'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'report_sale_view.xml',
+        'report_sale_graph.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
