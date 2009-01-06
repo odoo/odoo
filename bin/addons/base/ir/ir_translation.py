@@ -79,9 +79,9 @@ class ir_translation(osv.osv):
             cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
             cr.commit()
 
-    @tools.cache(skiparg=3)
+    @tools.cache(skiparg=3, multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
-        translations = {}
+        translations = dict.fromkeys(ids, False)
         if ids:
             cr.execute('select res_id,value ' \
                     'from ir_translation ' \
@@ -92,9 +92,6 @@ class ir_translation(osv.osv):
                     (lang,tt,name))
             for res_id, value in cr.fetchall():
                 translations[res_id] = value
-        for res_id in ids:
-            if res_id not in translations:
-                translations[res_id] = False
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value):
@@ -104,6 +101,7 @@ class ir_translation(osv.osv):
             if tr[res_id]:
                 self._get_source.clear_cache(cr.dbname, uid, name, tt, lang, tr[res_id])
         self._get_source.clear_cache(cr.dbname, uid, name, tt, lang)
+        self._get_ids.clear_cache(cr.dbname, uid, name, tt, lang, ids)
 
         cr.execute('delete from ir_translation ' \
                 'where lang=%s ' \
