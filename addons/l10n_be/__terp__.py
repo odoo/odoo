@@ -45,5 +45,6 @@
     'update_xml': ['account_pcmn_belgium.xml', 'l10n_be_wizard.xml', 'l10n_be_sequence.xml'],
     'demo_xml': [],
     'installable': True,
+    'certificate': '31977724637',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

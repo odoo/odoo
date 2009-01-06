@@ -61,5 +61,6 @@
     'demo_xml': ['sale_journal_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '77661619085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

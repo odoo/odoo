@@ -39,5 +39,6 @@ This module implements a dashboard for salesman that includes:
     'demo_xml': ['board_sale_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '46503501021',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

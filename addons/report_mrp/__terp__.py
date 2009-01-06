@@ -34,5 +34,6 @@
     'update_xml': ['security/ir.model.access.csv', 'report_mrp_view.xml'],
     'demo_xml': [],
     'installable': True,
+    'certificate': '71582896029',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

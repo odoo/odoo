@@ -50,5 +50,6 @@ to set up a management by affair.
     'demo_xml': ['hr_timesheet_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '71405533469',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

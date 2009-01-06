@@ -49,5 +49,6 @@ Basic Accounting, plus new things which available are:
     'demo_xml': [],
     'installable': True,
     'active': False,
+    'certificate': '37580727101',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -47,5 +47,6 @@ This module implements a dashboard for project member that includes:
     'demo_xml': ['board_project_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '39350482013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

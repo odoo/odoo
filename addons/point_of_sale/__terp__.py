@@ -50,5 +50,6 @@ Main features :
     ],
     'demo_xml': [],
     'installable': True,
+    'certificate': '48272150909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

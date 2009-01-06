@@ -34,5 +34,6 @@ This module implements a dashboard for associations.
     'demo_xml': ['board_association_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '79647781773',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

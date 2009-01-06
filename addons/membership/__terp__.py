@@ -49,5 +49,6 @@ invoice and send propositions for membership renewal.
     'demo_xml': ['membership_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '42907796381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -32,5 +32,6 @@
     'update_xml': ['hr_timesheet_project_view.xml', 'process/hr_timesheet_project_process.xml'],
     'installable': True,
     'active': False,
+    'certificate': '68570797709',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -44,5 +44,6 @@ This module installs:
     ],
     'demo_xml': ['account.report.report.csv'],
     'installable': True,
+    'certificate': '78164766621',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

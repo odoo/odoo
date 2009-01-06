@@ -38,5 +38,6 @@ This module's aim is to check the quality of other modules.
     'update_xml': ['base_module_quality_wizard.xml', 'security/ir.model.access.csv'],
     'installable': True,
     'active': False,
+    'certificate': '75119475677',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

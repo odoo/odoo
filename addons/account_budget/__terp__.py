@@ -58,5 +58,6 @@ Three reports are available:
     'demo_xml': ['crossovered_budget_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '43819694157',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

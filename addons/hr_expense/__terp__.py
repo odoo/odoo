@@ -54,5 +54,6 @@
     'demo_xml': ['hr_expense_demo.xml', 'hr.expense.expense.csv'],
     'installable': True,
     'active': False,
+    'certificate': '62479841789',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

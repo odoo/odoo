@@ -37,5 +37,6 @@ OpenOffice.
     'demo_xml': ['base_report_data.xml'],
     'installable': True,
     'active': False,
+    'certificate': '56379010493',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

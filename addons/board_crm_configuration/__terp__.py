@@ -40,5 +40,6 @@ This module implements a dashboard for CRM that includes:
     'demo_xml': ['board_crm_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '71599098909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

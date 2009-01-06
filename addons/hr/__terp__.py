@@ -48,5 +48,6 @@
     'demo_xml': ['hr_demo.xml', 'hr_department_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate': '86710558965',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

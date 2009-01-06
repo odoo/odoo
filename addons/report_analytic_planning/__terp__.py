@@ -38,5 +38,6 @@
     'demo_xml': ['report_account_analytic.planning.csv'],
     'installable': True,
     'active': False,
+    'certificate': '34901836973',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,5 +41,6 @@ Allows to automatically select analytic accounts based on criterions:
     'demo_xml': [],
     'installable': True,
     'active': False,
+    'certificate': '74229833581',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
