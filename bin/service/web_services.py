@@ -28,6 +28,7 @@ import string
 import thread
 import threading
 import time
+import sys
 
 from tools.translate import _
 import addons
