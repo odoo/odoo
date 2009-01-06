@@ -81,10 +81,10 @@ class browse_null(object):
         self.id = False
 
     def __getitem__(self, name):
-        return False
+        return None
 
     def __getattr__(self, name):
-        return False  # XXX: return self ?
+        return None  # XXX: return self ?
 
     def __int__(self):
         return False
@@ -156,7 +156,7 @@ class browse_record(object):
             else:
                 logger = netsvc.Logger()
                 logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
-                return False
+                return None
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._classic_write:
