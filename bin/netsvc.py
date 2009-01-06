@@ -3,10 +3,10 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    The refactoring about the OpenSSL support come from Tryton
-#    Copyright (C) 2007-2008 Cédric Krier.
-#    Copyright (C) 2007-2008 Bertrand Chenal.
+#    Copyright (C) 2007-2009 Cédric Krier.
+#    Copyright (C) 2007-2009 Bertrand Chenal.
 #    Copyright (C) 2008 B2CK SPRL.
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -137,7 +137,7 @@ class LocalService(Service):
             raise
 
 def service_exist(name):
-    return (name in _service) and bool(_service[name])
+    return _service.get(name, False)
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
@@ -230,6 +230,9 @@ class Logger(object):
         elif result:
             level_method(result[0])
 
+    def shutdown(self):
+        logging.shutdown()
+
 import tools
 init_logger()
 
@@ -257,6 +260,9 @@ class Agent(object):
             timer.cancel()
     quit = classmethod(quit)
 
+
+import traceback
+
 class xmlrpc(object):
     class RpcGateway(object):
         def __init__(self, name):
@@ -268,7 +274,6 @@ class GenericXMLRPCRequestHandler:
         Logger().notifyChannel('XMLRPC-%s' % title, LOG_DEBUG_RPC, pformat(msg))
 
     def _dispatch(self, method, params):
-        import traceback
         try:
             self.log('method', method)
             self.log('params', params)
@@ -285,13 +290,12 @@ class GenericXMLRPCRequestHandler:
             return r
         except Exception, e:
             self.log('exception', e)
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            s = str(e)
+            tb = sys.exc_info()
+            tb_s = "".join(traceback.format_exception(*tb))
             if tools.config['debug_mode']:
                 import pdb
-                tb = sys.exc_info()[2]
-                pdb.post_mortem(tb)
-            raise xmlrpclib.Fault(s, tb_s)
+                pdb.post_mortem(tb[2])
+            raise xmlrpclib.Fault(str(e), tb_s)
 
 class SSLSocket(object):
     def __init__(self, socket):
@@ -423,10 +427,10 @@ class TinySocketClientThread(threading.Thread):
         self._logger = Logger()
 
     def log(self, msg):
-        self._logger.notifyChannel('NETRPC', LOG_DEBUG_RPC, msg)
+        from pprint import pformat
+        self._logger.notifyChannel('NETRPC', LOG_DEBUG_RPC, pformat(msg))
 
     def run(self):
-        import traceback
         import time
         import select
         self.running = True
@@ -455,14 +459,13 @@ class TinySocketClientThread(threading.Thread):
                 self.log(result_from_method)
                 ts.mysend(result_from_method)
             except Exception, e:
-                print repr(e)
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+                self.log(e)
+                tb = sys.exc_info()
+                tb_s = "".join(traceback.format_exception(*tb))
                 if tools.config['debug_mode']:
                     import pdb
-                    tb = sys.exc_info()[2]
-                    pdb.post_mortem(tb)
-                e = Exception(str(e))
-                self.log(str(e))
+                    pdb.post_mortem(tb[2])
+                e = Exception(tools.ustr(e)) # avoid problems of pickeling
                 ts.mysend(e, exception=True, traceback=tb_s)
             except:
                 pass

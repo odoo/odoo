@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -111,6 +111,10 @@ class ir_model_grid(osv.osv):
         result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
         allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
         acc_obj = self.pool.get('ir.model.access')
+        
+        if not isinstance(result,list):
+            result=[result]
+            
         for res in result:
             rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
             rules_br = acc_obj.browse(cr, uid, rules, context=context)
@@ -372,18 +376,18 @@ class ir_model_access(osv.osv):
     def write(self, cr, uid, *args, **argv):
         self.call_cache_clearing_methods()
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
-        self.check()    # clear the cache of check function
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def create(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
-        self.check()
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def unlink(self, cr, uid, *args, **argv):
         self.call_cache_clearing_methods()
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
-        self.check()
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
 ir_model_access()
@@ -545,8 +549,9 @@ class ir_model_data(osv.osv):
     def _process_end(self, cr, uid, modules):
         if not modules:
             return True
-        module_str = ["'%s'" % m for m in modules]
-        cr.execute('select id,name,model,res_id,module from ir_model_data where module in ('+','.join(module_str)+') and not noupdate')
+        modules = list(modules)    
+        module_in = ",".join(["%s"] * len(modules))
+        cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:

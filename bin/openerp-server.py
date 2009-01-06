@@ -3,7 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -178,8 +178,13 @@ if tools.config['netrpc']:
     logger.notifyChannel("web-services", netsvc.LOG_INFO, 
                          "starting NET-RPC service, port %d" % (netport,))
 
+LST_SIGNALS = ['SIGINT', 'SIGTERM']
+if os.name == 'posix':
+    LST_SIGNALS.extend(['SIGUSR1','SIGQUIT'])
+
+
 SIGNALS = dict(
-    [(getattr(signal, sign), sign) for sign in ('SIGINT', 'SIGTERM', 'SIGUSR1', 'SIGQUIT')]
+    [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
 )
 
 def handler(signum, _):
@@ -196,6 +201,7 @@ def handler(signum, _):
         os.unlink(tools.config['pidfile'])
     logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
                          "Shutdown Server! - %s" % ( SIGNALS[signum], ))
+    logger.shutdown()
     sys.exit(0)
 
 for signum in SIGNALS:

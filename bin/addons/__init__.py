@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,11 @@ from osv import fields
 
 import zipfile
 import release
+
+import re
+import base64
+from zipfile import PyZipFile, ZIP_DEFLATED
+import StringIO
 
 logger = netsvc.Logger()
 
@@ -172,6 +177,45 @@ def get_module_filetree(module, dir='.'):
     
     return tree
 
+
+def get_module_as_zip(modulename, b64enc=True, src=True):
+    
+    RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
+    
+    def _zippy(archive, path, src=True):
+        path = os.path.abspath(path)
+        base = os.path.basename(path)
+        for f in tools.osutil.listdir(path, True):
+            bf = os.path.basename(f)
+            if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not path.endswith('.py')):
+                archive.write(os.path.join(path, f), os.path.join(base, f))
+    
+    ap = get_module_path(str(modulename))
+    if not ap:
+        raise Exception('Unable to find path for module %s' % modulename)
+    
+    ap = ap.encode('utf8') 
+    if os.path.isfile(ap + '.zip'):
+        val = file(ap + '.zip', 'rb').read()
+    else:
+        archname = StringIO.StringIO('wb')
+        archive = PyZipFile(archname, "w", ZIP_DEFLATED)
+        archive.writepy(ap)
+        _zippy(archive, ap, src=src)
+        archive.close()
+        val = archname.getvalue()
+        archname.close()
+
+    ### debug
+    f = file('/tmp/mod.zip', 'wb')
+    f.write(val)
+    f.close()
+
+    if b64enc:
+        val = base64.encodestring(val)
+    return val
+
+
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.
 
@@ -282,7 +326,12 @@ def register_class(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            imp.load_module(m, *imp.find_module(m, [ad, _ad]))
+            fm = imp.find_module(m, [ad, _ad])
+            try:
+                imp.load_module(m, *fm)
+            finally:
+                if fm[0]:
+                    fm[0].close()
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
@@ -595,13 +644,14 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
         if update_module:
-            cr.execute("select id,name from ir_module_module where state in ('to remove')")
+            cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
             for mod_id, mod_name in cr.fetchall():
                 pool = pooler.get_pool(cr.dbname)
-                cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
+                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod,rid in cr.fetchall():
                     uid = 1
                     pool.get(rmod).unlink(cr, uid, [rid])
+                cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
             # TODO: remove menu without actions of childs
@@ -615,6 +665,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                         (id not in (select res_id from ir_values where model='ir.ui.menu'))
                     and
                         (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                cr.commit()
                 if not cr.rowcount:
                     break
                 else:

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:59:16+0000\n"
-"PO-Revision-Date: 2008-12-22 17:59:16+0000\n"
+"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
+"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,6 +91,11 @@ msgstr "Nome de função"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-account"
+msgstr ""
+
+#. module: base
+#: view:res.partner.category:0
+msgid "Partner category"
 msgstr ""
 
 #. module: base
@@ -370,8 +375,8 @@ msgid "Sender's email"
 msgstr "E-mail do remetente"
 
 #. module: base
-#: selection:ir.report.custom,type:0
-msgid "Tabular"
+#: selection:module.lang.install,init,lang:0
+msgid "bs_BS"
 msgstr ""
 
 #. module: base
@@ -458,8 +463,8 @@ msgid "STOCK_CANCEL"
 msgstr ""
 
 #. module: base
-#: selection:res.partner.event,type:0
-msgid "Prospect Contact"
+#: selection:ir.actions.report.xml,report_type:0
+msgid "odt"
 msgstr ""
 
 #. module: base
@@ -943,8 +948,18 @@ msgid "STOCK_UNDERLINE"
 msgstr ""
 
 #. module: base
+#: rml:ir.module.reference:0
+msgid "Menu :"
+msgstr ""
+
+#. module: base
 #: selection:ir.model,state:0
 msgid "Custom Object"
+msgstr ""
+
+#. module: base
+#: view:ir.values:0
+msgid "Values for Event Type"
 msgstr ""
 
 #. module: base
@@ -1839,11 +1854,6 @@ msgid "Get file"
 msgstr "Carregar ficheiro"
 
 #. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "tr_TR"
-msgstr ""
-
-#. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Work Days"
 msgstr "Dias de trabalho"
@@ -1863,6 +1873,12 @@ msgstr "0=Muito urgente\n"
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
 msgid "ir.model.data"
+msgstr ""
+
+#. module: base
+#: code:osv/orm.py:0
+#, python-format
+msgid "UserError"
 msgstr ""
 
 #. module: base
@@ -1965,15 +1981,14 @@ msgid "From"
 msgstr "De"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "This method does not exist anymore"
-msgstr "Este método não existe mais"
-
-#. module: base
 #: selection:res.partner.event,partner_type:0
 msgid "Retailer"
 msgstr "Revendedor"
+
+#. module: base
+#: view:ir.values:0
+msgid "client_action_multi, client_action_relate"
+msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -1998,11 +2013,6 @@ msgstr "Arquivo TGZ"
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
-msgstr ""
-
-#. module: base
-#: selection:ir.values,key2:0
-msgid "Print"
 msgstr ""
 
 #. module: base
@@ -2035,6 +2045,11 @@ msgstr "Criado manualmente"
 #. module: base
 #: view:ir.module.module:0
 msgid "Defined Reports"
+msgstr ""
+
+#. module: base
+#: selection:ir.report.custom,type:0
+msgid "Tabular"
 msgstr ""
 
 #. module: base
@@ -2131,6 +2146,11 @@ msgstr "Palavrapasse vazia !"
 #: field:res.company,rml_header:0
 msgid "RML Header"
 msgstr "Cabeçalho RML"
+
+#. module: base
+#: view:res.config.view:0
+msgid "Set"
+msgstr "Definir"
 
 #. module: base
 #: code:osv/orm.py:0
@@ -2266,9 +2286,9 @@ msgid "Recursion error in modules dependencies !"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Open on Tree"
-msgstr ""
+#: view:ir.rule:0
+msgid "Manual domain setup"
+msgstr "Configuração manual do domínio"
 
 #. module: base
 #: field:ir.actions.report.xml,report_xsl:0
@@ -2489,6 +2509,11 @@ msgid "draft"
 msgstr "Rascunho"
 
 #. module: base
+#: field:res.partner.event,probability:0
+msgid "Probability (0.50)"
+msgstr "Probabilidade (0.50)"
+
+#. module: base
 #: field:res.currency.rate,name:0
 #: field:res.partner,date:0
 #: field:res.partner.event,date:0
@@ -2645,15 +2670,9 @@ msgid "(year)="
 msgstr "(ano)="
 
 #. module: base
-#: selection:ir.translation,type:0
-#: field:res.bank,code:0
-#: field:res.currency,code:0
-#: field:res.lang,code:0
-#: field:res.partner.bank.type,code:0
-#: field:res.partner.function,code:0
-#: field:res.partner,ref:0
-msgid "Code"
-msgstr "Código"
+#: rml:ir.module.reference:0
+msgid "Dependencies :"
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -2671,10 +2690,10 @@ msgid "Creator"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:osv/orm.py:0
 #, python-format
-msgid "Not implemented get_memory method !"
-msgstr "Método 'get_memory' não implementado"
+msgid "You cannot perform this operation."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,code:0
@@ -2726,7 +2745,6 @@ msgstr "Relação"
 
 #. module: base
 #: field:ir.actions.server,condition:0
-#: field:ir.actions.server,sub_condition:0
 #: field:ir.report.custom.fields,fc0_condition:0
 #: field:workflow.transition,condition:0
 msgid "Condition"
@@ -2868,8 +2886,8 @@ msgid "Childs Field"
 msgstr "Campo filhos"
 
 #. module: base
-#: field:res.roles,name:0
-msgid "Role Name"
+#: selection:module.lang.install,init,lang:0
+msgid "Turkish / Türkçe"
 msgstr ""
 
 #. module: base
@@ -2881,7 +2899,7 @@ msgstr "Não se pode remover utilizador root!"
 #. module: base
 #: field:ir.module.module,latest_version:0
 msgid "Installed version"
-msgstr ""
+msgstr "Versão instalado"
 
 #. module: base
 #: view:res.lang:0
@@ -2931,6 +2949,11 @@ msgstr "Exportar um ficheiro de traducão"
 #: model:ir.ui.menu,name:base.menu_ir_action_report_xml
 msgid "Report Xml"
 msgstr "XML de Relatório"
+
+#. module: base
+#: rml:ir.module.reference:0
+msgid "-"
+msgstr ""
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -2998,6 +3021,11 @@ msgstr "Banco"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_HARDDISK"
+msgstr ""
+
+#. module: base
+#: rml:ir.module.reference:0
+msgid "Reports :"
 msgstr ""
 
 #. module: base
@@ -3156,6 +3184,11 @@ msgid "Instances"
 msgstr "Instâncias"
 
 #. module: base
+#: field:res.roles,name:0
+msgid "Role Name"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_COPY"
 msgstr ""
@@ -3229,15 +3262,6 @@ msgstr ""
 #: field:ir.report.custom.fields,groupby:0
 msgid "Group by"
 msgstr "Agrupar por"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_partner_by_category
-#: model:ir.actions.act_window,name:base.action_partner_category_form
-#: model:ir.model,name:base.model_res_partner_category
-#: model:ir.ui.menu,name:base.menu_partner_category_form
-#: view:res.partner.category:0
-msgid "Partner Categories"
-msgstr "Categoria de terceiros"
 
 #. module: base
 #: field:ir.model.fields,readonly:0
@@ -3449,9 +3473,15 @@ msgid "Update Translations"
 msgstr "Actualizar traduções"
 
 #. module: base
-#: view:res.config.view:0
-msgid "Set"
-msgstr "Definir"
+#: selection:ir.translation,type:0
+#: field:res.bank,code:0
+#: field:res.currency,code:0
+#: field:res.lang,code:0
+#: field:res.partner.bank.type,code:0
+#: field:res.partner.function,code:0
+#: field:res.partner,ref:0
+msgid "Code"
+msgstr "Código"
 
 #. module: base
 #: field:ir.report.custom.fields,width:0
@@ -3530,6 +3560,12 @@ msgid "Channels"
 msgstr "Canais"
 
 #. module: base
+#: code:osv/fields.py:0
+#, python-format
+msgid "Not implemented get_memory method !"
+msgstr "Método 'get_memory' não implementado"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_access_act
 #: model:ir.ui.menu,name:base.menu_ir_access_act
 msgid "Access Controls List"
@@ -3563,8 +3599,8 @@ msgid "Schedule for Installation"
 msgstr "Agendar para instalação"
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Wizard in Tree"
+#: view:ir.sequence:0
+msgid "Year without century: %(y)s"
 msgstr ""
 
 #. module: base
@@ -3789,11 +3825,6 @@ msgid "STOCK_COLOR_PICKER"
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
-msgid "Manual domain setup"
-msgstr "Configuração manual do domínio"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-product"
 msgstr ""
@@ -3811,9 +3842,10 @@ msgid "Kind"
 msgstr ""
 
 #. module: base
-#: view:res.partner.bank:0
-msgid "Bank accounts"
-msgstr "Conta bancaria"
+#: code:osv/orm.py:0
+#, python-format
+msgid "This method does not exist anymore"
+msgstr "Este método não existe mais"
 
 #. module: base
 #: code:addons/base/ir/ir_report_custom.py:0
@@ -3830,9 +3862,9 @@ msgid "Tree"
 msgstr "Árvore"
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Relate on Object"
-msgstr ""
+#: view:res.partner.bank:0
+msgid "Bank accounts"
+msgstr "Conta bancaria"
 
 #. module: base
 #: selection:ir.actions.todo,start_on:0
@@ -4063,11 +4095,6 @@ msgstr "Não foi possível criar o próximo id porque alguns terceiros possuem u
 #: selection:ir.report.custom,state:0
 msgid "Unsubscribed"
 msgstr "Sem subscrição"
-
-#. module: base
-#: view:ir.sequence:0
-msgid "Year without century: %(y)s"
-msgstr ""
 
 #. module: base
 #: wizard_field:module.module.update,update,update:0
@@ -4454,11 +4481,6 @@ msgid "Arguments"
 msgstr "Argumentos"
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "Wizard in Forms"
-msgstr ""
-
-#. module: base
 #: field:res.bank,city:0
 #: field:res.partner.address,city:0
 #: field:res.partner.bank,city:0
@@ -4610,9 +4632,9 @@ msgid "Not Installable"
 msgstr "não instalável"
 
 #. module: base
-#: field:res.partner.event,probability:0
-msgid "Probability (0.50)"
-msgstr "Probabilidade (0.50)"
+#: rml:ir.module.reference:0
+msgid "View :"
+msgstr ""
 
 #. module: base
 #: field:res.partner.address,mobile:0
@@ -5088,6 +5110,11 @@ msgid "Iteration Actions"
 msgstr ""
 
 #. module: base
+#: view:res.partner.address:0
+msgid "Partner Address"
+msgstr "Imprimir endereço"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_request-act
 #: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
@@ -5169,9 +5196,9 @@ msgid "Operator"
 msgstr "Operador"
 
 #. module: base
-#: view:res.partner.address:0
-msgid "Partner Address"
-msgstr "Imprimir endereço"
+#: selection:module.lang.install,init,lang:0
+msgid "Arabic / الْعَرَبيّة"
+msgstr ""
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -5310,8 +5337,8 @@ msgid "Action Source"
 msgstr ""
 
 #. module: base
-#: selection:ir.values,key2:0
-msgid "/"
+#: view:ir.values:0
+msgid "tree_but_action, client_print_multi"
 msgstr ""
 
 #. module: base
@@ -5320,8 +5347,8 @@ msgid "%y - Year without century as a decimal number [00,99]."
 msgstr ""
 
 #. module: base
-#: view:res.partner.category:0
-msgid "Partner category"
+#: selection:res.partner.event,type:0
+msgid "Prospect Contact"
 msgstr ""
 
 #. module: base
@@ -5617,7 +5644,7 @@ msgstr "Gráfico"
 #. module: base
 #: field:ir.module.module,installed_version:0
 msgid "Latest version"
-msgstr ""
+msgstr "Ultima versão"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -5858,6 +5885,11 @@ msgid "Trigger Object"
 msgstr ""
 
 #. module: base
+#: view:ir.sequence:0
+msgid "Month: %(month)s"
+msgstr "Mês: %(month)s"
+
+#. module: base
 #: model:ir.model,name:base.model_res_partner_som
 msgid "res.partner.som"
 msgstr ""
@@ -5879,9 +5911,13 @@ msgid "Error"
 msgstr "Erro"
 
 #. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "ar_AR"
-msgstr ""
+#: model:ir.actions.act_window,name:base.action_partner_by_category
+#: model:ir.actions.act_window,name:base.action_partner_category_form
+#: model:ir.model,name:base.model_res_partner_category
+#: model:ir.ui.menu,name:base.menu_partner_category_form
+#: view:res.partner.category:0
+msgid "Partner Categories"
+msgstr "Categoria de terceiros"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_activity
@@ -6314,9 +6350,9 @@ msgid "Modules to be installed, upgraded or removed"
 msgstr "Módulos a ser instalado, actualizado ou removido"
 
 #. module: base
-#: view:ir.sequence:0
-msgid "Month: %(month)s"
-msgstr "Mês: %(month)s"
+#: selection:module.lang.install,init,lang:0
+msgid "Polish / Język polski"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
@@ -6392,11 +6428,6 @@ msgstr "Descrição geral"
 #: view:ir.module.module:0
 msgid "Cancel Install"
 msgstr "Cancelar instalação"
-
-#. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "pl_PL"
-msgstr ""
 
 #. module: base
 #: code:osv/orm.py:0

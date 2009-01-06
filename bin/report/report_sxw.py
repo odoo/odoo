@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -455,7 +455,7 @@ class rml_parse(object):
                         if len(source_string):
                             translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
                             if translated_string:
-                                piece_list[pn] = piece_list[pn].replace(source_string, translated_string.decode('utf8'))
+                                piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
                 text = ''.join(piece_list)
         for key in res:
             newtext = self._eval(key)

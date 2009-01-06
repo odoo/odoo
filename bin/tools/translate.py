@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -370,7 +370,7 @@ def trans_generate(lang, modules, dbname=None):
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
         if model=='ir.ui.view':
-            d = xml.dom.minidom.parseString(obj.arch)
+            d = xml.dom.minidom.parseString(encode(obj.arch))
             for t in trans_parse_view(d.documentElement):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':

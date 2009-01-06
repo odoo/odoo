@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -47,9 +47,37 @@ class except_osv(Exception):
         self.args = (exc_type, name)
 
 
+from tools.func import wraps
 class osv_pool(netsvc.Service):
+   
+    def check(f):
+        @wraps(f)
+        def wrapper(self, dbname, *args, **kwargs):
+            try:
+                if not pooler.get_pool(dbname)._ready:
+                    raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
+                return f(self, dbname, *args, **kwargs)
+            except orm.except_orm, inst:
+                self.abortResponse(1, inst.name, 'warning', inst.value)
+            except except_osv, inst:
+                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
+            except IntegrityError, inst:
+                for key in self._sql_error.keys():
+                    if key in inst[0]:
+                        self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
+                self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
+            except Exception, e:
+                import traceback
+                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
+                logger = Logger()
+                logger.notifyChannel('web-services', LOG_ERROR, tb_s)
+                raise
+
+        return wrapper
+
 
     def __init__(self):
+        self._ready = False
         self.obj_pool = {}
         self.module_object_list = {}
         self.created = []
@@ -63,42 +91,27 @@ class osv_pool(netsvc.Service):
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.execute)
-        self.exportMethod(self.execute_cr)
 
     def init_set(self, cr, mode):
-        if mode <> self._init:
+        different = mode != self._init
+        if different:
             if mode:
                 self._init_parent = {}
             if not mode:
                 for o in self._init_parent:
                     self.get(o)._parent_store_compute(cr)
             self._init = mode
-            return True
-        return False
-
+        
+        self._ready = True
+        return different
+   
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
-        try:
-            object = pooler.get_pool(cr.dbname).get(obj)
-            if not object:
-                self.abortResponse(1, 'Object Error', 'warning',
-                'Object %s doesn\'t exist' % str(obj))
-            return getattr(object, method)(cr, uid, *args, **kw)
-        except orm.except_orm, inst:
-            self.abortResponse(1, inst.name, 'warning', inst.value)
-        except except_osv, inst:
-            self.abortResponse(1, inst.name, inst.exc_type, inst.value)
-        except IntegrityError, inst:
-            for key in self._sql_error.keys():
-                if key in inst[0]:
-                    self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
-            self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
-        except Exception, e:
-            import traceback
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-            logger = Logger()
-            logger.notifyChannel('web-services', LOG_ERROR, tb_s)
-            raise
-
+        object = pooler.get_pool(cr.dbname).get(obj)
+        if not object:
+            raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
+        return getattr(object, method)(cr, uid, *args, **kw)
+    
+    @check
     def execute(self, db, uid, obj, method, *args, **kw):
         db, pool = pooler.get_db_and_pool(db)
         cr = db.cursor()
@@ -117,18 +130,16 @@ class osv_pool(netsvc.Service):
         wf_service = netsvc.LocalService("workflow")
         return wf_service.trg_validate(uid, obj, args[0], method, cr)
 
+    @check
     def exec_workflow(self, db, uid, obj, method, *args):
         cr = pooler.get_db(db).cursor()
         try:
             try:
                 res = self.exec_workflow_cr(cr, uid, obj, method, *args)
                 cr.commit()
-            except orm.except_orm, inst:
+            except Exception:
                 cr.rollback()
-                self.abortResponse(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                cr.rollback()
-                self.abortResponse(1, inst.name, inst[0], inst.value)
+                raise
         finally:
             cr.close()
         return res
@@ -148,7 +159,7 @@ class osv_pool(netsvc.Service):
         module = module.split('.')[0][2:]
         self.module_object_list.setdefault(module, []).append(obj_inst)
 
-    # Return False if object does not exist
+    # Return None if object does not exist
     def get(self, name):
         obj = self.obj_pool.get(name, None)
         return obj

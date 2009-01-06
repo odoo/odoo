@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -68,24 +68,21 @@ class res_company(osv.osv):
                 descendance = self._get_partner_descendance(cr, uid, child_id, descendance)
         return descendance
 
-    def __init__(self, *args, **argv):
-        return super(res_company, self).__init__(*args, **argv)
-
     #
     # This function restart the cache on the _get_company_children method
     #
-    def cache_restart(self, uid=None):
-        self._get_company_children()
+    def cache_restart(self, cr):
+        self._get_company_children.clear_cache(cr.dbname)
 
-    def create(self, *args, **argv):
-        self.cache_restart()
-        return super(res_company, self).create(*args, **argv)
+    def create(self, cr, *args, **argv):
+        self.cache_restart(cr)
+        return super(res_company, self).create(cr, *args, **argv)
 
-    def write(self, *args, **argv):
-        self.cache_restart()
+    def write(self, cr, *args, **argv):
+        self.cache_restart(cr)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get()
-        return super(res_company, self).write(*args, **argv)
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
+        return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context={}):
         try:

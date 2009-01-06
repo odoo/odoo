@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2009 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -34,8 +34,8 @@ import time
 import math
 from pprint import pprint as pp
 
-from tools import config
-import xmlrpclib
+from tools import config, debug
+from tools.maintenance import remote_contract
 
 class maintenance_contract_module(osv.osv):
     _name ="maintenance.contract.module"
@@ -50,6 +50,47 @@ maintenance_contract_module()
 class maintenance_contract(osv.osv):
     _name = "maintenance.contract"
     _description = "Maintenance Contract"
+
+    def _get_valid_contracts(self, cr, uid):
+        return [contract for contract in self.browse(cr, uid, self.search(cr, uid, [])) if contract.state == 'valid']
+
+    def status(self, cr, uid):
+        covered_modules, uncovered_modules = set(), set()
+
+        status = 'none'
+        for contract in self._get_valid_contracts(cr, uid):
+            covered_modules.update([m.name for m in contract.module_ids])
+        
+        if covered_modules:
+            modobj = self.pool.get('ir.module.module')
+            modids = modobj.search(cr, uid, [('state', '=', 'installed')])
+            uncovered_modules = set(m.name for m in modobj.browse(cr, uid, modids)) - covered_modules
+            status = ['full', 'partial'][len(uncovered_modules) > 0]
+        
+        return {
+            'status': status,
+            'uncovered_modules': list(uncovered_modules),
+        }
+    
+    def send(self, cr, uid, tb, explanations, remarks=None):
+        assert self.status(cr, uid) == 'full'
+        contract = self._get_valid_contracts(cr, uid)[0]
+        
+        content = "(%s) has reported the following bug:\n%s\nremarks: %s\nThe traceback is:\n%s" % (
+            contract.name, explanations, remarks or '', tb
+        )
+        try:
+            import urllib
+            args = [('contract_id', contract.name),('data', content)]
+            args = urllib.urlencode(args)
+            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
+            submit_result = fp.read()
+            debug(submit_result)
+            fp.close()
+        except:
+            # TODO schedule a retry
+            return False
+        return True
 
     def _valid_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -99,12 +140,8 @@ class maintenance_contract_wizard(osv.osv_memory):
 
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
 
-        login, password, remote_db, remote_server, port = 'admin', 'admin', 'trunk', 'localhost', 8069
+        contract_info = remote_contact(contract['name'], contract['password'], modules)
 
-        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/common' % (remote_server, port))
-        ruid = rpc.login(remote_db, login, password)
-        rpc = xmlrpclib.ServerProxy('http://%s:%d/xmlrpc/object' % (remote_server, port))
-        contract_info = rpc.execute(remote_db, ruid, password, 'maintenance.maintenance', 'check_contract', modules, contract )
         is_ok = contract_info['status'] in ('partial', 'full')
         if is_ok:
             if contract_info['modules_with_contract']:

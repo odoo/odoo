@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -98,12 +98,20 @@ class ir_translation(osv.osv):
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value):
+        # clear the caches
+        tr = self._get_ids(cr, uid, name, tt, lang, ids)
+        for res_id in tr:
+            if tr[res_id]:
+                self._get_source.clear_cache(cr.dbname, uid, name, tt, lang, tr[res_id])
+        self._get_source.clear_cache(cr.dbname, uid, name, tt, lang)
+
         cr.execute('delete from ir_translation ' \
                 'where lang=%s ' \
                     'and type=%s ' \
                     'and name=%s ' \
                     'and res_id in ('+','.join(map(str,ids))+')',
                 (lang,tt,name))
+        cr.commit()
         for id in ids:
             self.create(cr, uid, {
                 'lang':lang,
