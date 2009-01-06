@@ -59,6 +59,8 @@ def log(msg, lvl=netsvc.LOG_DEBUG):
     logger = netsvc.Logger()
     logger.notifyChannel('sql', lvl, msg)
 
+sql_counter = 0
+
 class Cursor(object):
     IN_MAX = 1000
     sql_from_log = {}
@@ -72,7 +74,7 @@ class Cursor(object):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if not hasattr(self, '_obj'):
-                raise psycopg2.ProgrammingError('Unable to use the cursor after having closing it')
+                raise psycopg2.ProgrammingError('Unable to use the cursor after having closed it')
             return f(self, *args, **kwargs)
         return wrapper
 
@@ -104,7 +106,7 @@ class Cursor(object):
         self.count+=1
         if '%d' in query or '%f' in query:
             log(query, netsvc.LOG_WARNING)
-            log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
+            log("SQL queries cannot contain %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
             if params:
                 query = query.replace('%d', '%s').replace('%f', '%s')
 
@@ -134,19 +136,20 @@ class Cursor(object):
         return res
 
     def print_log(self):
+	global sql_counter
+	sql_counter += self.count
         def process(type):
             sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
-            if not sqllogs[type]:
-                return
-            sqllogitems = sqllogs[type].items()
-            sqllogitems.sort(key=lambda k: k[1][1])
             sum = 0
-            log("SQL LOG %s:" % (type,))
-            for r in sqllogitems:
-                log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
-                sum+= r[1][1]
-            log("SUM:%s/%d" % (sum, self.count))
-            sqllogs[type].clear()
+            if sqllogs[type]:
+                sqllogitems = sqllogs[type].items()
+                sqllogitems.sort(key=lambda k: k[1][1])
+                log("SQL LOG %s:" % (type,))
+                for r in sqllogitems:
+                    log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
+                    sum+= r[1][1]
+                sqllogs[type].clear()
+            log("SUM:%s/%d [%d]" % (sum, self.count,sql_counter))
         process('from')
         process('into')
         self.count = 0
