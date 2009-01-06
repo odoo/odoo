@@ -376,18 +376,18 @@ class ir_model_access(osv.osv):
     def write(self, cr, uid, *args, **argv):
         self.call_cache_clearing_methods()
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
-        self.check()    # clear the cache of check function
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def create(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
-        self.check()
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def unlink(self, cr, uid, *args, **argv):
         self.call_cache_clearing_methods()
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
-        self.check()
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
 ir_model_access()

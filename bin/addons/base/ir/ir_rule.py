@@ -46,21 +46,19 @@ class ir_rule_group(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule_group, self).unlink(cr, uid, ids, context=context)
         # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get()
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
         res = super(ir_rule_group, self).create(cr, user, vals, context=context)
         # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get()
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context={}
         res = super(ir_rule_group, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get()
+        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return res
 
 ir_rule_group()
@@ -213,13 +211,13 @@ class ir_rule(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
         # Restart the cache on the domain_get method of ir.rule
-        self.domain_get()
+        self.domain_get.clear_cache(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
         res = super(ir_rule, self).create(cr, user, vals, context=context)
         # Restart the cache on the domain_get method of ir.rule
-        self.domain_get()
+        self.domain_get.clear_cache(cr.dbname)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -227,7 +225,7 @@ class ir_rule(osv.osv):
             context={}
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the domain_get method
-        self.domain_get()
+        self.domain_get.clear_cache(cr.dbname)
         return res
 
 ir_rule()

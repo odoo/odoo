@@ -549,26 +549,74 @@ class cache(object):
         self.multi = multi
         self.lasttime = time.time()
         self.cache = {}
-        
+        self.fun = None 
         cache.__caches.append(self)
 
-    @classmethod
-    def clean_cache_for_db(cls, dbname):
-        def get_dbname_from_key(key):
-            for e in key:
-                if e[0] == 'dbname':
-                    return e[1]
-            return None
+    
+    def _generate_keys(self, dbname, kwargs2):
+        """
+        Generate keys depending of the arguments and the self.mutli value
+        """
+        
+        def to_tuple(d):
+            i = d.items()
+            i.sort()
+            return tuple(i)
 
-        for cache in cls.__caches:
-            keys_to_del = [key for key in cache.cache if get_dbname_from_key(key) == dbname]
-            for key in keys_to_del:
-                del cache.cache[key]
+        if not self.multi:
+            key = (('dbname', dbname),) + to_tuple(kwargs2)
+            yield key, None
+        else:
+            multis = kwargs2[self.multi][:]    
+            for id in multis:
+                kwargs2[self.multi] = [id]
+                key = (('dbname', dbname),) + to_tuple(kwargs2)
+                yield key, id
+    
+    def _unify_args(self, *args, **kwargs):
+        # Update named arguments with positional argument values (without self and cr)
+        kwargs2 = self.fun_default_values.copy()
+        kwargs2.update(kwargs)
+        kwargs2.update(dict(zip(self.fun_arg_names, args[self.skiparg-2:])))
+        for k in kwargs2:
+            if isinstance(kwargs2[k], (list, dict, set)):
+                kwargs2[k] = tuple(kwargs2[k])
+            elif not is_hashable(kwargs2[k]):
+                kwargs2[k] = repr(kwargs2[k])
+
+        return kwargs2
+    
+    def clear(self, dbname, *args, **kwargs):
+        """clear the cache for database dbname
+            if *args and **kwargs are both empty, clear all the keys related to this database
+        """
+        if not args and not kwargs:
+            keys_to_del = [key for key in self.cache if key[0][1] == dbname]
+        else:
+            kwargs2 = self._unify_args(*args, **kwargs)
+            keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache]
+        
+        for key in keys_to_del:
+            del self.cache[key]
+    
+    @classmethod
+    def clean_caches_for_db(cls, dbname):
+        for c in cls.__caches:
+            c.clear(dbname)
 
     def __call__(self, fn):
-        arg_names = inspect.getargspec(fn)[0][self.skiparg:]
+        if self.fun is not None:
+            raise Exception("Can not use a cache instance on more than one function")
+        self.fun = fn
 
-        def cached_result(self2, cr=None, *args, **kwargs):
+        argspec = inspect.getargspec(fn)
+        self.fun_arg_names = argspec[0][self.skiparg:]
+        self.fun_default_values = {}
+        if argspec[3]:
+            self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
+        debug(self.fun_default_values)
+        
+        def cached_result(self2, cr, *args, **kwargs):
             if time.time()-self.timeout > self.lasttime:
                 self.lasttime = time.time()
                 t = time.time()-self.timeout 
@@ -576,64 +624,36 @@ class cache(object):
                     if self.cache[key][1]<t:
                         del self.cache[key]
 
-            if cr is None:
-                self.cache = {}
-                return True
-            if ('clear_keys' in kwargs):
-                if (kwargs['clear_keys'] in self.cache):
-                    del self.cache[kwargs['clear_keys']]
-                return True
+            kwargs2 = self._unify_args(*args, **kwargs)
 
-            # Update named arguments with positional argument values (without self and cr)
-            kwargs2 = kwargs.copy()
-            kwargs2.update(dict(zip(arg_names, args[self.skiparg-2:])))
-            for k in kwargs2:
-                if isinstance(kwargs2[k], (list, dict, set)):
-                    kwargs2[k] = tuple(kwargs2[k])
-                elif not is_hashable(kwargs2[k]):
-                    kwargs2[k] = repr(kwargs2[k])
-
-            if self.multi:
-                kwargs3 = kwargs2.copy()
-                notincache = []
-                result = {}
-                for id in kwargs3[self.multi]:
-                    kwargs2[self.multi] = [id]
-                    kwargs4 = kwargs2.items()
-                    kwargs4.sort()
-
-                    # Work out key as a tuple of ('argname', value) pairs
-                    key = (('dbname', cr.dbname),) + tuple(kwargs4)
-                    if key in self.cache:
-                        result[id] = self.cache[key][0]
-                    else:
-                        notincache.append(id)
-
-
-
-                if notincache:
-                    kwargs2[self.multi] = notincache
-                    result2 = fn(self2, cr, *args[2:self.skip], **kwargs3)
+            result = {}
+            notincache = {}
+            for key, id in self._generate_keys(cr.dbname, kwargs2):
+                if key in self.cache:
+                    result[id] = self.cache[key][0]
+                else:
+                    notincache[id] = key
+            
+            if notincache:
+                if self.multi:
+                    kwargs2[self.multi] = notincache.keys()
+                
+                result2 = fn(self2, cr, *args[2:self.skiparg], **kwargs2)
+                if not self.multi:
+                    key = notincache[None]
+                    self.cache[key] = (result2, time.time())
+                    result[None] = result2
+                else:
                     for id in result2:
-                        kwargs2[self.multi] = [id]
-                        kwargs4 = kwargs2.items()
-                        kwargs4.sort()
-                        key = (('dbname', cr.dbname),) + tuple(kwargs4)
-                        self.cache[key] = result2[id]
-                    result.updat(result2)
-                return result
-
-            kwargs2 = kwargs2.items()
-            kwargs2.sort()
-
-            key = (('dbname', cr.dbname),) + tuple(kwargs2)
-            if key in self.cache:
-                return self.cache[key][0]
-
-            result = fn(self2, cr, *args, **kwargs)
-
-            self.cache[key] = (result, time.time())
+                        key = notincache[id]
+                        self.cache[key] = (result2[id], time.time())
+                    result.update(result2)
+                        
+            if not self.multi:
+                return result[None]
             return result
+
+        cached_result.clear_cache = self.clear
         return cached_result
 
 def to_xml(s):
