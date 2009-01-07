@@ -71,7 +71,7 @@ class base_module_record(osv.osv):
         self.recording_data = []
         self.depends = {}
         if not installed:
-            obj  = netsvc._service['object']
+            obj = netsvc.SERVICES['object']
             obj.execute = fnct_call(obj.execute)
             obj.exportMethod(obj.execute)
             obj.exec_workflow = fnct_call_workflow(obj.exec_workflow)

@@ -341,7 +341,7 @@ def tmp_fct(fct_src):
         return res
     return execute
 
-obj  = netsvc._service['object']
+obj  = netsvc.SERVICES['object']
 obj.execute = tmp_fct(obj.execute)
 obj.exportMethod(obj.execute)
 
