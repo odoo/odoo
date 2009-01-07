@@ -19,23 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Board for accountant",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Accounting",
-    "depends":[
-        "account",
-        "hr_timesheet_invoice",
-        "board",
-        "report_account",
-        "report_analytic",
-        "report_analytic_line",
-        "account_report",
-    ],
-    "demo_xml":["board_account_demo.xml"],
-    "update_xml":["board_account_view.xml"],
-    "description": """
+    'name': 'Board for accountant',
+    'version': '1.0',
+    'category': 'Board/Accounting',
+    'description': """
     This module creates a dashboards for accountants that includes:
     * List of analytic accounts to close
     * List of uninvoiced quotations
@@ -44,9 +34,20 @@
     * Graph of aged receivables
     * Graph of aged incomes
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': [
+        'account',
+        'hr_timesheet_invoice',
+        'board',
+        'report_account',
+        'report_analytic',
+        'report_analytic_line',
+        'account_report'
+    ],
+    'update_xml': ['board_account_view.xml'],
+    'demo_xml': ['board_account_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '76016921229',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

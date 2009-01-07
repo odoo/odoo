@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Sale CRM Stuff",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["sale", "crm_configuration"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "description": """
+    'name': 'Sale CRM Stuff',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
 This module adds a shortcut on one or several cases in the CRM.
 This shortcut allows you to generate a sale order based the selected case.
 If different cases are open (a list), it generates one sale order by
@@ -39,15 +38,14 @@ This shortcut allows you to generate a CRM case for the partners.
 We suggest you to install this module if you installed both the sale and the
 crm_configuration modules.
     """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "sale_crm_wizard.xml",
-        "sale_crm_view.xml",
-        "process/sale_crm_process.xml"
-    ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['sale', 'crm_configuration'],
+    'init_xml': [],
+    'update_xml': ['sale_crm_wizard.xml', 'sale_crm_view.xml', 'process/sale_crm_process.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '64360130141',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

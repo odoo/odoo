@@ -19,29 +19,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Integrated Document Management System",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Others",
-    "website": "http://www.openerp.com",
-    "description": """This is a complete document management system:
+    'name': 'Integrated Document Management System',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """This is a complete document management system:
     * FTP Interface
     * User Authentication
     * Document Indexation
 """,
-    "depends" : ["base","process"],
-    "init_xml" : [
-        "document_data.xml",
-        "document_demo.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'process'],
+    'init_xml': ['document_data.xml', 'document_demo.xml'],
+    'update_xml': [
+        'document_view.xml',
+        'document_data.xml',
+        'security/document_security.xml',
+        'security/ir.model.access.csv'
     ],
-    "update_xml" : [
-        "document_view.xml",
-        "document_data.xml",
-        "security/document_security.xml",
-        "security/ir.model.access.csv",
-    ],
-    "demo_xml" : [],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '70515416461',
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

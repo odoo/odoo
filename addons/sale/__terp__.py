@@ -19,16 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Sales Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["product", "stock", "mrp", "process"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "init_xml" : [],
-    "demo_xml" : ["sale_demo.xml"],
-    "description": """
+    'name': 'Sales Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
     The base module to manage quotations and sales orders.
 
     * Workflow with validation steps:
@@ -44,23 +41,27 @@
         - all at once, multi-parcel
         - delivery costs
     """,
-    "update_xml" : [
-        "security/sale_security.xml",
-        "security/ir.model.access.csv",
-        "sale_workflow.xml",
-        "sale_sequence.xml",
-        "sale_data.xml",
-        "sale_wizard.xml",
-        "sale_view.xml",
-        "sale_report.xml",
-        "sale_wizard.xml",
-        "stock_view.xml",
-        "process/sale_process.xml",
-        "product_view.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['product', 'stock', 'mrp', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/sale_security.xml',
+        'security/ir.model.access.csv',
+        'sale_workflow.xml',
+        'sale_sequence.xml',
+        'sale_data.xml',
+        'sale_wizard.xml',
+        'sale_view.xml',
+        'sale_report.xml',
+        'sale_wizard.xml',
+        'stock_view.xml',
+        'process/sale_process.xml',
+        'product_view.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['sale_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '58103601429',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

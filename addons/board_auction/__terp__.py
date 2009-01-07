@@ -19,29 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Board for Auction",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Auction",
-    "depends":[
-        "board",
-        "auction",
-#       "report_auction",
-    ],
-    "demo_xml":["board_auction_demo.xml"],
-    "update_xml":["board_auction_view.xml","board_auction_manager_view.xml"],
-    "description": """
+    'name': 'Board for Auction',
+    'version': '1.0',
+    'category': 'Board/Auction',
+    'description': """
     This module creates a dashboards for auction that includes:
 
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['board', 'auction'],
+    'update_xml': ['board_auction_view.xml', 'board_auction_manager_view.xml'],
+    'demo_xml': ['board_auction_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '49187078189',
 }
-
-
-
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

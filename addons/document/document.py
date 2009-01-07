@@ -376,14 +376,14 @@ class document_directory(osv.osv):
         return True
     def write(self, cr, uid, ids, vals, context=None):        
         if not self._check_duplication(cr,uid,vals,ids,op='write'):
-            raise except_orm('ValidateError', 'Directory name must be unique!')
+            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
         return super(document_directory,self).write(cr,uid,ids,vals,context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr,uid,vals):
-            raise except_orm('ValidateError', 'Directory name must be unique!')          
+            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
-            raise 'Error'
+            raise osv.except_osv('ValidateError', _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 document_directory()

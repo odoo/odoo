@@ -493,7 +493,7 @@ class account_move_line(osv.osv):
         merges_rec = []
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
-                raise _('Already Reconciled')
+                raise osv.except_osv(_('Already Reconciled'), _('Already Reconciled'))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:

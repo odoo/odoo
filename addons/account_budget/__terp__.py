@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Budget Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "description": """This module allows accountants to manage analytic and crossovered budgets.
+    'name': 'Budget Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """This module allows accountants to manage analytic and crossovered budgets.
 
 Once the Master Budgets and the Budgets defined (in Financial
 Management/Budgets/), the Project Managers can set the planned amount on each
@@ -44,15 +44,20 @@ Three reports are available:
     3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.
 
 """,
-    "depends" : ["account"],
-    "init_xml" : [],
-    "demo_xml" : ["crossovered_budget_demo.xml"],
-    "update_xml" : [
-        "security/ir.model.access.csv","account_budget_wizard.xml",
-        "crossovered_budget_view.xml","crossovered_budget_report.xml","crossovered_budget_workflow.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_budget_wizard.xml',
+        'crossovered_budget_view.xml',
+        'crossovered_budget_report.xml',
+        'crossovered_budget_workflow.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['crossovered_budget_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '43819694157',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

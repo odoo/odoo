@@ -19,29 +19,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Project Management",
-    "version": "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr", "process"],
-    "description": """Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning,
+    'name': 'Project Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning,
     order tasks, delegate task, print gantt chart eso.""",
-    "init_xml" : [],
-    "demo_xml" : ["project_demo.xml"],
-    "update_xml": [
-        "security/project_security.xml",
-        "security/ir.model.access.csv",
-        "project_data.xml", 
-        "project_wizard.xml", 
-        "project_view.xml", 
-        "project_report.xml", 
-        "process/task_process.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['product', 'account', 'hr', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/project_security.xml',
+        'security/ir.model.access.csv',
+        'project_data.xml',
+        'project_wizard.xml',
+        'project_view.xml',
+        'project_report.xml',
+        'process/task_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['project_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '75116868317',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Accounting and financial management-Compare Accounts",
-    "version" : "1.1",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """Account Balance Module is an added functionality to the Financial Management module.
+    'name': 'Accounting and financial management-Compare Accounts',
+    'version': '1.1',
+    'category': 'Generic Modules/Accounting',
+    'description': """Account Balance Module is an added functionality to the Financial Management module.
 
     This module gives you the various options for printing balance sheet.
 
@@ -38,17 +39,14 @@
 
     5. You have an option to print the desired report in Landscape format.
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [
-    ],
-    "demo_xml" : [],
-    "update_xml" : ["account_report.xml","account_wizard.xml",],
-#    "translations" : {
-#        "fr": "i18n/french_fr.csv"
-#    },
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': ['account_report.xml', 'account_wizard.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '81928745309',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

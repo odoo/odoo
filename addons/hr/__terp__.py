@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Human Resources",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "description": """
+    'name': 'Human Resources',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """
     Module for human resource management. You can manage:
     * Employees and hierarchies
     * Work hours sheets
@@ -33,23 +33,21 @@
 
     Different reports are also provided, mainly for attendance statistics.
     """,
-    "depends" : ["base", "process"],
-    "init_xml" : [],
-    "demo_xml" : [
-        "hr_demo.xml", 
-        "hr_department_demo.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/hr_security.xml',
+        'security/ir.model.access.csv',
+        'hr_view.xml',
+        'hr_wizard.xml',
+        'hr_department_view.xml',
+        'process/hr_process.xml'
     ],
-    "update_xml" : [
-        "security/hr_security.xml",
-        "security/ir.model.access.csv",
-        "hr_view.xml", 
-        "hr_wizard.xml",
-        "hr_department_view.xml",
-        "process/hr_process.xml"
-    ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['hr_demo.xml', 'hr_department_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '86710558965',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

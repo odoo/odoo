@@ -19,20 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Human Resources (Timesheet encoding from project tasks)",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "description": """Auto-complete timesheet based on tasks made on the project management module.""",
-    "website" : "http://www.openerp.com",
-    "depends" : ["project", "hr_timesheet_sheet"],
-    "update_xml" : ["hr_timesheet_project_view.xml", 
-                    "process/hr_timesheet_project_process.xml",
-                    ],
-    "active": False,
-    "installable": True
+    'name': 'Human Resources (Timesheet encoding from project tasks)',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """Auto-complete timesheet based on tasks made on the project management module.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['project', 'hr_timesheet_sheet'],
+    'update_xml': ['hr_timesheet_project_view.xml', 'process/hr_timesheet_project_process.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '68570797709',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

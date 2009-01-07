@@ -19,23 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Account Reporting - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["account"],
-    "category" : "Generic Modules/Accounting",
-    "description": "A module that adds new reports based on the account module.",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_receivable_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'name': 'Account Reporting - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """A module that adds new reports based on the account module.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_receivable_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '61754222813',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

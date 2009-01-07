@@ -19,31 +19,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Reporting for accounting",
-    "version" : "1.0",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """Financial and accounting reporting
+    'name': 'Reporting for accounting',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """Financial and accounting reporting
     Fiscal statements
     Indicators
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [ ],
-    "demo_xml" : [ ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_view.xml",
-        "account_report.xml",
-        "account_wizard.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_view.xml',
+        'account_report.xml',
+        'account_wizard.xml'
     ],
-#   "translations" : {
-#       "fr": "i18n/french_fr.csv"
-#   },
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '50976406925',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,15 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Human Resources Contracts",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "depends" : ["hr"],
-    "module": "",
-    "description": """
+    'name': 'Human Resources Contracts',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """
     Add all information on the employee form to manage contracts:
     * Martial status,
     * Security number,
@@ -35,16 +33,18 @@
 
     You can assign several contracts per employee.
     """,
-    "init_xml" : ["hr_contract_data.xml", ],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/hr_contract_security.xml",
-        "security/ir.model.access.csv",
-        "hr_contract_view.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['hr'],
+    'init_xml': ['hr_contract_data.xml'],
+    'update_xml': [
+        'security/hr_contract_security.xml',
+        'security/ir.model.access.csv',
+        'hr_contract_view.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '46298028637',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
