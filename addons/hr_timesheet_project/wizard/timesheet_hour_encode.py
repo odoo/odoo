@@ -57,7 +57,7 @@ def _action_line_create(self, cr, uid, data, context):
             if res2:
                 res.update(res2['value'])
             if hasattr(ts, 'on_change_account_id'):
-                res2 = ts.on_change_account_id(cr, uid, False, aa.id)
+                res2 = ts.on_change_account_id(cr, uid, False, uid, aa.id, context)
                 if res2:
                     res.update(res2['value'])
             id = ts.create(cr, uid, res, context)

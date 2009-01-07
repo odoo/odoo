@@ -47,6 +47,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
         n = 0
         score = 0.0
+        self.result += "\nThis test checks if the module satisfies the current coding standard used by OpenERP. \n\n"
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
