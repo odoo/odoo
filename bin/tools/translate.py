@@ -359,7 +359,7 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
             service_name = 'wizard.'+encode(obj.wiz_name)
-            obj2 = netsvc._service[service_name]
+            obj2 = netsvc.SERVICES[service_name]
             for state_name, state_def in obj2.states.iteritems():
                 if 'result' in state_def:
                     result = state_def['result']
