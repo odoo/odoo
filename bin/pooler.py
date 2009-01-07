@@ -35,7 +35,13 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         import osv.osv
         pool = osv.osv.osv_pool()
         pool_dic[db_name] = pool
-        addons.load_modules(db, force_demo, status, update_module)
+        
+        try:
+            addons.load_modules(db, force_demo, status, update_module)
+        except Exception, e:
+            del pool_dic[db_name]
+            raise
+
         cr = db.cursor()
         try:
             pool.init_set(cr, False)

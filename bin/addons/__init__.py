@@ -317,11 +317,17 @@ def register_class(m):
     """
     Register module named m, if not already registered
     """
+
+    def log(e):
+        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
+        msg = "Couldn't load%s module %s" % (mt, m)
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
+
     global loaded
     if m in loaded:
         return
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
-    loaded.append(m)
     mod_path = get_module_path(m)
     try:
         zip_mod_path = mod_path + '.zip'
@@ -335,15 +341,11 @@ def register_class(m):
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
-    except zipimport.ZipImportError:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find zip module %s' % m)
+    except Exception, e:
+        log(e)
         raise
-    except ImportError:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % m)
-        raise
-    except Exception:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % (m))
-        raise
+    else:
+        loaded.append(m)
 
 
 class MigrationManager(object):
