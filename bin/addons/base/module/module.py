@@ -332,7 +332,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate'),
+                    'certificate': terp.get('certificate') or None,
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
@@ -352,7 +352,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate'),
+                    'certificate': terp.get('certificate') or None,
                 })
                 res[1] += 1
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
@@ -433,7 +433,7 @@ class module(osv.osv):
                 'author': terp.get('author', 'Unknown'),
                 'website': terp.get('website', ''),
                 'license': terp.get('license', 'GPL-2'),
-                'certificate': terp.get('certificate'),
+                'certificate': terp.get('certificate') or None,
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
