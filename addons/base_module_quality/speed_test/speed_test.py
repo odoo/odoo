@@ -38,7 +38,8 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.name = _("Speed Test")
         self.bool_installed_only = True
         self.ponderation = 1.0
-        self.listdata = []
+        self.result_det = {}
+        self.data_list = []
         return None
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
@@ -69,8 +70,8 @@ class quality_test(base_module_quality.abstract_quality_check):
 
                 if size < 5:
                     self.score += -2
-                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data"]
-                    self.listdata.append(list)
+                    list = [size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data"]
+                    self.result_det[obj] = list
                 else:
                     if code_size_complexity <= (code_base_complexity + size):
                         complexity = "O(1)"
@@ -78,12 +79,13 @@ class quality_test(base_module_quality.abstract_quality_check):
                     else:
                         complexity = "O(n) or worst"
                         score = 0
-                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
-                    self.listdata.append(list)
+                    list = [size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
+                    self.result_det[obj] = list
             else:
                 score += -5
-                list = [obj, size, "", "", "", "Warning! Object has no demo data"]
-                self.listdata.append(list)
+                list = [size, "", "", "", "Warning! Object has no demo data"]
+                self.result_det[obj] = list
+        self.data_list.append(self.result_det)
         self.score = obj_counter and score/obj_counter or 0.0
         self.result = self.get_result()
         self.result_details = self.get_result_details()
@@ -91,26 +93,20 @@ class quality_test(base_module_quality.abstract_quality_check):
         return None
 
     def get_result(self):
-##        self.run_test(cr, uid, module_path)
-#        if not self.bool_installed_only or module_state=="installed":
         summary = """
 This test checks the speed of the module.
-
 """
-#        else:
-#            summary ="""  \n===Speed Test===:
-#
-#The module has to be installed before running this test.\n\n """
-#            header_list = ""
-#            self.error = True
         return summary
 
     def get_result_details(self):
-        header_list = ['speed', 'Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
+        header_list = []
+        header_list.append('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s')
+        header_list.append('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ')
+        header_view = ['Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
         detail = ""
-#        detail += "\n===Speed Test===\n"
+        self.data_list.append(header_view)
         if not self.error:
-            detail += self.format_table(header=header_list, data_list=[self.listdata])
+            detail += self.format_table(header=header_list, data_list=self.data_list)
         return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

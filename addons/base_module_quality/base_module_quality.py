@@ -103,16 +103,15 @@ class abstract_quality_check(object):
 
     def format_table(self, header=[], data_list=[]):
         detail = ""
-        if header[0]=='method':
-            detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % (header[1].ljust(40), header[2].ljust(16), header[3].ljust(20), header[4].ljust(16))
-            for res in data_list[0]:
-                detail += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, data_list[0][res][0], data_list[0][res][1], data_list[0][res][2])
-            detail = detail + '\n|}'
-        elif header[0]=='speed':
-            detail += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s') % (header[1].ljust(40), header[2].ljust(10), header[3].ljust(10), header[4].ljust(10), header[5].ljust(10), header[6].ljust(20))
-            for data in data_list[0]:
-                detail +=  ('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ') % (data[0], data[1], data[2], data[3], data[4], data[5])
-                detail = detail  + '\n|}\n'
+        header_list = []
+        final_list = []
+        for head in data_list[1]:
+            header_list.append(head)
+        detail += (header[0]) % tuple(header_list)
+        for res in data_list[0]:
+            data_list[0][res].append(res)
+            detail += (header[1]) % tuple(data_list[0][res])
+        detail = detail + '\n|}'
         return detail
 
     def add_quatation(self, x, y):
