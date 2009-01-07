@@ -163,7 +163,7 @@ def _data_save(self, cr, uid, data, context):
             'WHERE fiscalyear_id = %s', ('done',fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
             'SET state = %s, end_journal_period_id = %s' \
-            'WHERE id = %s', ('done',start_jp,fy_id))
+            'WHERE id = %s', ('done',start_jp.id,fy_id))
     return {}
 
 class wiz_journal_close(wizard.interface):
