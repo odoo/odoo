@@ -176,7 +176,7 @@ class module(osv.osv):
         'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
-        'certificate' : fields.char('Certificate', size=64, readonly=True),
+        'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
     }
 
     _defaults = {
@@ -198,7 +198,7 @@ class module(osv.osv):
         logger = netsvc.Logger()
         for mod in self.browse(cr, uid, ids):
             if not mod.certificate:
-                logger.notifyChannel('', netsvc.LOG_WARNING, 'module %s: no certificate' % mod.name)
+                logger.notifyChannel('', netsvc.LOG_WARNING, 'module %s: no quality certificate' % mod.name)
             else:
                 try:
                     val = long(mod.certificate) % 97 == 29
