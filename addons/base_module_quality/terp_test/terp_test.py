@@ -43,6 +43,9 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def run_test(self, cr, uid, module_path):
         list_files = os.listdir(module_path)
+        
+        current_module = module_path.split('/')[-1]
+        
         for i in list_files:
             path = os.path.join(module_path, i)
             if os.path.isdir(path):
@@ -61,24 +64,39 @@ class quality_test(base_module_quality.abstract_quality_check):
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
 
-        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
+        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml', 'certificate']
 
         for key in terp_keys:
             if key in res:
-                feel_good_factor += 1
+                feel_good_factor += 1 # each tag should appear
                 if isinstance(res[key],(str,unicode)):
                     if not res[key]:
                         feel_bad_factor += 1
                     else:
-                        if key == 'description' and res[key] and len(str(res[key]))>=25:
+                       
+                        if key == 'description' and res[key] and len(str(res[key])) >= 150: # no. of chars should be >=150
                             feel_good_factor += 1
                             if res['description'].count('\n') >= 4:# description contains minimum 5 lines
                                 feel_good_factor += 1
                         if key == 'website':
-                            ptrn = re.compile('https?://[\w\.]*') # reg ex matching on temporary basis.
+                            ptrn = re.compile('https?://[\w\.]*') # reg ex matching on temporary basis.Website is correctly formatted
                             result = ptrn.search(str(res[key]))
                             if result:
                                 feel_good_factor += 1
+                            else:
+                                feel_bad_factor += 1
+                
+                if isinstance(res[key],bool):
+                    if key == 'active':
+                        if current_module != 'base':
+                            if res[key]:
+                                feel_bad_factor += 1
+                        else:
+                            if not res[key]:
+                                feel_bad_factor += 1       
+                        
+                    if key == 'installable' and not res[key]: # installable tag is provided and True
+                        feel_bad_factor +=1
             else:
                 feel_bad_factor += 1
 

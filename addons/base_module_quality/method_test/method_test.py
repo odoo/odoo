@@ -76,7 +76,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def get_result(self):
         summary = """
-This test checks if the module classes are raising exception when calling basic methods or no.
+This test checks if the module classes are raising exception when calling basic methods or not.
 """
         return summary
 

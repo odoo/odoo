@@ -25,7 +25,7 @@ from tools import config
 
 class abstract_quality_check(object):
     '''
-        This Class provide...
+        This Class provides...
     '''
 
     def __init__(self):
