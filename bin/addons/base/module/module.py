@@ -191,27 +191,6 @@ class module(osv.osv):
         ('certificate_uniq', 'unique (certificate)', 'The certificate ID of the module must be unique !')
     ]
 
-    def _check_certificate(self, cr, uid, ids):
-        if not ids:
-            return True
-
-        logger = netsvc.Logger()
-        for mod in self.browse(cr, uid, ids):
-            if not mod.certificate:
-                logger.notifyChannel('', netsvc.LOG_WARNING, 'module %s: no quality certificate' % mod.name)
-            else:
-                try:
-                    val = long(mod.certificate) % 97 == 29
-                    if not val:
-                        raise Exception('Invalid Certificate')
-                except Exception, ex:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_certificate, "Your certificate is wrong !", ['certificate']),
-    ]
-
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
@@ -489,28 +468,21 @@ class module(osv.osv):
                 if os.path.exists(f):
                     logger.notifyChannel("init", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
+        
 
-    def write(self, cr, uid, ids, vals, context=None):
-        # Override the write method because we want to show a warning when the description field is empty !
-        if isinstance( ids, (long, int) ):
-            ids = [ids]
-        if 'description' in vals and not vals['description']:
-            logger = netsvc.Logger()
-            for mod in self.browse(cr, uid, ids):
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
+    def check(self, cr, uid, ids, context=None):
+        logger = netsvc.Logger()
+        for mod in self.browse(cr, uid, ids, context=context):
+            if not mod.description:
+                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name,))
 
-        return super(module, self).write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        # Override the create method because we want to show a warning when the description field is empty !
-        module_id = super(module, self).create(cr, uid, vals, context=context)
-
-        if 'description' in vals and not vals['description']:
-            logger = netsvc.Logger()
-            for mod in self.browse(cr, uid, [module_id]):
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
-
-        return module_id
+            if not mod.certificate:
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: no quality certificate' % (mod.name,))
+            else:
+                val = long(mod.certificate) % 97 == 29
+                if not val:
+                    logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
+                    raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
 module()
 

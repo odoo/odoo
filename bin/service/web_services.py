@@ -277,6 +277,10 @@ class db(netsvc.Service):
         return release.version
 
     def migrate_databases(self, password, databases):
+
+        from osv.orm import except_orm
+        from osv.osv import except_osv
+
         security.check_super(password)
         l = netsvc.Logger()
         for db in databases:
@@ -284,8 +288,15 @@ class db(netsvc.Service):
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True) 
+            except except_orm, inst:
+                self.abortResponse(1, inst.name, 'warning', inst.value)
+            except except_osv, inst:
+                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except Exception, e:
-                tools.debug(e)
+                import traceback
+                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
+                logger = Logger()
+                logger.notifyChannel('web-services', LOG_ERROR, tb_s)
                 raise
         return True
 db()

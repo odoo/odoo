@@ -513,6 +513,8 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
     migrations = MigrationManager(cr, graph)
 
     check_rules = False
+    modobj = None
+
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
         m = package.name
@@ -523,6 +525,12 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
         register_class(m)
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s loading objects' % m)
         modules = pool.instanciate(m, cr)
+
+        if modobj is None:
+            modobj = pool.get('ir.module.module')
+
+        if modobj:
+            modobj.check(cr, 1, [mid])
 
         idref = {}
         status['progress'] = (float(statusi)+0.4)/len(graph)
@@ -566,7 +574,6 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
             #cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
 
             # Set new modules and dependencies
-            modobj = pool.get('ir.module.module')
             modobj.write(cr, 1, [mid], {'state':'installed', 'latest_version':ver})
             cr.commit()
 
@@ -584,7 +591,6 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model,name))
 
 
-    pool = pooler.get_pool(cr.dbname)
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
