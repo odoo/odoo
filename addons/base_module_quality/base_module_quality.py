@@ -59,7 +59,7 @@ class abstract_quality_check(object):
         #Specify test got an error on module
         self.error = False
 
-        #The tests have to subscribe itselfs in this list, that contains all the test that have to be performed. 
+        #The tests have to subscribe itselfs in this list, that contains all the test that have to be performed.
         self.tests = []
         self.list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         for item in self.list_folders:

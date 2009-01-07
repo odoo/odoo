@@ -35,6 +35,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
+        self.name = _("Speed Test")
         self.bool_installed_only = True
         self.ponderation = 1.0
         self.listdata = []
@@ -84,29 +85,30 @@ class quality_test(base_module_quality.abstract_quality_check):
                 list = [obj, size, "", "", "", "Warning! Object has no demo data"]
                 self.listdata.append(list)
         self.score = obj_counter and score/obj_counter or 0.0
+        self.result = self.get_result()
+        self.result_details = self.get_result_details()
+
         return None
 
-    def get_result(self, cr, uid, module_path, module_state):
-        self.run_test(cr, uid, module_path)
-        if not self.bool_installed_only or module_state=="installed":
-            summary = """
-===Speed Test===:
-
+    def get_result(self):
+##        self.run_test(cr, uid, module_path)
+#        if not self.bool_installed_only or module_state=="installed":
+        summary = """
 This test checks the speed of the module.
 
-""" + "Score: " + str(self.score) + "/10\n"
-        else:
-            summary ="""  \n===Speed Test===:
-
-The module has to be installed before running this test.\n\n """
-            header_list = ""
-            self.error = True
+"""
+#        else:
+#            summary ="""  \n===Speed Test===:
+#
+#The module has to be installed before running this test.\n\n """
+#            header_list = ""
+#            self.error = True
         return summary
 
-    def get_result_detail(self):
+    def get_result_details(self):
         header_list = ['speed', 'Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
         detail = ""
-        detail += "\n===Speed Test===\n"
+#        detail += "\n===Speed Test===\n"
         if not self.error:
             detail += self.format_table(header=header_list, data_list=[self.listdata])
         return detail
