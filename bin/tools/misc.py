@@ -569,7 +569,7 @@ class cache(object):
         else:
             multis = kwargs2[self.multi][:]    
             for id in multis:
-                kwargs2[self.multi] = [id]
+                kwargs2[self.multi] = (id,)
                 key = (('dbname', dbname),) + to_tuple(kwargs2)
                 yield key, id
     
@@ -614,7 +614,6 @@ class cache(object):
         self.fun_default_values = {}
         if argspec[3]:
             self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
-        debug(self.fun_default_values)
         
         def cached_result(self2, cr, *args, **kwargs):
             if time.time()-self.timeout > self.lasttime:
