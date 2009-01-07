@@ -160,6 +160,9 @@ class Logger(object):
 
         level_method = getattr(log, level)
 
+        if isinstance(msg, Exception):
+            msg = tools.exception_to_unicode(msg)
+
         result = tools.ustr(msg).strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
@@ -238,7 +241,7 @@ class GenericXMLRPCRequestHandler(OpenERPDispatcher):
             service_name = self.path.split("/")[-1]
             return self.dispatch(service_name, method, params)
         except OpenERPDispatcherException, e:
-            raise xmlrpclib.Fault(str(e.exception), e.traceback)
+            raise xmlrpclib.Fault(tools.exception_to_unicode(e.exception), e.traceback)
 
 class SSLSocket(object):
     def __init__(self, socket):
@@ -353,7 +356,7 @@ class TinySocketClientThread(threading.Thread, OpenERPDispatcher):
                 result = self.dispatch(msg[0], msg[1], msg[2:])
                 ts.mysend(result)
             except OpenERPDispatcherException, e:
-                new_e = Exception(tools.ustr(e.exception)) # avoid problems of pickeling
+                new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
                 ts.mysend(new_e, exception=True, traceback=e.traceback)
 
             self.sock.close()

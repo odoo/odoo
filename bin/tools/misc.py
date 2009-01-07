@@ -679,6 +679,17 @@ def ustr(value):
 
     return unicode(value, 'utf-8')
 
+def exception_to_unicode(e):
+    if hasattr(e, 'message'):
+        return ustr(e.message)
+    if hasattr(e, 'args'):
+        return "\n".join((ustr(a) for a in e.args))
+    try:
+        return ustr(e)
+    except:
+        return u"Unknow message"
+
+
 # to be compatible with python 2.4
 import __builtin__
 if not hasattr(__builtin__, 'all'):
