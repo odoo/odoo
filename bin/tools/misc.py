@@ -560,7 +560,7 @@ class cache(object):
         
         def to_tuple(d):
             i = d.items()
-            i.sort()
+            i.sort(key=lambda (x,y): x)
             return tuple(i)
 
         if not self.multi:
