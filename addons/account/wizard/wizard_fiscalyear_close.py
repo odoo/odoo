@@ -55,14 +55,15 @@ def _data_save(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
 
     fy_id = data['form']['fy_id']
+    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
+    start_jp = new_fyear.start_journal_period_id
+
     if data['form']['report_new']:
         periods_fy2 = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids
         if not periods_fy2:
             raise wizard.except_wizard(_('UserError'),
                         _('There are no periods defined on New Fiscal Year.'))
         period=periods_fy2[0]
-        new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
-        start_jp = new_fyear.start_journal_period_id
         if not start_jp:
             raise wizard.except_wizard(_('UserError'),
                         _('The new fiscal year should have a journal for new entries define on it'))
@@ -163,7 +164,7 @@ def _data_save(self, cr, uid, data, context):
             'WHERE fiscalyear_id = %s', ('done',fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
             'SET state = %s, end_journal_period_id = %s' \
-            'WHERE id = %s', ('done',start_jp.id,fy_id))
+            'WHERE id = %s', ('done', start_jp and start_jp.id or None, fy_id))
     return {}
 
 class wiz_journal_close(wizard.interface):
