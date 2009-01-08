@@ -51,7 +51,7 @@ def _data_load(self, cr, uid, data, context):
 
 def _data_save(self, cr, uid, data, context):
     if not data['form']['sure']:
-        raise wizard.except_wizard(_('UserError'), _('Closing of fiscal year canceled, please check the box !'))
+        raise wizard.except_wizard(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
     pool = pooler.get_pool(cr.dbname)
 
     fy_id = data['form']['fy_id']
@@ -99,7 +99,7 @@ def _data_save(self, cr, uid, data, context):
                         'period_id': period.id,
                         'account_id': account.id
                     }, {'journal_id': new_journal.id, 'period_id':period.id})
-            if accnt_type_data.close_method=='unreconciled':
+            if accnt_type_data.close_method == 'unreconciled':
                 offset = 0
                 limit = 100
                 while True:
