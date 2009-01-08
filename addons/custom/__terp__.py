@@ -33,6 +33,5 @@
     'update_xml': ['custom_view.xml'],
     'installable': True,
     'active': False,
-    'certificate': '45633383861',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
