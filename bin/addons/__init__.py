@@ -482,7 +482,7 @@ class MigrationManager(object):
                     del mod
     
 
-def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs):
+def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
         status={}
@@ -529,7 +529,7 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
         if modobj is None:
             modobj = pool.get('ir.module.module')
 
-        if modobj:
+        if modobj and perform_checks:
             modobj.check(cr, 1, [mid])
 
         idref = {}
@@ -585,7 +585,7 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
 
         statusi+=1
 
-    if check_access_rules and check_rules:
+    if perform_checks and check_rules:
         cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
         for (model,name) in cr.fetchall():
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model,name))
@@ -611,7 +611,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         if update_module:
             basegraph = create_graph(['base'], force)
-            load_module_graph(cr, basegraph, status, check_access_rules=False, report=report)
+            load_module_graph(cr, basegraph, status, perform_checks=False, report=report)
 
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
