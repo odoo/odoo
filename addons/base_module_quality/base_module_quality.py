@@ -21,6 +21,7 @@
 ##############################################################################
 import pooler
 import os
+import osv
 from tools import config
 
 class abstract_quality_check(object):
@@ -77,7 +78,8 @@ class abstract_quality_check(object):
         '''
         this method should do the test and fill the score, result and result_details var
         '''
-        raise 'Not Implemented'
+
+        raise osv.except_osv(_('Programming Error'), _('Test Is Not Implemented'))
 
     def get_objects(self, cr, uid, module):
         # This function returns all object of the given module..
@@ -103,14 +105,12 @@ class abstract_quality_check(object):
 
     def format_table(self, header=[], data_list=[]):
         detail = ""
-        header_list = []
-        final_list = []
-        for head in data_list[1]:
-            header_list.append(head)
-        detail += (header[0]) % tuple(header_list)
-        for res in data_list[0]:
-            data_list[0][res].append(res)
-            detail += (header[1]) % tuple(data_list[0][res])
+        detail += (header[0]) % tuple(header[1])
+        frow = '\n|-'
+        for i in header[1]:
+            frow += '\n| %s'
+        for key, value in data_list.items():
+            detail += (frow) % tuple(value)
         detail = detail + '\n|}'
         return detail
 

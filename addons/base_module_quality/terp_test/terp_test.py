@@ -58,8 +58,8 @@ class quality_test(base_module_quality.abstract_quality_check):
         feel_bad_factor = 0
         if '__terp__.py' not in list_files:
             self.no_terp = True
-        if self.no_terp:
             self.result += "The module does not contain the __terp__.py file"
+            return None
 
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
@@ -105,21 +105,21 @@ class quality_test(base_module_quality.abstract_quality_check):
 #        self.result += "__terp__.py : "+ str(self.score) + "/10\n"
         return None
 
-    def get_result(self, cr, uid, module_path, module_state):
-#        self.run_test(cr, uid, module_path)
-#        summary = "\n===TERP Test===:\n"
-        if self.no_terp:
-           summary += """
-The module does not contain the __terp__.py file.\n\n """
-#        else:
-#            summary += """
-#    This test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP.
-#    """ + "Score: " + str(self.score) + "/10\n"
-        return summary
+    #~ def get_result(self, cr, uid, module_path, module_state):
+#~ #        self.run_test(cr, uid, module_path)
+#~ #        summary = "\n===TERP Test===:\n"
+        #~ if self.no_terp:
+           #~ summary += """
+#~ The module does not contain the __terp__.py file.\n\n """
+#~ #        else:
+#~ #            summary += """
+#~ #    This test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP.
+#~ #    """ + "Score: " + str(self.score) + "/10\n"
+        #~ return summary
 
-    def get_result_details(self):
-        detail = "\n===TERP Test===\n" + self.result
-        return detail
+    #~ def get_result_details(self):
+        #~ detail = "\n===TERP Test===\n" + self.result
+        #~ return detail
 
 
 

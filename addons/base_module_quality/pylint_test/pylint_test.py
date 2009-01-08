@@ -47,7 +47,8 @@ class quality_test(base_module_quality.abstract_quality_check):
 
         n = 0
         score = 0.0
-        self.result += "\nThis test checks if the module satisfies the current coding standard used by OpenERP. \n\n"
+        self.result += """\nThis test checks if the module satisfies the current coding standard used by OpenERP. \n 
+Rating for *.py files goes from -10/10 to 10/10\n\n"""
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
@@ -72,29 +73,29 @@ class quality_test(base_module_quality.abstract_quality_check):
                 self.result_details += res
 
         average_score = n and score / n or score
-        self.score = (average_score + 10) /20
+        self.score = (average_score + 10) / 20
         return None
 
-    def get_result(self, cr, uid, module_path):
-        self.run_test(cr, uid, module_path)
-        if not self.bool_installed_only or module_state=="installed":
-            summary ="""
-===Pylint Test===:
+    #~ def get_result(self, cr, uid, module_path):
+        #~ self.run_test(cr, uid, module_path)
+        #~ if not self.bool_installed_only or module_state=="installed":
+            #~ summary ="""
+#~ ===Pylint Test===:
 
-This test checks if the module satisfies the current coding standard used by OpenERP.
+#~ This test checks if the module satisfies the current coding standard used by OpenERP.
 
-""" + "Score: " + str(self.score) + "/10\n"
-        else:
-            summary ="""  \n===Pylint Test===:
+#~ """ + "Score: " + str(self.score) + "/10\n"
+        #~ else:
+            #~ summary ="""  \n===Pylint Test===:
 
-The module has to be installed before running this test.\n\n """
-            header_list = ""
-            self.error = True
-        return summary
+#~ The module has to be installed before running this test.\n\n """
+            #~ header_list = ""
+            #~ self.error = True
+        #~ return summary
 
-    def get_result_details(self):
-        detail = "\n===Pylint Test===\n" + self.result
-        return detail
+    #~ def get_result_details(self):
+        #~ detail = "\n===Pylint Test===\n" + self.result
+        #~ return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -21,8 +21,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Result">
-                    <field name="name" nolabel="1" readonly="1"/>
-                    <field name="final_score" nolabel="1" readonly="1"/>
+                    <field name="name" readonly="1" search="1"/>
+                    <field name="final_score" readonly="1" search="1"/>
                     <separator colspan="4" string="Tests"/>
                     <field name="test_ids" nolabel="1" colspan="4" height="350" width="800" readonly="1"/>
                 </form>
@@ -38,8 +38,10 @@
                         <page string="Summary">
                             <field name="name" readonly="1"/>
                             <field name="score" readonly="1"/>
-                            <field name="ponderation" readonly="1"/>
                             <field name="summary" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800" readonly="1"/>
+
+                            <field name="ponderation" readonly="1"/>
+                            <field name="state" readonly="1"/>
                         </page>
                         <page string="Detail">
                             <field name="detail" widget="text_wiki" nolabel="1" colspan="4" readonly="1"/>
@@ -55,8 +57,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Result">
-                    <field name="name"/>
-                    <field name="score"/>
+                    <field name="name" required="1"/>
+                    <field name="state"/>
+                    <field name="score" required="1"/>
                     <field name="ponderation"/>
                 </tree>
             </field>
