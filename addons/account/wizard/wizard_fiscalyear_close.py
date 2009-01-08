@@ -163,7 +163,7 @@ def _data_save(self, cr, uid, data, context):
     cr.execute('UPDATE account_period SET state = %s ' \
             'WHERE fiscalyear_id = %s', ('done',fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
-            'SET state = %s, end_journal_period_id = %s' \
+            'SET state = %s, end_journal_period_id = %s ' \
             'WHERE id = %s', ('done', start_jp and start_jp.id or None, fy_id))
     return {}
 
