@@ -20,9 +20,7 @@
 #
 ##############################################################################
 
-
-import os
-from tools import config
+from tools.translate import _
 
 from base_module_quality import base_module_quality
 import pooler

@@ -24,6 +24,7 @@ import netsvc
 from osv import fields, osv
 import os
 from tools import config
+from tools.translate import _
 import pooler
 import time
 
@@ -54,11 +55,11 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         result_dict = {}
         result_dict2 = {}
         self.result_details += _("O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n")
-        for obj in obj_ids:
+        for obj, ids in obj_ids.items():
             obj_counter += 1
-            ids = obj_ids[obj]
             ids = ids[:100]
             size = len(ids)
+            list2 = []
             if size:
                 list = []
 
@@ -80,6 +81,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
                 if size < 5:
                     list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Warning! Not enough demo data")]
+                    list2 = [obj, _("No enough data")]
                 else:
                     if code_size_complexity <= (code_base_complexity + size):
                         complexity = _("O(1)")
@@ -93,18 +95,16 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
             else:
                 list = [obj, size, "", "", "", _("Warning! Object has no demo data")]
-                list2 = [obj, _("No demo data")]
+                list2 = [obj, _("No data")]
             result_dict[obj] = list
             result_dict2[obj] = list2
-
         self.score = obj_counter and score / obj_counter or 0.0
         self.result_details += self.get_result_details(result_dict)
         self.result += self.get_result(result_dict2)
-
         return None
 
     def get_result(self, dict):
-        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n', [_('Object Name'), _('Result'),])
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s', [_('Object Name'), _('Result')])
         if not self.error:
             return self.format_table(header, data_list=dict)
         return ""

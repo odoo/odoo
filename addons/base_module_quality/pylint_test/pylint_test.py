@@ -23,6 +23,7 @@
 
 import os
 from tools import config
+from tools.translate import _
 
 from base_module_quality import base_module_quality
 
@@ -35,6 +36,8 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.note = _("""This test uses Pylint and checks if the module satisfies the coding standard of Python. See http://www.logilab.org/project/name/pylint for further info.\n """)
         self.bool_installed_only = False
         self.ponderation = 1.0
+        self.result = ""
+        self.result_details = ""
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -81,7 +84,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         return None
 
     def get_result(self, dict):
-        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n', [_('File Name'), _('Result (/10)'),])
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n', [_('File Name'), _('Result (/10)')])
         if not self.error:
             return self.format_table(header, data_list=dict)
         return ""
