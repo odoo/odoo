@@ -35,13 +35,14 @@ class quality_test(base_module_quality.abstract_quality_check):
 #        '''
         super(quality_test, self).__init__()
         self.name = _("Terp Test")
+        self.note = _("This test checks if the module satisfies the current coding standard used by OpenERP.")
         self.bool_installed_only = False
         self.no_terp = False
         self.ponderation = 2
 
         return None
 
-    def run_test(self, cr, uid, module_path):
+    def run_test_terp(self, cr, uid, module_path):
         list_files = os.listdir(module_path)
         
         current_module = module_path.split('/')[-1]
@@ -58,7 +59,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         feel_bad_factor = 0
         if '__terp__.py' not in list_files:
             self.no_terp = True
-            self.result += "The module does not contain the __terp__.py file"
+            self.result += _("The module does not contain the __terp__.py file")
             return None
 
         terp_file = os.path.join(module_path,'__terp__.py')
@@ -100,10 +101,23 @@ class quality_test(base_module_quality.abstract_quality_check):
             else:
                 feel_bad_factor += 1
 
-        self.score = round((feel_good_factor) / float(feel_good_factor + feel_bad_factor),2)
-        self.result += "\nThis test checks if the module satisfies the current coding standard for __terp__.py file used by OpenERP."
+        score = round((feel_good_factor) / float(feel_good_factor + feel_bad_factor),2)
+
 #        self.result += "__terp__.py : "+ str(self.score) + "/10\n"
+        return [_('__terp__.py file'), score]
+
+
+    def run_test(self, cr, uid, module_path):
+        terp_score = self.run_test_terp(cr, uid, module_path)
+        self.score = terp_score[1]
+        self.result = self.get_result({'__terp__.py': terp_score})
         return None
+
+    def get_result(self, dict):
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n', [_('Object Name'), _('Result (/1)'),])
+        if not self.error:
+            return self.format_table(header, data_list=dict)
+        return ""
 
     #~ def get_result(self, cr, uid, module_path, module_state):
 #~ #        self.run_test(cr, uid, module_path)

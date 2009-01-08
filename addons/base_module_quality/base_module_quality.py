@@ -41,6 +41,9 @@ class abstract_quality_check(object):
         #This char have to store the name of the test.
         self.name = ""
 
+        #This char have to store the aim of the test and eventually a note.
+        self.note = ""
+
         #This char have to store the result.
         #Used to display the result of the test.
         self.result = ""

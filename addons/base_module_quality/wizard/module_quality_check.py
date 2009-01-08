@@ -48,6 +48,7 @@ class quality_check_detail(osv.osv):
         'name': fields.char('Name',size=128,),
         'score': fields.float('Score (%)',),
         'ponderation': fields.float('Ponderation',help='Some tests are more critical than others, so they have a bigger weight in the computation of final rating'),
+        'note': fields.text('Note',),
         'summary': fields.text('Summary',),
         'detail' : fields.text('Details',),
         'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
@@ -84,6 +85,7 @@ class create_quality_check(wizard.interface):
                         'summary': val.result,
                         'detail': val.result_details,
                         'state': 'done',
+                        'note': val.note,
                     }
                     create_ids.append((0,0,data))
                     score_sum += val.score * val.ponderation
@@ -91,6 +93,7 @@ class create_quality_check(wizard.interface):
                 else:
                     data = {
                         'name': val.name,
+                        'note': val.note,
                         'score': 0,
                         'state': 'skipped',
                         'summary': _("The module has to be installed before running this test.")
