@@ -227,7 +227,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                 fo.write(zfile.read(os.path.join(
                     os.path.basename(head), zipname).replace(
                         os.sep, '/')))
-
+                fo.seek(0)
                 if pathinfo:
                     return fo, name
                 return fo
