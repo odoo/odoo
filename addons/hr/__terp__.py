@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
     "name" : "Human Resources",
     "version" : "1.1",
@@ -33,23 +35,21 @@
 
     Different reports are also provided, mainly for attendance statistics.
     """,
-    "depends" : ["base", "process"],
-    "init_xml" : [],
-    "demo_xml" : [
-        "hr_demo.xml", 
-        "hr_department_demo.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/hr_security.xml',
+        'security/ir.model.access.csv',
+        'hr_view.xml',
+        'hr_wizard.xml',
+        'hr_department_view.xml',
+        'process/hr_process.xml'
     ],
-    "update_xml" : [
-        "security/hr_security.xml",
-        "security/ir.model.access.csv",
-        "hr_view.xml", 
-        "hr_wizard.xml",
-        "hr_department_view.xml",
-        "process/hr_process.xml"
-    ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['hr_demo.xml', 'hr_department_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '86710558965',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

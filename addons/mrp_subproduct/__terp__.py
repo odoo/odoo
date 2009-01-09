@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,21 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "MRP Sub Product",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["base","mrp"],
-    "category" : "Generic Modules/Production",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "mrp_subproduct_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'name': 'MRP Sub Product',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
+This module allows you to produce several products from one production order.
+You can configure sub-products in the bill of material.
+Without this module:
+    A + B + C -> D
+With this module:
+    A + B + C -> D + E
+    """,
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'mrp'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'mrp_subproduct_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '50060616733',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

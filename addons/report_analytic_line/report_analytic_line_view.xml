@@ -7,7 +7,7 @@
             <field name="model">report.account.analytic.line.to.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <tree string="Analytic Lines to Invoice">
+                <form string="Analytic Lines to Invoice">
                     <field name="name" select="1"/>
                     <field name="account_id" select="1"/>
                     <newline/>
@@ -16,7 +16,7 @@
                     <newline/>
                     <field colspan="1" name="amount"/>
                     <field colspan="1" name="unit_amount"/>
-                </tree>
+                </form>
             </field>
         </record>
         

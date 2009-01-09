@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -31,26 +31,36 @@ import tools
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
 
-    def sxwtorml(self,cr, uid, file_sxw):
+    def sxwtorml(self,cr, uid, file_sxw,file_type):
         '''
         The use of this function is to get rml file from sxw file.
         '''
         sxwval = StringIO(base64.decodestring(file_sxw))
-        fp = tools.file_open('normalized_oo2rml.xsl',
-                subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='sxw':
+            fp = tools.file_open('normalized_oo2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='odt':
+            fp = tools.file_open('normalized_odt2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        
         return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
-    def upload_report(self, cr, uid, report_id, file_sxw, context):
+    def upload_report(self, cr, uid, report_id, file_sxw,file_type, context):
         '''
         Untested function
         '''
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO(base64.decodestring(file_sxw))
-        fp = tools.file_open('normalized_oo2rml.xsl',
-                subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='sxw':
+            fp = tools.file_open('normalized_oo2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        if file_type=='odt':
+            fp = tools.file_open('normalized_odt2rml.xsl',
+                    subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
         report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw),
-            'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))
+            'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())),
+            'report_type' : file_type
         })
         cr.commit()
         db = pooler.get_db_only(cr.dbname)
@@ -59,6 +69,7 @@ class report_xml(osv.osv):
     def report_get(self, cr, uid, report_id, context={}):
         report = self.browse(cr, uid, report_id, context)
         return {
+            'file_type' : report.report_type,
             'report_sxw_content': report.report_sxw_content and base64.encodestring(report.report_sxw_content) or False,
             'report_rml_content': report.report_rml_content and base64.encodestring(report.report_rml_content) or False
         }

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ def _action_open_window(self, cr, uid, data, context):
     cr.execute('select default_credit_account_id from account_journal where id=%s', (form['journal_id'],))
     account_id = cr.fetchone()[0]
     if not account_id:
-        raise Exception, _('You have to define the bank account\nin the journal definition for reconciliation.')
+        raise wizard.except_wizard(_('Error'), _('You have to define the bank account\nin the journal definition for reconciliation.'))
     return {
         'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (form['journal_id'],account_id),
         'name': _('Standard Encoding'),

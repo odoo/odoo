@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"CRM profile",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Profile",
-    "depends":[
-        "crm_vertical", "board_crm_configuration",
-    ], 
-    "demo_xml":[],
-    "update_xml":[],
-    "active":False,
-    "installable":True,
+    'name': 'CRM profile',
+    'version': '1.0',
+    'category': 'Profile',
+    'description': """Profile for CRM""",
+    'author': 'Tiny',
+    'depends': ['crm_vertical', 'board_crm_configuration'],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '73301264221',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

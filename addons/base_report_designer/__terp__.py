@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,22 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Report designer interface module",
-    "description" : """
+    'name': 'Report designer interface module',
+    'version': '0.1',
+    'category': 'Generic Modules/Base',
+    'description': """
 This module adds wizards to import/export documents to be edited in
 OpenOffice.
 """,
-    "version" : "0.1",
-    "depends" : ["base"],
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
-    "init_xml" : [ ],
-    "demo_xml" : ["base_report_data.xml"],
-    "update_xml" : [ "base_report_designer_wizard.xml" ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['base_report_designer_wizard.xml'],
+    'demo_xml': ['base_report_data.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '56379010493',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

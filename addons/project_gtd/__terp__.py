@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,21 +19,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Getting Things Done - Time Management Module",
-    "version": "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project"],
-    "description": "",
-    "init_xml" : [],
-    "demo_xml" : ["project_gtd_demo.xml"],
-    "update_xml": [
-        "security/ir.model.access.csv",
-        "project_gtd_view.xml","project_gtd_wizard.xml"
+    'name': 'Getting Things Done - Time Management Module',
+    'version': '1.0',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """
+This module implements all concepts defined by the Getting Things Done
+methodology. This world-wide used methodology is used for personal
+time management improvement.
+
+Getting Things Done (commonly abbreviated as GTD) is an action management
+method created by David Allen, and described in a book of the same name.
+
+GTD rests on the principle that a person needs to move tasks out of the mind by
+recording them externally. That way, the mind is freed from the job of
+remembering everything that needs to be done, and can concentrate on actually
+performing those tasks.
+    """,
+    'author': 'Tiny',
+    'depends': ['project'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'project_gtd_view.xml',
+        'project_gtd_wizard.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['project_gtd_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '43525236301',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

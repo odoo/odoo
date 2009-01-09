@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    OpenERP, Open Source Management Solution    
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,9 @@ ICS_TAGS = {
     'attendee':'multiple',
     'location':'normal',
     'categories': 'normal',
-    'description':'normal'
+    'description':'normal',
+
+    # TODO: handle the 'duration' property
 }
 
 class document_directory_ics_fields(osv.osv):
@@ -126,8 +128,6 @@ class document_directory_content(osv.osv):
                     if len(dt)==10:
                         dt = dt+' 09:00:00'
                     value = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
-                    if field.name=='dtend':
-                        value += datetime.timedelta(hours=3)
                     event.add(field.name).value = value
         s= StringIO.StringIO(cal.serialize().encode('utf8'))
         s.name = node
@@ -141,4 +141,6 @@ class crm_case(osv.osv):
         'code': fields.char('Calendar Code', size=64)
     }
 crm_case()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

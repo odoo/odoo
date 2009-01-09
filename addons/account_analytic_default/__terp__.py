@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Account Analytic Default",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "description": """
+    'name': 'Account Analytic Default',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """
 Allows to automatically select analytic accounts based on criterions:
 * Product
 * Partner
@@ -33,14 +33,14 @@ Allows to automatically select analytic accounts based on criterions:
 * Company
 * Date
     """,
-    "depends" : ['account'],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_analytic_default_view.xml"],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '74229833581',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -635,7 +635,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True),
         'total': fields.float('Total Time', digits=(16,2), readonly=True),
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
-    }
+        }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (

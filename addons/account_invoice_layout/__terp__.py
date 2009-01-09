@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "account_invoice_layout",
-    "version" : "1.0",
-    "depends" : ["base", "account"],
-    "author" : "Tiny",
-    "description": """
+    'name': 'account_invoice_layout',
+    'version': '1.0',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """
     This module provides some features to improve the layout of the invoices.
 
     It gives you the possibility to
@@ -35,17 +36,18 @@
     Moreover, there is one option which allow you to print all the selected invoices with a given special message at the bottom of it. This feature can be very useful for printing your invoices with end-of-year wishes, special punctual conditions...
 
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_invoice_layout_view.xml",
-        "account_invoice_layout_report.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_invoice_layout_view.xml',
+        'account_invoice_layout_report.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '57235078173',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

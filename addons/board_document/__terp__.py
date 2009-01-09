@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,17 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Dashboard for Document Management",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Document",
-    "depends":["board","document", "report_document"],
-    "demo_xml":["board_document_demo.xml"],
-    "update_xml":["board_document_view.xml"],
-    "description": """ This module implements a dashboard for Document """,
-    "active":False,
-    "installable":True,
+    'name': 'Dashboard for Document Management',
+    'version': '1.0',
+    'category': 'Board/Document',
+    'description': """ This module implements a dashboard for Document """,
+    'author': 'Tiny',
+    'depends': ['board', 'document', 'report_document'],
+    'update_xml': ['board_document_view.xml'],
+    'demo_xml': ['board_document_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '44628458429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

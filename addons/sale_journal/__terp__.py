@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Managing sales and deliveries by journal",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Sales & Purchases",
-    "website": "http://www.openerp.com",
-    "depends" : ["stock","sale"],
-    "demo_xml" : ['sale_journal_demo.xml'],
-    "init_xml" : ['sale_journal_data.xml'],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "sale_journal_view.xml",
-        "picking_journal_view.xml",
-        "picking_journal_view_report.xml"
-    ],
-    "description" : """
-    The sale journal modules allows you to categorize your
+    'name': 'Managing sales and deliveries by journal',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
+    The sale journal modules allows you to categorise your
     sales and deliveries (packing lists) between different journals.
-    This module is very helpfull for bigger companies that
+    This module is very helpful for bigger companies that
     works by departments.
 
     You can use journal for different purposes, some examples:
@@ -48,7 +39,7 @@
     * draft, open, cancel, done.
 
     Batch operations can be processed on the different journals to
-    confirm all sales at once, to validate or invoice packings, ...
+    confirm all sales at once, to validate or invoice packing, ...
 
     It also supports batch invoicing methods that can be configured by
     partners and sales orders, examples:
@@ -57,8 +48,19 @@
 
     Some statistics by journals are provided.
     """,
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'sale'],
+    'init_xml': ['sale_journal_data.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'sale_journal_view.xml',
+        'picking_journal_view.xml',
+        'picking_journal_view_report.xml'
+    ],
+    'demo_xml': ['sale_journal_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '77661619085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

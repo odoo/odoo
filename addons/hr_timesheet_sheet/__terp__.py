@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Timesheets",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "description": """
+    'name': 'Timesheets',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """
 This module help you easily encode and validate timesheet and attendances
 within the same view. The upper part of the view is for attendances and
 track (sign in/sign out) events. The lower part is for timesheet.
@@ -44,18 +44,19 @@ The validation can be configured in te company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
     """,
-    "depends" : ["hr_timesheet", "hr_timesheet_invoice", "process"],
-    "init_xml" : [],
-    "demo_xml" : ["hr_timesheet_sheet_demo.xml",],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "hr_timesheet_sheet_view.xml",
-        "hr_timesheet_workflow.xml",
-        "process/hr_timesheet_sheet_process.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'hr_timesheet_sheet_view.xml',
+        'hr_timesheet_workflow.xml',
+        'process/hr_timesheet_sheet_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['hr_timesheet_sheet_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '73297700829',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

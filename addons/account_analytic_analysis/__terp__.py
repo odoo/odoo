@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "report_account_analytic",
-    "description": """Modifiy the account analytic view to show
+    'name': 'report_account_analytic',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """Modify account analytic view to show
 important data for project manager of services companies.
 Add menu to show relevant information for each manager.""",
     "version" : "1.1",
@@ -36,10 +40,9 @@ Add menu to show relevant information for each manager.""",
         "account_analytic_analysis_view.xml",
         "account_analytic_analysis_menu.xml",
     ],
-    "demo_xml" : [],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '42927202589',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

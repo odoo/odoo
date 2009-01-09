@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Base module quality",
-    "author" : "Tiny",
-    "version" : "1.0",
-    "depends" : ["base",],
-    "description": """"
+    'name': 'Base module quality',
+    'version': '1.0',
+    'category': 'Tiny Specific Modules/Base module quality',
+    'description': """"
 This module's aim is to check the quality of other modules.
 
-    It defines a wizard on the list of modules in OpenERP, which allow you to evaluate them on different critera such as: the respect of OpenERP coding standards, the speed efficency...
+    It defines a wizard on the list of modules in OpenERP, which allow you to evaluate them on different criteria such as: the respect of OpenERP coding standards, the speed efficiency...
 
-
-    This module also provide generic framework to define your own quality test. For further info, coders may take a look into base_module_quality\README.txt
-
+    This module also provides generic framework to define your own quality test. For further info, coders may take a look into base_module_quality\README.txt
 """,
-    "init_xml" : [],
-    "update_xml" : ["base_module_quality_wizard.xml"],
-    "category" : "Tiny Specific Modules/Base module quality",
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['base_module_quality_wizard.xml', 'security/ir.model.access.csv'],
+    'installable': True,
+    'active': False,
+    'certificate': '75119475677',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

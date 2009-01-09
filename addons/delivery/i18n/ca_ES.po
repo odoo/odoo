@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
+"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
+"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,17 +18,17 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Nom de taula"
+msgstr "Nom de quadrícula"
 
 #. module: delivery
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Quadrícula de tramesa"
+msgstr "Quadrícula d'enviament"
 
 #. module: delivery
 #: view:res.partner:0
@@ -75,7 +75,7 @@ msgstr "Empresa transportista"
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
 msgid "Delivery by Poste"
-msgstr "Enviament per correu"
+msgstr "Enviament per correu postal"
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -91,18 +91,18 @@ msgstr "Fix"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "L'estat de l'ordre ha d'estar en borrador per afegir línies d'enviament."
+msgstr "L'ordre ha d'estar en estat esborrany per afegir-hi línies d'enviament."
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Línia de la taula"
+msgstr "Línia de la quadrícula"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Llista de preus de lliurament"
+msgstr "Tarifes d'enviament"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
@@ -119,7 +119,7 @@ msgstr "No concorda quadrícula per aquest transportista!"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery line of grid"
-msgstr "Línia de lliurament de la taula"
+msgstr "Línia d'enviament de la quadrícula"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -142,7 +142,7 @@ msgstr "Error: Codi EAN erroni"
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Taula"
+msgstr "Quadrícula"
 
 #. module: delivery
 #: view:res.partner:0
@@ -158,12 +158,12 @@ msgstr "Actiu"
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "Definició de la taula"
+msgstr "Definició de la quadrícula"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packings."
-msgstr "Aquest mètode de tramesa serà utilitzat quan es facturi a partir d'albarans."
+msgstr "Aquest mètode d'enviament serà utilitzat quan es facturi a partir d'albarans."
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -179,7 +179,7 @@ msgstr "="
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "Producte de tramesa"
+msgstr "Producte d'enviament"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -189,12 +189,12 @@ msgstr "Condició"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Lliurament"
+msgstr "Enviament"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
-msgstr "Taula de transportistes i lliuraments"
+msgstr "Quadrícula de transportistes i enviaments"
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -279,7 +279,7 @@ msgstr "L'ordre no està en estat borrador!"
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Quadrícules de tramesa"
+msgstr "Quadrícules d'enviament"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -333,19 +333,19 @@ msgstr "Costos d'enviament"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "Línies de la taula"
+msgstr "Línies de la quadrícula"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr "Taules de lliurament"
+msgstr "Quadrícules d'enviament"
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
 #: field:res.partner,property_delivery_carrier:0
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Method"
-msgstr "Mètode lliurament"
+msgstr "Mètode d'enviament"
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
@@ -361,7 +361,7 @@ msgstr "Avís"
 #. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
-msgstr "Mètode lliurament"
+msgstr "Mètode d'enviament"
 
 #. module: delivery
 #: field:delivery.carrier,price:0

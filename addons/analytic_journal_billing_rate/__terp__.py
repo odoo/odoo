@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,28 +19,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name" : "Analytic Journal Billing Rate",
-    "version" : "1.0",
-    "depends" : ["analytic_user_function", "account", "hr_timesheet_invoice"],
-    "author" : "Tiny",
-    "description": """
 
-    This module allows you to define what is the defaut invoicing rate for a specific journal on a given account. This is mostly used when a user encode his timesheet: the values are retrieved and the fields are auto-filled... but the possibility to change these values is still available.
+
+{
+    'name': 'Analytic Journal Billing Rate',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """
+
+    This module allows you to define what is the default invoicing rate for a specific journal on a given account. This is mostly used when a user encode his timesheet: the values are retrieved and the fields are auto-filled... but the possibility to change these values is still available.
 
     Obviously if no data has been recorded for the current account, the default value is given as usual by the account data so that this module is perfectly compatible with older configurations.
 
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Others",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-            "analytic_journal_billing_rate_view.xml",
-            "security/ir.model.access.csv",
-            ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['analytic_user_function', 'account', 'hr_timesheet_invoice'],
+    'init_xml': [],
+    'update_xml': ['analytic_journal_billing_rate_view.xml', 'security/ir.model.access.csv'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '30271787965',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

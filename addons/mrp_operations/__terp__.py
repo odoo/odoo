@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Workcenter Production start end workflow",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product", "mrp"],
-    "description": """
+    'name': 'Workcenter Production start end workflow',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
      This module adds state, date_start,date_stop in production order operation lines
      (in the "Workcenters" tab)
      State: draft, confirm, done, cancel
-     When finnishing/confirming,cancelling production orders set all state lines to the according state
+     When finishing/confirming,cancelling production orders set all state lines to the according state
      Create menus:
          Production Management > All Operations
          Production Management > All Operations > Operations To Do (state="confirm")
@@ -48,17 +47,23 @@
     must become done.
 
     The field delay is the delay(stop date - start date).
-    So that we can compare the theoric delay and real delay.
+    So that we can compare the theoretic delay and real delay.
 
     """,
-    "init_xml" : [],
-    "demo_xml" : ["mrp_operation_data.xml"],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "mrp_operations_workflow.xml","mrp_operations_view.xml","mrp_operations_report.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'hr', 'purchase', 'product', 'mrp'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'mrp_operations_workflow.xml',
+        'mrp_operations_view.xml',
+        'mrp_operations_report.xml',
+        'process/mrp_operation_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['mrp_operation_data.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '56233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -114,10 +114,6 @@ class account_report_bs(osv.osv):
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
-
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
-    ]
 
 account_report_bs()
 

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Base Setup",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
-    "description": """
+    'name': 'Base Setup',
+    'version': '1.0',
+    'category': 'Generic Modules/Base',
+    'description': """
     This module implements a configuration system that helps user
     to configure the system at the installation of a new database.
 
@@ -38,20 +38,14 @@
     It also asks screens to help easily configure your company, the header and
     footer, the account chart to install and the language.
     """,
-    "depends" : ["base"],
-    "init_xml" : [
-        "base_setup_data.xml",
-    ],
-    "demo_xml" : [
-        "base_setup_demo.xml",
-    ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "base_setup_wizard.xml",
-    ],
-    "active": True,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': ['base_setup_data.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'base_setup_wizard.xml'],
+    'demo_xml': ['base_setup_demo.xml'],
+    'installable': True,
+    'active': True,
+    'certificate': '86711085869',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

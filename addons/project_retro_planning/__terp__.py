@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,21 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Project Retro planning",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Projects & Services",
-    "description": """
+    'name': 'Project Retro planning',
+    'version': '0.1',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """
         - Stop date of project is change will change all the tasks of that project to same number of days """,
-    "depends" : [
-        "base", "project"
-        ],
-    "demo_xml" : [],
-    "init_xml" : [],
-    "update_xml" : [],
-    "active" : False,
-    "installable" : True,
+    'author': 'Tiny',
+    'depends': ['base', 'project'],
+    'init_xml': [],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '57235475485',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-        "name" : "CRM Verticalisation",
-        "version" : "1.0",
-        "author" : "Tiny",
-        "website" : "http://www.openerp.com",
-        "category" : "Vertical Modules/Parametrization",
-        "description": """Simplification of the interface for CRM.""",
-        "depends" : ["crm_configuration"],
-        "init_xml" : [ ],
-        "demo_xml" : [ ],
-        "update_xml" : [],
-        "installable": True
-} 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+
+{
+    'name': 'CRM Verticalisation',
+    'version': '1.0',
+    'category': 'Vertical Modules/Parametrization',
+    'description': """Simplification of the interface for CRM.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['crm_configuration'],
+    'init_xml': [],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'certificate': '59915476845',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

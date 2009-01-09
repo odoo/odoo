@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,22 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Sales Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["purchase"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_purchase_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'name': 'Purchase Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """Module to add views like
+    Purchase By Product, Purchase By Category of Product, All Months, Current Month.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['purchase'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_purchase_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '73370750365',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,23 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "CRM Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["crm"],
-    "category" : "Generic Modules/CRM & SRM",
-    "description": "A module that adds new reports based on CRM cases.",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_crm_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'name': 'CRM Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """A module that adds new reports based on CRM cases.
+    Case By section, Case By category""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['crm'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_crm_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '30422968285',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

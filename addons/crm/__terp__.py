@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Customer & Supplier Relationship Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/CRM & SRM",
-    "description": """The generic Open ERP Customer Relationship Management
+    'name': 'Customer & Supplier Relationship Management',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
 leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
 It manages key tasks such as communication, identification, prioritization,
@@ -43,19 +43,20 @@ place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and Open ERP.""",
-    "depends" : ["base"],
-    "init_xml" : ["crm_data.xml"],
-    "demo_xml" : ["crm_demo.xml"],
-    "update_xml" : [
-        "crm_view.xml",
-        "crm_report.xml",
-        "crm_wizard.xml",
-        "security/crm_security.xml",
-        "security/ir.model.access.csv",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': ['crm_data.xml'],
+    'update_xml': [
+        'crm_view.xml',
+        'crm_report.xml',
+        'crm_wizard.xml',
+        'security/crm_security.xml',
+        'security/ir.model.access.csv'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['crm_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '79056041421',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

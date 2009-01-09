@@ -287,11 +287,11 @@
 </td>
 </tr>
 </blockTable>
-<para style="P19">[[ format(o.comment or '') ]]</para>
+<para style="P19">[[ format(o.comment) or '' ]]</para>
 <para style="P19">
 <font color="white"> </font>
 </para>
-<para style="P19">[[ format((o.payment_term and o.payment_term.note) or '') ]]</para>
+<para style="P19">[[ format(o.payment_term and o.payment_term.note) or '' ]]</para>
 </story>
 </document>
 

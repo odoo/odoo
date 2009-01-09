@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name": "Point Of Sale",
-    "version": "1.0",
-    "author": "Tiny",
 
-    "description": """
+
+{
+    'name': 'Point Of Sale',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
 Main features :
  - Fast encoding of the sale.
  - Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.
@@ -34,19 +35,21 @@ Main features :
  - Allow to refund former sales.
 
     """,
-    "category": "Generic Modules/Sales & Purchases",
-    "depends": ["sale", "purchase", "account", "account_tax_include"],
-    "init_xml": [],
-    "demo_xml": [],
-    "update_xml": [
-        "security/point_of_sale_security.xml",
-        "security/ir.model.access.csv",
-        "pos_report.xml", "pos_wizard.xml",
-        "pos_view.xml", "pos_sequence.xml", 
-        "pos_data.xml", "pos_workflow.xml"
+    'author': 'Tiny',
+    'depends': ['sale', 'purchase', 'account', 'account_tax_include'],
+    'init_xml': [],
+    'update_xml': [
+        'security/point_of_sale_security.xml',
+        'security/ir.model.access.csv',
+        'pos_report.xml',
+        'pos_wizard.xml',
+        'pos_view.xml',
+        'pos_sequence.xml',
+        'pos_data.xml',
+        'pos_workflow.xml'
     ],
-    "installable": True,
+    'demo_xml': [],
+    'installable': True,
+    'certificate': '48272150909',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

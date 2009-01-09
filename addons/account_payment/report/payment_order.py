@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -31,4 +31,4 @@ class payment_order(report_sxw.rml_parse):
             'time': time,
 
         })
-report_sxw.report_sxw('report.payment.order', 'payement.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order,header=False)
+report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order,header=False)

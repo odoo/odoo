@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:57:17+0000\n"
-"PO-Revision-Date: 2008-12-22 17:57:17+0000\n"
+"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
+"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_partners0
 msgid "Partners"
-msgstr ""
+msgstr "Partners"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
@@ -42,7 +42,7 @@ msgstr "Contatti"
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Current"
-msgstr ""
+msgstr "Attuale"
 
 #. module: base_contact
 #: field:res.partner.contact,first_name:0
@@ -50,8 +50,8 @@ msgid "First Name"
 msgstr "Nome"
 
 #. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
+#: model:ir.model,name:base_contact.model_res_partner_job
+msgid "Contact Partner Function"
 msgstr ""
 
 #. module: base_contact
@@ -60,9 +60,14 @@ msgid "Contact to function"
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.job,function_id:0
+msgid "Partner Function"
+msgstr ""
+
+#. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
 msgid "Define partners and their addresses."
-msgstr ""
+msgstr "Definire i partners e i loro indirizzi."
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -77,7 +82,7 @@ msgstr "Sito Web"
 #. module: base_contact
 #: field:res.partner.contact,function_id:0
 msgid "Main Job"
-msgstr ""
+msgstr "Lavoro principale"
 
 #. module: base_contact
 #: field:res.partner.job,phone:0
@@ -87,7 +92,7 @@ msgstr "Telefono"
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_contacttofunction0
 msgid "Defines contacts and functions."
-msgstr ""
+msgstr "Definire contatti e fuzioni."
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -153,7 +158,7 @@ msgstr "XML non valido per Visualizzazione Architettura!"
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Seq."
-msgstr ""
+msgstr "Seq."
 
 #. module: base_contact
 #: field:res.partner.contact,lang_id:0
@@ -173,12 +178,12 @@ msgstr "Cellulare"
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_functiontoaddress0
 msgid "Define functions and address."
-msgstr ""
+msgstr "Definire funzioni e indirizzi."
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0
 msgid "People you work with."
-msgstr ""
+msgstr "Persone con cui lavori."
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -186,21 +191,16 @@ msgid "Extra Information"
 msgstr "Informazioni Aggiuntive"
 
 #. module: base_contact
-#: field:res.partner.job,function_id:0
-msgid "Job Title"
-msgstr ""
-
-#. module: base_contact
 #: field:res.partner.contact,job_ids:0
 #: view:res.partner.contact:0
 msgid "Functions and Addresses"
-msgstr ""
+msgstr "Funzioni e Indirizzi"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_res_partner_job
 #: model:ir.ui.menu,name:base_contact.menu_action_res_partner_job
 msgid "Contact's Jobs"
-msgstr ""
+msgstr "Lavori del contatto"
 
 #. module: base_contact
 #: field:res.partner.job,contact_id:0
@@ -210,12 +210,12 @@ msgstr "Contatto"
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
 msgid "Companies you work with."
-msgstr ""
+msgstr "Aziende con cui si lavora"
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
-msgstr ""
+msgstr "Datore di lavoro principale"
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_functiontoaddress0
@@ -225,7 +225,7 @@ msgstr ""
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Partner Contacts"
-msgstr ""
+msgstr "Contatti del partner"
 
 #. module: base_contact
 #: view:res.partner:0
@@ -255,6 +255,11 @@ msgid "base_contact workflow"
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.job,state:0
+msgid "State"
+msgstr "Stato"
+
+#. module: base_contact
 #: view:res.partner.contact:0
 #: view:res.partner.job:0
 msgid "General"
@@ -263,17 +268,12 @@ msgstr "Generale"
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Past"
-msgstr ""
+msgstr "Passato"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "General Information"
 msgstr "Informazioni Generali"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_job
-msgid "Contact Job Title"
-msgstr ""
 
 #. module: base_contact
 #: field:res.partner.job,name:0
@@ -283,7 +283,7 @@ msgstr "Partner"
 #. module: base_contact
 #: field:res.partner.job,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Data inizio"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_function0
@@ -293,7 +293,7 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
 msgid "Working and private addresses."
-msgstr ""
+msgstr "Indirizzi di lavoro e privati"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0

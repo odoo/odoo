@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,19 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Dashboard for Associations",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Associations",
-    "depends":["event","membership","board","project"],
-    "demo_xml":["board_association_demo.xml"],
-    "update_xml":["board_association_view.xml"],
-    "description": """
+    'name': 'Dashboard for Associations',
+    'version': '1.0',
+    'category': 'Board/Associations',
+    'description': """
 This module implements a dashboard for associations.
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['event', 'membership', 'board', 'project'],
+    'update_xml': ['board_association_view.xml'],
+    'demo_xml': ['board_association_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '79647781773',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

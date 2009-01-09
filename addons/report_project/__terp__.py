@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,23 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Sales Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["project", "report_task"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "description": "A module that adds some reports on the sales",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_project_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'name': 'Sales Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """A module that adds some reports on projects.
+    Closed Tasks (By User and By Project), Finished Task (By User and By Project)""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['project', 'report_task'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_project_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '86804423149',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

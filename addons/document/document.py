@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -87,27 +87,28 @@ class node_class(object):
         if self.object2:
             where.append( ('res_model','=',self.object2._name) )
             where.append( ('res_id','=',self.object2.id) )
-            for content in self.object.content_ids:
-                if self.object2 or not content.include_name:
-                    if content.include_name:
-                        test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
-                    else:
-                        test_nodename = (content.suffix or '') + (content.extension or '')
-                    if test_nodename.find('/'):
-                        test_nodename=test_nodename.replace('/', '_')
-                    path = self.path+'/'+test_nodename
-                    if not nodename:
-                        n = node_class(self.cr, self.uid,path, self.object2, False, content=content, type='content', root=False)
-                        res2.append( n)
-                    else:
-                        if nodename == test_nodename:
-                            n = node_class(self.cr, self.uid, path, self.object2, False, content=content, type='content', root=False)
-                            res2.append(n)
         else:
             where.append( ('parent_id','=',self.object.id) )
             where.append( ('res_id','=',False) )
         if nodename:
-            where.append( (fobj._rec_name,'like',nodename) )        
+            where.append( (fobj._rec_name,'like',nodename) ) 
+        for content in self.object.content_ids:
+            if self.object2 or not content.include_name:
+                if content.include_name:
+                    test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
+                else:
+                    test_nodename = (content.suffix or '') + (content.extension or '')
+                if test_nodename.find('/'):
+                    test_nodename=test_nodename.replace('/', '_')
+                path = self.path+'/'+test_nodename
+                if not nodename:
+                    n = node_class(self.cr, self.uid,path, self.object2, False, content=content, type='content', root=False)
+                    res2.append( n)
+                else:
+                    if nodename == test_nodename:
+                        n = node_class(self.cr, self.uid, path, self.object2, False, content=content, type='content', root=False)
+                        res2.append(n)
+               
         ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ], context=self.context)
         if self.object and self.root and (self.object.type=='ressource'):
             ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ], context=self.context)
@@ -375,14 +376,14 @@ class document_directory(osv.osv):
         return True
     def write(self, cr, uid, ids, vals, context=None):        
         if not self._check_duplication(cr,uid,vals,ids,op='write'):
-            raise except_orm('ValidateError', 'Directory name must be unique!')
+            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
         return super(document_directory,self).write(cr,uid,ids,vals,context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr,uid,vals):
-            raise except_orm('ValidateError', 'Directory name must be unique!')          
+            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
-            raise 'Error'
+            raise osv.except_osv('ValidateError', _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 document_directory()
@@ -583,6 +584,9 @@ class document_file(osv.osv):
         default.update({'name': name+ " (copy)"})
         return super(document_file,self).copy(cr,uid,id,default,context)
     def write(self, cr, uid, ids, vals, context=None):     
+        res=self.search(cr,uid,[('id','in',ids)])
+        if not len(res):
+            return False
         if not self._check_duplication(cr,uid,vals,ids,'write'):
             raise except_orm('ValidateError', 'File name must be unique!')   
         result = super(document_file,self).write(cr,uid,ids,vals,context=context)

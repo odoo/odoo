@@ -267,6 +267,8 @@
                             <field name="user_id" groups="base.group_extended"/>
                             <newline/>
                             <field name="centralisation"/>
+                            <field name="group_invoice_lines"/>
+
                             <field name="update_posted"/>
                             <field name="entry_posted"/>
                         </page>
@@ -508,6 +510,7 @@
             <field name="model">account.tax.code</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code" toolbar="1">
                     <field name="name"/>

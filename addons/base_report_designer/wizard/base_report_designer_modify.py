@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -160,7 +160,7 @@ class base_report_designer_modify(wizard.interface):
         try:
             return {'file_sxw': base64.encodestring(report.report_sxw_content)}
         except:
-             raise Exception, _('Report does not contain the sxw content!')
+            raise wizard.except_wizard(_('Error'), _('Report does not contain the sxw content!'))
 
     states = {
         'init': {

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -308,7 +308,7 @@ class stock_tracking(osv.osv):
         return res
 
     def unlink(self, cr ,uid, ids):
-        raise Exception, _('You can not remove a lot line !')
+        raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
 stock_tracking()
 
 #----------------------------------------------------------
@@ -1062,20 +1062,16 @@ class stock_move(osv.osv):
             if move.state in ('confirmed','waiting','assigned','draft'):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
-        if move.move_dest_id and move.move_dest_id.state=='waiting':
-            self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
-            if move.move_dest_id.picking_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+            if move.move_dest_id and move.move_dest_id.state=='waiting':
+                self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
+                if move.move_dest_id.picking_id:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state':'cancel', 'move_dest_id': False})
 
-        #for pick_id in pickings:
-        #    wf_service = netsvc.LocalService("workflow")
-        #    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
-        #ids2 = []
-        #for res in self.read(cr, uid, ids, ['move_dest_id']):
-        #    if res['move_dest_id']:
-        #        ids2.append(res['move_dest_id'][0])
+        for pick in self.pool.get('stock.picking').browse(cr,uid,pickings.keys()):
+            if all(move.state == 'cancle' for move in pick.move_lines):
+                self.pool.get('stock.picking').write(cr,uid,[pick.id],{'state':'cancel'}) 
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:

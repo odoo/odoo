@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,19 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Module for Warnings form onchange Event",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Tools",
-    "depends":["base","sale"],
-    "demo_xml":[],
-    "update_xml":[
-        "warning_view.xml"],
-    "description": "Module for Warnings form onchange Event.",
-    "active":False,
-    "installable":True,
+    'name': 'Module for Warnings form onchange Event',
+    'version': '1.0',
+    'category': 'Tools',
+    'description': """Module for Warnings form onchange Event.""",
+    'author': 'Tiny',
+    'depends': ['base', 'sale'],
+    'update_xml': ['warning_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '80334018749',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

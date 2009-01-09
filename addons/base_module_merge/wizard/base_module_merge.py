@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -193,7 +193,7 @@ class base_module_merge(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         dep_obj=pool.get('ir.module.module.dependency')
         if level<1:
-            raise Exception, 'Recursion error in modules dependencies !'
+            raise wizard.except_wizard(_('Error'), _('Recursion error in modules dependencies !'))
         for module in pool.get('ir.module.module').browse(cr, uid, ids):
             dep_ids = dep_obj.search(cr, uid, [('module_id', '=', module.id)])
             if dep_ids:

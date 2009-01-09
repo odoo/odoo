@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,31 +19,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Board for manufacturing",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Board/Manufacturing",
-    "depends":[
-        "board",
-        "mrp",
-        "stock",
-        "report_mrp",
-
-
-    ],
-    "demo_xml":["board_manufacturing_demo.xml"],
-    "update_xml":["board_manufacturing_view.xml"],
-    "description": """
+    'name': 'Board for manufacturing',
+    'version': '1.0',
+    'category': 'Board/Manufacturing',
+    'description': """
     This module creates a dashboards for Manufaturing that includes:
     * List of next production orders
     * List of deliveries (out packing)
     * Graph of workcenter load
     * List of procurement in exception
     """,
-    "active":False,
-    "installable":True,
+    'author': 'Tiny',
+    'depends': ['board', 'mrp', 'stock', 'report_mrp'],
+    'update_xml': ['board_manufacturing_view.xml'],
+    'demo_xml': ['board_manufacturing_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '30407612797',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

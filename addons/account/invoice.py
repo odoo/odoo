@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ from tools import config
 from tools.translate import _
 
 class account_invoice(osv.osv):
-    def _amount_all(self, cr, uid, ids, name, args, context={}):
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
         res = {}
         for invoice in self.browse(cr,uid,ids, context=context):
             res[invoice.id] = {
@@ -47,6 +47,8 @@ class account_invoice(osv.osv):
         return res
 
     def _get_journal(self, cr, uid, context):
+        if context is None:
+            context = {}
         type_inv = context.get('type', 'out_invoice')
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         journal_obj = self.pool.get('account.journal')
@@ -63,15 +65,17 @@ class account_invoice(osv.osv):
         else:
             return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
-    def _get_journal_analytic(self, cr, uid, type_inv, context={}):
+    def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         tt = type2journal.get(type_inv, 'sale')
         result = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
-            raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
+            raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal of type '%s' !") % (tt,))
         return result[0]
 
-    def _get_type(self, cr, uid, context={}):
+    def _get_type(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         type = context.get('type', 'out_invoice')
         return type
 
@@ -84,7 +88,7 @@ class account_invoice(osv.osv):
     def _get_reference_type(self, cr, uid, context=None):
         return [('none', _('Free Reference'))]
 
-    def _amount_residual(self, cr, uid, ids, name, args, context={}):
+    def _amount_residual(self, cr, uid, ids, name, args, context=None):
         res = {}
         data_inv = self.browse(cr, uid, ids)
         for inv in data_inv:
@@ -113,19 +117,19 @@ class account_invoice(osv.osv):
                 res[id]=[x for x in l if x <> line.id]
         return res
 
-    def _get_invoice_line(self, cr, uid, ids, context={}):
+    def _get_invoice_line(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('account.invoice.line').browse(cr, uid, ids, context=context):
             result[line.invoice_id.id] = True
         return result.keys()
 
-    def _get_invoice_tax(self, cr, uid, ids, context={}):
+    def _get_invoice_tax(self, cr, uid, ids, context=None):
         result = {}
         for tax in self.pool.get('account.invoice.tax').browse(cr, uid, ids, context=context):
             result[tax.invoice_id.id] = True
         return result.keys()
 
-    def _compute_lines(self, cr, uid, ids, name, args, context={}):
+    def _compute_lines(self, cr, uid, ids, name, args, context=None):
         result = {}
         for invoice in self.browse(cr, uid, ids, context):
             moves = self.move_line_id_payment_get(cr, uid, [invoice.id])
@@ -373,7 +377,7 @@ class account_invoice(osv.osv):
             ok = ok and  bool(cr.fetchone()[0])
         return ok
 
-    def button_reset_taxes(self, cr, uid, ids, context={}):
+    def button_reset_taxes(self, cr, uid, ids, context=None):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
@@ -381,31 +385,9 @@ class account_invoice(osv.osv):
                 ait_obj.create(cr, uid, taxe)
         return True
 
-    def button_compute(self, cr, uid, ids, context={}, set_total=False):
-        ait_obj = self.pool.get('account.invoice.tax')
-        cur_obj = self.pool.get('res.currency')
+    def button_compute(self, cr, uid, ids, context=None, set_total=False):
+        self.button_reset_taxes(cr, uid, ids, context)
         for inv in self.browse(cr, uid, ids):
-            company_currency = inv.company_id.currency_id.id
-            compute_taxes = ait_obj.compute(cr, uid, inv.id)
-            if not inv.tax_line:
-                for tax in compute_taxes.values():
-                    ait_obj.create(cr, uid, tax)
-            else:
-                tax_key = []
-                for tax in inv.tax_line:
-                    if tax.manual:
-                        continue
-                    key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
-                    tax_key.append(key)
-                    if not key in compute_taxes:
-                        ait_obj.unlink(cr, uid, [tax.id])
-                        continue
-                    compute_taxes[key]['base'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
-                    if abs(compute_taxes[key]['base'] - tax.base) > inv.company_id.currency_id.rounding:
-                        ait_obj.write(cr, uid, [tax.id], compute_taxes[key])
-                for key in compute_taxes:
-                    if not key in tax_key:
-                        ait_obj.create(cr, uid, compute_taxes[key])
             if set_total:
                 self.pool.get('account.invoice').write(cr, uid, [inv.id], {'check_total': inv.amount_total})
         return True
@@ -448,7 +430,7 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
         acc_obj = self.pool.get('account.account')
-        self.button_compute(cr, uid, ids, context={}, set_total=True)
+        self.button_compute(cr, uid, ids, context={}, set_total=False)
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -598,14 +580,34 @@ class account_invoice(osv.osv):
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
+
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
+
+            if inv.journal_id.group_invoice_lines:
+                line2 = {}
+                for x, y, l in line:
+                    tmp = str(l['account_id'])
+                    tmp += '-'+str('tax_code_id' in l and l['tax_code_id'] or "False")
+                    tmp += '-'+str('product_id' in l and l['product_id'] or "False")
+                    tmp += '-'+str('analytic_account_id' in l and l['analytic_account_id'] or "False")
+
+                    if tmp in line2:
+                        am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
+                        line2[tmp]['debit'] = (am > 0) and am or 0.0
+                        line2[tmp]['credit'] = (am < 0) and -am or 0.0
+                        line2[tmp]['tax_amount'] += l['tax_amount']
+                        line2[tmp]['analytic_lines'] += l['analytic_lines']
+                    else:
+                        line2[tmp] = l
+                line = []
+                for key, val in line2.items():
+                    line.append((0,0,val))
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Can not create invoice move on centralized journal'))
-
             move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
@@ -628,7 +630,7 @@ class account_invoice(osv.osv):
         self._log_event(cr, uid, ids)
         return True
 
-    def line_get_convert(self, cr, uid, x, part, date, context={}):
+    def line_get_convert(self, cr, uid, x, part, date, context=None):
         return {
             'date_maturity': x.get('date_maturity', False),
             'partner_id':part,
@@ -719,7 +721,7 @@ class account_invoice(osv.osv):
                 self.pool.get('res.partner.event').create(cr, uid, {'name':'Invoice: '+name, 'som':False, 'description':name+' '+str(inv['id']), 'document':name, 'partner_id':part, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'canal_id':False, 'user_id':uid, 'partner_type':partnertype, 'probability':1.0, 'planned_revenue':pr, 'planned_cost':pc, 'type':eventtype})
         return len(invs)
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         types = {
@@ -733,7 +735,7 @@ class account_invoice(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args=[]
-        if not context:
+        if context is None:
             context={}
         ids = []
         if name:
@@ -811,7 +813,9 @@ class account_invoice(osv.osv):
             new_ids.append(self.create(cr, uid, invoice))
         return new_ids
 
-    def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}, name=''):
+    def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context=None, name=''):
+        if context is None:
+            context = {}
         #TODO check if we can use different period for payment and the writeoff line
         assert len(ids)==1, "Can only pay one invoice at a time"
         invoice = self.browse(cr, uid, ids[0])
@@ -839,7 +843,7 @@ class account_invoice(osv.osv):
             'ref':invoice.number,
         }
 
-        name = invoice.invoice_line[0].name
+        name = invoice.invoice_line and invoice.invoice_line[0].name or invoice.number
         l1['name'] = name
         l2['name'] = name
 
@@ -861,7 +865,7 @@ class account_invoice(osv.osv):
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
-        # Update the stored value
+        # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 account_invoice()
@@ -873,7 +877,9 @@ class account_invoice_line(osv.osv):
             res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),2)
         return res
 
-    def _price_unit_default(self, cr, uid, context={}):
+    def _price_unit_default(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'check_total' in context:
             t = context['check_total']
             for l in context.get('invoice_line', {}):
@@ -912,7 +918,7 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
-    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context={}):
+    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=None):
         tax_obj = self.pool.get('account.tax')
         if price_unit:
             taxes = tax_obj.browse(cr, uid, tax_id)
@@ -920,7 +926,9 @@ class account_invoice_line(osv.osv):
                 price_unit = price_unit - tax['amount']
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context={}):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context=None):
+        if context is None:
+            context = {}
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
@@ -967,7 +975,7 @@ class account_invoice_line(osv.osv):
                 domain = {'uos_id':[('category_id','=',res2 )]}
         return {'value':result, 'domain':domain}
 
-    def move_line_get(self, cr, uid, invoice_id, context={}):
+    def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
@@ -1009,7 +1017,7 @@ class account_invoice_line(osv.osv):
                 res[-1]['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, tax_amount, context={'date': inv.date_invoice})
         return res
 
-    def move_line_get_item(self, cr, uid, line, context={}):
+    def move_line_get_item(self, cr, uid, line, context=None):
         return {
             'type':'src',
             'name': line.name[:64],

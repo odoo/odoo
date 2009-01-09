@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,16 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Margins in Product",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Custom",
-    "depends":["base","product","account"],
-    "demo_xml":[],
-    "update_xml":["product_margin_view.xml"],
-    "active": False,
-    "installable": True,
+    'name': 'Margins in Product',
+    'version': '1.0',
+    'category': 'Custom',
+    'description': """
+Adds a reporting menu in products that computes sales, purchases, margins
+and others interesting indicators based on invoices. The wizard to launch
+the report has several options to help you get the data you need.
+""",
+    'author': 'Tiny',
+    'depends': ['base', 'product', 'account'],
+    'update_xml': ['product_margin_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '64392591773',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

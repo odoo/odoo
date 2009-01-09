@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -26,88 +26,109 @@ from osv import osv, fields
 import tools
 import os
 
+from base_module_quality import base_module_quality
 
-#TODO: (utiliser les nouveaux wizards pour heriter la vue et rajouter un onglet par test?)
-#TODO: implement the speed test
 #TODO: add cheks: do the class quality_check inherits the class abstract_quality_check?
-#TODO: improve translability
-#TODO: clean
 
 
-#To keep or not? to be discussed...
-
-#~ view_form = """<?xml version="1.0"?>
-#~ <form string="Check quality">
-    #~ <notebook>
-        #~ <page string="Summary">
-            #~ <field name="general_info" widget="text_wiki" nolabel="1" colspan="4" height="350" width="800"/>
-        #~ </page>
-    #~ </notebook>
-#~ </form>"""
-
-
-#~ view_field = {
-    #~ "general_info": {'type': 'text', 'string': 'General Info',  'readonly':True},
-#~ }
-
-
-class wiz_quality_check(osv.osv_memory):
-
-#    general_info = ""
+class wiz_quality_check(osv.osv):
     _name = 'wizard.quality.check'
-
-
-    def _check(self, cr, uid, data, context={}):
-        string_ret = ""
-        from tools import config
-        data['ids'] = data.get('module_id', False)
-        pool = pooler.get_pool(cr.dbname)
-        module_data = pool.get('ir.module.module').browse(cr, uid, [data['ids']])
-        list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
-        module_name = module_data[0].name
-        for item in list_folders:
-            path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
-                ad = tools.config['addons_path']
-                if module_data[0].name == 'base':
-                    ad = tools.config['root_path']+'/addons'
-                module_path = os.path.join(ad, module_data[0].name)
-                item2 = 'base_module_quality.'+item+'.'+item
-                x = __import__(item2)
-                x2 = getattr(x, item)
-                x3 = getattr(x2, item)
-                val = x3.quality_test()
-                if (not val.bool_installed_only or module_data[0].state == "installed"):
-                    val.run_test(cr, uid, str(module_path))
-                else:
-                    val.result += "The module has to be installed before running this test."
-                string_ret += val.result
-        return string_ret
-
-#    def _general_info(self, cr, uid, data, context={}):
-#        return self.general_info
-
-    #~ states = {
-
-        #~ 'init': {
-            #~ 'actions': [_check],
-            #~ 'result': {'type':'form', 'arch':view_form, 'fields':view_field, 'state':[('end','Ok')]},
-        #~ },
-        #~ }
-#To keep or not? to be discussed...
-
-        #~ 'init': {
-            #~ 'actions': [],
-            #~ 'result': {'type':'form', 'arch':form_check, 'fields':fields_check, 'state':[('end','Cancel'),('do','Do Test')]}
-        #~ },
     _columns = {
-        'general_info': fields.text('General Info', readonly="1",),
+        'name': fields.char('Rated Module', size=64, ),
+        'final_score': fields.char('Final Score (%)', size=10,),
+        'test_ids' : fields.one2many('quality.check.detail', 'quality_check_id', 'Tests',)
     }
-    _defaults = {
-        'general_info': _check
+wiz_quality_check()
+
+
+class quality_check_detail(osv.osv):
+    _name = 'quality.check.detail'
+    _columns = {
+        'quality_check_id': fields.many2one('wizard.quality.check', 'Quality'),
+        'name': fields.char('Name',size=128,),
+        'score': fields.float('Score (%)',),
+        'ponderation': fields.float('Ponderation',help='Some tests are more critical than others, so they have a bigger weight in the computation of final rating'),
+        'note': fields.text('Note',),
+        'summary': fields.text('Summary',),
+        'detail' : fields.text('Details',),
+        'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
+    }
+quality_check_detail()
+
+
+class create_quality_check(wizard.interface):
+
+    def _create_quality_check(self, cr, uid, data, context={}):
+        pool = pooler.get_pool(cr.dbname)
+        print data, context
+        objs = []
+        for id in data['ids']:
+            module_data = pool.get('ir.module.module').browse(cr, uid, id)
+            #list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
+            abstract_obj = base_module_quality.abstract_quality_check()
+            score_sum = 0.0
+            ponderation_sum = 0.0
+            create_ids = []
+            for test in abstract_obj.tests:
+                ad = tools.config['addons_path']
+                if module_data.name == 'base':
+                    ad = tools.config['root_path']+'/addons'
+                module_path = os.path.join(ad, module_data.name)
+                val = test.quality_test()
+
+                if not val.bool_installed_only or module_data.state=="installed":
+                    val.run_test(cr, uid, str(module_path))
+                    data = {
+                        'name': val.name,
+                        'score': val.score * 100,
+                        'ponderation': val.ponderation,
+                        'summary': val.result,
+                        'detail': val.result_details,
+                        'state': 'done',
+                        'note': val.note,
+                    }
+                    create_ids.append((0,0,data))
+                    score_sum += val.score * val.ponderation
+                    ponderation_sum += val.ponderation
+                else:
+                    data = {
+                        'name': val.name,
+                        'note': val.note,
+                        'score': 0,
+                        'state': 'skipped',
+                        'summary': _("The module has to be installed before running this test.")
+                    }
+                    create_ids.append((0,0,data))
+
+            final_score = str(score_sum / ponderation_sum * 100) + "%"
+            data = {
+                'name': module_data.name,
+                'final_score': final_score,
+                'test_ids' : create_ids,
+            }
+            obj = pool.get('wizard.quality.check').create(cr, uid, data, context)
+            objs.append(obj)
+        return objs
+
+    def _open_quality_check(self, cr, uid, data, context):
+        obj_ids = self._create_quality_check(cr, uid, data, context)
+        return {
+            'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
+            'name': _('Quality Check'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'wizard.quality.check',
+            'type': 'ir.actions.act_window'
+        }
+
+    states = {
+        'init' : {
+            'actions' : [],
+            'result': {'type':'action', 'action':_open_quality_check, 'state':'end'}
+        }
     }
 
-wiz_quality_check()
+create_quality_check("create_quality_check_wiz")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

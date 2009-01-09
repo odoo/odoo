@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
     "name" : "Manufacturing Resource Planning",
     "version" : "1.1",
@@ -43,7 +45,7 @@
     * Allows to browse Bill of Materials in complete structure
         that include child and phantom BoMs
     It supports complete integration and planification of stockable goods,
-    consumable of services. Services are completly integrated with the rest
+    consumable of services. Services are completely integrated with the rest
     of the software. For instance, you can set up a sub-contracting service
     in a BoM to automatically purchase on order the assembly of your production.
 
@@ -53,22 +55,26 @@
     * Print a production order
     * Stock forecasts
     """,
-    "init_xml" : [],
-    "demo_xml" : ["mrp_demo.xml","mrp_order_point.xml"],
-    "update_xml" : [
-        "security/mrp_security.xml",
-        "security/ir.model.access.csv",
-        "mrp_workflow.xml", 
-        "mrp_data.xml",
-        "mrp_view.xml", 
-        "mrp_wizard.xml", 
-        "mrp_report.xml",
-        "company_view.xml",
-        "process/procurement_process.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'hr', 'purchase', 'product', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/mrp_security.xml',
+        'security/ir.model.access.csv',
+        'mrp_workflow.xml',
+        'mrp_data.xml',
+        'mrp_view.xml',
+        'mrp_wizard.xml',
+        'mrp_report.xml',
+        'company_view.xml',
+        'process/stockable_product_process.xml',
+        'process/service_product_process.xml',
+        'process/procurement_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '32052481373',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

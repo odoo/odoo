@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,33 +19,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "crm_profiling management",
-    "version" : "1.3",
-    "depends" : ["base", "crm"],
-    "author" : "Tiny",
-    "description": """
+    'name': 'crm_profiling management',
+    'version': '1.3',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """
     This module allow users to perform segmentation within partners.
     It use the profiles criteria from the earlier segmentation module and improve it thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.
 
     It also has been merged with the earlier CRM & SRM segmentation tool because they were overlapping.
 
 
-    The menu items related are in "CRM & SRM\Configuration\Segmentations\"
+    The menu items related are in "CRM & SRM\Configuration\Segmentations"
 
 
     * Note: this module is not compatible with the module segmentation, since it's the same which has been renamed.
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/CRM & SRM",
-    "init_xml" : [],
-    "demo_xml" : ["crm_profiling_demo.xml"],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "crm_profiling_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'crm'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'crm_profiling_view.xml'],
+    'demo_xml': ['crm_profiling_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '33984979005',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

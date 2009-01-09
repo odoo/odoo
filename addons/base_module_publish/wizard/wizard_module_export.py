@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ finish_fields = {
 
 class move_module_wizard(wizard.interface):
     def createzip(self, cr, uid, data, context):
-        return module_zip.createzip(cr, uid, data['id'], context, src=data['form']['include_src'])
+       return module_zip.createzip(cr, uid, data['id'], context, src=data['form']['include_src'])
 
     states = {
         'init': {

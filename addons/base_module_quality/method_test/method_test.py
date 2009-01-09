@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,7 @@
 #
 ##############################################################################
 
-
-import os
-from tools import config
+from tools.translate import _
 
 from base_module_quality import base_module_quality
 import pooler
@@ -30,63 +28,57 @@ import pooler
 class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
-        self.result = """
-===Method Test===:
-
-This test checks if the module classes are raising exception when calling basic methods or no.
-
-"""
+        super(quality_test, self).__init__()
+        self.name = _("Method Test")
+        self.note = _("""
+This test checks if the module classes are raising exception when calling basic methods or not.
+""")
         self.bool_installed_only = True
+        self.ponderation = 1.0
         return None
 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module_name), ('model','=','ir.model')])
-        model_list = []
-        model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
-        for model in model_data:
-            model_list.append(model.res_id)
-        obj_list = []
-        for mod in pool.get('ir.model').browse(cr, uid, model_list):
-            obj_list.append(str(mod.model))
-        result={}
+        obj_list = self.get_objects(cr, uid, module_name)
         ok_count = 0
         ex_count = 0
-
+        result_dict = {}
         for obj in obj_list:
-            temp = []
+            temp = [obj]
             try:
                 res = pool.get(obj).search(cr, uid, [])
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
             try:
                 res1 = pool.get(obj).fields_view_get(cr, uid,)
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
             try:
                 res2 = pool.get(obj).read(cr, uid, [])
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
-            result[obj] = temp
-        self.result += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % ('Object Name'.ljust(40), 'search()'.ljust(16), 'fields_view_get()'.ljust(20), 'read()'.ljust(16))
-
-        for res in result:
-            self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, result[res][0],result[res][1], result[res][2])
-
-        self.result += '\n|}'
+            result_dict[obj] = temp
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
+        self.result = self.get_result(result_dict)
         return None
 
+
+    def get_result(self, dict):
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ', [_('Object Name'), 'search()', 'fields_view_get()', 'read()'])
+        detail = ""
+        if not self.error:
+            detail += self.format_table(header, dict)
+        return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

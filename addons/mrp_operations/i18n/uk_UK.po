@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:04:06+0000\n"
-"PO-Revision-Date: 2008-12-22 18:04:06+0000\n"
+"POT-Creation-Date: 2009-01-03 02:16:57+0000\n"
+"PO-Revision-Date: 2009-01-03 02:16:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_startoperation0
+msgid "Start Operation"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,state:0
@@ -33,6 +38,16 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
 
 #. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_startoperation0
+msgid "Operation is started"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_productionorder0
+msgid "Production Order"
+msgstr "Заявка на виробництво"
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Start working"
 msgstr ""
@@ -43,9 +58,9 @@ msgid "mrp_operations.operation.code"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Production Order Cannot start in [%s] state"
+#: model:process.node,note:mrp_operations.process_node_canceloperation0
+#: model:process.transition,note:mrp_operations.process_transition_startcanceloperation0
+msgid "Operation is cancelled"
 msgstr ""
 
 #. module: mrp_operations
@@ -72,6 +87,11 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Draft"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_workorder0
+msgid "Work Center"
 msgstr ""
 
 #. module: mrp_operations
@@ -116,6 +136,11 @@ msgid "Product"
 msgstr ""
 
 #. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
+msgid "Start Cancel Operation"
+msgstr ""
+
+#. module: mrp_operations
 #: selection:mrp_operations.operation.code,start_stop:0
 #: view:mrp.production.workcenter.line:0
 msgid "Resume"
@@ -154,6 +179,11 @@ msgid "Operation is already finished !"
 msgstr ""
 
 #. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
+msgid "Start Done Operation"
+msgstr ""
+
+#. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "There is no Operation to be cancelled !"
@@ -169,6 +199,16 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Sorry!"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_productionorder0
+msgid "Production order for any products"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
+msgid "From work order, define the cycles and hour for creating product"
 msgstr ""
 
 #. module: mrp_operations
@@ -199,6 +239,12 @@ msgid "This is delay between operation start and stop in this workcenter"
 msgstr ""
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Production Order Cannot start in [%s] state"
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_operation_action
 msgid "Work Order Events Using Bar Codes"
 msgstr ""
@@ -220,14 +266,35 @@ msgid "Operation is not started yet !"
 msgstr ""
 
 #. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_canceloperation0
+msgid "Cancel Operation"
+msgstr ""
+
+#. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
 #, python-format
-msgid "Error!"
+msgid " You cannot Resume the operation other then Pause state !"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_doneoperation0
+#: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
+msgid "Operation is done"
 msgstr ""
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,workcenter_id:0
 msgid "Workcenter"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_workorder0
+msgid "Production Work Center"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_productionstart0
+msgid "Production start Operation"
 msgstr ""
 
 #. module: mrp_operations
@@ -264,14 +331,24 @@ msgid "Work Orders to Do"
 msgstr ""
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
+msgid "Work start Operation"
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
 msgid "Start/Stop Barcode"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid " You cannot Resume the operation other then Pause state !"
+#: model:process.node,name:mrp_operations.process_node_doneoperation0
+msgid "Done Operation"
 msgstr ""
 
 #. module: mrp_operations
@@ -282,6 +359,11 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Canceled"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_productionstart0
+msgid "From production order, create the workorder"
 msgstr ""
 
 #. module: mrp_operations
@@ -320,5 +402,10 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Operation has already started !' 'You  can either Pause /Finish/Cancel the operation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:process.process,name:mrp_operations.process_process_mrpoperationworkflow0
+msgid "Mrp Operation Workflow"
 msgstr ""
 

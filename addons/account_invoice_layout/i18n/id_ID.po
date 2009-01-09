@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-11-28 17:09+0000\n"
+"POT-Creation-Date: 2008-12-30 13:19+0000\n"
 "PO-Revision-Date: 2008-10-16 02:59+0000\n"
 "Last-Translator: opix <inur.opix@gmail.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-12-22 08:10+0000\n"
+"X-Launchpad-Export-Date: 2009-01-03 01:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -40,6 +40,11 @@ msgid "Title"
 msgstr "Judul"
 
 #. module: account_invoice_layout
+#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+msgid "Invoices with Layout and Message"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Potongan (%)"
@@ -55,9 +60,10 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
-msgid "Invoice + Message"
-msgstr ""
+#: help:notify.message,msg:0
+msgid ""
+"This notification will appear at the bottom of the Invoices when printed."
+msgstr "Pengumuman ini akan muncul sebagai footer pada invoice yang tercetak"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -166,7 +172,6 @@ msgstr "Salah dalam penyusunan format XML"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoice"
 msgstr "Invoice"
 
@@ -206,6 +211,11 @@ msgid "Total (excl. taxes):"
 msgstr "Total (tidak termasuk pajak) :"
 
 #. module: account_invoice_layout
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr ""
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
 msgstr "Draft Invoice"
@@ -239,12 +249,6 @@ msgstr "Baris Pemisah"
 #: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Pajak"
-
-#. module: account_invoice_layout
-#: help:notify.message,msg:0
-msgid ""
-"This notification will appear at the bottom of the Invoices when printed."
-msgstr "Pengumuman ini akan muncul sebagai footer pada invoice yang tercetak"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0

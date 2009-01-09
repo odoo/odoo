@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,19 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name":"Association profile",
-    "version":"0.1",
-    "author":"Tiny",
-    "category":"Profile",
-    "depends":["membership", "board_association"],
-    "demo_xml":[],
-    "update_xml":[
-        "security/ir.model.access.csv",
-        "profile_association.xml"
-    ],
-    "active":False,
-    "installable":True,
-    }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+
+{
+    'name': 'Association profile',
+    'version': '0.1',
+    'category': 'Profile',
+    'description': """Profile for Associates""",
+    'author': 'Tiny',
+    'depends': ['membership', 'board_association'],
+    'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '78696047261',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -43,7 +43,7 @@
             <field name="model">payment.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment type">
+                <form string="Payment Type">
                     <field name="name" select="1"/>
                     <field name="code"/>
                     <newline/>
@@ -57,7 +57,7 @@
             <field name="model">payment.mode</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payment mode">
+                <tree string="Payment Mode">
                     <field name="name"/>
                     <field name="journal"/>
                 </tree>
@@ -68,7 +68,7 @@
             <field name="model">payment.mode</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment mode">
+                <form string="Payment Mode">
                     <field name="name" select="1"/>
                     <field name="type"/>
                     <field name="journal"/>
@@ -77,7 +77,7 @@
             </field>
         </record>
         <record id="action_payment_mode_form" model="ir.actions.act_window">
-            <field name="name">Payment mode</field>
+            <field name="name">Payment Mode</field>
             <field name="res_model">payment.mode</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -220,14 +220,14 @@
                     <notebook>
                         <page string="Payment">
                             <field name="order_id" select="1"/>
-                            <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode, currency, company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+                            <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                             <separator colspan="4" string="Transaction Information"/>
                             <field name="date"/>
                             <group colspan="2">
                                 <field name="amount_currency" select="2" on_change="onchange_amount(amount_currency,currency,comapny_currency)"/>
                                 <field name="currency" nolabel="1"/>
                             </group>
-                            <field name="partner_id" on_change="onchange_partner(partner_id)" select="1"/>
+                            <field name="partner_id" on_change="onchange_partner(partner_id, False)" select="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                             <separator colspan="2" string="Owner Account"/>
                             <separator colspan="2" string="Desitination Account"/>

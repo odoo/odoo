@@ -8,6 +8,7 @@
 		
         <record id="process_process_contractworkflow0" model="process.process">
 			<field eval="1" name="active"/>
+			<field name="model_id" ref="crm.model_crm_case"/>
 			<field eval="&quot;&quot;&quot;Contract Workflow&quot;&quot;&quot;" name="name"/>
 		</record>
 		
@@ -17,7 +18,7 @@
 		
 		<record id="process_node_leads0" model="process.node">
 			<field name="model_id" ref="crm.model_crm_case"/>
-			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Leads&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Very first contact with new prospect&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_contractworkflow0"/>
@@ -37,7 +38,7 @@
 	
 		<record id="process_node_opportunities0" model="process.node">
 			<field name="model_id" ref="crm.model_crm_case"/>
-			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Opportunities&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When a real project/opportunity is detected&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_contractworkflow0"/>

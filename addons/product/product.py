@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -174,7 +174,7 @@ product_ul()
 #----------------------------------------------------------
 class product_category(osv.osv):
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context)
@@ -187,7 +187,7 @@ class product_category(osv.osv):
         return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.name_get(cr, uid, ids)
+        res = self.name_get(cr, uid, ids, context)
         return dict(res)
 
     _name = "product.category"

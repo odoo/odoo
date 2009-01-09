@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,28 +19,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Membership",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Association",
-    "depends" : [
-        "base", "product", "account","process"
-        ],
-    "demo_xml" : [
-        #"demo_data.xml",
-        "membership_demo.xml"
-        ],
-    "init_xml" : [
-        "membership_data.xml",
-        ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "membership_view.xml","membership_wizard.xml",
-        "process/membership_process.xml"
-        ],
-    "active" : False,
-    "installable" : True,
+    'name': 'Membership',
+    'version': '0.1',
+    'category': 'Generic Modules/Association',
+    'description': """
+This module allows you to manage all operations for managing memberships.
+It supports different kind of members:
+* Free member
+* Associated member (ex: a group subscribe for a membership for all
+  subsidiaries)
+* Paid members,
+* Special member prices, ...
+
+It is integrated with sales and accounting to allow you to automatically
+invoice and send propositions for membership renewal.
+    """,
+    'author': 'Tiny',
+    'depends': ['base', 'product', 'account', 'process'],
+    'init_xml': ['membership_data.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'membership_view.xml',
+        'membership_wizard.xml',
+        'process/membership_process.xml'
+    ],
+    'demo_xml': ['membership_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '42907796381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

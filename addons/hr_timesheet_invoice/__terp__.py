@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,30 +19,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Invoice on analytic lines",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Accounting",
-    "website" : "http://www.openerp.com",
-    "depends" : ["account",'hr_timesheet'],
-    "description": """
-Module to generate invoices based on costs (human ressources, expenses, ...).
-You can define pricelists in analytic account, make some theorical revenue
+    'name': 'Invoice on analytic lines',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """
+Module to generate invoices based on costs (human resources, expenses, ...).
+You can define price lists in analytic account, make some theoretical revenue
 reports, eso.""",
-    "init_xml" : [],
-    "demo_xml" : [
-        'hr_timesheet_invoice_demo.xml'
-    ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account', 'hr_timesheet'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
         'hr_timesheet_invoice_view.xml',
         'hr_timesheet_invoice_wizard.xml',
         'hr_timesheet_invoice_report.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['hr_timesheet_invoice_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '56091842381',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

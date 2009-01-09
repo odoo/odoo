@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -77,7 +77,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permited !'), _('You can not delete a project with tasks. I suggest you to desactivate it.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
@@ -409,11 +409,15 @@ class project_work(osv.osv):
     }
     _order = "date desc"
     def create(self, cr, uid, vals, *args, **kwargs):
+        if 'hours' in vals and (not vals['hours']):
+            vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids,vals,context={}):
+        if 'hours' in vals and (not vals['hours']):
+            vals['hours'] = 0.00
         for work in self.browse(cr, uid, ids, context):
             cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)

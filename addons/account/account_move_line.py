@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -61,6 +61,8 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context={}):
         for obj_line in self.browse(cr, uid, ids, context):
             if obj_line.analytic_account_id:
+                if not obj_line.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name,))
                 amt = (obj_line.credit or  0.0) - (obj_line.debit or 0.0)
                 vals_lines={
                     'name': obj_line.name,
@@ -491,7 +493,7 @@ class account_move_line(osv.osv):
         merges_rec = []
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
-                raise _('Already Reconciled')
+                raise osv.except_osv(_('Already Reconciled'), _('Already Reconciled'))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
@@ -780,7 +782,7 @@ class account_move_line(osv.osv):
             context['journal_id'] = vals['journal_id']
         if 'period_id' in vals and 'period_id' not in context:
             context['period_id'] = vals['period_id']
-        if 'journal_id' not in context and 'move_id' in vals:
+        if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
@@ -789,6 +791,7 @@ class account_move_line(osv.osv):
 
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+        is_new_move = False
         if not move_id:
             if journal.centralisation:
                 # use the first move ever created for this journal and period
@@ -813,10 +816,7 @@ class account_move_line(osv.osv):
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
-        else:
-            if 'date' in vals:
-                self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
-                del vals['date']
+            is_new_move = True
 
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
@@ -929,6 +929,8 @@ class account_move_line(osv.osv):
                 if data['tax_code_id']:
                     self.create(cr, uid, data, context)
 
+        if not is_new_move and 'date' in vals:
+            self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check:
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:54:00+0000\n"
-"PO-Revision-Date: 2008-12-22 17:54:00+0000\n"
+"POT-Creation-Date: 2009-01-03 02:04:56+0000\n"
+"PO-Revision-Date: 2009-01-03 02:04:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,13 +154,6 @@ msgid "Origin"
 msgstr "Brondocument"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: model:process.node,note:sale.process_node_saleorder0
-#: model:process.node,name:sale.process_node_saleorder0
-msgid "Ok"
-msgstr "Akkoord"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Goederenstromen"
@@ -179,6 +172,7 @@ msgstr "Leveringsopdracht:"
 #: model:ir.model,name:sale.model_sale_order
 #: field:stock.picking,sale_id:0
 #: view:sale.order:0
+#: model:process.node,name:sale.process_node_saleorder0
 #: model:res.request.link,name:sale.req_link_sale_order
 msgid "Sale Order"
 msgstr "Verkooporder"
@@ -587,7 +581,7 @@ msgstr "Netto-prijs"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "invalid mode for test_state"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -608,12 +602,17 @@ msgstr "Facturen"
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Packing Default Policy"
+msgstr "Standaard verpakmethode"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
 msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
-msgstr ""
+msgstr "Standaard verzendmethode"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -639,7 +638,7 @@ msgstr "Product meeteenheid"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Invoiced To"
-msgstr ""
+msgstr "Gefactureerd aan"
 
 #. module: sale
 #: field:sale.order,user_id:0
@@ -670,7 +669,7 @@ msgstr "Orderstatus"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
-msgstr ""
+msgstr "Niet-gefactureerde regels"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -765,7 +764,7 @@ msgstr "Onze verkoper"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
 msgid "Create Advance Invoice"
-msgstr ""
+msgstr "Maak een vooruitfacturering"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -787,7 +786,7 @@ msgstr "Wanneer er niet voldoende voorraad aanwezig is om alles te leveren moet 
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr ""
+msgstr "Je kun geen verkooporders verwijderen welke al bevestigd zijn!"
 
 #. module: sale
 #: field:product.product,pricelist_sale:0
@@ -813,6 +812,7 @@ msgstr "Waarden"
 
 #. module: sale
 #: selection:sale.order,state:0
+#: model:process.node,name:sale.process_node_quotation0
 msgid "Quotation"
 msgstr "Offerte-aanvraag"
 
@@ -846,7 +846,7 @@ msgstr "Term"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Concept-verkoopfactuure, moet worden nagekeken door administratie"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -880,7 +880,7 @@ msgstr "Aantal"
 #. module: sale
 #: rml:sale.shipping:0
 msgid "Shipping To"
-msgstr ""
+msgstr "Verzenden aan"
 
 #. module: sale
 #: rml:sale.order:0
@@ -890,7 +890,7 @@ msgstr "Eigen referentie"
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Delivery Order Only"
-msgstr ""
+msgstr "Alleen leveringsopdracht"
 
 #. module: sale
 #: rml:sale.order:0
@@ -906,7 +906,7 @@ msgstr "Kostenplaatsen"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid "One procurement for each product."
-msgstr ""
+msgstr "Een aanschaffing voor elk product"
 
 #. module: sale
 #: view:sale.order:0
@@ -981,7 +981,7 @@ msgstr "Annuleer"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -996,7 +996,7 @@ msgstr "Order Ref"
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Packing OUT is created for stockable products."
-msgstr ""
+msgstr "Uitgaande pakketten aangemaakt voor voorraadartikelen"
 
 #. module: sale
 #: view:sale.order:0
@@ -1022,7 +1022,7 @@ msgstr "Bevestig de verkooporder en maak factuur"
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr ""
+msgstr "Paklijst en pakbon"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1055,7 +1055,7 @@ msgstr "Wil je echt de facturen aanmaken?"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Invoice based on packing lists"
-msgstr ""
+msgstr "Facturatie gebaseerd op paklijsten"
 
 #. module: sale
 #: view:sale.order:0
@@ -1070,7 +1070,7 @@ msgstr "Verkooporders"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Quotation (A sale order in draft state)"
-msgstr ""
+msgstr "Offerte (verkooporder en concept-status)"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -1091,7 +1091,7 @@ msgstr "Product"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,open:0
 msgid "Open Advance Invoice"
-msgstr ""
+msgstr "Open vooruitgefactureerde factuur"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -1127,7 +1127,7 @@ msgstr "Product Verkoopeenh."
 #. module: sale
 #: rml:sale.order:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel.:"
 
 #. module: sale
 #: constraint:product.product:0
@@ -1230,12 +1230,12 @@ msgstr "Transporteur"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Uitgaande producten"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
 msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
-msgstr ""
+msgstr "Standaard regelt OpenERP complexe gangen van producten en het magazijn en relatie-locaties. Deze opties stelt de meest simpele methode om producten te leveren in een of twee handeling bij de werknemer."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
@@ -1275,7 +1275,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
 msgid "In sale order , procuerement for each line and it comes into the procurement order"
-msgstr ""
+msgstr "In de verkooporder, de aanschaf voor elke regel kom in de inkooporder."
 
 #. module: sale
 #: view:sale.order:0
@@ -1307,7 +1307,7 @@ msgstr "Financiële verwerking"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr ""
+msgstr "Facturatie gebaseer op leveringen"
 
 #. module: sale
 #: field:sale.order,amount_total:0

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,11 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Accounting - Voucher Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "description": """
+    'name': 'Accounting - Voucher Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """
 India Accounting module includes all the basic requirenment of 
 Basic Accounting, plus new things which available are:
     * New Invoice - (Local, Retail)
@@ -33,21 +35,20 @@ Basic Accounting, plus new things which available are:
     * VAT Declaration report
     * Accounting Periods
     """,
-    "category" : "Generic Modules/Accounting",
-    "website" : "http://www.openerp.com",
-    "depends" : ["base", "account"],
-    "init_xml" : [
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_voucher_sequence.xml',
+        'account_view.xml',
+        'account_report.xml',
+        'voucher_view.xml'
     ],
-    
-    "demo_xml" : [
-    ],
-    
-    "update_xml" : [
-        "account_voucher_sequence.xml",
-        "account_view.xml",
-        "account_report.xml",
-        "voucher_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '37580727101',
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

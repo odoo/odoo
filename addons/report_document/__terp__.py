@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name" : "Document Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "depends" : ["document"],
-    "category" : "Generic Modules/Document Management",
-    "description": """
-    Reporting for the Document Management module:
-    * Files by my
-    * Files by all users
-    """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "report_document_view.xml",
-        "security/ir.model.access.csv",
-    ],
-    "active": False,
-    "installable": True
- }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+
+{
+    'name': 'Document Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/Document Management',
+    'description': """
+    Reporting for the Document Management module:
+    * My Files
+    * All users Files 
+    """,
+    'author': 'Tiny',
+    'depends': ['document'],
+    'init_xml': [],
+    'update_xml': ['report_document_view.xml', 'security/ir.model.access.csv'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '68012774557',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

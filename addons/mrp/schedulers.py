@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -202,6 +202,8 @@ class mrp_procurement(osv.osv):
                     elif op.product_id.supply_method == 'produce':
                         location_id = op.warehouse_id.lot_stock_id
                     else:
+                        continue
+                    if qty<=0:
                         continue
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': 'OP:'+str(op.id),

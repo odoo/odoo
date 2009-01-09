@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,16 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Stock Location Paths",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "depends" : [ "stock"],
-    "category" : "Generic Modules/Inventory Control",
-    "description":"""
+    'name': 'Stock Location Paths',
+    'version': '1.0',
+    'category': 'Generic Modules/Inventory Control',
+    'description': """
 Manages product's path in locations.
 
-This module may be usefull for different purposes:
+This module may be useful for different purposes:
 * Manages the product in his whole manufacturing chain
 * Manages different default locations by products
 * Define paths within the warehouse to route products based on operations:
@@ -37,12 +37,13 @@ This module may be usefull for different purposes:
    - Supplier Return
 * Manage products to be rent.
     """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : ["stock_view.xml",
-					"security/ir.model.access.csv",
-				   ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'depends': ['stock'],
+    'init_xml': [],
+    'update_xml': ['stock_view.xml', 'security/ir.model.access.csv'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '46505115101',
 }
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

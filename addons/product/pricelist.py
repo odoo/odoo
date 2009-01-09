@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ from osv import fields, osv
 from _common import rounding
 import time
 from tools import config
+from tools.misc import ustr
 from tools.translate import _
 
 class price_type(osv.osv):
@@ -91,8 +92,17 @@ class product_pricelist(osv.osv):
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
     }
+    
+    def name_get(self, cr, uid, ids, context={}):
+        result= []
+        for pl in self.browse(cr, uid, ids, context):
+            name = pl.name + ' ('+ pl.currency_id.name + ')'
+            result.append((pl.id,name))
+        return result
+    
+
     def _get_currency(self, cr, uid, ctx):
-        comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+        comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
         if not comp:
             comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)

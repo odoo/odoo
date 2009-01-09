@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
     "name" : "Project Management",
     "version": "1.1",
@@ -38,9 +40,9 @@
         "project_report.xml", 
         "process/task_process.xml"
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['project_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '75116868317',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

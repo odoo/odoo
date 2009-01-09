@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -158,6 +158,7 @@ class stock_picking(osv.osv):
                     price_unit = sale_line.price_unit
                     discount = sale_line.discount
                     tax_ids = sale_line.tax_id
+                    tax_ids = map(lambda x: x.id, tax_ids)
 
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)

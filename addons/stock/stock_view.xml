@@ -563,7 +563,7 @@
                             </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
+                                <button name="draft_force_assign" states="draft" string="Confirm (Do Not Process Now)" type="object"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
@@ -834,6 +834,7 @@
                                         domain="[('product_id','=',product_id)]"
                                         on_change="onchange_lot_id(prodlot_id,product_qty, location_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
+                                    <label/>
                                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>

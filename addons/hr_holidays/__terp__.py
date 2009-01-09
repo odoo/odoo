@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+
+
 {
     "name" : "Human Resources: Holidays management",
     "version" : "1.1",
@@ -10,7 +12,7 @@
     This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.
 
     Note that:
-    - A synchronisation with an internal agenda (use of the crm module) is possible: in order to automaticly create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your color preferencies in
+    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in
                 HR \ Configuration \ Holidays Status
     - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).
     - There are two ways to print the employee's holidays:
@@ -24,20 +26,21 @@
                 Administration \ Users \ Users
             for example, you maybe will do it for the user 'admin'.
 """,
-    "depends" : ["hr","crm_configuration", "process"],
-    "init_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "hr_workflow.xml",
-        "hr_view.xml",
-        "hr_holidays_report.xml",
-        "hr_holidays_wizard.xml",
-        "process/hr_holidays_process.xml"
+    'author': 'Tiny & Axelor',
+    'website': 'http://www.openerp.com',
+    'depends': ['hr', 'crm_configuration', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'hr_workflow.xml',
+        'hr_view.xml',
+        'hr_holidays_report.xml',
+        'hr_holidays_wizard.xml',
+        'process/hr_holidays_process.xml'
     ],
-#    "demo_xml" : ["hr_bel_holidays_2008.xml",],
-    "demo_xml" : [],
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '86579209325',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

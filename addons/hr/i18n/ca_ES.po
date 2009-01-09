@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:51+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:51+0000\n"
+"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
+"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,11 +97,6 @@ msgid "Work from"
 msgstr "Treballa des de"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr "Crea usuari OpenERP"
-
-#. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
@@ -116,11 +111,6 @@ msgstr "Jerarquia d'empleats"
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Dona"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_jobshiring0
-msgid "Process to search, interview and evaluate new candidates"
-msgstr "Procés per cercar, entrevistar i avaluar nous candidats"
 
 #. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
@@ -269,11 +259,6 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeejob0
-msgid "After confirming job, he will be a employee"
-msgstr "Després de confirmar el treball, ell serà un empleat"
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Informació de contacte"
@@ -311,11 +296,6 @@ msgid "Day of week"
 msgstr "Dia de la setmana"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_employeejob0
-msgid "Employee Job"
-msgstr "Treball empleat"
-
-#. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
 msgstr "Núm. Seg. Social"
@@ -324,6 +304,11 @@ msgstr "Núm. Seg. Social"
 #: field:hr.employee,active:0
 msgid "Active"
 msgstr "Actiu"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -336,6 +321,12 @@ msgid "Employee Complete Form"
 msgstr "Formulari complet d'empleat"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Categories d'empleat"
+
+#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Empreses"
@@ -346,15 +337,9 @@ msgid "Wednesday"
 msgstr "Dimecres"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Categories d'empleat"
-
-#. module: hr
-#: model:process.node,name:hr.process_node_jobshiring0
-msgid "Jobs hiring"
-msgstr "Sol·licitud de treball"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
+msgstr "Crea usuari OpenERP"
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
@@ -389,7 +374,7 @@ msgstr "Informació personal"
 #. module: hr
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet_group

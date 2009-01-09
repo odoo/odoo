@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 17:50:14+0000\n"
-"PO-Revision-Date: 2008-12-22 17:50:14+0000\n"
+"POT-Creation-Date: 2009-01-03 02:00:56+0000\n"
+"PO-Revision-Date: 2009-01-03 02:00:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,9 +122,8 @@ msgid "Starting date"
 msgstr "Начална дата"
 
 #. module: account
-#: code:addons/account/wizard/wizard_refund.py:0
-#, python-format
-msgid "Can not %s draft invoice."
+#: view:account.invoice:0
+msgid "Compute Taxes"
 msgstr ""
 
 #. module: account
@@ -309,6 +308,12 @@ msgstr ""
 #: wizard_view:account.vat.declaration,init:0
 msgid "Select period"
 msgstr "Избери период"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Please verify the price of the invoice !\nThe real total does not match the computed total."
+msgstr ""
 
 #. module: account
 #: field:account.invoice.line,origin:0
@@ -768,6 +773,11 @@ msgid "account.move.line"
 msgstr "account.move.line"
 
 #. module: account
+#: model:process.transition,name:account.process_transition_supplieranalyticcost0
+msgid "Analytic Invoice"
+msgstr ""
+
+#. module: account
 #: field:account.journal.column,field:0
 msgid "Field Name"
 msgstr "Име на поле"
@@ -863,6 +873,12 @@ msgstr ""
 #. module: account
 #: field:account.invoice,move_lines:0
 msgid "Move Lines"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "Can not %s draft invoice."
 msgstr ""
 
 #. module: account
@@ -1628,11 +1644,6 @@ msgid "Close Period"
 msgstr "Затваряне на период"
 
 #. module: account
-#: view:account.invoice:0
-msgid "Reset taxes"
-msgstr "Изчистване на данъците"
-
-#. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
 msgstr "Подробно"
@@ -1732,7 +1743,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,period_id:0
 msgid "Force Period"
-msgstr "Съждай изрично период"
+msgstr "Създай изрично период"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,init_partial,debit:0
@@ -2220,7 +2231,7 @@ msgstr "Проект фактура за доставчик"
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
 msgid "Force period"
-msgstr ""
+msgstr "Създай изрично период"
 
 #. module: account
 #: rml:account.overdue:0
@@ -2498,6 +2509,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/invoice.py:0
+#: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "No Analytic Journal !"
 msgstr ""
@@ -2572,6 +2584,7 @@ msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
+#: model:process.transition,note:account.process_transition_supplieranalyticcost0
 msgid "From analytic accounts, Create invoice."
 msgstr ""
 
@@ -2690,6 +2703,7 @@ msgstr ""
 #: rml:account.analytic.account.journal:0
 #: model:ir.ui.menu,name:account.next_id_40
 #: model:process.node,name:account.process_node_analytic0
+#: model:process.node,name:account.process_node_analyticcost0
 msgid "Analytic"
 msgstr "Аналитичен"
 
@@ -2701,6 +2715,7 @@ msgstr "Единична цена"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
+#: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr ""
 
@@ -2775,6 +2790,12 @@ msgstr ""
 #: field:account.invoice,number:0
 msgid "Invoice Number"
 msgstr "Номер на фактура"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "You have to define an analytic journal of type '%s' !"
+msgstr ""
 
 #. module: account
 #: wizard_button:populate_statement_from_inv,customer,finish:0
@@ -2862,6 +2883,11 @@ msgstr "Идентификатор на партньор"
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Общо кредит"
+
+#. module: account
+#: help:account.journal,centralisation:0
+msgid "Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal. This is used in fiscal year closing."
+msgstr ""
 
 #. module: account
 #: rml:account.overdue:0
@@ -3351,6 +3377,11 @@ msgid "Total debit"
 msgstr "Общ дебит"
 
 #. module: account
+#: help:account.journal,group_invoice_lines:0
+msgid "If this box is cheked, the system will try to group the accouting lines when generating them from invoices."
+msgstr ""
+
+#. module: account
 #: code:addons/account/wizard/wizard_bank_reconcile.py:0
 #, python-format
 msgid "You have to define the bank account\nin the journal definition for reconciliation."
@@ -3410,11 +3441,6 @@ msgid "If a default tax if given in the partner it only override taxes from acco
 msgstr "Ако е зададен данък по подразбиране за партньора, той само застъпва данъци от сметка (или продукт) от същата група."
 
 #. module: account
-#: help:account.model.line,sequence:0
-msgid "The sequence field is used to order the resources from the lowest sequences to the higher ones"
-msgstr "Полето за последователност се използва за подреждане на ресурсите от най-ниска към най-висока."
-
-#. module: account
 #: view:account.bank.statement:0
 msgid "Real Entries"
 msgstr "Реални записи"
@@ -3459,9 +3485,9 @@ msgid "Date of the day"
 msgstr "Дата на деня"
 
 #. module: account
-#: help:account.journal,centralisation:0
-msgid "Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal."
-msgstr "Отметнете ако искате всеки запис да не създава копие, а да споделя едно копие за всеки запис на този дневник."
+#: help:account.model.line,sequence:0
+msgid "The sequence field is used to order the resources from the lowest sequences to the higher ones"
+msgstr "Полето за последователност се използва за подреждане на ресурсите от най-ниска към най-висока."
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -4760,9 +4786,8 @@ msgstr "Възможната друга валута ако записа е в �
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
-msgid "Warning"
+msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr ""
 
 #. module: account
@@ -4944,6 +4969,13 @@ msgid "Have a number and entries are generated"
 msgstr ""
 
 #. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/wizard_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: account
 #: rml:account.analytic.account.analytic.check:0
 msgid "Analytic Check -"
 msgstr ""
@@ -4954,9 +4986,8 @@ msgid "Account Balance -"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "Please verify the price of the invoice !\nThe real total does not match the computed total."
+#: field:account.journal,group_invoice_lines:0
+msgid "Group invoice lines"
 msgstr ""
 
 #. module: account
@@ -5296,7 +5327,6 @@ msgstr "Нормален"
 #. module: account
 #: selection:account.bank.statement,state:0
 #: view:account.bank.statement:0
-#: model:process.transition.action,name:account.process_transition_action_draftconfirmstatement0
 msgid "Confirm"
 msgstr "Потвърждение"
 
@@ -5345,7 +5375,6 @@ msgid "Check this option if the user can make a reconciliation of the entries in
 msgstr "Отметнете ако потребителя може да приравнява записите от тази сметка."
 
 #. module: account
-#: view:account.invoice:0
 #: view:account.bank.statement:0
 #: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0

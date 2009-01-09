@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,26 +19,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Reporting of Balancesheet for accounting",
-    "version" : "1.0",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """Financial and accounting reporting""",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [ ],
-    "demo_xml" : [ ],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_view.xml",
-        "account_report.xml",
-        "account_data.xml",
+    'name': 'Reporting of Balancesheet for accounting',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """Financial and accounting reporting
+    Balance Sheet Report""",
+    'author': 'Tiny',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_view.xml',
+        'account_report.xml',
+        'account_data.xml'
     ],
-#   "translations" : {
-#       "fr": "i18n/french_fr.csv"
-#   },
-    "active": False,
-    "installable": True
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '72305016797',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

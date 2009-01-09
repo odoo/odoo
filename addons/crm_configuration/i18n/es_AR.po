@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc2\n"
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2008-12-22 18:02:02+0000\n"
-"PO-Revision-Date: 2008-12-22 18:02:02+0000\n"
+"POT-Creation-Date: 2009-01-03 02:13:59+0000\n"
+"PO-Revision-Date: 2009-01-03 02:13:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -214,8 +214,9 @@ msgid "Planned Calls"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
-msgid "Communication"
+#: model:ir.actions.act_window,name:crm_configuration.crm_case_helpdesk_act_all0
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_helpdesk_act_myhelpdesk_all0
+msgid "All Open Helpdesk Requests"
 msgstr ""
 
 #. module: crm_configuration
@@ -662,7 +663,8 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-msgid "Lead Details"
+#: model:process.node,name:crm_configuration.process_node_meeting0
+msgid "Meeting"
 msgstr ""
 
 #. module: crm_configuration
@@ -688,6 +690,7 @@ msgstr ""
 #: field:report.crm.case.section.categ.categ2,stage_id:0
 #: field:report.crm.case.section.categ.stage,stage_id:0
 #: field:report.crm.case.section.stage,stage_id:0
+#: view:crm.case.stage:0
 msgid "Stage"
 msgstr ""
 
@@ -705,6 +708,13 @@ msgstr ""
 #. module: crm_configuration
 #: model:crm.case.categ,name:crm_configuration.categ_fund2
 msgid "Learning And Education"
+msgstr ""
+
+#. module: crm_configuration
+#: model:ir.actions.act_window,name:crm_configuration.crm_case_stage_act
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_stage_act
+#: view:crm.case.stage:0
+msgid "Stages"
 msgstr ""
 
 #. module: crm_configuration
@@ -908,11 +918,6 @@ msgstr ""
 #. module: crm_configuration
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_helpdesk_act_my_helpdesk
 msgid "My Unclosed Requests"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_presale
-msgid "Pre-Sales"
 msgstr ""
 
 #. module: crm_configuration
@@ -1426,6 +1431,11 @@ msgid "Cases by section and stage"
 msgstr ""
 
 #. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_presale
+msgid "Sales"
+msgstr ""
+
+#. module: crm_configuration
 #: view:crm.case:0
 msgid "General"
 msgstr ""
@@ -1446,9 +1456,8 @@ msgid "Done"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_helpdesk_act_all0
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_helpdesk_act_myhelpdesk_all0
-msgid "All Open Helpdesk Requests"
+#: view:crm.case:0
+msgid "Communication"
 msgstr ""
 
 #. module: crm_configuration
@@ -1950,8 +1959,7 @@ msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
-#: model:process.node,name:crm_configuration.process_node_meeting0
-msgid "Meeting"
+msgid "Lead Details"
 msgstr ""
 
 #. module: crm_configuration
