@@ -398,7 +398,10 @@ GNU Public Licence.
                 mp = addons.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
-                        rmtree(os.path.realpath(mp))
+                        if os.path.islink(mp):
+                            os.unlink(mp)
+                        else:
+                            rmtree(mp)
                     else:
                         os.unlink(mp + '.zip')
 
