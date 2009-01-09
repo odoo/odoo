@@ -44,7 +44,6 @@
         "report_stock_view.xml",
         "security/stock_security.xml",
         "security/ir.model.access.csv",
-        "process/stock_process.xml"
     ],
     'demo_xml': ['stock_demo.xml'],
     'installable': True,
