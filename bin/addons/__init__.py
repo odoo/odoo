@@ -461,21 +461,33 @@ class MigrationManager(object):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    fp = tools.file_open(opj(modulename, pyfile))
-                    mod = None
+                    mod = fp = fp2 = None
                     try:
-                        mod = imp.load_source(name, pyfile, fp)
-                        logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
-                        mod.migrate(self.cr, pkg.installed_version)
-                    except ImportError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
-                        raise
-                    except AttributeError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    except:
-                        raise
-                    fp.close()
-                    del mod
+                        fp = tools.file_open(opj(modulename, pyfile))
+        
+                        # imp.load_source need a real file object, so we create 
+                        # on from the file-like object we get from file_open
+                        fp2 = os.tmpfile()
+                        fp2.write(fp.read())
+                        fp2.seek(0)
+                        try:
+                            mod = imp.load_source(name, pyfile, fp2)
+                            logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
+                            mod.migrate(self.cr, pkg.installed_version)
+                        except ImportError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
+                            raise
+                        except AttributeError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
+                        except:
+                            raise
+                    finally:
+                        if fp:
+                            fp.close()
+                        if fp2:
+                            fp2.close()
+                        if mod:
+                            del mod
     
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
