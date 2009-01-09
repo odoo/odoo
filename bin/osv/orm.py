@@ -812,7 +812,7 @@ class orm_template(object):
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.localName, context)
             if result:
-                node.setAttribute('string', result.decode('utf-8'))
+                node.setAttribute('string', result)
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
