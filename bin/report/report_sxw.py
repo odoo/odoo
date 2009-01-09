@@ -21,7 +21,7 @@
 ##############################################################################
 
 from interface import  report_rml
-import cStringIO
+import StringIO
 import base64
 import copy
 import ir
@@ -618,7 +618,7 @@ class report_sxw(report_rml):
 
         if report_type in ['sxw','odt'] and report_xml:
             context['parents'] = sxw_parents
-            sxw_io = cStringIO.StringIO(report_xml.report_sxw_content)
+            sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
             sxw_z = zipfile.ZipFile(sxw_io, mode='r')
             rml = sxw_z.read('content.xml')
             meta = sxw_z.read('meta.xml')
