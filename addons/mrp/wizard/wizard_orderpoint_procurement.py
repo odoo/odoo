@@ -41,10 +41,13 @@ parameter_fields = {
 def _procure_calculation_orderpoint(self, db_name, uid, data, context):
     db, pool = pooler.get_db_and_pool(db_name)
     cr = db.cursor()
-    proc_obj = pool.get('mrp.procurement')
-    automatic = data['form']['automatic']
-    proc_obj._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-            use_new_cursor=cr.dbname, context=context)
+    try:
+        proc_obj = pool.get('mrp.procurement')
+        automatic = data['form']['automatic']
+        proc_obj._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
+                use_new_cursor=cr.dbname, context=context)
+    finally:
+        cr.close()
     return {}
 
 def _procure_calculation(self, cr, uid, data, context):
