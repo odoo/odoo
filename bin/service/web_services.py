@@ -295,8 +295,7 @@ class db(netsvc.Service):
             except Exception, e:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-                logger = Logger()
-                logger.notifyChannel('web-services', LOG_ERROR, tb_s)
+                l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
                 raise
         return True
 db()
