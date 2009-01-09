@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Products & Pricelists",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "Tiny",
     "category" : "Generic Modules/Inventory Control",
     "depends" : ["base", "process"],

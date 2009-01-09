@@ -24,7 +24,7 @@
     "description": """Modifiy the account analytic view to show
 important data for project manager of services companies.
 Add menu to show relevant information for each manager.""",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "Camptocamp",
     "category" : "Generic Modules/Accounting",
     "module": "",

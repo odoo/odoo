@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Accounting and financial management",
-    "version" : "1.0",
+    "version" : "1.1",
     "depends" : ["product", "base", "process"],
     "author" : "Tiny",
     "description": """Financial and accounting module that covers:

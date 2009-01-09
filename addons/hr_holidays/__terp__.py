@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     "name" : "Human Resources: Holidays management",
-    "version" : "0.1",
+    "version" : "1.1",
     "author" : "Tiny & Axelor",
     "category" : "Generic Modules/Human Resources",
     "website" : "http://www.openerp.com",

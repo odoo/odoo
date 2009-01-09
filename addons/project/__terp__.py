@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Project Management",
-    "version": "1.0",
+    "version": "1.1",
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
