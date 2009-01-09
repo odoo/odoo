@@ -30,7 +30,8 @@ def _check_xml(self, cr, uid, ids, context={}):
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        relaxng = etree.RelaxNG(file=frng)
+        relaxng_doc = etree.parse(frng)
+        relaxng = etree.RelaxNG(relaxng_doc)
         if not relaxng.validate(eview):
             logger = netsvc.Logger()
             logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
