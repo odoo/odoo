@@ -52,7 +52,11 @@ class quality_test(base_module_quality.abstract_quality_check):
         n = 0
         score = 0.0
         dict = {}
-        self.result_details += '<nowiki>'
+        self.result_details += '''<html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="/tg_widgets/openerp/css/wiki.css" media="all">
+        </head>
+        <body>'''
         for file in list_files:
             if file.split('.')[-1] == 'py' and not file.endswith('__init__.py') and not file.endswith('__terp__.py'):
                 file_path = os.path.join(module_path, file)
@@ -76,8 +80,8 @@ class quality_test(base_module_quality.abstract_quality_check):
                     score += 0
                     #self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                     dict[file] = [file, _("Unable to parse the result. Check the details.")]
-                self.result_details += res
-        self.result_details += '</nowiki>'
+                self.result_details += res.replace('''<div''', '''<div class="wikiwidget readonlyfield"''')
+        self.result_details += '</body></html>'
         average_score = n and score / n or score
         self.score = (max(average_score,0)) / 10
         self.result = self.get_result(dict)
