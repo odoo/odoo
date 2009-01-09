@@ -28,7 +28,7 @@ import os
 import tools
 
 import zipfile
-import cStringIO
+from StringIO import StringIO
 import base64
 
 finish_form ='''<?xml version="1.0"?>
@@ -55,7 +55,8 @@ class move_module_wizard(wizard.interface):
         module_data = data['form']['module_file']
 
         val =base64.decodestring(module_data)
-        fp = cStringIO.StringIO(val)
+        fp = StringIO()
+        fp.write(val)
         fdata = zipfile.ZipFile(fp, 'r')
         fname = fdata.namelist()[0]
         module_name = os.path.split(fname)[0]

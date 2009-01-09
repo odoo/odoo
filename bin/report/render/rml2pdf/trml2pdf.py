@@ -40,7 +40,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
-import cStringIO
+from StringIO import StringIO
 import xml.dom.minidom
 import copy
 
@@ -351,26 +351,26 @@ class _rml_canvas(object):
         import urllib
         from reportlab.lib.utils import ImageReader
 
+        s = StringIO()
         if not node.hasAttribute('file'):
 
             if node.hasAttribute('name'):
                 image_data = self.images[node.getAttribute('name')]
-                s = cStringIO.StringIO(image_data)
+                s.write(image_data)
             else:
                 import base64
                 image_data = base64.decodestring(node.firstChild.nodeValue)
                 if not image_data: return False
-                s = cStringIO.StringIO(image_data)
+                s.write(image_data)
         else:
             if node.getAttribute('file') in self.images:
-                s = cStringIO.StringIO(self.images[node.getAttribute('file')])
+                s.write(self.images[node.getAttribute('file')])
             else:
                 try:
                     u = urllib.urlopen(str(node.getAttribute('file')))
-                    s = cStringIO.StringIO(u.read())
                 except:
                     u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
-                    s = cStringIO.StringIO(u.read())
+                s.write(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 
@@ -639,7 +639,8 @@ class _rml_flowable(object):
                 else:
                     import base64
                     image_data = base64.decodestring(node.firstChild.nodeValue)
-                image = cStringIO.StringIO(image_data)
+                image = StringIO()
+                image.write(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
                 return platypus.Image(node.getAttribute('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
@@ -794,7 +795,7 @@ def parseString(data, fout=None, images={}, path='.',title=None):
         fp.close()
         return fout
     else:
-        fp = cStringIO.StringIO()
+        fp = StringIO()
         r.render(fp)
         return fp.getvalue()
 
