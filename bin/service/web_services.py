@@ -301,8 +301,6 @@ class db(netsvc.Service):
         return True
 db()
 
-class MigrationException(Exception): pass
-
 class common(netsvc.Service):
     def __init__(self,name="common"):
         netsvc.Service.__init__(self,name)
@@ -384,12 +382,12 @@ GNU Public Licence.
         security.check_super(password)
         l = netsvc.Logger()
         try: 
-            from tools.maintenance import remote_contract
-            rc = remote_contract(contract_id, contract_password)
+            import tools.maintenance as tm
+            rc = tm.remote_contract(contract_id, contract_password)
             if not rc.id:
-                raise MigrationException('This contract does not exist or is not active') 
+                raise tm.RemoteContractException('This contract does not exist or is not active') 
             if rc.status != 'full':
-                raise MigrationException('Can not get updates for a partial contract')
+                raise tm.RemoteContractException('Can not get updates for a partial contract')
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
@@ -412,7 +410,7 @@ GNU Public Licence.
                 zip.close()
 
             return True
-        except MigrationException, e:
+        except tm.RemoteContractException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
             import traceback
