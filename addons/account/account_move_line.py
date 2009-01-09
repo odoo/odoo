@@ -791,6 +791,7 @@ class account_move_line(osv.osv):
 
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+        is_new_move = False
         if not move_id:
             if journal.centralisation:
                 # use the first move ever created for this journal and period
@@ -815,10 +816,7 @@ class account_move_line(osv.osv):
                     vals['move_id'] = move_id
                 else:
                     raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
-        else:
-            if 'date' in vals:
-                self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
-                del vals['date']
+            is_new_move = True
 
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
@@ -931,6 +929,8 @@ class account_move_line(osv.osv):
                 if data['tax_code_id']:
                     self.create(cr, uid, data, context)
 
+        if not is_new_move and 'date' in vals:
+            self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check:
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

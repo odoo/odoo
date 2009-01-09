@@ -35,8 +35,8 @@ class wiz_quality_check(osv.osv):
     _name = 'wizard.quality.check'
     _columns = {
         'name': fields.char('Rated Module', size=64, ),
-        'final_score': fields.char('Final Score', size=10,),
-        'test_ids' : fields.one2many('quality.check.detail', 'quality_check_id', 'Test Details',)
+        'final_score': fields.char('Final Score (%)', size=10,),
+        'test_ids' : fields.one2many('quality.check.detail', 'quality_check_id', 'Tests',)
     }
 wiz_quality_check()
 
@@ -46,10 +46,12 @@ class quality_check_detail(osv.osv):
     _columns = {
         'quality_check_id': fields.many2one('wizard.quality.check', 'Quality'),
         'name': fields.char('Name',size=128,),
-        'score': fields.float('Score',),
-        'ponderation': fields.float('Ponderation',),
+        'score': fields.float('Score (%)',),
+        'ponderation': fields.float('Ponderation',help='Some tests are more critical than others, so they have a bigger weight in the computation of final rating'),
+        'note': fields.text('Note',),
         'summary': fields.text('Summary',),
         'detail' : fields.text('Details',),
+        'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
     }
 quality_check_detail()
 
@@ -58,8 +60,10 @@ class create_quality_check(wizard.interface):
 
     def _create_quality_check(self, cr, uid, data, context={}):
         pool = pooler.get_pool(cr.dbname)
-        if data['id']:
-            module_data = pool.get('ir.module.module').browse(cr, uid, [data['id']])[0]
+        print data, context
+        objs = []
+        for id in data['ids']:
+            module_data = pool.get('ir.module.module').browse(cr, uid, id)
             #list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
             abstract_obj = base_module_quality.abstract_quality_check()
             score_sum = 0.0
@@ -76,10 +80,12 @@ class create_quality_check(wizard.interface):
                     val.run_test(cr, uid, str(module_path))
                     data = {
                         'name': val.name,
-                        'score': val.score,
+                        'score': val.score * 100,
                         'ponderation': val.ponderation,
                         'summary': val.result,
                         'detail': val.result_details,
+                        'state': 'done',
+                        'note': val.note,
                     }
                     create_ids.append((0,0,data))
                     score_sum += val.score * val.ponderation
@@ -87,7 +93,9 @@ class create_quality_check(wizard.interface):
                 else:
                     data = {
                         'name': val.name,
+                        'note': val.note,
                         'score': 0,
+                        'state': 'skipped',
                         'summary': _("The module has to be installed before running this test.")
                     }
                     create_ids.append((0,0,data))
@@ -99,12 +107,13 @@ class create_quality_check(wizard.interface):
                 'test_ids' : create_ids,
             }
             obj = pool.get('wizard.quality.check').create(cr, uid, data, context)
-        return obj
+            objs.append(obj)
+        return objs
 
     def _open_quality_check(self, cr, uid, data, context):
-        obj_id = self._create_quality_check(cr, uid, data, context)
+        obj_ids = self._create_quality_check(cr, uid, data, context)
         return {
-            'domain': "[('id','=', "+ str(obj_id)+")]",
+            'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
             'name': _('Quality Check'),
             'view_type': 'form',
             'view_mode': 'tree,form',

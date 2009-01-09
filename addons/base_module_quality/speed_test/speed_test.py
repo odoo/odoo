@@ -35,12 +35,15 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
-        self.name = _("Speed Test")
         self.bool_installed_only = True
         self.ponderation = 1.0
-        self.result_det = {}
-        self.data_list = []
+        self.name = _("Speed Test")
+        self.note = _("""
+This test checks the speed of the module. Note that at least 5 demo data is needed in order to run it.
+
+""")
         return None
+
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
@@ -48,66 +51,69 @@ class quality_test(base_module_quality.abstract_quality_check):
         obj_counter = 0
         score = 0
         obj_ids = self.get_ids(cr, uid, obj_list)
+        result_dict = {}
+        result_dict2 = {}
+        self.result_details += _("O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n")
         for obj in obj_ids:
             obj_counter += 1
             ids = obj_ids[obj]
             ids = ids[:100]
             size = len(ids)
             if size:
-                c1 = cr.count
+                list = []
 
+                #we perform the operation twice, and count the number of queries in the second run. This allows to avoid the cache effect. (like translated terms that asks for more queries) 
                 pool.get(obj).read(cr, uid, [ids[0]])
+                c = cr.count
                 pool.get(obj).read(cr, uid, [ids[0]])
-                code_base_complexity = cr.count - c1
+                code_base_complexity = cr.count - c
 
                 pool.get(obj).read(cr, uid, ids[:size/2])
+                c = cr.count
                 pool.get(obj).read(cr, uid, ids[:size/2])
-                code_half_complexity = cr.count - c1
+                code_half_complexity = cr.count - c
 
                 pool.get(obj).read(cr, uid, ids)
+                c = cr.count
                 pool.get(obj).read(cr, uid, ids)
-                code_size_complexity = cr.count - c1
+                code_size_complexity = cr.count - c
 
                 if size < 5:
-                    self.score += -2
-                    list = [size, code_base_complexity, code_half_complexity, code_size_complexity, "Warning! Not enough demo data"]
-                    self.result_det[obj] = list
+                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Warning! Not enough demo data")]
                 else:
                     if code_size_complexity <= (code_base_complexity + size):
-                        complexity = "O(1)"
-                        score = 10
+                        complexity = _("O(1)")
+                        score += 1
+                        list2 = [obj, _("Efficient")]
                     else:
-                        complexity = "O(n) or worst"
-                        score = 0
-                    list = [size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
-                    self.result_det[obj] = list
+                        complexity = _("O(n) or worst")
+                        list2 = [obj, _("Not Efficient")]
+
+                    list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, complexity]
+
             else:
-                score += -5
-                list = [size, "", "", "", "Warning! Object has no demo data"]
-                self.result_det[obj] = list
-        self.data_list.append(self.result_det)
-        self.score = obj_counter and score/obj_counter or 0.0
-        self.result = self.get_result()
-        self.result_details = self.get_result_details()
+                list = [obj, size, "", "", "", _("Warning! Object has no demo data")]
+                list2 = [obj, _("No demo data")]
+            result_dict[obj] = list
+            result_dict2[obj] = list2
+
+        self.score = obj_counter and score / obj_counter or 0.0
+        self.result_details += self.get_result_details(result_dict)
+        self.result += self.get_result(result_dict2)
 
         return None
 
-    def get_result(self):
-        summary = """
-This test checks the speed of the module.
-"""
-        return summary
-
-    def get_result_details(self):
-        header_list = []
-        header_list.append('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s')
-        header_list.append('\n|-\n| %s \n| %s \n| %s \n| %s \n| %s \n| %s ')
-        header_view = ['Object Name', 'Size-Number of Records (S)', '1', 'S/2', 'S', 'Complexity using query']
-        detail = ""
-        self.data_list.append(header_view)
+    def get_result(self, dict):
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n', [_('Object Name'), _('Result'),])
         if not self.error:
-            detail += self.format_table(header=header_list, data_list=self.data_list)
-        return detail
+            return self.format_table(header, data_list=dict)
+        return ""
+
+    def get_result_details(self, dict):
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
+        if not self.error:
+            return self.format_table(header, data_list=dict)
+        return ""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
