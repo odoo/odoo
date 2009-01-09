@@ -227,7 +227,7 @@ class OpenERPDispatcher:
             self.log('result', result)
             return result
         except Exception, e:
-            self.log('exception', e)
+            self.log('exception', tools.exception_to_unicode(e))
             tb = sys.exc_info()
             tb_s = "".join(traceback.format_exception(*tb))
             if tools.config['debug_mode']:
