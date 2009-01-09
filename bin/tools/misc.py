@@ -44,7 +44,7 @@ from itertools import izip
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    for line in file(f).read().split(';'):
+    for line in file_open(f).read().split(';'):
         if (len(line)>0) and (not line.isspace()):
             cr.execute(line)
     cr.commit()
@@ -55,12 +55,8 @@ def init_db(cr):
         if not mod_path:
             continue
         info = False
-        if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
-            info = eval(file(terp_file).read())
-        elif zipfile.is_zipfile(mod_path+'.zip'):
-            zfile = zipfile.ZipFile(mod_path+'.zip')
-            i = os.path.splitext(i)[0]
-            info = eval(zfile.read(os.path.join(i, '__terp__.py')))
+        if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
+            info = eval(file_open(terp_file).read())
         if info:
             categs = info.get('category', 'Uncategorized').split('/')
             p_id = None
