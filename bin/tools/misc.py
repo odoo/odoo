@@ -224,10 +224,11 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         else:
             zipname = tail
         if zipfile.is_zipfile(head+'.zip'):
-            import cStringIO
+            from cStringIO import StringIO
             zfile = zipfile.ZipFile(head+'.zip')
             try:
-                fo = cStringIO.StringIO(zfile.read(os.path.join(
+                fo = StringIO()
+                fo.write(zfile.read(os.path.join(
                     os.path.basename(head), zipname).replace(
                         os.sep, '/')))
 
