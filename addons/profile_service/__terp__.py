@@ -19,26 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name":"Service company profile",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Profile",
-    "description": "Profile for service companies",
-    "depends":[
-        "hr",
-        "project",
-        "board_project",
-        "account_analytic_analysis"
-    ],
-    #"board_project",
-    #"board_account"],
-    "demo_xml":[],
-    "update_xml":[
-        "security/ir.model.access.csv",
-        "profile_service.xml"
-    ],
-    "active":False,
-    "installable":True,
-}
 
+
+{
+    'name': 'Service company profile',
+    'version': '1.0',
+    'category': 'Profile',
+    'description': """Profile for service companies""",
+    'author': 'Tiny',
+    'depends': ['hr', 'project', 'board_project', 'account_analytic_analysis'],
+    'update_xml': ['security/ir.model.access.csv', 'profile_service.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '30405502077',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,23 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Purchase Analytic Distribution Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["purchase","account_analytic_plans"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "description": """
+    'name': 'Purchase Analytic Distribution Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
     The base module to manage analytic distribution and purchase orders.
     """,
-    "update_xml" : [
-        "purchase_analytic_plans_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['purchase', 'account_analytic_plans'],
+    'init_xml': [],
+    'update_xml': ['purchase_analytic_plans_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '62176518909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

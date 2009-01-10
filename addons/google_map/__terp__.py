@@ -19,21 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Google Map",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Others",
-    "description": """The module adds google map field in partner address
+    'name': 'Google Map',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds google map field in partner address
 so that we can directly open google map from the
 url widget.""",
-    "depends" : ["base"],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : ["google_map_wizard.xml","google_map_view.xml"],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['google_map_wizard.xml', 'google_map_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '29498930765',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

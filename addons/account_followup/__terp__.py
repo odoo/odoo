@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Accounting follow-ups management",
-    "version" : "1.0",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """
+    'name': 'Accounting follow-ups management',
+    'version': '1.0',
+    'category': 'Generic Modules/Accounting',
+    'description': """
     Modules to automate letters for unpaid invoices, with multi-level recalls.
 
     You can define your multiple levels of recall through the menu:
@@ -37,20 +38,19 @@
     It will generate a PDF with all the letters according the the
     different levels of recall defined. You can define different policies
     for different companies.""",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [],
-    "demo_xml" : ["followup_demo.xml"],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "wizard/wizard_view.xml",
-        "followup_view.xml",
-        "followup_report_view.xml",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'wizard/wizard_view.xml',
+        'followup_view.xml',
+        'followup_report_view.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['followup_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '72481076453',
 }
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -154,7 +154,7 @@ class account_account(osv.osv):
                 args[pos] = ('id','in',ids1)
             pos+=1
 
-        if context and context.has_key('consolidate_childs'): #add concolidated childs of accounts
+        if context and context.has_key('consolidate_childs'): #add consolidated childs of accounts
             ids = super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
             for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
@@ -166,15 +166,14 @@ class account_account(osv.osv):
 
     def _get_children_and_consol(self, cr, uid, ids, context={}):
         #this function search for all the children and all consolidated children (recursively) of the given account ids
-        res = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        for id in res:
-            this = self.browse(cr, uid, id, context)
-            for child in this.child_consol_ids:
-                if child.id not in res:
-                    res.append(child.id)
-        if len(res) != len(ids):
-            return self._get_children_and_consol(cr, uid, res, context)
-        return res
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
+        ids3 = []
+        for rec in self.browse(cr, uid, ids2, context=context):
+            for child in rec.child_consol_ids:
+                ids3.append(child.id)
+        if ids3:
+            ids3 = self._get_children_and_consol(cr, uid, ids3, context)
+        return ids2+ids3
 
     def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
         #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
@@ -1224,15 +1223,15 @@ class account_tax(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usualy 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
+        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the VAT declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
-        'ref_base_sign': fields.float('Base Code Sign', help="Usualy 1 or -1."),
-        'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
+        'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+        'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Internal Name',size=32),
@@ -1594,7 +1593,7 @@ class account_config_wizard(osv.osv_memory):
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
-        res.sort(lambda x,y: cmp(x[1],y[1]))
+        res.sort(key=lambda x: x[1])
         return res
 
     _columns = {
@@ -1621,25 +1620,12 @@ class account_config_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    def install_account_chart(self, cr, uid,ids, context=None):
+    def install_account_chart(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
-            id = res['charts']
-            def install(id):
+            chart_id = res['charts']
+            if chart_id > 0:
                 mod_obj = self.pool.get('ir.module.module')
-                mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
-                mod_obj.download(cr, uid, [id], context=context)
-                cr.commit()
-                cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%s and m.state='uninstalled'",(id,))
-                ret = cr.fetchall()
-                if len(ret):
-                    for r in ret:
-                        install(r[0])
-                else:
-                    mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
-                    mod_obj.download(cr, uid, [id], context=context)
-                    cr.commit()
-            if id>0:
-                install(id)
+                mod_obj.button_install(cr, uid, [chart_id], context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 

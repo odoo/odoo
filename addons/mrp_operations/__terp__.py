@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Workcenter Production start end workflow",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product", "mrp"],
-    "description": """
+    'name': 'Workcenter Production start end workflow',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
      This module adds state, date_start,date_stop in production order operation lines
      (in the "Workcenters" tab)
      State: draft, confirm, done, cancel
@@ -51,15 +50,20 @@
     So that we can compare the theoretic delay and real delay.
 
     """,
-    "init_xml" : [],
-    "demo_xml" : ["mrp_operation_data.xml"],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "mrp_operations_workflow.xml","mrp_operations_view.xml","mrp_operations_report.xml",
-        "process/mrp_operation_process.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['stock', 'hr', 'purchase', 'product', 'mrp'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'mrp_operations_workflow.xml',
+        'mrp_operations_view.xml',
+        'mrp_operations_report.xml',
+        'process/mrp_operation_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['mrp_operation_data.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '56233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -27,14 +27,13 @@
 # Règlement disponible sur http://comptabilite.erp-libre.info
 # Mise en forme et paramétrage par http://sisalp.fr et http://nbconseil.net
 #
+
+
 {
-    "name" : "France - Plan comptable Societe - 99-03",
-    "version" : "1.1",
-    "author" : "SISalp-NBconseil",
-    "category" : "Localisation/Account Charts",
-    "website": "http://erp-libre.info",
-    "depends" : ["base", "account", "account_chart", 'base_vat'],
-     "description": """
+    'name': 'France - Plan comptable Societe - 99-03',
+    'version': '1.1',
+    'category': 'Localisation/Account Charts',
+    'description': """
     This is the base module to manage the accounting chart for France in Open ERP.
 
     After Installing this module,The Configuration wizard for accounting is launched.
@@ -46,12 +45,19 @@
     * This module installs :
         The Tax Code chart and taxes for French Accounting.
     """,
-    "init_xml" : ["fr_data.xml"],
-    "update_xml" : ["l10n_fr_view.xml","types.xml", "plan-99-03_societe.xml",
-                     "taxes.xml","fr_wizard.xml",],
-    "demo_xml" : [],
-    "installable": True
+    'author': 'SISalp-NBconseil',
+    'website': 'http://erp-libre.info',
+    'depends': ['base', 'account', 'account_chart', 'base_vat'],
+    'init_xml': ['fr_data.xml'],
+    'update_xml': [
+        'l10n_fr_view.xml',
+        'types.xml',
+        'plan-99-03_societe.xml',
+        'taxes.xml',
+        'fr_wizard.xml'
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'certificate': '30349198621',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

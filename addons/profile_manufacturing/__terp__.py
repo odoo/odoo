@@ -19,21 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name":"Manufacturing industry profile",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Profile",
-    "description": "Profile for manufacturing industries",
-    "depends":["mrp", "sale", "delivery","board_manufacturing","product_margin"],
-    "demo_xml":[],
-    "update_xml":[
-        "security/ir.model.access.csv",
-        "profile_manufacturing.xml"
-    ],
-    "active":False,
-    "installable":True,
+    'name': 'Manufacturing industry profile',
+    'version': '1.0',
+    'category': 'Profile',
+    'description': """Profile for manufacturing industries""",
+    'author': 'Tiny',
+    'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin'],
+    'update_xml': ['security/ir.model.access.csv', 'profile_manufacturing.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '27737506213',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -19,14 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Human Resources Expenses Tracking",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "depends" : ["hr","account", "account_tax_include",],
-    "description": """
+    'name': 'Human Resources Expenses Tracking',
+    'version': '1.0',
+    'category': 'Generic Modules/Human Resources',
+    'description': """
     This module aims to manage employee's expenses.
 
     The whole workflow is implemented:
@@ -40,19 +39,21 @@
     the invoice on timesheet module so that you will be able to automatically
     re-invoice your customer's expenses if your work by project.
     """,
-    "init_xml" : [],
-    "demo_xml" : ["hr_expense_demo.xml", "hr.expense.expense.csv"],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "hr_expense_sequence.xml",
-        "hr_expense_workflow.xml",
-        "hr_expense_view.xml",
-        "hr_expense_report.xml",
-        "process/hr_expense_process.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['hr', 'account', 'account_tax_include'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'hr_expense_sequence.xml',
+        'hr_expense_workflow.xml',
+        'hr_expense_view.xml',
+        'hr_expense_report.xml',
+        'process/hr_expense_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['hr_expense_demo.xml', 'hr.expense.expense.csv'],
+    'installable': True,
+    'active': False,
+    'certificate': '62479841789',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

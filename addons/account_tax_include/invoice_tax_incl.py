@@ -40,7 +40,7 @@ account_invoice()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
-    def _amount_line2(self, cr, uid, ids, name, args, context={}):
+    def _amount_line2(self, cr, uid, ids, name, args, context=None):
         """
         Return the subtotal excluding taxes with respect to price_type.
         """
@@ -87,7 +87,9 @@ class account_invoice_line(osv.osv):
         res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], 2)
         return res
 
-    def _price_unit_default(self, cr, uid, context={}):
+    def _price_unit_default(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'check_total' in context:
             t = context['check_total']
             if context.get('price_type', False) == 'tax_included':
@@ -116,7 +118,7 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
-    def move_line_get_item(self, cr, uid, line, context={}):
+    def move_line_get_item(self, cr, uid, line, context=None):
         return {
                 'type':'src',
                 'name':line.name,
@@ -129,27 +131,29 @@ class account_invoice_line(osv.osv):
                 'account_analytic_id':line.account_analytic_id.id,
             }
 
-# TODO: check why ?
-#
-#    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context={}):
-#        if context.get('price_type', False) == 'tax_included':
-#            return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
-#        else:
-#            return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
-#
-#    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, price_type='tax_excluded', context={}):
-#        context.update({'price_type': price_type})
-#        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context=context)
+    def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=None):
+        if context is None:
+            context = {}
+        # if the tax is already included, just return the value without calculations
+        if context.get('price_type', False) == 'tax_included':
+            return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
+        else:
+            return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
+
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, price_type='tax_excluded', context=None):
+        # note: will call product_id_change_unit_price_inv with context... 
+        if context is None:
+            context = {}
+        context.update({'price_type': price_type})
+        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context=context)
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
     _inherit = "account.invoice.tax"
 
-    def compute(self, cr, uid, invoice_id, context={}):
+    def compute(self, cr, uid, invoice_id, context=None):
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
         line_ids = map(lambda x: x.id, inv.invoice_line)
-
-
 
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')

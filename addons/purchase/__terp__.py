@@ -19,35 +19,34 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Purchase Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["base", "account", "stock", "process"],
-    "category" : "Generic Modules/Sales & Purchases",
-    "description": """Module for purchase management
+    'name': 'Purchase Management',
+    'version': '1.1',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """Module for purchase management
     Request for quotation, Create Supplier Invoice, Print Order...""",
-    "init_xml" : [],
-    "demo_xml" : ["purchase_demo.xml", 
-                  #"purchase_unit_test.xml"
-                  ],
-    "update_xml" : [
-        "security/purchase_security.xml",
-        "security/ir.model.access.csv",
-        "purchase_workflow.xml", 
-        "purchase_sequence.xml", 
-        "purchase_data.xml", 
-        "purchase_view.xml", 
-        "purchase_report.xml", 
-        "purchase_wizard.xml",
-        "stock_view.xml",
-        "partner_view.xml",
-        "process/purchase_process.xml"
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'account', 'stock', 'process'],
+    'init_xml': [],
+    'update_xml': [
+        'security/purchase_security.xml',
+        'security/ir.model.access.csv',
+        'purchase_workflow.xml',
+        'purchase_sequence.xml',
+        'purchase_data.xml',
+        'purchase_view.xml',
+        'purchase_report.xml',
+        'purchase_wizard.xml',
+        'stock_view.xml',
+        'partner_view.xml',
+        'process/purchase_process.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['purchase_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '57234283549',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

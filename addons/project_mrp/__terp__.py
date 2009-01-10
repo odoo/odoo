@@ -19,27 +19,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Project Management - MRP and Sale Integration",
-    "version": "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project", 'mrp', "sale", "mrp_jit"],
-    "description": """
+    'name': 'Project Management - MRP and Sale Integration',
+    'version': '1.0',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """
 This module is used to automatically create tasks based on different
 procurements: sales order, manufacturing order, ...
 
 It is mainly used to invoices services based on tasks automatically
 created by sales orders.
 """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml": ["project_workflow.xml",
-                   "process/project_mrp_process.xml"
-                   ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['project', 'mrp', 'sale', 'mrp_jit'],
+    'init_xml': [],
+    'update_xml': ['project_workflow.xml', 'process/project_mrp_process.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '31976495453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

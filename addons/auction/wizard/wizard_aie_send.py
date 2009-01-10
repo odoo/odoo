@@ -161,7 +161,7 @@ def _get_dates(self,cr,uid, datas,context={}):
             return (x.split(' - ')[0], (' - '.join(x.split(' - ')[1:]).decode('latin1','replace').encode('utf-8','replace')))
         send_fields['dates']['selection'] = map(_date_decode, response.read().split('\n'))
     else:
-        raise "Connection to WWW.Auction-in-Europe.com failed !"
+        raise wizard.except_wizard(_('Error'), _("Connection to WWW.Auction-in-Europe.com failed !"))
     return {'objects':len(datas['ids'])}
 
 def _send(self,db_name,uid, datas,context={}):

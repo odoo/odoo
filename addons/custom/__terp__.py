@@ -19,19 +19,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Module for custom developments",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Others",
-    "website": "http://www.openerp.com",
-    "description": "Sample custom module where you can put your customer specific developments.",
-    "depends" : ["base"],
-    "init_xml" : [],
-    "update_xml" : ["custom_view.xml"],
-    "active": False,
-    "installable": True
+    'name': 'Module for custom developments',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """Sample custom module where you can put your customer specific developments.""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': ['custom_view.xml'],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

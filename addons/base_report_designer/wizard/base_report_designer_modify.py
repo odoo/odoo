@@ -160,7 +160,7 @@ class base_report_designer_modify(wizard.interface):
         try:
             return {'file_sxw': base64.encodestring(report.report_sxw_content)}
         except:
-             raise Exception, _('Report does not contain the sxw content!')
+            raise wizard.except_wizard(_('Error'), _('Report does not contain the sxw content!'))
 
     states = {
         'init': {

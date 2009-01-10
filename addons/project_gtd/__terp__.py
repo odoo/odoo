@@ -19,13 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Getting Things Done - Time Management Module",
-    "version": "1.0",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project"],
-    "description": """
+    'name': 'Getting Things Done - Time Management Module',
+    'version': '1.0',
+    'category': 'Generic Modules/Projects & Services',
+    'description': """
 This module implements all concepts defined by the Getting Things Done
 methodology. This world-wide used methodology is used for personal
 time management improvement.
@@ -38,14 +38,17 @@ recording them externally. That way, the mind is freed from the job of
 remembering everything that needs to be done, and can concentrate on actually
 performing those tasks.
     """,
-    "init_xml" : [],
-    "demo_xml" : ["project_gtd_demo.xml"],
-    "update_xml": [
-        "security/ir.model.access.csv",
-        "project_gtd_view.xml","project_gtd_wizard.xml"
+    'author': 'Tiny',
+    'depends': ['project'],
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'project_gtd_view.xml',
+        'project_gtd_wizard.xml'
     ],
-    "active": False,
-    "installable": True
+    'demo_xml': ['project_gtd_demo.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '43525236301',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

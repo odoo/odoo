@@ -19,24 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Charts of Accounts",
-    "version" : "1.1",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "description": """Remove minimal account chart""",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [
-    ],
-    "demo_xml" : [
-    ],
-    "update_xml" : [
-# Must be loaded by each modules
-#       "account_chart.xml",
-    ],
-    "installable": True
+    'name': 'Charts of Accounts',
+    'version': '1.1',
+    'category': 'Generic Modules/Accounting',
+    'description': """Remove minimal account chart""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
+    'init_xml': [],
+    'update_xml': [],
+    'demo_xml': [],
+    'installable': True,
+    'certificate': '73332443901',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

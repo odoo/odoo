@@ -20,9 +20,7 @@
 #
 ##############################################################################
 
-
-import os
-from tools import config
+from tools.translate import _
 
 from base_module_quality import base_module_quality
 import pooler
@@ -31,69 +29,56 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
         super(quality_test, self).__init__()
-#        self.result = """
-#===Method Test===:
-#
-#This test checks if the module classes are raising exception when calling basic methods or no.
-#
-#"""
+        self.name = _("Method Test")
+        self.note = _("""
+This test checks if the module classes are raising exception when calling basic methods or not.
+""")
         self.bool_installed_only = True
         self.ponderation = 1.0
         return None
 
-    def run_test(self, cr, uid, module_path, module_state):
+    def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
         obj_list = self.get_objects(cr, uid, module_name)
-        result = {}
         ok_count = 0
         ex_count = 0
+        result_dict = {}
         for obj in obj_list:
-            temp = []
+            temp = [obj]
             try:
                 res = pool.get(obj).search(cr, uid, [])
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
             try:
                 res1 = pool.get(obj).fields_view_get(cr, uid,)
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
             try:
                 res2 = pool.get(obj).read(cr, uid, [])
-                temp.append('Ok')
+                temp.append(_('Ok'))
                 ok_count += 1
             except:
-                temp.append('Exception')
+                temp.append(_('Exception'))
                 ex_count += 1
-            result[obj] = temp
-#        self.result += ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ') % ('Object Name'.ljust(40), 'search()'.ljust(16), 'fields_view_get()'.ljust(20), 'read()'.ljust(16))
-        header_list = ['Object Name', 'search()', 'fields_view_get', 'read']
-#        for res in result:
-#            self.result += ('\n|-\n| %s \n| %s \n| %s \n| %s ') % (res, result[res][0],result[res][1], result[res][2])
-#        self.result += '\n|}'
+            result_dict[obj] = temp
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
-        if not self.bool_installed_only or module_state=="installed":
-            summary = """
-===Method Test===:
-
-This test checks if the module classes are raising exception when calling basic methods or no.
-
-""" #+ "Score: " + str(self.score) + "/10\n"
-        else:
-            summary ="""  \n===Method Test===:
-
-The module has to be installed before running this test.\n\n """
-            header_list = ""
-            self.error = True
-        self.result = self.format_table(test='method', header=header_list, data_list=[summary,result,self.error])
+        self.result = self.get_result(result_dict)
         return None
 
+
+    def get_result(self, dict):
+        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ', [_('Object Name'), 'search()', 'fields_view_get()', 'read()'])
+        detail = ""
+        if not self.error:
+            detail += self.format_table(header, dict)
+        return detail
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

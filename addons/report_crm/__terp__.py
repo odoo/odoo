@@ -19,24 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "CRM Management - Reporting",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "depends" : ["crm"],
-    "category" : "Generic Modules/CRM & SRM",
-    "description": """A module that adds new reports based on CRM cases.
+    'name': 'CRM Management - Reporting',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """A module that adds new reports based on CRM cases.
     Case By section, Case By category""",
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "report_crm_view.xml",
-    ],
-    "active": False,
-    "installable": True
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['crm'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'report_crm_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '30422968285',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
