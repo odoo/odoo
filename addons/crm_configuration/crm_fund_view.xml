@@ -37,7 +37,7 @@
                     <field name="duration"/>
                     <field name="category2_id" select="1" string="Payment Mode"/>
                 </group>
-                <notebook>
+                <notebook colspan="4">
                 <page string="Funds">
                     <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
@@ -70,7 +70,7 @@
                     <field name="create_date"/>
                     <field name="date_closed"/>
                     <field name="date_action_last"/>
-                    <field name="date"/>
+                    <field name="date_action_next"/>
                     <separator colspan="4"/>
                     <field name="history_line" colspan="2" nolabel="1" mode="tree,form">
                         <form string="Communication history">
