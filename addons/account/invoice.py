@@ -383,6 +383,8 @@ class account_invoice(osv.osv):
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
             for taxe in ait_obj.compute(cr, uid, id).values():
                 ait_obj.create(cr, uid, taxe)
+         # Update the stored value (fields.function), so we write to trigger recompute
+        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)        
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
