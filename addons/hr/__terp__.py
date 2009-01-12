@@ -22,10 +22,12 @@
 
 
 {
-    'name': 'Human Resources',
-    'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """
+    "name" : "Human Resources",
+    "version" : "1.1",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Human Resources",
+    "website" : "http://www.openerp.com",
+    "description": """
     Module for human resource management. You can manage:
     * Employees and hierarchies
     * Work hours sheets

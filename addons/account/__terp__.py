@@ -22,10 +22,11 @@
 
 
 {
-    'name': 'Accounting and financial management',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
-    'description': """Financial and accounting module that covers:
+    "name" : "Accounting and financial management",
+    "version" : "1.1",
+    "depends" : ["product", "base", "process"],
+    "author" : "Tiny",
+    "description": """Financial and accounting module that covers:
     General accounting
     Cost / Analytic accounting
     Third party accounting

@@ -23,7 +23,7 @@
 
 {
     'name': 'Purchase Management',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """Module for purchase management
     Request for quotation, Create Supplier Invoice, Print Order...""",

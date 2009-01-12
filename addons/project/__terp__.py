@@ -22,23 +22,23 @@
 
 
 {
-    'name': 'Project Management',
-    'version': '1.0',
-    'category': 'Generic Modules/Projects & Services',
-    'description': """Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning,
-    order tasks, delegate task, print gantt chart eso.""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['product', 'account', 'hr', 'process'],
-    'init_xml': [],
-    'update_xml': [
-        'security/project_security.xml',
-        'security/ir.model.access.csv',
-        'project_data.xml',
-        'project_wizard.xml',
-        'project_view.xml',
-        'project_report.xml',
-        'process/task_process.xml'
+    "name" : "Project Management",
+    "version": "1.1",
+    "author" : "Tiny",
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Projects & Services",
+    "depends" : ["product", "account", "hr", "process"],
+    "description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
+    "init_xml" : [],
+    "demo_xml" : ["project_demo.xml"],
+    "update_xml": [
+        "security/project_security.xml",
+        "security/ir.model.access.csv",
+        "project_data.xml", 
+        "project_wizard.xml", 
+        "project_view.xml", 
+        "project_report.xml", 
+        "process/task_process.xml"
     ],
     'demo_xml': ['project_demo.xml'],
     'installable': True,

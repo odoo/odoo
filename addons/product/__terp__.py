@@ -22,10 +22,14 @@
 
 
 {
-    'name': 'Products & Pricelists',
-    'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
-    'description': """
+    "name" : "Products & Pricelists",
+    "version" : "1.1",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Inventory Control",
+    "depends" : ["base", "process"],
+    "init_xml" : [],
+    "demo_xml" : ["product_demo.xml"],
+    "description": """
     This is the base module to manage products and pricelists in Open ERP.
 
     Products support variants, different pricing methods, suppliers

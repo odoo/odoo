@@ -2,10 +2,12 @@
 
 
 {
-    'name': 'Human Resources: Holidays management',
-    'version': '0.1',
-    'category': 'Generic Modules/Human Resources',
-    'description': """Human Resources: Holidays tracking and workflow
+    "name" : "Human Resources: Holidays management",
+    "version" : "1.1",
+    "author" : "Tiny & Axelor",
+    "category" : "Generic Modules/Human Resources",
+    "website" : "http://www.openerp.com",
+    "description": """Human Ressources: Holidays tracking and workflow
 
     This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.
 

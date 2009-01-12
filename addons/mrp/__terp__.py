@@ -22,10 +22,13 @@
 
 
 {
-    'name': 'Manufacturing Resource Planning',
-    'version': '1.0',
-    'category': 'Generic Modules/Production',
-    'description': """
+    "name" : "Manufacturing Resource Planning",
+    "version" : "1.1",
+    "author" : "Tiny",
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Production",
+    "depends" : ["stock", "hr", "purchase", "product","process"],
+    "description": """
     This is the base module to manage the manufacturing process in Open ERP.
 
     Features:

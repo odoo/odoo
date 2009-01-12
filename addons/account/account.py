@@ -154,7 +154,7 @@ class account_account(osv.osv):
                 args[pos] = ('id','in',ids1)
             pos+=1
 
-        if context and context.has_key('consolidate_childs'): #add concolidated childs of accounts
+        if context and context.has_key('consolidate_childs'): #add consolidated childs of accounts
             ids = super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
             for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
@@ -170,7 +170,7 @@ class account_account(osv.osv):
         ids3 = []
         for rec in self.browse(cr, uid, ids2, context=context):
             for child in rec.child_consol_ids:
-                ids3.append[child.id]
+                ids3.append(child.id)
         if ids3:
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2+ids3

@@ -22,10 +22,13 @@
 
 
 {
-    'name': 'Payment Management',
-    'version': '1.0',
-    'category': 'Generic Modules/Payment',
-    'description': """
+    "name": "Payment Management",
+    "version": "1.1",
+    "author": "Tiny",
+    "category": "Generic Modules/Payment",
+    "depends": ["account"],
+    "init_xml": [],
+    "description": """
     This module provide :
     * a more efficient way to manage invoice payment.
     * a basic mechanism to easily plug various automated payment.
