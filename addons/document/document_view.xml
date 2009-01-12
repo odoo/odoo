@@ -131,11 +131,11 @@
                     <separator string="Preview" colspan="4"/>
                     <field
                         name="preview"
-                        widget="image" 
-                        readonly="1" 
-                        nolabel="1" 
-                        colspan="4" 
-                        img_height="400" 
+                        widget="image"
+                        readonly="1"
+                        nolabel="1"
+                        colspan="4"
+                        img_height="400"
                         img_width="800"/>
 
                 </page><page string="Indexed Content">
@@ -194,6 +194,7 @@
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
         <field name="domain">[('parent_id','=',active_id)]</field>
+        <field name="context">{'parent_id':'active_id'}</field>
     </record>
 
     <record model="ir.values" id="ir_action_document_file_directory_form">
