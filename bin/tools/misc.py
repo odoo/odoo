@@ -727,7 +727,7 @@ def get_languages():
         'en_US': u'English (US)',
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
-        'et_ET': u'Estonian / Eesti keel',
+        'et_EE': u'Estonian / Eesti keel',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
