@@ -6,10 +6,10 @@
             Process
         -->
         
-        <record id="process_process_purchaseworkflow0" model="process.process">
+        <record id="process_process_purchaseprocess0" model="process.process">
             <field eval="1" name="active"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field eval="&quot;&quot;&quot;Purchase Workflow&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Purchase Process&quot;&quot;&quot;" name="name"/>
         </record>
         
         <!--        
@@ -22,7 +22,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Out Packing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Invoice based on deliveries&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="account.process_process_invoiceworkflow0"/>
+            <field name="process_id" ref="account.process_process_invoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('assigned', 'confirmed')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -33,8 +33,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;When controlling invoice from orders&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="account.process_process_supplierinvoiceworkflow0"/>
-            <field name="subflow_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="account.process_process_supplierinvoiceprocess0"/>
+            <field name="subflow_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -45,7 +45,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Request for quotation is proposed by the system.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -56,7 +56,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encoded manually by the user.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -67,7 +67,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Confirmed Purchase&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Purchase order is confirmed by the user.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -78,7 +78,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Approved Purchase&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Purchase order is approved by supplier.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='approved'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -89,8 +89,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Pre-generated supplier invoice to control based on order&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
-            <field name="subflow_id" ref="account.process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
+            <field name="subflow_id" ref="account.process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -101,7 +101,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Incoming Products&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Packing is created for the products reception control.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='assigned'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -112,8 +112,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Supplier Invoice pre-generated on receptions for control&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_purchaseworkflow0"/>
-            <field name="subflow_id" ref="account.process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_purchaseprocess0"/>
+            <field name="subflow_id" ref="account.process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -124,8 +124,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product Receipt&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Control invoices on receptions&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="process_process_purchaseworkflow0"/>
-            <field name="process_id" ref="account.process_process_supplierinvoiceworkflow0"/>
+            <field name="subflow_id" ref="process_process_purchaseprocess0"/>
+            <field name="process_id" ref="account.process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>

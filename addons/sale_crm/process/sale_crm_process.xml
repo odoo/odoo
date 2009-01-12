@@ -12,7 +12,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Convert opportunity to quotation&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="crm_configuration.process_process_contractworkflow0"/>
+			<field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -22,8 +22,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;CRM Opportunity&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The CRM Opportunity can lead to a quotation.&quot;&quot;&quot;" name="note"/>
-			<field name="subflow_id" ref="crm_configuration.process_process_contractworkflow0"/>
-			<field name="process_id" ref="sale.process_process_salesworkflow0"/>
+			<field name="subflow_id" ref="crm_configuration.process_process_contractprocess0"/>
+			<field name="process_id" ref="sale.process_process_salesprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -34,7 +34,7 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Analytic account&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Reflect the contract made with customer&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="crm_configuration.process_process_contractworkflow0"/>
+			<field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -44,7 +44,7 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Contract Pricelist&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Contract Volume (pricelist)&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="crm_configuration.process_process_contractworkflow0"/>
+			<field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 		

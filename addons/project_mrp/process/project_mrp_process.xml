@@ -12,8 +12,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For each product, on type service and on order&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="sale.process_process_salesworkflow0"/>
-            <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
+            <field name="process_id" ref="sale.process_process_salesprocess0"/>
+            <field name="subflow_id" ref="project.process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -24,8 +24,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Sale Order Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case you sell services on sale order&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="sale.process_process_salesworkflow0"/>
-            <field name="process_id" ref="project.process_process_tasksworkflow0"/>
+            <field name="subflow_id" ref="sale.process_process_salesprocess0"/>
+            <field name="process_id" ref="project.process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -36,8 +36,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A task is created to provide the service.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="mrp.process_process_serviceproductworkflow0"/>
-            <field name="subflow_id" ref="project.process_process_tasksworkflow0"/>
+            <field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
+            <field name="subflow_id" ref="project.process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>

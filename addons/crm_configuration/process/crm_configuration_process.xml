@@ -6,10 +6,10 @@
 			Process
 		-->
 		
-        <record id="process_process_contractworkflow0" model="process.process">
+        <record id="process_process_contractprocess0" model="process.process">
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="crm.model_crm_case"/>
-			<field eval="&quot;&quot;&quot;Contract Workflow&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Contract Process&quot;&quot;&quot;" name="name"/>
 		</record>
 		
 		<!--	
@@ -21,7 +21,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Leads&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Very first contact with new prospect&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field name="process_id" ref="process_process_contractprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -32,7 +32,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Partner&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Convert to prospect to business partner&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field name="process_id" ref="process_process_contractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -41,7 +41,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Opportunities&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;When a real project/opportunity is detected&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field name="process_id" ref="process_process_contractprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -51,7 +51,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Meeting&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Schedule a normal or phone meeting&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_contractworkflow0"/>
+			<field name="process_id" ref="process_process_contractprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>

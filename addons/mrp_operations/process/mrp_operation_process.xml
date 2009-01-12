@@ -6,8 +6,8 @@
 			Process
 		-->
 	
-		<record id="process_process_mrpoperationworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Mrp Operation Workflow&quot;&quot;&quot;" name="name"/>
+		<record id="process_process_mrpoperationprocess0" model="process.process">
+			<field eval="&quot;&quot;&quot;Mrp Operation Process&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="1" name="active"/>
 		</record>
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Production order for any products&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Production Order&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_mrpoperationworkflow0"/>
+			<field name="process_id" ref="process_process_mrpoperationprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -33,7 +33,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Production Work Center&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Work Center&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_mrpoperationworkflow0"/>
+			<field name="process_id" ref="process_process_mrpoperationprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -44,7 +44,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Operation is started&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Start Operation&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_mrpoperationworkflow0"/>
+			<field name="process_id" ref="process_process_mrpoperationprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='startworking'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -55,7 +55,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Operation is done&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Done Operation&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_mrpoperationworkflow0"/>
+			<field name="process_id" ref="process_process_mrpoperationprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='done'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -66,7 +66,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Operation is cancelled&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Cancel Operation&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_mrpoperationworkflow0"/>
+			<field name="process_id" ref="process_process_mrpoperationprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='cancel'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>

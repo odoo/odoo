@@ -6,8 +6,8 @@
 		Process
 	-->
 	
-		<record id="process_process_basecontactworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;base_contact workflow&quot;&quot;&quot;" name="name"/>
+		<record id="process_process_basecontactprocess0" model="process.process">
+			<field eval="&quot;&quot;&quot;Base Contact Process&quot;&quot;&quot;" name="name"/>
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="base_contact.model_res_partner_contact"/>
 		</record>
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;People you work with.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Contacts&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_basecontactworkflow0"/>
+			<field name="process_id" ref="process_process_basecontactprocess0"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 
@@ -32,7 +32,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Companies you work with.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Partners&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_basecontactworkflow0"/>
+			<field name="process_id" ref="process_process_basecontactprocess0"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 
@@ -42,7 +42,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Jobs at a same partner address.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Function&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_basecontactworkflow0"/>
+			<field name="process_id" ref="process_process_basecontactprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 
@@ -52,7 +52,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Working and private addresses.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Addresses&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_basecontactworkflow0"/>
+			<field name="process_id" ref="process_process_basecontactprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 		

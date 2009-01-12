@@ -6,10 +6,10 @@
             Process    
         -->
         
-        <record id="process_process_supplierinvoiceworkflow0" model="process.process">
+        <record id="process_process_supplierinvoiceprocess0" model="process.process">
             <field eval="1" name="active"/>
             <field name="model_id" ref="account.model_account_invoice"/>
-            <field eval="&quot;&quot;&quot;Supplier Invoice Workflow&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Supplier Invoice Process&quot;&quot;&quot;" name="name"/>
         </record>
         
         <!--    
@@ -22,7 +22,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Analytic&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic costs to reinvoice purchases, timesheets, ...&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -33,7 +33,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Invoices&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Pre-generated invoice from control&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -44,7 +44,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Control Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Have a number and entries are generated&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -55,8 +55,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Statement encoding produces payment entries&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
-            <field name="subflow_id" ref="process_process_statementworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
+            <field name="subflow_id" ref="process_process_statementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -67,7 +67,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Accounting Entries&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Validated accounting entries.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
         
@@ -77,7 +77,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Payment Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Select invoices you want to pay and manages advances&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -88,7 +88,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Reconciliation of entries from invoice(s) and payment(s)&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='valid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -99,7 +99,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Paid invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Paid invoice when reconciled.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_supplierinvoiceworkflow0"/>
+            <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
