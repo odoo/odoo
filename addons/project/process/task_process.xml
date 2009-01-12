@@ -6,10 +6,10 @@
         Process
     -->
     
-        <record id="process_process_tasksworkflow0" model="process.process">
+        <record id="process_process_tasksprocess0" model="process.process">
             <field eval="1" name="active"/>
             <field name="model_id" ref="project.model_project_task"/>
-            <field eval="&quot;&quot;&quot;Tasks workflow&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Tasks Process&quot;&quot;&quot;" name="name"/>
         </record>
         
     <!--    
@@ -22,7 +22,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Task by delegate&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Delegate your task to the other user&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_tasksworkflow0"/>
+            <field name="process_id" ref="process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('open', 'pending')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -33,7 +33,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Define the Requirements and Set Planned Hours.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_tasksworkflow0"/>
+            <field name="process_id" ref="process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -44,7 +44,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Open task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encode your working hours.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_tasksworkflow0"/>
+            <field name="process_id" ref="process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='open'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -55,7 +55,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Done task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Task is Completed&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_tasksworkflow0"/>
+            <field name="process_id" ref="process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='done'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -65,9 +65,9 @@
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Trigger Invoice&quot;&quot;&quot;" name="name"/>
-            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceprocess0"/>
             <field eval="&quot;&quot;&quot;Trigger invoices from sale order lines&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_tasksworkflow0"/>
+            <field name="process_id" ref="process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>

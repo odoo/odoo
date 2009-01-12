@@ -60,7 +60,6 @@ class create_quality_check(wizard.interface):
 
     def _create_quality_check(self, cr, uid, data, context={}):
         pool = pooler.get_pool(cr.dbname)
-        print data, context
         objs = []
         for id in data['ids']:
             module_data = pool.get('ir.module.module').browse(cr, uid, id)

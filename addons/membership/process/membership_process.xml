@@ -6,8 +6,8 @@
 			Process
 		-->
 	
-		<record id="process_process_membershipworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Membership workflow&quot;&quot;&quot;" name="name"/>
+		<record id="process_process_membershipprocess0" model="process.process">
+			<field eval="&quot;&quot;&quot;Membership Process&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="base.model_res_partner"/>
 			<field eval="1" name="active"/>
 		</record>
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Define membership product.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Membership product&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 	
@@ -32,7 +32,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Draft invoice for membership.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Waiting member&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -42,7 +42,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Open invoice.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Invoiced member&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -52,7 +52,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Membership invoice paid.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Paid member&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -63,7 +63,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Set an associate member of partner.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Set association&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -74,7 +74,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Member is associated.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Associated member&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_membershipworkflow0"/>
+			<field name="process_id" ref="process_process_membershipprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='associated'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>

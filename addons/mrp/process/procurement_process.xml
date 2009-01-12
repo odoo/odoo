@@ -6,8 +6,8 @@
 			Process
 		-->
 	
-		<record id="process_process_procurementworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Procurement Workflow&quot;&quot;&quot;" name="name"/>
+		<record id="process_process_procurementprocess0" model="process.process">
+			<field eval="&quot;&quot;&quot;Procurement Process&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="1" name="active"/>
 		</record>
@@ -22,8 +22,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;For stockable and consumable&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="mrp.process_process_stockableproductworkflow0"/>
-			<field name="subflow_id" ref="process_process_procurementworkflow0"/>
+			<field name="process_id" ref="mrp.process_process_stockableproductprocess0"/>
+			<field name="subflow_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -34,8 +34,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;If Product type is service&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Service Product&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="mrp.process_process_serviceproductworkflow0"/>
-			<field name="subflow_id" ref="process_process_procurementworkflow0"/>
+			<field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
+			<field name="subflow_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -46,7 +46,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Procurement for raw materials.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Production Order&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_procurementworkflow0"/>
+			<field name="process_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'picking_except', 'confirmed', 'ready', 'in_production', 'cancel', 'done')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -57,7 +57,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Procurement is created if the product quantity is lower than the minimum limit.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Minimum Stock Rule&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_procurementworkflow0"/>
+			<field name="process_id" ref="process_process_procurementprocess0"/>
 			<field eval="1" name="flow_start"/>
 		</record>
 	
@@ -67,7 +67,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Central document to procure products&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_procurementworkflow0"/>
+			<field name="process_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -78,8 +78,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;For stockable and consumable&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
-			<field name="subflow_id" ref="process_process_stockableproductworkflow0"/>
-			<field name="process_id" ref="process_process_procurementworkflow0"/>
+			<field name="subflow_id" ref="process_process_stockableproductprocess0"/>
+			<field name="process_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -90,8 +90,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;If Product type is service&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Service Product&quot;&quot;&quot;" name="name"/>
-			<field name="subflow_id" ref="process_process_serviceproductworkflow0"/>
-			<field name="process_id" ref="process_process_procurementworkflow0"/>
+			<field name="subflow_id" ref="process_process_serviceproductprocess0"/>
+			<field name="process_id" ref="process_process_procurementprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -102,8 +102,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurements&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Procurement orders&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="process_process_procurementworkflow0"/>
-            <field name="process_id" ref="purchase.process_process_purchaseworkflow0"/>
+            <field name="subflow_id" ref="process_process_procurementprocess0"/>
+            <field name="process_id" ref="purchase.process_process_purchaseprocess0"/>
             <field eval="1" name="flow_start"/>
         </record>
         
@@ -113,7 +113,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Minimum stock rule&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Create minimum stock rules&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="product.process_process_productworkflow0"/>
+            <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
         
@@ -123,7 +123,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Routing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Define a routing to describe the manufacturing steps.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="product.process_process_productworkflow0"/>
+            <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
         
@@ -133,7 +133,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Bill of Materials&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Define the product structure, with sub-products and/or components.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="product.process_process_productworkflow0"/>
+            <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
 		

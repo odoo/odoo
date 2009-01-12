@@ -6,8 +6,8 @@
 			Process
 		-->
 	
-		<record id="process_process_stockableproductworkflow0" model="process.process">
-			<field eval="&quot;&quot;&quot;Stockable Product Workflow&quot;&quot;&quot;" name="name"/>
+		<record id="process_process_stockableproductprocess0" model="process.process">
+			<field eval="&quot;&quot;&quot;Stockable Product Process&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="1" name="active"/>
 		</record>
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;The system waits for requested products in stock.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Make to Stock&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_stockableproductworkflow0"/>
+			<field name="process_id" ref="process_process_stockableproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -33,7 +33,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Wait for available products for reservation&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Stockable Stock&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_stockableproductworkflow0"/>
+			<field name="process_id" ref="process_process_stockableproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -44,8 +44,8 @@
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;A Request for Quotation is created and sent to the supplier.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
-			<field name="subflow_id" ref="purchase.process_process_purchaseworkflow0"/>
-			<field name="process_id" ref="process_process_stockableproductworkflow0"/>
+			<field name="subflow_id" ref="purchase.process_process_purchaseprocess0"/>
+			<field name="process_id" ref="process_process_stockableproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -56,7 +56,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Production orders are created for the product manufacturing.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Production Order&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_stockableproductworkflow0"/>
+			<field name="process_id" ref="process_process_stockableproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>

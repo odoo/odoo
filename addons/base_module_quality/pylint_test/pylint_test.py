@@ -67,6 +67,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     break
                 n += 1
                 leftchar = -1
+#                print res
                 while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
                     leftchar -= 1
                 rightchar = -10
@@ -80,6 +81,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     score += 0
                     #self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                     dict[file] = [file, _("Unable to parse the result. Check the details.")]
+#                self.result_details += res.replace('''<div''', '''<div class="wikiwidget readonlyfield"''')
                 self.result_details += res.replace('''<div''', '''<div class="wikiwidget readonlyfield"''')
         self.result_details += '</body></html>'
         average_score = n and score / n or score

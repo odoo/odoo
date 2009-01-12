@@ -6,10 +6,10 @@
             Process
         -->
         
-        <record id="process_process_hrtimesheetworkflow0" model="process.process">
+        <record id="process_process_hrtimesheetprocess0" model="process.process">
             <field eval="1" name="active"/>
             <field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
-            <field eval="&quot;&quot;&quot;Hr Timesheet Workflow&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Hr Timesheet Process&quot;&quot;&quot;" name="name"/>
         </record>
         
         <!-- 
@@ -22,7 +22,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Analytic cost&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic cost is created&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -33,7 +33,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Review&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Review end of day check day is complete&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -44,8 +44,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Timesheet sheet confirm at the end of the period&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="process_process_hrtimesheetworkflow0"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="subflow_id" ref="process_process_hrtimesheetprocess0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -56,7 +56,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Timesheet Line&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encode your timesheet line&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -67,7 +67,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Phone call&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Whatever time u spent for phone call&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -78,7 +78,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Attendance&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Defines employee's timesheet entry&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="1" name="flow_start"/>
         </record>
     
@@ -88,8 +88,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Defines the task work entry into timesheet line&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
-            <field name="subflow_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
+            <field name="subflow_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -100,7 +100,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Timesheet sheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Encode Your hours and Sign in / out&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -111,7 +111,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Confirmed Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;At the end of the period (week/month)&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -122,7 +122,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Validated Timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Control by the project manager&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='done'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -133,8 +133,8 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Invoice on Work&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Invoice based on timesheet&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="account.process_process_invoiceworkflow0"/>
-            <field name="process_id" ref="process_process_hrtimesheetworkflow0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceprocess0"/>
+            <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>

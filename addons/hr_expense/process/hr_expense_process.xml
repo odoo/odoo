@@ -6,10 +6,10 @@
 			Process
 		-->
     
-		<record id="process_process_expenseworkflow0" model="process.process">
+		<record id="process_process_expenseprocess0" model="process.process">
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
-			<field eval="&quot;&quot;&quot;Expense Workflow&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Expense Process&quot;&quot;&quot;" name="name"/>
 		</record>
 		
 		<!--
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Draft Expenses&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Employee encode all his expenses&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
@@ -33,7 +33,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Confirmed Expenses&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The employee validates his expense sheet&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -44,7 +44,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Refused&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The direct manager refuses the sheet.Reset as draft.&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='canceled'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -55,7 +55,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Approved&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The direct manager approves the sheet&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='accepted'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -66,7 +66,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Supplier Invoice&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The accoutant validates the sheet&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -77,7 +77,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Reimbursement&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;The accoutant reimburse the expenses&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -88,7 +88,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Reinvoicing&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Some costs may be reinvoices to the customer&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_expenseworkflow0"/>
+			<field name="process_id" ref="process_process_expenseprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
