@@ -50,7 +50,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         module_name = module_path.split('/')[-1]
         obj_list = self.get_objects(cr, uid, module_name)
         obj_counter = 0
-        score = 0
+        score = 0.0
         obj_ids = self.get_ids(cr, uid, obj_list)
         result_dict = {}
         result_dict2 = {}
@@ -63,7 +63,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             if size:
                 list = []
 
-                #we perform the operation twice, and count the number of queries in the second run. This allows to avoid the cache effect. (like translated terms that asks for more queries) 
+                #we perform the operation twice, and count the number of queries in the second run. This allows to avoid the cache effect. (like translated terms that asks for more queries)
                 pool.get(obj).read(cr, uid, [ids[0]])
                 c = cr.count
                 pool.get(obj).read(cr, uid, [ids[0]])
