@@ -12,7 +12,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Timesheet task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Complete Your Timesheet.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="project.process_process_tasksworkflow0"/>
+            <field name="process_id" ref="project.process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -23,7 +23,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Work on Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Defines the work summary of task&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet_sheet.process_process_hrtimesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet_sheet.process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('open', pending', 'done', 'cancelled')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -34,7 +34,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Task Work&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Work on task&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="hr_timesheet.process_process_timesheetworkflow0"/>
+            <field name="process_id" ref="hr_timesheet.process_process_timesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='open'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>

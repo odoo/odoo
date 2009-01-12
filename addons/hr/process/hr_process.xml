@@ -6,10 +6,10 @@
 			Process
 		-->
     
-		<record id="process_process_employeecontractworkflow0" model="process.process">
+		<record id="process_process_employeecontractprocess0" model="process.process">
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="hr.model_hr_employee"/>
-			<field eval="&quot;&quot;&quot;Employee Contract Workflow&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Employee Contract Process&quot;&quot;&quot;" name="name"/>
 		</record>
 		
 		<!--
@@ -22,7 +22,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Employee Complete Form&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -32,7 +32,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee Contact&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Fill up employee's contact information&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 	
@@ -42,7 +42,7 @@
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Openerp user&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Create OpenERP User&quot;&quot;&quot;" name="note"/>
-			<field name="process_id" ref="process_process_employeecontractworkflow0"/>
+			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
 		
