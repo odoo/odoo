@@ -74,7 +74,7 @@ class view(osv.osv):
     ]
 
     def create(self, cr, uid, vals, context={}):
-       if 'inherit_id' in vals:
+       if 'inherit_id' in vals and vals['inherit_id']:
            obj=self.browse(cr,uid,vals['inherit_id'])
            child=self.pool.get(vals['model'])
            error="Inherited view model [%s] and \
