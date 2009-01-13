@@ -1868,6 +1868,45 @@ class account_tax_template(osv.osv):
 
 account_tax_template()
 
+# Fiscal Position Templates
+
+class account_fiscal_position_template(osv.osv):
+    _name = 'account.fiscal.position.template'
+    _description = 'Template for Fiscal Position'
+    
+    _columns = {
+        'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
+        'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Accounts Mapping'),
+        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Taxes Mapping')
+    }
+    
+account_fiscal_position_template()
+
+class account_fiscal_position_tax_template(osv.osv):
+    _name = 'account.fiscal.position.tax.template'
+    _description = 'Fiscal Position Template Taxes Mapping'
+    _rec_name = 'position_id'
+
+    _columns = {
+        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
+        'tax_src_id': fields.many2one('account.tax.template', 'Tax Source', required=True),
+        'tax_dest_id': fields.many2one('account.tax.template', 'Replacement Tax')
+    }
+
+account_fiscal_position_tax_template()
+
+class account_fiscal_position_account_template(osv.osv):
+    _name = 'account.fiscal.position.account.template'
+    _description = 'Fiscal Position Template Accounts Mapping'
+    _rec_name = 'position_id'
+    _columns = {
+        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
+        'account_src_id': fields.many2one('account.account.template', 'Account Source', required=True),
+        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', required=True)
+    }
+
+account_fiscal_position_account_template() 
+
     # Multi charts of Accounts wizard
 
 class wizard_multi_charts_accounts(osv.osv_memory):
@@ -1909,6 +1948,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
+        obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
+        obj_fiscal_position = self.pool.get('account.fiscal.position')
 
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
@@ -2114,6 +2155,36 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #create the property
                 property_obj.create(cr, uid, vals)
 
+        fp_ids = obj_fiscal_position_template.search(cr, uid,[])
+        
+        if fp_ids:
+            for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
+                
+                vals_fp = {
+                           'company_id' : company_id,
+                           'name' : position.name,
+                           }
+                new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
+                
+                obj_tax_fp = self.pool.get('account.fiscal.position.tax')
+                obj_ac_fp = self.pool.get('account.fiscal.position.account')
+                
+                for tax in position.tax_ids:
+                    vals_tax = {
+                                'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
+                                'tax_dest_id' : tax_template_ref[tax.tax_dest_id.id],
+                                'position_id' : new_fp,
+                                }
+                    obj_tax_fp.create(cr, uid, vals_tax)
+                
+                for acc in position.account_ids:
+                    vals_acc = {
+                                'account_src_id' : acc_template_ref[acc.account_src_id.id],
+                                'account_dest_id' : acc_template_ref[acc.account_dest_id.id],
+                                'position_id' : new_fp,
+                                }
+                    obj_ac_fp.create(cr, uid, vals_acc)
+        
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
