@@ -11,13 +11,13 @@
                     <page string="Accounting">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchases Properties" colspan="2"/>
-                        <field name="property_account_income"/>
-                        <field name="property_account_expense"/>
+                        <field name="property_account_income" attrs="{'readonly':[('sale_ok','=',0)]}" />
+                        <field name="property_account_expense" attrs="{'readonly':[('purchase_ok','=',0)]}" />
 
                         <separator string="Sale Taxes" colspan="2"/>
                         <separator string="Purchase Taxes" colspan="2"/>
-                        <field name="taxes_id" nolabel="1" colspan="2"/>
-                        <field name="supplier_taxes_id" nolabel="1" colspan="2"/>
+                        <field name="taxes_id" nolabel="1" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                        <field name="supplier_taxes_id" nolabel="1" colspan="2" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
                     </page>
                 </notebook>
             </field>
