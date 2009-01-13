@@ -60,7 +60,6 @@ class report_xml(osv.osv):
         report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw),
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())),
-            'report_type' : file_type
         })
         cr.commit()
         db = pooler.get_db_only(cr.dbname)
