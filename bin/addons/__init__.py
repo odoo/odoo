@@ -154,8 +154,9 @@ def get_module_filetree(module, dir='.'):
         return False
     
     dir = os.path.normpath(dir)
-    if dir == '.': dir = ''
-    if dir.startswith('..') or dir[0] == '/':
+    if dir == '.':
+        dir = ''
+    if dir.startswith('..') or (dir and dir[0] == '/'):
         raise Exception('Cannot access file outside the module')
 
     if not os.path.isdir(path):
