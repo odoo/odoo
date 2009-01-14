@@ -1901,8 +1901,8 @@ class account_fiscal_position_account_template(osv.osv):
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account.template', 'Account Source', required=True),
-        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', required=True)
+        'account_src_id': fields.many2one('account.account.template', 'Account Source', domain=[('type','<>','view')], required=True),
+        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
 
 account_fiscal_position_account_template() 
