@@ -448,8 +448,8 @@ class account_journal(osv.osv):
 
         'active': fields.boolean('Active'),
         'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account'),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account'),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries'),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is cheked, the system will try to group the accouting lines when generating them from invoices."),
