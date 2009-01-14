@@ -182,7 +182,7 @@ class account_invoice(osv.osv):
 
         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]} ),
 
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done'), help="Keep empty to use the period of the validation date."),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation date."),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
