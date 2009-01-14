@@ -170,7 +170,8 @@ def get_module_filetree(module, dir='.'):
     for f in files:
         if not f.startswith(dir):
             continue
-        f = f[len(dir)+int(not dir.endswith('/')):]
+        if dir:
+            f = f[len(dir)+int(not dir.endswith('/')):]
         lst = f.split(os.sep)
         current = tree
         while len(lst) != 1:
