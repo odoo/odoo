@@ -103,14 +103,18 @@ class ir_cron(osv.osv, netsvc.Agent):
                     addsql = ', active=False'
                 cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
                 cr.commit()
+	except:
+		print "Exception!"
         finally:
             cr.close()
-        #
+	#
         # Can be improved to do at the min(min(nextcalls), time()+next_wait)
         # But is this an improvement ?
         # 
         if not check:
             self.setAlarm(self._poolJobs, int(time.time())+next_wait, [db_name])
+	return None
+
 ir_cron()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
