@@ -22,15 +22,20 @@
 
 import xmlrpclib
 
+class RemoteContractException(Exception): pass
+
 class remote_contract(object):
     def __init__(self, contract_id, contract_password, modules=None):
-        self.__server = 'http://localhost:8069/xmlrpc/'
-        self.__db = "trunk"
+        self.__server = 'http://192.168.0.127:8072/xmlrpc/'
+        self.__db = "maintenance"
         self.__password = "admin"
         self.__login = "admin"
         
         rpc = xmlrpclib.ServerProxy(self.__server + 'common')
-        self.__userid = rpc.login(self.__db, self.__login, self.__password)
+        try:
+            self.__userid = rpc.login(self.__db, self.__login, self.__password)
+        except:
+            raise RemoteContractException("Unable to contact the migration server")
 
         self.__rpc = xmlrpclib.ServerProxy(self.__server + 'object')
         

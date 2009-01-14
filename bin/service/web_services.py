@@ -28,6 +28,7 @@ import string
 import thread
 import threading
 import time
+import sys
 
 from tools.translate import _
 import addons
@@ -67,12 +68,14 @@ class db(netsvc.Service):
 
         self.actions[id] = {'clean': False}
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
-        cr.autocommit(True)
-        time.sleep(0.2)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
-        cr.close()
+        try:
+            cr.autocommit(True)
+            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        finally:
+            cr.close()
+            sql_db.close_db('template1')
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
                 try:
@@ -105,7 +108,7 @@ class db(netsvc.Service):
                 except Exception, e:
                     serv.actions[id]['clean'] = False
                     serv.actions[id]['exception'] = e
-                    from StringIO import StringIO
+                    from cStringIO import StringIO
                     import traceback
                     e_str = StringIO()
                     traceback.print_exc(file=e_str)
@@ -145,7 +148,7 @@ class db(netsvc.Service):
         sql_db.close_db(db_name)
         logger = netsvc.Logger()
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
         cr.autocommit(True)
         try:
@@ -160,6 +163,7 @@ class db(netsvc.Service):
                     'DROP DB: %s' % (db_name))
         finally:
             cr.close()
+            sql_db.close_db('template1')
         return True
 
     def dump(self, password, db_name):
@@ -196,11 +200,14 @@ class db(netsvc.Service):
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
         cr.autocommit(True)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
-        cr.close()
+        try:
+            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        finally:
+            cr.close()
+            sql_db.close_db('template1')
 
         cmd = ['pg_restore']
         if tools.config['db_user']:
@@ -239,24 +246,28 @@ class db(netsvc.Service):
 
     def list(self):
         db = sql_db.db_connect('template1')
+        cr = db.cursor()
         try:
-            cr = db.cursor()
-            db_user = tools.config["db_user"]
-            if not db_user and os.name == 'posix':
-                import pwd
-                db_user = pwd.getpwuid(os.getuid())[0]
-            if not db_user:
-                cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
-                res = cr.fetchone()
-                db_user = res and str(res[0])
-            if db_user:
-                cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
-            else:
-                cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
-            res = [str(name) for (name,) in cr.fetchall()]
+            try:
+                cr = db.cursor()
+                db_user = tools.config["db_user"]
+                if not db_user and os.name == 'posix':
+                    import pwd
+                    db_user = pwd.getpwuid(os.getuid())[0]
+                if not db_user:
+                    cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
+                    res = cr.fetchone()
+                    db_user = res and str(res[0])
+                if db_user:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
+                else:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
+                res = [str(name) for (name,) in cr.fetchall()]
+            except:
+                res = []
+        finally:
             cr.close()
-        except:
-            res = []
+            sql_db.close_db('template1')
         res.sort()
         return res
 
@@ -276,6 +287,10 @@ class db(netsvc.Service):
         return release.version
 
     def migrate_databases(self, password, databases):
+
+        from osv.orm import except_orm
+        from osv.osv import except_osv
+
         security.check_super(password)
         l = netsvc.Logger()
         for db in databases:
@@ -283,13 +298,17 @@ class db(netsvc.Service):
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True) 
+            except except_orm, inst:
+                self.abortResponse(1, inst.name, 'warning', inst.value)
+            except except_osv, inst:
+                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except Exception, e:
-                tools.debug(e)
+                import traceback
+                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
+                l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
                 raise
         return True
 db()
-
-class MigrationException(Exception): pass
 
 class common(netsvc.Service):
     def __init__(self,name="common"):
@@ -372,12 +391,12 @@ GNU Public Licence.
         security.check_super(password)
         l = netsvc.Logger()
         try: 
-            from tools.maintenance import remote_contract
-            rc = remote_contract(contract_id, contract_password)
+            import tools.maintenance as tm
+            rc = tm.remote_contract(contract_id, contract_password)
             if not rc.id:
-                raise MigrationException('This contract does not exist or is not active') 
+                raise tm.RemoteContractException('This contract does not exist or is not active') 
             if rc.status != 'full':
-                raise MigrationException('Can not get updates for a partial contract')
+                raise tm.RemoteContractException('Can not get updates for a partial contract')
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
@@ -389,7 +408,10 @@ GNU Public Licence.
                 mp = addons.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
-                        rmtree(os.path.realpath(mp))
+                        if os.path.islink(mp):
+                            os.unlink(mp)
+                        else:
+                            rmtree(mp)
                     else:
                         os.unlink(mp + '.zip')
 
@@ -400,7 +422,7 @@ GNU Public Licence.
                 zip.close()
 
             return True
-        except MigrationException, e:
+        except tm.RemoteContractException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
             import traceback

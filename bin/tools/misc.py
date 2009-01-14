@@ -44,7 +44,7 @@ from itertools import izip
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    for line in file(f).read().split(';'):
+    for line in file_open(f).read().split(';'):
         if (len(line)>0) and (not line.isspace()):
             cr.execute(line)
     cr.commit()
@@ -55,12 +55,8 @@ def init_db(cr):
         if not mod_path:
             continue
         info = False
-        if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
-            info = eval(file(terp_file).read())
-        elif zipfile.is_zipfile(mod_path+'.zip'):
-            zfile = zipfile.ZipFile(mod_path+'.zip')
-            i = os.path.splitext(i)[0]
-            info = eval(zfile.read(os.path.join(i, '__terp__.py')))
+        if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
+            info = eval(file_open(terp_file).read())
         if info:
             categs = info.get('category', 'Uncategorized').split('/')
             p_id = None
@@ -224,13 +220,14 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         else:
             zipname = tail
         if zipfile.is_zipfile(head+'.zip'):
-            import StringIO
+            from cStringIO import StringIO
             zfile = zipfile.ZipFile(head+'.zip')
             try:
-                fo = StringIO.StringIO(zfile.read(os.path.join(
+                fo = StringIO()
+                fo.write(zfile.read(os.path.join(
                     os.path.basename(head), zipname).replace(
                         os.sep, '/')))
-
+                fo.seek(0)
                 if pathinfo:
                     return fo, name
                 return fo
@@ -560,7 +557,7 @@ class cache(object):
         
         def to_tuple(d):
             i = d.items()
-            i.sort()
+            i.sort(key=lambda (x,y): x)
             return tuple(i)
 
         if not self.multi:
@@ -569,7 +566,7 @@ class cache(object):
         else:
             multis = kwargs2[self.multi][:]    
             for id in multis:
-                kwargs2[self.multi] = [id]
+                kwargs2[self.multi] = (id,)
                 key = (('dbname', dbname),) + to_tuple(kwargs2)
                 yield key, id
     
@@ -614,7 +611,6 @@ class cache(object):
         self.fun_default_values = {}
         if argspec[3]:
             self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
-        debug(self.fun_default_values)
         
         def cached_result(self2, cr, *args, **kwargs):
             if time.time()-self.timeout > self.lasttime:
@@ -680,6 +676,17 @@ def ustr(value):
 
     return unicode(value, 'utf-8')
 
+def exception_to_unicode(e):
+    if hasattr(e, 'message'):
+        return ustr(e.message)
+    if hasattr(e, 'args'):
+        return "\n".join((ustr(a) for a in e.args))
+    try:
+        return ustr(e)
+    except:
+        return u"Unknow message"
+
+
 # to be compatible with python 2.4
 import __builtin__
 if not hasattr(__builtin__, 'all'):
@@ -711,19 +718,22 @@ def get_languages():
         'bs_BS': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
+        'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
+        'el_EL': u'Greek / Ελληνικά',
         'en_CA': u'English (CA)',
         'en_EN': u'English (default)',
         'en_GB': u'English (UK)',
         'en_US': u'English (US)',
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
-        'et_ET': u'Estonian / Eesti keel',
+        'et_EE': u'Estonian / Eesti keel',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
         'hr_HR': u'Croatian / hrvatski jezik',
         'hu_HU': u'Hungarian / Magyar',
+        'id_ID': u'Indonesian / Bahasa Indonesia',
         'it_IT': u'Italian / Italiano',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'nl_NL': u'Dutch / Nederlands',

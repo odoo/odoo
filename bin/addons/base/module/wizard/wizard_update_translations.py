@@ -23,7 +23,7 @@
 from osv import osv, fields
 import tools
 import pooler
-import StringIO
+import cStringIO
 
 class update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
@@ -45,7 +45,7 @@ class update_translations(osv.osv_memory):
     def act_update(self, cr, uid, ids, context=None):
         this = self.browse(cr, uid, ids)[0]
         lang_name = self._get_lang_name(cr, uid, this.lang)
-        buf=StringIO.StringIO()
+        buf=cStringIO.StringIO()
         tools.trans_export(this.lang, ['all'], buf, 'csv', dbname=cr.dbname)
         tools.trans_load_data(cr.dbname, buf, 'csv', this.lang, lang_name=lang_name)
         buf.close()

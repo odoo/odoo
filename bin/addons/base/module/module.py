@@ -176,6 +176,7 @@ class module(osv.osv):
         'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
+        'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
     }
 
     _defaults = {
@@ -186,7 +187,8 @@ class module(osv.osv):
     _order = 'name'
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the module must be unique !')
+        ('name_uniq', 'unique (name)', 'The name of the module must be unique !'),
+        ('certificate_uniq', 'unique (certificate)', 'The certificate ID of the module must be unique !')
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -309,6 +311,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
+                    'certificate': terp.get('certificate') or None,
                     })
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
                 self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
@@ -328,6 +331,7 @@ class module(osv.osv):
                     'author': terp.get('author', 'Unknown'),
                     'website': terp.get('website', ''),
                     'license': terp.get('license', 'GPL-2'),
+                    'certificate': terp.get('certificate') or None,
                 })
                 res[1] += 1
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
@@ -408,6 +412,7 @@ class module(osv.osv):
                 'author': terp.get('author', 'Unknown'),
                 'website': terp.get('website', ''),
                 'license': terp.get('license', 'GPL-2'),
+                'certificate': terp.get('certificate') or None,
                 })
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
@@ -463,29 +468,21 @@ class module(osv.osv):
                 if os.path.exists(f):
                     logger.notifyChannel("init", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
+        
 
-    def write(self, cr, uid, ids, vals, context=None):
-        # Override the write method because we want to show a warning when the description field is empty !
-        if isinstance( ids, (long, int) ):
-            ids = [ids]
-        if 'description' in vals and not vals['description']:
-            logger = netsvc.Logger()
-            for mod in self.browse(cr, uid, ids):
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
+    def check(self, cr, uid, ids, context=None):
+        logger = netsvc.Logger()
+        for mod in self.browse(cr, uid, ids, context=context):
+            if not mod.description:
+                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name,))
 
-        return super(module, self).write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        # Override the create method because we want to show a warning when the description field is empty !
-        module_id = super(module, self).create(cr, uid, vals, context=context)
-
-        if 'description' in vals and not vals['description']:
-            logger = netsvc.Logger()
-            for mod in self.browse(cr, uid, [module_id]):
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name))
-
-        return module_id 
-
+            if not mod.certificate:
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: no quality certificate' % (mod.name,))
+            else:
+                val = long(mod.certificate) % 97 == 29
+                if not val:
+                    logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
+                    raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
 module()
 

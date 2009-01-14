@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -87,7 +87,6 @@ class osv_pool(netsvc.Service):
         self._init_parent = {}
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.joinGroup('web-services')
-        self.exportMethod(self.exportedMethods)
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.execute)
@@ -261,4 +260,6 @@ class osv(orm.orm):
         pool.add(self._name, self)
         self.pool = pool
         orm.orm.__init__(self, cr)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

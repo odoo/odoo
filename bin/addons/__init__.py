@@ -41,7 +41,8 @@ import release
 import re
 import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
-import StringIO
+from cStringIO import StringIO
+
 
 logger = netsvc.Logger()
 
@@ -198,18 +199,13 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
     if os.path.isfile(ap + '.zip'):
         val = file(ap + '.zip', 'rb').read()
     else:
-        archname = StringIO.StringIO('wb')
+        archname = StringIO()
         archive = PyZipFile(archname, "w", ZIP_DEFLATED)
         archive.writepy(ap)
         _zippy(archive, ap, src=src)
         archive.close()
         val = archname.getvalue()
         archname.close()
-
-    ### debug
-    f = file('/tmp/mod.zip', 'wb')
-    f.write(val)
-    f.close()
 
     if b64enc:
         val = base64.encodestring(val)
@@ -317,11 +313,17 @@ def register_class(m):
     """
     Register module named m, if not already registered
     """
+
+    def log(e):
+        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
+        msg = "Couldn't load%s module %s" % (mt, m)
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
+        logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
+
     global loaded
     if m in loaded:
         return
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
-    loaded.append(m)
     mod_path = get_module_path(m)
     try:
         zip_mod_path = mod_path + '.zip'
@@ -335,15 +337,11 @@ def register_class(m):
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
-    except zipimport.ZipImportError:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find zip module %s' % m)
+    except Exception, e:
+        log(e)
         raise
-    except ImportError:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % m)
-        raise
-    except Exception:
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'Couldn\'t find module %s' % (m))
-        raise
+    else:
+        loaded.append(m)
 
 
 class MigrationManager(object):
@@ -463,24 +461,36 @@ class MigrationManager(object):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    fp = tools.file_open(opj(modulename, pyfile))
-                    mod = None
+                    mod = fp = fp2 = None
                     try:
-                        mod = imp.load_source(name, pyfile, fp)
-                        logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
-                        mod.migrate(self.cr, pkg.installed_version)
-                    except ImportError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
-                        raise
-                    except AttributeError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    except:
-                        raise
-                    fp.close()
-                    del mod
+                        fp = tools.file_open(opj(modulename, pyfile))
+        
+                        # imp.load_source need a real file object, so we create 
+                        # on from the file-like object we get from file_open
+                        fp2 = os.tmpfile()
+                        fp2.write(fp.read())
+                        fp2.seek(0)
+                        try:
+                            mod = imp.load_source(name, pyfile, fp2)
+                            logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
+                            mod.migrate(self.cr, pkg.installed_version)
+                        except ImportError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
+                            raise
+                        except AttributeError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
+                        except:
+                            raise
+                    finally:
+                        if fp:
+                            fp.close()
+                        if fp2:
+                            fp2.close()
+                        if mod:
+                            del mod
     
 
-def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs):
+def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
         status={}
@@ -511,6 +521,8 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
     migrations = MigrationManager(cr, graph)
 
     check_rules = False
+    modobj = None
+
     for package in graph:
         status['progress'] = (float(statusi)+0.1)/len(graph)
         m = package.name
@@ -521,6 +533,12 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
         register_class(m)
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s loading objects' % m)
         modules = pool.instanciate(m, cr)
+
+        if modobj is None:
+            modobj = pool.get('ir.module.module')
+
+        if modobj and perform_checks:
+            modobj.check(cr, 1, [mid])
 
         idref = {}
         status['progress'] = (float(statusi)+0.4)/len(graph)
@@ -564,7 +582,6 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
             #cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
 
             # Set new modules and dependencies
-            modobj = pool.get('ir.module.module')
             modobj.write(cr, 1, [mid], {'state':'installed', 'latest_version':ver})
             cr.commit()
 
@@ -576,13 +593,12 @@ def load_module_graph(cr, graph, status=None, check_access_rules=True, **kwargs)
 
         statusi+=1
 
-    if check_access_rules and check_rules:
+    if perform_checks and check_rules:
         cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
         for (model,name) in cr.fetchall():
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model,name))
 
 
-    pool = pooler.get_pool(cr.dbname)
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
@@ -603,7 +619,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         if update_module:
             basegraph = create_graph(['base'], force)
-            load_module_graph(cr, basegraph, status, check_access_rules=False, report=report)
+            load_module_graph(cr, basegraph, status, perform_checks=False, report=report)
 
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')

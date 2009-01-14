@@ -162,9 +162,11 @@ class document(object):
                         fname = str(datas['datas_fname'])
                         ext = fname.split('.')[-1].lower()
                         if ext in ('jpg','jpeg', 'png'):
-                            import base64, StringIO
+                            import base64
+                            from StringIO import StringIO
                             dt = base64.decodestring(datas['datas'])
-                            fp = StringIO.StringIO(dt)
+                            fp = StringIO()
+                            fp.write(dt)
                             i = str(len(self.bin_datas))
                             self.bin_datas[i] = fp
                             

@@ -37,7 +37,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
-import StringIO
+import cStringIO
 import xml.dom.minidom
 import copy
 
@@ -365,7 +365,7 @@ def parseString(data, fout=None):
         fp.close()
         return fout
     else:
-        fp = StringIO.StringIO()
+        fp = cStringIO.StringIO()
         r.render(fp)
         return fp.getvalue()
 

@@ -22,7 +22,7 @@
 
 import render
 
-from StringIO import StringIO
+from cStringIO import StringIO
 import xml.dom.minidom
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table
