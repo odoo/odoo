@@ -435,6 +435,13 @@ class Partner(osv.osv):
 
 
     _inherit = 'res.partner'
+    def _get_partners(self, cr, uid, ids, context={}):
+        ids2 = ids
+        while ids2:
+            ids2 = self.search(cr, uid, [('associate_member','in',ids2)], context=context)
+            ids+=ids2
+        return ids
+
     _columns = {
         'member_lines': fields.one2many('membership.membership_line', 'partner',
             'Membership'),
@@ -445,7 +452,7 @@ class Partner(osv.osv):
         'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
             type='selection',selection=STATE,store={'account.invoice':(_get_invoice_partner,['state'], 10),
                                                     'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
+                                                    'res.partner':(_get_partners, ['free_member'], 10)}),
 #       'associate_member': fields.many2one('res.partner', 'Associate member'),
         'free_member': fields.boolean('Free member'),
 #        'membership_start': fields.function(_membership_start, method=True,
