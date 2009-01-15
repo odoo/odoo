@@ -132,7 +132,7 @@ class questionnaire(osv.osv):
         select name, id
         from crm_profiling_question
         where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""
-        res = cr.execute(query, data['form']['questionnaire_name'])
+        res = cr.execute(query, (data['form']['questionnaire_name'],))
         result = cr.fetchall()
         quest_fields={}
         quest_form='''<?xml version="1.0"?>
@@ -175,7 +175,7 @@ class partner(osv.osv):
                 temp.append(data['form'][x])
 
         query = "select answer from partner_question_rel where partner=%s"
-        cr.execute(query, data['id'])
+        cr.execute(query, (data['id'],))
         for x in cr.fetchall():
             temp.append(x[0])
 
