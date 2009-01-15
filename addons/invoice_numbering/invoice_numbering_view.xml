@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 	<data>
 		<record model="ir.ui.view" id="view_account_journal_form_invoice_numbering">
 			<field name="name">account.journal.form.inherit</field>
@@ -11,17 +11,17 @@
 					<field name="fy_seq_id" colspan="4" widget="one2many_list" >
 						<tree string="Invoice Sequences">
 							<field name="fiscalyear_id"/>
-							<field name="sequence_id"/>							
+							<field name="sequence_id"/>
 						</tree>
 						<form string="Invoice Sequences">
 							<field name="fiscalyear_id"/>
-							<field name="sequence_id"/>							
+							<field name="sequence_id"/>
 						</form>
 					</field>
 				</field>
 			</field>
 		</record>
 
-		
+
 	</data>
-</terp>
+</openerp>
