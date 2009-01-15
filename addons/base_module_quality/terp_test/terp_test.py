@@ -22,6 +22,7 @@
 
 import os
 import tools
+from tools.translate import _
 
 from base_module_quality import base_module_quality
 import pooler
@@ -30,9 +31,6 @@ import re
 class quality_test(base_module_quality.abstract_quality_check):
 
     def __init__(self):
-#        '''
-#        This test checks the quality of __terp__.py file in the selected module.
-#        '''
         super(quality_test, self).__init__()
         self.name = _("Terp Test")
         self.note = _("This test checks if the module satisfies the current coding standard used by OpenERP.")
@@ -94,16 +92,15 @@ class quality_test(base_module_quality.abstract_quality_check):
                                 feel_bad_factor += 1
                         else:
                             if not res[key]:
-                                feel_bad_factor += 1       
+                                feel_bad_factor += 1
                         
-                    if key == 'installable' and not res[key]: # installable tag is provided and True
+                    if key == 'installable' and not res[key]: # installable tag is provided and False
                         feel_bad_factor +=1
             else:
                 feel_bad_factor += 1
 
         score = round((feel_good_factor) / float(feel_good_factor + feel_bad_factor),2)
 
-#        self.result += "__terp__.py : "+ str(self.score) + "/10\n"
         return [_('__terp__.py file'), score]
 
 
