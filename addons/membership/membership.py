@@ -30,7 +30,6 @@ STATE = [
     ('old', 'Old Member'),
     ('waiting', 'Waiting Member'),
     ('invoiced', 'Invoiced Member'),
-    ('associated', 'Associated Member'),
     ('free', 'Free Member'),
     ('paid', 'Paid Member'),
 ]
@@ -41,7 +40,6 @@ STATE_PRIOR = {
         'old' : 2,
         'waiting' : 3,
         'invoiced' : 4,
-        'associated' : 5,
         'free' : 6,
         'paid' : 7
         }
@@ -60,7 +58,6 @@ ELSE CASE WHEN MAX(members.state) = 1 THEN 'canceled'
 ELSE CASE WHEN MAX(members.state) = 2 THEN 'old'
 ELSE CASE WHEN MAX(members.state) = 3 THEN 'waiting'
 ELSE CASE WHEN MAX(members.state) = 4 THEN 'invoiced'
-ELSE CASE WHEN MAX(members.state) = 5 THEN 'associated'
 ELSE CASE WHEN MAX(members.state) = 6 THEN 'free'
 ELSE CASE WHEN MAX(members.state) = 7 THEN 'paid'
 END END END END END END END END
@@ -311,7 +308,7 @@ class Partner(osv.osv):
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.browse(cr, uid, ids):
-            if partner.membership_state == 'associated':
+            if partner.associate_member:
                 partner_id = partner.associate_member.id
             else:
                 partner_id = partner.id
@@ -350,8 +347,7 @@ class Partner(osv.osv):
         for partner in self.browse(cr, uid, ids):
             cr.execute('select membership_state from res_partner where id=%s', (partner.id,))
             data_state = cr.fetchall()
-            #if partner.membership_state == 'associated':
-            if data_state[0][0] == 'associated':
+            if partner.associate_member:
                 partner_id = partner.associate_member.id
             else:
                 partner_id = partner.id
