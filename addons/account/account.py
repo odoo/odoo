@@ -289,8 +289,6 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
-         'merge_invoice': fields.boolean('Merge Invoice Entries',help="Check this box if you want that all lines of "\
-            "a customer or supplier invoice using this account are created in one line only"),
     }
 
     def _default_company(self, cr, uid, context={}):
