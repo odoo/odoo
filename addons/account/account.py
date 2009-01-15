@@ -2069,8 +2069,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['code'] = _('SAJ')
 
         if obj_multi.chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_receivable.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_receivable.id]
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
 
@@ -2080,8 +2080,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['code']=_('EXJ')
 
         if obj_multi.chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_payable.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_payable.id]
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
 
