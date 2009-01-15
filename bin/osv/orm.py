@@ -481,7 +481,7 @@ class orm_template(object):
                     if line[i]:
                         if fields_def[field[len(prefix)][:-3]]['type']=='many2many':
                             res_id = []
-                            for word in line[i].split(','):
+                            for word in line[i].split(config.get('csv_internal_sep')):
                                 if '.' in word:
                                     module, xml_id = word.rsplit('.', 1)
                                 else:
@@ -551,7 +551,7 @@ class orm_template(object):
                         res = []
                         if line[i]:
                             relation = fields_def[field[len(prefix)]]['relation']
-                            for word in line[i].split(','):
+                            for word in line[i].split(config.get('csv_internal_sep')):
                                 res2 = self.pool.get(relation).name_search(cr,
                                         uid, word, [], operator='=')
                                 res3 = (res2 and res2[0][0]) or False
