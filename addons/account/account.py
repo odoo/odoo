@@ -1874,6 +1874,7 @@ class account_fiscal_position_template(osv.osv):
     
     _columns = {
         'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Accounts Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Taxes Mapping')
     }
@@ -2153,7 +2154,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #create the property
                 property_obj.create(cr, uid, vals)
 
-        fp_ids = obj_fiscal_position_template.search(cr, uid,[])
+        fp_ids = obj_fiscal_position_template.search(cr, uid,[('chart_template_id', '=', obj_multi.chart_template_id.id)])
         
         if fp_ids:
             for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
