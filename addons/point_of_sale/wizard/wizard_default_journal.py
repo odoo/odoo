@@ -95,9 +95,9 @@ class wizard_default_journal(wizard.interface):
             journal_codes[obj.code] = int(obj.journal_id.id)
 
         form = data['form']
-        form['default_journal'] = journal_codes.get('DEFAULT')
-        form['default_journal_rebate'] = journal_codes.get('REBATE')
-        form['default_journal_gift'] = journal_codes.get('GIFT')
+        form['default_journal'] = journal_codes.get('DEFAULT') or False
+        form['default_journal_rebate'] = journal_codes.get('REBATE') or False
+        form['default_journal_gift'] = journal_codes.get('GIFT') or False
 
         return form
 
@@ -124,6 +124,4 @@ class wizard_default_journal(wizard.interface):
     }
 
 wizard_default_journal('pos.config.journal')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
