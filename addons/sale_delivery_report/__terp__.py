@@ -20,5 +20,21 @@
 #
 ##############################################################################
 
-import sale_prepare_allot
-import order
+
+{
+    'name': 'Print Delivery Order',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """Allows to print a delivery order.""",
+    'author': 'Tiny',
+    'depends': ['sale', 'delivery'],
+    'init_xml': [],
+    'update_xml': [
+        'delivery_report.xml'
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -71,4 +71,4 @@ class shipping(report_sxw.rml_parse):
 #        sum_total = self.cr.fetchone()[0] or 0.00
 #        return True
 
-report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/sale/report/shipping.rml',parser=shipping)
+report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/sale_delivery/report/shipping.rml',parser=shipping)

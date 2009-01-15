@@ -20,5 +20,5 @@
 #
 ##############################################################################
 
-import sale_prepare_allot
-import order
+import report
+

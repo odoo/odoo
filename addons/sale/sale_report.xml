@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- 
-	this report is defined here instead of in the stock module because it uses the
-	sale_id field defined in the sale module
-	-->
-        <report id="report_shipping" model="stock.picking" name="sale.shipping" rml="sale/report/shipping.rml" string="Delivery order"/>
-        
-        <!--
-	<report
-		id="report_prepare"
-		string="Preparation Order"
-		model="sale.order"
-		name="sale.order.prepare"
-		rml="sale/report/prepare.rml"/>
 
-	<report
-		id="report_prepare_allot"
-		string="Preparation Order (with Allotments)"
-		model="sale.order"
-		name="sale.order.prepare.allot"
-		rml="sale/report/prepare_allot.rml"
-		auto="False"/>
-	-->
         <report auto="False" id="report_sale_order" model="sale.order" name="sale.order" rml="sale/report/order.rml" string="Quotation / Order"/>
 
     </data>
