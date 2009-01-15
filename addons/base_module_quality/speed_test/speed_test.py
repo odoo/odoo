@@ -110,11 +110,11 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         return ""
 
     def get_result_details(self, dict):
-#        header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
-        header = ('! %-40s \n! %-10s \n! %-10s \n! %-10s \n! %-10s \n! %-20s', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
-        # todo ...ronvert result come from format table to html format will display in table format
+        str_html = '''<html><head></head><body><table border="1">'''
+        header = ('<tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
         if not self.error:
-            return '<pre>' + self.format_table(header, data_list=dict) + '</pre>'
+            res = str_html + self.format_html_table(header, data_list=dict) + '</table></body></html>'
+            return res
         return ""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

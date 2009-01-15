@@ -66,22 +66,22 @@ class quality_test(base_module_quality.abstract_quality_check):
                     self.result += _("Error. Is pylint correctly installed?")+"\n"
                     break
                 n += 1
-                leftchar = -1
-#                print res
-                while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
-                    leftchar -= 1
-                rightchar = -10
-                while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
-                    rightchar += 1
+#                leftchar = -1
+#                while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
+#                    leftchar -= 1
+#                rightchar = -10
+#                while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
+#                    rightchar += 1
                 try:
-                    score += float(res[leftchar+1:rightchar])
+#                    score += float(res[leftchar+1:rightchar])
+                    scr = res.split("Your code has been rated at")[1].split("</div>")[0].split("/")[0]
+                    score += float(scr)
                     #self.result += file + ": " + res[leftchar+1:rightchar] + "/10\n"
-                    dict[file] = [file, res[leftchar+1:rightchar]]
+                    dict[file] = [file, scr]
                 except:
                     score += 0
                     #self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                     dict[file] = [file, _("Unable to parse the result. Check the details.")]
-#                self.result_details += res.replace('''<div''', '''<div class="wikiwidget readonlyfield"''')
                 self.result_details += res.replace('''<div''', '''<div class="wikiwidget readonlyfield"''')
         self.result_details += '</body></html>'
         average_score = n and score / n or score

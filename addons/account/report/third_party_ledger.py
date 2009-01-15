@@ -44,6 +44,8 @@ class third_party_ledger(rml_parse.rml_parse):
 			'comma_me' : self.comma_me,
 		})
 	def date_range(self,start,end):
+		if not start or not end:
+			return []
 		start = datetime.date.fromtimestamp(time.mktime(time.strptime(start,"%Y-%m-%d")))
 		end = datetime.date.fromtimestamp(time.mktime(time.strptime(end,"%Y-%m-%d")))
 		full_str_date = []
@@ -158,9 +160,10 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.transform_period_into_date_array(data)
 		elif data['form']['state'] == 'all':
 			self.transform_both_into_date_array(data)
-
-
-		self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
+			
+		self.date_lst_string = ''
+		if self.date_lst:
+			self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
@@ -183,7 +186,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
-		if data['form']['soldeinit'] :
+		if self.date_lst and data['form']['soldeinit'] :
 			
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
@@ -229,6 +232,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND l.reconcile_id IS NULL"
+		
 #		if data['form']['soldeinit'] :
 #			
 #			self.cr.execute(
@@ -249,8 +253,8 @@ class third_party_ledger(rml_parse.rml_parse):
 #				sum = r['debit'] - r['credit']
 #				r['progress'] = sum
 #				full_account.append(r)
-
-		self.cr.execute(
+		if self.date_lst_string:
+			self.cr.execute(
 				"SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
 				"FROM account_move_line l " \
 				"LEFT JOIN account_journal j " \
@@ -261,15 +265,14 @@ class third_party_ledger(rml_parse.rml_parse):
 					" " + RECONCILE_TAG + " "\
 					"ORDER BY l.id",
 					(partner.id,))
-		res = self.cr.dictfetchall()
-		
-		sum = 0.0
-		for r in res:
-			sum = r['debit'] - r['credit']
-			r['progress'] = sum
-			full_account.append(r)
-
-		return full_account
+	    	res = self.cr.dictfetchall()
+	    	sum = 0.0
+	    	for r in res:
+				sum = r['debit'] - r['credit']
+				r['progress'] = sum
+				full_account.append(r)
+				
+		return full_account		
 
 	def _sum_debit_partner(self, partner,data):
 
@@ -279,7 +282,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND reconcile_id IS NULL"
-		if data['form']['soldeinit'] :
+		if self.date_lst and data['form']['soldeinit'] :
 			self.cr.execute(
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
@@ -294,21 +297,21 @@ class third_party_ledger(rml_parse.rml_parse):
 			else:
 				result_tmp = result_tmp + 0.0
 
-
-		self.cr.execute(
-				"SELECT sum(debit) " \
-				"FROM account_move_line " \
-				"WHERE partner_id = %s " \
-					"AND account_id IN (" + self.account_ids + ") " \
-					" " + RECONCILE_TAG + " " \
-					"AND date IN (" + self.date_lst_string + ") " ,
-				(partner.id,))
-
-		contemp = self.cr.fetchone()
-		if contemp != None:
-			result_tmp = contemp[0] or 0.0
-		else:
-			result_tmp = result_tmp + 0.0
+		if self.date_lst_string:
+			self.cr.execute(
+					"SELECT sum(debit) " \
+					"FROM account_move_line " \
+					"WHERE partner_id = %s " \
+						"AND account_id IN (" + self.account_ids + ") " \
+						" " + RECONCILE_TAG + " " \
+						"AND date IN (" + self.date_lst_string + ") " ,
+					(partner.id,))
+	
+			contemp = self.cr.fetchone()
+			if contemp != None:
+				result_tmp = contemp[0] or 0.0
+			else:
+				result_tmp = result_tmp + 0.0
 		return result_tmp
 
 	def _sum_credit_partner(self, partner,data):
@@ -318,7 +321,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND reconcile_id IS NULL"
-		if data['form']['soldeinit'] :
+		if self.date_lst and data['form']['soldeinit'] :
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
@@ -333,20 +336,21 @@ class third_party_ledger(rml_parse.rml_parse):
 			else:
 				result_tmp = result_tmp + 0.0
 
-		self.cr.execute(
-				"SELECT sum(credit) " \
-				"FROM account_move_line " \
-				"WHERE partner_id=%s " \
-					"AND account_id IN (" + self.account_ids + ") " \
-					" " + RECONCILE_TAG + " " \
-					"AND date IN (" + self.date_lst_string + ") " ,
-				(partner.id,))
-
-		contemp = self.cr.fetchone()
-		if contemp != None:
-			result_tmp = contemp[0] or 0.0
-		else:
-			result_tmp = result_tmp + 0.0
+		if self.date_lst_string:		
+			self.cr.execute(
+					"SELECT sum(credit) " \
+					"FROM account_move_line " \
+					"WHERE partner_id=%s " \
+						"AND account_id IN (" + self.account_ids + ") " \
+						" " + RECONCILE_TAG + " " \
+						"AND date IN (" + self.date_lst_string + ") " ,
+					(partner.id,))
+	
+			contemp = self.cr.fetchone()
+			if contemp != None:
+				result_tmp = contemp[0] or 0.0
+			else:
+				result_tmp = result_tmp + 0.0
 		return result_tmp
 
 	def _sum_debit(self,data):
@@ -358,7 +362,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND reconcile_id IS NULL"
-		if data['form']['soldeinit'] :
+		if self.date_lst and data['form']['soldeinit'] :
 			self.cr.execute(
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
@@ -373,20 +377,21 @@ class third_party_ledger(rml_parse.rml_parse):
 			else:
 				result_tmp = result_tmp + 0.0
 
-		self.cr.execute(
-				"SELECT sum(debit) " \
-				"FROM account_move_line " \
-				"WHERE partner_id IN (" + self.partner_ids + ") " \
-					"AND account_id IN (" + self.account_ids + ") " \
-					" " + RECONCILE_TAG + " " \
-					"AND date IN (" + self.date_lst_string + ") "
-				)
-
-		contemp = self.cr.fetchone()
-		if contemp != None:
-			result_tmp = contemp[0] or 0.0
-		else:
-			result_tmp = result_tmp + 0.0
+		if self.date_lst_string:
+			self.cr.execute(
+					"SELECT sum(debit) " \
+					"FROM account_move_line " \
+					"WHERE partner_id IN (" + self.partner_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
+						" " + RECONCILE_TAG + " " \
+						"AND date IN (" + self.date_lst_string + ") "
+					)
+	
+			contemp = self.cr.fetchone()
+			if contemp != None:
+				result_tmp = contemp[0] or 0.0
+			else:
+				result_tmp = result_tmp + 0.0
 
 		return result_tmp
 
@@ -400,7 +405,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND reconcile_id IS NULL"
-		if data['form']['soldeinit'] :
+		if self.date_lst and data['form']['soldeinit'] :
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
@@ -414,19 +419,21 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = contemp[0] or 0.0
 			else:
 				result_tmp = result_tmp + 0.0
-		self.cr.execute(
-				"SELECT sum(credit) " \
-				"FROM account_move_line " \
-				"WHERE partner_id IN (" + self.partner_ids + ") " \
-					"AND account_id IN (" + self.account_ids + ") " \
-					" " + RECONCILE_TAG + " " \
-					"AND date IN (" + self.date_lst_string + ") "
-				)
-		contemp = self.cr.fetchone()
-		if contemp != None:
-			result_tmp = contemp[0] or 0.0
-		else:
-			result_tmp = result_tmp + 0.0
+		
+		if self.date_lst_string:
+			self.cr.execute(
+					"SELECT sum(credit) " \
+					"FROM account_move_line " \
+					"WHERE partner_id IN (" + self.partner_ids + ") " \
+						"AND account_id IN (" + self.account_ids + ") " \
+						" " + RECONCILE_TAG + " " \
+						"AND date IN (" + self.date_lst_string + ") "
+					)
+			contemp = self.cr.fetchone()
+			if contemp != None:
+				result_tmp = contemp[0] or 0.0
+			else:
+				result_tmp = result_tmp + 0.0
 
 		return result_tmp
 

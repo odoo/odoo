@@ -59,7 +59,17 @@ class tax_report(rml_parse.rml_parse):
 			return self.comma_me(new)
 	def _get_lines(self, based_on,period_list,company_id=False, parent=False, level=0):
 		res = self._get_codes(based_on,parent,level,period_list)
-		res = self._add_codes(based_on,res,period_list)
+		
+		if period_list[0][2] :
+			res = self._add_codes(based_on,res,period_list)
+		else :
+			self.cr.execute ("select id from account_fiscalyear")
+			fy = self.cr.fetchall()
+			self.cr.execute ("select id from account_period where fiscalyear_id = %d"%(fy[0][0]))
+			periods = self.cr.fetchall()
+			for p in periods :
+				period_list[0][2].append(p[0])
+			res = self._add_codes(based_on,res,period_list)
 		
 		i = 0
 		top_result = []

@@ -1682,7 +1682,63 @@
                     <field name="balance" operator="+"/>
                 </graph>
             </field>
-     </record>
+     	</record>
+     	
+     	<!-- Fiscal Position Templates -->
+     	
+		<record id="view_account_position_template_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.form</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position Template">
+                    <field name="name" select="1"/>
+                    <newline/>
+                    <field name="tax_ids" colspan="4">
+                        <tree string="Taxes Mapping" editable="bottom">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </tree>
+                        <form string="Taxes Mapping">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                        </form>
+                    </field>
+                    <field name="account_ids" colspan="4">
+                        <tree string="Accounts Mapping" editable="bottom">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </tree>
+                        <form string="Accounts Mapping">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_position_template_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.template.tree</field>
+            <field name="model">account.fiscal.position.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
+            <field name="name">Fiscal Position Templates</field>
+            <field name="res_model">account.fiscal.position.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_account_fiscal_position_template_form"
+            id="menu_action_account_fiscal_position_form_template"
+            parent="account_template_folder" sequence="20"/>
 
     </data>
 </openerp>

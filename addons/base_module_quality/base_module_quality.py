@@ -106,7 +106,7 @@ class abstract_quality_check(object):
             result_ids[obj] = ids
         return result_ids
 
-    def format_table(self, header=[], data_list=[]):
+    def format_table(self, header=[], data_list=[]): #This function can work forwidget="text_wiki"
         detail = ""
         detail += (header[0]) % tuple(header[1])
         frow = '\n|-'
@@ -115,6 +115,18 @@ class abstract_quality_check(object):
         for key, value in data_list.items():
             detail += (frow) % tuple(value)
         detail = detail + '\n|}'
+        return detail
+
+    def format_html_table(self, header=[], data_list=[]): #This function can work for widget="html_tag"
+        # function create html table....
+        detail = ""
+        detail += (header[0]) % tuple(header[1])
+        frow = '<tr>'
+        for i in header[1]:
+            frow += '<td>%s</td>'
+        frow += '</tr>'
+        for key, value in data_list.items():
+            detail += (frow) % tuple(value)
         return detail
 
     def add_quatation(self, x, y):
