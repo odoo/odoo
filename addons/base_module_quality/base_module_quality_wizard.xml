@@ -2,6 +2,7 @@
 <openerp>
     <data>
 		<!--<wizard id="base_module_quality" model="ir.module.module" name="base.module.quality" string="Check the Quality of module"/>-->
+		<wizard id="quality_detail_save" model="ir.module.module" name="quality_detail_save" string="Report Save" menu="False"/>
 
         <record id="view_wizard_quality_check_tree" model="ir.ui.view">
             <field name="name">Results of Quality Checks</field>
@@ -45,7 +46,8 @@
                             <field name="state" readonly="1"/>
                         </page>
                         <page string="Detail">
-                            <field name="detail" widget="html_tag" nolabel="1" colspan="4" readonly="1"/>
+	                        <button name="%(quality_detail_save)d" string="Save Report" type="action"/>
+                            <field name="detail" widget="text_html" nolabel="1" colspan="4" readonly="1"/>
                         </page>
                     </notebook>
                 </form>
