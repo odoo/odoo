@@ -191,8 +191,8 @@ class ir_ui_menu(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        if 'read_delta' in ctx:
-            del ctx['read_delta']
+        if self.CONCURRENCY_CHECK_FIELD in ctx:
+            del ctx[self.CONCURRENCY_CHECK_FIELD]
         values_obj = self.pool.get('ir.values')
         values_ids = values_obj.search(cursor, user, [
             ('model', '=', self._name), ('key', '=', 'action'),

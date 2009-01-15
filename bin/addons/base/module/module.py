@@ -462,9 +462,12 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids):
             if mod.state != 'installed':
                 continue
-
+            modpath = addons.get_module_path(mod.name)
+            if not modpath:
+                # unable to find the module. we skip
+                continue
             for lang in filter_lang:
-                f = os.path.join(addons.get_module_path(mod.name), 'i18n', lang + '.po')
+                f = os.path.join(modpath, 'i18n', lang + '.po')
                 if os.path.exists(f):
                     logger.notifyChannel("init", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
