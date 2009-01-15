@@ -192,7 +192,9 @@ class expression(object):
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring): # and not isinstance(field, fields.related):
-                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None)
+                        c = context.copy()
+                        c['active_test'] = False
+                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
             else:

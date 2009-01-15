@@ -850,9 +850,6 @@ class orm_template(object):
             for f in node.childNodes:
                 fields.update(self.__view_look_dom(cr, user, f, context))
 
-        if ('state' not in fields) and (('state' in self._columns) or ('state' in self._inherit_fields)):
-            fields['state'] = {}
-
         return fields
 
     def __view_look_dom_arch(self, cr, user, node, context=None):
@@ -2313,8 +2310,9 @@ class orm(orm_template):
         for f in self._columns.keys(): # + self._inherit_fields.keys():
             if not f in vals:
                 default.append(f)
+
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (not self._inherit_fields[f][0] in avoid_table):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
                 default.append(f)
 
         if len(default):
@@ -2333,7 +2331,7 @@ class orm(orm_template):
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
-        
+
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
         try:        

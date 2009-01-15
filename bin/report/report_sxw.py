@@ -243,7 +243,7 @@ class rml_parse(object):
         self.cr = cr
         self.uid = uid
         self.pool = pooler.get_pool(cr.dbname)
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user = self.pool.get('res.users').browse(cr, uid, uid, fields_process=_fields_process)
         self.localcontext = {
             'user': user,
             'company': user.company_id,
@@ -582,7 +582,8 @@ class report_sxw(report_rml):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
-        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
+        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context,
+            fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
         logo = None
