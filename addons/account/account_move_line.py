@@ -91,7 +91,6 @@ class account_move_line(osv.osv):
     def _default_get(self, cr, uid, fields, context={}):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
-
         # Starts: Manual entry from account.move form
         if context.get('lines',[]):
 
@@ -114,8 +113,11 @@ class account_move_line(osv.osv):
                         account = journal_obj.default_debit_account_id
 
 
-                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
-                    data['account_id'] = account.id
+                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data:
+                    part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
+                    account = self.pool.get('account.fiscal.position').map_account(cr, uid, part, account.id)
+                    account = self.pool.get('account.account').browse(cr, uid, account)
+                    data['account_id'] =  account.id
 
             s = -total_new
             data['debit'] = s>0  and s or 0.0
@@ -170,15 +172,15 @@ class account_move_line(osv.osv):
         total = 0
         ref_id = False
         move = self.pool.get('account.move').browse(cr, uid, move_id, context)
-
+        if 'name' in fields:
+            data.setdefault('name', move.line_id[-1].name)
         acc1 = False
         for l in move.line_id:
             acc1 = l.account_id
             partner_id = partner_id or l.partner_id.id
             ref_id = ref_id or l.ref
             total += (l.debit or 0.0) - (l.credit or 0.0)
-            if 'name' in fields:
-               data.setdefault('name', l.name)
+
         if 'ref' in fields:
             data['ref'] = ref_id
         if 'partner_id' in fields:
@@ -195,11 +197,16 @@ class account_move_line(osv.osv):
             else:
                 account = move.journal_id.default_debit_account_id
 
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        account = self.pool.get('account.fiscal.position').map_account(cr, uid, part, account.id)
+        account = self.pool.get('account.account').browse(cr, uid, account)
+
         if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
             data['account_id'] = account.id
             # Propose the price VAT excluded, the VAT will be added when confirming line
             if account.tax_ids:
-                tax = account.tax_ids
+                taxes = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, account.tax_ids)
+                tax = self.pool.get('account.tax').browse(cr, uid, taxes)
                 for t in self.pool.get('account.tax').compute_inv(cr, uid, tax, total, 1):
                     total -= t['amount']
 
@@ -465,19 +472,27 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 if jt=='sale':
-                    val['account_id'] =  id2
+                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part, id2)
+
                 elif jt=='purchase':
-                    val['account_id'] =  id1
+                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
+
         return {'value':val}
 
-    def onchange_account_id(self, cr, uid, ids, account_id=False):
+    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
         val = {}
         if account_id:
-            tax_ids = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
-            val['account_tax_id'] = tax_ids and tax_ids[0].id or False
+            res = self.pool.get('account.account').browse(cr, uid, account_id)
+            tax_ids = res.tax_ids
+            if tax_ids and partner_id:
+                part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, tax_ids)[0]
+            else:
+                tax_id = tax_ids and tax_ids[0].id or False
+            val['account_tax_id'] = tax_id
         return {'value':val}
 
     #
@@ -684,7 +699,9 @@ class account_move_line(osv.osv):
                 elif field.field=='account_tax_id':
                     attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 elif field.field=='account_id' and journal.id:
-                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id)"')
+                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+                elif field.field == 'partner_id':
+                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
                 if field.readonly:
                     attrs.append('readonly="1"')
                 if field.required:
@@ -693,8 +710,7 @@ class account_move_line(osv.osv):
                     attrs.append('required="0"')
                 if field.field in ('amount_currency','currency_id'):
                     attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
-                if field.field == 'partner_id':
-                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
+
                 if field.field in widths:
                     attrs.append('width="'+str(widths[field.field])+'"')
                 xml += '''<field name="%s" %s/>\n''' % (field.field,' '.join(attrs))
