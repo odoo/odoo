@@ -257,9 +257,9 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
+        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."),
-        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
@@ -282,6 +282,15 @@ class product_template(osv.osv):
     def _default_category(self, cr, uid, context={}):
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
+        return False
+
+    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+        if uom_id and uom_po_id:
+            uom_obj=self.pool.get('product.uom')
+            uom=uom_obj.browse(cursor,user,[uom_id])[0]
+            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
+            if uom.category_id.id != uom_po.category_id.id:
+                return {'value': {'uom_po_id': uom_id}}
         return False
 
     _defaults = {
