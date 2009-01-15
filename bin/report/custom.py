@@ -158,8 +158,13 @@ class report_custom(report_int):
             row = []
             cond = []
             for i in range(4):
-                if f['field_child'+str(i)]:
-                    row.append(f['field_child'+str(i)][1])
+                field_child = f['field_child'+str(i)]
+                if field_child:
+                    row.append(
+                        service.execute(cr.dbname, uid, 
+                                        'ir.model.fields', 'read', [field_child[0]],
+                                        ['name'], context=context)[0]['name']
+                    )
                     if f['fc'+str(i)+'_operande']:
                         fct_name = 'id'
                         cond_op =  f['fc'+str(i)+'_op']

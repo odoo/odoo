@@ -223,7 +223,7 @@ class PoolManager(object):
             cls._pools[db_name].closeall()
             del cls._pools[db_name]
 
-def db_connect(db_name, serialize=0):
+def db_connect(db_name):
     return PoolManager.get(db_name)
 
 def close_db(db_name):

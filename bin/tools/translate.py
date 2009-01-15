@@ -335,7 +335,7 @@ def trans_generate(lang, modules, dbname=None):
 
     _to_translate = []
     def push_translation(module, type, name, id, source):
-        tuple = (module, type, name, id, source)
+        tuple = (module, source, name, id, type)
         if source and tuple not in _to_translate:
             _to_translate.append(tuple)
     
@@ -486,8 +486,9 @@ def trans_generate(lang, modules, dbname=None):
 
 
     out = [["module","type","name","res_id","src","value"]] # header
+    _to_translate.sort()
     # translate strings marked as to be translated
-    for module, type, name, id, source in _to_translate:
+    for module, source, name, id, type in _to_translate:
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
     

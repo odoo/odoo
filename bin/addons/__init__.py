@@ -41,7 +41,8 @@ import release
 import re
 import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
-import cStringIO
+from cStringIO import StringIO
+
 
 logger = netsvc.Logger()
 
@@ -54,6 +55,7 @@ if ad != _ad:
 
 # Modules already loaded
 loaded = []
+
 
 class Graph(dict):
 
@@ -78,6 +80,7 @@ class Graph(dict):
                 yield module
             level += 1
 
+
 class Singleton(object):
 
     def __new__(cls, name, graph):
@@ -88,6 +91,7 @@ class Singleton(object):
             inst.name = name
             graph[name] = inst
         return inst
+
 
 class Node(Singleton):
 
@@ -106,7 +110,7 @@ class Node(Singleton):
         for attr in ('init', 'update', 'demo'):
             if hasattr(self, attr):
                 setattr(node, attr, True)
-        self.childs.sort(lambda x,y: cmp(x.name, y.name))
+        self.childs.sort(lambda x, y: cmp(x.name, y.name))
 
     def hasChild(self, name):
         return Node(name, self.graph) in self.childs or \
@@ -134,9 +138,9 @@ class Node(Singleton):
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
 
+
 def get_module_path(module):
-    """Return the path of the given module.
-    """
+    """Return the path of the given module."""
 
     if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
         return opj(ad, module)
@@ -147,14 +151,16 @@ def get_module_path(module):
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
 
+
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
     if not path:
         return False
-    
+
     dir = os.path.normpath(dir)
-    if dir == '.': dir = ''
-    if dir.startswith('..') or dir[0] == '/':
+    if dir == '.':
+        dir = ''
+    if dir.startswith('..') or (dir and dir[0] == '/'):
         raise Exception('Cannot access file outside the module')
 
     if not os.path.isdir(path):
@@ -163,25 +169,27 @@ def get_module_filetree(module, dir='.'):
         files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
     else:
         files = tools.osutil.listdir(path, True)
-    
+
     tree = {}
     for f in files:
         if not f.startswith(dir):
             continue
-        f = f[len(dir)+int(not dir.endswith('/')):]
+
+        if dir:
+            f = f[len(dir)+int(not dir.endswith('/')):]
         lst = f.split(os.sep)
         current = tree
         while len(lst) != 1:
             current = current.setdefault(lst.pop(0), {})
         current[lst.pop(0)] = None
-    
+
     return tree
 
 
 def get_module_as_zip(modulename, b64enc=True, src=True):
-    
+
     RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
-    
+
     def _zippy(archive, path, src=True):
         path = os.path.abspath(path)
         base = os.path.basename(path)
@@ -189,27 +197,22 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
             bf = os.path.basename(f)
             if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not path.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
-    
+
     ap = get_module_path(str(modulename))
     if not ap:
         raise Exception('Unable to find path for module %s' % modulename)
-    
-    ap = ap.encode('utf8') 
+
+    ap = ap.encode('utf8')
     if os.path.isfile(ap + '.zip'):
         val = file(ap + '.zip', 'rb').read()
     else:
-        archname = cStringIO.StringIO('wb')
+        archname = StringIO()
         archive = PyZipFile(archname, "w", ZIP_DEFLATED)
         archive.writepy(ap)
         _zippy(archive, ap, src=src)
         archive.close()
         val = archname.getvalue()
         archname.close()
-
-    ### debug
-    f = file('/tmp/mod.zip', 'wb')
-    f.write(val)
-    f.close()
 
     if b64enc:
         val = base64.encodestring(val)
@@ -226,6 +229,7 @@ def get_module_resource(module, *args):
     """
     a = get_module_path(module)
     return a and opj(a, *args) or False
+
 
 def get_modules():
     """Returns the list of module names
@@ -244,9 +248,10 @@ def get_modules():
 
     return list(set(listdir(ad) + listdir(_ad)))
 
+
 def create_graph(module_list, force=None):
     if not force:
-        force=[]
+        force = []
     graph = Graph()
     packages = []
 
@@ -258,7 +263,8 @@ def create_graph(module_list, force=None):
         except IOError:
             continue
         terp_file = get_module_resource(module, '__terp__.py')
-        if not terp_file: continue
+        if not terp_file:
+            continue
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
                 info = eval(tools.file_open(terp_file).read())
@@ -267,14 +273,14 @@ def create_graph(module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-    
+
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = Set([p for p, dep, data in packages]), Set()
     while packages and current > later:
         package, deps, data = packages[0]
 
         # if all dependencies of 'package' are already in the graph, add 'package' in the graph
-        if reduce(lambda x,y: x and y in graph, deps, True):
+        if reduce(lambda x, y: x and y in graph, deps, True):
             if not package in current:
                 packages.pop(0)
                 continue
@@ -290,15 +296,15 @@ def create_graph(module_list, force=None):
             later.add(package)
             packages.append((package, deps, data))
         packages.pop(0)
-    
+
     for package in later:
         unmet_deps = filter(lambda p: p not in graph, dependencies[package])
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
 
     return graph
 
+
 def init_module_objects(cr, module_name, obj_list):
-    pool = pooler.get_pool(cr.dbname)
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
     todo = []
     for obj in obj_list:
@@ -312,6 +318,7 @@ def init_module_objects(cr, module_name, obj_list):
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()
+
 
 def register_class(m):
     """
@@ -353,8 +360,8 @@ class MigrationManager(object):
         This class manage the migration of modules
         Migrations files must be python files containing a "migrate(cr, installed_version)" function.
         Theses files must respect a directory tree structure: A 'migrations' folder which containt a
-        folder by version. Version can be 'module' version or 'server.module' version (in this case, 
-        the files will only be processed by this version of the server). Python file names must start 
+        folder by version. Version can be 'module' version or 'server.module' version (in this case,
+        the files will only be processed by this version of the server). Python file names must start
         by 'pre' or 'post' and will be executed, respectively, before and after the module initialisation
         Example:
 
@@ -370,7 +377,7 @@ class MigrationManager(object):
                 |   `-- post-clean-data.py
                 `-- foo.py                      # not processed
 
-        This similar structure is generated by the maintenance module with the migrations files get by 
+        This similar structure is generated by the maintenance module with the migrations files get by
         the maintenance contract
 
     """
@@ -395,7 +402,6 @@ class MigrationManager(object):
             self.migrations[pkg.name]['module'] = get_module_filetree(pkg.name, 'migrations') or {}
             self.migrations[pkg.name]['maintenance'] = get_module_filetree('base', 'maintenance/migrations/' + pkg.name) or {}
 
-
     def migrate_module(self, pkg, stage):
         assert stage in ('pre', 'post')
         stageformat = {'pre': '[>%s]',
@@ -404,7 +410,7 @@ class MigrationManager(object):
 
         if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'):
             return
-        
+
         def convert_version(version):
             if version.startswith(release.major_version) and version != release.major_version:
                 return version  # the version number already containt the server version
@@ -415,7 +421,7 @@ class MigrationManager(object):
                 return [d for d in tree if tree[d] is not None]
 
             versions = list(set(
-                __get_dir(self.migrations[pkg.name]['module']) + 
+                __get_dir(self.migrations[pkg.name]['module']) +
                 __get_dir(self.migrations[pkg.name]['maintenance'])
             ))
             versions.sort(key=lambda k: parse_version(convert_version(k)))
@@ -426,7 +432,7 @@ class MigrationManager(object):
             """
             m = self.migrations[pkg.name]
             lst = []
-                
+
             mapping = {'module': {'module': pkg.name, 'rootdir': opj('migrations')},
                        'maintenance': {'module': 'base', 'rootdir': opj('maintenance', 'migrations', pkg.name)},
                       }
@@ -441,7 +447,7 @@ class MigrationManager(object):
                         lst.append((mapping[x]['module'], opj(mapping[x]['rootdir'], version, f)))
             return lst
 
-        def mergedict(a,b):
+        def mergedict(a, b):
             a = a.copy()
             a.update(b)
             return a
@@ -450,7 +456,7 @@ class MigrationManager(object):
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data.get('version', '0')))
-        
+
         versions = _get_migration_versions(pkg)
 
         for version in versions:
@@ -460,32 +466,44 @@ class MigrationManager(object):
                           'stage': stage,
                           'version': stageformat[stage] % version,
                           }
-                
+
                 for modulename, pyfile in _get_migration_files(pkg, version, stage):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    fp = tools.file_open(opj(modulename, pyfile))
-                    mod = None
+                    mod = fp = fp2 = None
                     try:
-                        mod = imp.load_source(name, pyfile, fp)
-                        logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__},strfmt))
-                        mod.migrate(self.cr, pkg.installed_version)
-                    except ImportError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)-migration file %(file)s' % mergedict({'file': opj(modulename,pyfile)}, strfmt))
-                        raise
-                    except AttributeError:
-                        logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    except:
-                        raise
-                    fp.close()
-                    del mod
-    
+                        fp = tools.file_open(opj(modulename, pyfile))
+
+                        # imp.load_source need a real file object, so we create
+                        # on from the file-like object we get from file_open
+                        fp2 = os.tmpfile()
+                        fp2.write(fp.read())
+                        fp2.seek(0)
+                        try:
+                            mod = imp.load_source(name, pyfile, fp2)
+                            logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__}, strfmt))
+                            mod.migrate(self.cr, pkg.installed_version)
+                        except ImportError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': opj(modulename, pyfile)}, strfmt))
+                            raise
+                        except AttributeError:
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
+                        except:
+                            raise
+                    finally:
+                        if fp:
+                            fp.close()
+                        if fp2:
+                            fp2.close()
+                        if mod:
+                            del mod
+
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     # **kwargs is passed directly to convert_xml_import
     if not status:
-        status={}
+        status = {}
 
     status = status.copy()
     package_todo = []
@@ -509,14 +527,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     for package in graph:
         for k, v in additional_data[package.name].items():
             setattr(package, k, v)
-    
+
     migrations = MigrationManager(cr, graph)
 
     check_rules = False
     modobj = None
 
     for package in graph:
-        status['progress'] = (float(statusi)+0.1)/len(graph)
+        status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
 
@@ -533,14 +551,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             modobj.check(cr, 1, [mid])
 
         idref = {}
-        status['progress'] = (float(statusi)+0.4)/len(graph)
+        status['progress'] = (float(statusi)+0.4) / len(graph)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             check_rules = True
             init_module_objects(cr, m, modules)
             for kind in ('init', 'update'):
                 for filename in package.data.get('%s_xml' % kind, []):
                     mode = 'update'
-                    if hasattr(package, 'init') or package.state=='to install':
+                    if hasattr(package, 'init') or package.state == 'to install':
                         mode = 'init'
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
                     name, ext = os.path.splitext(filename)
@@ -557,7 +575,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                         tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     fp.close()
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
-                status['progress'] = (float(statusi)+0.75)/len(graph)
+                status['progress'] = (float(statusi)+0.75) / len(graph)
                 for xml in package.data.get('demo_xml', []):
                     name, ext = os.path.splitext(xml)
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
@@ -574,7 +592,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             #cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
 
             # Set new modules and dependencies
-            modobj.write(cr, 1, [mid], {'state':'installed', 'latest_version':ver})
+            modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
             cr.commit()
 
             # Update translations for all installed languages
@@ -583,12 +601,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 cr.commit()
             migrations.migrate_module(package, 'post')
 
-        statusi+=1
+        statusi += 1
 
     if perform_checks and check_rules:
         cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
-        for (model,name) in cr.fetchall():
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model,name))
+        for (model, name) in cr.fetchall():
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
 
 
     cr.execute('select model from ir_model where state=%s', ('manual',))
@@ -598,9 +616,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
 
+
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:
-        status={}
+        status = {}
 
     cr = db.cursor()
     force = []
@@ -622,20 +641,20 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
                 if ids:
                     modobj.button_install(cr, 1, ids)
-            
+
             mods = [k for k in tools.config['update'] if tools.config['update'][k]]
             if mods:
-                ids = modobj.search(cr, 1, ['&',('state', '=', 'installed'), ('name', 'in', mods)])
+                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
                 if ids:
                     modobj.button_upgrade(cr, 1, ids)
-            
+
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
             cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
         else:
             cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade')")
         module_list = [name for (name,) in cr.fetchall()]
         graph = create_graph(module_list, force)
-        
+
         # the 'base' module has already been updated
         base = graph['base']
         base.state = 'installed'
@@ -648,7 +667,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
 
         for kind in ('init', 'demo', 'update'):
-            tools.config[kind]={}
+            tools.config[kind] = {}
 
         cr.commit()
         if update_module:
@@ -656,7 +675,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for mod_id, mod_name in cr.fetchall():
                 pool = pooler.get_pool(cr.dbname)
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
-                for rmod,rid in cr.fetchall():
+                for rmod, rid in cr.fetchall():
                     uid = 1
                     pool.get(rmod).unlink(cr, uid, [rid])
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))

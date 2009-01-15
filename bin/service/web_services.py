@@ -68,12 +68,14 @@ class db(netsvc.Service):
 
         self.actions[id] = {'clean': False}
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
-        cr.autocommit(True)
-        time.sleep(0.2)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
-        cr.close()
+        try:
+            cr.autocommit(True)
+            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        finally:
+            cr.close()
+            sql_db.close_db('template1')
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
                 try:
@@ -146,7 +148,7 @@ class db(netsvc.Service):
         sql_db.close_db(db_name)
         logger = netsvc.Logger()
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
         cr.autocommit(True)
         try:
@@ -161,6 +163,7 @@ class db(netsvc.Service):
                     'DROP DB: %s' % (db_name))
         finally:
             cr.close()
+            sql_db.close_db('template1')
         return True
 
     def dump(self, password, db_name):
@@ -197,11 +200,14 @@ class db(netsvc.Service):
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
 
-        db = sql_db.db_connect('template1', serialize=1)
+        db = sql_db.db_connect('template1')
         cr = db.cursor()
         cr.autocommit(True)
-        cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
-        cr.close()
+        try:
+            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+        finally:
+            cr.close()
+            sql_db.close_db('template1')
 
         cmd = ['pg_restore']
         if tools.config['db_user']:
@@ -240,24 +246,28 @@ class db(netsvc.Service):
 
     def list(self):
         db = sql_db.db_connect('template1')
+        cr = db.cursor()
         try:
-            cr = db.cursor()
-            db_user = tools.config["db_user"]
-            if not db_user and os.name == 'posix':
-                import pwd
-                db_user = pwd.getpwuid(os.getuid())[0]
-            if not db_user:
-                cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
-                res = cr.fetchone()
-                db_user = res and str(res[0])
-            if db_user:
-                cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
-            else:
-                cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
-            res = [str(name) for (name,) in cr.fetchall()]
+            try:
+                cr = db.cursor()
+                db_user = tools.config["db_user"]
+                if not db_user and os.name == 'posix':
+                    import pwd
+                    db_user = pwd.getpwuid(os.getuid())[0]
+                if not db_user:
+                    cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
+                    res = cr.fetchone()
+                    db_user = res and str(res[0])
+                if db_user:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
+                else:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
+                res = [str(name) for (name,) in cr.fetchall()]
+            except:
+                res = []
+        finally:
             cr.close()
-        except:
-            res = []
+            sql_db.close_db('template1')
         res.sort()
         return res
 
@@ -398,7 +408,10 @@ GNU Public Licence.
                 mp = addons.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
-                        rmtree(os.path.realpath(mp))
+                        if os.path.islink(mp):
+                            os.unlink(mp)
+                        else:
+                            rmtree(mp)
                     else:
                         os.unlink(mp + '.zip')
 

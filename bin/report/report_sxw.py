@@ -598,6 +598,7 @@ class report_sxw(report_rml):
         report_xml = None
         title=''
         attach = False
+        want_header = self.header
         if report_xml_ids:
             report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
                     context=context)
@@ -605,6 +606,7 @@ class report_sxw(report_rml):
             attach = report_xml.attachment
             rml = report_xml.report_rml_content
             report_type = report_xml.report_type
+            want_header = report_xml.header
         else:
             ir_menu_report_obj = pool.get('ir.ui.menu')
             report_menu_ids = ir_menu_report_obj.search(cr, uid,
@@ -657,14 +659,14 @@ class report_sxw(report_rml):
                         pe.childNodes[0].data=data['model']
             meta = rml_dom_meta.documentElement.toxml('utf-8')
 
-            rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+            rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
             sxw_z = zipfile.ZipFile(sxw_io, mode='a')
             sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                     rml2)
             sxw_z.writestr('meta.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                     meta)
 
-            if self.header:
+            if want_header:
                 #Add corporate header/footer
                 if report_type=='odt':
                     rml = tools.file_open('custom/corporate_odt_header.xml').read()
@@ -676,7 +678,7 @@ class report_sxw(report_rml):
                 objs = self.getObjects(cr, uid, ids, context)
                 rml_parser.preprocess(objs, data, ids)
                 rml_dom = xml.dom.minidom.parseString(rml)
-                rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+                rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
                 sxw_z.writestr('styles.xml',"<?xml version='1.0' encoding='UTF-8'?>" + \
                         rml2)
             sxw_z.close()
@@ -690,7 +692,7 @@ class report_sxw(report_rml):
             objs = self.getObjects(cr, uid, ids, context)
             rml_parser.preprocess(objs, data, ids)
             rml_dom = xml.dom.minidom.parseString(rml)
-            rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+            rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
             if rml_parser.logo:
                 logo = base64.decodestring(rml_parser.logo)
 
