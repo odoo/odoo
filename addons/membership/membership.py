@@ -288,23 +288,7 @@ class Partner(osv.osv):
             if partner_data.free_member and s!=0:
                 res[id] = 'free'
             if partner_data.associate_member:
-                assciate_partner = self.browse(cr,uid,partner_data.associate_member.id)
-                cr.execute('select membership_state from res_partner where id=%s', (partner_data.id,))
-                data_partner_state = cr.fetchall()
-                for i in assciate_partner.member_lines:
-                    if i.date_from <= today and i.date_to >= today and i.account_invoice_line.invoice_id.state == 'paid' and s!=0 and data_partner_state[0][0] !='free':
-                        res[id] = 'associated'
-#
-#       '''Compute membership state of partners'''
-#       today = time.strftime('%Y-%m-%d')
-##      res = {}
-##      for id in ids:
-##          res[id] = 'none'
-#       clause = 'WHERE partner IN (' + ','.join([str(id) for id in ids]) + ')'
-#       cr.execute(REQUETE % (today, today, today, today, today, today, clause))
-#       fetches = cr.fetchall()
-#       for fetch in fetches:
-#           res[fetch[0]] = fetch[1]
+                res[id] = partner_data.associate_member.membership_state
         return res
 
 #no more need becaz of new functionality store attribut on function field
