@@ -135,6 +135,9 @@ class hr_timesheet_sheet(osv.osv):
                 result[sheet_id] = emp.state
         return result
 
+    def copy(self, cr, uid, ids, *args, **argv):
+        raise osv.except_osv(_('Error !'), _('You can not duplicate a timesheet !'))
+
     def button_confirm(self, cr, uid, ids, context):
         for sheet in self.browse(cr, uid, ids, context):
             di = sheet.user_id.company_id.timesheet_max_difference

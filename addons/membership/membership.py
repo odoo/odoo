@@ -30,7 +30,6 @@ STATE = [
     ('old', 'Old Member'),
     ('waiting', 'Waiting Member'),
     ('invoiced', 'Invoiced Member'),
-    ('associated', 'Associated Member'),
     ('free', 'Free Member'),
     ('paid', 'Paid Member'),
 ]
@@ -41,7 +40,6 @@ STATE_PRIOR = {
         'old' : 2,
         'waiting' : 3,
         'invoiced' : 4,
-        'associated' : 5,
         'free' : 6,
         'paid' : 7
         }
@@ -60,7 +58,6 @@ ELSE CASE WHEN MAX(members.state) = 1 THEN 'canceled'
 ELSE CASE WHEN MAX(members.state) = 2 THEN 'old'
 ELSE CASE WHEN MAX(members.state) = 3 THEN 'waiting'
 ELSE CASE WHEN MAX(members.state) = 4 THEN 'invoiced'
-ELSE CASE WHEN MAX(members.state) = 5 THEN 'associated'
 ELSE CASE WHEN MAX(members.state) = 6 THEN 'free'
 ELSE CASE WHEN MAX(members.state) = 7 THEN 'paid'
 END END END END END END END END
@@ -288,23 +285,7 @@ class Partner(osv.osv):
             if partner_data.free_member and s!=0:
                 res[id] = 'free'
             if partner_data.associate_member:
-                assciate_partner = self.browse(cr,uid,partner_data.associate_member.id)
-                cr.execute('select membership_state from res_partner where id=%s', (partner_data.id,))
-                data_partner_state = cr.fetchall()
-                for i in assciate_partner.member_lines:
-                    if i.date_from <= today and i.date_to >= today and i.account_invoice_line.invoice_id.state == 'paid' and s!=0 and data_partner_state[0][0] !='free':
-                        res[id] = 'associated'
-#
-#       '''Compute membership state of partners'''
-#       today = time.strftime('%Y-%m-%d')
-##      res = {}
-##      for id in ids:
-##          res[id] = 'none'
-#       clause = 'WHERE partner IN (' + ','.join([str(id) for id in ids]) + ')'
-#       cr.execute(REQUETE % (today, today, today, today, today, today, clause))
-#       fetches = cr.fetchall()
-#       for fetch in fetches:
-#           res[fetch[0]] = fetch[1]
+                res[id] = partner_data.associate_member.membership_state
         return res
 
 #no more need becaz of new functionality store attribut on function field
@@ -327,7 +308,7 @@ class Partner(osv.osv):
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.browse(cr, uid, ids):
-            if partner.membership_state == 'associated':
+            if partner.associate_member:
                 partner_id = partner.associate_member.id
             else:
                 partner_id = partner.id
@@ -366,8 +347,7 @@ class Partner(osv.osv):
         for partner in self.browse(cr, uid, ids):
             cr.execute('select membership_state from res_partner where id=%s', (partner.id,))
             data_state = cr.fetchall()
-            #if partner.membership_state == 'associated':
-            if data_state[0][0] == 'associated':
+            if partner.associate_member:
                 partner_id = partner.associate_member.id
             else:
                 partner_id = partner.id
@@ -435,6 +415,13 @@ class Partner(osv.osv):
 
 
     _inherit = 'res.partner'
+    def _get_partners(self, cr, uid, ids, context={}):
+        ids2 = ids
+        while ids2:
+            ids2 = self.search(cr, uid, [('associate_member','in',ids2)], context=context)
+            ids+=ids2
+        return ids
+
     _columns = {
         'member_lines': fields.one2many('membership.membership_line', 'partner',
             'Membership'),
@@ -445,7 +432,7 @@ class Partner(osv.osv):
         'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
             type='selection',selection=STATE,store={'account.invoice':(_get_invoice_partner,['state'], 10),
                                                     'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
+                                                    'res.partner':(_get_partners, ['free_member'], 10)}),
 #       'associate_member': fields.many2one('res.partner', 'Associate member'),
         'free_member': fields.boolean('Free member'),
 #        'membership_start': fields.function(_membership_start, method=True,

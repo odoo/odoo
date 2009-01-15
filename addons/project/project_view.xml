@@ -93,6 +93,15 @@
         </record>
         <menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/>
 
+        <record id="open_view_project_all" model="ir.actions.act_window">
+            <field name="name">All projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="view_project"/>
+        </record>
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/>
+
         <record id="open_view_project_open" model="ir.actions.act_window">
             <field name="name">Running projects</field>
             <field name="res_model">project.project</field>
@@ -100,7 +109,7 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="menu_all_project"/>
+        <menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="menu_open_view_project_all"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Template of Projects</field>

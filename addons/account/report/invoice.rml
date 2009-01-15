@@ -350,7 +350,7 @@
         </tr>
         <tr>
           <td>
-            <para style="terp_default_Note">[[  format(l.note) or removeParentNode('tr') ]]</para>
+            <para style="terp_default_Note">[[  format(l.note or removeParentNode('tr')) ]]</para>
             <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
@@ -541,7 +541,7 @@
     <blockTable colWidths="530.0" style="Table_Coment_Payment_Term">
       <tr>
         <td>
-          <para style="terp_default_9">[[ format(o.comment) or  removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_9">[[ format(o.comment or  removeParentNode('blockTable')) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -551,7 +551,7 @@
     <blockTable colWidths="530.0" style="Table_Payment_Terms">
       <tr>
         <td>
-          <para style="terp_default_9">[[ format(o.payment_term and o.payment_term.note) or  removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_9">[[ format(o.payment_term and o.payment_term.note or  removeParentNode('blockTable')) ]]</para>
         </td>
       </tr>
     </blockTable>

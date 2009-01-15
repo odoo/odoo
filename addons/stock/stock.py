@@ -367,6 +367,7 @@ class stock_picking(osv.osv):
             res[pick]['max_date'] = dt2
         return res
 
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin Reference', size=64),

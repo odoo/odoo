@@ -159,7 +159,6 @@ class account_report(osv.osv):
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
-#        'expression_status': fields.char('Status expression', size=240, required=True),
         'badness_limit' :fields.float('Badness Indicator Limit', digits=(16,2),help='This Value depicts the limit of badness.'),
         'goodness_limit' :fields.float('Goodness Indicator Limit', digits=(16,2),help='This Value depicts the limit of goodness.'),
         'parent_id': fields.many2one('account.report.report', 'Parent'),
@@ -204,10 +203,7 @@ class account_report(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     _constraints = [
-    #TODO Put an expression to valid expression and expression_status
-    ]
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
+    #TODO Put an expression to valid expression 
     ]
 
 account_report()
