@@ -289,8 +289,6 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
-         'merge_invoice': fields.boolean('Merge Invoice Entries',help="Check this box if you want that all lines of "\
-            "a customer or supplier invoice using this account are created in one line only"),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -448,8 +446,8 @@ class account_journal(osv.osv):
 
         'active': fields.boolean('Active'),
         'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account'),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account'),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries'),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is cheked, the system will try to group the accouting lines when generating them from invoices."),
@@ -1901,8 +1899,8 @@ class account_fiscal_position_account_template(osv.osv):
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account.template', 'Account Source', required=True),
-        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', required=True)
+        'account_src_id': fields.many2one('account.account.template', 'Account Source', domain=[('type','<>','view')], required=True),
+        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
 
 account_fiscal_position_account_template() 

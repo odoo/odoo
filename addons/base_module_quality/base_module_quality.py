@@ -23,6 +23,7 @@ import pooler
 import os
 import osv
 from tools import config
+from tools.translate import _
 
 class abstract_quality_check(object):
     '''
@@ -52,24 +53,28 @@ class abstract_quality_check(object):
         #Used to provide more details if necessary.
         self.result_details = ""
 
-        #This bool defines if the test can be run only if the module is installed.
+        #This bool defines if the test can be run only if the module 
+        #is installed.
         #True => the module have to be installed.
         #False => the module can be uninstalled.
         self.bool_installed_only = True
 
-        #This variable is use to make result of test should have more weight (Some tests are more critical than others)
+        #This variable is used to give result of test more weight,
+        #because some tests are more critical than others.
         self.ponderation = 1.0
 
         #Specify test got an error on module
         self.error = False
 
-        #The tests have to subscribe itselfs in this list, that contains all the test that have to be performed.
+        #The tests have to subscribe itselfs in this list, that contains 
+        #all the test that have to be performed.
         self.tests = []
-        self.list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
+        self.list_folders = os.listdir(config['addons_path'] + 
+            '/base_module_quality/')
         for item in self.list_folders:
             self.item = item
             path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path+'/'+item+'.py') and item not in ['report', 'wizard', 'security']:
+            if os.path.exists(path + '/' + item + '.py') and item not in ['report', 'wizard', 'security']:
                 item2 = 'base_module_quality.' + item +'.' + item
                 x = __import__(item2)
                 x2 = getattr(x, item)
@@ -87,7 +92,8 @@ class abstract_quality_check(object):
     def get_objects(self, cr, uid, module):
         # This function returns all object of the given module..
         pool = pooler.get_pool(cr.dbname)
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module','=', module), ('model','=','ir.model')])
+        ids2 = pool.get('ir.model.data').search(cr, uid, 
+            [('module', '=', module), ('model', '=', 'ir.model')])
         model_list = []
         model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
         for model in model_data:

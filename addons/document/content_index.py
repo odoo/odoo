@@ -23,6 +23,7 @@ import time
 import os
 import StringIO
 import odt2txt
+import tempfile
 
 #
 # This should be the indexer
@@ -36,11 +37,10 @@ def content_index(content, filename=None, content_type=None):
 		stdin.close()
 		result = stdout.read().decode('latin1','replace').encode('utf-8','replace')
 	elif ext == '.pdf':
-		fname = os.tempnam(filename)+'.pdf'
-		fp = file(fname,'wb')
-		fp.write(content)
-		fp.close()
-		fp = os.popen('pdftotext -enc UTF-8 -nopgbrk '+fname+' -', 'r')
+                file_descriptor, file_name = tempfile.mkstemp(suffix=ext)
+                os.write(file_descriptor, content)
+                os.close(file_descriptor)
+		fp = os.popen('pdftotext -enc UTF-8 -nopgbrk '+file_name+' -', 'r')
 		result = fp.read()
 		fp.close()
 	elif ext in ('.xls','.ods','.odt','.odp'):

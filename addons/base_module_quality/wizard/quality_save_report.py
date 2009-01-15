@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,17 +20,36 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+import wizard
+from osv import osv
+import pooler
+from tools.translate import _
 
-#class custom_material(osv.osv):
-#   _name = 'network.material'
-#   _inherit = 'network.material'
-#   _columns = {
-#   }
-#   _defaults = {
-#   }
-#custom_material()
+import base64
 
+form_rep = '''<?xml version="1.0"?>
+<form string="Standard entries">
+    <field name="module_file"/>
+</form>'''
+
+
+fields_rep = {
+    'module_file': {'string': 'Save report', 'type': 'binary', 'required': True},
+}
+
+def get_detail(self, cr, uid, datas, context={}):
+    data = pooler.get_pool(cr.dbname).get('quality.check.detail').browse(cr, uid, datas['id'])
+    data.detail = base64.encodestring(data.detail)
+    return {'module_file':data.detail}
+
+class save_report(wizard.interface):
+    states = {
+        'init': {
+            'actions': [get_detail],
+            'result': {'type': 'form', 'arch':form_rep, 'fields':fields_rep, 'state':[('end','Cancel')]}
+        },
+    }
+save_report('quality_detail_save')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

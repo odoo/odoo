@@ -25,8 +25,7 @@
     'name': 'Base module quality',
     'version': '1.0',
     'category': 'Tiny Specific Modules/Base module quality',
-    'description': """"
-This module's aim is to check the quality of other modules.
+    'description': """This module's aim is to check the quality of other modules.
 
     It defines a wizard on the list of modules in OpenERP, which allow you to evaluate them on different criteria such as: the respect of OpenERP coding standards, the speed efficiency...
 
