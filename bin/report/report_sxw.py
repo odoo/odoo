@@ -697,7 +697,7 @@ class report_sxw(report_rml):
                 logo = base64.decodestring(rml_parser.logo)
 
         create_doc = self.generators[report_type]
-        pdf = create_doc(rml2, logo,title)
+        pdf = create_doc(rml2, logo, title.encode('utf8'))
 
         if attach:
             # TODO: save multiple print with symbolic links in attach            
