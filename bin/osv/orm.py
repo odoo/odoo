@@ -303,6 +303,8 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
+    
+    CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -1861,13 +1863,20 @@ class orm(orm_template):
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields_to_read) + self._inherits.values()
+        fields_pre = [f for f in fields_to_read if
+                           f == self.CONCURRENCY_CHECK_FIELD 
+                        or (f in self._columns and getattr(self._columns[f], '_classic_write'))
+                     ] + self._inherits.values()
 
         res = []
         if len(fields_pre):
             def convert_field(f):
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f, f)
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    if self._log_access:
+                        return "COALESCE(write_date, create_date, now())::timestamp AS %s" % (f,)
+                    return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return "length(%s) as %s" % (f,f)
                 return '"%s"' % (f,)
@@ -1892,6 +1901,8 @@ class orm(orm_template):
             res = map(lambda x: {'id': x}, ids)
 
         for f in fields_pre:
+            if f == self.CONCURRENCY_CHECK_FIELD:
+                continue
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
@@ -2012,26 +2023,33 @@ class orm(orm_template):
             return res[ids]
         return res
 
-    def unlink(self, cr, uid, ids, context=None):
+    def _check_concurrency(self, cr, ids, context):
         if not context:
-            context = {}
+            return
+        if context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access:
+            santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = tools.flatten(((i, context[self.CONCURRENCY_CHECK_FIELD][str(i)]) 
+                                          for i in ids[i:i+cr.IN_MAX] 
+                                          if str(i) in context[self.CONCURRENCY_CHECK_FIELD]))
+                if sub_ids:
+                    cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
+                    res = cr.fetchone()
+                    if res and res[0]:
+                        raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+
+            del context[self.CONCURRENCY_CHECK_FIELD]
+
+
+    def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
 
         result_store = self._store_get_values(cr, uid, ids, None, context)
-        delta = context.get('read_delta', False)
-        if delta and self._log_access:
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
-                        "from \"%s\" where id in (%s)" %
-                        (delta, self._table, ",".join(map(str, sub_ids))))
-            res = cr.fetchone()
-            if res and res[0]:
-                raise except_orm(_('ConcurrencyException'),
-                        _('This record was modified in the meanwhile'))
+        
+        self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
@@ -2112,24 +2130,11 @@ class orm(orm_template):
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
-        delta = context.get('read_delta', False)
-        if delta and self._log_access:
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
-                        "from %s where id in (%s)" %
-                        (delta, self._table, ",".join(map(str, sub_ids))))
-                res = cr.fetchone()
-                if res and res[0]:
-                    for field in vals:
-                        if field in self._columns and self._columns[field]._classic_write:
-                            raise except_orm(_('ConcurrencyException'),
-                                    _('This record was modified in the meanwhile'))
+
+        self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
-        #for v in self._inherits.values():
-        #   assert v not in vals, (v, vals)
         upd0 = []
         upd1 = []
         upd_todo = []
@@ -2276,10 +2281,6 @@ class orm(orm_template):
                             parent_left<%s OR parent_right>%s;
                     ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
                         cwidth,cleft,cright,treeshift,leftrange,rightrange))
-
-        if 'read_delta' in context:
-            del context['read_delta']
-
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
