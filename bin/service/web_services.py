@@ -518,6 +518,13 @@ wizard()
 # Report state:
 #     False -> True
 #
+
+class ExceptionWithTraceback(Exception):
+    def __init__(self, msg, tb):
+        self.message = msg
+        self.traceback = tb
+        self.args = (msg, tb)
+
 class report_spool(netsvc.Service):
     def __init__(self, name='report'):
         netsvc.Service.__init__(self, name)
@@ -553,12 +560,12 @@ class report_spool(netsvc.Service):
             except Exception, exception:
                 import traceback
                 import sys
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                    sys.exc_type, sys.exc_value, sys.exc_traceback))
+                tb = sys.exc_info()
+                tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
-                self._reports[id]['exception'] = exception
+                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.close()
             return True
