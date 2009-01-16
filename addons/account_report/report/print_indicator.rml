@@ -91,13 +91,10 @@
 <font color="white"> </font>
 </para>
 <para style="P1">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
-<blockTable colWidths="362.0,166.0" style="Table4">
+<blockTable colWidths="528.0" style="Table4">
 <tr>
 <td>
 <para style="P6">Name</para>
-</td>
-<td>
-<para style="P6">Code</para>
 </td>
 </tr>
 </blockTable>
@@ -107,26 +104,20 @@
 <para style="P3"><seqReset/></para>
 <section>
 <para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
-<blockTable colWidths="362.0,166.0" style="Table3">
+<blockTable colWidths="528.0" style="Table3">
 <tr>
 <td>
-<para style="P11"><b>(<seq/>)</b> [[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold','fontSize':'10.5'}) ]]<u>[[ o['name'] ]]</u></para>
-</td>
-<td>
-<para style="P11">[[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold','fontSize':'10.5'}) ]]<u>[[ o['code'] ]]</u></para>
+<para style="P11"><b>(<seq/>)</b> [[ o['type']=='view' and setTag('para','para',{'fontName':'Helvetica-Bold','fontSize':'10.5'}) ]]<u>[[ o['name'] ]]</u>  (<u>[[ o['code'] ]]</u>)</para>
 </td>
 </tr>
 </blockTable>
-<para style="P3">
-<font color="white"> </font>
-</para>
 <para style="P1">[[ o['disp_tree'] and setTag('para','image',{'file':gettree(data['form'],o)}) or removeParentNode('para') ]]</para>
 <para style="P1">[[ o['disp_graph'] and setTag('para','image',{'width':'450.00','height':'215.00','file':getgraph(data['form'],o)}) or removeParentNode('para') ]]</para>
 <para style="P3">
 <font color="white"> </font>
 </para>
 <section>
-      <para style="P13">[[ repeatIn(getarray(data['form'],o),'array',td=len(data['form']['base_selection'][0][2])) ]]</para>
+      <para style="P13">[[ o['array_table'] and repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
       <blockTable colWidths="0.0" style="Table5">
       	<tr>
 			<td>
@@ -165,7 +156,7 @@
   <para style="P9"> </para>
   </td>
 <td>
-<para style="P5"><b>Notes :</b> [[ o['note'] ]]</para>
+<para style="P5"> [[ format(o['note']) or removeParentNode('blockTable') ]]</para>
 </td>
 <td>
   <para style="P9"> </para>
