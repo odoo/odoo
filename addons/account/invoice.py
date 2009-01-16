@@ -160,7 +160,12 @@ class account_invoice(osv.osv):
     def _get_invoice_from_line(self, cr, uid, ids, context={}):
         move = {}
         for line in self.pool.get('account.move.line').browse(cr, uid, ids):
-            move[line.move_id.id] = True
+            if line.reconcile_partial_id:
+                for line2 in line.reconcile_partial_id.line_partial_ids:
+                    move[line2.move_id.id] = True
+            if line.reconcile_id:
+                for line2 in line.reconcile_id.line_id:
+                    move[line2.move_id.id] = True
         invoice_ids = []
         if move:
             invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
