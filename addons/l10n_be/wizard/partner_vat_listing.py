@@ -90,8 +90,9 @@ class wizard_vat(wizard.interface):
 
         for ads in obj_cmpny.partner_id.address:
                 if ads.type=='default':
-                    if ads.zip_id:
-                        zip_city=pooler.get_pool(cr.dbname).get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1]
+                    zip_city = pooler.get_pool(cr.dbname).get('res.partner.address').get_city(cr,uid,ads.id)
+                    if not zip_city:
+                        zip_city = ''
                     if ads.street:
                         street=ads.street
                     if ads.street2:
