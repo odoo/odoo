@@ -894,7 +894,8 @@ class orm_template(object):
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields:
-            fields[field].update(fields_def[field])
+	    if field in fields_def:
+                fields[field].update(fields_def[field])
         return arch, fields
 
     def __get_default_calendar_view(self):
