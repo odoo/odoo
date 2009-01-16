@@ -859,17 +859,22 @@
                             <field name="state"/>
                         </form>
                         <tree editable="top" string="Account Entry Line">
+                            <field name="ref"/>
+                            <field name="invoice"/>
                             <field name="name"/>
                             <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
                             <field name="account_id"/>
                             <field name="date_maturity"/>
-                            <field name="ref"/>
                             <field name="debit" sum="Total Debit"/>
                             <field name="credit" sum="Total Credit"/>
                             <field name="analytic_account_id"/>
+                            <field name="amount_currency" groups="base.group_extended"/>
+                            <field name="currency_id" groups="base.group_extended"/>
                             <field name="tax_code_id"/>
                             <field name="tax_amount"/>
                             <field name="state"/>
+                            <field name="reconcile_id"/>
+                            <field name="reconcile_partial_id" groups="base.group_extended"/>
                         </tree>
                     </field>
 

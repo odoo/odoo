@@ -35,15 +35,8 @@ def _trans_unrec(self, cr, uid, data, context):
     recs = pool.get('account.move.line').read(cr, uid, data['ids'], ['reconcile_id',])
     recs = filter(lambda x: x['reconcile_id'], recs)
     rec_ids = [rec['reconcile_id'][0] for rec in recs]
-    move = {}
-    for r in pool.get('account.move.reconcile').browse(cr, uid, rec_ids):
-        for line in r.line_id:
-            move[line.move_id.id] = True
     if len(rec_ids):
         pooler.get_pool(cr.dbname).get('account.move.reconcile').unlink(cr, uid, rec_ids)
-    if move:
-        invoice_ids = pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
-        pool.get('account.invoice').write(cr, uid, invoice_ids, {}, context=context)
     return {}
 
 class wiz_unreconcile(wizard.interface):

@@ -95,7 +95,7 @@ class account_invoice(osv.osv):
             paid_amt = 0.0
             to_pay = inv.amount_total
             for lines in inv.move_lines:
-                paid_amt = paid_amt + lines.credit
+                paid_amt = paid_amt + lines.credit + lines.debit
             res[inv.id] = to_pay - paid_amt
         return res
 
@@ -145,6 +145,27 @@ class account_invoice(osv.osv):
             result[invoice.id] = lines
         return result
 
+    def _get_invoice_from_line(self, cr, uid, ids, context={}):
+        move = {}
+        for line in self.pool.get('account.move.line').browse(cr, uid, ids):
+            move[line.move_id.id] = True
+        invoice_ids = []
+        if move:
+            invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
+        return invoice_ids
+
+    def _get_invoice_from_reconcile(self, cr, uid, ids, context={}):
+        move = {}
+        for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids):
+            for line in r.line_partial_ids:
+                move[line.move_id.id] = True
+            for line in r.line_id:
+                move[line.move_id.id] = True
+        invoice_ids = []
+        if move:
+            invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
+        return invoice_ids
+
     _name = "account.invoice"
     _description = 'Invoice'
     _order = "number"
@@ -174,14 +195,16 @@ class account_invoice(osv.osv):
         ],'State', select=True, readonly=True),
 
         'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-
+        'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]},
+            help="If you use payment terms, the due date will be computed automatically at the generation "\
+                "of accounting entries. If you keep the payment term and the due date empty, it means direct payment."),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
         'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
         'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
-
-        'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]} ),
-
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]},
+            help="If you use payment terms, the due date will be computed automatically at the generation "\
+                "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "\
+                "The payment term may compute several due dates: 50% now, 50% in one month."),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation date."),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
@@ -224,6 +247,8 @@ class account_invoice(osv.osv):
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
                 'account.invoice.line': (_get_invoice_line, None, 50),
+                'account.move.line': (_get_invoice_from_line, None, 50),
+                'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),

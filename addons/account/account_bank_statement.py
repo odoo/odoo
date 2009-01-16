@@ -276,13 +276,13 @@ class account_bank_statement(osv.osv):
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
-                    try:
-                        if abs(move.reconcile_amount-move.amount)<0.0001:
-                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', context)
-                        else:
-                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-                    except:
-                        raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
+                    #try:
+                    if abs(move.reconcile_amount-move.amount)<0.0001:
+                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', context)
+                    else:
+                        account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                    #except:
+                    #    raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
 
                 if st.journal_id.entry_posted:
                     account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
