@@ -249,7 +249,6 @@ class db(netsvc.Service):
         cr = db.cursor()
         try:
             try:
-                cr = db.cursor()
                 db_user = tools.config["db_user"]
                 if not db_user and os.name == 'posix':
                     import pwd
