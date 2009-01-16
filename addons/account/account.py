@@ -584,7 +584,7 @@ class account_period(osv.osv):
             if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or obj_period.fiscalyear_id.date_stop < obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_stop:
                 return False
 
-            pids = self.search(cr, uid, [('date_stop','>=',obj_period.date_start),('date_stop','<=',obj_period.date_start),('special','=',False),('id','<>',obj_period.id)])
+            pids = self.search(cr, uid, [('date_stop','>=',obj_period.date_start),('date_start','<=',obj_period.date_stop),('special','=',False),('id','<>',obj_period.id)])
             for period in self.browse(cr, uid, pids):
                 if period.fiscalyear_id.company_id.id==obj_period.fiscalyear_id.company_id.id:
                     return False
