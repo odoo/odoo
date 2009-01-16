@@ -197,7 +197,8 @@ class account_move_line(osv.osv):
             else:
                 account = move.journal_id.default_debit_account_id
 
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        part = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id) or False
+        # part = False is acceptable for fiscal position.
         account = self.pool.get('account.fiscal.position').map_account(cr, uid, part, account.id)
         account = self.pool.get('account.account').browse(cr, uid, account)
 
