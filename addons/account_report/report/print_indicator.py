@@ -92,22 +92,25 @@ class accounting_report_indicator(report_sxw.rml_parse):
             'getarray':self.getarray,
             'gettree':self.gettree,
         })
-        self.count=0
-        self.treecount=0
-        self.list=[]
-        self.header_name=self.header_val=[]
-        self.main_dict={}
+        self.count = 0
+        self.treecount = 0
+        self.list = []
+        self.header_name = []
+        self.header_val = []
+        self.main_dict = {}
 
-    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[]):
+    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[],data=''):
         self._node.data = ''
         node = self._find_parent(self._node, nodes_parent or parents)
         ns = node.nextSibling
 #start
         if not name=='array':
             return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
-
-        value=['Data']
+        
+        array_header = eval(data,{'year':'Fiscal Year','periods':'Periods'})
+        value = [array_header]
         value.extend(self.header_name)
+        
         type=['string'].extend(['float']*len(self.header_name))
         width=[40]*(len(self.header_name)+1)
 
@@ -145,7 +148,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
                             newnode=False
                             i+=1
                         check=1
-
         return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
 
     def lines(self,data):
@@ -173,18 +175,22 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'disp_tree':obj_ind.disp_tree,
                 'note':obj_ind.note,
                 'type':obj_ind.type,
+                'array_table' : False,
                 }
+            if len(obj_ind.expression)>=2:
+                res['array_table'] = True
             result.append(res)
         return result
 
-    def getarray(self,data,object):
+    def getarray(self,data,object,array_header=''):
         res={}
         result=[]
         self.getgraph(data,object,intercall=True)
         self.header_val=[str(x) for x in self.header_val]
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
-        res['Data']='Value'
+        array_header = eval(array_header,{'year':'Fiscal Year','periods':'Periods'})
+        res[array_header]='Value'
         result.append(res)
         return result
 

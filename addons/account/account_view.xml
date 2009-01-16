@@ -162,13 +162,14 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1">
+                <tree string="Chart of accounts" toolbar="1" colors="blue:type=='view'">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_currency_id"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -272,6 +273,7 @@
                             <field name="group_invoice_lines"/>
 
                             <field name="update_posted"/>
+                            <field name="entry_posted"/>
                             <field name="fy_seq_id" colspan="4" widget="one2many_list" >
 								<tree string="Invoice Sequences">
 									<field name="fiscalyear_id"/>
@@ -282,7 +284,6 @@
 									<field name="sequence_id"/>
 								</form>
 							</field>
-                            <field name="entry_posted"/>
                         </page>
                         <page string="Entry Controls">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
@@ -670,8 +671,9 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line">
+                <tree string="Account Entry Line" editable="top" on_write="_on_create_write">
                     <field name="date"/>
+                    <field name="period_id"/>
                     <field name="move_id"/>
                     <field name="ref"/>
                     <field name="invoice"/>
