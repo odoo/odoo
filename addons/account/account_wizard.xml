@@ -7,8 +7,11 @@
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice"/>
 
         <!-- close year, period, journal -->
-        <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Close a Fiscal Year"/>
+        <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Close a Fiscal Year (New entries)"/>
         <menuitem id="menu_finance" name="Financial Management"/><menuitem action="wizard_fiscalyear_close" id="menu_wizard_fy_close" parent="menu_account_end_year_treatments" sequence="11" type="wizard"/>
+
+		<wizard id="wizard_fiscalyear_close_state" menu="False" model="account.fiscalyear" name="account.fiscalyear.close.state" string="Close a Fiscal Year (States)"/>
+		<menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" type="wizard"/>
 
         <wizard id="wizard_open_closed_fiscalyear" menu="False" model="account.fiscalyear" name="account.open_closed_fiscalyear" string="Open a Closed Fiscal Year"/>
         <menuitem action="wizard_open_closed_fiscalyear" id="menu_wizard_open_closed_fy" parent="account.menu_account_end_year_treatments" sequence="12" type="wizard"/>

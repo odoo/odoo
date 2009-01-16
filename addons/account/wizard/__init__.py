@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -41,6 +41,7 @@ import wizard_partner_balance_report
 
 import wizard_period_close
 import wizard_fiscalyear_close
+import wizard_fiscalyear_close_state
 import wizard_open_closed_fiscalyear
 
 import wizard_vat
