@@ -671,8 +671,9 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line">
+                <tree string="Account Entry Line" editable="top" on_write="_on_create_write">
                     <field name="date"/>
+                    <field name="period_id"/>
                     <field name="move_id"/>
                     <field name="ref"/>
                     <field name="invoice"/>
