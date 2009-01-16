@@ -161,20 +161,21 @@ class _format(object):
                     'report %s: unable to set locale "%s"' % (self.name,
                         self.object._context.get('lang', 'en_US') or 'en_US'))
 
+
 class _float_format(float, _format):
     def __str__(self):
         if not self.object._context:
-            return self.name
+            return locale.format('%f', self.name, True)
         digit = 2
         if hasattr(self._field, 'digits') and self._field.digits:
             digit = self._field.digits[1]
         return locale.format('%.' + str(digit) + 'f', self.name, True)
 
+
 class _int_format(int, _format):
     def __str__(self):
-        if not self.object._context:
-            return self.name
         return locale.format('%d', self.name, True)
+
 
 class _date_format(str, _format):
     def __str__(self):
@@ -188,7 +189,8 @@ class _date_format(str, _format):
                     datedata)
             except :
                 pass
-	return ''
+        return ''
+
 
 _fields_process = {
     'float': _float_format,
