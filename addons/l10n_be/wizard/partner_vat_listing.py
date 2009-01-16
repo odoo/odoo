@@ -104,7 +104,7 @@ class wizard_vat(wizard.interface):
         data_file='<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
         data_file +=' ControlRef="'+ cref + '" MandataireId="'+ data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         if data['form']['test_xml']:
-            data_file += 'Test="0"'
+            data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
         data_file +='\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ str(street) +'</Street>\n\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
         data_file +='\n\t\t<Country>'+ str(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
@@ -114,7 +114,7 @@ class wizard_vat(wizard.interface):
         for p_id in p_id_list:
             record=[] # this holds record per partner
             obj_partner=pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
-            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%%s and l.date between %s group by a.type' % (period,), (p_id,))
+            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%%s and l.date between %s group by b.code' % (period,), (p_id,))
             line_info=cr.fetchall()
             if not line_info:
                 continue
