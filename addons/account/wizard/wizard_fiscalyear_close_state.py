@@ -28,14 +28,12 @@ from tools.translate import _
 _transaction_form = '''<?xml version="1.0"?>
 <form string=" Close states of Fiscal year and periods">
     <field name="fy_id"/>
-    <field name="fy2_id"/>
     <separator string="Are you sure you want to close the states of fiscal year and its period?" colspan="4"/>
     <field name="sure"/>
 </form>'''
 
 _transaction_fields = {
     'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear','required':True, 'domain':[('state','=','draft')]},
-    'fy2_id': {'string':'New Fiscal Year', 'type':'many2one', 'relation': 'account.fiscalyear', 'domain':[('state','=','draft')], 'required':True},
     'sure': {'string':'Check this box', 'type':'boolean'},
 }
 
@@ -45,8 +43,6 @@ def _data_save(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
 
     fy_id = data['form']['fy_id']
-    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
-    start_jp = new_fyear.start_journal_period_id
 
     cr.execute('UPDATE account_journal_period ' \
             'SET state = %s ' \
@@ -55,8 +51,7 @@ def _data_save(self, cr, uid, data, context):
     cr.execute('UPDATE account_period SET state = %s ' \
             'WHERE fiscalyear_id = %s', ('done',fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
-            'SET state = %s, end_journal_period_id = %s ' \
-            'WHERE id = %s', ('done', start_jp and start_jp.id or None, fy_id))
+            'SET state = %s WHERE id = %s', ('done', fy_id))
     return {}
 
 class wiz_journal_close_state(wizard.interface):

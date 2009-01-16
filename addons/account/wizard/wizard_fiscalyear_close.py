@@ -43,7 +43,7 @@ _transaction_fields = {
 }
 
 def _data_load(self, cr, uid, data, context):
-    data['form']['report_name'] = 'End of Fiscal Year Entry'
+    data['form']['report_name'] = _('End of Fiscal Year Entry')
     return data['form']
 
 def _data_save(self, cr, uid, data, context):
@@ -152,6 +152,11 @@ def _data_save(self, cr, uid, data, context):
                     pool.get('account.move.line').create(cr, uid, move)
                 offset += limit
 
+    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
+    start_jp = new_fyear.start_journal_period_id
+    cr.execute('UPDATE account_fiscalyear ' \
+            'SET end_journal_period_id = %s ' \
+            'WHERE id = %s', (start_jp and start_jp.id or None, fy_id))
     return {}
 
 class wiz_journal_close(wizard.interface):
