@@ -30,6 +30,18 @@ from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
+class fiscalyear_seq(osv.osv):
+    _name = "fiscalyear.seq"
+    _description = "Maintains Invoice sequences with Fiscal Year"
+    _rec_name = 'fiscalyear_id'
+    _columns = {
+        'journal_id': fields.many2one('account.journal', 'Journal'),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
+        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
+    }
+
+fiscalyear_seq()
+
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -409,7 +421,7 @@ class account_invoice(osv.osv):
             for taxe in ait_obj.compute(cr, uid, id).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)        
+        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
@@ -646,10 +658,18 @@ class account_invoice(osv.osv):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_invoice ' \
                 'WHERE id IN ('+','.join(map(str,ids))+')')
+        obj_inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
-                number = self.pool.get('ir.sequence').get(cr, uid,
-                        'account.invoice.' + invtype)
+                flag = True
+                for seq in obj_inv.journal_id.fy_seq_id:
+                    if seq.fiscalyear_id.id == obj_inv.move_id.period_id.fiscalyear_id.id:
+                        number =  self.pool.get('ir.sequence').get_id(cr, uid,seq.sequence_id.id)
+                        flag = False
+                        break
+                if flag:
+                    number = self.pool.get('ir.sequence').get(cr, uid,
+                            'account.invoice.' + invtype)
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:

@@ -269,6 +269,16 @@
                             <field name="group_invoice_lines"/>
 
                             <field name="update_posted"/>
+                            <field name="fy_seq_id" colspan="4" widget="one2many_list" >
+								<tree string="Invoice Sequences">
+									<field name="fiscalyear_id"/>
+									<field name="sequence_id"/>
+								</tree>
+								<form string="Invoice Sequences">
+									<field name="fiscalyear_id"/>
+									<field name="sequence_id"/>
+								</form>
+							</field>
                             <field name="entry_posted"/>
                         </page>
                         <page string="Entry Controls">
@@ -1687,9 +1697,9 @@
                 </graph>
             </field>
      	</record>
-     	
+
      	<!-- Fiscal Position Templates -->
-     	
+
 		<record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>

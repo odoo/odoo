@@ -163,7 +163,7 @@ class tax_report(rml_parse.rml_parse):
 	
 		res = []
 		for code in tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
-			res.append(('a'*2*level,code))
+			res.append(('.'*2*level,code))
 			
 			res += self._get_codes(based_on, code.id, level+1)
 		return res

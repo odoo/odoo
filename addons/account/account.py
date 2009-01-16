@@ -457,6 +457,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want that new account moves pass through the \'draft\' state and goes direclty to the \'posted state\' without any manual validation.'),
         'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        'fy_seq_id': fields.one2many('fiscalyear.seq', 'journal_id', 'Sequences'),
     }
 
     _defaults = {
@@ -923,7 +924,7 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context):
             #unlink analytic lines on move_lines
             for obj_line in move.line_id:
-                for obj in obj_line.analytic_lines: 
+                for obj in obj_line.analytic_lines:
                     self.pool.get('account.analytic.line').unlink(cr,uid,obj.id)
 
             journal = move.journal_id
@@ -1872,14 +1873,14 @@ account_tax_template()
 class account_fiscal_position_template(osv.osv):
     _name = 'account.fiscal.position.template'
     _description = 'Template for Fiscal Position'
-    
+
     _columns = {
         'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Accounts Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Taxes Mapping')
     }
-    
+
 account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
@@ -1905,7 +1906,7 @@ class account_fiscal_position_account_template(osv.osv):
         'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
 
-account_fiscal_position_account_template() 
+account_fiscal_position_account_template()
 
     # Multi charts of Accounts wizard
 
@@ -2156,19 +2157,19 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 property_obj.create(cr, uid, vals)
 
         fp_ids = obj_fiscal_position_template.search(cr, uid,[('chart_template_id', '=', obj_multi.chart_template_id.id)])
-        
+
         if fp_ids:
             for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
-                
+
                 vals_fp = {
                            'company_id' : company_id,
                            'name' : position.name,
                            }
                 new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
-                
+
                 obj_tax_fp = self.pool.get('account.fiscal.position.tax')
                 obj_ac_fp = self.pool.get('account.fiscal.position.account')
-                
+
                 for tax in position.tax_ids:
                     vals_tax = {
                                 'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
@@ -2176,7 +2177,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 'position_id' : new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)
-                
+
                 for acc in position.account_ids:
                     vals_acc = {
                                 'account_src_id' : acc_template_ref[acc.account_src_id.id],
@@ -2184,7 +2185,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 'position_id' : new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
-        
+
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
