@@ -1354,7 +1354,6 @@ class orm_memory(orm_template):
 
 class orm(orm_template):
     _sql_constraints = []
-    _log_access = True
     _table = None
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
 
@@ -1666,6 +1665,11 @@ class orm(orm_template):
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
+        
+        if not hasattr(self, '_log_access'):
+            # if not access is not specify, it is the same value as _auto
+            self._log_access = not hasattr(self, "_auto") or self._auto
+
         self._columns = self._columns.copy()
         for store_field in self._columns:
             f = self._columns[store_field]
