@@ -495,6 +495,8 @@ class account_fiscalyear(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
+        'company_id': fields.many2one('res.company', 'Company',
+            help="Keep empty if the fiscal year belongs to several companies."),
         'date_start': fields.date('Start date', required=True),
         'date_stop': fields.date('End date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
@@ -557,6 +559,8 @@ class account_period(osv.osv):
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
+        'special': fields.boolean('Special Period', size=12,
+            help="Special periods are periods that can overlap, like the 13rd period in fiscal years for closing entries."),
         'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
@@ -567,21 +571,28 @@ class account_period(osv.osv):
     }
     _order = "date_start"
 
-    def _check_duration(self,cr,uid,ids):
+    def _check_duration(self,cr,uid,ids,context={}):
         obj_period=self.browse(cr,uid,ids[0])
         if obj_period.date_stop < obj_period.date_start:
             return False
         return True
 
-    def _check_year_limit(self,cr,uid,ids):
-        obj_period=self.browse(cr,uid,ids[0])
-        if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or obj_period.fiscalyear_id.date_stop < obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_stop:
-            return False
+    def _check_year_limit(self,cr,uid,ids,context={}):
+        for obj_period in self.browse(cr,uid,ids):
+            if obj_period.special:
+                continue
+            if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or obj_period.fiscalyear_id.date_stop < obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_start or obj_period.fiscalyear_id.date_start > obj_period.date_stop:
+                return False
+
+            pids = self.search(cr, uid, [('date_stop','>=',obj_period.date_start),('date_stop','<=',obj_period.date_start),('special','=',False),('id','<>',obj_period.id)])
+            for period in self.browse(cr, uid, pids):
+                if period.fiscalyear_id.company_id.id==obj_period.fiscalyear_id.company_id.id:
+                    return False
         return True
 
     _constraints = [
         (_check_duration, 'Error ! The date duration of the Period(s) is invalid. ', ['date_stop']),
-        (_check_year_limit, 'Error ! The date duration of the Period(s) should be within the limit of the Fiscal year. ', ['date_stop'])
+        (_check_year_limit, 'Invalid period ! Some periods overlap or the date duration is not in the limit of the fiscal year. ', ['date_stop'])
     ]
 
     def next(self, cr, uid, period, step, context={}):
