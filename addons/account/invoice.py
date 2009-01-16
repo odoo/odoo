@@ -56,6 +56,7 @@ class account_invoice(osv.osv):
             for line in invoice.tax_line:
                 res[invoice.id]['amount_tax'] += line.amount
             res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
+        print 'res', res
         return res
 
     def _get_journal(self, cr, uid, context):
@@ -160,7 +161,12 @@ class account_invoice(osv.osv):
     def _get_invoice_from_line(self, cr, uid, ids, context={}):
         move = {}
         for line in self.pool.get('account.move.line').browse(cr, uid, ids):
-            move[line.move_id.id] = True
+            if line.reconcile_partial_id:
+                for line2 in line.reconcile_partial_id.line_partial_ids:
+                    move[line2.move_id.id] = True
+            if line.reconcile_id:
+                for line2 in line.reconcile_id.line_id:
+                    move[line2.move_id.id] = True
         invoice_ids = []
         if move:
             invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
@@ -468,13 +474,13 @@ class account_invoice(osv.osv):
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
-        #self.button_compute(cr, uid, ids, context={}, set_total=False)
+
         for inv in self.browse(cr, uid, ids):
+            if not inv.tax_line:
+                self.button_compute(cr, uid, [inv], context={}, set_total=False)
             if inv.move_id:
                 continue
-            if inv.check_total in (0, 0.0, False, None):
-                self.button_compute(cr, uid, ids, context={}, set_total=False)
-                
+
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
             if not inv.date_invoice:
