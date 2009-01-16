@@ -468,10 +468,13 @@ class account_invoice(osv.osv):
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
-        self.button_compute(cr, uid, ids, context={}, set_total=False)
+        #self.button_compute(cr, uid, ids, context={}, set_total=False)
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
+            if inv.check_total in (0, 0.0, False, None):
+                self.button_compute(cr, uid, ids, context={}, set_total=False)
+                
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
             if not inv.date_invoice:
