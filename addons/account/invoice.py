@@ -56,7 +56,6 @@ class account_invoice(osv.osv):
             for line in invoice.tax_line:
                 res[invoice.id]['amount_tax'] += line.amount
             res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
-        print 'res', res
         return res
 
     def _get_journal(self, cr, uid, context):
