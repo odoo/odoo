@@ -77,7 +77,8 @@ class account_payment_term_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
-        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
+        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month." \
+            "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
