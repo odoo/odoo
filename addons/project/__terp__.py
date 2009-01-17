@@ -28,7 +28,9 @@
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["product", "account", "hr", "process"],
-    "description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
+    "description": """Project management module that track multi-level projects, tasks,
+works done on tasks, eso. It is able to render planning, order tasks, eso.
+    """,
     "init_xml" : [],
     "demo_xml" : ["project_demo.xml"],
     "update_xml": [

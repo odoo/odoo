@@ -54,7 +54,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
+    _parent_order = 'id'
     _order = 'parent_left'
 
     def _complete_name(self, cr, uid, ids, name, args, context):
