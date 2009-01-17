@@ -558,7 +558,7 @@ class account_move_line(osv.osv):
                 GROUP BY account_id,reconcile_id')
         r = cr.fetchall()
 #TODO: move this check to a constraint in the account_move_reconcile object
-        if len(r) != 1:
+        if (len(r) != 1) and context.get('same_account', True):
             raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
             raise osv.except_osv(_('Error'), _('Entry is already reconciled'))

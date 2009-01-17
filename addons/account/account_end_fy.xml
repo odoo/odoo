@@ -3,13 +3,17 @@
     <data>
         
         <record id="action_account_period_tree" model="ir.actions.act_window">
-            <field name="name">Close Period</field>
+            <field name="name">Close a Period</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_id" ref="view_account_period_tree"/>
         </record>
-        <menuitem action="action_account_period_tree" id="menu_action_account_period_close_tree" parent="account.menu_account_end_year_treatments"/>
+        <menuitem
+            action="action_account_period_tree"
+            id="menu_action_account_period_close_tree"
+            parent="account.menu_account_end_year_treatments"
+            sequence="0"/>
         
     </data>
 </openerp>

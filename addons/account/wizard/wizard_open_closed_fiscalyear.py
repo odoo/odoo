@@ -27,7 +27,7 @@ from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Choose Fiscal Year">
-    <field name="fyear_id" domain="[('state','=','done')]"/>
+    <field name="fyear_id" domain="[('state','=','draft')]"/>
 </form>
 """
 

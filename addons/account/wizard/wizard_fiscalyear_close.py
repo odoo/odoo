@@ -29,7 +29,9 @@ _transaction_form = '''<?xml version="1.0"?>
 <form string="Close Fiscal Year with new entries">
     <field name="fy_id"/>
     <field name="fy2_id"/>
-    <field name="report_name" colspan="3"/>
+    <field name="journal_id"/>
+    <field name="period_id"/>
+    <field name="report_name" colspan="4"/>
 
     <separator string="Are you sure you want to create entries?" colspan="4"/>
     <field name="sure"/>
@@ -37,6 +39,8 @@ _transaction_form = '''<?xml version="1.0"?>
 
 _transaction_fields = {
     'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear','required':True, 'domain':[('state','=','draft')]},
+    'journal_id': {'string':'Opening Entries Journal', 'type':'many2one', 'relation': 'account.journal','required':True},
+    'period_id': {'string':'Opening Entries Period', 'type':'many2one', 'relation': 'account.period','required':True, 'domain':"[('fiscalyear_id','=',fy2_id)]"},
     'fy2_id': {'string':'New Fiscal Year', 'type':'many2one', 'relation': 'account.fiscalyear', 'domain':[('state','=','draft')], 'required':True},
     'report_name': {'string':'Name of new entries', 'type':'char', 'size': 64, 'required':True},
     'sure': {'string':'Check this box', 'type':'boolean'},
@@ -53,18 +57,15 @@ def _data_save(self, cr, uid, data, context):
 
     fy_id = data['form']['fy_id']
     new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
-    start_jp = new_fyear.start_journal_period_id
 
-    periods_fy2 = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids
+    periods_fy2 = new_fyear.period_ids
     if not periods_fy2:
         raise wizard.except_wizard(_('UserError'),
                     _('There are no periods defined on New Fiscal Year.'))
     period=periods_fy2[0]
-    if not start_jp:
-        raise wizard.except_wizard(_('UserError'),
-                    _('The new fiscal year should have a journal for new entries define on it'))
 
-    new_journal = start_jp.journal_id
+    new_journal = data['form']['journal_id']
+    new_journal = pool.get('account.journal').browse(cr, uid, new_journal, context=context)
 
     if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
         raise wizard.except_wizard(_('UserError'),
@@ -160,13 +161,15 @@ def _data_save(self, cr, uid, data, context):
     ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
         ('period_id.fiscalyear_id','=',new_fyear.id)])
 
+    context['same_account'] = False
     pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
 
-    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
-    start_jp = new_fyear.start_journal_period_id
-    cr.execute('UPDATE account_fiscalyear ' \
-            'SET end_journal_period_id = %s ' \
-            'WHERE id = %s', (start_jp and start_jp.id or None, fy_id))
+    new_period = data['form']['period_id']
+    ids = pool.get('account.journal.period').search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])
+    if ids:
+        cr.execute('UPDATE account_fiscalyear ' \
+                'SET end_journal_period_id = %s ' \
+                'WHERE id = %s', (ids[0], new_fyear.id))
     return {}
 
 class wiz_journal_close(wizard.interface):
