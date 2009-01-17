@@ -560,8 +560,8 @@ class account_period(osv.osv):
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
-        'special': fields.boolean('Special Period', size=12,
-            help="Special periods are periods that can overlap, like the 13rd period in fiscal years for closing entries."),
+        'special': fields.boolean('Opening/Closing Period', size=12,
+            help="These periods can overlap."),
         'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),

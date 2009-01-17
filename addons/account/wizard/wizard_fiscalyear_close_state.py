@@ -28,7 +28,7 @@ from tools.translate import _
 _transaction_form = '''<?xml version="1.0"?>
 <form string=" Close states of Fiscal year and periods">
     <field name="fy_id"/>
-    <separator string="Are you sure you want to close the states of fiscal year and its period?" colspan="4"/>
+    <separator string="Are you sure you want to close the fiscal year ?" colspan="4"/>
     <field name="sure"/>
 </form>'''
 

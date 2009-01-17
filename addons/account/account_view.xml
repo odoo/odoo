@@ -741,10 +741,6 @@
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1"/>
                         </page>
-                        <page string="Linked Lines" groups="base.group_extended">
-                            <field colspan="4" name="reconcile_implicit"/>
-                            <field colspan="4" name="parent_move_lines" nolabel="0"/>
-                        </page>
                     </notebook>
                 </form>
             </field>
@@ -784,7 +780,6 @@
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
-                            <field colspan="4" name="reconcile_implicit"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>

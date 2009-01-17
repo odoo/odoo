@@ -73,6 +73,13 @@ def _data_save(self, cr, uid, data, context):
         raise wizard.except_wizard(_('UserError'),
                 _('The journal must have centralised counterpart'))
 
+    move_ids = pool.get('account.move.line').search(cr, uid, [
+        ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
+    if move_ids:
+        raise wizard.except_wizard(_('UserError'),
+                _('The opening journal must not have any entry in the new fiscal year !'))
+
+
     query_line = pool.get('account.move.line')._query_get(cr, uid,
             obj='account_move_line', context={'fiscalyear': fy_id})
     cr.execute('select id from account_account WHERE active')
@@ -118,7 +125,6 @@ def _data_save(self, cr, uid, data, context):
                         'date': period.date_start,
                         'journal_id': new_journal.id,
                         'period_id': period.id,
-                        'parent_move_lines':[(6,0,[parent_id])]
                     })
                     pool.get('account.move.line').create(cr, uid, move, {
                         'journal_id': new_journal.id,
@@ -147,10 +153,14 @@ def _data_save(self, cr, uid, data, context):
                         'date': period.date_start,
                         'journal_id': new_journal.id,
                         'period_id': period.id,
-                        'parent_move_lines':[(6,0,[parent_id])]
                     })
                     pool.get('account.move.line').create(cr, uid, move)
                 offset += limit
+
+    ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
+        ('period_id.fiscalyear_id','=',new_fyear.id)])
+
+    pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
 
     new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
     start_jp = new_fyear.start_journal_period_id
