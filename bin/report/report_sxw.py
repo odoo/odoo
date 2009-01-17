@@ -155,7 +155,7 @@ class _format(object):
             if os.name == 'nt':
                 locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
             else:
-                locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
+                locale.setlocale(locale.LC_ALL,str( lang + '.' + encoding))
         except Exception:
             netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
                     'report %s: unable to set locale "%s"' % (self.name,
@@ -337,31 +337,78 @@ class rml_parse(object):
         if not value:
             return ''
 
-        pool_lang=self.pool.get('res.lang')
+        lc, encoding = locale.getdefaultlocale()
+        
+        if not encoding:
+            encoding = 'UTF-8'
+        if encoding == 'utf':
+            encoding = 'UTF-8'
+        if encoding == 'cp1252':
+            encoding= '1252'
+        
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
+         
+        try:
+            if os.name == 'nt':
+                locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+            else:
+                locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
+        except Exception:
+            
+            netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
+                    'report %s: unable to set locale "%s"' % (self.name,
+                        self.localcontext.get('lang', 'en_US') or 'en_US')) 
+            lang, encoding = locale.getdefaultlocale()
                 
         if date or date_time:
-            date_format = lang_obj.date_format
-            if date_time:
-                date_format = lang_obj.date_format + " " + lang_obj.time_format
-                        
             if not isinstance(value, time.struct_time):
                 # assume string, parse it
                 if len(str(value)) == 10:
                     # length of date like 2001-01-01 is ten
                     # assume format '%Y-%m-%d'
-                    date = mx.DateTime.strptime(str(value),DT_FORMAT)
+                    date = time.strptime(value, DT_FORMAT)
+                    locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
+                    return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),date)
                 else:
                     # assume format '%Y-%m-%d %H:%M:%S'
-                    value = str(value)[:19]
-                    date = mx.DateTime.strptime(str(value),DHM_FORMAT)
-            else:
-                date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
-            
-            return date.strftime(date_format)
-        
-        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+                    date = time.strptime(value, DHM_FORMAT)
+                    date_f = time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),date)
+                    time_f = time.strftime(locale.nl_langinfo(locale.T_FMT),date)
+                    res = date_f + " " + time_f
+                    locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
+                    return res
+            return date
+        return locale.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+
+#    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
+#        if not value:
+#            return ''
+#
+#        pool_lang=self.pool.get('res.lang')
+#        lang = self.localcontext.get('lang', 'en_US') or 'en_US'
+#        lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
+#                
+#        if date or date_time:
+#            date_format = lang_obj.date_format
+#            if date_time:
+#                date_format = lang_obj.date_format + " " + lang_obj.time_format
+#                        
+#            if not isinstance(value, time.struct_time):
+#                # assume string, parse it
+#                if len(str(value)) == 10:
+#                    # length of date like 2001-01-01 is ten
+#                    # assume format '%Y-%m-%d'
+#                    date = mx.DateTime.strptime(str(value),DT_FORMAT)
+#                else:
+#                    # assume format '%Y-%m-%d %H:%M:%S'
+#                    value = str(value)[:19]
+#                    date = mx.DateTime.strptime(str(value),DHM_FORMAT)
+#            else:
+#                date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
+#            
+#            return date.strftime(date_format)
+#        
+#        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
     
 #    def formatLang(self, value, digit=2, date=False):
 #        if not value:
