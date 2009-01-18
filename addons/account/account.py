@@ -1230,7 +1230,8 @@ class account_tax(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax childs. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
         'active': fields.boolean('Active'),
-        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
+        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'),('balance','Balance')], 'Tax Type', required=True,
+            help="The computation method for the tax amount. Balance can be used on child taxes only."),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True,
             help="If not applicable (computed through a Python code), the tax do not appears on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developpers to create specific taxes in a custom domain."),
@@ -1345,6 +1346,8 @@ class account_tax(osv.osv):
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
+            elif tax.type=='balance':
+                data['amount'] = cur_price_unit - reduce(lambda x, y: x+y.get('amount',0.0), res, 0.0)
             amount2 = data['amount']
             if len(tax.child_ids):
                 if tax.child_depend:
@@ -1412,6 +1415,8 @@ class account_tax(osv.osv):
                 localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
+            elif tax.type=='balance':
+                data['amount'] = cur_price_unit - reduce(lambda x, y: x+y.get('amount',0.0), res, 0.0)
 
             if tax.include_base_amount:
                 cur_price_unit -= amount
