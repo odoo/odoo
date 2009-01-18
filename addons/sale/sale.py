@@ -866,6 +866,10 @@ class sale_order_line(osv.osv):
 
         result = {}
         product_obj = product_obj.browse(cr, uid, product, context=context)
+        if not packaging and product_obj.packaging:
+            packaging = product_obj.packaging[0].id
+            result['product_packaging'] = packaging
+
         if packaging:
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)

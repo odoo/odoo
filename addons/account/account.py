@@ -1108,35 +1108,6 @@ class account_tax_code(osv.osv):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context, where =''):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-        if context.get('based_on', 'invoices') == 'payments':
-            cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                    FROM account_move_line AS line, \
-                        account_move AS move \
-                        LEFT JOIN account_invoice invoice ON \
-                            (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                        AND move.id = line.move_id \
-                        AND ((invoice.state = \'paid\') \
-                            OR (invoice.id IS NULL)) \
-                    GROUP BY line.tax_code_id')
-        else:
-            cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                    FROM account_move_line AS line \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                    GROUP BY line.tax_code_id')
-        res=dict(cr.fetchall())
-        for record in self.browse(cr, uid, ids, context):
-            def _rec_get(record):
-                amount = res.get(record.id, 0.0)
-                for rec in record.child_ids:
-                    amount += _rec_get(rec) * rec.sign
-                return amount
-            res[record.id] = round(_rec_get(record), 2)
-        return res
-
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
             period_id = context['period_id']
@@ -1155,7 +1126,6 @@ class account_tax_code(osv.osv):
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
-        'sum': fields.function(_sum, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
         'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
