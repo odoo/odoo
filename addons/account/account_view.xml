@@ -922,13 +922,18 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
         </record>
         <record id="action_move_line_search_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_tree"/>
+            <field name="act_window_id" ref="action_move_line_search"/>
+        </record>
+        <record id="action_move_line_search_view2" model="ir.actions.act_window.view">
+            <field eval="11" name="sequence"/>
+            <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
         <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>
