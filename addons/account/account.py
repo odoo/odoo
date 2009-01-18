@@ -1348,10 +1348,24 @@ class account_tax(osv.osv):
             amount2 = data['amount']
             if len(tax.child_ids):
                 if tax.child_depend:
-                    del res[-1]
+                    latest = res.pop()
                 amount = amount2
                 child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner)
                 res.extend(child_tax)
+                if tax.child_depend:
+                    for r in res:
+                        for name in ('base','ref_base'):
+                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
+                                r[name+'_code_id'] = latest[name+'_code_id']
+                                r[name+'_sign'] = latest[name+'_sign']
+                                r['price_unit'] = latest['price_unit']
+                                latest[name+'_code_id'] = False
+                        for name in ('tax','ref_tax'):
+                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
+                                r[name+'_code_id'] = latest[name+'_code_id']
+                                r[name+'_sign'] = latest[name+'_sign']
+                                r['amount'] = data['amount']
+                                latest[name+'_code_id'] = False
             if tax.include_base_amount:
                 cur_price_unit+=amount2
         return res
