@@ -1137,6 +1137,19 @@ class account_tax_code(osv.osv):
             res[record.id] = round(_rec_get(record), 2)
         return res
 
+    def _sum_year(self, cr, uid, ids, name, args, context):
+        if 'fiscalyear_id' in context and context['fiscalyear_id']:
+            fiscalyear_id = context['fiscalyear_id']
+        else:
+            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+        where = ''
+        if fiscalyear_id:
+             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
+             if pids:
+                 where = ' and period_id in (' + (','.join(pids))+')'
+        return self._sum(cr, uid, ids, name, args, context,
+                where=where)
+
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
             period_id = context['period_id']
@@ -1155,7 +1168,7 @@ class account_tax_code(osv.osv):
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
-        'sum': fields.function(_sum, method=True, string="Year Sum"),
+        'sum': fields.function(_sum_year, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
         'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
