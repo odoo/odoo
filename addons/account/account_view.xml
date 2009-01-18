@@ -1165,7 +1165,7 @@
                     <field name="name" select="1"/>
                     <field name="sequence"/>
                     <field name="value"/>
-                    <field name="value_amount"/>
+                    <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <newline/>
                     <field name="days"/>
                     <field name="days2"/>
