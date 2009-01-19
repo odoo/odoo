@@ -110,7 +110,7 @@ class res_partner(osv.osv):
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0)
         for pid,type,val in cr.fetchall():
-            res[pid][maps[type]] = val
+            res[pid][maps[type]] = (type=='receivable') and val or -val
         return res
 
     def _credit_search(self, cr, uid, obj, name, args):
