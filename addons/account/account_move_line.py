@@ -942,7 +942,7 @@ class account_move_line(osv.osv):
         if check:
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
-                self.pool.get('account.move').write(cr,uid, [vals['move_id']],{'state':'posted'})
+                self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
 
