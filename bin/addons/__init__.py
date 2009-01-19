@@ -541,7 +541,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         migrations.migrate_module(package, 'pre')
 
         register_class(m)
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s loading objects' % m)
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % m)
         modules = pool.instanciate(m, cr)
 
         if modobj is None:
