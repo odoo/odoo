@@ -861,26 +861,21 @@ class orm_template(object):
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = xpath.Evaluate('//button', node)
-        if buttons:
-            for button in buttons:
-                if button.getAttribute('type') == 'object':
-                    continue
+        buttons = xpath.Evaluate("//button[@type != 'object']", node)
+        for button in buttons:
+            ok = True
+            if user != 1:   # admin user has all roles
+                user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
+                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                roles = cr.fetchall()
+                for role in roles:
+                    if role[0]:
+                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
 
-                ok = True
-
-                if user != 1:   # admin user has all roles
-                    user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                    cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
-                    roles = cr.fetchall()
-                    for role in roles:
-                        if role[0]:
-                            ok = ok and rolesobj.check(cr, user, user_roles, role[0])
-
-                if not ok:
-                    button.setAttribute('readonly', '1')
-                else:
-                    button.setAttribute('readonly', '0')
+            if not ok:
+                button.setAttribute('readonly', '1')
+            else:
+                button.setAttribute('readonly', '0')
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
