@@ -443,7 +443,7 @@ class orm_template(object):
                         break
                     i += 1
                 if i == len(f):
-                    data[fpos] = str(r or '')
+                    data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
     def export_data(self, cr, uid, ids, fields, context=None):
