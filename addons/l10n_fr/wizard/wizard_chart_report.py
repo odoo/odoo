@@ -138,6 +138,7 @@ def sumCreditor_start_stop(cr,uid,account_from_in,account_to_in,date_start,date_
     resultAccount =cr.execute(queryAccount)
     rows =cr.fetchall()
 
+    query = None
     for row in rows:
             query="""
     select sum(debit),sum(credit)
@@ -151,8 +152,11 @@ def sumCreditor_start_stop(cr,uid,account_from_in,account_to_in,date_start,date_
                     and account_period.date_start >='""" + date_start + """'
                     and account_period.date_stop <= '""" + date_stop + """'
     """
-    result=cr.execute(query)
-    row2 =cr.fetchone()
+    if query:
+        result=cr.execute(query)
+        row2 =cr.fetchone()
+    else:
+        row2 = (0.0,0.0)
     try:
         if row2[1] - row2[0] > 0:
             sumCreditor = sumCreditor + (row2[1] - row2[0])

@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="property_account_position" position="after">
-                    <label string="VAT :" align="1.0"/>
+                    <label string="VAT: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="vat" nolabel="1" on_change="vat_change(vat)" select="2"/>
                         <field name="vat_subjected" nolabel="1"/>
