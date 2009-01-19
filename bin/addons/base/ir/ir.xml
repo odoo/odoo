@@ -261,6 +261,8 @@
                 <form string="Report xml">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
+                    <field name="model" select="1"/>
+                    <newline/>
                     <field name="report_name" select="1"/>
                     <field name="report_xsl"/>
                     <field name="report_xml"/>
@@ -901,7 +903,7 @@
             <field name="model">ir.translation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Translations">
+                <tree string="Translations">
                     <field name="src"/>
                     <field name="value"/>
                     <field name="name"/>

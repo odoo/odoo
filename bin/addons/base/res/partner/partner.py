@@ -328,6 +328,10 @@ class res_partner_address(osv.osv):
                 ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
                 ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
+
+    def get_city(self, cr, uid, id):
+        return self.browse(cr, uid, id).city
+
 res_partner_address()
 
 class res_partner_bank_type(osv.osv):

@@ -296,6 +296,7 @@ class orm_template(object):
     _rec_name = 'name'
     _parent_name = 'parent_id'
     _parent_store = False
+    _parent_order = False
     _date_name = 'date'
     _order = 'id'
     _sequence = None
@@ -1365,6 +1366,8 @@ class orm(orm_template):
             where = self._parent_name+'='+str(root)
             if not root:
                 where = self._parent_name+' IS NULL'
+            if self._parent_order:
+                where += ' order by '+self._parent_order
             cr.execute('SELECT id FROM '+self._table+' WHERE '+where)
             pos2 = pos + 1
             childs = cr.fetchall()

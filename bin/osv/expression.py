@@ -34,7 +34,7 @@ class expression(object):
     """
 
     def _is_operator(self, element):
-        return isinstance(element, str) \
+        return (isinstance(element, str) or isinstance(element, unicode)) \
            and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
