@@ -72,7 +72,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         try:
             cr.autocommit(True)
-            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
@@ -153,7 +153,7 @@ class db(netsvc.Service):
         cr.autocommit(True)
         try:
             try:
-                cr.execute('DROP DATABASE ' + db_name)
+                cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
                 logger.notifyChannel("web-services", netsvc.LOG_ERROR,
                         'DROP DB: %s failed:\n%s' % (db_name, e))
@@ -204,7 +204,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         cr.autocommit(True)
         try:
-            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
@@ -258,9 +258,9 @@ class db(netsvc.Service):
                     res = cr.fetchone()
                     db_user = res and str(res[0])
                 if db_user:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
                 else:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
                 res = [str(name) for (name,) in cr.fetchall()]
             except:
                 res = []
