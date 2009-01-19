@@ -93,9 +93,9 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_planned': fields.date('Scheduled date if fixed',help='Select a date if you have chosen Preferred Date to be fixed.'),
-        'reference': fields.char('Reference',size=128,required=1),
-        'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1,help='Select the Payment Mode to be applied.'),
+        'date_planned': fields.date('Scheduled date if fixed', states={'done':[('readonly',True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'reference': fields.char('Reference', size=128, required=1, states={'done':[('readonly',True)]}),
+        'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1, states={'done':[('readonly',True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('open','Confirmed'),
@@ -104,12 +104,12 @@ class payment_order(osv.osv):
         'line_ids': fields.one2many('payment.line','order_id','Payment lines',states={'done':[('readonly',True)]}),
         'total': fields.function(_total, string="Total", method=True,
             type='float'),
-        'user_id': fields.many2one('res.users','User',required=True),
+        'user_id': fields.many2one('res.users','User', required=True, states={'done':[('readonly',True)]}),
         'date_prefered': fields.selection([
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred date", change_default=True, required=True,help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+            ], "Preferred date", change_default=True, required=True, states={'done':[('readonly',True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
     }
