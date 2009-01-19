@@ -82,6 +82,7 @@
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
                                 <field name="invoice_id" readonly="1"/>
+                                <field name="fiscal_position"/>
                             </group>
                             <newline/>
                             <separator string="Purchase Control" colspan="4"/>
@@ -206,11 +207,11 @@
         </record>
 
         <act_window
-            context="{'partner_id': active_id}" 
-            domain="[('partner_id', '=', active_id)]" 
-            id="act_res_partner_2_purchase_order" 
-            name="Purchase orders" 
-            res_model="purchase.order" 
+            context="{'partner_id': active_id}"
+            domain="[('partner_id', '=', active_id)]"
+            id="act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
             src_model="res.partner"/>
     </data>
 </openerp>

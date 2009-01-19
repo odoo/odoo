@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(224.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="34.0" y1="42.0" width="145" height="758"/>
+      <frame id="first" x1="0.0" y1="0.0" width="224" height="842"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -56,8 +56,8 @@
   <story>
     <para style="P1">[[ repeatIn(objects,'o') ]]</para>
     <para style="P2">[[ o.user_id.company_id.name ]]</para>
-    <para style="P3">[[ address and address.street or '' ]], [[ address and address.zip or '']] [[ address and address.city or '' ]]</para>
-    <para style="P3">[[ address and address.country_id and address.country_id.name or '' ]]</para>
+    <para style="P3">[[ address and address.street ]], [[ address and address.zip ]] [[ address and address.city ]]</para>
+    <para style="P3">[[ address and address.country_id and address.country_id.name ]]</para>
     <para style="P3">Tel : [[ address and address.phone ]]</para>
     <para style="P3">E-mail : [[ address and address.email ]]</para>
     <para style="P3">User : [[ o.user_id.name ]]</para>

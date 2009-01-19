@@ -270,6 +270,7 @@ class account_invoice(osv.osv):
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Account Move', size=64),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {
         'type': _get_type,
@@ -305,6 +306,7 @@ class account_invoice(osv.osv):
         partner_payment_term = False
         acc_id = False
         bank_id = False
+        fiscal_position = False
 
         opt = [('uid', str(uid))]
         if partner_id:
@@ -318,7 +320,8 @@ class account_invoice(osv.osv):
                 acc_id = p.property_account_receivable.id
             else:
                 acc_id = p.property_account_payable.id
-
+            if p.property_account_position:
+                fiscal_position = p.property_account_position.id
             partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
             if p.bank_ids:
                 bank_id = p.bank_ids[0].id
@@ -328,6 +331,7 @@ class account_invoice(osv.osv):
             'address_invoice_id': invoice_addr_id,
             'account_id': acc_id,
             'payment_term': partner_payment_term,
+            'fiscal_position': fiscal_position
             }
         }
 

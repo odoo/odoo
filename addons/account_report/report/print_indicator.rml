@@ -150,22 +150,30 @@
 </para>
 </section>
 <section>
-	<para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
-	  <para style="P13">[[ o['array_table'] and repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
+	<para style="P13">[[ repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array_header',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
 	  <blockTable colWidths="0.0" style="Table5">
 	  	<tr>
 			<td>
-	        <para style="P9"> </para>
-	      </td>
-	    </tr>
-	    <tr>
-			<td>
-	        <para style="P9"> </para>
+	        <para style="P3"> </para>
 	      </td>
 	    </tr>
 	 </blockTable>
+	 
 </section>
-<hr color="black" thickness="1.5"/>
+<section>
+	<para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
+	<para style="P13">[[ repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
+	  <blockTable colWidths="0.00" style="Table5">
+	  <tr>
+			<td>
+	        <para style="P9">  </para>
+	      </td>
+	    </tr>
+	    
+	 </blockTable>
+	 
+</section>
+
 </story>
 </document>
 

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -85,20 +85,19 @@ class wizard_vat(wizard.interface):
         period="to_date('" + str(obj_year.date_start) + "','yyyy-mm-dd') and to_date('" + str(obj_year.date_stop) +"','yyyy-mm-dd')"
 
         street=zip_city=country=''
-        if not obj_cmpny.partner_id.address:
-                street=zip_city=country=''
-
-        for ads in obj_cmpny.partner_id.address:
-                if ads.type=='default':
-                    zip_city = pooler.get_pool(cr.dbname).get('res.partner.address').get_city(cr,uid,ads.id)
-                    if not zip_city:
-                        zip_city = ''
-                    if ads.street:
-                        street=ads.street
-                    if ads.street2:
-                        street +=ads.street2
-                    if ads.country_id:
-                        country=ads.country_id.code
+        addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
+        if addr.get('invoice',False):
+            ads=pooler.get_pool(cr.dbname).get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]     
+                
+            zip_city = pooler.get_pool(cr.dbname).get('res.partner.address').get_city(cr,uid,ads.id)
+            if not zip_city:
+                zip_city = ''
+            if ads.street:
+                street=ads.street
+            if ads.street2:
+                street +=ads.street2
+            if ads.country_id:
+                country=ads.country_id.code
 
 
         sender_date=time.strftime('%Y-%m-%d')
@@ -111,7 +110,7 @@ class wizard_vat(wizard.interface):
         data_file +='\n\t\t<Country>'+ str(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
         data_comp ='\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t<Street>'+ str(street) +'</Street>\n\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t<Country>'+ str(country) +'</Country>\n</CompanyInfo>'
         data_period ='\n<Period>'+ str(obj_year.name[-4:]) +'</Period>'
-
+        error_message=[]
         for p_id in p_id_list:
             record=[] # this holds record per partner
             obj_partner=pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
@@ -121,14 +120,18 @@ class wizard_vat(wizard.interface):
                 continue
 
             record.append(obj_partner.vat)
-            for ads in obj_partner.address:
-                if ads.type=='default':
-                    if ads.country_id:
-                        record.append(ads.country_id.code)
-                    else:
-                        raise wizard.except_wizard('Data Insufficient!', 'The Partner "'+obj_partner.name + '"'' has no country associated with its default type address!')
+            addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_partner.id], ['invoice'])
+            if addr.get('invoice',False):
+                ads=pooler.get_pool(cr.dbname).get('res.partner.address').browse(cr,uid,[addr['invoice']])[0] 
+            
+                if ads.country_id:
+                    record.append(ads.country_id.code)
                 else:
-                    raise wizard.except_wizard('Data Insufficient!', 'The Partner "'+obj_partner.name + '"'' has no default type address!')
+                    error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no country associated with its Invoice address!')
+                    
+            if len(record)<2:
+                record.append('')
+                error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no Invoice address!')
             if len(line_info)==1:
                 if line_info[0][0]=='produit':
                        record.append(0.00)
@@ -145,6 +148,9 @@ class wizard_vat(wizard.interface):
         data_clientinfo=''
         sum_tax=0.00
         sum_turnover=0.00
+        if len(error_message):
+            data['form']['msg']='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+            return data['form']
         for line in datas:
             if line[3]< data['form']['limit_amount']:
                 continue

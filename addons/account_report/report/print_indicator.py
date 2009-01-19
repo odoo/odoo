@@ -98,56 +98,59 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.header_name = []
         self.header_val = []
         self.main_dict = {}
-
+        
     def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[],data=''):
         self._node.data = ''
         node = self._find_parent(self._node, nodes_parent or parents)
         ns = node.nextSibling
 #start
-        if not name=='array':
+        if (not name in ['array','array_header']):
             return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
         
         array_header = eval(data,{'year':'Fiscal Year','periods':'Periods'})
         value = [array_header]
         value.extend(self.header_name)
-        
-        type=['string'].extend(['float']*len(self.header_name))
-        width=[40]*(len(self.header_name)+1)
 
+        type=['string']
+        if name=='array':
+            type.extend(['float']*len(self.header_name))
+        else:
+            type=['lable'] * (len(self.header_name)+1)
+        
+        width = [538/float(len(value))]*(len(value))
+        
         if not lst:
             lst.append(1)
         for ns in node.childNodes :
             if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
                 width_str = ns._attrs['colWidths'].nodeValue
                 ns.removeAttribute('colWidths')
-                total_td = td * len(value)
-
+#                total_td = td * len(value)
+                
                 if not width:
                     for v in value:
                         width.append(30)
-                for v in range(len(value)):
+                for v in range(len(width)):
                     width_str +=',%d'%width[v]
-
                 ns.setAttribute('colWidths',width_str)
 
                 child_list =  ns.childNodes
-                check=0
                 for child in child_list:
                     if child.nodeName=='tr':
                         lc = child.childNodes[1]
-#                        for t in range(td):
                         i=0
                         for v in value:
                             newnode = lc.cloneNode(1)
-                            if check==1:
-                                t1="[[ %s['%s'] ]]"%(name,v)
-                            else:
+                            if type[i] == 'float':
+                                t1="[[ '%.2f' % " + "%s['%s'] ]]"%(name,v)
+                            if type[i] == 'lable':
                                 t1="%s"%(v)
-                            newnode.childNodes[1].lastChild.data = t1
+                            else:
+                                t1="[[ %s['%s'] ]]"%(name,v)   
+                            newnode.childNodes[1].lastChild.data = t1    
                             child.appendChild(newnode)
                             newnode=False
                             i+=1
-                        check=1
         return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
 
     def lines(self,data):
@@ -190,7 +193,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
         temp_dict=zip(self.header_name,self.header_val)
         res=dict(temp_dict)
         array_header = eval(array_header,{'year':'Fiscal Year','periods':'Periods'})
-        res[array_header]='Value'
+        res[array_header]=object['name']
         result.append(res)
         return result
 
