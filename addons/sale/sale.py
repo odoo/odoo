@@ -250,6 +250,7 @@ class sale_order(osv.osv):
 
         'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.",required=True),
         'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
@@ -303,12 +304,13 @@ class sale_order(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery','invoice','contact'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
-        return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term}}
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
+        return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term, 'fiscal_position': fiscal_position}}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context={}):
         if not policy:

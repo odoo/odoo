@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -184,6 +184,7 @@ class purchase_order(osv.osv):
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
@@ -198,7 +199,7 @@ class purchase_order(osv.osv):
     _name = "purchase.order"
     _description = "Purchase order"
     _order = "name desc"
-    
+
     def unlink(self, cr, uid, ids):
         purchase_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -207,8 +208,8 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)        
-    
+        return osv.osv.unlink(self, cr, uid, unlink_ids)
+
     def button_dummy(self, cr, uid, ids, context={}):
         return True
 
@@ -227,11 +228,12 @@ class purchase_order(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_address_id': False}}
+            return {'value':{'partner_address_id': False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
         pricelist = part.property_product_pricelist_purchase.id
-        return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
+        return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
