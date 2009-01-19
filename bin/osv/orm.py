@@ -281,6 +281,8 @@ def get_pg_type(f):
         f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
+    elif isinstance(f, fields.function) and f._type == 'char':
+        f_type = ('varchar', 'VARCHAR(%d)' % (f.size))
     else:
         logger = netsvc.Logger()
         logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
