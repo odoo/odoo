@@ -96,7 +96,7 @@
                     <field name="date_prefered"/>
                     <field name="date_planned" select="1"/>
                     <field name="user_id" select="2"/>
-                    <button colspan="2" name="%(wizard_populate_payment)d" string="Select Invoices to Pay" type="action"/>
+                    <button colspan="2" name="%(wizard_populate_payment)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}"/>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
                             <notebook>
