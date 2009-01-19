@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:00:56+0000\n"
-"PO-Revision-Date: 2009-01-03 02:00:56+0000\n"
+"POT-Creation-Date: 2009-01-19 19:28:41+0000\n"
+"PO-Revision-Date: 2009-01-19 19:28:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
+#: view:hr.contract.wage.type:0
+msgid "Hourly cost computation"
 msgstr ""
 
 #. module: hr_contract
@@ -82,9 +82,12 @@ msgid "Function"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
+#: field:hr.employee,marital_status:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
+#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
+msgid "Marital Status"
 msgstr ""
 
 #. module: hr_contract
@@ -93,16 +96,16 @@ msgid "Miscelleanous"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,contract_ids:0
 #: view:hr.contract:0
 #: view:hr.employee:0
+#: field:hr.employee,contract_ids:0
 msgid "Contracts"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
 #: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
 msgid "Wage Type"
 msgstr ""
 
@@ -112,8 +115,8 @@ msgid "Period Name"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
+#: field:hr.employee,nationality:0
+msgid "Nationality"
 msgstr ""
 
 #. module: hr_contract
@@ -147,18 +150,19 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Невалиден XML за преглед на архитектурата"
 
 #. module: hr_contract
-#: field:hr.contract,notes:0
 #: view:hr.contract:0
+#: field:hr.contract,notes:0
 #: view:hr.employee:0
 msgid "Notes"
 msgstr ""
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.employee:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
-#: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Contract"
 msgstr ""
 
@@ -168,24 +172,14 @@ msgid "Contract Type"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 #: field:hr.contract.wage.type,period_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,nationality:0
-msgid "Nationality"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,audiens_num:0
-msgid "AUDIENS Number"
+#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
+msgid "Employee Marital Status"
 msgstr ""
 
 #. module: hr_contract
@@ -199,12 +193,9 @@ msgid "Contract Name"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: field:hr.employee,marital_status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-#: view:hr.employee.marital.status:0
-msgid "Marital Status"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Contract Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -218,9 +209,9 @@ msgid "Manager"
 msgstr ""
 
 #. module: hr_contract
+#: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-#: view:hr.contract.wage.type.period:0
 msgid "Wage period"
 msgstr ""
 
@@ -228,6 +219,11 @@ msgstr ""
 #: help:hr.contract.wage.type,factor_type:0
 #: help:hr.contract.wage.type.period,factor_days:0
 msgid "This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
 msgstr ""
 
 #. module: hr_contract

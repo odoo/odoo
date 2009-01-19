@@ -6,19 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:15:28+0000\n"
-"PO-Revision-Date: 2009-01-03 02:15:28+0000\n"
+"POT-Creation-Date: 2009-01-19 19:43:36+0000\n"
+"PO-Revision-Date: 2009-01-19 19:43:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: account_budget
-#: view:account.budget.post:0
-msgid "Dotations"
-msgstr ""
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -37,8 +32,11 @@ msgid "Budgetary Positions"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.actions.wizard,name:account_budget.wizard_budget_spread
-msgid "Spread amount"
+#: model:ir.actions.report.xml,name:account_budget.account_analytic_account_budget
+#: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
+#: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
+#: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
+msgid "Print Budgets"
 msgstr ""
 
 #. module: account_budget
@@ -58,6 +56,11 @@ msgid "Validate User"
 msgstr ""
 
 #. module: account_budget
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
 msgstr ""
@@ -68,11 +71,11 @@ msgid "Period"
 msgstr ""
 
 #. module: account_budget
-#: wizard_button:wizard.analytic.account.budget.report,init,report:0
-#: wizard_button:account.budget.report,init,report:0
-#: wizard_button:wizard.crossovered.budget,init,report:0
-#: wizard_button:wizard.crossovered.budget.summary,init,report:0
-msgid "Print"
+#: wizard_field:account.budget.report,init,date2:0
+#: wizard_field:wizard.analytic.account.budget.report,init,date_to:0
+#: wizard_field:wizard.crossovered.budget,init,date_to:0
+#: wizard_field:wizard.crossovered.budget.summary,init,date_to:0
+msgid "End of period"
 msgstr ""
 
 #. module: account_budget
@@ -93,11 +96,8 @@ msgid "at"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.actions.report.xml,name:account_budget.account_analytic_account_budget
-#: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
-#: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
-#: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
-msgid "Print Budgets"
+#: view:account.budget.post:0
+msgid "Dotations"
 msgstr ""
 
 #. module: account_budget
@@ -123,8 +123,8 @@ msgid "Percentage"
 msgstr ""
 
 #. module: account_budget
-#: selection:crossovered.budget,state:0
-msgid "Validated"
+#: rml:account.budget:0
+msgid "Results"
 msgstr ""
 
 #. module: account_budget
@@ -133,7 +133,6 @@ msgid "Status"
 msgstr ""
 
 #. module: account_budget
-#: rml:account.analytic.account.budget:0
 #: rml:account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "%"
@@ -151,8 +150,11 @@ msgid "Analytic Account :"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: wizard_button:account.budget.report,init,report:0
+#: wizard_button:wizard.analytic.account.budget.report,init,report:0
+#: wizard_button:wizard.crossovered.budget,init,report:0
+#: wizard_button:wizard.crossovered.budget.summary,init,report:0
+msgid "Print"
 msgstr ""
 
 #. module: account_budget
@@ -176,8 +178,8 @@ msgstr ""
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
-#: rml:crossovered.budget.report:0
 #: field:crossovered.budget.lines,planned_amount:0
+#: rml:crossovered.budget.report:0
 msgid "Planned Amount"
 msgstr ""
 
@@ -198,10 +200,10 @@ msgid "Budget Analysis"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post,account_ids:0
-#: view:account.budget.post:0
-msgid "Accounts"
-msgstr "Konton"
+#: view:crossovered.budget:0
+#: selection:crossovered.budget,state:0
+msgid "Done"
+msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -216,8 +218,8 @@ msgstr ""
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
-#: rml:crossovered.budget.report:0
 #: field:crossovered.budget.lines,practical_amount:0
+#: rml:crossovered.budget.report:0
 msgid "Practical Amount"
 msgstr ""
 
@@ -238,8 +240,8 @@ msgid "Theoritical Amount"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post.dotation,name:0
 #: field:account.budget.post,name:0
+#: field:account.budget.post.dotation,name:0
 #: field:crossovered.budget,name:0
 msgid "Name"
 msgstr "Namn"
@@ -250,14 +252,8 @@ msgid "Print Summary of Budgets"
 msgstr ""
 
 #. module: account_budget
-#: selection:crossovered.budget,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: account_budget
-#: selection:crossovered.budget,state:0
-#: view:crossovered.budget:0
-msgid "Done"
+#: model:ir.actions.wizard,name:account_budget.wizard_budget_spread
+msgid "Spread amount"
 msgstr ""
 
 #. module: account_budget
@@ -267,24 +263,24 @@ msgid "Lines"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
 #: rml:account.budget:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,crossovered_budget_id:0
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
 #: model:ir.actions.wizard,name:account_budget.wizard_budget_report
 #: model:ir.model,name:account_budget.model_crossovered_budget
-#: field:crossovered.budget.lines,crossovered_budget_id:0
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
-#: view:crossovered.budget:0
 msgid "Budget"
 msgstr ""
 
 #. module: account_budget
-#: wizard_view:wizard.analytic.account.budget.report,init:0
-msgid "Select Dates Period"
+#: field:account.budget.post.dotation,post_id:0
+msgid "Item"
 msgstr ""
 
 #. module: account_budget
-#: wizard_field:account.budget.spread,init,amount:0
 #: field:account.budget.post.dotation,amount:0
+#: wizard_field:account.budget.spread,init,amount:0
 msgid "Amount"
 msgstr ""
 
@@ -301,16 +297,13 @@ msgid "Budgets"
 msgstr "Budgetar"
 
 #. module: account_budget
-#: wizard_field:wizard.analytic.account.budget.report,init,date_to:0
-#: wizard_field:account.budget.report,init,date2:0
-#: wizard_field:wizard.crossovered.budget,init,date_to:0
-#: wizard_field:wizard.crossovered.budget.summary,init,date_to:0
-msgid "End of period"
+#: selection:crossovered.budget,state:0
+msgid "Cancelled"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.model,name:account_budget.model_account_budget_post_dotation
 #: view:account.budget.post.dotation:0
+#: model:ir.model,name:account_budget.model_account_budget_post_dotation
 msgid "Budget Dotation"
 msgstr ""
 
@@ -325,21 +318,18 @@ msgid "Budget Item Detail"
 msgstr ""
 
 #. module: account_budget
-#: wizard_view:account.budget.report,init:0
-msgid "Select period"
+#: view:account.budget.post:0
+#: field:crossovered.budget.lines,general_budget_id:0
+#: model:ir.model,name:account_budget.model_account_budget_post
+msgid "Budgetary Position"
 msgstr ""
 
 #. module: account_budget
-#: wizard_field:wizard.analytic.account.budget.report,init,date_from:0
 #: wizard_field:account.budget.report,init,date1:0
+#: wizard_field:wizard.analytic.account.budget.report,init,date_from:0
 #: wizard_field:wizard.crossovered.budget,init,date_from:0
 #: wizard_field:wizard.crossovered.budget.summary,init,date_from:0
 msgid "Start of period"
-msgstr ""
-
-#. module: account_budget
-#: wizard_field:account.budget.spread,init,fiscalyear:0
-msgid "Fiscal Year"
 msgstr ""
 
 #. module: account_budget
@@ -349,8 +339,13 @@ msgid "Code"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post.dotation,post_id:0
-msgid "Item"
+#: field:account.budget.post.dotation,tot_planned:0
+msgid "Total Planned Amount"
+msgstr ""
+
+#. module: account_budget
+#: wizard_view:wizard.analytic.account.budget.report,init:0
+msgid "Select Dates Period"
 msgstr ""
 
 #. module: account_budget
@@ -365,8 +360,8 @@ msgid "Theoretical Amount"
 msgstr ""
 
 #. module: account_budget
-#: rml:account.budget:0
-msgid "Results"
+#: wizard_field:account.budget.spread,init,fiscalyear:0
+msgid "Fiscal Year"
 msgstr ""
 
 #. module: account_budget
@@ -381,11 +376,17 @@ msgstr ""
 
 #. module: account_budget
 #: rml:account.budget:0
+#: view:account.budget.post:0
 #: wizard_view:account.budget.spread,init:0
 #: wizard_button:account.budget.spread,init,spread:0
-#: view:account.budget.post:0
 msgid "Spread"
 msgstr ""
+
+#. module: account_budget
+#: view:account.budget.post:0
+#: field:account.budget.post,account_ids:0
+msgid "Accounts"
+msgstr "Konton"
 
 #. module: account_budget
 #: model:ir.actions.report.xml,name:account_budget.account_budget
@@ -393,39 +394,33 @@ msgid "Print Budget"
 msgstr ""
 
 #. module: account_budget
-#: field:account.budget.post.dotation,tot_planned:0
-msgid "Total Planned Amount"
-msgstr ""
-
-#. module: account_budget
+#: view:account.analytic.account:0
+#: field:account.analytic.account,crossovered_budget_line:0
+#: view:account.budget.post:0
+#: field:account.budget.post,crossovered_budget_line:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget,crossovered_budget_line:0
+#: view:crossovered.budget.lines:0
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
-#: field:account.analytic.account,crossovered_budget_line:0
-#: field:account.budget.post,crossovered_budget_line:0
-#: field:crossovered.budget,crossovered_budget_line:0
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
-#: view:crossovered.budget:0
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget.lines:0
 msgid "Budget Lines"
 msgstr ""
 
 #. module: account_budget
-#: wizard_button:wizard.analytic.account.budget.report,init,end:0
 #: wizard_button:account.budget.report,init,end:0
 #: wizard_button:account.budget.spread,init,end:0
+#: view:crossovered.budget:0
+#: wizard_button:wizard.analytic.account.budget.report,init,end:0
 #: wizard_button:wizard.crossovered.budget,init,end:0
 #: wizard_button:wizard.crossovered.budget.summary,init,end:0
-#: view:crossovered.budget:0
 msgid "Cancel"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.model,name:account_budget.model_account_budget_post
-#: field:crossovered.budget.lines,general_budget_id:0
-#: view:account.budget.post:0
-msgid "Budgetary Position"
+#: wizard_view:account.budget.report,init:0
+msgid "Select period"
 msgstr ""
 
 #. module: account_budget
@@ -438,5 +433,10 @@ msgstr ""
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Analysis from"
+msgstr ""
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Validated"
 msgstr ""
 

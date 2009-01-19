@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:13:15+0000\n"
-"PO-Revision-Date: 2009-01-03 02:13:15+0000\n"
+"POT-Creation-Date: 2009-01-19 19:41:22+0000\n"
+"PO-Revision-Date: 2009-01-19 19:41:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,17 @@ msgid "Date Created"
 msgstr ""
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Ressource ID"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr ""
@@ -31,13 +42,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Data"
-msgstr "Podatki"
-
-#. module: document
-#: view:document.directory:0
-msgid "Seq."
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
 msgstr ""
 
 #. module: document
@@ -63,6 +69,11 @@ msgstr ""
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid "Check this field if you want that the name of the file start by the record name."
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
+msgid "Seq."
 msgstr ""
 
 #. module: document
@@ -117,13 +128,13 @@ msgid "Directorie's Structure"
 msgstr ""
 
 #. module: document
-#: field:document.directory,parent_id:0
-msgid "Parent Item"
+#: selection:document.directory,type:0
+msgid "Other Ressources"
 msgstr ""
 
 #. module: document
-#: view:document.configuration.wizard:0
-msgid "This wizard will automatically configure the document management system according to modules installed on your system."
+#: view:ir.attachment:0
+msgid "File Information"
 msgstr ""
 
 #. module: document
@@ -133,28 +144,34 @@ msgid "Files"
 msgstr ""
 
 #. module: document
+#: field:document.directory,write_uid:0
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
+msgstr ""
+
+#. module: document
+#: view:document.configuration.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr ""
+
+#. module: document
+#: field:ir.attachment,title:0
+msgid "Resource Title"
+msgstr ""
+
+#. module: document
 #: model:ir.model,name:document.model_document_directory_content
 msgid "Directory Content"
 msgstr ""
 
 #. module: document
-#: model:ir.ui.menu,name:document.menu_document_browse
-msgid "Browse Files Using FTP"
-msgstr ""
-
-#. module: document
-#: help:document.directory,ressource_tree:0
-msgid "Check this if you want to use the same tree structure than the selected object in the system."
-msgstr ""
-
-#. module: document
-#: field:document.configuration.wizard,host:0
-msgid "Server Address"
-msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Directory Type"
+#: field:document.directory,parent_id:0
+msgid "Parent Item"
 msgstr ""
 
 #. module: document
@@ -163,13 +180,8 @@ msgid "Use a domain if you want to apply an automatic filter on visible ressourc
 msgstr ""
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr ""
-
-#. module: document
-#: view:document.configuration.wizard:0
-msgid "Cancel"
+#: help:document.directory,ressource_parent_type_id:0
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
 msgstr ""
 
 #. module: document
@@ -178,13 +190,13 @@ msgid "Document Management"
 msgstr ""
 
 #. module: document
-#: help:document.configuration.wizard,host:0
-msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
+#: selection:ir.attachment,store_method:0
+msgid "Link"
 msgstr ""
 
 #. module: document
-#: selection:document.directory,type:0
-msgid "Other Ressources"
+#: view:document.directory:0
+msgid "Directory Type"
 msgstr ""
 
 #. module: document
@@ -199,19 +211,19 @@ msgid "Report"
 msgstr ""
 
 #. module: document
-#: selection:ir.attachment,store_method:0
-msgid "Link"
+#: help:document.configuration.wizard,host:0
+msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
+msgstr ""
+
+#. module: document
+#: view:document.configuration.wizard:0
+msgid "This wizard will automatically configure the document management system according to modules installed on your system."
 msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
-msgid "History"
-msgstr ""
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+msgid "Data"
+msgstr "Podatki"
 
 #. module: document
 #: view:ir.attachment:0
@@ -219,10 +231,9 @@ msgid "Notes"
 msgstr "Opombe"
 
 #. module: document
-#: field:document.directory.content.type,name:0
-#: field:document.directory,file_type:0
-#: field:ir.attachment,file_type:0
-msgid "Content Type"
+#: view:ir.attachment:0
+#: field:ir.attachment,index_content:0
+msgid "Indexed Content"
 msgstr ""
 
 #. module: document
@@ -236,18 +247,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Neveljaven XML za arhitekturo pogleda."
 
 #. module: document
-#: view:ir.attachment:0
-msgid "File Information"
-msgstr ""
-
-#. module: document
 #: field:document.directory,name:0
 msgid "Name"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content.type,code:0
-msgid "Extension"
+#: help:document.directory,ressource_tree:0
+msgid "Check this if you want to use the same tree structure than the selected object in the system."
 msgstr ""
 
 #. module: document
@@ -261,39 +267,14 @@ msgid "Virtual Files"
 msgstr ""
 
 #. module: document
-#: model:ir.ui.menu,name:document.menu_document_directories
 #: view:document.directory:0
+#: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr ""
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Attached To"
-msgstr ""
-
-#. module: document
-#: field:ir.attachment,title:0
-msgid "Resource Title"
-msgstr ""
-
-#. module: document
-#: field:document.directory.content.type,active:0
-msgid "Active"
-msgstr ""
-
-#. module: document
-#: model:ir.model,name:document.model_document_configuration_wizard
-msgid "document.configuration.wizard"
-msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_document_files
-msgid "Search a File"
-msgstr ""
-
-#. module: document
-#: selection:ir.attachment,store_method:0
-msgid "Filesystem"
+#: field:ir.attachment,store_fname:0
+msgid "Stored Filename"
 msgstr ""
 
 #. module: document
@@ -303,15 +284,47 @@ msgid "Directory"
 msgstr ""
 
 #. module: document
+#: field:document.directory.content.type,code:0
+msgid "Extension"
+msgstr ""
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration_wizard
+msgid "document.configuration.wizard"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "Attached To"
+msgstr ""
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory
+#: field:process.node,directory_id:0
+msgid "Document directory"
+msgstr ""
+
+#. module: document
+#: selection:ir.attachment,store_method:0
+msgid "Filesystem"
+msgstr ""
+
+#. module: document
+#: field:document.directory,file_type:0
+#: field:document.directory.content.type,name:0
+#: field:ir.attachment,file_type:0
+msgid "Content Type"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: view:ir.attachment:0
 msgid "Security"
 msgstr ""
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
-msgid "Last Modification User"
+#: model:ir.ui.menu,name:document.menu_document_browse
+msgid "Browse Files Using FTP"
 msgstr ""
 
 #. module: document
@@ -320,8 +333,8 @@ msgid "Directories Mapped to Objects"
 msgstr ""
 
 #. module: document
-#: view:document.configuration.wizard:0
-msgid "Configure"
+#: view:ir.attachment:0
+msgid "History"
 msgstr ""
 
 #. module: document
@@ -356,6 +369,11 @@ msgid "Suffix"
 msgstr ""
 
 #. module: document
+#: field:document.configuration.wizard,host:0
+msgid "Server Address"
+msgstr ""
+
+#. module: document
 #: model:ir.actions.url,name:document.action_document_browse
 msgid "Browse Files"
 msgstr ""
@@ -366,9 +384,9 @@ msgid "Content Name"
 msgstr ""
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory
-#: field:process.node,directory_id:0
-msgid "Document directory"
+#: code:addons/document/document.py:0
+#, python-format
+msgid "Directory name must be unique!"
 msgstr ""
 
 #. module: document
@@ -378,8 +396,8 @@ msgid "Owner"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
+#: field:document.directory,create_uid:0
+msgid "Creator"
 msgstr ""
 
 #. module: document
@@ -388,13 +406,13 @@ msgid "Auto-Generated Files"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: document
-#: field:document.directory,create_uid:0
-msgid "Creator"
+#: model:ir.ui.menu,name:document.menu_document_files
+msgid "Search a File"
 msgstr ""
 
 #. module: document
@@ -403,8 +421,8 @@ msgid "Auto Configure"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_id:0
-msgid "Ressource ID"
+#: view:document.configuration.wizard:0
+msgid "Cancel"
 msgstr ""
 
 #. module: document
@@ -415,12 +433,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "PDF Report"
-msgstr ""
-
-#. module: document
-#: field:ir.attachment,index_content:0
-#: view:ir.attachment:0
-msgid "Indexed Content"
 msgstr ""
 
 #. module: document

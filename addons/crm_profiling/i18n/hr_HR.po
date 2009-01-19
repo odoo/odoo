@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:03:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:03:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:31:24+0000\n"
+"PO-Revision-Date: 2009-01-19 19:31:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgid "Excluded answers"
 msgstr ""
 
 #. module: crm_profiling
-#: model:ir.model,name:crm_profiling.model_crm_profiling_question
 #: field:crm_profiling.answer,question_id:0
 #: field:crm_profiling.question,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_question
 msgid "Question"
 msgstr ""
 
@@ -38,15 +38,14 @@ msgid "Open Questionnaire"
 msgstr ""
 
 #. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
-#: view:crm_profiling.questionnaire:0
 msgid "Questionnaires"
 msgstr ""
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
-#: field:crm_profiling.answer,name:0
 msgid "Answer"
 msgstr ""
 
@@ -66,9 +65,9 @@ msgid "Description"
 msgstr ""
 
 #. module: crm_profiling
-#: field:res.partner,answers_ids:0
 #: view:crm_profiling.answer:0
 #: view:crm_profiling.question:0
+#: field:res.partner,answers_ids:0
 msgid "Answers"
 msgstr ""
 
@@ -98,8 +97,17 @@ msgid "Childs profile"
 msgstr ""
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
+msgstr ""
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
 msgstr ""
 
 #. module: crm_profiling
@@ -108,8 +116,8 @@ msgid "Use The Profiling Rules"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm_profiling.question,answers_ids:0
 #: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
 msgstr ""
 
@@ -119,10 +127,10 @@ msgid "Parent Profile"
 msgstr ""
 
 #. module: crm_profiling
-#: model:ir.actions.act_window,name:crm_profiling.open_questions
-#: field:crm_profiling.questionnaire,questions_ids:0
-#: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
 #: view:crm_profiling.question:0
+#: field:crm_profiling.questionnaire,questions_ids:0
+#: model:ir.actions.act_window,name:crm_profiling.open_questions
+#: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
 msgid "Questions"
 msgstr ""
 
@@ -133,12 +141,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: crm_profiling
-#: wizard_view:open_questionnaire,init:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: field:crm_profiling.questionnaire,name:0
-#: code:addons/crm_profiling/crm_profiling.py:0
-#, python-format
-msgid "Questionnaire"
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
 msgstr ""
 
 #. module: crm_profiling

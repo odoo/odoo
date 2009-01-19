@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:09:44+0000\n"
-"PO-Revision-Date: 2009-01-03 02:09:44+0000\n"
+"POT-Creation-Date: 2009-01-19 19:37:44+0000\n"
+"PO-Revision-Date: 2009-01-19 19:37:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,16 +21,17 @@ msgid "Review end of day check day is complete"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: constraint:hr_timesheet_sheet.sheet:0
+msgid "You can not have 2 timesheets that overlaps !\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
 #: field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
-msgid "Timesheet is validate by project manager."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -81,8 +82,8 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-msgid "Date to"
+#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
+msgid "Defines employee's timesheet entry"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -196,8 +197,8 @@ msgid "Date from"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
-msgid "At the end of the period (week/month)"
+#: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
+msgid "Hr Timesheet Process"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -287,8 +288,8 @@ msgid "No employee defined"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Done"
+#: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
+msgid "Confirmed Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -377,11 +378,11 @@ msgid "Draft"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.next_id_60
 #: view:res.company:0
-#: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheets"
 msgstr ""
 
@@ -403,8 +404,8 @@ msgid "Status"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Defines employee's timesheet entry"
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -418,8 +419,8 @@ msgid "Invoice on timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,user_id:0
-msgid "User"
+#: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice based on timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -439,8 +440,8 @@ msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice based on timesheet"
+#: field:hr_timesheet_sheet.sheet,user_id:0
+msgid "User"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -455,24 +456,19 @@ msgid "Timesheets To Validate"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetworkflow0
-msgid "Hr Timesheet Workflow"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,period_ids:0
 #: view:hr_timesheet_sheet.sheet:0
+#: field:hr_timesheet_sheet.sheet,period_ids:0
 msgid "Period"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-msgid "Confirmed Timesheet"
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Done"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -501,9 +497,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków specjalnych !"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_unvalidate
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_sheet_unvalidate
-msgid "Unvalidated Timesheets"
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
+msgid "Timesheet is validate by project manager."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -523,9 +518,9 @@ msgid "My Department's Timesheet to Confirm"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
-#: field:hr_timesheet_sheet.sheet,attendances_ids:0
 #: view:hr_timesheet_sheet.sheet:0
+#: field:hr_timesheet_sheet.sheet,attendances_ids:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
 msgid "Attendances"
 msgstr ""
 
@@ -545,14 +540,20 @@ msgid "Sign Out"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not duplicate a timesheet !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "By Day"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_difference:0
 #: field:hr_timesheet_sheet.sheet,total_difference:0
 #: field:hr_timesheet_sheet.sheet,total_difference_day:0
+#: field:hr_timesheet_sheet.sheet.day,total_difference:0
 msgid "Difference"
 msgstr ""
 
@@ -562,8 +563,8 @@ msgid "hr_timesheet_sheet.sheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Absent"
+#: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
+msgid "At the end of the period (week/month)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -610,6 +611,12 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_current:0
 msgid "Current date"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_unvalidate
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_sheet_unvalidate
+msgid "Unvalidated Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet

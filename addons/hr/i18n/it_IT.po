@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
-"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
+"POT-Creation-Date: 2009-01-19 19:36:17+0000\n"
+"PO-Revision-Date: 2009-01-19 19:36:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,11 @@ msgstr "Utente Openerp"
 #: model:ir.ui.menu,name:hr.menu_edit_workgroup
 msgid "Working Time Categories"
 msgstr "Categorie Orari di Lavoro"
+
+#. module: hr
+#: constraint:hr.department:0
+msgid "Error! You can not create recursive departments."
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -58,6 +63,11 @@ msgid "Work Email"
 msgstr "Email Ufficio"
 
 #. module: hr
+#: field:hr.timesheet.group,name:0
+msgid "Group name"
+msgstr "Nome Gruppo"
+
+#. module: hr
 #: field:hr.department,company_id:0
 #: field:hr.employee,company_id:0
 msgid "Company"
@@ -85,9 +95,9 @@ msgid "Childs Categories"
 msgstr "Categorie collegate"
 
 #. module: hr
-#: field:hr.employee,notes:0
 #: view:hr.department:0
 #: view:hr.employee:0
+#: field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Note"
 
@@ -97,15 +107,20 @@ msgid "Work from"
 msgstr "Lavoro da"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Employee Hierarchy"
+msgstr "Organigramma dei dipendenti"
+
+#. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
 msgstr "Errore utente"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Employee Hierarchy"
-msgstr "Organigramma dei dipendenti"
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Configurazione"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -124,12 +139,6 @@ msgid "Working Time Category"
 msgstr "Categorie Orari di Lavoro"
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "Una entrata deve essere registrata appena dopo un'uscita"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
@@ -146,14 +155,14 @@ msgid "Work Phone"
 msgstr "Telefono Ufficio"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Indirizzo di lavoro"
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "Posizione Ufficio"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_employee
-#: field:hr.employee,name:0
 #: view:hr.employee:0
+#: field:hr.employee,name:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Dipendente"
@@ -179,9 +188,14 @@ msgid "Members"
 msgstr "Membri"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "Configurazione"
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "Numero SSN"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid "Fill up contact information"
+msgstr "Compilare le informazioni di contatto"
 
 #. module: hr
 #: constraint:ir.ui.view:0
@@ -227,8 +241,8 @@ msgid "Unmaried"
 msgstr "Celibe/Nubile"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_employee_category
 #: view:hr.employee.category:0
+#: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
 msgstr "Categoria Dipendente"
 
@@ -280,11 +294,6 @@ msgid "Categories structure"
 msgstr "Struttura Categorie"
 
 #. module: hr
-#: field:hr.employee,birthday:0
-msgid "Started on"
-msgstr "Iniziato il"
-
-#. module: hr
 #: code:addons/hr/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
@@ -296,9 +305,9 @@ msgid "Day of week"
 msgstr "Giorno della settimana"
 
 #. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "Numero SSN"
+#: field:hr.employee,birthday:0
+msgid "Birthday"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,active:0
@@ -308,6 +317,11 @@ msgstr "Attivo"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract Process"
 msgstr ""
 
 #. module: hr
@@ -352,9 +366,9 @@ msgid "Parent category"
 msgstr "Categoria Superiore"
 
 #. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "Posizione Ufficio"
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Indirizzo di lavoro"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -362,9 +376,9 @@ msgid "Marital Status"
 msgstr "Stato civile"
 
 #. module: hr
-#: field:hr.timesheet.group,name:0
-msgid "Group name"
-msgstr "Nome Gruppo"
+#: model:ir.model,name:hr.model_hr_timesheet
+msgid "Timesheet Line"
+msgstr "Riga Orari di Lavoro"
 
 #. module: hr
 #: view:hr.employee:0
@@ -377,9 +391,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet_group
-#: field:hr.timesheet.group,timesheet_id:0
 #: view:hr.timesheet:0
+#: field:hr.timesheet.group,timesheet_id:0
+#: model:ir.model,name:hr.model_hr_timesheet_group
 msgid "Working Time"
 msgstr "Orario di Lavoro"
 
@@ -399,11 +413,6 @@ msgid "Other"
 msgstr "Altro"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid "Fill up contact information"
-msgstr "Compilare le informazioni di contatto"
-
-#. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "Categorie Dipendenti"
@@ -412,11 +421,6 @@ msgstr "Categorie Dipendenti"
 #: field:hr.department,child_ids:0
 msgid "Childs Departments"
 msgstr "Dipartimenti Collegati"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet
-msgid "Timesheet Line"
-msgstr "Riga Orari di Lavoro"
 
 #. module: hr
 #: view:hr.department:0
@@ -444,9 +448,9 @@ msgid "Gender"
 msgstr "Sesso"
 
 #. module: hr
+#: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list
-#: view:hr.employee:0
 msgid "Employees"
 msgstr "Dipendenti"
 
@@ -459,11 +463,6 @@ msgstr "Nome Dipartimento"
 #: view:hr.employee:0
 msgid "Job Information"
 msgstr "Informazioni Impiego"
-
-#. module: hr
-#: model:process.process,name:hr.process_process_employeecontractworkflow0
-msgid "Employee Contract Workflow"
-msgstr ""
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0

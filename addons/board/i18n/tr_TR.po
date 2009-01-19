@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:16:12+0000\n"
-"PO-Revision-Date: 2009-01-03 02:16:12+0000\n"
+"POT-Creation-Date: 2009-01-19 19:44:20+0000\n"
+"PO-Revision-Date: 2009-01-19 19:44:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgid "board.board"
 msgstr ""
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
-msgid "Menu Information"
-msgstr "Menü Bilgileri"
+#: field:board.note,user_id:0
+msgid "Author"
+msgstr "Yazar"
 
 #. module: board
 #: model:ir.model,name:board.model_board_note
@@ -36,8 +36,8 @@ msgid "board.note"
 msgstr ""
 
 #. module: board
-#: field:board.note,note:0
 #: view:board.note:0
+#: field:board.note,note:0
 msgid "Note"
 msgstr "Not"
 
@@ -47,14 +47,15 @@ msgid "Width"
 msgstr "Genişlik"
 
 #. module: board
+#: field:board.board.line,name:0
+msgid "Title"
+msgstr "Başlık"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
 msgstr ""
-
-#. module: board
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Yazar"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -63,9 +64,9 @@ msgid "Publish a note"
 msgstr ""
 
 #. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Başlık"
+#: wizard_view:board.board.menu.create,init:0
+msgid "Menu Information"
+msgstr "Menü Bilgileri"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -78,9 +79,9 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr ""
+#: model:ir.ui.menu,name:board.next_id_50
+msgid "Configuration"
+msgstr "Ayarlar"
 
 #. module: board
 #: field:board.note.type,name:0
@@ -108,16 +109,16 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: board
-#: field:board.board.line,board_id:0
-#: field:board.board,name:0
-#: view:board.board:0
-msgid "Dashboard"
-msgstr "Pano"
+#: model:ir.model,name:board.model_board_note_type
+msgid "board.note.type"
+msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Eylem"
+#: view:board.board:0
+#: field:board.board,name:0
+#: field:board.board.line,board_id:0
+msgid "Dashboard"
+msgstr "Pano"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -155,18 +156,14 @@ msgid "Right"
 msgstr "Sağ"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Ayarlar"
-
-#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Sıra"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
+#: view:board.board:0
+#: wizard_button:board.board.menu.create,init,create_menu:0
+msgid "Create Menu"
 msgstr ""
 
 #. module: board
@@ -195,9 +192,8 @@ msgid "Dashboard View"
 msgstr ""
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,create_menu:0
-#: view:board.board:0
-msgid "Create Menu"
+#: model:ir.model,name:board.model_board_board_line
+msgid "board.board.line"
 msgstr ""
 
 #. module: board

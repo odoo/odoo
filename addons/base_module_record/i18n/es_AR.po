@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:00+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:00+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,16 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
-msgid "You can continue the recording session by relauching the 'start recording' wizard."
-msgstr ""
-
-#. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,intro,category:0
 #: wizard_field:base_module_record.module_save,info,category:0
 msgid "Category"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+#: wizard_field:base_module_record.module_save,init,info_text:0
+#: wizard_view:base_module_record.module_save,save:0
+msgid "Information"
 msgstr ""
 
 #. module: base_module_record
@@ -42,7 +44,6 @@ msgid "Choose objects to record"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,author:0
 #: wizard_field:base_module_record.module_save,info,author:0
 msgid "Author"
 msgstr ""
@@ -65,8 +66,9 @@ msgid "Demo Data"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,start:0
-msgid "The module recorder allows you to record every operation made in the Open ERP client and save them as a module. You will be able to install this module on any database to reuse and/or publish it."
+#: wizard_field:base_module_record.module_record_objects,save,module_filename:0
+#: wizard_field:base_module_record.module_save,save,module_filename:0
+msgid "Filename"
 msgstr ""
 
 #. module: base_module_record
@@ -76,8 +78,8 @@ msgid "Version"
 msgstr ""
 
 #. module: base_module_record
-#: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record
-msgid "Record module"
+#: wizard_view:base_module_record.module_record_objects,init:0
+msgid "Objects Recording"
 msgstr ""
 
 #. module: base_module_record
@@ -97,13 +99,14 @@ msgid "Status"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,intro:0
+#: wizard_view:base_module_record.module_record,stop:0
 #: wizard_view:base_module_record.module_record_objects,end:0
+#: wizard_view:base_module_record.module_record_objects,intro:0
 #: wizard_view:base_module_record.module_record_objects,save:0
+#: wizard_view:base_module_record.module_save,end:0
 #: wizard_view:base_module_record.module_save,info:0
 #: wizard_view:base_module_record.module_save,init:0
 #: wizard_view:base_module_record.module_save,save:0
-#: wizard_view:base_module_record.module_save,end:0
 msgid "Module Recording"
 msgstr ""
 
@@ -120,8 +123,8 @@ msgid "Thanks in advance for your contribution."
 msgstr ""
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
-msgid "Open ERP recording is stopped. Don't forget to save the recorded module."
+#: help:base_module_record.module_record_objects,init,objects:0
+msgid "List of objects to be recorded"
 msgstr ""
 
 #. module: base_module_record
@@ -133,13 +136,6 @@ msgstr ""
 #. module: base_module_record
 #: selection:base_module_record.module_save,init,info_status:0
 msgid "Not Recording"
-msgstr ""
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_field:base_module_record.module_save,init,info_text:0
-#: wizard_view:base_module_record.module_save,save:0
-msgid "Information"
 msgstr ""
 
 #. module: base_module_record
@@ -167,11 +163,6 @@ msgstr ""
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record,start:0
-msgid "Recording Stopped"
-msgstr ""
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record,start:0
 msgid "Recording information"
 msgstr ""
 
@@ -179,6 +170,11 @@ msgstr ""
 #: wizard_view:base_module_record.module_record_objects,save:0
 #: wizard_view:base_module_record.module_save,save:0
 msgid "Module successfully created !"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record,start:0
+msgid "Recording Stopped"
 msgstr ""
 
 #. module: base_module_record
@@ -227,20 +223,8 @@ msgid "Continue"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_view:base_module_record.module_save,save:0
-msgid "If you think your module could interrest others people, we'd like you to publish it on OpenERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module."
-msgstr ""
-
-#. module: base_module_record
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_mod_rec_rec
 msgid "Module Recorder"
-msgstr ""
-
-#. module: base_module_record
-#: wizard_button:base_module_record.module_record_objects,save,end:0
-#: wizard_button:base_module_record.module_save,save,end:0
-msgid "Close"
 msgstr ""
 
 #. module: base_module_record
@@ -250,20 +234,35 @@ msgid "Normal Data"
 msgstr ""
 
 #. module: base_module_record
+#: wizard_button:base_module_record.module_record_objects,end,end:0
+#: wizard_button:base_module_record.module_save,end,end:0
+msgid "OK"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+#: wizard_view:base_module_record.module_save,save:0
+msgid "If you think your module could interrest others people, we'd like you to publish it on OpenERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module."
+msgstr ""
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record,start:0
+msgid "The module recorder allows you to record every operation made in the Open ERP client and save them as a module. You will be able to install this module on any database to reuse and/or publish it."
+msgstr ""
+
+#. module: base_module_record
+#: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record
+msgid "Record module"
+msgstr ""
+
+#. module: base_module_record
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_mod_rec
 msgid "Module Creation"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,save,module_filename:0
-#: wizard_field:base_module_record.module_save,save,module_filename:0
-msgid "Filename"
-msgstr ""
-
-#. module: base_module_record
-#: wizard_button:base_module_record.module_record_objects,end,end:0
-#: wizard_button:base_module_record.module_save,end,end:0
-msgid "OK"
+#: wizard_view:base_module_record.module_record,stop:0
+msgid "You can continue the recording session by relauching the 'start recording' wizard."
 msgstr ""
 
 #. module: base_module_record
@@ -285,8 +284,8 @@ msgid "Save Recorded Module"
 msgstr ""
 
 #. module: base_module_record
-#: help:base_module_record.module_record_objects,init,objects:0
-msgid "List of objects to be recorded"
+#: wizard_view:base_module_record.module_record,stop:0
+msgid "Open ERP recording is stopped. Don't forget to save the recorded module."
 msgstr ""
 
 #. module: base_module_record
@@ -299,8 +298,9 @@ msgid "Cancel"
 msgstr ""
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,init:0
-msgid "Objects Recording"
+#: wizard_button:base_module_record.module_record_objects,save,end:0
+#: wizard_button:base_module_record.module_save,save,end:0
+msgid "Close"
 msgstr ""
 
 #. module: base_module_record

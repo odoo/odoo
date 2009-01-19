@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:08:20+0000\n"
-"PO-Revision-Date: 2009-01-03 02:08:20+0000\n"
+"POT-Creation-Date: 2009-01-19 19:36:17+0000\n"
+"PO-Revision-Date: 2009-01-19 19:36:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,18 +17,8 @@ msgstr ""
 
 #. module: board_project
 #: view:board.board:0
-msgid "My user's pipeline"
-msgstr "Flusso del Mio Utente"
-
-#. module: board_project
-#: view:board.board:0
 msgid "My Deadlines"
 msgstr "Le Mie Scadenze"
-
-#. module: board_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: board_project
 #: view:board.board:0
@@ -37,6 +27,7 @@ msgstr "Orari di Lavoro dell'Utente"
 
 #. module: board_project
 #: view:hr_timesheet_sheet.sheet:0
+#: model:ir.actions.act_window,name:board_project.act_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Orari di Lavoro"
 
@@ -46,9 +37,10 @@ msgid "My Tasks"
 msgstr "Le Mie Attività"
 
 #. module: board_project
-#: view:board.board:0
-msgid "My Timesheet"
-msgstr ""
+#: model:ir.actions.act_window,name:board_project.open_board_project_manager
+#: model:ir.ui.menu,name:board_project.menu_board_project_manager
+msgid "Project Manager Dashboard"
+msgstr "Dashboard Project manager"
 
 #. module: board_project
 #: view:board.board:0
@@ -56,16 +48,15 @@ msgid "My project's planning"
 msgstr "La MIa Pianificazione Progetti"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_view_board_note_tree
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.action_view_board_note_tree
 msgid "Public Notes"
 msgstr "Note Pubbliche"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.open_board_project
-#: model:ir.ui.menu,name:board_project.menu_board_project
-msgid "Project Dashboard"
-msgstr "Dashboard Progetto"
+#: model:ir.actions.act_window,name:board_project.action_project_pipeline_user
+msgid "Pipeline of tasks"
+msgstr "Flusso Attività"
 
 #. module: board_project
 #: model:ir.ui.menu,name:board_project.next_id_86
@@ -73,9 +64,9 @@ msgid "Project"
 msgstr "Progetto"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_project_pipeline_user
-msgid "Pipeline of tasks"
-msgstr "Flusso Attività"
+#: view:board.board:0
+msgid "My Timesheet"
+msgstr ""
 
 #. module: board_project
 #: view:board.board:0
@@ -88,20 +79,20 @@ msgid "My tasks board"
 msgstr "Scheda Le Mie Attività"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.act_my_account
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.act_my_account
 msgid "My accounts to invoice"
 msgstr "I Miei Conti da Fatturare"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.act_my_project
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.act_my_project
 msgid "My projects"
 msgstr "I Miei Progetti"
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_view_task_tree
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.action_view_task_tree
 msgid "My Open Tasks"
 msgstr "Le Mie Attività aperte"
 
@@ -116,13 +107,18 @@ msgid "My Task's Deadlines"
 msgstr "Scadenze delle Mie Attività"
 
 #. module: board_project
+#: model:ir.actions.act_window,name:board_project.open_board_project
+#: model:ir.ui.menu,name:board_project.menu_board_project
+msgid "Project Dashboard"
+msgstr "Dashboard Progetto"
+
+#. module: board_project
 #: view:board.board:0
 msgid "My Planning"
 msgstr ""
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.open_board_project_manager
-#: model:ir.ui.menu,name:board_project.menu_board_project_manager
-msgid "Project Manager Dashboard"
-msgstr "Dashboard Project manager"
+#: view:board.board:0
+msgid "My user's pipeline"
+msgstr "Flusso del Mio Utente"
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,15 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: report_account
-#: field:report.account.receivable,type:0
-msgid "Account Type"
-msgstr "Tipo de Conta"
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Saldo por tipo de conta"
 
 #. module: report_account
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: report_account
 #: model:ir.model,name:report_account.model_report_account_receivable
@@ -36,24 +37,19 @@ msgid "Receivable accounts"
 msgstr "Contas que se pode receber"
 
 #. module: report_account
-#: view:report.account.receivable:0
-msgid "Accounts by type"
-msgstr "Contas por tipo"
-
-#. module: report_account
 #: field:report.account.receivable,credit:0
 msgid "Credit"
 msgstr "Crédito"
 
 #. module: report_account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Contas por tipo"
+
+#. module: report_account
 #: field:report.account.receivable,name:0
 msgid "Week of Year"
 msgstr "Semana do ano"
-
-#. module: report_account
-#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
-msgid "Balance by Type of Account"
-msgstr "Saldo por tipo de conta"
 
 #. module: report_account
 #: field:report.account.receivable,debit:0

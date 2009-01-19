@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,42 +19,12 @@ msgstr ""
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr ""
+msgstr "Lähetedokument"
 
 #. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr ""
-
-#. module: subscription
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#. module: subscription
-#: field:subscription.subscription,date_init:0
-msgid "First Date"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.document.fields,field:0
-msgid "Field"
-msgstr ""
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription_history
-msgid "Subscription history"
-msgstr ""
-
-#. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Draft"
-msgstr ""
-
-#. module: subscription
-#: selection:subscription.document.fields,value:0
-msgid "Current Date"
-msgstr ""
+#: field:subscription.document,model:0
+msgid "Object"
+msgstr "Objekt"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
@@ -63,65 +33,94 @@ msgid "Please provide another source document.\nThis one does not exist !"
 msgstr ""
 
 #. module: subscription
+#: field:subscription.subscription,date_init:0
+msgid "First Date"
+msgstr "Esiemene kuupäev"
+
+#. module: subscription
+#: field:subscription.document.fields,field:0
+msgid "Field"
+msgstr "Väli"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "Tellimuse ajalugu"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: subscription
+#: selection:subscription.document.fields,value:0
+msgid "Current Date"
+msgstr "Tänane kuupäev"
+
+#. module: subscription
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
-msgstr ""
+msgstr "Nädalad"
 
 #. module: subscription
 #: field:subscription.subscription,state:0
 msgid "Status"
-msgstr ""
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.next_id_45
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Stop"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Set to Draft"
-msgstr ""
+msgstr "Olek"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 msgid "Subscription document fields"
-msgstr ""
+msgstr "Tellimusdokumendi väljad"
+
+#. module: subscription
+#: field:subscription.subscription,interval_number:0
+msgid "Interval Qty"
+msgstr "Intervalli kogus"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Stop"
+msgstr "Peata"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Set to Draft"
+msgstr "Määra mustandiks"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+msgid "Subscription document"
+msgstr "Tellimusdokument"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr ""
+msgstr "Töötab"
 
 #. module: subscription
 #: view:subscription.subscription.history:0
 msgid "Subscription History"
-msgstr ""
+msgstr "Tellimuse ajalugu"
 
 #. module: subscription
 #: field:subscription.subscription,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kasutaja"
 
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr ""
+msgstr "Intervalli ühik"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
 msgid "Date"
-msgstr ""
+msgstr "Kuupäev"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_subscription_config
@@ -131,134 +130,135 @@ msgstr "Seadistus"
 #. module: subscription
 #: field:subscription.subscription,exec_init:0
 msgid "Number of documents"
-msgstr ""
+msgstr "Dokumentide arv"
 
 #. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Months"
-msgstr ""
+#: selection:subscription.subscription.history,document_id:0
+msgid "Sale Order"
+msgstr "Müügikorraldus"
 
 #. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
-msgstr ""
+msgstr "Väljad"
 
 #. module: subscription
 #: field:subscription.subscription,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Märkmed"
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Sale Order"
-msgstr ""
+#: selection:subscription.subscription,interval_type:0
+msgid "Months"
+msgstr "Kuud"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "Päevad"
+
+#. module: subscription
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "Aktiivne"
+
+#. module: subscription
+#: field:subscription.subscription,cron_id:0
+msgid "Cron Job"
+msgstr "Cron töö"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
-msgstr ""
-
-#. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Days"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.subscription,cron_id:0
-msgid "Cron Job"
-msgstr ""
+msgstr "Tellimus"
 
 #. module: subscription
 #: field:subscription.subscription,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr ""
+msgstr "Tellimuse andmed"
 
 #. module: subscription
-#: field:subscription.document.fields,document_id:0
 #: view:subscription.document:0
+#: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Process"
-msgstr ""
+msgstr "Tellimusdokument"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "False"
-msgstr ""
+msgstr "Väär"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-msgid "Subscription document"
-msgstr ""
+#: view:subscription.subscription:0
+msgid "Process"
+msgstr "Protsess"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "All Subscriptions"
-msgstr ""
+msgstr "Kõik tellimused"
 
 #. module: subscription
+#: model:ir.ui.menu,name:subscription.next_id_45
+#: view:subscription.subscription:0
+msgid "Subscriptions"
+msgstr "Tellimused"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr ""
+msgstr "Dokumentide tüübid"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Vale lähtedokument!"
 
 #. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr ""
+msgstr "Tellimusdokumendi väljad"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Arve"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
-msgstr ""
+msgstr "Vaikeväärtus"
 
 #. module: subscription
-#: field:subscription.subscription,doc_lines:0
 #: view:subscription.subscription:0
+#: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
-msgstr ""
+msgstr "Dokumendid loodud"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_tools

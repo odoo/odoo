@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,10 +21,9 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-msgid "Download URL"
-msgstr ""
+#: wizard_field:base_module_publish.module_export,zip,module_file:0
+msgid "Module .zip file"
+msgstr "Mooduli .zip fail"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_export,zip,module_filename:0
@@ -34,12 +33,17 @@ msgstr "Failinimi"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,operation:0
 msgid "Modification"
+msgstr "Muutmine"
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "/fixed assets"
 msgstr ""
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr ""
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Accounting & Finance"
+msgstr "Töölauad ja esitlus/Raamatupidamine ja finants"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_export,zip:0
@@ -49,72 +53,71 @@ msgstr "Lõpeta"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Human ressources"
-msgstr ""
+msgstr "Töölauad ja esitlus/Inimressurssid"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Administration tools"
-msgstr ""
+msgid "Vertical modules/Manufacturing industries"
+msgstr "Vertikaalsed moodulid/Tootvad tööstused"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Foods industries"
-msgstr ""
+msgstr "Vertikaalsed moodulid/Toiduainetööstused"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Services companies/IT Companies"
-msgstr ""
+msgstr "Teenindusettevõtted/IT ettevõtted"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "Login failed!"
-msgstr ""
+msgstr "Sisenemine nurjunud!"
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Manufacturing"
+msgstr "Töölauad ja esitlus/Tootmine"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,init,zip:0
 #: wizard_button:base_module_publish.module_publish_all,init,login:0
 msgid "Ok"
-msgstr "Ok"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "/Dashboards & Reporting"
-msgstr ""
+msgstr "Olgu"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/module_zip.py:0
 #, python-format
 msgid "Can not export module that is not installed!"
-msgstr ""
+msgstr "Ei saa eksportida moodulit, mis pole paigaldatud!"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Purchases & Procurement"
-msgstr ""
+msgstr "Töölauad ja esitlus/Ostud ja hanked"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Services companies"
-msgstr ""
+msgstr "Vertikaalsed moodulid/Teenindusettevõtted"
 
 #. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish_all,login:0
-msgid "User information"
-msgstr "Kasutajainfo"
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Vertical modules/Profiles"
+msgstr "Vertikaalsed moodulid/Profiilid"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "You could not publish a module that is not installed!"
-msgstr ""
+msgstr "Sa ei saa avaldada moodulit, mis pole paigaldatud!"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Sales & Marketing"
-msgstr ""
+msgstr "Töölauad ja esitlus/Müügid ja marketing"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,operation:0
@@ -124,18 +127,18 @@ msgstr "Toiming"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Reporting"
-msgstr ""
+msgstr "Välised liidesed/Esitamine"
 
 #. module: base_module_publish
-#: wizard_button:base_module_publish.module_publish,step2,step1:0
 #: wizard_button:base_module_publish.module_publish,step1,init:0
+#: wizard_button:base_module_publish.module_publish,step2,step1:0
 msgid "Previous"
 msgstr "Eelmine"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Verify your module information"
-msgstr ""
+msgstr "Kontrolli oma mooduli informatsiooni"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,step2,publish:0
@@ -151,12 +154,17 @@ msgstr "Versioon"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "Other proprietary"
+msgstr "Teised omandid"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_export,init,include_src:0
+msgid "Include sources"
 msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Others"
-msgstr ""
+msgstr "Lokalisatsioonid/Muud"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,email:0
@@ -168,43 +176,43 @@ msgstr "E-post"
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "If you don't have an access, you can create one http://www.openerp.com/"
-msgstr ""
+msgstr "Kui sul puudub ligipääs siis saad sa selle luua aadressil http://www.openerp.com/"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "Failed to upload the file"
-msgstr ""
+msgstr "Faili üleslaadimine nurjunud"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Accounting & finance"
-msgstr ""
+msgstr "Lokalisatsioonid/Raamatupidamine ja finants"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,update:0
 msgid "Modules updated"
-msgstr ""
+msgstr "Moodulid uuendatud"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,docurl:0
 msgid "Documentation URL"
-msgstr ""
+msgstr "Dokumentatsiooni URL"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Accounting & Finance"
-msgstr ""
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
+msgstr "toeta ainult .png faile"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Base"
-msgstr ""
+msgstr "Töölauad ja esitlus/Baas"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Inventory control"
-msgstr ""
+msgstr "Töölauad ja esitlus/Inventuuri kontroll"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_export,init:0
@@ -215,42 +223,42 @@ msgstr "Ekspordi moodul"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Accounting & Finance"
-msgstr ""
+msgstr "Üldised moodulid/Raamatupidamine ja finants"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Manufacturing"
-msgstr ""
+msgid "Generic modules/Security"
+msgstr "Üldised moodulid/Turvalisus"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/eCommerce"
-msgstr ""
+msgstr "Välised liidesed/eKommerts"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/CRM & SRM"
-msgstr ""
+msgstr "Töölauad ja esitlus/CRM ja SRM"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Human ressources"
-msgstr ""
+msgstr "Üldised moodulid/Inimressurssid"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Developpers tools"
-msgstr ""
+msgstr "Tööriistad/Arendaja tööriistad"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,docurl:0
 msgid "Empty to keep existing value"
-msgstr ""
+msgstr "Tühjenda, et hoida olemasolevat väärtust"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/EDI"
-msgstr ""
+msgstr "Välised liidesed/EDI"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,category:0
@@ -260,28 +268,28 @@ msgstr "Kategooria"
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,shortdesc:0
 msgid "Small description"
-msgstr ""
+msgstr "Lühikirjeldus"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Payroll"
-msgstr ""
+msgstr "Lokalisatsioonid/Palgaleht"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
 #: wizard_view:base_module_publish.module_publish_all,init:0
 msgid "Publication information"
-msgstr ""
+msgstr "Avaldamise informatsioon"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Others"
-msgstr ""
+msgstr "Vertikaalsed moodulid/Muud"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,publish,result:0
 msgid "Result page"
-msgstr ""
+msgstr "Tulemuste leht"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,error:0
@@ -291,22 +299,17 @@ msgstr ""
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Others/Education"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Security"
-msgstr ""
+msgstr "Muud/Haridus"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,demourl:0
 msgid "empty to keep existing value"
-msgstr ""
+msgstr "Tühjenda, et hoida olemasolevat väärtust"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,url_download:0
 msgid "Keep empty for an auto upload of the module"
-msgstr ""
+msgstr "Hoia tühjana mooduli automaatse üleslaadimise jaoks"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,website:0
@@ -316,11 +319,11 @@ msgstr "Veebileht"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Sales & Marketing"
-msgstr ""
+msgstr "Üldised moodulid/Müük ja marketing"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Manufacturing"
+msgid "Manufacturing/Manufacturing"
 msgstr ""
 
 #. module: base_module_publish
@@ -331,37 +334,40 @@ msgstr "Kokkuvõte"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Base"
-msgstr ""
+msgstr "Üldised moodulid/Baas"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,already:0
 msgid "Modules already updated"
-msgstr ""
+msgstr "Moodulid juba uuendatud"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_export,zip,module_file:0
-msgid "Module .zip file"
-msgstr "Mooduli .zip fail"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
+msgstr "Viga"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Profiles"
-msgstr ""
+#: wizard_view:base_module_publish.module_publish,step2:0
+#: wizard_view:base_module_publish.module_publish_all,login:0
+msgid "User information"
+msgstr "Kasutajainfo"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Portal Management"
-msgstr ""
+msgstr "Välised liidesed/Portaali haldus"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Sample modules"
-msgstr ""
+msgstr "Tööriistad/Näidismoodulid"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,include_src:0
 msgid "Include source"
-msgstr ""
+msgstr "Kaasa lähetkood"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
@@ -371,8 +377,8 @@ msgstr "Üldine"
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,init,end:0
 #: wizard_button:base_module_publish.module_publish,init,end:0
-#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish,step1,end:0
+#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish_all,init,end:0
 #: wizard_button:base_module_publish.module_publish_all,login,end:0
 msgid "Cancel"
@@ -388,12 +394,12 @@ msgstr "Sulge"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Inventory control"
-msgstr ""
+msgstr "Üldised moodulid/Inventuuri kontroll"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Others"
-msgstr ""
+msgstr "Töölauad ja esitlus/Muud"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0
@@ -404,51 +410,49 @@ msgstr "Informatsioon"
 #: wizard_field:base_module_publish.module_publish,init,text:0
 #: wizard_field:base_module_publish.module_publish_all,init,text:0
 msgid "Introduction"
-msgstr ""
+msgstr "Tutvustus"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Others"
-msgstr ""
+msgstr "Välised liidesed/Muud"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Purchases & Procurement"
-msgstr ""
+msgstr "Üldised moodulid/Ostud ja hanked"
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Generic modules/Manufacturing"
+msgstr "Üldised moodulid/Tootmine"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,demourl:0
 msgid "Demo URL"
-msgstr ""
+msgstr "Demo URL"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,description:0
 #: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_field:base_module_publish.module_publish,step1,description:0
 msgid "Description"
 msgstr "Kirjeldus"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Manufacturing industries"
-msgstr ""
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
-msgstr ""
+msgid "Tools/Administration tools"
+msgstr "Tööriistad/Administratiivsed tööriistad"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish,step1:0
 #: wizard_view:base_module_publish.module_publish,publish:0
+#: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,init:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Module publication"
-msgstr ""
+msgstr "Mooduli avaldamine"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,license:0
@@ -469,7 +473,7 @@ msgstr "Tulemus"
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
 msgid "Publish all modules"
-msgstr ""
+msgstr "Avalda kõik moodulid"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,name:0
@@ -479,18 +483,18 @@ msgstr "Nimi"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Others"
-msgstr ""
+msgstr "Üldised moodulid/Muud"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "This version of the module is already exist on the server"
-msgstr ""
+msgstr "See mooduli versioon on juba serveris olemas"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/CRM & SRM"
-msgstr ""
+msgstr "Üldised moodulid/CRM ja SRM"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,init,step1:0
@@ -502,33 +506,39 @@ msgstr "Jätka"
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "Please provide here your login on the Open ERP website."
-msgstr ""
+msgstr "Palun sisesta siia oma Open ERP veebilehe kasutajanimi."
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,login:0
 #: wizard_field:base_module_publish.module_publish_all,login,login:0
 msgid "Login"
-msgstr ""
+msgstr "Kasutajanimi"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "GPL-2"
-msgstr ""
+msgstr "GPL-2"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
-msgstr ""
+msgstr "Üleslaadimise informatsioon"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,operation:0
 msgid "Creation"
-msgstr ""
+msgstr "Loomine"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Others"
-msgstr ""
+msgstr "Tööriistad/Muud"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "Allalaadimise URL"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,image:0
@@ -538,7 +548,7 @@ msgstr "Pildifail"
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_export,zip:0
 msgid "Module successfully exported !"
-msgstr ""
+msgstr "Moodul edukalt eksporditud!"
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish

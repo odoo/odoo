@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:10:25+0000\n"
-"PO-Revision-Date: 2009-01-03 02:10:25+0000\n"
+"POT-Creation-Date: 2009-01-19 19:38:27+0000\n"
+"PO-Revision-Date: 2009-01-19 19:38:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 #. module: report_crm
 #: field:report.crm.case.categ,categ_id:0
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #. module: report_crm
 #: field:report.crm.case.categ,probability:0
 #: field:report.crm.case.user,probability:0
 msgid "Avg. Probability"
-msgstr ""
+msgstr "Avg. Probabilidade"
 
 #. module: report_crm
 #: constraint:ir.model:0
@@ -34,47 +34,46 @@ msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter es
 #. module: report_crm
 #: model:ir.model,name:report_crm.model_report_crm_case_categ
 msgid "Cases by section and category"
-msgstr ""
+msgstr "Casos por seção e categoria"
 
 #. module: report_crm
 #: field:report.crm.case.categ,section_id:0
 #: field:report.crm.case.user,section_id:0
 msgid "Section"
-msgstr ""
+msgstr "Seção"
 
 #. module: report_crm
-#: field:report.crm.case.categ,nbr:0
 #: field:report.crm.case.user,nbr:0
 msgid "# of Cases"
-msgstr ""
+msgstr "# de casos"
 
 #. module: report_crm
 #: field:report.crm.case.categ,delay_close:0
 msgid "Delay Close"
-msgstr ""
+msgstr "Fim do atraso"
 
 #. module: report_crm
 #: selection:report.crm.case.categ,state:0
 #: selection:report.crm.case.user,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Esboço"
 
 #. module: report_crm
 #: selection:report.crm.case.categ,state:0
 #: selection:report.crm.case.user,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.action_report_crm_case_categ_tree_month
 #: model:ir.ui.menu,name:report_crm.menu_crm_case_categ_tree_month
 msgid "Cases by categories and section (this month)"
-msgstr ""
+msgstr "Casos por categorias e seção(deste mes)"
 
 #. module: report_crm
 #: model:ir.ui.menu,name:report_crm.next_id_66
 msgid "All Months"
-msgstr ""
+msgstr "Todos os meses"
 
 #. module: report_crm
 #: field:report.crm.case.categ,amount_revenue_prob:0
@@ -86,29 +85,28 @@ msgstr ""
 #: selection:report.crm.case.categ,state:0
 #: selection:report.crm.case.user,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Pendente"
 
 #. module: report_crm
 #: field:report.crm.case.categ,state:0
 #: field:report.crm.case.user,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: report_crm
-#: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_my
-#: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_my
-msgid "My cases by section"
-msgstr ""
+#: field:report.crm.case.user,delay_close:0
+msgid "Delay to close"
+msgstr "Atraso para fechar"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.act_crm_case_section_2_report_crm_case_user
 msgid "Monthly cases by user"
-msgstr ""
+msgstr "Casos por usuários mensalmente"
 
 #. module: report_crm
 #: model:ir.ui.menu,name:report_crm.next_id_64
 msgid "Reporting"
-msgstr ""
+msgstr "Relatórios"
 
 #. module: report_crm
 #: field:report.crm.case.categ,amount_costs:0
@@ -119,12 +117,12 @@ msgstr ""
 #. module: report_crm
 #: field:report.crm.case.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.act_crm_case_section_2_report_crm_case_categ
 msgid "Monthly cases by section"
-msgstr ""
+msgstr "Casos por seção mensalmente"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree
@@ -132,17 +130,12 @@ msgstr ""
 #: view:report.crm.case.categ:0
 #: view:report.crm.case.user:0
 msgid "Cases by User and Section"
-msgstr ""
-
-#. module: report_crm
-#: field:report.crm.case.user,delay_close:0
-msgid "Delay to close"
-msgstr ""
+msgstr "Casos por usuário e seção"
 
 #. module: report_crm
 #: model:ir.ui.menu,name:report_crm.next_id_65
 msgid "This Month"
-msgstr ""
+msgstr "Este mes"
 
 #. module: report_crm
 #: constraint:ir.ui.view:0
@@ -150,9 +143,10 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Invalido XML para Arquitetura da View"
 
 #. module: report_crm
+#: model:ir.actions.act_window,name:report_crm.act_crm_case_categ_2_report_crm_case_categ
 #: model:ir.actions.act_window,name:report_crm.act_res_users_2_report_crm_case_user
 msgid "Monthly cases"
-msgstr ""
+msgstr "Casos mensalmente"
 
 #. module: report_crm
 #: field:report.crm.case.categ,amount_revenue:0
@@ -164,40 +158,46 @@ msgstr ""
 #: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_month
 #: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_month
 msgid "Cases by user and section (this month)"
-msgstr ""
+msgstr "Casos por usuário e seção(este mes)"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.action_report_crm_case_categ_tree
 #: model:ir.ui.menu,name:report_crm.menu_crm_case_categ_tree
 msgid "Cases by Categories and Section"
-msgstr ""
+msgstr "Casos por categorias e seção"
+
+#. module: report_crm
+#: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_my
+#: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_my
+msgid "My cases by section"
+msgstr "Meus casos por seção"
 
 #. module: report_crm
 #: field:report.crm.case.categ,name:0
 #: field:report.crm.case.user,name:0
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #. module: report_crm
 #: selection:report.crm.case.categ,state:0
 #: selection:report.crm.case.user,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_month_my
 #: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_month_my
 msgid "My cases by section (this month)"
-msgstr ""
+msgstr "Meus casos por seção(este mes)"
 
 #. module: report_crm
 #: model:ir.model,name:report_crm.model_report_crm_case_user
 msgid "Cases by user and section"
-msgstr ""
+msgstr "Casos por usuário e seção"
 
 #. module: report_crm
 #: selection:report.crm.case.categ,state:0
 #: selection:report.crm.case.user,state:0
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
 

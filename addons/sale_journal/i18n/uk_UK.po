@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:16:57+0000\n"
-"PO-Revision-Date: 2009-01-03 02:16:57+0000\n"
+"POT-Creation-Date: 2009-01-19 19:45:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:45:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,8 +45,8 @@ msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_journal_sale_journal
-#: field:stock.picking,sale_journal_id:0
 #: view:sale_journal.sale.journal:0
+#: field:stock.picking,sale_journal_id:0
 msgid "Sale Journal"
 msgstr ""
 
@@ -97,7 +97,6 @@ msgid "Packings Journals"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type.stats,count:0
 #: field:sale_journal.picking.stats,count:0
 #: field:sale_journal.sale.stats,count:0
 msgid "# of Lines"
@@ -110,9 +109,9 @@ msgid "All Open Journals"
 msgstr ""
 
 #. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Draft"
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "done"
 msgstr ""
 
 #. module: sale_journal
@@ -170,6 +169,11 @@ msgstr ""
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_journal_sale_stats
 msgid "Sales Orders by Journal"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_all
+msgid "Open journals"
 msgstr ""
 
 #. module: sale_journal
@@ -237,8 +241,10 @@ msgid "Order State"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Cancel Packings"
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
+msgid "Packings by Journal"
 msgstr ""
 
 #. module: sale_journal
@@ -249,9 +255,9 @@ msgid "Note"
 msgstr ""
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "done"
+#: selection:sale_journal.picking.journal,state:0
+#: selection:sale_journal.sale.journal,state:0
+msgid "Draft"
 msgstr ""
 
 #. module: sale_journal
@@ -288,10 +294,8 @@ msgid "Validation date"
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
-msgid "Packings by Journal"
+#: view:sale_journal.picking.journal:0
+msgid "Cancel Packings"
 msgstr ""
 
 #. module: sale_journal
@@ -427,10 +431,10 @@ msgid "Packings by Invoice Method"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,name:0
 #: field:sale.order,invoice_type_id:0
-#: field:stock.picking,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
 msgstr ""
 
@@ -458,14 +462,14 @@ msgid "Quantities"
 msgstr ""
 
 #. module: sale_journal
+#: field:sale.order,journal_id:0
+#: view:sale_journal.picking.journal:0
 #: field:sale_journal.picking.journal,name:0
 #: field:sale_journal.picking.stats,journal_id:0
+#: view:sale_journal.sale.journal:0
 #: field:sale_journal.sale.journal,name:0
 #: field:sale_journal.sale.stats,journal_id:0
-#: field:sale.order,journal_id:0
 #: field:stock.picking,journal_id:0
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
 msgid "Journal"
 msgstr ""
 

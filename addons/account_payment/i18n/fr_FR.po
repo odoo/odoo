@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:06:17+0000\n"
-"PO-Revision-Date: 2009-01-03 02:06:17+0000\n"
+"POT-Creation-Date: 2009-01-19 19:34:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:34:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,8 +27,8 @@ msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
-msgid "Total in Company Currency"
-msgstr ""
+msgid "Set to draft"
+msgstr "Remettre en brouillon"
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -41,17 +41,11 @@ msgid "Payment lines"
 msgstr "Lignes de paiement"
 
 #. module: account_payment
-#: field:payment.line,info_owner:0
 #: view:payment.line:0
+#: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
 msgstr "Compte du Partenaire principal"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_open
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
-msgid "Payment orders to validate"
-msgstr "Payment orders to validate"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -86,11 +80,6 @@ msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Écritures comptables"
-
-#. module: account_payment
 #: wizard_button:populate_payment,search,create:0
 msgid "_Add to payment order"
 msgstr "_Ajouter à l'ordre de paiement"
@@ -108,8 +97,8 @@ msgstr "Date d'exécution :"
 
 #. module: account_payment
 #: view:payment.order:0
-msgid "Set to draft"
-msgstr "Remettre en brouillon"
+msgid "Total in Company Currency"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -129,9 +118,10 @@ msgid "Reference"
 msgstr "Référence"
 
 #. module: account_payment
-#: field:payment.line,ml_date_created:0
-msgid "Effective Date"
-msgstr "Date Effective"
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
+msgid "Payment Orders"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -139,9 +129,12 @@ msgid "Directly"
 msgstr "Directement"
 
 #. module: account_payment
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Brouillon"
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Payment Line"
+msgstr "Ligne de paiement"
 
 #. module: account_payment
 #: field:payment.type,suitable_bank_types:0
@@ -192,9 +185,9 @@ msgid "Payment Mode"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Total débit"
+#: field:payment.line,ml_date_created:0
+msgid "Effective Date"
+msgstr "Date Effective"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -202,15 +195,20 @@ msgid "Invoice Ref."
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,move_line_id:0
-msgid "Entry line"
-msgstr "Ligne d'entrée"
+#: help:payment.order,date_prefered:0
+msgid "Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."
+msgstr ""
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
 msgstr ""
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "Total débit"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -251,11 +249,6 @@ msgid "Created"
 msgstr "Créé"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Sélectionnez les Factures à Payer"
-
-#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Montant Total dans la devise"
@@ -271,15 +264,10 @@ msgid "Communication Type"
 msgstr "Type de communication"
 
 #. module: account_payment
-#: rml:payment.order:0
 #: field:payment.line,partner_id:0
+#: rml:payment.order:0
 msgid "Partner"
 msgstr "Partenaire"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Due date"
-msgstr "Date de l'échéance"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -287,19 +275,28 @@ msgid "Communication"
 msgstr "Communication"
 
 #. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Due date"
+msgstr "Date de l'échéance"
+
+#. module: account_payment
+#: field:account.invoice,amount_to_pay:0
+msgid "Amount to be paid"
+msgstr "Montant à payer"
+
+#. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Information"
-msgstr "Information"
+#: help:payment.mode,name:0
+msgid "Mode of Payment"
+msgstr ""
 
 #. module: account_payment
-#: help:payment.type,name:0
 #: view:payment.type:0
+#: help:payment.type,name:0
 msgid "Payment Type"
 msgstr ""
 
@@ -309,18 +306,9 @@ msgid "Payment amount in the partner currency"
 msgstr "Montant du paiement dans la devise du partenaire"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
-msgid "Draft payment order"
-msgstr "Ordre de Paiement Brouillon"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr "Ligne de paiement"
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Brouillon"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -354,6 +342,7 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 #: wizard_field:populate_statement,init,lines:0
 msgid "Payment Lines"
 msgstr "Lignes de paiement"
@@ -419,13 +408,11 @@ msgid "Code"
 msgstr "Code"
 
 #. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
-msgstr "Votre Référence"
+#: help:payment.line,communication:0
+msgid "Used as the message between ordering customer and current company.Depicts 'What do you want to say to the receipent about this oder?'"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 #: view:payment.order:0
 msgid "Payment order"
 msgstr "Ordre de paiement"
@@ -442,9 +429,9 @@ msgid "Done"
 msgstr "Terminé"
 
 #. module: account_payment
-#: field:account.invoice,amount_to_pay:0
-msgid "Amount to be paid"
-msgstr "Montant à payer"
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Sélectionnez les Factures à Payer"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -452,14 +439,10 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: account_payment
-#: help:payment.line,communication:0
-msgid "Used as the message between ordering customer and current company.Depicts 'What do you want to say to the receipent about this oder?'"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.mode,name:0
-msgid "Mode of Payment"
-msgstr ""
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Information"
+msgstr "Information"
 
 #. module: account_payment
 #: constraint:ir.model:0
@@ -476,6 +459,12 @@ msgstr "Payer"
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
 msgstr "Ordre de Paiement"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
+msgid "Draft Payment Order"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -508,8 +497,8 @@ msgid "Cash Journal for the Payment Mode"
 msgstr ""
 
 #. module: account_payment
-#: rml:payment.order:0
 #: field:payment.mode,bank_id:0
+#: rml:payment.order:0
 msgid "Bank account"
 msgstr "Compte banquaire"
 
@@ -532,9 +521,9 @@ msgid "Payment"
 msgstr "Paiement"
 
 #. module: account_payment
-#: help:payment.order,date_prefered:0
-msgid "Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."
-msgstr ""
+#: field:payment.line,move_line_id:0
+msgid "Entry line"
+msgstr "Ligne d'entrée"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -570,15 +559,21 @@ msgid "Order"
 msgstr "Commande"
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_open
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
+msgid "Payment Orders to Validate"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
 #: field:payment.mode,type:0
 msgid "Payment type"
 msgstr "Type de paiement"
 
 #. module: account_payment
-#: help:payment.mode,bank_id:0
-msgid "Bank Account for the Payment Mode"
-msgstr ""
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Total"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
@@ -597,9 +592,14 @@ msgid "Payment mode"
 msgstr "Mode de paiement"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Total"
+#: help:payment.mode,bank_id:0
+msgid "Bank Account for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.line,name:0
+msgid "Your Reference"
+msgstr "Votre Référence"
 
 #. module: account_payment
 #: field:payment.mode,journal:0

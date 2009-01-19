@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: delivery
-#: field:delivery.grid,name:0
-msgid "Grid Name"
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
 msgstr ""
 
 #. module: delivery
@@ -26,8 +26,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
+#: selection:delivery.grid.line,operator:0
+msgid ">="
 msgstr ""
 
 #. module: delivery
@@ -36,8 +36,8 @@ msgid "Sales & Purchases"
 msgstr "Müügid ja ostud"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "<="
+#: view:delivery.grid:0
+msgid "Destination"
 msgstr ""
 
 #. module: delivery
@@ -48,7 +48,7 @@ msgstr ""
 #. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
@@ -57,19 +57,8 @@ msgid "No price available !"
 msgstr ""
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "Käibemaksukohuslase numbris on viga"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "No grid avaible !"
-msgstr ""
-
-#. module: delivery
-#: field:delivery.carrier,partner_id:0
-msgid "Carrier Partner"
+#: field:delivery.grid,state_ids:0
+msgid "States"
 msgstr ""
 
 #. module: delivery
@@ -78,8 +67,8 @@ msgid "Delivery by Poste"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,state_ids:0
-msgid "States"
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
 msgstr ""
 
 #. module: delivery
@@ -122,10 +111,8 @@ msgid "Delivery line of grid"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
-msgid "Volume"
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
 msgstr ""
 
 #. module: delivery
@@ -135,8 +122,8 @@ msgid "Packings to be invoiced"
 msgstr ""
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
 msgstr ""
 
 #. module: delivery
@@ -187,11 +174,6 @@ msgid "Condition"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
 msgstr ""
@@ -199,11 +181,6 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr ""
-
-#. module: delivery
-#: view:delivery.grid:0
-msgid "Destination"
 msgstr ""
 
 #. module: delivery
@@ -222,6 +199,11 @@ msgid "Countries"
 msgstr ""
 
 #. module: delivery
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr ""
+
+#. module: delivery
 #: view:sale.order:0
 msgid "Notes"
 msgstr "Märkmed"
@@ -232,27 +214,29 @@ msgid "Variable Factor"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid avaible !"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
-msgid "Operator"
+#: field:delivery.grid,name:0
+msgid "Grid Name"
 msgstr ""
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
 #: field:stock.picking,carrier_id:0
-#: view:delivery.carrier:0
 msgid "Carrier"
 msgstr ""
 
 #. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Add Delivery Costs"
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: field:stock.picking,volume:0
+msgid "Volume"
 msgstr ""
 
 #. module: delivery
@@ -261,13 +245,27 @@ msgid "Maximum Value"
 msgstr ""
 
 #. module: delivery
+#: wizard_button:delivery.sale.order,init,delivery:0
+msgid "Add Delivery Costs"
+msgstr ""
+
+#. module: delivery
+#: wizard_field:delivery.sale.order,init,carrier_id:0
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: field:res.partner,property_delivery_carrier:0
+msgid "Delivery Method"
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
 msgstr ""
 
 #. module: delivery
@@ -294,19 +292,8 @@ msgid "Sequence"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,list_price:0
-msgid "Sale Price"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
-
-#. module: delivery
-#: field:delivery.grid,zip_to:0
-msgid "To Zip"
+#: field:delivery.carrier,partner_id:0
+msgid "Carrier Partner"
 msgstr ""
 
 #. module: delivery
@@ -316,8 +303,8 @@ msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid ">="
+#: field:delivery.grid,zip_to:0
+msgid "To Zip"
 msgstr ""
 
 #. module: delivery
@@ -331,8 +318,13 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
+#: field:delivery.grid.line,list_price:0
+msgid "Sale Price"
+msgstr ""
+
+#. module: delivery
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: delivery
@@ -341,10 +333,9 @@ msgid "Delivery grids"
 msgstr ""
 
 #. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: field:res.partner,property_delivery_carrier:0
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-msgid "Delivery Method"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: delivery
@@ -369,6 +360,11 @@ msgstr ""
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr ""
+
+#. module: delivery
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "Käibemaksukohuslase numbris on viga"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

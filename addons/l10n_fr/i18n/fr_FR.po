@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:06:17+0000\n"
-"PO-Revision-Date: 2009-01-03 02:06:17+0000\n"
+"POT-Creation-Date: 2009-01-19 19:34:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:34:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_receivable
 msgid "Receivable"
-msgstr ""
+msgstr "Recevable"
 
 #. module: l10n_fr
 #: constraint:ir.model:0
@@ -26,14 +26,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stocks
-msgid "Actif circulant"
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_income
+msgid "Income"
+msgstr "Produits"
 
 #. module: l10n_fr
 #: model:ir.actions.todo,note:l10n_fr.config_call_account_template
@@ -44,13 +39,7 @@ msgstr ""
 #. module: l10n_fr
 #: wizard_button:account.chart.report,init,pdf:0
 msgid "Print Balance Sheet"
-msgstr "Imprimer le Bilan"
-
-#. module: l10n_fr
-#: model:ir.actions.wizard,name:l10n_fr.wizard_l10n_fr_cdr_report
-#: model:ir.ui.menu,name:l10n_fr.menu_action_cdr
-msgid "Compte de resultat"
-msgstr ""
+msgstr "Imprimer la balance"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_asset
@@ -58,34 +47,40 @@ msgid "Asset"
 msgstr "Actif (avoirs)"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_income
-msgid "Income"
-msgstr "Produits"
+#: model:account.account.type,name:l10n_fr.account_type_special
+msgid "Comptes spéciaux"
+msgstr "Comptes spéciaux"
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_equity
+msgid "Equity"
+msgstr "Capitaux propres"
 
 #. module: l10n_fr
 #: wizard_button:l10n.fr.bilan.report,init,report:0
 #: wizard_button:l10n.fr.cdr.report,init,report:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
-msgstr ""
+#: field:l10n.fr.line,name:0
+#: field:l10n.fr.report,name:0
+msgid "Name"
+msgstr "Nom"
 
 #. module: l10n_fr
 #: wizard_view:l10n.fr.bilan.report,init:0
 msgid "Select year"
-msgstr ""
+msgstr "Sélectionné l'année"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_dettes
-msgid "Dettes long terme"
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_expense
+msgid "Expense"
+msgstr "Charges"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
 msgstr ""
 
 #. module: l10n_fr
@@ -93,7 +88,7 @@ msgstr ""
 #: model:ir.ui.menu,name:l10n_fr.menu_l10n_fr_line_tree
 #: view:l10n.fr.line:0
 msgid "Entrées"
-msgstr ""
+msgstr "Entrées"
 
 #. module: l10n_fr
 #: wizard_field:account.chart.report,init,company_id:0
@@ -104,37 +99,37 @@ msgstr "Société"
 #: model:ir.actions.wizard,name:l10n_fr.wizard_l10n_fr_bilan_report
 #: model:ir.ui.menu,name:l10n_fr.menu_action_bilan
 msgid "Bilan"
-msgstr ""
+msgstr "Bilan"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_payable
 msgid "Payable"
-msgstr ""
+msgstr "À payer"
 
 #. module: l10n_fr
 #: view:l10n.fr.report:0
 msgid "Rapport"
-msgstr ""
+msgstr "Rapport"
 
 #. module: l10n_fr
 #: field:l10n.fr.line,report_id:0
 msgid "Report"
-msgstr ""
+msgstr "Rapport"
 
 #. module: l10n_fr
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_commitment
-msgid "Engagements"
-msgstr ""
+#: model:ir.ui.menu,name:l10n_fr.menu_synthesis_config
+msgid "Configuration"
+msgstr "Configuration"
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_l10n_fr_line
 msgid "Report Lines for l10n_fr"
-msgstr ""
+msgstr "Lignes de rapport pour l10n_fr"
 
 #. module: l10n_fr
 #: wizard_field:account.chart.report,init,target_move:0
@@ -144,12 +139,18 @@ msgstr "Mouvements Cibles"
 #. module: l10n_fr
 #: model:ir.ui.menu,name:l10n_fr.menu_synthesis
 msgid "Documents de synthèse"
-msgstr ""
+msgstr "Documents de synthèse"
+
+#. module: l10n_fr
+#: model:ir.actions.act_window,name:l10n_fr.action_l10n_fr_report_tree
+#: model:ir.ui.menu,name:l10n_fr.menu_l10n_fr_report_tree
+msgid "Rapports"
+msgstr "Rapports"
 
 #. module: l10n_fr
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
-msgstr ""
+msgstr "Définition"
 
 #. module: l10n_fr
 #: constraint:ir.ui.view:0
@@ -157,20 +158,24 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: l10n_fr
-#: field:l10n.fr.line,name:0
-#: field:l10n.fr.report,name:0
-msgid "Name"
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_commitment
+msgid "Engagements"
+msgstr "Engagements"
 
 #. module: l10n_fr
 #: selection:account.chart.report,init,target_move:0
 msgid "All Posted Entries"
-msgstr ""
+msgstr "Toutes les écritures courantes"
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_stock
+msgid "Stocks"
+msgstr "Stocks"
 
 #. module: l10n_fr
 #: field:l10n.fr.report,line_ids:0
 msgid "Lines"
-msgstr ""
+msgstr "Lignes"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_cash
@@ -180,33 +185,7 @@ msgstr "Liquidités"
 #. module: l10n_fr
 #: help:account.chart.report,init,fiscalyear:0
 msgid "Keep empty for all open fiscal year"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_special
-msgid "Comptes spéciaux"
-msgstr ""
-
-#. module: l10n_fr
-#: model:ir.actions.act_window,name:l10n_fr.action_l10n_fr_report_tree
-#: model:ir.ui.menu,name:l10n_fr.menu_l10n_fr_report_tree
-msgid "Rapports"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_equity
-msgid "Equity"
-msgstr "Capitaux propres"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_immobilisations
-msgid "Immobilisations"
-msgstr ""
-
-#. module: l10n_fr
-#: wizard_view:account.chart.report,init:0
-msgid "(If you do not select Fiscal year it will take all open fiscal year)"
-msgstr ""
+msgstr "Laisser vide pour toutes les années fiscales ouvertes"
 
 #. module: l10n_fr
 #: wizard_view:account.chart.report,init:0
@@ -214,14 +193,30 @@ msgid "Aged Trial Balance"
 msgstr "Echéancier"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_expense
-msgid "Expense"
-msgstr "Charges"
+#: field:l10n.fr.report,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_immobilisations
+msgid "Immobilisations"
+msgstr "Immobilisations"
+
+#. module: l10n_fr
+#: model:ir.actions.wizard,name:l10n_fr.wizard_l10n_fr_cdr_report
+#: model:ir.ui.menu,name:l10n_fr.menu_action_cdr
+msgid "Compte de resultat"
+msgstr "Compte de resultat"
+
+#. module: l10n_fr
+#: model:account.account.type,name:l10n_fr.account_type_dettes
+msgid "Dettes long terme"
+msgstr "Dettes long terme"
 
 #. module: l10n_fr
 #: wizard_view:l10n.fr.cdr.report,init:0
 msgid "Select period"
-msgstr ""
+msgstr "Sélectionner une période"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_view
@@ -229,19 +224,24 @@ msgid "View"
 msgstr "Vue"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stock
-msgid "Stocks"
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_stocks
+msgid "Actif circulant"
+msgstr "Actif circulant"
 
 #. module: l10n_fr
-#: model:ir.ui.menu,name:l10n_fr.menu_synthesis_config
-msgid "Configuration"
-msgstr "Configuration"
+#: model:account.account.type,name:l10n_fr.account_type_provision
+msgid "Provisions"
+msgstr "Provisions"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
+msgstr "Rapport pour l10n_fr"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_tax
 msgid "Tax"
-msgstr ""
+msgstr "Taxe"
 
 #. module: l10n_fr
 #: model:ir.actions.wizard,name:l10n_fr.wizard_chart_report
@@ -271,10 +271,10 @@ msgstr "Cloture"
 #. module: l10n_fr
 #: field:l10n.fr.line,code:0
 msgid "Variable Name"
-msgstr ""
+msgstr "Nom de la variable"
 
 #. module: l10n_fr
 #: selection:account.chart.report,init,target_move:0
 msgid "All Entries"
-msgstr ""
+msgstr "Toutes les écritures"
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "Task"
 msgstr "Tarea"
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
-msgstr "Tipo de producto es servicio, luego se crea la tarea."
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procure method is Make to order and supply method is produce"
+msgstr "si método de abastecimiento es Fabricar bajo pedido y método de suministro es Producir"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -37,19 +37,19 @@ msgid "if product type is 'service' then it creates the task."
 msgstr "si tipo de producto es 'servicio' entonces se crea la tarea."
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procure method is Make to order and supply method is produce"
-msgstr "si método de abastecimiento es Fabricar bajo pedido y método de suministro es Producir"
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Tipo de producto es servicio, luego se crea la tarea."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procure Task"
 msgstr "Tarea abastecimiento"
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "Se crea una tarea para proveer el servicio."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
@@ -59,7 +59,7 @@ msgstr "Tarea orden"
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr ""
+msgstr "Tarea pedido de venta"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -69,5 +69,5 @@ msgstr "Crear tarea"
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr ""
+msgstr "En caso que venda servicios sobre pedido de venta"
 

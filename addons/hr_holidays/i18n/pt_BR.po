@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:10:25+0000\n"
-"PO-Revision-Date: 2009-01-03 02:10:25+0000\n"
+"POT-Creation-Date: 2009-01-19 19:38:27+0000\n"
+"PO-Revision-Date: 2009-01-19 19:38:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgid "Requests Awaiting for Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
-msgid "My Holidays Request Draft"
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Blue"
 msgstr ""
 
 #. module: hr_holidays
@@ -99,8 +99,8 @@ msgid "Employee Declaration"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
 #: view:hr.holidays:0
+#: selection:hr.holidays,state:0
 #: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
 msgid "Validate"
 msgstr ""
@@ -170,8 +170,8 @@ msgid "Summary Of Holidays"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_setholiday0
-msgid "Holiday is set in the calendar."
+#: model:process.node,note:hr_holidays.process_node_calendar0
+msgid "The holiday is set in the calendar"
 msgstr ""
 
 #. module: hr_holidays
@@ -215,15 +215,10 @@ msgid "Define holiday status"
 msgstr "Definir Status de Folga"
 
 #. module: hr_holidays
+#: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
-#: selection:hr.holidays,state:0
 msgid "Confirmed"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.process,name:hr_holidays.process_process_holidaysworkflow0
-msgid "Holidays Workflow"
 msgstr ""
 
 #. module: hr_holidays
@@ -239,13 +234,13 @@ msgid "Confirm"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.status,section_id:0
-msgid "Section"
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
+msgid "My Awaiting Confirmation Holidays Requests"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_approved0
-msgid "His manager approves the request"
+#: field:hr.holidays,user_id:0
+msgid "Employee_id"
 msgstr ""
 
 #. module: hr_holidays
@@ -261,8 +256,8 @@ msgid "Employee"
 msgstr "Empregado"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Red"
+#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
+msgid "Employee get holidays"
 msgstr ""
 
 #. module: hr_holidays
@@ -281,13 +276,18 @@ msgid "Number of Holidays Requested"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+msgid "My Holiday Requests"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Number of Days"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: field:hr.holidays.status,name:0
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Holiday Status"
 msgstr ""
@@ -304,8 +304,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Invalido XML para Arquitetura da View"
 
 #. module: hr_holidays
-#: field:hr.holidays,user_id:0
-msgid "Employee_id"
+#: model:process.node,note:hr_holidays.process_node_approved0
+msgid "His manager approves the request"
 msgstr ""
 
 #. module: hr_holidays
@@ -334,9 +334,9 @@ msgid "Number of Days in this Holiday Request"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
-#: view:hr.holidays.per.user:0
 msgid "Holidays Per Employee"
 msgstr ""
 
@@ -361,8 +361,8 @@ msgid "hr.holidays.log"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Violet"
+#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
+msgid "Print Summary of Employee's Holidays"
 msgstr ""
 
 #. module: hr_holidays
@@ -387,13 +387,8 @@ msgid "Employee fills in a request for holidays"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
-msgid "Employee get holidays"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_calendar0
-msgid "The holiday is set in the calendar"
+#: model:process.transition,note:hr_holidays.process_transition_setholiday0
+msgid "Holiday is set in the calendar."
 msgstr ""
 
 #. module: hr_holidays
@@ -493,18 +488,13 @@ msgid "Reufse"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
-msgid "My Awaiting Confirmation Holidays Requests"
+#: field:hr.holidays.status,section_id:0
+msgid "Section"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
 msgid "My Holidays Request Waiting confirmation"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
-msgid "Print Summary of Employee's Holidays"
 msgstr ""
 
 #. module: hr_holidays
@@ -519,13 +509,8 @@ msgid "Active"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.log,name:0
-msgid "Action"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Blue"
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
+msgid "My Holidays Request Draft"
 msgstr ""
 
 #. module: hr_holidays
@@ -540,8 +525,8 @@ msgid "Approved Request"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,history:0
 #: view:hr.holidays.per.user:0
+#: field:hr.holidays.per.user,history:0
 msgid "History"
 msgstr ""
 
@@ -566,10 +551,10 @@ msgid "General Information"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays,state:0
 #: wizard_button:hr.holidays.summary,init,end:0
 #: wizard_button:hr.holidays.summary.employee,init,end:0
-#: selection:hr.holidays,state:0
-#: view:hr.holidays:0
 msgid "Cancel"
 msgstr ""
 
@@ -656,6 +641,21 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_legaldeclaration0
 msgid "Secretariat Social"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Violet"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Red"
+msgstr ""
+
+#. module: hr_holidays
+#: model:process.process,name:hr_holidays.process_process_holidaysprocess0
+msgid "Holidays Process"
 msgstr ""
 
 #. module: hr_holidays

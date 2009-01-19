@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: profile_association
-#: model:ir.model,name:profile_association.model_profile_association_config_install_modules_wizard
-msgid "profile.association.config.install_modules_wizard"
-msgstr "perfil.asociacion.config.asistente_instal_modulos"
-
-#. module: profile_association
 #: field:profile.association.config.install_modules_wizard,wiki:0
 msgid "Wiki"
 msgstr "Wiki"
+
+#. module: profile_association
+#: model:ir.model,name:profile_association.model_profile_association_config_install_modules_wizard
+msgid "profile.association.config.install_modules_wizard"
+msgstr "perfil.asociacion.config.asistente_instal_modulos"
 
 #. module: profile_association
 #: field:profile.association.config.install_modules_wizard,project_gtd:0
@@ -36,14 +36,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: profile_association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "Relationship Management"
-msgstr "Gestión de relaciones"
-
-#. module: profile_association
-#: help:profile.association.config.install_modules_wizard,wiki:0
-msgid "An integrated wiki content management system. This is really usefull to manage FAQ, quality manuals, etc."
-msgstr "﻿Un sistema de gestión de contenido Wiki integrado. Esto es realmente útil para gestionar FAQ, manuales de calidad, etc."
+#: field:profile.association.config.install_modules_wizard,segmentation:0
+msgid "Segmentation"
+msgstr "Segmentación"
 
 #. module: profile_association
 #: help:profile.association.config.install_modules_wizard,hr_expense:0
@@ -51,9 +46,14 @@ msgid "Tracks the personal expenses process, from the employee expense encoding,
 msgstr "Realiza el seguimiento de gastos personales, desde la codificación del gasto del empleado y el reembolso del empleado hasta su facturación al cliente final."
 
 #. module: profile_association
-#: field:profile.association.config.install_modules_wizard,segmentation:0
-msgid "Segmentation"
-msgstr "Segmentación"
+#: view:profile.association.config.install_modules_wizard:0
+msgid "Relationship Management"
+msgstr "Gestión de relaciones"
+
+#. module: profile_association
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: profile_association
 #: help:profile.association.config.install_modules_wizard,project_gtd:0
@@ -67,8 +67,8 @@ msgstr "﻿El sistema de gestión de la documentación de OpenERP le permite alm
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
-msgid "Cancel"
-msgstr "Cancelar"
+msgid "Resources Management"
+msgstr "Gestión de recursos"
 
 #. module: profile_association
 #: field:profile.association.config.install_modules_wizard,board_document:0
@@ -78,7 +78,7 @@ msgstr "Gestión de documentos"
 #. module: profile_association
 #: model:ir.actions.todo,note:profile_association.config_install_module
 msgid "Install more modules. A few modules are proposed according to the association profile you selected. You will be able to install them based on our requirements."
-msgstr ""
+msgstr "﻿Instale más módulos. Se proponen unos cuantos módulos relacionados con el perfil de asociación que ha seleccionado. Los podrá instalar a partir de nuestros requisitos."
 
 #. module: profile_association
 #: field:profile.association.config.install_modules_wizard,crm_configuration:0
@@ -97,13 +97,13 @@ msgstr "Seguimiento de gastos"
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
-msgid "Resources Management"
-msgstr "Gestión de recursos"
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: profile_association
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: model:ir.actions.act_window,name:profile_association.action_config_install_module
+msgid "Association Profile : Install Extra Modules"
+msgstr ""
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
@@ -111,8 +111,8 @@ msgid "Install Extra Module"
 msgstr "Instalar módulo extra"
 
 #. module: profile_association
-#: field:profile.association.config.install_modules_wizard,project:0
 #: view:profile.association.config.install_modules_wizard:0
+#: field:profile.association.config.install_modules_wizard,project:0
 msgid "Project Management"
 msgstr "Gestión de proyectos"
 

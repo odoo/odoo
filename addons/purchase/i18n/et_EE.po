@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "Sihtkoht"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -43,12 +43,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,partner_id:0
 msgid "Supplier"
-msgstr ""
+msgstr "Tarnija"
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
-msgid "Confirming Purchase Order"
-msgstr ""
+#: view:purchase.order:0
+msgid "Delivery"
+msgstr "Kättetoimetamine"
 
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
@@ -59,33 +59,27 @@ msgstr ""
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Hinnakiri puudub !"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Invalid action !"
-msgstr ""
+#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
+msgid "Confirmed Purchase"
+msgstr "Kinnitatud ost"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order
-msgid "Purchase order"
+#: selection:purchase.order,state:0
+msgid "Invoice Exception"
 msgstr ""
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr ""
+msgstr "Vaikimisi ostu hinnakiri"
 
 #. module: purchase
-#: model:ir.actions.wizard,name:purchase.purchase_order_merge
-msgid "Merge purchases"
-msgstr ""
+#: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
+msgid "Create invoice"
+msgstr "Loo arve"
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -95,7 +89,7 @@ msgstr ""
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Faks :"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -108,19 +102,24 @@ msgid "The pricelist sets the currency used for this purchase order. It also com
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
-msgid "Invoice from Packing list"
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase Process"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr ""
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "Kogus"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approve Purchase"
+msgstr "Kiida Ost Heaks"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Heakskiidetud"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action4
@@ -129,37 +128,42 @@ msgid "Purchase Orders in Progress"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,notes:0
-#: field:purchase.order,notes:0
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-msgid "Notes"
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
 msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,notes:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,notes:0
+msgid "Notes"
+msgstr "Märkused"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "N°"
-msgstr ""
+msgstr "N°"
 
 #. module: purchase
 #: rml:purchase.order:0
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Maksud"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
-#: field:stock.picking,purchase_id:0
-#: view:purchase.order:0
 #: model:process.node,name:purchase.process_node_purchaseorder0
+#: view:purchase.order:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
+#: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Ostutellimus"
 
 #. module: purchase
-#: rml:purchase.quotation:0
-msgid "Regards,"
+#: field:purchase.order,name:0
+msgid "Order Reference"
 msgstr ""
 
 #. module: purchase
@@ -170,7 +174,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Tühistatud"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -185,24 +189,23 @@ msgstr ""
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 msgid "Incoming Products"
-msgstr ""
+msgstr "Sissetulevad Tooted"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Could not cancel purchase order !"
-msgstr ""
+#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
+msgid "Purchase order is confirmed by the user."
+msgstr "Ostutellimus on kinnitatud kasutaja poolt."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Parandatud käsitsi"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
-msgstr ""
+msgstr "Kõigepealt pead tühistama kõik arved mis on lisatud sellele ostutellimusele."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -215,14 +218,9 @@ msgid "TVA :"
 msgstr ""
 
 #. module: purchase
-#: model:process.process,name:purchase.process_process_purchaseworkflow0
-msgid "Purchase Workflow"
-msgstr ""
-
-#. module: purchase
 #: rml:purchase.quotation:0
 msgid "Tel.:"
-msgstr ""
+msgstr "Tel.:"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -232,7 +230,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 msgid "Purchase Order lines"
-msgstr ""
+msgstr "Ostutellimuse read"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -259,7 +257,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Order Line"
-msgstr ""
+msgstr "Tellimuse rida"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -276,7 +274,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Kinnitatud"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_productrecept0
@@ -286,7 +284,7 @@ msgstr ""
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 msgid "Confirm"
-msgstr ""
+msgstr "Kinnita"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -312,12 +310,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Ladu"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Tellimuse read"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -327,7 +325,7 @@ msgstr ""
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Fax:"
-msgstr ""
+msgstr "Faks:"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -345,19 +343,20 @@ msgid "Shipping address :"
 msgstr ""
 
 #. module: purchase
-#: field:res.partner,property_product_pricelist_purchase:0
-msgid "Purchase Pricelist"
-msgstr ""
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Error !"
+msgstr "Viga !"
 
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Planeeritud kuupäev"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved by Supplier"
-msgstr ""
+msgstr "Heakskiidetud Tarnijapoolt"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -365,9 +364,9 @@ msgid "From Order"
 msgstr ""
 
 #. module: purchase
-#: rml:purchase.order:0
-msgid "Total :"
-msgstr ""
+#: model:ir.actions.wizard,name:purchase.purchase_order_merge
+msgid "Merge purchases"
+msgstr "Ühenda ostud"
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
@@ -375,14 +374,20 @@ msgid "Reservation Destination"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,name:0
-msgid "Order Reference"
-msgstr ""
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "Vigane tegevus !"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Done"
+msgstr "Valmis"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Hinnakiri"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -392,7 +397,7 @@ msgstr ""
 #. module: purchase
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoicecontrol0
@@ -422,7 +427,7 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "Approve Purchase order after Confirming"
-msgstr ""
+msgstr "Kiida Ostutellimus heaks peale kinnitamist"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -435,6 +440,12 @@ msgid "Encoded manually by the user."
 msgstr ""
 
 #. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Qty"
+msgstr "Kogus"
+
+#. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid "This is computed as the minimum scheduled date of all purchase order lines' products."
 msgstr ""
@@ -442,7 +453,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr ""
+msgstr "Ostutellimused"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -455,20 +466,14 @@ msgid "Request for Quotation :"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_form_action3
-#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
-msgid "Purchase Order Waiting Approval"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
-msgid "Create invoice"
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
+msgid "Confirm Purchase order from Request for quotation"
 msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Purchase Order"
-msgstr ""
+msgstr "Kinnita ostutellimus"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -476,14 +481,14 @@ msgid "This is the list of picking list that have been generated for this purcha
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Partner Ref."
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+msgid "Purchase Management"
 msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Maksud :"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0
@@ -499,33 +504,28 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Sihtkoha aadress"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-msgid "Approved Purchase"
-msgstr ""
-
-#. module: purchase
-#: field:stock.move,purchase_line_id:0
 #: view:purchase.order.line:0
+#: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Ostutellimuse rida"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
-msgstr ""
+msgstr "Kalendrivaade"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
-msgid "Confirmed Purchase"
+#: view:purchase.order:0
+msgid "Set to Draft"
 msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 msgid "Purchase order is approved by supplier."
-msgstr ""
+msgstr "Ostutellimus on heakskiidetud tarnijapoolt."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -534,13 +534,18 @@ msgid "Draft Invoice"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-msgid "Invoice Exception"
-msgstr ""
+#: model:ir.model,name:purchase.model_purchase_order
+msgid "Purchase order"
+msgstr "Ostutellimus"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packings"
 msgstr ""
 
 #. module: purchase
@@ -570,14 +575,14 @@ msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_packinginvoice0
-msgid "Out Packing"
+#: rml:purchase.order:0
+msgid "Tél. :"
 msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
 msgid "After Purchase order , Create invoice."
-msgstr ""
+msgstr "Pärast ostutellimust , Loo arve."
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -597,12 +602,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Compute"
-msgstr ""
+msgstr "Arvuta"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Purchase Order"
-msgstr ""
+msgstr "Tühista ostutellimus"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -610,75 +615,79 @@ msgid "Create Packing list"
 msgstr ""
 
 #. module: purchase
+#: rml:purchase.order:0
+msgid "Total :"
+msgstr "Kokku :"
+
+#. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-msgid "Quantity"
+#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
+msgid "Invoice from Packing list"
 msgstr ""
 
 #. module: purchase
 #: field:purchase.order,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Tellimuse staatus"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Approve Purchase"
-msgstr ""
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Vahesumma"
 
 #. module: purchase
-#: rml:purchase.order:0
-#: rml:purchase.quotation:0
-msgid "Qty"
-msgstr ""
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Partneri viide."
 
 #. module: purchase
 #: rml:purchase.order:0
 #: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Ühiku hind"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-msgid "Done"
+#: field:purchase.order,fiscal_position:0
+msgid "Fiscal Position"
 msgstr ""
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Arve"
 
 #. module: purchase
-#: wizard_button:purchase.order.merge,init,end:0
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
+#: wizard_button:purchase.order.merge,init,end:0
 msgid "Cancel"
 msgstr "Tühista"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchases Properties"
-msgstr ""
+msgstr "Ostude omadused"
 
 #. module: purchase
 #: field:purchase.order.line,order_id:0
 msgid "Order Ref"
-msgstr ""
+msgstr "Tellimuse viide"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Ostutellimused"
 
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
 #: wizard_button:purchase.order.merge,init,merge:0
 msgid "Merge orders"
-msgstr ""
+msgstr "Ühenda tellimused"
 
 #. module: purchase
 #: constraint:ir.model:0
@@ -689,7 +698,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #: model:ir.actions.act_window,name:purchase.purchase_form_action_new
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
 msgid "New Purchase Order"
-msgstr ""
+msgstr "Uus ostutellimus"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -704,8 +713,8 @@ msgid "Request for Quotation"
 msgstr ""
 
 #. module: purchase
-#: rml:purchase.order:0
-msgid "Tél. :"
+#: model:process.node,name:purchase.process_node_packinginvoice0
+msgid "Out Packing"
 msgstr ""
 
 #. module: purchase
@@ -721,25 +730,25 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,date_approve:0
 msgid "Date Approved"
-msgstr ""
+msgstr "Heakskiitmise Kuupäev"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Seda ostutellimust ei saa tühistada !"
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Toode"
 
 #. module: purchase
 #: rml:purchase.order:0
-#: rml:purchase.quotation:0
 #: field:purchase.order.line,name:0
+#: rml:purchase.quotation:0
 msgid "Description"
-msgstr ""
+msgstr "Kirjeldus"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -752,13 +761,14 @@ msgid "Expected Delivery address:"
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
-msgid "Confirm Purchase order from Request for quotation"
-msgstr ""
+#: model:ir.actions.act_window,name:purchase.purchase_form_action3
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
+msgid "Purchase Order Waiting Approval"
+msgstr "Ostutellimused Mis Ootavad Heakskiitmist"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Delivery"
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
+msgid "Confirming Purchase Order"
 msgstr ""
 
 #. module: purchase
@@ -767,9 +777,9 @@ msgid "Product UOM"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,partner_address_id:0
-msgid "Address"
-msgstr ""
+#: rml:purchase.quotation:0
+msgid "Regards,"
+msgstr "Tervitades,"
 
 #. module: purchase
 #: field:purchase.order.line,move_id:0
@@ -777,14 +787,15 @@ msgid "Reservation"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
-msgid "Purchase order is confirmed by the user."
-msgstr ""
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Could not cancel purchase order !"
+msgstr "Ostu tellimust ei saa tühistada !"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "Purchase Invoice"
-msgstr ""
+msgstr "Ostuarve"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -820,10 +831,9 @@ msgid "Request For Quotations"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Error !"
-msgstr ""
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Ostu hinnakiri"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -833,21 +843,16 @@ msgstr ""
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr ""
+msgstr "Nõustu"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_root
-msgid "Purchase Management"
-msgstr ""
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+msgid "Approved Purchase"
+msgstr "Heakskiidetud Ost"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,amount_total:0
-msgid "Total"
 msgstr ""
 
 #. module: purchase
@@ -858,7 +863,7 @@ msgstr ""
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr ""
+msgstr "Oled kindel, et tahad ühendada need tellimused ?"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -871,7 +876,7 @@ msgid "After approved purchase order , it comes into the supplier invoice"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr ""
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Kokku"
 

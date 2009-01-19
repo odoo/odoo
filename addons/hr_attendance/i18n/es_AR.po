@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:00+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:00+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance
 #: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
 msgstr "Asistencia"
 
@@ -28,8 +28,12 @@ msgstr ""
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr "Ud. ya está listo para registrar su Ingreso / Salida."
+#: wizard_view:hr.si_so,si_ask_so:0
+#: wizard_view:hr.si_so,so_ask_si:0
+#: model:ir.actions.wizard,name:hr_attendance.si_so
+#: model:ir.ui.menu,name:hr_attendance.menu_si_so
+msgid "Sign in / Sign out"
+msgstr "Registrar Ingreso / Salida"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
@@ -43,18 +47,14 @@ msgid "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-#: wizard_view:hr.si_so,init:0
-#: wizard_view:hr.si_so,si_ask_so:0
-#: model:ir.actions.wizard,name:hr_attendance.si_so
-#: model:ir.ui.menu,name:hr_attendance.menu_si_so
-msgid "Sign in / Sign out"
-msgstr "Registrar Ingreso / Salida"
+#: view:hr.attendance:0
+msgid "Employee attendances"
+msgstr "Asistencias del Empleado"
 
 #. module: hr_attendance
-#: wizard_button:hr.si_so,so_ask_si,so:0
-#: wizard_button:hr.si_so,init,so_test:0
 #: selection:hr.action.reason,action_type:0
+#: wizard_button:hr.si_so,init,so_test:0
+#: wizard_button:hr.si_so,so_ask_si,so:0
 msgid "Sign out"
 msgstr "Registrar Salida"
 
@@ -64,10 +64,11 @@ msgid "Delay"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Acción"
+#: wizard_field:hr.si_so,init,name:0
+#: wizard_field:hr.si_so,si_ask_so,name:0
+#: wizard_field:hr.si_so,so_ask_si,name:0
+msgid "Employee's name"
+msgstr "Nombre del Empleado"
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -97,16 +98,21 @@ msgid "You tried to sign out with a date anterior to another event !\nTry to con
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
-msgid "Attendances"
-msgstr ""
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action reason"
+msgstr "Razón de la Acción"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,so_ask_si,last_time:0
-msgid "Your last sign in"
-msgstr "Su último Ingreso"
+#: wizard_view:hr.si_so,init:0
+msgid "You are now ready to sign in or out of the attendance follow up"
+msgstr "Ud. ya está listo para registrar su Ingreso / Salida."
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-out must be right after a sign-in !"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -123,6 +129,11 @@ msgstr ""
 #: field:hr.action.reason,name:0
 msgid "Reason"
 msgstr "Razón"
+
+#. module: hr_attendance
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -146,9 +157,9 @@ msgid "You did not signed out the last time. Please enter the date and time you 
 msgstr "Ud. no registró su Salida la última vez.  Por favor indique la fecha de su última Salida."
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr ""
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Razones de Asistencia"
 
 #. module: hr_attendance
 #: wizard_field:hr.timesheet.attendance.report,init,init_date:0
@@ -196,9 +207,9 @@ msgid "Define attendance reason"
 msgstr "Definir Razón de Asistencia"
 
 #. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
 #: wizard_button:hr.si_so,init,si_test:0
 #: wizard_button:hr.si_so,si_ask_so,si:0
-#: selection:hr.action.reason,action_type:0
 msgid "Sign in"
 msgstr "Registrar Ingreso"
 
@@ -218,10 +229,11 @@ msgid "You did not signed in the last time. Please enter the date and time you s
 msgstr "Ud. no registró su Ingreso la última vez.  Por favor indique la fecha de su último Ingreso."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-#: field:hr.attendance,action_desc:0
-msgid "Action reason"
-msgstr "Razón de la Acción"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+msgid "Attendances"
+msgstr ""
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
@@ -229,11 +241,10 @@ msgid "Attendance Errors"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,so_ask_si,name:0
-#: wizard_field:hr.si_so,init,name:0
-#: wizard_field:hr.si_so,si_ask_so,name:0
-msgid "Employee's name"
-msgstr "Nombre del Empleado"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Acción"
 
 #. module: hr_attendance
 #: wizard_button:hr.timesheet.attendance.report,init,print:0
@@ -280,18 +291,13 @@ msgid "You tried to sign in with a date anterior to another event !\nTry to cont
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Razones de Asistencia"
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr ""
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendance"
-msgstr "Asistencias del Empleado"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
 msgstr "Asistencias del Empleado"
 
 #. module: hr_attendance
@@ -301,9 +307,9 @@ msgid "Warning"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_button:hr.si_so,so_ask_si,end:0
 #: wizard_button:hr.si_so,init,end:0
 #: wizard_button:hr.si_so,si_ask_so,end:0
+#: wizard_button:hr.si_so,so_ask_si,end:0
 #: wizard_button:hr.timesheet.attendance.report,init,end:0
 msgid "Cancel"
 msgstr ""
@@ -314,15 +320,9 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+#: wizard_field:hr.si_so,so_ask_si,last_time:0
+msgid "Your last sign in"
+msgstr "Su último Ingreso"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0

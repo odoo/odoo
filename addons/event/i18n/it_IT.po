@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
-"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
+"POT-Creation-Date: 2009-01-19 19:36:17+0000\n"
+"PO-Revision-Date: 2009-01-19 19:36:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -77,9 +77,10 @@ msgid "Ticket for Opera"
 msgstr "Biglietti per l'Opera"
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
-msgstr "Fattura Rifiutata"
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: event
 #: view:event.event:0
@@ -112,22 +113,22 @@ msgid "Registration"
 msgstr "Registrazione"
 
 #. module: event
-#: model:ir.model,name:event.model_event_type
 #: field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
 msgid "Event type"
 msgstr "Tipo Evento"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.model,name:event.model_event_event
 #: field:report.event.registration,name:0
-#: view:event.event:0
 msgid "Event"
 msgstr "Evento"
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_created:0
-msgid "Invoice Created"
-msgstr "Fattura Creata"
+#: selection:event.event,state:0
+msgid "Confirmed"
+msgstr "Confermato"
 
 #. module: event
 #: wizard_view:event.confirm_registration,split:0
@@ -140,8 +141,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_registration_confirm
 #: field:event.event,register_current:0
+#: model:ir.actions.act_window,name:event.action_registration_confirm
 #: model:ir.ui.menu,name:event.menu_action_registration_confirm
 msgid "Confirmed Registrations"
 msgstr "Registrazioni Confermati"
@@ -152,9 +153,9 @@ msgid "Mail Auto Register"
 msgstr "Mail Registrazione Automatico"
 
 #. module: event
-#: field:event.event,type:0
-msgid "Type"
-msgstr "Tipo"
+#: view:event.registration:0
+msgid "Badge"
+msgstr "Tesserino"
 
 #. module: event
 #: field:event.event,section_id:0
@@ -165,11 +166,6 @@ msgstr "Sezione Caso"
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
 msgstr ""
-
-#. module: event
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Errore: L'Unità di Vendita deve essere in una categoria diversa da quella dell'Unità di misura"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -235,9 +231,9 @@ msgid "Confirm Anyway"
 msgstr ""
 
 #. module: event
-#: field:event.registration,badge_partner:0
-msgid "Badge Partner"
-msgstr "Tesserino Partner"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Errore: L'Unità di Vendita deve essere in una categoria diversa da quella dell'Unità di misura"
 
 #. module: event
 #: view:event.event:0
@@ -275,8 +271,8 @@ msgid "Ticket for Concert"
 msgstr "Biglieeto per Concerto"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_registration_draft
 #: field:event.event,register_prospect:0
+#: model:ir.actions.act_window,name:event.action_registration_draft
 #: model:ir.ui.menu,name:event.menu_action_registration_draft
 msgid "Unconfirmed Registrations"
 msgstr "Registrazione non confermati"
@@ -318,14 +314,9 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr "Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono trovarsi nella stessa categoria"
 
 #. module: event
-#: selection:event.event,state:0
-msgid "Confirmed"
-msgstr "Confermato"
-
-#. module: event
-#: view:event.registration:0
-msgid "Action Information"
-msgstr "Informazioni Azione"
+#: wizard_field:event.reg_make_invoice,init,inv_created:0
+msgid "Invoice Created"
+msgstr "Fattura Creata"
 
 #. module: event
 #: view:event.event:0
@@ -348,9 +339,9 @@ msgid "Event type on registration"
 msgstr "Tipo di Evento su Rgistrazione"
 
 #. module: event
-#: field:event.registration,badge_title:0
-msgid "Badge Title"
-msgstr "Titolo Tesserino"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
 
 #. module: event
 #: field:event.registration,event_id:0
@@ -359,8 +350,8 @@ msgstr "Evento Collegato"
 
 #. module: event
 #: model:crm.case.section,name:event.case_section_event
-#: model:ir.actions.act_window,name:event.action_event_view
 #: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_event_view
 msgid "Events"
 msgstr "Eventi"
 
@@ -370,9 +361,9 @@ msgid "Number of Registration"
 msgstr "Numero di Registrazione"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state:0
 #: view:event.registration:0
-#: view:event.event:0
 msgid "Status"
 msgstr "Stato"
 
@@ -397,9 +388,9 @@ msgid "Set To Draft"
 msgstr "Imposta per Bozza"
 
 #. module: event
+#: view:event.registration:0
 #: model:ir.actions.wizard,name:event.event_confirm_registration
 #: field:report.event.registration,confirm_state:0
-#: view:event.registration:0
 msgid "Confirm Registration"
 msgstr "Conferma Registrazione"
 
@@ -425,8 +416,8 @@ msgid "Auto Confirmation Email"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
 #: view:event.event:0
+#: view:event.registration:0
 msgid "General"
 msgstr "Generale"
 
@@ -468,9 +459,9 @@ msgid "Open"
 msgstr "Apri"
 
 #. module: event
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
+#: field:event.registration,badge_title:0
+msgid "Badge Title"
+msgstr "Titolo Tesserino"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_new_event_form
@@ -489,9 +480,9 @@ msgid "Conference on ERP Buisness"
 msgstr ""
 
 #. module: event
-#: help:event.event,mail_registr:0
-msgid "This email will be sent when someone subscribes to the event."
-msgstr ""
+#: field:event.registration,badge_partner:0
+msgid "Badge Partner"
+msgstr "Tesserino Partner"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view_confirm
@@ -500,15 +491,19 @@ msgid "Confirmed Events"
 msgstr "Eventi Confermati"
 
 #. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Registrazioni Massime"
+#: constraint:crm.case.section:0
+msgid "Error ! You can not create recursive sections."
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Badge"
-msgstr "Tesserino"
+#: field:event.event,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: event
+#: help:event.event,mail_registr:0
+msgid "This email will be sent when someone subscribes to the event."
+msgstr ""
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
@@ -551,15 +546,15 @@ msgid "Payments"
 msgstr "Pagamenti"
 
 #. module: event
-#: field:report.event.type.registration,name:0
 #: view:event.type:0
+#: field:report.event.type.registration,name:0
 msgid "Event Type"
 msgstr "Tipo di Evento"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.actions.wizard,name:event.wizard_event_registration
-#: view:event.event:0
 msgid "Registrations"
 msgstr "Registrazioni"
 
@@ -570,10 +565,15 @@ msgid "Draft Events"
 msgstr "Bozze dei Eventi"
 
 #. module: event
-#: code:addons/event/event.py:0
-#, python-format
-msgid "Error!"
-msgstr ""
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Registrazioni Massime"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
+msgstr "Fattura Rifiutata"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_main

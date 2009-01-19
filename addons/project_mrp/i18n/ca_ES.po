@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
-msgstr "Tipus de producte és servei, després es crea la tasca."
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procure method is Make to order and supply method is produce"
+msgstr "si mètode de proveïment és Fabricar sota comanda i mètode de subministrament és Produir"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -37,19 +37,19 @@ msgid "if product type is 'service' then it creates the task."
 msgstr "si tipus de producte és 'servei' aleshores es crea la tasca."
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procure method is Make to order and supply method is produce"
-msgstr "si mètode de proveïment és Fabricar sota comanda i mètode de subministrament és Produir"
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Tipus de producte és servei, després es crea la tasca."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procure Task"
 msgstr "Tasca proveïment"
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "Es crea una tasca per proveir el servei."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
@@ -59,7 +59,7 @@ msgstr "Tasca ordre"
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr ""
+msgstr "Tasca comanda de venda"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -69,5 +69,5 @@ msgstr "Crea tasca"
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr ""
+msgstr "En cas que veneu serveis sobre comanda de venda"
 

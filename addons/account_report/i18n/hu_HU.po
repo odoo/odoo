@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:07:39+0000\n"
-"PO-Revision-Date: 2009-01-03 02:07:39+0000\n"
+"POT-Creation-Date: 2009-01-19 19:35:34+0000\n"
+"PO-Revision-Date: 2009-01-19 19:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_report
-#: model:ir.model,name:account_report.model_account_report_history
 #: field:account.report.history,name:0
 #: selection:account.report.report,type:0
+#: model:ir.model,name:account_report.model_account_report_history
 msgid "Indicator"
 msgstr ""
 
@@ -48,11 +48,6 @@ msgid "Parent"
 msgstr ""
 
 #. module: account_report
-#: rml:print.indicators:0
-msgid "("
-msgstr ""
-
-#. module: account_report
 #: view:account.report.report:0
 msgid "Account Debit:"
 msgstr ""
@@ -78,14 +73,19 @@ msgid "Very bad"
 msgstr ""
 
 #. module: account_report
-#: field:account.report.report,amount:0
 #: field:account.report.history,val:0
+#: field:account.report.report,amount:0
 msgid "Value"
 msgstr ""
 
 #. module: account_report
-#: selection:account.report.report,status:0
 #: view:account.report.report:0
+msgid "= Badness Indicator Limit:"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+#: selection:account.report.report,status:0
 msgid "Bad"
 msgstr ""
 
@@ -140,9 +140,9 @@ msgid "Next"
 msgstr ""
 
 #. module: account_report
-#: rml:print.indicators:0
-#: model:ir.actions.report.xml,name:account_report.report_print_indicators
-msgid "Indicators"
+#: wizard_button:print.indicators,next,print:0
+#: wizard_button:print.indicators.pdf,init,print:0
+msgid "Print"
 msgstr ""
 
 #. module: account_report
@@ -161,8 +161,8 @@ msgid "Account Tax Code:"
 msgstr ""
 
 #. module: account_report
-#: selection:account.report.report,status:0
 #: view:account.report.report:0
+#: selection:account.report.report,status:0
 msgid "Good"
 msgstr ""
 
@@ -183,13 +183,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "= Badness Indicator Limit:"
-msgstr ""
-
-#. module: account_report
-#: rml:print.indicators:0
-msgid "Notes :"
+#: wizard_field:print.indicators,init,select_base:0
+msgid "Choose Criteria"
 msgstr ""
 
 #. module: account_report
@@ -208,8 +203,8 @@ msgid "Account Credit:"
 msgstr ""
 
 #. module: account_report
-#: wizard_view:print.indicators,init:0
-msgid "Select the criteria based on which Indicators will be printed."
+#: view:account.report.report:0
+msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
 msgstr ""
 
 #. module: account_report
@@ -223,8 +218,8 @@ msgid "< Badness Indicator Limit:"
 msgstr ""
 
 #. module: account_report
-#: selection:account.report.report,status:0
 #: view:account.report.report:0
+#: selection:account.report.report,status:0
 msgid "Very Good"
 msgstr ""
 
@@ -296,6 +291,7 @@ msgid "Expression :"
 msgstr ""
 
 #. module: account_report
+#: model:ir.actions.act_window,name:account_report.account_report_history_record
 #: model:ir.ui.menu,name:account_report.menu_account_report_history_record
 msgid "All Indicators History"
 msgstr ""
@@ -316,25 +312,20 @@ msgid "Accounting reporting"
 msgstr ""
 
 #. module: account_report
-#: wizard_field:print.indicators,init,select_base:0
-msgid "Choose Criteria"
+#: model:ir.actions.act_window,name:account_report.action_account_report_form
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_form
+msgid "New Reporting Item Formula"
 msgstr ""
 
 #. module: account_report
-#: rml:accounting.report:0
-#: rml:print.indicators:0
 #: field:account.report.report,code:0
+#: rml:accounting.report:0
 msgid "Code"
 msgstr ""
 
 #. module: account_report
 #: field:account.report.history,tmp:0
 msgid "temp"
-msgstr ""
-
-#. module: account_report
-#: view:account.report.report:0
-msgid "+ - * / ( )"
 msgstr ""
 
 #. module: account_report
@@ -359,21 +350,15 @@ msgid "You can not delete an indicator history record. You may have to delete th
 msgstr ""
 
 #. module: account_report
-#: wizard_button:print.indicators.pdf,init,end:0
 #: wizard_button:print.indicators,init,end:0
 #: wizard_button:print.indicators,next,end:0
+#: wizard_button:print.indicators.pdf,init,end:0
 msgid "Cancel"
 msgstr ""
 
 #. module: account_report
-#: model:ir.actions.act_window,name:account_report.action_account_report_form
-#: model:ir.ui.menu,name:account_report.menu_action_account_report_form
-msgid "New Reporting Item Formula"
-msgstr ""
-
-#. module: account_report
-#: view:account.report.report:0
-msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
+#: wizard_view:print.indicators,init:0
+msgid "Select the criteria based on which Indicators will be printed."
 msgstr ""
 
 #. module: account_report
@@ -387,17 +372,16 @@ msgid "Based On Fiscal Years"
 msgstr ""
 
 #. module: account_report
-#: wizard_view:print.indicators,init:0
-#: wizard_view:print.indicators,next:0
 #: model:ir.actions.wizard,name:account_report.wizard_print_indicators
 #: model:ir.ui.menu,name:account_report.menu_wizard_print_indicators
+#: wizard_view:print.indicators,init:0
+#: wizard_view:print.indicators,next:0
 msgid "Print Indicators"
 msgstr ""
 
 #. module: account_report
-#: wizard_button:print.indicators.pdf,init,print:0
-#: wizard_button:print.indicators,next,print:0
-msgid "Print"
+#: view:account.report.report:0
+msgid "+ - * / ( )"
 msgstr ""
 
 #. module: account_report
@@ -449,6 +433,12 @@ msgid "Based on Fiscal Periods"
 msgstr ""
 
 #. module: account_report
+#: model:ir.actions.report.xml,name:account_report.report_print_indicators
+#: rml:print.indicators:0
+msgid "Indicators"
+msgstr ""
+
+#. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Print Indicators with PDF"
 msgstr ""
@@ -460,9 +450,9 @@ msgid "Indicators reporting"
 msgstr ""
 
 #. module: account_report
+#: field:account.report.report,name:0
 #: rml:accounting.report:0
 #: rml:print.indicators:0
-#: field:account.report.report,name:0
 msgid "Name"
 msgstr ""
 

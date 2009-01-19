@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: delivery
-#: field:delivery.grid,name:0
-msgid "Grid Name"
-msgstr "Nome da grelha"
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Grelha de entrega"
 
 #. module: delivery
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Grelha de entrega"
+#: selection:delivery.grid.line,operator:0
+msgid ">="
+msgstr ">="
 
 #. module: delivery
 #: view:res.partner:0
@@ -36,9 +36,9 @@ msgid "Sales & Purchases"
 msgstr "Vendas e compras"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "<="
-msgstr "<="
+#: view:delivery.grid:0
+msgid "Destination"
+msgstr "Destino"
 
 #. module: delivery
 #: constraint:product.template:0
@@ -57,20 +57,9 @@ msgid "No price available !"
 msgstr ""
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "O IVA não parece estar correcto."
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "No grid avaible !"
-msgstr ""
-
-#. module: delivery
-#: field:delivery.carrier,partner_id:0
-msgid "Carrier Partner"
-msgstr "Terceiro portador"
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "Estados"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -78,9 +67,9 @@ msgid "Delivery by Poste"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "Estados"
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "Iniciar zip"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -122,11 +111,9 @@ msgid "Delivery line of grid"
 msgstr "Linha de entrega da grelha"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
-msgid "Volume"
-msgstr "Volume"
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
+msgstr "Entrega"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -135,9 +122,9 @@ msgid "Packings to be invoiced"
 msgstr "Embalagens a ser facturados"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código ean inválido"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
+msgstr "Linhas da grelha"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -187,11 +174,6 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "Entrega"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
 msgstr "Grelha de transportador e entregador"
@@ -200,11 +182,6 @@ msgstr "Grelha de transportador e entregador"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Preço de custo"
-
-#. module: delivery
-#: view:delivery.grid:0
-msgid "Destination"
-msgstr "Destino"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -222,6 +199,11 @@ msgid "Countries"
 msgstr "Países"
 
 #. module: delivery
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr "Operador"
+
+#. module: delivery
 #: view:sale.order:0
 msgid "Notes"
 msgstr "Notas"
@@ -232,28 +214,30 @@ msgid "Variable Factor"
 msgstr "factores variáveis"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "Variável"
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid avaible !"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
-msgid "Operator"
-msgstr "Operador"
+#: field:delivery.grid,name:0
+msgid "Grid Name"
+msgstr "Nome da grelha"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
 #: field:stock.picking,carrier_id:0
-#: view:delivery.carrier:0
 msgid "Carrier"
 msgstr "Transportadora"
 
 #. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Add Delivery Costs"
-msgstr ""
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: field:stock.picking,volume:0
+msgid "Volume"
+msgstr "Volume"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -261,14 +245,28 @@ msgid "Maximum Value"
 msgstr "Valor máximo"
 
 #. module: delivery
+#: wizard_button:delivery.sale.order,init,delivery:0
+msgid "Add Delivery Costs"
+msgstr ""
+
+#. module: delivery
+#: wizard_field:delivery.sale.order,init,carrier_id:0
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: field:res.partner,property_delivery_carrier:0
+msgid "Delivery Method"
+msgstr "Método de entrega"
+
+#. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "Iniciar zip"
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Variável"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -294,20 +292,9 @@ msgid "Sequence"
 msgstr "Sequência"
 
 #. module: delivery
-#: field:delivery.grid.line,list_price:0
-msgid "Sale Price"
-msgstr "Preço de venda"
-
-#. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
-
-#. module: delivery
-#: field:delivery.grid,zip_to:0
-msgid "To Zip"
-msgstr "Patra zip"
+#: field:delivery.carrier,partner_id:0
+msgid "Carrier Partner"
+msgstr "Terceiro portador"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
@@ -316,9 +303,9 @@ msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid ">="
-msgstr ">="
+#: field:delivery.grid,zip_to:0
+msgid "To Zip"
+msgstr "Patra zip"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -331,9 +318,14 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
-msgstr "Linhas da grelha"
+#: field:delivery.grid.line,list_price:0
+msgid "Sale Price"
+msgstr "Preço de venda"
+
+#. module: delivery
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erro: Código ean inválido"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -341,11 +333,10 @@ msgid "Delivery grids"
 msgstr "Grelhas de entrega"
 
 #. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: field:res.partner,property_delivery_carrier:0
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-msgid "Delivery Method"
-msgstr "Método de entrega"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr ""
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
@@ -369,6 +360,11 @@ msgstr "Método de entrega"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Preço"
+
+#. module: delivery
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "O IVA não parece estar correcto."
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

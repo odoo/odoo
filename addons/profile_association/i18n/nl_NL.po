@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:04:56+0000\n"
-"PO-Revision-Date: 2009-01-03 02:04:56+0000\n"
+"POT-Creation-Date: 2009-01-19 19:32:47+0000\n"
+"PO-Revision-Date: 2009-01-19 19:32:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: profile_association
-#: model:ir.model,name:profile_association.model_profile_association_config_install_modules_wizard
-msgid "profile.association.config.install_modules_wizard"
+#: field:profile.association.config.install_modules_wizard,wiki:0
+msgid "Wiki"
 msgstr ""
 
 #. module: profile_association
-#: field:profile.association.config.install_modules_wizard,wiki:0
-msgid "Wiki"
+#: model:ir.model,name:profile_association.model_profile_association_config_install_modules_wizard
+msgid "profile.association.config.install_modules_wizard"
 msgstr ""
 
 #. module: profile_association
@@ -36,13 +36,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: profile_association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "Relationship Management"
-msgstr ""
-
-#. module: profile_association
-#: help:profile.association.config.install_modules_wizard,wiki:0
-msgid "An integrated wiki content management system. This is really usefull to manage FAQ, quality manuals, etc."
+#: field:profile.association.config.install_modules_wizard,segmentation:0
+msgid "Segmentation"
 msgstr ""
 
 #. module: profile_association
@@ -51,9 +46,14 @@ msgid "Tracks the personal expenses process, from the employee expense encoding,
 msgstr ""
 
 #. module: profile_association
-#: field:profile.association.config.install_modules_wizard,segmentation:0
-msgid "Segmentation"
+#: view:profile.association.config.install_modules_wizard:0
+msgid "Relationship Management"
 msgstr ""
+
+#. module: profile_association
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Ongeldige XML voor weergave opbouw"
 
 #. module: profile_association
 #: help:profile.association.config.install_modules_wizard,project_gtd:0
@@ -67,7 +67,7 @@ msgstr ""
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
-msgid "Cancel"
+msgid "Resources Management"
 msgstr ""
 
 #. module: profile_association
@@ -97,13 +97,13 @@ msgstr ""
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
-msgid "Resources Management"
+msgid "Cancel"
 msgstr ""
 
 #. module: profile_association
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw"
+#: model:ir.actions.act_window,name:profile_association.action_config_install_module
+msgid "Association Profile : Install Extra Modules"
+msgstr ""
 
 #. module: profile_association
 #: view:profile.association.config.install_modules_wizard:0
@@ -111,8 +111,8 @@ msgid "Install Extra Module"
 msgstr ""
 
 #. module: profile_association
-#: field:profile.association.config.install_modules_wizard,project:0
 #: view:profile.association.config.install_modules_wizard:0
+#: field:profile.association.config.install_modules_wizard,project:0
 msgid "Project Management"
 msgstr ""
 

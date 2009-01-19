@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -88,14 +88,14 @@ msgid "Scrum Projects"
 msgstr "Proyectos scrum"
 
 #. module: scrum
-#: field:scrum.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Avisar empresa"
+#: field:scrum.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Tareas delegadas"
 
 #. module: scrum
-#: help:scrum.project,warn_header:0
-msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
-msgstr "Cabecera añadida al principio del correo electrónico del mensaje de aviso enviado al cliente cuando una tarea se cierra."
+#: field:scrum.task,progress:0
+msgid "Progress (%)"
+msgstr "Progreso (%)"
 
 #. module: scrum
 #: field:scrum.task,priority:0
@@ -118,8 +118,8 @@ msgid "Project's member. Not used in any computation, just for information purpo
 msgstr "Miembros del proyecto. No utilizado en ningún cálculo, sólo con el propósito de informar."
 
 #. module: scrum
-#: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
+#: selection:scrum.task,priority:0
 msgid "Very urgent"
 msgstr "Muy urgente"
 
@@ -134,9 +134,9 @@ msgid "Sprint Name"
 msgstr "Nombre del sprint"
 
 #. module: scrum
-#: field:scrum.meeting,question_backlog:0
-msgid "Backlog Accurate"
-msgstr "Exactitud de los backlogs"
+#: help:scrum.task,planned_hours:0
+msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
+msgstr "Tiempo estimado para realizar la tarea, normalmente fijado por el responsable del proyecto cuando la tarea está en estado borrador."
 
 #. module: scrum
 #: field:scrum.project,notes:0
@@ -151,8 +151,8 @@ msgid "Product Backlog"
 msgstr "Backlog del producto"
 
 #. module: scrum
-#: field:scrum.task,project_id:0
 #: field:scrum.sprint,project_id:0
+#: field:scrum.task,project_id:0
 msgid "Project"
 msgstr "Proyecto"
 
@@ -225,9 +225,9 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: scrum
-#: field:scrum.task,planned_hours:0
 #: field:scrum.product.backlog,planned_hours:0
 #: field:scrum.sprint,planned_hours:0
+#: field:scrum.task,planned_hours:0
 msgid "Planned Hours"
 msgstr "Horas planeadas"
 
@@ -268,13 +268,13 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: scrum
-#: field:scrum.sprint,scrum_master_id:0
-msgid "Scrum Master"
-msgstr "Scrum master"
+#: view:scrum.project:0
+msgid "Scrum Data"
+msgstr "Datos scrum"
 
 #. module: scrum
-#: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
+#: selection:scrum.task,priority:0
 msgid "Medium"
 msgstr "Media"
 
@@ -305,8 +305,8 @@ msgstr "Tareas desde ayer"
 
 #. module: scrum
 #: field:scrum.project,date_start:0
-#: field:scrum.task,date_start:0
 #: field:scrum.sprint,date_start:0
+#: field:scrum.task,date_start:0
 msgid "Starting Date"
 msgstr "Fecha de inicio"
 
@@ -357,9 +357,9 @@ msgid "Tasks"
 msgstr "Tareas"
 
 #. module: scrum
-#: field:scrum.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Tareas delegadas"
+#: view:scrum.sprint:0
+msgid "Retrospective"
+msgstr "Retrospectivo"
 
 #. module: scrum
 #: wizard_view:scrum.product.backlog.task.create,init:0
@@ -368,9 +368,9 @@ msgid "Create Tasks"
 msgstr "Crear tareas"
 
 #. module: scrum
-#: field:scrum.task,progress:0
-msgid "Progress (%)"
-msgstr "Progreso (%)"
+#: help:scrum.project,warn_header:0
+msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr "Cabecera añadida al principio del correo electrónico del mensaje de aviso enviado al cliente cuando una tarea se cierra."
 
 #. module: scrum
 #: help:scrum.task,progress:0
@@ -439,15 +439,15 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: scrum
-#: selection:scrum.task,state:0
 #: selection:scrum.product.backlog,state:0
 #: selection:scrum.sprint,state:0
+#: selection:scrum.task,state:0
 msgid "Draft"
 msgstr "Borrador"
 
 #. module: scrum
-#: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
+#: selection:scrum.task,priority:0
 msgid "Low"
 msgstr "Baja"
 
@@ -474,9 +474,9 @@ msgid "Is there anything blocking you ?"
 msgstr "¿Hay algo que le bloquea?"
 
 #. module: scrum
-#: field:scrum.task,state:0
 #: field:scrum.product.backlog,state:0
 #: field:scrum.sprint,state:0
+#: field:scrum.task,state:0
 msgid "Status"
 msgstr "Estado"
 
@@ -509,8 +509,8 @@ msgid "My Sprints (Scrum Master)"
 msgstr "Mis sprints (scrum master)"
 
 #. module: scrum
-#: view:scrum.product.backlog:0
 #: model:process.node,name:scrum.process_node_productbacklog0
+#: view:scrum.product.backlog:0
 msgid "Product backlog"
 msgstr "Backlog del producto"
 
@@ -528,7 +528,6 @@ msgstr "Usuario"
 #. module: scrum
 #: field:scrum.project,active:0
 #: field:scrum.task,active:0
-#: field:scrum.product.backlog,active:0
 msgid "Active"
 msgstr "Activo"
 
@@ -549,9 +548,9 @@ msgid "Draft Sprints"
 msgstr "Sprints borrador"
 
 #. module: scrum
-#: field:scrum.task,parent_id:0
-msgid "Parent Task"
-msgstr "Tarea padre"
+#: field:scrum.project,timesheet_id:0
+msgid "Working Time"
+msgstr "Tiempo trabajado"
 
 #. module: scrum
 #: field:scrum.task,work_ids:0
@@ -574,9 +573,9 @@ msgid "Assigned to"
 msgstr "Asignado a"
 
 #. module: scrum
-#: help:scrum.task,planned_hours:0
-msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
-msgstr "Tiempo estimado para realizar la tarea, normalmente fijado por el responsable del proyecto cuando la tarea está en estado borrador."
+#: field:scrum.meeting,question_backlog:0
+msgid "Backlog Accurate"
+msgstr "Exactitud de los backlogs"
 
 #. module: scrum
 #: help:scrum.project,effective_hours:0
@@ -587,6 +586,11 @@ msgstr "Suma de las horas dedicadas de todas las tareas relacionadas con este pr
 #: help:scrum.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr "Suma de las horas previstas de todas las tareas relacionadas con este proyecto."
+
+#. module: scrum
+#: field:scrum.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Avisar empresa"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_open_tree4
@@ -600,10 +604,10 @@ msgid "Task summary"
 msgstr "Resumen de tarea"
 
 #. module: scrum
-#: selection:scrum.project,state:0
-#: selection:scrum.task,state:0
 #: selection:scrum.product.backlog,state:0
+#: selection:scrum.project,state:0
 #: selection:scrum.sprint,state:0
+#: selection:scrum.task,state:0
 msgid "Done"
 msgstr "Realizado"
 
@@ -624,11 +628,11 @@ msgid "Open"
 msgstr "Abierto"
 
 #. module: scrum
-#: field:scrum.product.backlog,effective_hours:0
-#: field:scrum.sprint,effective_hours:0
 #: view:scrum.product.backlog:0
+#: field:scrum.product.backlog,effective_hours:0
 #: view:scrum.project:0
 #: view:scrum.sprint:0
+#: field:scrum.sprint,effective_hours:0
 msgid "Effective hours"
 msgstr "Horas reales"
 
@@ -643,6 +647,11 @@ msgid "In Progress"
 msgstr "En progreso"
 
 #. module: scrum
+#: field:scrum.sprint,review:0
+msgid "Sprint Review"
+msgstr "Revisión del sprint"
+
+#. module: scrum
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
@@ -653,9 +662,9 @@ msgid "Remaining Hours"
 msgstr "Horas restantes"
 
 #. module: scrum
-#: field:scrum.project,timesheet_id:0
-msgid "Working Time"
-msgstr "Tiempo trabajado"
+#: field:scrum.task,parent_id:0
+msgid "Parent Task"
+msgstr "Tarea padre"
 
 #. module: scrum
 #: field:scrum.product.backlog,name:0
@@ -663,8 +672,8 @@ msgid "Feature"
 msgstr "Característica"
 
 #. module: scrum
-#: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
+#: selection:scrum.task,priority:0
 msgid "Very Low"
 msgstr "Muy baja"
 
@@ -678,11 +687,6 @@ msgstr "Horas de trabajo del horario para ajustar el informe del diagrama de Gan
 #: model:ir.ui.menu,name:scrum.menu_action_sprint_open_tree3
 msgid "Sprints Done"
 msgstr "Sprints realizados"
-
-#. module: scrum
-#: constraint:scrum.project:0
-msgid "Error ! You can not create recursive projects."
-msgstr "¡Error! No puede crear proyectos recursivos."
 
 #. module: scrum
 #: model:process.transition,name:scrum.process_transition_backlogtask0
@@ -703,6 +707,7 @@ msgid "Edit Projects"
 msgstr "Editar proyectos"
 
 #. module: scrum
+#: model:ir.actions.act_window,name:scrum.action_meeting_form
 #: model:ir.model,name:scrum.model_scrum_meeting
 #: model:ir.ui.menu,name:scrum.menu_action_meeting_form
 #: view:scrum.meeting:0
@@ -715,8 +720,8 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: scrum
-#: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
+#: selection:scrum.task,priority:0
 msgid "Urgent"
 msgstr "Urgente"
 
@@ -763,19 +768,14 @@ msgid "Sprint Info"
 msgstr "Info. del sprint"
 
 #. module: scrum
-#: view:scrum.project:0
-msgid "Scrum Data"
-msgstr "Datos scrum"
+#: field:scrum.sprint,scrum_master_id:0
+msgid "Scrum Master"
+msgstr "Scrum master"
 
 #. module: scrum
 #: field:scrum.product.backlog,tasks_id:0
 msgid "Tasks Details"
 msgstr "Detalles de tareas"
-
-#. module: scrum
-#: view:scrum.sprint:0
-msgid "Retrospective"
-msgstr "Retrospectivo"
 
 #. module: scrum
 #: field:scrum.task,effective_hours:0
@@ -798,9 +798,9 @@ msgid "Users"
 msgstr "Usuarios"
 
 #. module: scrum
+#: field:scrum.product.backlog,sequence:0
 #: field:scrum.project,priority:0
 #: field:scrum.task,sequence:0
-#: field:scrum.product.backlog,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -821,9 +821,9 @@ msgid "Created tasks"
 msgstr "Crear tareas"
 
 #. module: scrum
-#: field:scrum.sprint,review:0
-msgid "Sprint Review"
-msgstr "Revisión del sprint"
+#: constraint:scrum.project:0
+msgid "Error ! You can not create recursive projects."
+msgstr "¡Error! No puede crear proyectos recursivos."
 
 #. module: scrum
 #: wizard_field:scrum.product.backlog.task.create,init,user_id:0
@@ -832,9 +832,9 @@ msgstr "Asignar a"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_form
+#: model:ir.ui.menu,name:scrum.menu_action_sprint_form
 #: field:scrum.meeting,sprint_id:0
 #: field:scrum.product.backlog,sprint_id:0
-#: model:ir.ui.menu,name:scrum.menu_action_sprint_form
 msgid "Sprint"
 msgstr "Sprint"
 

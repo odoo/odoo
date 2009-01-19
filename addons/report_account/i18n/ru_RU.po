@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,10 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: report_account
-#: field:report.account.receivable,type:0
-msgid "Account Type"
-msgstr "Тип счета"
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Баланс по типу счетов"
 
 #. module: report_account
 #: constraint:ir.model:0
@@ -36,24 +37,19 @@ msgid "Receivable accounts"
 msgstr "Дебиторская задолженность"
 
 #. module: report_account
-#: view:report.account.receivable:0
-msgid "Accounts by type"
-msgstr "Счета по типу"
-
-#. module: report_account
 #: field:report.account.receivable,credit:0
 msgid "Credit"
 msgstr "Кредит"
 
 #. module: report_account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Счета по типу"
+
+#. module: report_account
 #: field:report.account.receivable,name:0
 msgid "Week of Year"
 msgstr "Неделя года"
-
-#. module: report_account
-#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
-msgid "Balance by Type of Account"
-msgstr "Баланс по типу счетов"
 
 #. module: report_account
 #: field:report.account.receivable,debit:0

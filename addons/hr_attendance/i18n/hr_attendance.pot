@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:18:25+0000\n"
-"PO-Revision-Date: 2009-01-03 02:18:25+0000\n"
+"POT-Creation-Date: 2009-01-19 19:46:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:46:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance
 #: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
 msgstr ""
 
@@ -28,7 +28,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
-msgid "You are now ready to sign in or out of the attendance follow up"
+#: wizard_view:hr.si_so,si_ask_so:0
+#: wizard_view:hr.si_so,so_ask_si:0
+#: model:ir.actions.wizard,name:hr_attendance.si_so
+#: model:ir.ui.menu,name:hr_attendance.menu_si_so
+msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_attendance
@@ -43,18 +47,14 @@ msgid "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-#: wizard_view:hr.si_so,init:0
-#: wizard_view:hr.si_so,si_ask_so:0
-#: model:ir.actions.wizard,name:hr_attendance.si_so
-#: model:ir.ui.menu,name:hr_attendance.menu_si_so
-msgid "Sign in / Sign out"
+#: view:hr.attendance:0
+msgid "Employee attendances"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_button:hr.si_so,so_ask_si,so:0
-#: wizard_button:hr.si_so,init,so_test:0
 #: selection:hr.action.reason,action_type:0
+#: wizard_button:hr.si_so,init,so_test:0
+#: wizard_button:hr.si_so,so_ask_si,so:0
 msgid "Sign out"
 msgstr ""
 
@@ -64,9 +64,10 @@ msgid "Delay"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
+#: wizard_field:hr.si_so,init,name:0
+#: wizard_field:hr.si_so,si_ask_so,name:0
+#: wizard_field:hr.si_so,so_ask_si,name:0
+msgid "Employee's name"
 msgstr ""
 
 #. module: hr_attendance
@@ -97,15 +98,20 @@ msgid "You tried to sign out with a date anterior to another event !\nTry to con
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
-msgid "Attendances"
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action reason"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,so_ask_si,last_time:0
-msgid "Your last sign in"
+#: wizard_view:hr.si_so,init:0
+msgid "You are now ready to sign in or out of the attendance follow up"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-out must be right after a sign-in !"
 msgstr ""
 
 #. module: hr_attendance
@@ -122,6 +128,11 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
 msgid "Reason"
+msgstr ""
+
+#. module: hr_attendance
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: hr_attendance
@@ -146,8 +157,8 @@ msgid "You did not signed out the last time. Please enter the date and time you 
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
 msgstr ""
 
 #. module: hr_attendance
@@ -196,9 +207,9 @@ msgid "Define attendance reason"
 msgstr ""
 
 #. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
 #: wizard_button:hr.si_so,init,si_test:0
 #: wizard_button:hr.si_so,si_ask_so,si:0
-#: selection:hr.action.reason,action_type:0
 msgid "Sign in"
 msgstr ""
 
@@ -218,9 +229,10 @@ msgid "You did not signed in the last time. Please enter the date and time you s
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-#: field:hr.attendance,action_desc:0
-msgid "Action reason"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+msgid "Attendances"
 msgstr ""
 
 #. module: hr_attendance
@@ -229,10 +241,9 @@ msgid "Attendance Errors"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,so_ask_si,name:0
-#: wizard_field:hr.si_so,init,name:0
-#: wizard_field:hr.si_so,si_ask_so,name:0
-msgid "Employee's name"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
 msgstr ""
 
 #. module: hr_attendance
@@ -280,18 +291,13 @@ msgid "You tried to sign in with a date anterior to another event !\nTry to cont
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
 msgstr ""
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendance"
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
 msgstr ""
 
 #. module: hr_attendance
@@ -301,9 +307,9 @@ msgid "Warning"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_button:hr.si_so,so_ask_si,end:0
 #: wizard_button:hr.si_so,init,end:0
 #: wizard_button:hr.si_so,si_ask_so,end:0
+#: wizard_button:hr.si_so,so_ask_si,end:0
 #: wizard_button:hr.timesheet.attendance.report,init,end:0
 msgid "Cancel"
 msgstr ""
@@ -314,14 +320,8 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
+#: wizard_field:hr.si_so,so_ask_si,last_time:0
+msgid "Your last sign in"
 msgstr ""
 
 #. module: hr_attendance

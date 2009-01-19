@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:00:15+0000\n"
-"PO-Revision-Date: 2009-01-03 02:00:15+0000\n"
+"POT-Creation-Date: 2009-01-19 19:27:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:27:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,9 @@ msgid "Average Price"
 msgstr ""
 
 #. module: report_purchase
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: field:report.purchase.order.category,state:0
+#: field:report.purchase.order.product,state:0
+msgid "Order State"
 msgstr ""
 
 #. module: report_purchase
@@ -50,9 +51,8 @@ msgid "Purchases by Products"
 msgstr ""
 
 #. module: report_purchase
-#: field:report.purchase.order.category,state:0
-#: field:report.purchase.order.product,state:0
-msgid "Order State"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: report_purchase
@@ -62,9 +62,9 @@ msgid "Waiting Schedule"
 msgstr ""
 
 #. module: report_purchase
-#: field:report.purchase.order.category,price_total:0
-#: field:report.purchase.order.product,price_total:0
-msgid "Total Price"
+#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
+#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
+msgid "Purchases by Products (this month)"
 msgstr ""
 
 #. module: report_purchase
@@ -89,9 +89,9 @@ msgid "Invoice Exception"
 msgstr ""
 
 #. module: report_purchase
-#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
-#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
-msgid "Purchases by Products (this month)"
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
 msgstr ""
 
 #. module: report_purchase
@@ -139,6 +139,7 @@ msgid "Manual in progress"
 msgstr ""
 
 #. module: report_purchase
+#: model:ir.actions.act_window,name:report_purchase.action_order_category_tree
 #: model:ir.ui.menu,name:report_purchase.menu_report_order_category
 msgid "Purchases by Category of Product (this month)"
 msgstr ""
@@ -162,7 +163,6 @@ msgid "Month"
 msgstr ""
 
 #. module: report_purchase
-#: field:report.purchase.order.category,count:0
 #: field:report.purchase.order.product,count:0
 msgid "# of Lines"
 msgstr ""

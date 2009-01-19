@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: report_analytic_planning
+#: view:report_account_analytic.planning:0
+msgid "Time by Account"
+msgstr "Tiempo por cuenta"
+
+#. module: report_analytic_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning by Account"
+msgstr "Planificación por cuenta"
+
+#. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
-msgid "To:"
-msgstr "Hasta:"
-
-#. module: report_analytic_planning
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Análisis planificación"
+msgid "Summary by project"
+msgstr "Resumen por proyecto"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -39,11 +39,6 @@ msgstr "Ctdad UdM"
 #: field:report_account_analytic.planning,user_id:0
 msgid "Responsible"
 msgstr "Responsable"
-
-#. module: report_analytic_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: report_analytic_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_stat
@@ -67,14 +62,15 @@ msgid "My Current Plannings"
 msgstr "Mis planificaciones actuales"
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr "Planificación por cuenta"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by user"
-msgstr "Resumen por usuario"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat
+msgid "Planning Statistics"
+msgstr "Estadísticas de planificación"
 
 #. module: report_analytic_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_stat_account
@@ -93,26 +89,20 @@ msgid "Real"
 msgstr "Real"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_manager_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my_manager
-msgid "Planning Statistics of My Projects"
-msgstr "Estadísticas de planificación de mis proyectos"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my
+msgid "My Planning Statistics"
+msgstr "Mis estadísticas de planificación"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat
-msgid "Planning Statistics"
-msgstr "Estadísticas de planificación"
+#: rml:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Resumen por usuario"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning,name:0
 msgid "Planning Name"
 msgstr "Nombre planificación"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat,sum_amount:0
-msgid "Planned hours"
-msgstr "Horas planeadas"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -125,24 +115,16 @@ msgid "HR Planning"
 msgstr "Planificación RRHH"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat.account,sum_amount_real:0
 #: field:report_account_analytic.planning.stat,sum_amount_real:0
+#: field:report_account_analytic.planning.stat.account,sum_amount_real:0
 #: field:report_account_analytic.planning.stat.user,sum_amount_real:0
 msgid "Timesheet"
 msgstr "Hoja de asistencia"
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Time by Account"
-msgstr "Tiempo por cuenta"
-
-#. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-#: field:report_account_analytic.planning.line,user_id:0
-#: field:report_account_analytic.planning.stat,user_id:0
-#: field:report_account_analytic.planning.stat.user,user_id:0
-msgid "User"
-msgstr "Usuario"
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned hours"
+msgstr "Horas planeadas"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -150,9 +132,9 @@ msgid "Responsible:"
 msgstr "Responsable:"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_user_ids:0
-msgid "Planning by user"
-msgstr "Planificación por usuario"
+#: field:report_account_analytic.planning.line,amount:0
+msgid "Quantity"
+msgstr "Cantidad"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -171,9 +153,9 @@ msgid "End Date"
 msgstr "Fecha final"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat,account_id:0
-msgid "Account"
-msgstr "Cuenta"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
@@ -181,11 +163,18 @@ msgid "Time by User"
 msgstr "Tiempo por usuario"
 
 #. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_manager_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my_manager
+msgid "Planning Statistics of My Projects"
+msgstr "Estadísticas de planificación de mis proyectos"
+
+#. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
 msgid "Quantities by Account"
 msgstr "Cantidades por cuenta"
 
 #. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form
 #: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning
 msgid "Plannings"
 msgstr "Planificaciones"
@@ -194,6 +183,14 @@ msgstr "Planificaciones"
 #: view:report_account_analytic.planning:0
 msgid "Analysis"
 msgstr "Análisis"
+
+#. module: report_analytic_planning
+#: field:report_account_analytic.planning.line,user_id:0
+#: rml:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,user_id:0
+#: field:report_account_analytic.planning.stat.user,user_id:0
+msgid "User"
+msgstr "Usuario"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -223,14 +220,14 @@ msgid "Planned"
 msgstr "Planificado"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by project"
-msgstr "Resumen por proyecto"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Análisis planificación"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_account_ids:0
-msgid "Planning by account"
-msgstr "Planificación por cuenta"
+#: field:report_account_analytic.planning,line_ids:0
+msgid "Planning lines"
+msgstr "Líneas planificación"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -243,9 +240,14 @@ msgid "]"
 msgstr "]"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.line,amount:0
-msgid "Quantity"
-msgstr "Cantidad"
+#: rml:report_account_analytic.planning.print:0
+msgid "To:"
+msgstr "Hasta:"
+
+#. module: report_analytic_planning
+#: field:report_account_analytic.planning,stat_user_ids:0
+msgid "Planning by user"
+msgstr "Planificación por usuario"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.line,note:0
@@ -259,14 +261,9 @@ msgid "Tasks"
 msgstr "Tareas"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,line_ids:0
-msgid "Planning lines"
-msgstr "Líneas planificación"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat.account,account_id:0
-msgid "Analytic Account"
-msgstr "Cuenta analítica"
+#: field:report_account_analytic.planning,stat_account_ids:0
+msgid "Planning by account"
+msgstr "Planificación por cuenta"
 
 #. module: report_analytic_planning
 #: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current
@@ -280,10 +277,9 @@ msgid "Quantities by User"
 msgstr "Cantidades por usuario"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my
-msgid "My Planning Statistics"
-msgstr "Mis estadísticas de planificación"
+#: field:report_account_analytic.planning.stat.account,account_id:0
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.stat,manager_id:0
@@ -293,13 +289,13 @@ msgstr "Responsable"
 #. module: report_analytic_planning
 #: model:ir.actions.report.xml,name:report_analytic_planning.report_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning
-#: field:report_account_analytic.planning.line,planning_id:0
-#: field:report_account_analytic.planning.stat.account,planning_id:0
-#: field:report_account_analytic.planning.stat,planning_id:0
-#: field:report_account_analytic.planning.stat.user,planning_id:0
 #: model:ir.ui.menu,name:report_analytic_planning.next_id_85
 #: model:ir.ui.menu,name:report_analytic_planning.planning_main
 #: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.line,planning_id:0
+#: field:report_account_analytic.planning.stat,planning_id:0
+#: field:report_account_analytic.planning.stat.account,planning_id:0
+#: field:report_account_analytic.planning.stat.user,planning_id:0
 msgid "Planning"
 msgstr "Planificación"
 

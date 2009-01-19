@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: base_report_creator
-#: field:base_report_creator.report.fields,group_method:0
-msgid "Grouping Method"
-msgstr "Метод группирования"
+#: field:base_report_creator.report,view_graph_type:0
+msgid "Graph Type"
+msgstr "Тип графика"
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
@@ -52,9 +52,9 @@ msgid "First View"
 msgstr "Первый вид"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,model_ids:0
-msgid "Reported Objects"
-msgstr "Объекты, включаемые в отчет"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -97,15 +97,14 @@ msgid "Set Filter Values"
 msgstr "Установить значения фильтра"
 
 #. module: base_report_creator
+#: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
+msgid "Menu Name"
+msgstr ""
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Used View"
 msgstr "Используемый вид"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,filter_ids:0
-#: view:base_report_creator.report:0
-msgid "Filters"
-msgstr "Фильтры"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -113,9 +112,19 @@ msgid "Security"
 msgstr "Безопасность"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,state:0
-msgid "Status"
-msgstr "Статус"
+#: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,operator:0
+msgid "Operator"
+msgstr "Оператор"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,model_ids:0
+msgid "Reported Objects"
+msgstr "Объекты, включаемые в отчет"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Starting Date"
+msgstr "Дата начала"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -126,11 +135,6 @@ msgstr "Добавить фильтр"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
 msgstr "Создать меню для отчета"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,view_graph_type:0
-msgid "Graph Type"
-msgstr "Тип графика"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -148,10 +152,16 @@ msgid "General Configuration"
 msgstr "Общие настройки"
 
 #. module: base_report_creator
+#: field:base_report_creator.report.fields,report_id:0
+#: field:base_report_creator.report.filter,report_id:0
+#: model:ir.model,name:base_report_creator.model_base_report_creator_report
+msgid "Report"
+msgstr "Отчет"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report,view_type3:0
 #: selection:base_report_creator.report.fields,calendar_mode:0
 #: selection:base_report_creator.report.fields,graph_mode:0
-#: selection:base_report_creator.report,view_type2:0
-#: selection:base_report_creator.report,view_type3:0
 msgid "/"
 msgstr "/"
 
@@ -166,11 +176,9 @@ msgid "Third View"
 msgstr "Третий вид"
 
 #. module: base_report_creator
-#: wizard_button:base_report_creator.report.menu.create,init,end:0
-#: wizard_button:base_report_creator.report_filter.fields,init,end:0
-#: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
-msgid "Cancel"
-msgstr "Отмена"
+#: selection:base_report_creator.report.fields,graph_mode:0
+msgid "Y Axis"
+msgstr "Ось Y"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -190,16 +198,9 @@ msgid "Graph"
 msgstr "График"
 
 #. module: base_report_creator
-#: model:ir.model,name:base_report_creator.model_base_report_creator_report
-#: field:base_report_creator.report.fields,report_id:0
-#: field:base_report_creator.report.filter,report_id:0
-msgid "Report"
-msgstr "Отчет"
-
-#. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: field:base_report_creator.report,active:0
+msgid "Active"
+msgstr "Активен"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -207,13 +208,13 @@ msgid "Horizontal"
 msgstr "По горизонтали"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Starting Date"
-msgstr "Дата начала"
+#: field:base_report_creator.report.fields,group_method:0
+msgid "Grouping Method"
+msgstr "Метод группирования"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: field:base_report_creator.report.filter,condition:0
+#: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "Condition"
 msgstr "Условие"
 
@@ -221,6 +222,11 @@ msgstr "Условие"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
 msgstr ""
+
+#. module: base_report_creator
+#: field:base_report_creator.report,state:0
+msgid "Status"
+msgstr "Статус"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -243,21 +249,14 @@ msgid "Parent Menu"
 msgstr "Родительское меню"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Fields"
-msgstr "Поля"
-
-#. module: base_report_creator
 #: field:base_report_creator.report,type:0
 msgid "Report Type"
 msgstr "Тип отчета"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report,view_type1:0
-#: selection:base_report_creator.report,view_type2:0
-#: selection:base_report_creator.report,view_type3:0
-msgid "Tree"
-msgstr "В виде дерева"
+#: view:base_report_creator.report:0
+msgid "Fields"
+msgstr "Поля"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -270,19 +269,19 @@ msgid "Authorized Groups"
 msgstr "Авторизованные группы"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report.fields,group_method:0
-msgid "Maximum"
-msgstr "Максимум"
-
-#. module: base_report_creator
-#: field:base_report_creator.report.filter,expression:0
-msgid "Value"
-msgstr "Значение"
-
-#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Graph View"
 msgstr "Графический вид"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Reports"
+msgstr "Отчеты"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report.fields,group_method:0
+msgid "Maximum"
+msgstr "Максимум"
 
 #. module: base_report_creator
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
@@ -305,9 +304,9 @@ msgid "Values"
 msgstr "Значения"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Reports"
-msgstr "Отчеты"
+#: field:base_report_creator.report.filter,expression:0
+msgid "Value"
+msgstr "Значение"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_orientation:0
@@ -350,8 +349,8 @@ msgid "Report Filters"
 msgstr "Фильтры отчета"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: selection:base_report_creator.report.filter,condition:0
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "И"
 
@@ -376,15 +375,16 @@ msgid "Grouped"
 msgstr "Сгруппировано"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,sql_query:0
 #: view:base_report_creator.report:0
+#: field:base_report_creator.report,sql_query:0
 msgid "SQL Query"
 msgstr "Запрос SQL"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report_filter.fields,init,field_id:0
-msgid "Filter Field"
-msgstr "Поле фильтра"
+#: view:base_report_creator.report:0
+#: wizard_button:base_report_creator.report.menu.create,init,create_menu:0
+msgid "Create Menu"
+msgstr "Создать меню"
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,sequence:0
@@ -392,8 +392,8 @@ msgid "Sequence"
 msgstr "Последовательность"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,field_ids:0
 #: view:base_report_creator.report:0
+#: field:base_report_creator.report,field_ids:0
 msgid "Fields to Display"
 msgstr "Воля для отображения"
 
@@ -403,8 +403,8 @@ msgid "Calendar Mode"
 msgstr "Режим календаря"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 #: selection:base_report_creator.report.filter,condition:0
+#: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "OR"
 msgstr "ИЛИ"
 
@@ -424,14 +424,17 @@ msgid "Uniq Colors"
 msgstr "Уник. цвета"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report.fields,graph_mode:0
-msgid "Y Axis"
-msgstr "Ось Y"
+#: view:base_report_creator.report:0
+#: field:base_report_creator.report,filter_ids:0
+msgid "Filters"
+msgstr "Фильтры"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,operator:0
-msgid "Operator"
-msgstr "Оператор"
+#: wizard_button:base_report_creator.report.menu.create,init,end:0
+#: wizard_button:base_report_creator.report_filter.fields,init,end:0
+#: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
+msgid "Cancel"
+msgstr "Отмена"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -441,13 +444,14 @@ msgid "Calendar"
 msgstr "Календарь"
 
 #. module: base_report_creator
-#: wizard_button:base_report_creator.report.menu.create,init,create_menu:0
-#: view:base_report_creator.report:0
-msgid "Create Menu"
-msgstr "Создать меню"
+#: wizard_field:base_report_creator.report_filter.fields,init,field_id:0
+msgid "Filter Field"
+msgstr "Поле фильтра"
 
 #. module: base_report_creator
-#: field:base_report_creator.report,active:0
-msgid "Active"
-msgstr "Активен"
+#: selection:base_report_creator.report,view_type1:0
+#: selection:base_report_creator.report,view_type2:0
+#: selection:base_report_creator.report,view_type3:0
+msgid "Tree"
+msgstr "В виде дерева"
 

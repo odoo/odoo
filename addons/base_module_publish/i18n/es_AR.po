@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:00+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:00+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,8 @@ msgid "Author"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-msgid "Download URL"
+#: wizard_field:base_module_publish.module_export,zip,module_file:0
+msgid "Module .zip file"
 msgstr ""
 
 #. module: base_module_publish
@@ -37,8 +36,13 @@ msgid "Modification"
 msgstr ""
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "/fixed assets"
+msgstr ""
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Accounting & Finance"
 msgstr ""
 
 #. module: base_module_publish
@@ -53,7 +57,7 @@ msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Administration tools"
+msgid "Vertical modules/Manufacturing industries"
 msgstr ""
 
 #. module: base_module_publish
@@ -73,14 +77,14 @@ msgid "Login failed!"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_button:base_module_publish.module_export,init,zip:0
-#: wizard_button:base_module_publish.module_publish_all,init,login:0
-msgid "Ok"
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Manufacturing"
 msgstr ""
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "/Dashboards & Reporting"
+#: wizard_button:base_module_publish.module_export,init,zip:0
+#: wizard_button:base_module_publish.module_publish_all,init,login:0
+msgid "Ok"
 msgstr ""
 
 #. module: base_module_publish
@@ -100,9 +104,8 @@ msgid "Vertical modules/Services companies"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish_all,login:0
-msgid "User information"
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Vertical modules/Profiles"
 msgstr ""
 
 #. module: base_module_publish
@@ -127,8 +130,8 @@ msgid "External interfaces/Reporting"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_button:base_module_publish.module_publish,step2,step1:0
 #: wizard_button:base_module_publish.module_publish,step1,init:0
+#: wizard_button:base_module_publish.module_publish,step2,step1:0
 msgid "Previous"
 msgstr ""
 
@@ -151,6 +154,11 @@ msgstr ""
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "Other proprietary"
+msgstr ""
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_export,init,include_src:0
+msgid "Include sources"
 msgstr ""
 
 #. module: base_module_publish
@@ -192,8 +200,8 @@ msgid "Documentation URL"
 msgstr ""
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Accounting & Finance"
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
 msgstr ""
 
 #. module: base_module_publish
@@ -219,7 +227,7 @@ msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Manufacturing"
+msgid "Generic modules/Security"
 msgstr ""
 
 #. module: base_module_publish
@@ -294,11 +302,6 @@ msgid "Others/Education"
 msgstr ""
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Security"
-msgstr ""
-
-#. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,demourl:0
 msgid "empty to keep existing value"
 msgstr ""
@@ -320,7 +323,7 @@ msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Manufacturing"
+msgid "Manufacturing/Manufacturing"
 msgstr ""
 
 #. module: base_module_publish
@@ -339,13 +342,16 @@ msgid "Modules already updated"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_export,zip,module_file:0
-msgid "Module .zip file"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Profiles"
+#: wizard_view:base_module_publish.module_publish,step2:0
+#: wizard_view:base_module_publish.module_publish_all,login:0
+msgid "User information"
 msgstr ""
 
 #. module: base_module_publish
@@ -371,8 +377,8 @@ msgstr ""
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,init,end:0
 #: wizard_button:base_module_publish.module_publish,init,end:0
-#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish,step1,end:0
+#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish_all,init,end:0
 #: wizard_button:base_module_publish.module_publish_all,login,end:0
 msgid "Cancel"
@@ -417,33 +423,31 @@ msgid "Generic modules/Purchases & Procurement"
 msgstr ""
 
 #. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Generic modules/Manufacturing"
+msgstr ""
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,demourl:0
 msgid "Demo URL"
 msgstr ""
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,description:0
 #: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_field:base_module_publish.module_publish,step1,description:0
 msgid "Description"
 msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Manufacturing industries"
-msgstr ""
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
+msgid "Tools/Administration tools"
 msgstr ""
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish,step1:0
 #: wizard_view:base_module_publish.module_publish,publish:0
+#: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,init:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 #: wizard_view:base_module_publish.module_publish_all,publish:0
@@ -528,6 +532,12 @@ msgstr ""
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Others"
+msgstr ""
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
 msgstr ""
 
 #. module: base_module_publish

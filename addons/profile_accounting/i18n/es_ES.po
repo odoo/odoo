@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,11 +19,6 @@ msgstr ""
 #: model:ir.actions.todo,note:profile_accounting.config_install_wizard
 msgid "Install more modules. A few modules are proposed according to the Account Profile you selected. You will be able to install them based on our requirements."
 msgstr ""
-
-#. module: profile_accounting
-#: help:profile.accounting.config.install_modules_wizard,account_budget:0
-msgid "Helps you to manage financial and analytic budgets."
-msgstr "Ayuda a gestionar los presupuestos financieros y analíticos."
 
 #. module: profile_accounting
 #: constraint:ir.ui.view:0
@@ -46,9 +41,9 @@ msgid "Suppliers Payment Management"
 msgstr "Gestión de los pagos a proveedores"
 
 #. module: profile_accounting
-#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
-msgid "profile.accounting.config.install_modules_wizard"
-msgstr "perfil.contabilidad.config.asistente_instal_modulos"
+#: field:profile.accounting.config.install_modules_wizard,account_asset:0
+msgid "Asset Management"
+msgstr "Gestión de activos"
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
@@ -71,9 +66,14 @@ msgid "The Document Management System of Open ERP allows you to store, browse, a
 msgstr "﻿El sistema de gestión de la documentación de OpenERP le permite almacenar, navegar, clasificar automáticamente, buscar y visualizar todo tipo de documentos (documentos internos, informes impresos, sistema de calendario). Abre un acceso de FTP para que los usuarios naveguen fácilmente en los documentos asociados."
 
 #. module: profile_accounting
+#: model:ir.actions.act_window,name:profile_accounting.action_config_install_module
+msgid "Accounting Profile : Install Extra Modules"
+msgstr ""
+
+#. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
-msgid "Cancel"
-msgstr "Cancelar"
+msgid "Resources Management"
+msgstr "Gestión de recursos"
 
 #. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
@@ -86,6 +86,11 @@ msgid "Document Management"
 msgstr "Gestión de documentos"
 
 #. module: profile_accounting
+#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
+msgid "profile.accounting.config.install_modules_wizard"
+msgstr "perfil.contabilidad.config.asistente_instal_modulos"
+
+#. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,account_budget:0
 msgid "Budgets"
 msgstr "Presupuestos"
@@ -96,22 +101,17 @@ msgid "Install"
 msgstr "Instalar"
 
 #. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,account_asset:0
-msgid "Asset Management"
-msgstr "Gestión de activos"
+#: help:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Helps you to manage financial and analytic budgets."
+msgstr "Ayuda a gestionar los presupuestos financieros y analíticos."
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
-msgid "Resources Management"
-msgstr "Gestión de recursos"
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
 msgid "Install Extra Module"
 msgstr "Instalar módulo extra"
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Accounting Management"
-msgstr "Gestión financiera"
 

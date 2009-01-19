@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:06:17+0000\n"
-"PO-Revision-Date: 2009-01-03 02:06:17+0000\n"
+"POT-Creation-Date: 2009-01-19 19:34:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:34:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,56 +18,56 @@ msgstr ""
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
-msgstr ""
+msgstr "Pour chaque produit, de type service et sur commande"
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_mrptask0
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 msgid "Task"
+msgstr "Tâche"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procure method is Make to order and supply method is produce"
+msgstr "Si la méthode de réapprovisionnement est sur fabriqué et que la méthode est sur produire"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "Si le produit est de type 'service' alors il crée la tâche."
+
+#. module: project_mrp
+#: field:project.task,procurement_id:0
+msgid "Procurement"
 msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr ""
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr ""
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procure method is Make to order and supply method is produce"
-msgstr ""
+msgstr "Le type de produit est service, alors ça créer une tâche."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procure Task"
-msgstr ""
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr ""
+msgstr "Tâche obtenu"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
-msgstr ""
+msgstr "Tâche commandée"
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr ""
+msgstr "Tâche sur les commandes de ventes"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
-msgstr ""
+msgstr "Crée une tâche"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr ""
+msgstr "Dans ce cas vous vendez le service sur les commandes de ventes"
 

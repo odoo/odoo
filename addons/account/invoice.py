@@ -320,8 +320,7 @@ class account_invoice(osv.osv):
                 acc_id = p.property_account_receivable.id
             else:
                 acc_id = p.property_account_payable.id
-            if p.property_account_position:
-                fiscal_position = p.property_account_position.id
+            fiscal_position = p.property_account_position and p.property_account_position.id or False
             partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
             if p.bank_ids:
                 bank_id = p.bank_ids[0].id
@@ -950,7 +949,7 @@ class account_invoice_line(osv.osv):
                 price_unit = price_unit - tax['amount']
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
         if context is None:
             context = {}
         if not partner_id:
@@ -961,15 +960,17 @@ class account_invoice_line(osv.osv):
             else:
                 return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
+
         lang=part.lang
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.taxes_id)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, res.taxes_id)
         else:
-            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, res.supplier_taxes_id)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, res.supplier_taxes_id)
         if type in ('in_invoice', 'in_refund'):
             result = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
         else:
@@ -987,7 +988,7 @@ class account_invoice_line(osv.osv):
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
 
-        a = self.pool.get('account.fiscal.position').map_account(cr, uid, part, a)
+        a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
 
@@ -1057,13 +1058,12 @@ class account_invoice_line(osv.osv):
     #
     # Set the tax field according to the account and the partner
     #
-    def onchange_account_id(self, cr, uid, ids, partner_id,account_id):
-        if not (partner_id and account_id):
+    def onchange_account_id(self, cr, uid, ids, fposition_id, account_id):
+        if not (fposition_id and account_id):
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-
-        res = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, taxes)
+        fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
+        res = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         r = {'value':{'invoice_line_tax_id': res}}
         return r
 account_invoice_line()

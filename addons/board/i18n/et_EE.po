@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:28+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,21 +23,21 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "board.board"
-msgstr ""
+msgstr "board.board"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
-msgid "Menu Information"
-msgstr ""
+#: field:board.note,user_id:0
+msgid "Author"
+msgstr "Autor"
 
 #. module: board
 #: model:ir.model,name:board.model_board_note
 msgid "board.note"
-msgstr ""
+msgstr "board.note"
 
 #. module: board
-#: field:board.note,note:0
 #: view:board.note:0
+#: field:board.note,note:0
 msgid "Note"
 msgstr "Märkus"
 
@@ -47,30 +47,31 @@ msgid "Width"
 msgstr "Laius"
 
 #. module: board
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr ""
-
-#. module: board
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Autor"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr ""
-
-#. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Pealkiri"
 
 #. module: board
+#: model:ir.actions.act_window,name:board.action_view_board_list_form
+#: model:ir.ui.menu,name:board.menu_view_board_form
+msgid "Dashboard Definition"
+msgstr "Töölaua määratlus"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_view_board_note_form
+#: model:ir.ui.menu,name:board.menu_view_board_note_form
+msgid "Publish a note"
+msgstr "Avalda märge"
+
+#. module: board
+#: wizard_view:board.board.menu.create,init:0
+msgid "Menu Information"
+msgstr "Menüü info"
+
+#. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr ""
+msgstr "Toimingute vaated"
 
 #. module: board
 #: field:board.note,date:0
@@ -78,9 +79,9 @@ msgid "Date"
 msgstr "Kuupäev"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr ""
+#: model:ir.ui.menu,name:board.next_id_50
+msgid "Configuration"
+msgstr "Seadistus"
 
 #. module: board
 #: field:board.note.type,name:0
@@ -90,17 +91,17 @@ msgstr "Märkuse tüüp"
 #. module: board
 #: wizard_view:board.board.menu.create,init:0
 msgid "Create Menu For Dashboard"
-msgstr ""
+msgstr "Loo menüü töölauale"
 
 #. module: board
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_parent_id:0
 msgid "Parent Menu"
-msgstr ""
+msgstr "Ülemmenüü"
 
 #. module: board
 #: view:board.note:0
@@ -108,71 +109,67 @@ msgid "Notes"
 msgstr "Märkmed"
 
 #. module: board
-#: field:board.board.line,board_id:0
-#: field:board.board,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "board.note.type"
+msgstr "board.note.type"
+
+#. module: board
 #: view:board.board:0
+#: field:board.board,name:0
+#: field:board.board.line,board_id:0
 msgid "Dashboard"
 msgstr "Teabetahvel"
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Tegevus"
-
-#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
-msgstr ""
+msgstr "Positsioon"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.dashboard_open
 msgid "Open Dashboard"
-msgstr ""
+msgstr "Ava töölaud"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_name:0
 msgid "Menu Name"
-msgstr ""
+msgstr "Menüü nimi"
 
 #. module: board
 #: field:board.note,type:0
 msgid "Note type"
-msgstr ""
+msgstr "Märkme tüüp"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
-msgstr ""
+msgstr "Vasakul"
 
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr ""
+msgstr "Laua vaade"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Right"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Paremal"
 
 #. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Jada"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr ""
+#: view:board.board:0
+#: wizard_button:board.board.menu.create,init,create_menu:0
+msgid "Create Menu"
+msgstr "Loo menüü"
 
 #. module: board
 #: model:ir.ui.menu,name:board.dashboard_menu
 msgid "Dashboards"
-msgstr ""
+msgstr "Töölauad"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -182,7 +179,7 @@ msgstr "Kõrgus"
 #. module: board
 #: model:ir.actions.wizard,name:board.wizard_board_create_menu
 msgid "Create Board Menu"
-msgstr ""
+msgstr "Loo laua menüü"
 
 #. module: board
 #: wizard_button:board.board.menu.create,init,end:0
@@ -192,13 +189,12 @@ msgstr "Tühista"
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
-msgstr ""
+msgstr "Töölaua vaade"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,create_menu:0
-#: view:board.board:0
-msgid "Create Menu"
-msgstr "Loo menüü"
+#: model:ir.model,name:board.model_board_board_line
+msgid "board.board.line"
+msgstr "board.board.line"
 
 #. module: board
 #: field:board.note,name:0

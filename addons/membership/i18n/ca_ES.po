@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,12 @@ msgstr ""
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
 msgid "invoice to associate"
-msgstr "factura a soci"
+msgstr "factura a soci beneficiari"
+
+#. module: membership
+#: model:process.process,name:membership.process_process_membershipprocess0
+msgid "Membership Process"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -27,9 +32,15 @@ msgid "Paid Member"
 msgstr "Soci pagat"
 
 #. module: membership
+#: field:report.partner_member.year,currency:0
+#: field:report.partner_member.year_new,currency:0
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
 msgid "Set an associate member of partner."
-msgstr "Estableix un soci d'una empresa."
+msgstr "Estableix un soci beneficiari d'una empresa."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
@@ -64,12 +75,17 @@ msgstr "Soci beneficiari"
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
-msgstr "El soci està associat."
+msgstr "El soci és beneficiari."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr "Empresa associada."
+msgstr "Empresa beneficiaria."
+
+#. module: membership
+#: constraint:account.account:0
+msgid "Error ! You can not create recursive accounts."
+msgstr ""
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -183,7 +199,7 @@ msgstr "Defineix producte per socis."
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
 msgid "Invoiced member may be Associated member."
-msgstr "Soci facturat pot ser un soci associat."
+msgstr "Soci facturat pot ser un soci beneficiari."
 
 #. module: membership
 #: constraint:product.template:0
@@ -217,10 +233,12 @@ msgid "Membership Product - 1"
 msgstr "Producte per socis - 1"
 
 #. module: membership
-#: field:report.partner_member.year,currency:0
-#: field:report.partner_member.year_new,currency:0
-msgid "Currency"
-msgstr "Moneda"
+#: field:report.partner_member.year,canceled_amount:0
+#: field:report.partner_member.year,canceled_number:0
+#: field:report.partner_member.year_new,canceled_amount:0
+#: field:report.partner_member.year_new,canceled_number:0
+msgid "Canceled"
+msgstr "Cancel·lat"
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -234,11 +252,6 @@ msgstr "Tarifa de venda per a socis"
 #: field:report.partner_member.year_new,invoiced_number:0
 msgid "Invoiced"
 msgstr "Facturat"
-
-#. module: membership
-#: model:process.process,name:membership.process_process_membershipworkflow0
-msgid "Membership workflow"
-msgstr "Flux de soci"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -259,7 +272,7 @@ msgstr "El preu negociat per l'empresa"
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
-msgstr "Soci associat"
+msgstr "Soci beneficiari"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -277,10 +290,10 @@ msgid "Membership invoice paid."
 msgstr "Factura de soci pagada."
 
 #. module: membership
-#: field:report.partner_member.year_new,paid_amount:0
-#: field:report.partner_member.year_new,paid_number:0
 #: field:report.partner_member.year,paid_amount:0
 #: field:report.partner_member.year,paid_number:0
+#: field:report.partner_member.year_new,paid_amount:0
+#: field:report.partner_member.year_new,paid_number:0
 msgid "Paid"
 msgstr "Pagat"
 
@@ -291,11 +304,11 @@ msgid "Invoiced Member"
 msgstr "Soci facturat"
 
 #. module: membership
-#: field:product.product,membership:0
-#: field:res.partner,member_lines:0
 #: model:ir.ui.menu,name:membership.menu_membership
 #: view:product.product:0
+#: field:product.product,membership:0
 #: view:res.partner:0
+#: field:res.partner,member_lines:0
 msgid "Membership"
 msgstr "Soci"
 
@@ -344,16 +357,15 @@ msgid "Old Member"
 msgstr "Soci antic"
 
 #. module: membership
-#: field:product.template,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-msgid "Member Price"
-msgstr "Preu soci"
+#: field:membership.membership_line,date_to:0
+msgid "To"
+msgstr "Fins"
 
 #. module: membership
-#: field:report.partner_member.year_new,waiting_amount:0
-#: field:report.partner_member.year_new,waiting_number:0
 #: field:report.partner_member.year,waiting_amount:0
 #: field:report.partner_member.year,waiting_number:0
+#: field:report.partner_member.year_new,waiting_amount:0
+#: field:report.partner_member.year_new,waiting_number:0
 msgid "Waiting"
 msgstr "En espera"
 
@@ -395,11 +407,6 @@ msgid "Information"
 msgstr "Informació"
 
 #. module: membership
-#: field:membership.membership_line,account_invoice_line:0
-msgid "Account Invoice line"
-msgstr "Línia factura"
-
-#. module: membership
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
@@ -413,12 +420,13 @@ msgstr "Factura esborrany per soci."
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Canceled Member"
-msgstr "Cancel·la soci"
+msgstr "Soci cancel·lat"
 
 #. module: membership
-#: field:membership.membership_line,date_to:0
-msgid "To"
-msgstr "Fins"
+#: model:product.price.type,name:membership.product_price_type_memberprice
+#: field:product.template,member_price:0
+msgid "Member Price"
+msgstr "Preu soci"
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -429,12 +437,6 @@ msgstr "Soci gratis"
 #: field:res.partner,membership_stop:0
 msgid "Stop membership date"
 msgstr "Data final d'afiliació"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:res.partner,membership_state:0
-msgid "Associated Member"
-msgstr "Soci beneficiari"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -467,11 +469,11 @@ msgstr "Soci en espera"
 #. module: membership
 #: model:ir.actions.wizard,name:membership.wizard_invoice_membership
 msgid "Invoice Membership"
-msgstr "Soci facturat"
+msgstr "Factura a soci"
 
 #. module: membership
-#: wizard_field:wizard_invoice_membership,init,product:0
 #: model:process.node,name:membership.process_node_membershipproduct0
+#: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
 msgstr "Producte per socis"
 
@@ -481,21 +483,13 @@ msgid "You can not have 2 pricelist version that overlaps!"
 msgstr "No podeu tenir 2 versions de tarifes que es superposin!"
 
 #. module: membership
-#: field:report.partner_member.year,canceled_amount:0
-#: field:report.partner_member.year,canceled_number:0
-#: field:report.partner_member.year_new,canceled_amount:0
-#: field:report.partner_member.year_new,canceled_number:0
-msgid "Canceled"
-msgstr "Cancel·lat"
-
-#. module: membership
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Error: Codi EAN erroni"
 
 #. module: membership
-#: field:report.partner_member.year_new,year:0
 #: field:report.partner_member.year,year:0
+#: field:report.partner_member.year_new,year:0
 msgid "Year"
 msgstr "Any"
 

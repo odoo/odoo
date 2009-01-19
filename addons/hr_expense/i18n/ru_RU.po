@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,19 +37,14 @@ msgid "Expenses waiting validation"
 msgstr "Расходы в ожидании проверки"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-msgid "Date Valided"
-msgstr "Дата проверки"
+#: field:hr.expense.expense,date_confirm:0
+msgid "Date Confirmed"
+msgstr "Дата подтверждения"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting confirmation"
 msgstr "В ожидании подтверждения"
-
-#. module: hr_expense
-#: model:process.process,name:hr_expense.process_process_expenseworkflow0
-msgid "Expense Workflow"
-msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -63,6 +58,7 @@ msgid "My expenses waiting validation"
 msgstr "Мои расходы в ожидании проверки"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 msgid "All expenses"
 msgstr "Все расходы"
@@ -99,9 +95,9 @@ msgid "This document must be dated and signed for reimbursment"
 msgstr "Для возмещения расходов необходимо поставить дату и расписаться на документы"
 
 #. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
-msgid "After creating invoice, reimburse expenses"
-msgstr ""
+#: selection:hr.expense.expense,state:0
+msgid "Accepted"
+msgstr "Принято"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -153,9 +149,9 @@ msgid "State"
 msgstr "Состояние"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_confirm:0
-msgid "Date Confirmed"
-msgstr "Дата подтверждения"
+#: field:hr.expense.expense,date_valid:0
+msgid "Date Valided"
+msgstr "Дата проверки"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -164,10 +160,9 @@ msgid "Employee"
 msgstr "Сотрудник"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_draft
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
-msgid "My Draft expenses"
-msgstr "Мои расходы - черновик"
+#: rml:hr.expense:0
+msgid "Qty"
+msgstr ""
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -213,9 +208,9 @@ msgid "New Expenses Sheet"
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Accepted"
-msgstr "Принято"
+#: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
+msgid "After creating invoice, reimburse expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -234,22 +229,22 @@ msgid "The employee must have a contact address"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: field:hr.expense.line,expense_id:0
+#: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
 msgstr "Расход"
 
 #. module: hr_expense
-#: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.expense:0
+#: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Позиции расходов"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Canceled"
-msgstr "Отменено"
+#: field:hr.expense.expense,currency_id:0
+msgid "Currency"
+msgstr "Валюта"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -280,6 +275,11 @@ msgstr ""
 #: selection:hr.expense.expense,state:0
 msgid "Draft"
 msgstr "Черновик"
+
+#. module: hr_expense
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -350,18 +350,20 @@ msgid "Expenses waiting payment"
 msgstr "Расходы в ожидании оплаты"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_my_draft
+#: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
+msgid "My Draft expenses"
+msgstr "Мои расходы - черновик"
+
+#. module: hr_expense
 #: rml:hr.expense:0
-msgid "Qty"
-msgstr ""
+#: field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
+msgstr "Цена за ед."
 
 #. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_confirmexpense0
-msgid "Confirm expense"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,invoice_id:0
 #: view:hr.expense.expense:0
+#: field:hr.expense.expense,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "Счет"
@@ -377,9 +379,9 @@ msgid "Reinvoice"
 msgstr ""
 
 #. module: hr_expense
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
+#: model:process.process,name:hr_expense.process_process_expenseprocess0
+msgid "Expense Process"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -393,10 +395,9 @@ msgid "Draft expenses"
 msgstr "Черновик расходов"
 
 #. module: hr_expense
-#: rml:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
-msgid "Unit Price"
-msgstr "Цена за ед."
+#: model:process.transition,name:hr_expense.process_transition_confirmexpense0
+msgid "Confirm expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_approveexpense0
@@ -431,13 +432,13 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: hr_expense
-#: field:hr.expense.expense,currency_id:0
-msgid "Currency"
-msgstr "Валюта"
+#: selection:hr.expense.expense,state:0
+msgid "Canceled"
+msgstr "Отменено"
 
 #. module: hr_expense
-#: field:hr.expense.expense,name:0
 #: view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0
 msgid "Expense Sheet"
 msgstr "Отчет о расходах"
 
@@ -460,11 +461,6 @@ msgstr ""
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation User"
 msgstr ""
-
-#. module: hr_expense
-#: rml:hr.expense:0
-msgid "(Date and signature)"
-msgstr "(Дата и подпись)"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -497,8 +493,8 @@ msgid "Expense is confirmed."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.next_id_49
 #: view:hr.expense.expense:0
+#: model:ir.ui.menu,name:hr_expense.next_id_49
 msgid "Expenses"
 msgstr "Расходы"
 

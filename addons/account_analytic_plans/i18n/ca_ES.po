@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,9 +38,9 @@ msgid "Account5 Id"
 msgstr "Id compte5"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-msgid "Analytic Plan Instance"
-msgstr "Instància de pla analític"
+#: wizard_field:wizard.crossovered.analytic,init,date2:0
+msgid "End Date"
+msgstr "Data final"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -48,9 +48,13 @@ msgid "Rate (%)"
 msgstr "Taxa (%)"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
-msgstr "Línia de distribució analítica"
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
+msgstr "Pla analític"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -63,14 +67,14 @@ msgid "Analytic Distribution Lines"
 msgstr "Línies de distribució analítica"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Imprimeix"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Codi de distribució"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr "Data impressió:"
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
+msgstr "Id pla"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -83,13 +87,9 @@ msgid "Account Name"
 msgstr "Nom de compte"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
-#: field:account.analytic.plan.line,plan_id:0
-#: field:account.analytic.plan,name:0
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
-#: view:account.analytic.plan:0
-msgid "Analytic Plan"
-msgstr "Pla analític"
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
+msgstr "Línia de distribució analítica"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -117,19 +117,15 @@ msgid "Select Information"
 msgstr "Selecciona informació"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Compte analític"
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Id compte3"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Codi de distribució"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "%"
-msgstr "%"
+#: field:account.analytic.plan.instance,journal_id:0
+#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
+msgid "Analytic Journal"
+msgstr "Diari analític"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -143,10 +139,10 @@ msgstr "Ref. compte analítica"
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
 #: field:account.analytic.plan.instance,name:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
-#: view:account.analytic.plan.instance:0
 msgid "Analytic Distribution"
 msgstr "Distribució analítica"
 
@@ -176,10 +172,10 @@ msgid "to"
 msgstr "fins"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
-#: view:account.analytic.plan:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Plans analítics"
 
@@ -199,9 +195,9 @@ msgid "Distribution Model Saved"
 msgstr "Model de distribució desat"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
-msgid "End Date"
-msgstr "Data final"
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr "Instància de pla analític"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -209,8 +205,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
 msgstr "Línies de pla analític"
 
@@ -245,12 +246,6 @@ msgid "Account6 Id"
 msgstr "Id compte6"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
-#: field:account.analytic.plan.instance,journal_id:0
-msgid "Analytic Journal"
-msgstr "Diari analític"
-
-#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Quantitat"
@@ -276,9 +271,9 @@ msgid "Root Account"
 msgstr "Compte principal"
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "This distribution model has been saved. You will be able to reuse it later."
-msgstr "Aquest model de distribució s'ha desat. Més tard podrà reutilitzar-lo."
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "Imprimeix"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -291,19 +286,24 @@ msgid "Period from"
 msgstr "Període des de"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Id compte3"
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Compte analític"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,plan_id:0
-msgid "Plan Id"
-msgstr "Id pla"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date:"
+msgstr "Data impressió:"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
 msgstr "Models de distribució analítica"
+
+#. module: account_analytic_plans
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "Aquest model de distribució s'ha desat. Més tard podrà reutilitzar-lo."
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0

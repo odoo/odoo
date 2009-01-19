@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,15 +29,16 @@ msgid "Very Good"
 msgstr "Väga hea"
 
 #. module: idea
-#: field:idea.idea,stat_vote_ids:0
 #: view:idea.idea:0
+#: field:idea.idea,stat_vote_ids:0
 msgid "Statistics"
 msgstr "Statistika"
 
 #. module: idea
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
+#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
+msgid "My Ideas"
+msgstr "Minu ideed"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -49,13 +50,13 @@ msgstr "Avatud"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Not Voted"
-msgstr ""
+msgstr "Pole hääletatud"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open_my
 #: model:ir.ui.menu,name:idea.menu_idea_idea_open_my
 msgid "My Open Ideas"
-msgstr "Minu avatud ideed"
+msgstr "Minu lahtised ideed"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea
@@ -65,38 +66,26 @@ msgid "Ideas"
 msgstr "Ideed"
 
 #. module: idea
-#: model:ir.model,name:idea.model_idea_comment
-#: field:idea.idea,comment_ids:0
-#: view:idea.comment:0
+#: field:idea.category,child_ids:0
+msgid "Child Categories"
+msgstr "Alamkategooriad"
+
+#. module: idea
 #: view:idea.idea:0
-msgid "Comments"
-msgstr "Kommentaarid"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Väga halb"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Halb"
+msgid "New Idea"
+msgstr "Uus idee"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
-msgstr ""
+msgstr "Ideed kategooria järgi"
 
 #. module: idea
 #: field:idea.vote,score:0
 #: field:idea.vote.stat,score:0
 msgid "Score"
-msgstr ""
+msgstr "Tulemus"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -106,12 +95,17 @@ msgstr "Mustand"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's vote"
-msgstr ""
+msgstr "Idee hääletus"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote_stat
 msgid "Statistics on Votes"
-msgstr ""
+msgstr "Hääletuse statistika"
+
+#. module: idea
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
@@ -119,9 +113,9 @@ msgid "Category for an idea"
 msgstr "Idee kategooria"
 
 #. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
-msgstr ""
+#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
+msgid "Vote Statistics"
+msgstr "Häälte statistika"
 
 #. module: idea
 #: field:idea.idea,state:0
@@ -153,19 +147,14 @@ msgid "Reporting"
 msgstr "Aruandlus"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Close"
-msgstr "Sulge"
-
-#. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr ""
+msgstr "Idee hääletuse statistika"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
 msgid "idea.vote"
-msgstr ""
+msgstr "idea.vote"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -176,14 +165,15 @@ msgstr "Kasutaja"
 #. module: idea
 #: view:idea.idea:0
 msgid "Your comment"
-msgstr ""
+msgstr "Sinu kommentaar"
 
 #. module: idea
-#: selection:idea.idea,state:0
-msgid "Accepted"
-msgstr ""
+#: model:ir.ui.menu,name:idea.menu_config
+msgid "Configuration"
+msgstr "Seadistus"
 
 #. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
 msgstr "Kategooriad"
@@ -191,22 +181,22 @@ msgstr "Kategooriad"
 #. module: idea
 #: view:idea.stat:0
 msgid "stat"
-msgstr ""
+msgstr "stat"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Minu hääl"
 
 #. module: idea
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Votes"
-msgstr ""
+msgstr "Hääled"
 
 #. module: idea
 #: field:idea.comment,create_date:0
@@ -217,17 +207,64 @@ msgstr "Loomise kuupäev"
 #. module: idea
 #: field:idea.idea,count_votes:0
 msgid "Count of votes"
-msgstr ""
+msgstr "Häälte kogus"
 
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
-msgstr ""
+msgstr "Häälte arv"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
 msgid "idea.idea"
-msgstr ""
+msgstr "idea.idea"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
+#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
+msgid "My Draft Ideas"
+msgstr "Minu ideede mustandid"
+
+#. module: idea
+#: field:idea.idea,vote_ids:0
+msgid "Vote"
+msgstr "Hääleta"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Bad"
+msgstr "Halb"
+
+#. module: idea
+#: view:idea.idea:0
+#: model:ir.ui.menu,name:idea.menu_idea_idea
+msgid "All Ideas"
+msgstr "Kõik ideed"
+
+#. module: idea
+#: view:idea.comment:0
+#: view:idea.idea:0
+#: field:idea.idea,comment_ids:0
+#: model:ir.model,name:idea.model_idea_comment
+msgid "Comments"
+msgstr "Kommentaarid"
+
+#. module: idea
+#: field:idea.idea,count_comments:0
+msgid "Count of comments"
+msgstr "Kommentaaride kogus"
+
+#. module: idea
+#: field:idea.idea,title:0
+msgid "Idea Summary"
+msgstr "Idee kokkuvõte"
+
+#. module: idea
+#: view:idea.category:0
+msgid "Category of ideas"
+msgstr "Ideede kategooriad"
 
 #. module: idea
 #: field:idea.category,summary:0
@@ -235,92 +272,54 @@ msgid "Summary"
 msgstr "Kokkuvõte"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Cancel"
-msgstr "Tühista"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
-msgid "My Ideas"
-msgstr ""
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea
-#: view:idea.idea:0
-msgid "All Ideas"
-msgstr ""
-
-#. module: idea
-#: field:idea.category,child_ids:0
-msgid "Child Categories"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,count_comments:0
-msgid "Count of comments"
-msgstr ""
-
-#. module: idea
-#: field:idea.idea,title:0
-msgid "Idea Summary"
-msgstr ""
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "New Idea"
-msgstr "Uus idee"
-
-#. module: idea
-#: field:idea.idea,vote_avg:0
-msgid "Average Score"
-msgstr "Keskmine hinne"
+#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
+#: model:ir.actions.act_window,name:idea.action_idea_idea_open
+#: model:ir.ui.menu,name:idea.menu_idea_idea_open
+msgid "Open Ideas"
+msgstr "Lahtised ideed"
 
 #. module: idea
 #: view:idea.idea:0
 #: view:idea.vote.stat:0
 msgid "vote_stat of ideas"
-msgstr ""
+msgstr "Ideede häälte statistika"
 
 #. module: idea
-#: field:idea.comment,content:0
 #: view:idea.comment:0
+#: field:idea.comment,content:0
 #: view:idea.idea:0
 msgid "Comment"
 msgstr "Kommentaar"
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_config
-msgid "Configuration"
-msgstr "Seadistus"
-
-#. module: idea
 #: field:idea.category,parent_id:0
 msgid "Parent Categories"
-msgstr ""
+msgstr "Ülemakategooriad"
 
 #. module: idea
 #: field:idea.idea,user_id:0
 msgid "Creator"
-msgstr ""
+msgstr "Looja"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Open"
-msgstr ""
+#: model:ir.ui.menu,name:idea.menu_tools
+msgid "Tools"
+msgstr "Tööriistad"
 
 #. module: idea
 #: field:idea.comment,idea_id:0
+#: view:idea.idea:0
 #: field:idea.vote,idea_id:0
 #: field:idea.vote.stat,idea_id:0
-#: view:idea.idea:0
 msgid "Idea"
 msgstr "Idee"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Bad"
+msgstr "Väga halb"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -330,30 +329,27 @@ msgstr "Tühistatud"
 #. module: idea
 #: model:ir.ui.menu,name:idea.menu_idea_vote
 msgid "All Votes"
-msgstr ""
+msgstr "Kõik hääled"
 
 #. module: idea
-#: field:idea.idea,vote_ids:0
-msgid "Vote"
-msgstr ""
+#: view:idea.idea:0
+msgid "Cancel"
+msgstr "Tühista"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
-msgid "My Draft Ideas"
-msgstr ""
+#: view:idea.idea:0
+msgid "Close"
+msgstr "Sulge"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open
-msgid "Open Ideas"
-msgstr "Avatud ideed"
+#: field:idea.idea,vote_avg:0
+msgid "Average Score"
+msgstr "Keskmine hinne"
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_tools
-msgid "Tools"
-msgstr "Tööriistad"
+#: view:idea.idea:0
+msgid "Open"
+msgstr "Ava"
 
 #. module: idea
 #: help:idea.idea,description:0

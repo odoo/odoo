@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salario"
+#: view:hr.contract.wage.type:0
+msgid "Hourly cost computation"
+msgstr "Cálculo coste por hora"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -82,10 +82,13 @@ msgid "Function"
 msgstr "Función"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Tipo de salario"
+#: field:hr.employee,marital_status:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
+#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
+msgid "Marital Status"
+msgstr "Estado civil"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -93,16 +96,16 @@ msgid "Miscelleanous"
 msgstr "Miscelánea"
 
 #. module: hr_contract
-#: field:hr.employee,contract_ids:0
 #: view:hr.contract:0
 #: view:hr.employee:0
+#: field:hr.employee,contract_ids:0
 msgid "Contracts"
 msgstr "Contratos"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
 #: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
 msgid "Wage Type"
 msgstr "Tipo de salario"
 
@@ -112,9 +115,9 @@ msgid "Period Name"
 msgstr "Nombre de período"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Estado civil del empleado"
+#: field:hr.employee,nationality:0
+msgid "Nationality"
+msgstr "Nacionalidad"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -147,18 +150,19 @@ msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: hr_contract
-#: field:hr.contract,notes:0
 #: view:hr.contract:0
+#: field:hr.contract,notes:0
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "Notas"
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.employee:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
-#: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Contract"
 msgstr "Contrato"
 
@@ -168,25 +172,15 @@ msgid "Contract Type"
 msgstr "Tipo de contrato"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 #: field:hr.contract.wage.type,period_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
 msgstr "Período de salario"
 
 #. module: hr_contract
-#: field:hr.employee,nationality:0
-msgid "Nationality"
-msgstr "Nacionalidad"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Cálculo coste por hora"
-
-#. module: hr_contract
-#: field:hr.employee,audiens_num:0
-msgid "AUDIENS Number"
-msgstr "Número de AUDIENS"
+#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
+msgid "Employee Marital Status"
+msgstr "Estado civil del empleado"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -199,13 +193,10 @@ msgid "Contract Name"
 msgstr "Nombre contrato"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: field:hr.employee,marital_status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-#: view:hr.employee.marital.status:0
-msgid "Marital Status"
-msgstr "Estado civil"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Contract Wage Type"
+msgstr "Tipo de salario"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -218,9 +209,9 @@ msgid "Manager"
 msgstr "Director"
 
 #. module: hr_contract
+#: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-#: view:hr.contract.wage.type.period:0
 msgid "Wage period"
 msgstr "Períodos de salario"
 
@@ -229,6 +220,11 @@ msgstr "Períodos de salario"
 #: help:hr.contract.wage.type.period,factor_days:0
 msgid "This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee"
 msgstr "Este campo es usado por el sistema de horarios para calcular el precio de una hora de trabajo basado en el contrato del empleado"
+
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salario"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,9 +22,10 @@ msgid "Average Price"
 msgstr "Preu mig"
 
 #. module: report_purchase
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
+#: field:report.purchase.order.category,state:0
+#: field:report.purchase.order.product,state:0
+msgid "Order State"
+msgstr "Estat de la comanda"
 
 #. module: report_purchase
 #: model:ir.actions.act_window,name:report_purchase.action_order_category_tree_all
@@ -50,10 +51,9 @@ msgid "Purchases by Products"
 msgstr "Compres per productes"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,state:0
-#: field:report.purchase.order.product,state:0
-msgid "Order State"
-msgstr "Estat de la comanda"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0
@@ -62,10 +62,10 @@ msgid "Waiting Schedule"
 msgstr "Esperant data planificada"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,price_total:0
-#: field:report.purchase.order.product,price_total:0
-msgid "Total Price"
-msgstr "Preu total"
+#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
+#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
+msgid "Purchases by Products (this month)"
+msgstr "Compres per productes (aquest mes)"
 
 #. module: report_purchase
 #: model:ir.model,name:report_purchase.model_report_purchase_order_category
@@ -89,10 +89,10 @@ msgid "Invoice Exception"
 msgstr "Excepció de factura"
 
 #. module: report_purchase
-#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
-#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
-msgid "Purchases by Products (this month)"
-msgstr "Compres per productes (aquest mes)"
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr "Preu total"
 
 #. module: report_purchase
 #: field:report.purchase.order.category,quantity:0
@@ -139,6 +139,7 @@ msgid "Manual in progress"
 msgstr "Manual en procés"
 
 #. module: report_purchase
+#: model:ir.actions.act_window,name:report_purchase.action_order_category_tree
 #: model:ir.ui.menu,name:report_purchase.menu_report_order_category
 msgid "Purchases by Category of Product (this month)"
 msgstr "Compres per categoria de producte (aquest mes)"
@@ -162,7 +163,6 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,count:0
 #: field:report.purchase.order.product,count:0
 msgid "# of Lines"
 msgstr "# de línies"

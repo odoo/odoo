@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:09:43+0000\n"
-"PO-Revision-Date: 2009-01-03 02:09:43+0000\n"
+"POT-Creation-Date: 2009-01-19 19:37:44+0000\n"
+"PO-Revision-Date: 2009-01-19 19:37:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,11 +33,6 @@ msgstr ""
 #. module: account_reporting
 #: selection:account.report.bs,font_style:0
 msgid "Helvetica"
-msgstr ""
-
-#. module: account_reporting
-#: model:ir.actions.wizard,name:account_reporting.wizard_balance_report
-msgid "Account balance"
 msgstr ""
 
 #. module: account_reporting
@@ -67,13 +62,18 @@ msgid "Courier-BoldOblique"
 msgstr ""
 
 #. module: account_reporting
+#: wizard_button:account.account.balancesheet.report,init,report:0
+msgid "Print BalanceSheet"
+msgstr ""
+
+#. module: account_reporting
 #: help:account.account.balancesheet.report,init,periods:0
 msgid "All periods if empty"
 msgstr ""
 
 #. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,end:0
-msgid "Cancel"
+#: field:account.report.bs,color_font:0
+msgid "Font Color"
 msgstr ""
 
 #. module: account_reporting
@@ -108,8 +108,8 @@ msgid "Account reporting"
 msgstr ""
 
 #. module: account_reporting
-#: field:account.report.bs,color_font:0
-msgid "Font Color"
+#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
+msgid "Balance Sheet Report Form"
 msgstr ""
 
 #. module: account_reporting
@@ -118,13 +118,8 @@ msgid "Notes"
 msgstr ""
 
 #. module: account_reporting
-#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
-msgid "Balance Sheet Report Form"
-msgstr ""
-
-#. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,report:0
-msgid "Print BalanceSheet"
+#: model:ir.model,name:account_reporting.model_account_report_bs
+msgid "Account reporting for Balance Sheet"
 msgstr ""
 
 #. module: account_reporting
@@ -188,9 +183,14 @@ msgid "Courier-Bold"
 msgstr ""
 
 #. module: account_reporting
-#: field:account.report.bs,account_id:0
 #: view:account.report.bs:0
+#: field:account.report.bs,account_id:0
 msgid "Accounts"
+msgstr ""
+
+#. module: account_reporting
+#: wizard_field:account.account.balancesheet.report,init,periods:0
+msgid "Periods"
 msgstr ""
 
 #. module: account_reporting
@@ -199,8 +199,8 @@ msgid "Back Color"
 msgstr ""
 
 #. module: account_reporting
-#: model:ir.model,name:account_reporting.model_account_report_bs
-msgid "Account reporting for Balance Sheet"
+#: wizard_button:account.account.balancesheet.report,init,end:0
+msgid "Cancel"
 msgstr ""
 
 #. module: account_reporting

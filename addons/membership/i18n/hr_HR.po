@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:03:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:03:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:31:24+0000\n"
+"PO-Revision-Date: 2009-01-19 19:31:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,20 @@ msgid "invoice to associate"
 msgstr ""
 
 #. module: membership
+#: model:process.process,name:membership.process_process_membershipprocess0
+msgid "Membership Process"
+msgstr ""
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
+msgstr ""
+
+#. module: membership
+#: field:report.partner_member.year,currency:0
+#: field:report.partner_member.year_new,currency:0
+msgid "Currency"
 msgstr ""
 
 #. module: membership
@@ -69,6 +80,11 @@ msgstr ""
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
+msgstr ""
+
+#. module: membership
+#: constraint:account.account:0
+msgid "Error ! You can not create recursive accounts."
 msgstr ""
 
 #. module: membership
@@ -217,9 +233,11 @@ msgid "Membership Product - 1"
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year,currency:0
-#: field:report.partner_member.year_new,currency:0
-msgid "Currency"
+#: field:report.partner_member.year,canceled_amount:0
+#: field:report.partner_member.year,canceled_number:0
+#: field:report.partner_member.year_new,canceled_amount:0
+#: field:report.partner_member.year_new,canceled_number:0
+msgid "Canceled"
 msgstr ""
 
 #. module: membership
@@ -233,11 +251,6 @@ msgstr ""
 #: field:report.partner_member.year_new,invoiced_amount:0
 #: field:report.partner_member.year_new,invoiced_number:0
 msgid "Invoiced"
-msgstr ""
-
-#. module: membership
-#: model:process.process,name:membership.process_process_membershipworkflow0
-msgid "Membership workflow"
 msgstr ""
 
 #. module: membership
@@ -277,10 +290,10 @@ msgid "Membership invoice paid."
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year_new,paid_amount:0
-#: field:report.partner_member.year_new,paid_number:0
 #: field:report.partner_member.year,paid_amount:0
 #: field:report.partner_member.year,paid_number:0
+#: field:report.partner_member.year_new,paid_amount:0
+#: field:report.partner_member.year_new,paid_number:0
 msgid "Paid"
 msgstr ""
 
@@ -291,11 +304,11 @@ msgid "Invoiced Member"
 msgstr ""
 
 #. module: membership
-#: field:product.product,membership:0
-#: field:res.partner,member_lines:0
 #: model:ir.ui.menu,name:membership.menu_membership
 #: view:product.product:0
+#: field:product.product,membership:0
 #: view:res.partner:0
+#: field:res.partner,member_lines:0
 msgid "Membership"
 msgstr ""
 
@@ -344,16 +357,15 @@ msgid "Old Member"
 msgstr ""
 
 #. module: membership
-#: field:product.template,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-msgid "Member Price"
+#: field:membership.membership_line,date_to:0
+msgid "To"
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year_new,waiting_amount:0
-#: field:report.partner_member.year_new,waiting_number:0
 #: field:report.partner_member.year,waiting_amount:0
 #: field:report.partner_member.year,waiting_number:0
+#: field:report.partner_member.year_new,waiting_amount:0
+#: field:report.partner_member.year_new,waiting_number:0
 msgid "Waiting"
 msgstr ""
 
@@ -395,11 +407,6 @@ msgid "Information"
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,account_invoice_line:0
-msgid "Account Invoice line"
-msgstr ""
-
-#. module: membership
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
@@ -416,8 +423,9 @@ msgid "Canceled Member"
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,date_to:0
-msgid "To"
+#: model:product.price.type,name:membership.product_price_type_memberprice
+#: field:product.template,member_price:0
+msgid "Member Price"
 msgstr ""
 
 #. module: membership
@@ -428,12 +436,6 @@ msgstr ""
 #. module: membership
 #: field:res.partner,membership_stop:0
 msgid "Stop membership date"
-msgstr ""
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:res.partner,membership_state:0
-msgid "Associated Member"
 msgstr ""
 
 #. module: membership
@@ -470,8 +472,8 @@ msgid "Invoice Membership"
 msgstr ""
 
 #. module: membership
-#: wizard_field:wizard_invoice_membership,init,product:0
 #: model:process.node,name:membership.process_node_membershipproduct0
+#: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
 msgstr ""
 
@@ -481,21 +483,13 @@ msgid "You can not have 2 pricelist version that overlaps!"
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year,canceled_amount:0
-#: field:report.partner_member.year,canceled_number:0
-#: field:report.partner_member.year_new,canceled_amount:0
-#: field:report.partner_member.year_new,canceled_number:0
-msgid "Canceled"
-msgstr ""
-
-#. module: membership
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: membership
-#: field:report.partner_member.year_new,year:0
 #: field:report.partner_member.year,year:0
+#: field:report.partner_member.year_new,year:0
 msgid "Year"
 msgstr ""
 
