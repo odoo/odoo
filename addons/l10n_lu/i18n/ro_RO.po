@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:49+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:49+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:53+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,11 @@ msgid "VAT Legal Declaration"
 msgstr ""
 
 #. module: l10n_lu
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
+msgstr ""
+
+#. module: l10n_lu
 #: wizard_button:l10n_lu.tax.report.wizard,init,pdf:0
 msgid "Print Taxes Statement"
 msgstr ""
@@ -31,8 +36,8 @@ msgid "Company"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_equity
-msgid "Equity"
+#: model:account.account.type,name:l10n_lu.account_type_income
+msgid "Income"
 msgstr ""
 
 #. module: l10n_lu
@@ -57,11 +62,6 @@ msgid "Liability"
 msgstr ""
 
 #. module: l10n_lu
-#: model:ir.ui.menu,name:l10n_lu.legal_lu
-msgid "Luxembourg"
-msgstr ""
-
-#. module: l10n_lu
 #: model:ir.actions.wizard,name:l10n_lu.wizard_print_vat
 #: model:ir.ui.menu,name:l10n_lu.legal_lu_vat
 msgid "VAT Declaration"
@@ -73,13 +73,13 @@ msgid "Period"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_asset
-msgid "Asset"
+#: model:ir.ui.menu,name:l10n_lu.legal_lu
+msgid "Luxembourg"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_income
-msgid "Income"
+#: model:account.account.type,name:l10n_lu.account_type_cash_equity
+msgid "Equity"
 msgstr ""
 
 #. module: l10n_lu

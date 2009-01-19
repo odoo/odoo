@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,analytic_id:0
-msgid "Analytic Account"
-msgstr "Compte analític"
+#: field:account.analytic.default,date_stop:0
+msgid "End Date"
+msgstr "Data final"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,product_id:0
-msgid "Product"
-msgstr "Producte"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: account_analytic_default
 #: constraint:ir.model:0
@@ -36,31 +36,24 @@ msgid "Seq"
 msgstr "Seqüència"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
-msgid "End Date"
-msgstr "Data final"
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-msgid "Analytic Rules"
-msgstr "Regles analítiques"
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Seqüència"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: field:account.analytic.default,company_id:0
+msgid "Company"
+msgstr "Companyia"
 
 #. module: account_analytic_default
+#: field:account.analytic.default,product_id:0
+msgid "Product"
+msgstr "Producte"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_form
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_defaul_form
-#: view:account.analytic.default:0
 msgid "Analytic Defaults"
 msgstr "Anàlisi: Valors per defecte"
 
@@ -73,6 +66,11 @@ msgstr "Distribucions analítiques"
 #: field:account.analytic.default,user_id:0
 msgid "User"
 msgstr "Usuari"
+
+#. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
+msgid "Entries"
+msgstr "Assentaments"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,partner_id:0
@@ -90,7 +88,9 @@ msgid "Conditions"
 msgstr "Condicions"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,company_id:0
-msgid "Company"
-msgstr "Companyia"
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
+msgid "Analytic Rules"
+msgstr "Regles analítiques"
 

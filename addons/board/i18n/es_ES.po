@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgid "board.board"
 msgstr "board.board"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
-msgid "Menu Information"
-msgstr "Información del menú"
+#: field:board.note,user_id:0
+msgid "Author"
+msgstr "Autor"
 
 #. module: board
 #: model:ir.model,name:board.model_board_note
@@ -36,8 +36,8 @@ msgid "board.note"
 msgstr "board.nota"
 
 #. module: board
-#: field:board.note,note:0
 #: view:board.note:0
+#: field:board.note,note:0
 msgid "Note"
 msgstr "Nota"
 
@@ -47,14 +47,15 @@ msgid "Width"
 msgstr "Ancho"
 
 #. module: board
+#: field:board.board.line,name:0
+msgid "Title"
+msgstr "Título"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
 msgstr "Definición tablero"
-
-#. module: board
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Autor"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -63,9 +64,9 @@ msgid "Publish a note"
 msgstr "Publicar una nota"
 
 #. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Título"
+#: wizard_view:board.board.menu.create,init:0
+msgid "Menu Information"
+msgstr "Información del menú"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -78,9 +79,9 @@ msgid "Date"
 msgstr "Fecha"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr "board.nota.tipo"
+#: model:ir.ui.menu,name:board.next_id_50
+msgid "Configuration"
+msgstr "Configuración"
 
 #. module: board
 #: field:board.note.type,name:0
@@ -108,16 +109,16 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: board
-#: field:board.board.line,board_id:0
-#: field:board.board,name:0
-#: view:board.board:0
-msgid "Dashboard"
-msgstr "Tablero"
+#: model:ir.model,name:board.model_board_note_type
+msgid "board.note.type"
+msgstr "board.nota.tipo"
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Acción"
+#: view:board.board:0
+#: field:board.board,name:0
+#: field:board.board.line,board_id:0
+msgid "Dashboard"
+msgstr "Tablero"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -155,19 +156,15 @@ msgid "Right"
 msgstr "Derecha"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Configuración"
-
-#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr "board.board.line"
+#: view:board.board:0
+#: wizard_button:board.board.menu.create,init,create_menu:0
+msgid "Create Menu"
+msgstr "Crear menú"
 
 #. module: board
 #: model:ir.ui.menu,name:board.dashboard_menu
@@ -195,10 +192,9 @@ msgid "Dashboard View"
 msgstr "Vista tablero"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,create_menu:0
-#: view:board.board:0
-msgid "Create Menu"
-msgstr "Crear menú"
+#: model:ir.model,name:board.model_board_board_line
+msgid "board.board.line"
+msgstr "board.board.line"
 
 #. module: board
 #: field:board.note,name:0

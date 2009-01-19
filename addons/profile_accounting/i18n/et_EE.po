@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,9 @@ msgid "Install more modules. A few modules are proposed according to the Account
 msgstr ""
 
 #. module: profile_accounting
-#: help:profile.accounting.config.install_modules_wizard,account_budget:0
-msgid "Helps you to manage financial and analytic budgets."
-msgstr ""
-
-#. module: profile_accounting
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: profile_accounting
 #: constraint:ir.model:0
@@ -38,80 +33,85 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,account_payment:0
 msgid "Suppliers Payment Management"
-msgstr ""
-
-#. module: profile_accounting
-#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
-msgid "profile.accounting.config.install_modules_wizard"
-msgstr ""
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Services Management"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
-msgid "Analytic Accounting"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,account_analytic_plans:0
-msgid "Multiple Analytic Plans"
-msgstr ""
-
-#. module: profile_accounting
-#: help:profile.accounting.config.install_modules_wizard,board_document:0
-msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
-msgstr ""
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Cancel"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
-msgid "Invoice on Analytic Entries"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,board_document:0
-msgid "Document Management"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,account_budget:0
-msgid "Budgets"
-msgstr ""
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Install"
-msgstr ""
+msgstr "Tarnijate maksehaldus"
 
 #. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,account_asset:0
 msgid "Asset Management"
+msgstr "Varahaldus"
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Services Management"
+msgstr "Teenuste haldus"
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
+msgid "Analytic Accounting"
+msgstr "Analüütiline raamatupidamine"
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_plans:0
+msgid "Multiple Analytic Plans"
+msgstr "Mitmekordsed analüütilised plaanid"
+
+#. module: profile_accounting
+#: help:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
+msgstr "Open ERP dokumendihaldussüsteem võimaldab sul säilitada, sirvida, automaatselt indekseerida, otsida ja eelvaadata kõiki dokumendiliike (sisemised dokumendid, prinditud aruandeid, kalendrisüsteemi). See avab kasutajatele FTP ligipääsu, et lihtsalt sirvida ühingu dokumente."
+
+#. module: profile_accounting
+#: model:ir.actions.act_window,name:profile_accounting.action_config_install_module
+msgid "Accounting Profile : Install Extra Modules"
 msgstr ""
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
 msgid "Resources Management"
-msgstr ""
+msgstr "Vahendite haldus"
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
+msgid "Invoice on Analytic Entries"
+msgstr "Arve analüütiliste kirjete põhjal"
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "Document Management"
+msgstr "Dokumendihaldus"
+
+#. module: profile_accounting
+#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
+msgid "profile.accounting.config.install_modules_wizard"
+msgstr "profile.accounting.config.install_modules_wizard"
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Budgets"
+msgstr "Eelarved"
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Install"
+msgstr "Paigalda"
+
+#. module: profile_accounting
+#: help:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Helps you to manage financial and analytic budgets."
+msgstr "Aitab sul hallata finants ja analüütilisi eelarveid"
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Cancel"
+msgstr "Loobu"
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
 msgid "Install Extra Module"
-msgstr ""
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Accounting Management"
-msgstr ""
+msgstr "Paigalda lisamoodul"
 

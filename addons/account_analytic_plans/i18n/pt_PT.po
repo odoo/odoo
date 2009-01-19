@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Identificação da conta4"
 #. module: account_analytic_plans
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -38,9 +38,9 @@ msgid "Account5 Id"
 msgstr "Identificação da conta5"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-msgid "Analytic Plan Instance"
-msgstr "Instância do plano analítico"
+#: wizard_field:wizard.crossovered.analytic,init,date2:0
+msgid "End Date"
+msgstr "Data de Finalização"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -48,9 +48,13 @@ msgid "Rate (%)"
 msgstr "Taxa (%)"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
-msgstr "Linha de distribuição analítica"
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
+msgstr "Plano analítico"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -63,14 +67,14 @@ msgid "Analytic Distribution Lines"
 msgstr "Linhas de distribuição analítica"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Imprimir"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Código de distribuição"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr "Data de impressão:"
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
+msgstr "Identificação do plano"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -83,13 +87,9 @@ msgid "Account Name"
 msgstr "Nome da Conta"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
-#: field:account.analytic.plan.line,plan_id:0
-#: field:account.analytic.plan,name:0
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
-#: view:account.analytic.plan:0
-msgid "Analytic Plan"
-msgstr "Plano analítico"
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
+msgstr "Linha de distribuição analítica"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -117,19 +117,15 @@ msgid "Select Information"
 msgstr "Selecçione informações"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Conta da Contabilidade Analítica"
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Identificação da conta3"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Código de distribuição"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "%"
-msgstr "%"
+#: field:account.analytic.plan.instance,journal_id:0
+#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
+msgid "Analytic Journal"
+msgstr "Diário analítico"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -143,10 +139,10 @@ msgstr "Referencia da conta de contabilidade analítica"
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
 #: field:account.analytic.plan.instance,name:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
-#: view:account.analytic.plan.instance:0
 msgid "Analytic Distribution"
 msgstr "Distribuição analítica"
 
@@ -176,10 +172,10 @@ msgid "to"
 msgstr "para"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
-#: view:account.analytic.plan:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Plano analítico"
 
@@ -199,9 +195,9 @@ msgid "Distribution Model Saved"
 msgstr "Modelo de distibuição guardado"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
-msgid "End Date"
-msgstr "Data de Finalização"
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr "Instância do plano analítico"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -209,8 +205,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
 msgstr "Plano de linhas analíticas"
 
@@ -245,12 +246,6 @@ msgid "Account6 Id"
 msgstr "Identificação da conta5"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
-#: field:account.analytic.plan.instance,journal_id:0
-msgid "Analytic Journal"
-msgstr "Diário analítico"
-
-#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Quantidade"
@@ -276,9 +271,9 @@ msgid "Root Account"
 msgstr "Conta raiz"
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "This distribution model has been saved. You will be able to reuse it later."
-msgstr "Este modelo foi gravado. Poderás reutiliza-lo mais tarde."
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "Imprimir"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -291,19 +286,24 @@ msgid "Period from"
 msgstr "Periodo a partir de"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Identificação da conta3"
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Conta da Contabilidade Analítica"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,plan_id:0
-msgid "Plan Id"
-msgstr "Identificação do plano"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date:"
+msgstr "Data de impressão:"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
 msgstr "Modelos de distribuições analítica"
+
+#. module: account_analytic_plans
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "Este modelo foi gravado. Poderás reutiliza-lo mais tarde."
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0

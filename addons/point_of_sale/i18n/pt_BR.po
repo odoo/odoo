@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:10:25+0000\n"
-"PO-Revision-Date: 2009-01-03 02:10:25+0000\n"
+"POT-Creation-Date: 2009-01-19 19:38:27+0000\n"
+"PO-Revision-Date: 2009-01-19 19:38:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,21 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Total paid"
-msgstr ""
+msgstr "Total pago"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Qty of product"
-msgstr ""
+#: view:pos.order:0
+msgid "Pickings"
+msgstr "Transações"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "Ajustar para Esboçar"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -40,7 +39,7 @@ msgstr ""
 #. module: point_of_sale
 #: wizard_view:pos.discount,init:0
 msgid "Discount :"
-msgstr ""
+msgstr "Desconto:"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_nb:0
@@ -51,82 +50,82 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,name:0
 msgid "Order Description"
-msgstr ""
+msgstr "Número da Parte"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
 msgid "Scan Product"
-msgstr ""
+msgstr "Pesquisar Produto"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #. module: point_of_sale
 #: wizard_view:pos.add_product,init:0
 msgid "Add product :"
-msgstr ""
+msgstr "Adicionar produto"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree2
 msgid "Orders of the day"
-msgstr ""
+msgstr "Ordens do dia"
+
+#. module: point_of_sale
+#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
+msgid "Sales (summary)"
+msgstr "Vendas(Resumo)"
 
 #. module: point_of_sale
 #: wizard_view:pos.sale.get,init:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Selecione uma Ordem de Venda Aberta"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Invoice Date"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ","
-msgstr ""
+msgstr "Data da Fatura"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
 msgid "Details of Sales"
-msgstr ""
+msgstr "Detalhes das Vendas"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: point_of_sale
 #: wizard_view:pos.scan_product,init:0
 msgid "Scan product"
-msgstr ""
+msgstr "Pesquisar Produtos"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Partner Ref."
-msgstr ""
+msgstr "Código parceiro"
 
 #. module: point_of_sale
-#: wizard_view:pos.payment,ask_pay:0
-msgid "Add payment :"
-msgstr ""
+#: field:pos.order.line,name:0
+msgid "Line Description"
+msgstr "Descrição da Linha"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Loja"
 
 #. module: point_of_sale
 #: wizard_button:pos.refund_order,init,refund_n_quit:0
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: point_of_sale
 #: wizard_view:pos.scan_product,init:0
@@ -136,277 +135,285 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,last_out_picking:0
 msgid "Last output picking"
-msgstr ""
+msgstr "Última transação de Saída"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Pickings"
-msgstr ""
-
-#. module: point_of_sale
-#: field:pos.order,note:0
-#: view:pos.order:0
-msgid "Notes"
-msgstr ""
-
-#. module: point_of_sale
-#: wizard_field:pos.sale.get,init,picking_id:0
-msgid "Sale Order"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Qty of product"
+msgstr "Qtd de Produtos"
+
+#. module: point_of_sale
+#: view:pos.order:0
+#: field:pos.order,note:0
+msgid "Notes"
+msgstr "Notas"
+
+#. module: point_of_sale
+#: field:stock.picking,pos_order:0
+msgid "Pos order"
+msgstr "Ordem de Venda"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Detail of Sales"
-msgstr ""
+msgstr "Detalhes das Vendas"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
-msgstr ""
+msgstr "Impostos"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of transaction"
-msgstr ""
+msgstr "Número da Transação"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 msgid "Sale line"
-msgstr ""
+msgstr "Linha de Venda"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Mode of Taxes"
-msgstr ""
+#: rml:pos.invoice:0
+#: field:pos.payment,amount:0
+#: wizard_field:pos.payment,ask_pay,amount:0
+#: field:report.transaction.pos,amount:0
+msgid "Amount"
+msgstr "Quantidade"
 
 #. module: point_of_sale
-#: rml:pos.details:0
 #: field:pos.config.journal,code:0
+#: rml:pos.details:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: point_of_sale
-#: wizard_field:pos.refund_order,init,date_validity:0
 #: field:pos.order,date_validity:0
+#: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
-msgstr ""
+msgstr "Data de Validade"
 
 #. module: point_of_sale
-#: wizard_field:pos.config.journal,init,default_journal_gift:0
-msgid "Default gift journal"
-msgstr ""
+#: rml:pos.receipt:0
+msgid "Operation N° :"
+msgstr "Operação N° :"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 msgid "VAT"
-msgstr ""
+msgstr "Imposto"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_refund
 msgid "Refund Orders"
-msgstr ""
+msgstr "Ordens de Reembolso"
 
 #. module: point_of_sale
 #: wizard_view:pos.config.journal,init:0
 msgid "Select default journals"
-msgstr ""
+msgstr "Selecione o registro default"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+msgid "VAT(%)"
+msgstr "Imposto(%)"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Tax"
-msgstr ""
+msgstr "Imposto"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
-msgstr ""
+msgstr "Total da Transação"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 msgid "Disc"
-msgstr ""
+msgstr "Disco"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Journal:"
-msgstr ""
+msgstr "Registro"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: point_of_sale
 #: field:pos.order,partner_id:0
 msgid "Partner"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Payments"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: point_of_sale
 #: field:pos.order,payments:0
 msgid "Order Payments"
-msgstr ""
+msgstr "Ordens de Pagamentos"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Tel :"
-msgstr ""
+msgid "Date :"
+msgstr "Data :"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Total of the day"
-msgstr ""
+#: rml:pos.receipt:0
+msgid "Disc :"
+msgstr "Desconto :"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
 #: wizard_button:pos.sale.get,init,set:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr ""
+msgstr "Ordens de Vendas"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: rml:pos.lines:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "Desconto (%)"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Sales total"
-msgstr ""
+msgstr "Total de Vendas"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Fatura do Fornecedor"
 
 #. module: point_of_sale
-#: field:pos.order,state:0
-msgid "State"
-msgstr ""
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Modify line failed !"
+msgstr "Falha na modificação da Linha!"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Sum of subtotals"
-msgstr ""
+msgstr "Soma dos Subtotais"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_date:0
 #: field:pos.payment,payment_date:0
 msgid "Payment date"
-msgstr ""
+msgstr "Data de Pagamento"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 #: field:pos.payment,payment_name:0
 msgid "Payment name"
-msgstr ""
+msgstr "Nome da Forma de Pagamento"
 
 #. module: point_of_sale
-#: selection:pos.payment,ask_pay,journal:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.config.journal,init,default_journal_gift:0
 #: selection:pos.config.journal,init,default_journal:0
+#: selection:pos.config.journal,init,default_journal_gift:0
+#: selection:pos.config.journal,init,default_journal_rebate:0
+#: selection:pos.payment,ask_pay,journal:0
 msgid "x Bank Journal"
 msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
+msgstr "Linhas da Ordem"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Disc.(%)"
 msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total Sold"
-msgstr ""
+msgstr "Total Vendido"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "User :"
-msgstr ""
+msgstr "Usuário :"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 #: rml:pos.lines:0
 msgid "Print Date:"
-msgstr ""
+msgstr "Data da Impressão:"
 
 #. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order lines"
+#: rml:pos.invoice:0
+msgid "PRO-FORMA"
 msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 msgid "Reporting"
-msgstr ""
+msgstr "Relatórios"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "POS "
-msgstr ""
+msgstr "Venda "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Point of Sale journal configuration."
-msgstr ""
+msgstr "Configuração do registro do Ponto de Venda."
 
 #. module: point_of_sale
 #: field:pos.order,invoice_wanted:0
 msgid "Create invoice"
-msgstr ""
+msgstr "Criar Fatura"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Create line failed !"
-msgstr ""
+msgstr "Falha na criação da linha !"
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal:0
 msgid "Default journal"
-msgstr ""
+msgstr "Registro Padrão"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Product Name"
-msgstr ""
+msgstr "Nome do Produto"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Ação Inválida !"
 
 #. module: point_of_sale
 #: field:pos.order,account_receivable:0
 msgid "Default Receivable"
-msgstr ""
+msgstr "Recebimento Padrão"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_sale_get
 msgid "Get From Order"
-msgstr ""
+msgstr "Ir para Ordem"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config
@@ -421,48 +428,42 @@ msgstr "Invalido XML para Arquitetura da View"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
 msgid "POS Lines of the day"
-msgstr ""
+msgstr "Linhas de Vendas por dia"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_default_journal
 msgid "Default journals"
-msgstr ""
-
-#. module: point_of_sale
-#: field:pos.order.line,order_id:0
-#: field:pos.payment,order_id:0
-msgid "Order Ref"
-msgstr ""
+msgstr "Registro Padrão"
 
 #. module: point_of_sale
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Desconto (%)"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
 msgid "Add products"
-msgstr ""
+msgstr "Adicionar produtos"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
-msgstr ""
+msgstr "Total de Qtd"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
 msgid "POS Lines"
-msgstr ""
+msgstr "Linhas de Vendas"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Sales Order POS"
-msgstr ""
+msgstr "Ordem de Vendas"
 
 #. module: point_of_sale
 #: wizard_button:pos.config.journal,init,set_default_journal:0
 msgid "Define default journals"
-msgstr ""
+msgstr "Defina registro default"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
@@ -472,33 +473,33 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "Point of Sale"
-msgstr ""
+msgstr "Ponto de Venda"
 
 #. module: point_of_sale
 #: field:pos.order,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 #: selection:pos.order,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturado"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Date :"
-msgstr ""
+msgid "Tel :"
+msgstr "Tel :"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total No. of Articles"
-msgstr ""
+msgstr "Número total dos Artigos"
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal_rebate:0
 msgid "Default rebate journal"
-msgstr ""
+msgstr "Registro de desconto default"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.wizard_default_journal
@@ -506,9 +507,9 @@ msgid "Wizard default journals"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Disc :"
-msgstr ""
+#: view:pos.order:0
+msgid "Ma_ke Payment"
+msgstr "Efetuar Pagamento"
 
 #. module: point_of_sale
 #: wizard_field:pos.scan_product,init,gencod:0
@@ -518,122 +519,133 @@ msgstr ""
 #. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Esboço"
 
 #. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order line"
-msgstr ""
+#: selection:pos.order,state:0
+msgid "Paid"
+msgstr "Pago"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total Taxes"
-msgstr ""
+msgstr "Total de Impostos"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "Imposto:"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "PRO-FORMA"
-msgstr ""
+#: view:pos.order.line:0
+msgid "POS Order lines"
+msgstr "Linhas da Ordem de Venda"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "E-mail :"
-msgstr ""
+msgstr "E-mail :"
 
 #. module: point_of_sale
-#: selection:pos.payment,ask_pay,journal:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.config.journal,init,default_journal_gift:0
 #: selection:pos.config.journal,init,default_journal:0
+#: selection:pos.config.journal,init,default_journal_gift:0
+#: selection:pos.config.journal,init,default_journal_rebate:0
+#: selection:pos.payment,ask_pay,journal:0
 msgid "x Checks Journal"
-msgstr ""
+msgstr "x Checar Registro"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Total invoiced"
-msgstr ""
+msgstr "Total Faturado"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_today
 msgid "Sales of the day"
-msgstr ""
+msgstr "Vendas do Dia"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0
 #: field:pos.order,amount_return:0
 msgid "unknown"
-msgstr ""
+msgstr "Desconhecido"
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
-msgid "Paid"
-msgstr ""
+#: view:pos.order.line:0
+msgid "POS Order line"
+msgstr "Linha de Ordem de Venda"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "."
-msgstr ""
+msgstr "."
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_discount
 msgid "Discount"
-msgstr ""
+msgstr "Desconto"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 #: rml:pos.lines:0
 #: field:report.transaction.pos,date_create:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by user"
-msgstr ""
+msgstr "Vendas do Usuário"
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
-msgstr ""
+#: wizard_button:pos.add_product,init,add:0
+#: view:pos.order:0
+msgid "_Add product"
+msgstr "_Incluir produto"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
+#: rml:pos.receipt:0
+msgid ":"
+msgstr ":"
+
+#. module: point_of_sale
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Period:"
-msgstr ""
+msgstr "Período:"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree
 msgid "All the sales"
-msgstr ""
+msgstr "Todas as Vendas"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Compute"
-msgstr ""
+msgstr "Computar"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
+
+#. module: point_of_sale
+#: field:pos.order.line,create_date:0
+msgid "Creation date"
+msgstr "Data de criação"
 
 #. module: point_of_sale
 #: field:pos.order,pickings:0
@@ -641,159 +653,145 @@ msgid "Picking"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order.line,create_date:0
-msgid "Creation date"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Total discount"
-msgstr ""
-
-#. module: point_of_sale
-#: field:pos.order,pricelist_id:0
-msgid "Pricelist"
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Create _Invoice"
-msgstr ""
+msgstr "Criar Fatura"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: wizard_field:pos.add_product,init,quantity:0
+#: rml:pos.invoice:0
 #: field:pos.order.line,qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Refund"
-msgstr ""
+msgstr "Reembolso"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Mode of payment"
-msgstr ""
+msgstr "Modo de pagamento"
 
 #. module: point_of_sale
 #: wizard_button:pos.payment,ask_pay,add_pay:0
 msgid "Ma_ke payment"
-msgstr ""
+msgstr "Criar Forma de Pagamento"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ":"
-msgstr ""
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
+msgstr "Aplicar Desconto"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total Paid"
-msgstr ""
+msgstr "Total Pago"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-msgid "VAT(%)"
-msgstr ""
+#: field:pos.order,pricelist_id:0
+msgid "Pricelist"
+msgstr "Lista de preço"
 
 #. module: point_of_sale
 #: wizard_field:pos.discount,init,discount:0
 msgid "Discount percentage"
-msgstr ""
+msgstr "Percentual de Desconto"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_receipt
 msgid "Receipt"
-msgstr ""
+msgstr "Recibo"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Modify line failed !"
-msgstr ""
+#: field:pos.order,state:0
+msgid "State"
+msgstr "Estado"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
 msgid "Refund order :"
-msgstr ""
+msgstr "Ordem de Restituição:"
 
 #. module: point_of_sale
 #: rml:pos.details:0
 #: rml:pos.receipt:0
 msgid "Qty"
-msgstr ""
+msgstr "Qtd"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Total líquido:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Cannot delete a point of sale which is already confirmed !"
-msgstr ""
+msgstr "Não posso deletar de um ponto de venda que já foi confirmado!"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Other"
-msgstr ""
+#: rml:pos.invoice:0
+#: rml:pos.lines:0
+#: field:pos.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preço unitário"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
-#: wizard_field:pos.payment,ask_pay,invoice_wanted:0
+#: rml:pos.invoice:0
 #: field:pos.order,invoice_id:0
+#: wizard_field:pos.payment,ask_pay,invoice_wanted:0
 #: field:report.transaction.pos,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: point_of_sale
 #: wizard_button:pos.add_product,init,end:0
+#: wizard_button:pos.config.journal,init,end:0
 #: wizard_button:pos.discount,init,end:0
+#: view:pos.order:0
+#: selection:pos.order,state:0
 #: wizard_button:pos.payment,ask_pay,end:0
 #: wizard_button:pos.refund_order,init,end:0
 #: wizard_button:pos.sale.get,init,end:0
 #: wizard_button:pos.scan_product,init,end:0
-#: wizard_button:pos.config.journal,init,end:0
-#: selection:pos.order,state:0
-#: view:pos.order:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Order lines"
-msgstr ""
+msgstr "Ordem de Linhas"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
-msgid "Sales (summary)"
-msgstr ""
+#: field:pos.order.line,order_id:0
+#: field:pos.payment,order_id:0
+msgid "Order Ref"
+msgstr "Referência da Ordem"
 
 #. module: point_of_sale
-#: field:pos.order.line,name:0
-msgid "Line Description"
-msgstr ""
+#: wizard_view:pos.payment,ask_pay:0
+msgid "Add payment :"
+msgstr "Adicionar Pagamento:"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
@@ -801,130 +799,134 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Ma_ke Payment"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total of the day"
+msgstr "Total do Dia"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Pos Payment"
-msgstr ""
+msgstr "Pagamento da Venda"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
-#: field:pos.order.line,price_unit:0
-msgid "Unit Price"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total discount"
+msgstr "Total de Desconto"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Other"
+msgstr "Outro"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
 msgid "Refund "
-msgstr ""
+msgstr "Reembolso "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr ""
+msgstr "Linhas do Ponto de Venda"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Taxas:"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: view:report.transaction.pos:0
 msgid "Amount total"
-msgstr ""
+msgstr "Quantidade Total"
 
 #. module: point_of_sale
-#: rml:pos.details:0
 #: wizard_field:pos.add_product,init,product:0
+#: rml:pos.details:0
 #: field:pos.order.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.receipt:0
-#: field:pos.config.journal,name:0
-#: field:pos.payment,name:0
-msgid "Description"
-msgstr ""
+#: view:pos.order:0
+msgid "Invoicing"
+msgstr "Faturamento"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
 msgid "Number of print"
-msgstr ""
+msgstr "Número de impressão"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.details:0
-#: rml:pos.receipt:0
-msgid "Price"
-msgstr ""
+#: field:pos.config.journal,journal_id:0
+#: field:pos.order,sale_journal:0
+#: wizard_field:pos.payment,ask_pay,journal:0
+#: field:pos.payment,journal_id:0
+#: field:report.transaction.pos,journal_id:0
+msgid "Journal"
+msgstr "Registro"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Canceled Invoice"
-msgstr ""
+msgstr "Fatura Cancelada"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "POS"
-msgstr ""
+msgstr "Ponto de Venda"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Pos Lines"
-msgstr ""
+msgstr "Linhas de Vendas"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
+#: wizard_field:pos.config.journal,init,default_journal_gift:0
+msgid "Default gift journal"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_payment
 #: view:pos.order:0
 msgid "Payment"
-msgstr ""
+msgstr "Pagamento"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree3
 msgid "All orders"
-msgstr ""
+msgstr "Todas as Ordens"
 
 #. module: point_of_sale
-#: field:stock.picking,pos_order:0
-msgid "Pos order"
-msgstr ""
+#: wizard_field:pos.sale.get,init,picking_id:0
+msgid "Sale Order"
+msgstr "Ordem de Venda"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_month
 msgid "Sales of the month"
-msgstr ""
+msgstr "Vendas por Mês"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "D_iscount"
-msgstr ""
+msgstr "Desconto"
 
 #. module: point_of_sale
 #: field:pos.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Data Requisitada"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
@@ -932,69 +934,67 @@ msgid "Ce bon est valide jusqu'au"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_button:pos.add_product,init,add:0
 #: view:pos.order:0
-msgid "_Add product"
-msgstr ""
+msgid "Payments"
+msgstr "Pagamentos"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumo"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Invoicing"
-msgstr ""
+#: field:pos.config.journal,name:0
+#: rml:pos.invoice:0
+#: field:pos.payment,name:0
+#: rml:pos.receipt:0
+msgid "Description"
+msgstr "Descrição"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Account Entry"
-msgstr ""
+msgstr "Escrituração"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_id:0
 #: field:pos.payment,payment_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Condição do Pagamento"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: wizard_field:pos.payment,ask_pay,amount:0
-#: field:pos.payment,amount:0
-#: field:report.transaction.pos,amount:0
-msgid "Amount"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Mode of Taxes"
+msgstr "Modo de Tributação"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Actions"
-msgstr ""
+msgstr "Ações"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 #: rml:pos.lines:0
 msgid "Company:"
-msgstr ""
+msgstr "Empresa:"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Reembolso a fornecedor"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: point_of_sale
-#: wizard_field:pos.payment,ask_pay,journal:0
-#: field:pos.config.journal,journal_id:0
-#: field:pos.order,sale_journal:0
-#: field:pos.payment,journal_id:0
-#: field:report.transaction.pos,journal_id:0
-msgid "Journal"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.invoice:0
+#: rml:pos.receipt:0
+msgid "Price"
+msgstr "Preço"
 

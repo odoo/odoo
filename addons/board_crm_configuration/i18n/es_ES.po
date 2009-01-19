@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,31 +16,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: board_crm_configuration
+#: view:board.board:0
+#: model:ir.ui.menu,name:board_crm_configuration.menu_board_statistics_dash
+msgid "Statistics Dashboard"
+msgstr "Tablero de estadísticas"
+
+#. module: board_crm_configuration
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: board_crm_configuration
-#: view:report.crm.case.categ:0
-msgid "Cases by Sections and Categories"
-msgstr "Casos por secciones y categorías"
-
-#. module: board_crm_configuration
-#: model:ir.actions.act_window,name:board_crm_configuration.act_oppor_categ
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_crm_configuration.act_oppor_categ
 msgid "Opportunities By Categories"
 msgstr "Oportunidades por categorías"
 
 #. module: board_crm_configuration
-#: model:ir.actions.act_window,name:board_crm_configuration.act_my_cases
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_crm_configuration.act_my_cases
 msgid "My Cases"
 msgstr "Mis casos"
-
-#. module: board_crm_configuration
-#: view:board.board:0
-msgid "My Sales Pipeline"
-msgstr "Mi flujo de ventas"
 
 #. module: board_crm_configuration
 #: model:ir.actions.act_window,name:board_crm_configuration.open_board_crm
@@ -48,21 +44,22 @@ msgid "CRM Dashboard"
 msgstr "Tablero CRM"
 
 #. module: board_crm_configuration
-#: model:ir.ui.menu,name:board_crm_configuration.menu_board_crm
 #: view:board.board:0
+#: model:ir.ui.menu,name:board_crm_configuration.menu_board_crm
 msgid "Connecting Dashboard"
 msgstr "Conectando tablero"
 
 #. module: board_crm_configuration
-#: model:ir.actions.act_window,name:board_crm_configuration.act_leads_month_user
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_crm_configuration.act_leads_month_user
 msgid "Leads Of The Month By User"
 msgstr "Iniciativas del mes por usuario"
 
 #. module: board_crm_configuration
-#: view:report.crm.case.user:0
-msgid "Cases by User and Section"
-msgstr "Casos por usuario y sección"
+#: view:board.board:0
+#: view:report.crm.case.section.stage:0
+msgid "Leads By Stage"
+msgstr "Iniciativas por etapas"
 
 #. module: board_crm_configuration
 #: view:board.board:0
@@ -76,8 +73,19 @@ msgstr "Configuración CRM"
 
 #. module: board_crm_configuration
 #: view:board.board:0
+#: model:ir.actions.act_window,name:board_crm_configuration.act_jobs_categ
 msgid "Jobs Requests Of The Month by Applied Job"
 msgstr "Peticiones de trabajo del mes por ofertas de trabajo"
+
+#. module: board_crm_configuration
+#: view:board.board:0
+msgid "My Sales Pipeline"
+msgstr "Mi flujo de ventas"
+
+#. module: board_crm_configuration
+#: view:report.crm.case.user:0
+msgid "Cases by User and Section"
+msgstr "Casos por usuario y sección"
 
 #. module: board_crm_configuration
 #: view:board.board:0
@@ -85,24 +93,12 @@ msgid "My Leads By Stage"
 msgstr "Mis iniciativas por etapas"
 
 #. module: board_crm_configuration
-#: view:board.board:0
-#: view:report.crm.case.section.stage:0
-msgid "Leads By Stage"
-msgstr "Iniciativas por etapas"
-
-#. module: board_crm_configuration
-#: model:ir.ui.menu,name:board_crm_configuration.menu_board_statistics_dash
-#: view:board.board:0
-msgid "Statistics Dashboard"
-msgstr "Tablero de estadísticas"
+#: view:report.crm.case.categ:0
+msgid "Cases by Sections and Categories"
+msgstr "Casos por secciones y categorías"
 
 #. module: board_crm_configuration
 #: view:board.board:0
 msgid "My Leads"
 msgstr "Mis iniciativas"
-
-#. module: board_crm_configuration
-#: model:ir.actions.act_window,name:board_crm_configuration.open_board_statistical_dash
-msgid "CRM - Statistics Dashboard"
-msgstr "CRM - Tablero de estadísticas"
 

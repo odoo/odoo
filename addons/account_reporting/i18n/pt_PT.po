@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "código"
 #. module: account_reporting
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: account_reporting
 #: selection:account.report.bs,font_style:0
@@ -34,11 +34,6 @@ msgstr "Helvetica-Bold"
 #: selection:account.report.bs,font_style:0
 msgid "Helvetica"
 msgstr "Helvetica"
-
-#. module: account_reporting
-#: model:ir.actions.wizard,name:account_reporting.wizard_balance_report
-msgid "Account balance"
-msgstr "Saldo de conta"
 
 #. module: account_reporting
 #: field:account.report.bs,note:0
@@ -67,14 +62,19 @@ msgid "Courier-BoldOblique"
 msgstr "Courier-BoldOblique"
 
 #. module: account_reporting
-#: help:account.account.balancesheet.report,init,periods:0
-msgid "All periods if empty"
-msgstr ""
+#: wizard_button:account.account.balancesheet.report,init,report:0
+msgid "Print BalanceSheet"
+msgstr "Imprimir balancete"
 
 #. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,end:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: help:account.account.balancesheet.report,init,periods:0
+msgid "All periods if empty"
+msgstr "Todos os períodos se vazio"
+
+#. module: account_reporting
+#: field:account.report.bs,color_font:0
+msgid "Font Color"
+msgstr "Cor da letra fonte"
 
 #. module: account_reporting
 #: selection:account.report.bs,report_type:0
@@ -108,9 +108,9 @@ msgid "Account reporting"
 msgstr "Relatório de Contabilidade"
 
 #. module: account_reporting
-#: field:account.report.bs,color_font:0
-msgid "Font Color"
-msgstr "Cor da letra fonte"
+#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
+msgid "Balance Sheet Report Form"
+msgstr "Formulário de relatório do balanço"
 
 #. module: account_reporting
 #: view:account.report.bs:0
@@ -118,14 +118,9 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: account_reporting
-#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
-msgid "Balance Sheet Report Form"
-msgstr ""
-
-#. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,report:0
-msgid "Print BalanceSheet"
-msgstr "Imprimir balancete"
+#: model:ir.model,name:account_reporting.model_account_report_bs
+msgid "Account reporting for Balance Sheet"
+msgstr "Relatório de conta para balancete"
 
 #. module: account_reporting
 #: field:account.report.bs,code:0
@@ -188,10 +183,15 @@ msgid "Courier-Bold"
 msgstr "Courier-Negrito"
 
 #. module: account_reporting
-#: field:account.report.bs,account_id:0
 #: view:account.report.bs:0
+#: field:account.report.bs,account_id:0
 msgid "Accounts"
 msgstr "Contas"
+
+#. module: account_reporting
+#: wizard_field:account.account.balancesheet.report,init,periods:0
+msgid "Periods"
+msgstr ""
 
 #. module: account_reporting
 #: field:account.report.bs,color_back:0
@@ -199,9 +199,9 @@ msgid "Back Color"
 msgstr "Cor de fundo"
 
 #. module: account_reporting
-#: model:ir.model,name:account_reporting.model_account_report_bs
-msgid "Account reporting for Balance Sheet"
-msgstr "Relatório de conta para balancete"
+#: wizard_button:account.account.balancesheet.report,init,end:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: account_reporting
 #: selection:account.report.bs,font_style:0

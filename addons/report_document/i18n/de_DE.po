@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:06:57+0000\n"
-"PO-Revision-Date: 2009-01-03 02:06:57+0000\n"
+"POT-Creation-Date: 2009-01-19 19:34:52+0000\n"
+"PO-Revision-Date: 2009-01-19 19:34:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: report_document
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: report_document
 #: model:ir.actions.act_window,name:report_document.action_view_wall
@@ -126,7 +126,7 @@ msgstr ""
 #. module: report_document
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: report_document
 #: model:ir.ui.menu,name:report_document.menu_action_view_my_document_report_all_userfile
@@ -135,17 +135,22 @@ msgid "All Users files"
 msgstr ""
 
 #. module: report_document
+#: model:ir.actions.act_window,name:report_document.action_view_my_document_tree
+msgid "My files (This months)"
+msgstr ""
+
+#. module: report_document
 #: model:ir.model,name:report_document.model_report_document_user
 msgid "Files details by Users"
 msgstr ""
 
 #. module: report_document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
+#: field:report.document.user,user_id:0
+#: field:report.document.wall,user_id:0
+msgid "Owner"
 msgstr ""
 
 #. module: report_document
-#: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
 #: field:report.files.partner,nbr:0
 msgid "# of Files"
@@ -213,14 +218,13 @@ msgid "Files by Resource Type"
 msgstr ""
 
 #. module: report_document
-#: model:ir.actions.act_window,name:report_document.action_view_my_document_tree
-msgid "My files (This months)"
+#: model:ir.actions.act_window,name:report_document.action_view_all_document_tree
+msgid "All Users files (This month)"
 msgstr ""
 
 #. module: report_document
-#: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
-msgid "Owner"
+#: field:report.document.wall,last:0
+msgid "Last Posted Time"
 msgstr ""
 
 #. module: report_document

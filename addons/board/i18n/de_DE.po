@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:06:57+0000\n"
-"PO-Revision-Date: 2009-01-03 02:06:57+0000\n"
+"POT-Creation-Date: 2009-01-19 19:34:52+0000\n"
+"PO-Revision-Date: 2009-01-19 19:34:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: board
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -26,8 +26,8 @@ msgid "board.board"
 msgstr ""
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
-msgid "Menu Information"
+#: field:board.note,user_id:0
+msgid "Author"
 msgstr ""
 
 #. module: board
@@ -36,8 +36,8 @@ msgid "board.note"
 msgstr ""
 
 #. module: board
-#: field:board.note,note:0
 #: view:board.note:0
+#: field:board.note,note:0
 msgid "Note"
 msgstr ""
 
@@ -47,13 +47,14 @@ msgid "Width"
 msgstr ""
 
 #. module: board
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
+#: field:board.board.line,name:0
+msgid "Title"
 msgstr ""
 
 #. module: board
-#: field:board.note,user_id:0
-msgid "Author"
+#: model:ir.actions.act_window,name:board.action_view_board_list_form
+#: model:ir.ui.menu,name:board.menu_view_board_form
+msgid "Dashboard Definition"
 msgstr ""
 
 #. module: board
@@ -63,8 +64,8 @@ msgid "Publish a note"
 msgstr ""
 
 #. module: board
-#: field:board.board.line,name:0
-msgid "Title"
+#: wizard_view:board.board.menu.create,init:0
+msgid "Menu Information"
 msgstr ""
 
 #. module: board
@@ -78,9 +79,9 @@ msgid "Date"
 msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr ""
+#: model:ir.ui.menu,name:board.next_id_50
+msgid "Configuration"
+msgstr "Konfiguration"
 
 #. module: board
 #: field:board.note.type,name:0
@@ -95,7 +96,7 @@ msgstr ""
 #. module: board
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_parent_id:0
@@ -108,15 +109,15 @@ msgid "Notes"
 msgstr ""
 
 #. module: board
-#: field:board.board.line,board_id:0
-#: field:board.board,name:0
-#: view:board.board:0
-msgid "Dashboard"
+#: model:ir.model,name:board.model_board_note_type
+msgid "board.note.type"
 msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
+#: view:board.board:0
+#: field:board.board,name:0
+#: field:board.board.line,board_id:0
+msgid "Dashboard"
 msgstr ""
 
 #. module: board
@@ -155,18 +156,14 @@ msgid "Right"
 msgstr ""
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
+#: view:board.board:0
+#: wizard_button:board.board.menu.create,init,create_menu:0
+msgid "Create Menu"
 msgstr ""
 
 #. module: board
@@ -195,9 +192,8 @@ msgid "Dashboard View"
 msgstr ""
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,create_menu:0
-#: view:board.board:0
-msgid "Create Menu"
+#: model:ir.model,name:board.model_board_board_line
+msgid "board.board.line"
 msgstr ""
 
 #. module: board

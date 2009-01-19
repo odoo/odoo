@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,14 +61,14 @@ msgid "Resources Management"
 msgstr "Gestión de recursos"
 
 #. module: profile_service
-#: help:profile.service.config.install_modules_wizard,hr_holidays:0
-msgid "Tracks the full holidays management process, from the employee's request to the global planning."
-msgstr "Realiza el seguimiento de todo el proceso de gestión de vacaciones, desde la petición del empleado hasta la planificación global."
+#: model:ir.actions.act_window,name:profile_service.action_config_install_module
+msgid "Service Profile : Install Extra Modules"
+msgstr ""
 
 #. module: profile_service
-#: model:ir.actions.todo,note:profile_service.config_install_module
-msgid "A few modules are proposed according to the 'service profile' you selected. You will be able to install them or more modules later through the Administration menu."
-msgstr ""
+#: field:profile.service.config.install_modules_wizard,account_budget_crossover:0
+msgid "Analytic Budgets"
+msgstr "Presupuestos analíticos"
 
 #. module: profile_service
 #: field:profile.service.config.install_modules_wizard,crm_configuration:0
@@ -86,9 +86,9 @@ msgid "Portal"
 msgstr "Portal"
 
 #. module: profile_service
-#: field:profile.service.config.install_modules_wizard,account_budget_crossover:0
-msgid "Analytic Budgets"
-msgstr "Presupuestos analíticos"
+#: help:profile.service.config.install_modules_wizard,hr_holidays:0
+msgid "Tracks the full holidays management process, from the employee's request to the global planning."
+msgstr "Realiza el seguimiento de todo el proceso de gestión de vacaciones, desde la petición del empleado hasta la planificación global."
 
 #. module: profile_service
 #: constraint:ir.ui.view:0
@@ -101,6 +101,11 @@ msgid "Scrum is an 'agile development methodology', mainly used in IT projects. 
 msgstr "Scrum es una 'metodología de desarrollo ágil', principalmente utilizada en proyectos de TI. Le ayuda a dirigir equipos humanos, desarrollos a largo plazo, sprints, etc."
 
 #. module: profile_service
+#: help:profile.service.config.install_modules_wizard,portal:0
+msgid "This module allows you to manage a Portal system."
+msgstr "Este módulo permite gestionar un sistema de portal web."
+
+#. module: profile_service
 #: view:profile.service.config.install_modules_wizard:0
 msgid "Portal Management"
 msgstr "Gestión de portal"
@@ -111,9 +116,9 @@ msgid "Holidays Management"
 msgstr "Gestión de vacaciones"
 
 #. module: profile_service
-#: help:profile.service.config.install_modules_wizard,portal:0
-msgid "This module allows you to manage a Portal system."
-msgstr "Este módulo permite gestionar un sistema de portal web."
+#: help:profile.service.config.install_modules_wizard,crm_configuration:0
+msgid "This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."
+msgstr "Esto instala funcionalidades de relación con el cliente como: Seguimiento de iniciativas y oportunidades, calendario compartido, seguimiento de trabajos, seguimiento de incidencias, etc."
 
 #. module: profile_service
 #: view:profile.service.config.install_modules_wizard:0
@@ -194,9 +199,4 @@ msgstr "Cancelar"
 #: help:profile.service.config.install_modules_wizard,base_contact:0
 msgid "Allows you to manage partners (enterprises), addresses of partners and contacts of these partners (employee/people). Install this if you plan to manage your relationships with partners and contacts, with contacts having different jobs in different companies."
 msgstr "Permite gestionar empresas o organizaciones, direcciones de empresas y contactos de estas empresas (empleados o gente relacionada). Instálelo si desea gestionar sus relaciones con empresas y contactos, con contactos que tienen trabajos diferentes en empresas diferentes."
-
-#. module: profile_service
-#: help:profile.service.config.install_modules_wizard,crm_configuration:0
-msgid "This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."
-msgstr "Esto instala funcionalidades de relación con el cliente como: Seguimiento de iniciativas y oportunidades, calendario compartido, seguimiento de trabajos, seguimiento de incidencias, etc."
 

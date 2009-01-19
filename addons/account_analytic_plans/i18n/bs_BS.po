@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:17:41+0000\n"
-"PO-Revision-Date: 2009-01-03 02:17:41+0000\n"
+"POT-Creation-Date: 2009-01-19 19:28:02+0000\n"
+"PO-Revision-Date: 2009-01-19 19:28:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,8 +38,8 @@ msgid "Account5 Id"
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-msgid "Analytic Plan Instance"
+#: wizard_field:wizard.crossovered.analytic,init,date2:0
+msgid "End Date"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -48,8 +48,12 @@ msgid "Rate (%)"
 msgstr ""
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -63,13 +67,13 @@ msgid "Analytic Distribution Lines"
 msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
 msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -83,12 +87,8 @@ msgid "Account Name"
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
-#: field:account.analytic.plan.line,plan_id:0
-#: field:account.analytic.plan,name:0
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
-#: view:account.analytic.plan:0
-msgid "Analytic Plan"
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -117,18 +117,14 @@ msgid "Select Information"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr ""
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "%"
+#: field:account.analytic.plan.instance,journal_id:0
+#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
+msgid "Analytic Journal"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -143,10 +139,10 @@ msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
 #: field:account.analytic.plan.instance,name:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
-#: view:account.analytic.plan.instance:0
 msgid "Analytic Distribution"
 msgstr ""
 
@@ -176,10 +172,10 @@ msgid "to"
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
-#: view:account.analytic.plan:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr ""
 
@@ -199,8 +195,8 @@ msgid "Distribution Model Saved"
 msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
-msgid "End Date"
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -209,8 +205,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
 msgstr ""
 
@@ -245,12 +246,6 @@ msgid "Account6 Id"
 msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
-#: field:account.analytic.plan.instance,journal_id:0
-msgid "Analytic Journal"
-msgstr ""
-
-#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr ""
@@ -276,8 +271,8 @@ msgid "Root Account"
 msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "This distribution model has been saved. You will be able to reuse it later."
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -291,18 +286,23 @@ msgid "Period from"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,plan_id:0
-msgid "Plan Id"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date:"
 msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
+msgstr ""
+
+#. module: account_analytic_plans
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
 msgstr ""
 
 #. module: account_analytic_plans

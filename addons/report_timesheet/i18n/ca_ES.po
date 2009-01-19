@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,10 +32,10 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet per account"
-msgstr "Full de serveis diària per compte"
+#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:report_timesheet.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Costos a facturar"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_my
@@ -44,14 +44,14 @@ msgid "My Timesheet of the Month"
 msgstr "El meu full de serveis del mes"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr "Fulls de treball"
+
+#. module: report_timesheet
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
 msgstr "Full de serveis per compte"
-
-#. module: report_timesheet
-#: model:ir.ui.menu,name:report_timesheet.next_id_70
-msgid "All Months"
-msgstr "Tots els mesos"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timehsheet_account
@@ -70,17 +70,15 @@ msgid "Daily Timesheet by Account"
 msgstr "Full de serveis diària per compte"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
-msgstr "Fulls de serveis per dia"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Full de serveis per dia"
 
 #. module: report_timesheet
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Usuari"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr "Full de serveis per compte"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
@@ -100,32 +98,9 @@ msgid "Timesheet by invoice"
 msgstr "Full de serveis per factura"
 
 #. module: report_timesheet
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr "A facturar"
-
-#. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user
-msgid "Timesheet by user (this month)"
-msgstr "Full de serveis per usuari (aquest mes)"
-
-#. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_account
-#: view:report_timesheet.account:0
-msgid "Timesheet per account"
-msgstr "Full de serveis per compte"
-
-#. module: report_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_all
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user_all
-msgid "Timesheet by User"
-msgstr "Full de serveis per usuari"
+#: model:ir.ui.menu,name:report_timesheet.next_id_69
+msgid "This Month"
+msgstr "Aquest mes"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_my
@@ -134,9 +109,27 @@ msgid "My timesheets by account"
 msgstr "Els meus fulls de serveis per compte"
 
 #. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr "Full de serveis per dia"
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Usuari"
+
+#. module: report_timesheet
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#. module: report_timesheet
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr "Full de serveis diària per compte"
+
+#. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Fulls de serveis per dia"
 
 #. module: report_timesheet
 #: field:report_timesheet.invoice,account_id:0
@@ -144,9 +137,15 @@ msgid "Project"
 msgstr "Projecte"
 
 #. module: report_timesheet
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet by account"
-msgstr "Full de serveis diària per compte"
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "A facturar"
+
+#. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_all
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user_all
+msgid "Timesheet by User"
+msgstr "Full de serveis per usuari"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_invoice_stat_all
@@ -155,8 +154,8 @@ msgid "Timesheet by Invoice"
 msgstr "Full de serveis per factura"
 
 #. module: report_timesheet
-#: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.invoice,quantity:0
 #: field:report_timesheet.user,quantity:0
 msgid "Quantity"
@@ -169,10 +168,10 @@ msgid "My timesheets to invoice"
 msgstr "Els meus fulls de serveis a facturar"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_invoice
-#: model:ir.model,name:report_timesheet.model_report_timesheet_invoice
-msgid "Costs to invoice"
-msgstr "Costos a facturar"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr "Full de serveis diària per compte"
 
 #. module: report_timesheet
 #: field:report_timesheet.account,name:0
@@ -196,7 +195,8 @@ msgid "Cost"
 msgstr "Cost"
 
 #. module: report_timesheet
-#: model:ir.ui.menu,name:report_timesheet.next_id_69
-msgid "This Month"
-msgstr "Aquest mes"
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user
+msgid "Timesheet by user (this month)"
+msgstr "Full de serveis per usuari (aquest mes)"
 

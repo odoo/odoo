@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:08:21+0000\n"
-"PO-Revision-Date: 2009-01-03 02:08:21+0000\n"
+"POT-Creation-Date: 2009-01-19 19:36:17+0000\n"
+"PO-Revision-Date: 2009-01-19 19:36:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,8 +51,8 @@ msgid "Your report has been modified."
 msgstr "Il tuo Report è stato modificato"
 
 #. module: base_report_designer
-#: wizard_field:base_report_designer.modify,get_form_result,report_id:0
 #: wizard_field:base_report_designer.modify,get_form,report_id:0
+#: wizard_field:base_report_designer.modify,get_form_result,report_id:0
 #: wizard_field:base_report_designer.modify,send_form,report_id:0
 msgid "Report"
 msgstr "Report"
@@ -61,7 +61,7 @@ msgstr "Report"
 #: code:addons/base_report_designer/wizard/base_report_designer_modify.py:0
 #, python-format
 msgid "Report does not contain the sxw content!"
-msgstr ""
+msgstr "Il report non ha contenuto sxw!"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_wizard_report_designer_modify
@@ -69,8 +69,8 @@ msgid "Report Designer"
 msgstr "Report Designer"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form_result:0
 #: wizard_view:base_report_designer.modify,get_form:0
+#: wizard_view:base_report_designer.modify,get_form_result:0
 #: wizard_view:base_report_designer.modify,send_form:0
 msgid "Get a report"
 msgstr "Scarica un Report"
@@ -81,6 +81,13 @@ msgid "Continue"
 msgstr "Continua"
 
 #. module: base_report_designer
+#: code:addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: base_report_designer
+#: wizard_field:base_report_designer.modify,get_form_result,file_sxw:0
 #: wizard_field:base_report_designer.modify,send_form,file_sxw:0
 msgid "Your .SXW file"
 msgstr "Il tuo file .SXW"
@@ -93,7 +100,7 @@ msgstr "Report Designer"
 #. module: base_report_designer
 #: wizard_view:base_report_designer.modify,get_form_result:0
 msgid "This is the template of your requested report. Save it as a .SXW file and open it with OpenOffice. Don't forget to install the Tiny OpenOffice package to modify it. Once it is modified, re-upload it in Open ERP using this wizard."
-msgstr ""
+msgstr "Questo è il template del report richiesto. Salvarlo come file  .SXW e aprirlo con OpenOffice. Non dimenticare di installare il pacchetto OpenERP di OpenOffice per modificarlo. Una volta modificato, ricaricarlo in Open ERP utilizzando la procedura guidata."
 
 #. module: base_report_designer
 #: wizard_button:base_report_designer.modify,send_form,send_form_result:0
@@ -103,7 +110,7 @@ msgstr "Aggiorna Report"
 #. module: base_report_designer
 #: selection:base_report_designer.modify,init,operation:0
 msgid "Create a new report"
-msgstr ""
+msgstr "Creare un nuovo report"
 
 #. module: base_report_designer
 #: selection:base_report_designer.modify,init,operation:0
@@ -112,7 +119,6 @@ msgid "Modify an existing report"
 msgstr "Modifica un Report Esistente"
 
 #. module: base_report_designer
-#: wizard_button:base_report_designer.modify,get_form,end:0
 #: wizard_button:base_report_designer.modify,init,end:0
 msgid "Cancel"
 msgstr "Annulla"
@@ -130,12 +136,12 @@ msgid "Operation"
 msgstr "Operazione"
 
 #. module: base_report_designer
-#: wizard_view:base_report_designer.modify,get_form:0
-msgid "Select your report"
-msgstr "Seleziona il tuo Report"
-
-#. module: base_report_designer
 #: wizard_view:base_report_designer.modify,init:0
 msgid "Report designer introduction"
 msgstr "Introduzione a Report Designer"
+
+#. module: base_report_designer
+#: wizard_view:base_report_designer.modify,get_form:0
+msgid "Select your report"
+msgstr "Seleziona il tuo Report"
 

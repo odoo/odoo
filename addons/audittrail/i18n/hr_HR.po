@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:03:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:03:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:31:24+0000\n"
+"PO-Revision-Date: 2009-01-19 19:31:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,23 +31,18 @@ msgid "Subscribed"
 msgstr ""
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr ""
-
-#. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Create"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log.line,new_value_text:0
-msgid "New value Text"
+#: wizard_view:audittrail.view.log,init:0
+msgid "Audit Logs"
 msgstr ""
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
+#: field:audittrail.rule,state:0
+msgid "State"
 msgstr ""
 
 #. module: audittrail
@@ -91,8 +86,13 @@ msgid "Resource Id"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
+#: selection:audittrail.log,method:0
+msgid "Write"
+msgstr ""
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
+msgid "Audittrails"
 msgstr ""
 
 #. module: audittrail
@@ -101,8 +101,8 @@ msgid "Log Lines"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
+#: view:audittrail.rule:0
+msgid "Subscribe"
 msgstr ""
 
 #. module: audittrail
@@ -122,23 +122,28 @@ msgid "AuditTrail Rule"
 msgstr ""
 
 #. module: audittrail
+#: wizard_field:audittrail.view.log,init,to:0
+msgid "Log To"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
 msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
+#: view:audittrail.log:0
+msgid "Old Value : "
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,timestamp:0
 msgid "Date"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.log,user_id:0
+msgid "User"
 msgstr ""
 
 #. module: audittrail
@@ -162,6 +167,11 @@ msgid "Log lines"
 msgstr ""
 
 #. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
+msgid "Subscribed Rules"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
 msgstr ""
@@ -169,11 +179,6 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.rule,action_id:0
-msgid "Action ID"
 msgstr ""
 
 #. module: audittrail
@@ -212,18 +217,13 @@ msgid "Open Logs"
 msgstr ""
 
 #. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
-msgid "Audit Logs"
+#: field:audittrail.log.line,new_value_text:0
+msgid "New value Text"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
 msgstr ""
 
 #. module: audittrail
@@ -257,11 +257,6 @@ msgid "AuditTrail Logs"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.rule,state:0
-msgid "State"
-msgstr ""
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
 msgstr ""
@@ -269,6 +264,11 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
 msgstr ""
 
 #. module: audittrail

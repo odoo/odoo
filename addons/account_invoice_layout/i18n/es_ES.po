@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:14:45+0000\n"
-"PO-Revision-Date: 2009-01-03 02:14:45+0000\n"
+"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
+"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Título"
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
 msgid "Invoices with Layout and Message"
-msgstr ""
+msgstr "Facturas con plantilla y mensaje"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -52,9 +52,9 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Supplier Invoice"
-msgstr "Factura de proveedor"
+#: wizard_button:wizard.notify_message,init,print:0
+msgid "Print"
+msgstr "Imprimir"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -72,11 +72,6 @@ msgid "Notify By Messages"
 msgstr "Notificar mediante mensajes"
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,print:0
-msgid "Print"
-msgstr "Imprimir"
-
-#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Document"
 msgstr "Documento"
@@ -87,9 +82,9 @@ msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes:"
-msgstr "Impuestos:"
+#: field:account.invoice,abstract_line_ids:0
+msgid "Invoice Lines"
+msgstr "Líneas de factura"
 
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
@@ -127,14 +122,19 @@ msgid "Canceled Invoice"
 msgstr "Factura cancelada"
 
 #. module: account_invoice_layout
-#: field:account.invoice,abstract_line_ids:0
-msgid "Invoice Lines"
-msgstr "Líneas de factura"
+#: rml:account.invoice.layout:0
+msgid "Taxes:"
+msgstr "Impuestos:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
 msgstr "Cuenta origen"
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -162,14 +162,19 @@ msgid ":"
 msgstr ":"
 
 #. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Tel. :"
+msgstr "Tel. :"
+
+#. module: account_invoice_layout
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice"
-msgstr "Factura"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Salto de página"
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
@@ -187,14 +192,9 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
-msgstr "Impuestos"
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
-msgstr "Salto de página"
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
+msgstr "Facturas con plantilla"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -207,9 +207,9 @@ msgid "Total (excl. taxes):"
 msgstr "Total (sin impuestos):"
 
 #. module: account_invoice_layout
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
-msgid "Invoices with Layout"
-msgstr ""
+#: rml:account.invoice.layout:0
+msgid "Taxes"
+msgstr "Impuestos"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -243,18 +243,18 @@ msgstr "Línea de separación"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "Supplier Invoice"
+msgstr "Factura de proveedor"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Impuesto"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
-msgstr "(con impuestos):"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel. :"
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0

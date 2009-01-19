@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,9 +22,10 @@ msgid "Average Price"
 msgstr "Средняя цена"
 
 #. module: report_purchase
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
+#: field:report.purchase.order.category,state:0
+#: field:report.purchase.order.product,state:0
+msgid "Order State"
+msgstr "Состояние заказа"
 
 #. module: report_purchase
 #: model:ir.actions.act_window,name:report_purchase.action_order_category_tree_all
@@ -50,10 +51,9 @@ msgid "Purchases by Products"
 msgstr "Закупки по продукции"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,state:0
-#: field:report.purchase.order.product,state:0
-msgid "Order State"
-msgstr "Состояние заказа"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0
@@ -62,10 +62,10 @@ msgid "Waiting Schedule"
 msgstr "Расписание ожидания"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,price_total:0
-#: field:report.purchase.order.product,price_total:0
-msgid "Total Price"
-msgstr "Итоговая цена"
+#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
+#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
+msgid "Purchases by Products (this month)"
+msgstr "Закупки по продуктам (тек. мес.)"
 
 #. module: report_purchase
 #: model:ir.model,name:report_purchase.model_report_purchase_order_category
@@ -89,10 +89,10 @@ msgid "Invoice Exception"
 msgstr ""
 
 #. module: report_purchase
-#: model:ir.actions.act_window,name:report_purchase.action_order_product_tree
-#: model:ir.ui.menu,name:report_purchase.menu_report_order_product
-msgid "Purchases by Products (this month)"
-msgstr "Закупки по продуктам (тек. мес.)"
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr "Итоговая цена"
 
 #. module: report_purchase
 #: field:report.purchase.order.category,quantity:0
@@ -139,6 +139,7 @@ msgid "Manual in progress"
 msgstr "Выполняется вручную"
 
 #. module: report_purchase
+#: model:ir.actions.act_window,name:report_purchase.action_order_category_tree
 #: model:ir.ui.menu,name:report_purchase.menu_report_order_category
 msgid "Purchases by Category of Product (this month)"
 msgstr "Закупки по категориям продукции (тек.мес.)"
@@ -162,7 +163,6 @@ msgid "Month"
 msgstr "Месяц"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,count:0
 #: field:report.purchase.order.product,count:0
 msgid "# of Lines"
 msgstr "Кол-во позиций"

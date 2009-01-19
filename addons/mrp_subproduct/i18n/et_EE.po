@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,23 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr ""
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Vigane XML vaate arhitektuurile!"
+
+#. module: mrp_subproduct
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "sub products"
-msgstr ""
-
-#. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
-msgstr ""
-
-#. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Mrp Sub Product"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -41,22 +36,27 @@ msgid "Product Qty"
 msgstr ""
 
 #. module: mrp_subproduct
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr ""
+
+#. module: mrp_subproduct
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr ""
+
+#. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product UOM"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
 msgstr ""
 
 #. module: mrp_subproduct
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Mrp Sub Product"
 msgstr ""
 

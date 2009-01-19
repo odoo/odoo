@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,8 +45,8 @@ msgstr "Per ser facturat"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_journal_sale_journal
-#: field:stock.picking,sale_journal_id:0
 #: view:sale_journal.sale.journal:0
+#: field:stock.picking,sale_journal_id:0
 msgid "Sale Journal"
 msgstr "Diari de vendes"
 
@@ -97,7 +97,6 @@ msgid "Packings Journals"
 msgstr "Diaris d'albarans"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type.stats,count:0
 #: field:sale_journal.picking.stats,count:0
 #: field:sale_journal.sale.stats,count:0
 msgid "# of Lines"
@@ -110,10 +109,10 @@ msgid "All Open Journals"
 msgstr "Tots els diaris oberts"
 
 #. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Draft"
-msgstr "Esborrany"
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "done"
+msgstr "realitzat"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
@@ -171,6 +170,11 @@ msgstr "Els meus diaris d'albarans oberts"
 #: model:ir.model,name:sale_journal.model_sale_journal_sale_stats
 msgid "Sales Orders by Journal"
 msgstr "Comandes de vendes per diari"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_all
+msgid "Open journals"
+msgstr ""
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
@@ -237,9 +241,11 @@ msgid "Order State"
 msgstr "Estat de la comanda"
 
 #. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Cancel Packings"
-msgstr "Cancel·la albarans"
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
+msgid "Packings by Journal"
+msgstr "Albarans per diari"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -249,10 +255,10 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "done"
-msgstr "realitzat"
+#: selection:sale_journal.picking.journal,state:0
+#: selection:sale_journal.sale.journal,state:0
+msgid "Draft"
+msgstr "Esborrany"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
@@ -288,11 +294,9 @@ msgid "Validation date"
 msgstr "Data de validació"
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
-msgid "Packings by Journal"
-msgstr "Albarans per diari"
+#: view:sale_journal.picking.journal:0
+msgid "Cancel Packings"
+msgstr "Cancel·la albarans"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
@@ -427,10 +431,10 @@ msgid "Packings by Invoice Method"
 msgstr "Albarans per mètode de facturació"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,name:0
 #: field:sale.order,invoice_type_id:0
-#: field:stock.picking,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Tipus de factura"
 
@@ -458,14 +462,14 @@ msgid "Quantities"
 msgstr "Quantitats"
 
 #. module: sale_journal
+#: field:sale.order,journal_id:0
+#: view:sale_journal.picking.journal:0
 #: field:sale_journal.picking.journal,name:0
 #: field:sale_journal.picking.stats,journal_id:0
+#: view:sale_journal.sale.journal:0
 #: field:sale_journal.sale.journal,name:0
 #: field:sale_journal.sale.stats,journal_id:0
-#: field:sale.order,journal_id:0
 #: field:stock.picking,journal_id:0
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
 msgid "Journal"
 msgstr "Diari"
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:16:57+0000\n"
-"PO-Revision-Date: 2009-01-03 02:16:57+0000\n"
+"POT-Creation-Date: 2009-01-19 19:45:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:45:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,10 +32,10 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
 
 #. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet per account"
-msgstr "Щоденний табель за рахунком"
+#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:report_timesheet.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Кошти на виписку"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_my
@@ -44,14 +44,14 @@ msgid "My Timesheet of the Month"
 msgstr "Мій табель за місяць"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr "Табелі"
+
+#. module: report_timesheet
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
 msgstr "Щоденний табель за рахунком"
-
-#. module: report_timesheet
-#: model:ir.ui.menu,name:report_timesheet.next_id_70
-msgid "All Months"
-msgstr "Всі місяці"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timehsheet_account
@@ -70,17 +70,15 @@ msgid "Daily Timesheet by Account"
 msgstr "Щоденний табель за рахунками"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
-msgstr "Табелі за днями"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Табель за днем"
 
 #. module: report_timesheet
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Користувач"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr "Табель за рахунком"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
@@ -100,32 +98,9 @@ msgid "Timesheet by invoice"
 msgstr "Табель за накладними"
 
 #. module: report_timesheet
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr "На виписку"
-
-#. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user
-msgid "Timesheet by user (this month)"
-msgstr "Табель за користувачами (цей місяць)"
-
-#. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_account
-#: view:report_timesheet.account:0
-msgid "Timesheet per account"
-msgstr "Табель за рахунком"
-
-#. module: report_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильний XML для Архітектури Вигляду!"
-
-#. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_all
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user_all
-msgid "Timesheet by User"
-msgstr "Табель за користувачами"
+#: model:ir.ui.menu,name:report_timesheet.next_id_69
+msgid "This Month"
+msgstr "Цей місяць"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_my
@@ -134,9 +109,27 @@ msgid "My timesheets by account"
 msgstr "Мої табелі за рахунком"
 
 #. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr "Табель за днем"
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Користувач"
+
+#. module: report_timesheet
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильний XML для Архітектури Вигляду!"
+
+#. module: report_timesheet
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr "Щоденний табель за рахунком"
+
+#. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Табелі за днями"
 
 #. module: report_timesheet
 #: field:report_timesheet.invoice,account_id:0
@@ -144,9 +137,15 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: report_timesheet
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet by account"
-msgstr "Щоденний табель за рахунком"
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "На виписку"
+
+#. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat_all
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user_all
+msgid "Timesheet by User"
+msgstr "Табель за користувачами"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_invoice_stat_all
@@ -155,8 +154,8 @@ msgid "Timesheet by Invoice"
 msgstr "Табель за накладними"
 
 #. module: report_timesheet
-#: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.invoice,quantity:0
 #: field:report_timesheet.user,quantity:0
 msgid "Quantity"
@@ -169,10 +168,10 @@ msgid "My timesheets to invoice"
 msgstr "Мої табелі на оформлення"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_invoice
-#: model:ir.model,name:report_timesheet.model_report_timesheet_invoice
-msgid "Costs to invoice"
-msgstr "Кошти на виписку"
+#: model:ir.model,name:report_timesheet.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr "Щоденний табель за рахунком"
 
 #. module: report_timesheet
 #: field:report_timesheet.account,name:0
@@ -196,7 +195,8 @@ msgid "Cost"
 msgstr "Витрати"
 
 #. module: report_timesheet
-#: model:ir.ui.menu,name:report_timesheet.next_id_69
-msgid "This Month"
-msgstr "Цей місяць"
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_user
+msgid "Timesheet by user (this month)"
+msgstr "Табель за користувачами (цей місяць)"
 

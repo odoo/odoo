@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: report_intrastat
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -45,11 +45,6 @@ msgstr ""
 #: rml:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr ""
-
-#. module: report_intrastat
-#: model:ir.ui.menu,name:report_intrastat.next_id_90
-msgid "All Months"
-msgstr "Todos os meses"
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -88,8 +83,8 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Price"
+#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
+msgid "Invoice Intrastat"
 msgstr ""
 
 #. module: report_intrastat
@@ -113,17 +108,9 @@ msgid "Base"
 msgstr ""
 
 #. module: report_intrastat
-#: view:report.intrastat:0
-msgid "Intrastat Data"
-msgstr "Dado interestadual"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Código interestadual"
+#: rml:account.invoice.intrastat:0
+msgid "Quantity"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.menu,name:report_intrastat.next_id_89
@@ -147,7 +134,7 @@ msgstr "Relatório Interestadual"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
-msgid "Invoice"
+msgid "Fax :"
 msgstr ""
 
 #. module: report_intrastat
@@ -161,9 +148,9 @@ msgid "Amount"
 msgstr ""
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Total (excl. taxes):"
-msgstr ""
+#: view:report.intrastat:0
+msgid "Intrastat Data"
+msgstr "Dado interestadual"
 
 #. module: report_intrastat
 #: field:report.intrastat,value:0
@@ -171,8 +158,8 @@ msgid "Value"
 msgstr "Valor"
 
 #. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: rml:account.invoice.intrastat:0
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 msgid "Intrastat"
 msgstr "Interestadual"
@@ -183,9 +170,12 @@ msgid "Draft Invoice"
 msgstr ""
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr ""
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
+msgid "Intrastat code"
+msgstr "Código interestadual"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -230,7 +220,7 @@ msgstr "Exportar"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
-msgid "Fax :"
+msgid "Invoice"
 msgstr ""
 
 #. module: report_intrastat
@@ -239,13 +229,19 @@ msgid "Supplier Refund"
 msgstr ""
 
 #. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
-msgid "Invoice Intrastat"
+#: rml:account.invoice.intrastat:0
+msgid "Total (excl. taxes):"
 msgstr ""
 
 #. module: report_intrastat
-#: field:report.intrastat.code,name:0
+#: rml:account.invoice.intrastat:0
+msgid "Price"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Código Interestadual"
 

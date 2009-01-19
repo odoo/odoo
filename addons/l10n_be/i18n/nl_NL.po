@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:04:56+0000\n"
-"PO-Revision-Date: 2009-01-03 02:04:56+0000\n"
+"POT-Creation-Date: 2009-01-19 19:32:47+0000\n"
+"PO-Revision-Date: 2009-01-19 19:32:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
+msgid "En Belgique"
+msgstr ""
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
@@ -24,13 +29,12 @@ msgstr ""
 #: wizard_view:list.vat.detail,go:0
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "Notification"
-msgstr "Melding"
+msgstr "Mededeling"
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
-#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
-msgid "Taxes Statement"
-msgstr ""
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "XML Flie has been Created."
+msgstr "XML bestand is aangemaakt"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
@@ -46,7 +50,7 @@ msgstr "XML Aanmaken"
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_capitaux
 msgid "Capital"
-msgstr ""
+msgstr "Kapitaal"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,msg:0
@@ -60,15 +64,20 @@ msgid "Stock et Encours"
 msgstr ""
 
 #. module: l10n_be
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
+msgstr ""
+
+#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
 msgid "Immobilisation"
-msgstr ""
+msgstr "Onroerende goederen"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,file_save:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,file_save:0
 msgid "Save File"
-msgstr "Bestand Opslaan"
+msgstr "Bestand opslaan"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
@@ -93,7 +102,7 @@ msgstr "Selecteer Periode"
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
 msgid "Produit"
-msgstr ""
+msgstr "Product"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
@@ -103,13 +112,13 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
 msgid "Vue"
-msgstr ""
+msgstr "Weergave"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,go,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,go,end:0
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
@@ -124,7 +133,7 @@ msgstr "BTW gegevens bekijken"
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,limit_amount:0
 msgid "Limit Amount"
-msgstr ""
+msgstr "Bestedingslimiet"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
@@ -132,9 +141,10 @@ msgid "Fiscal Year"
 msgstr "Boekjaar"
 
 #. module: l10n_be
-#: wizard_view:wizard.account.xml.vat.declaration,go:0
-msgid "XML Flie has been Created."
-msgstr ""
+#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
+#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
+msgid "Taxes Statement"
+msgstr "BTW aangifte"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
@@ -150,12 +160,13 @@ msgstr "Test XML bestand"
 #: model:ir.actions.todo,note:l10n_be.config_call_account_template
 msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
 "This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
-msgstr ""
+msgstr "Genereer rekeningschema uit een schema sjabloon. U wordt gevraagd om de naam van de vennootschap, het schema sjabloon te gebruiken, het aantal cijfers voor het genereren van de code grootboekrekeningen, munteenheid voor de journalen. Dus wordt de zuivere kopie van het schema sjabloon aangemaakt.\n"
+"Dit is dezelfde wizard die wekt  vanuit Financieel Management / Configuratie / Financial Accounting / Financiële Rekeningen / Genereer Rekeningsschema  uit een schema sjabloon."
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,mand_id:0
 msgid "MandataireId"
-msgstr ""
+msgstr "Agent ID"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax
@@ -178,8 +189,12 @@ msgid "Financier"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_button:list.vat.detail,init,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
+msgstr "Annuleer"
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
+msgid "Dans l'U.E"
 msgstr ""
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:16:57+0000\n"
-"PO-Revision-Date: 2009-01-03 02:16:57+0000\n"
+"POT-Creation-Date: 2009-01-19 19:45:06+0000\n"
+"PO-Revision-Date: 2009-01-19 19:45:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: report_analytic_planning
+#: view:report_account_analytic.planning:0
+msgid "Time by Account"
+msgstr ""
+
+#. module: report_analytic_planning
+#: view:report_account_analytic.planning:0
+msgid "Planning by Account"
+msgstr ""
+
+#. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
-msgid "To:"
-msgstr "Для:"
-
-#. module: report_analytic_planning
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Аналіз планування"
+msgid "Summary by project"
+msgstr "Всього за проектом"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -39,11 +39,6 @@ msgstr "ОВ к-сті"
 #: field:report_account_analytic.planning,user_id:0
 msgid "Responsible"
 msgstr "Відповідальний"
-
-#. module: report_analytic_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильний XML для Архітектури Вигляду!"
 
 #. module: report_analytic_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_stat
@@ -67,14 +62,15 @@ msgid "My Current Plannings"
 msgstr ""
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr ""
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by user"
-msgstr "Всього по користувачу"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat
+msgid "Planning Statistics"
+msgstr "Статистика планування"
 
 #. module: report_analytic_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_stat_account
@@ -93,26 +89,20 @@ msgid "Real"
 msgstr "Реальний"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_manager_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my_manager
-msgid "Planning Statistics of My Projects"
-msgstr "Статистика планування моїх проектів"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my
+msgid "My Planning Statistics"
+msgstr "Статистика мого планування"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat
-msgid "Planning Statistics"
-msgstr "Статистика планування"
+#: rml:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Всього по користувачу"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning,name:0
 msgid "Planning Name"
 msgstr "Назва планування"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat,sum_amount:0
-msgid "Planned hours"
-msgstr "Заплановано годин"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -125,24 +115,16 @@ msgid "HR Planning"
 msgstr "Планування Персоналу"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat.account,sum_amount_real:0
 #: field:report_account_analytic.planning.stat,sum_amount_real:0
+#: field:report_account_analytic.planning.stat.account,sum_amount_real:0
 #: field:report_account_analytic.planning.stat.user,sum_amount_real:0
 msgid "Timesheet"
 msgstr "Табель"
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Time by Account"
-msgstr ""
-
-#. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-#: field:report_account_analytic.planning.line,user_id:0
-#: field:report_account_analytic.planning.stat,user_id:0
-#: field:report_account_analytic.planning.stat.user,user_id:0
-msgid "User"
-msgstr "Користувач"
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned hours"
+msgstr "Заплановано годин"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -150,9 +132,9 @@ msgid "Responsible:"
 msgstr "Відповідальний:"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_user_ids:0
-msgid "Planning by user"
-msgstr "Планування за користувачем"
+#: field:report_account_analytic.planning.line,amount:0
+msgid "Quantity"
+msgstr "Кількість"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -171,9 +153,9 @@ msgid "End Date"
 msgstr ""
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat,account_id:0
-msgid "Account"
-msgstr "Рахунок"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильний XML для Архітектури Вигляду!"
 
 #. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
@@ -181,11 +163,18 @@ msgid "Time by User"
 msgstr ""
 
 #. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_manager_form
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my_manager
+msgid "Planning Statistics of My Projects"
+msgstr "Статистика планування моїх проектів"
+
+#. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
 msgid "Quantities by Account"
 msgstr ""
 
 #. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form
 #: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning
 msgid "Plannings"
 msgstr ""
@@ -194,6 +183,14 @@ msgstr ""
 #: view:report_account_analytic.planning:0
 msgid "Analysis"
 msgstr "Аналіз"
+
+#. module: report_analytic_planning
+#: field:report_account_analytic.planning.line,user_id:0
+#: rml:report_account_analytic.planning.print:0
+#: field:report_account_analytic.planning.stat,user_id:0
+#: field:report_account_analytic.planning.stat.user,user_id:0
+msgid "User"
+msgstr "Користувач"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -223,14 +220,14 @@ msgid "Planned"
 msgstr "Планується"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by project"
-msgstr "Всього за проектом"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Аналіз планування"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,stat_account_ids:0
-msgid "Planning by account"
-msgstr "Планування за рахунком"
+#: field:report_account_analytic.planning,line_ids:0
+msgid "Planning lines"
+msgstr "Рядки планування"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -243,9 +240,14 @@ msgid "]"
 msgstr "]"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.line,amount:0
-msgid "Quantity"
-msgstr "Кількість"
+#: rml:report_account_analytic.planning.print:0
+msgid "To:"
+msgstr "Для:"
+
+#. module: report_analytic_planning
+#: field:report_account_analytic.planning,stat_user_ids:0
+msgid "Planning by user"
+msgstr "Планування за користувачем"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.line,note:0
@@ -259,14 +261,9 @@ msgid "Tasks"
 msgstr "Завдання"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning,line_ids:0
-msgid "Planning lines"
-msgstr "Рядки планування"
-
-#. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat.account,account_id:0
-msgid "Analytic Account"
-msgstr "Аналітичний рахунок"
+#: field:report_account_analytic.planning,stat_account_ids:0
+msgid "Planning by account"
+msgstr "Планування за рахунком"
 
 #. module: report_analytic_planning
 #: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current
@@ -280,10 +277,9 @@ msgid "Quantities by User"
 msgstr ""
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_stat_my_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_stat_my
-msgid "My Planning Statistics"
-msgstr "Статистика мого планування"
+#: field:report_account_analytic.planning.stat.account,account_id:0
+msgid "Analytic Account"
+msgstr "Аналітичний рахунок"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.stat,manager_id:0
@@ -293,13 +289,13 @@ msgstr "Менеджер"
 #. module: report_analytic_planning
 #: model:ir.actions.report.xml,name:report_analytic_planning.report_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning
-#: field:report_account_analytic.planning.line,planning_id:0
-#: field:report_account_analytic.planning.stat.account,planning_id:0
-#: field:report_account_analytic.planning.stat,planning_id:0
-#: field:report_account_analytic.planning.stat.user,planning_id:0
 #: model:ir.ui.menu,name:report_analytic_planning.next_id_85
 #: model:ir.ui.menu,name:report_analytic_planning.planning_main
 #: view:report_account_analytic.planning:0
+#: field:report_account_analytic.planning.line,planning_id:0
+#: field:report_account_analytic.planning.stat,planning_id:0
+#: field:report_account_analytic.planning.stat.account,planning_id:0
+#: field:report_account_analytic.planning.stat.user,planning_id:0
 msgid "Planning"
 msgstr "Планування"
 

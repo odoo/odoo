@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,11 +36,6 @@ msgid "Helvetica"
 msgstr "Helvètica"
 
 #. module: account_reporting
-#: model:ir.actions.wizard,name:account_reporting.wizard_balance_report
-msgid "Account balance"
-msgstr "Saldo comptable"
-
-#. module: account_reporting
 #: field:account.report.bs,note:0
 msgid "Note"
 msgstr "Nota"
@@ -67,14 +62,19 @@ msgid "Courier-BoldOblique"
 msgstr "Courier-NegretaCursiva"
 
 #. module: account_reporting
-#: help:account.account.balancesheet.report,init,periods:0
-msgid "All periods if empty"
-msgstr ""
+#: wizard_button:account.account.balancesheet.report,init,report:0
+msgid "Print BalanceSheet"
+msgstr "Imprimeix fulla de balanç"
 
 #. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,end:0
-msgid "Cancel"
-msgstr "Cancel·la"
+#: help:account.account.balancesheet.report,init,periods:0
+msgid "All periods if empty"
+msgstr "Tots els períodes si està buit"
+
+#. module: account_reporting
+#: field:account.report.bs,color_font:0
+msgid "Font Color"
+msgstr "Color tipus de letra"
 
 #. module: account_reporting
 #: selection:account.report.bs,report_type:0
@@ -108,9 +108,9 @@ msgid "Account reporting"
 msgstr "Informe de comptabilitat"
 
 #. module: account_reporting
-#: field:account.report.bs,color_font:0
-msgid "Font Color"
-msgstr "Color tipus de letra"
+#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
+msgid "Balance Sheet Report Form"
+msgstr "Formulari informe full de balanç"
 
 #. module: account_reporting
 #: view:account.report.bs:0
@@ -118,14 +118,9 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: account_reporting
-#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
-msgid "Balance Sheet Report Form"
-msgstr ""
-
-#. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,report:0
-msgid "Print BalanceSheet"
-msgstr "Imprimeix fulla de balanç"
+#: model:ir.model,name:account_reporting.model_account_report_bs
+msgid "Account reporting for Balance Sheet"
+msgstr "Informe comptable per fulla de balanç"
 
 #. module: account_reporting
 #: field:account.report.bs,code:0
@@ -188,10 +183,15 @@ msgid "Courier-Bold"
 msgstr "Courier-Negreta"
 
 #. module: account_reporting
-#: field:account.report.bs,account_id:0
 #: view:account.report.bs:0
+#: field:account.report.bs,account_id:0
 msgid "Accounts"
 msgstr "Comptes"
+
+#. module: account_reporting
+#: wizard_field:account.account.balancesheet.report,init,periods:0
+msgid "Periods"
+msgstr ""
 
 #. module: account_reporting
 #: field:account.report.bs,color_back:0
@@ -199,9 +199,9 @@ msgid "Back Color"
 msgstr "Color fons"
 
 #. module: account_reporting
-#: model:ir.model,name:account_reporting.model_account_report_bs
-msgid "Account reporting for Balance Sheet"
-msgstr "Informe comptable per fulla de balanç"
+#: wizard_button:account.account.balancesheet.report,init,end:0
+msgid "Cancel"
+msgstr "Cancel·la"
 
 #. module: account_reporting
 #: selection:account.report.bs,font_style:0

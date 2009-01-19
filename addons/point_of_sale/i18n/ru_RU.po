@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,15 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Total paid"
 msgstr "Всего уплачено"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Qty of product"
-msgstr "кол-во продукции"
+#: view:pos.order:0
+msgid "Pickings"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -74,6 +73,11 @@ msgid "Orders of the day"
 msgstr "Заказы дня"
 
 #. module: point_of_sale
+#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
+msgid "Sales (summary)"
+msgstr "Продажи (обзор)"
+
+#. module: point_of_sale
 #: wizard_view:pos.sale.get,init:0
 msgid "Select an Open Sale Order"
 msgstr "Выберите открытый заказ"
@@ -82,11 +86,6 @@ msgstr "Выберите открытый заказ"
 #: rml:pos.invoice:0
 msgid "Invoice Date"
 msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ","
-msgstr ","
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -114,9 +113,9 @@ msgid "Partner Ref."
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_view:pos.payment,ask_pay:0
-msgid "Add payment :"
-msgstr "Добавить платеж"
+#: field:pos.order.line,name:0
+msgid "Line Description"
+msgstr "Описание позиции"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0
@@ -139,24 +138,25 @@ msgid "Last output picking"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Pickings"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Qty of product"
+msgstr "кол-во продукции"
 
 #. module: point_of_sale
-#: field:pos.order,note:0
 #: view:pos.order:0
+#: field:pos.order,note:0
 msgid "Notes"
 msgstr "Примечания"
 
 #. module: point_of_sale
-#: wizard_field:pos.sale.get,init,picking_id:0
-msgid "Sale Order"
-msgstr "Заказ"
+#: field:stock.picking,pos_order:0
+msgid "Pos order"
+msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Detail of Sales"
 msgstr "Подроюности продаж"
 
@@ -173,32 +173,35 @@ msgid "Number of transaction"
 msgstr "кол-во транзакций"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 msgid "Sale line"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Mode of Taxes"
-msgstr "Режим налогов"
+#: rml:pos.invoice:0
+#: field:pos.payment,amount:0
+#: wizard_field:pos.payment,ask_pay,amount:0
+#: field:report.transaction.pos,amount:0
+msgid "Amount"
+msgstr "Сумма"
 
 #. module: point_of_sale
-#: rml:pos.details:0
 #: field:pos.config.journal,code:0
+#: rml:pos.details:0
 msgid "Code"
 msgstr "Код"
 
 #. module: point_of_sale
-#: wizard_field:pos.refund_order,init,date_validity:0
 #: field:pos.order,date_validity:0
+#: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
 msgstr "Действителен до"
 
 #. module: point_of_sale
-#: wizard_field:pos.config.journal,init,default_journal_gift:0
-msgid "Default gift journal"
-msgstr "Книга подарков по умолчанию"
+#: rml:pos.receipt:0
+msgid "Operation N° :"
+msgstr "Операция №:"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -214,6 +217,11 @@ msgstr "Возврат по заказам"
 #: wizard_view:pos.config.journal,init:0
 msgid "Select default journals"
 msgstr "Выбрать книгу по умолчанию"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+msgid "VAT(%)"
+msgstr "НДС(%)"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -246,25 +254,19 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Payments"
-msgstr "Платежи"
-
-#. module: point_of_sale
 #: field:pos.order,payments:0
 msgid "Order Payments"
 msgstr "Платежи по заказу"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Tel :"
-msgstr "Тел.:"
+msgid "Date :"
+msgstr "Дата :"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Total of the day"
-msgstr "Итоги дня"
+#: rml:pos.receipt:0
+msgid "Disc :"
+msgstr "Скидка :"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
@@ -278,14 +280,13 @@ msgid "POS Orders"
 msgstr "Заказы кассового терминала"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: rml:pos.lines:0
 msgid "Disc. (%)"
 msgstr "Скидка (%)"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Sales total"
 msgstr "Итог продаж"
 
@@ -295,9 +296,10 @@ msgid "Supplier Invoice"
 msgstr "Счета поставщиков"
 
 #. module: point_of_sale
-#: field:pos.order,state:0
-msgid "State"
-msgstr "Состояние"
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Modify line failed !"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -317,10 +319,10 @@ msgid "Payment name"
 msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.payment,ask_pay,journal:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.config.journal,init,default_journal_gift:0
 #: selection:pos.config.journal,init,default_journal:0
+#: selection:pos.config.journal,init,default_journal_gift:0
+#: selection:pos.config.journal,init,default_journal_rebate:0
+#: selection:pos.payment,ask_pay,journal:0
 msgid "x Bank Journal"
 msgstr ""
 
@@ -328,6 +330,11 @@ msgstr ""
 #: field:pos.order,lines:0
 msgid "Order Lines"
 msgstr "Позиции заказа"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Disc.(%)"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -340,16 +347,16 @@ msgid "User :"
 msgstr "Пользователь :"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 #: rml:pos.lines:0
 msgid "Print Date:"
 msgstr "Дата печати:"
 
 #. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order lines"
-msgstr ""
+#: rml:pos.invoice:0
+msgid "PRO-FORMA"
+msgstr "Проформа"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
@@ -429,12 +436,6 @@ msgid "Default journals"
 msgstr "Книги по умолчанию"
 
 #. module: point_of_sale
-#: field:pos.order.line,order_id:0
-#: field:pos.payment,order_id:0
-msgid "Order Ref"
-msgstr "Ссылка на заказ"
-
-#. module: point_of_sale
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Скидка (%)"
@@ -487,8 +488,8 @@ msgstr "Выставлен счет"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Date :"
-msgstr "Дата :"
+msgid "Tel :"
+msgstr "Тел.:"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -506,9 +507,9 @@ msgid "Wizard default journals"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Disc :"
-msgstr "Скидка :"
+#: view:pos.order:0
+msgid "Ma_ke Payment"
+msgstr "Провести платеж"
 
 #. module: point_of_sale
 #: wizard_field:pos.scan_product,init,gencod:0
@@ -526,9 +527,9 @@ msgid "Draft"
 msgstr "Черновик"
 
 #. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order line"
-msgstr ""
+#: selection:pos.order,state:0
+msgid "Paid"
+msgstr "Оплачено"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -541,9 +542,9 @@ msgid "VAT :"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "PRO-FORMA"
-msgstr "Проформа"
+#: view:pos.order.line:0
+msgid "POS Order lines"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
@@ -551,16 +552,16 @@ msgid "E-mail :"
 msgstr "Эл. почта:"
 
 #. module: point_of_sale
-#: selection:pos.payment,ask_pay,journal:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.config.journal,init,default_journal_gift:0
 #: selection:pos.config.journal,init,default_journal:0
+#: selection:pos.config.journal,init,default_journal_gift:0
+#: selection:pos.config.journal,init,default_journal_rebate:0
+#: selection:pos.payment,ask_pay,journal:0
 msgid "x Checks Journal"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Total invoiced"
 msgstr "Сумма счета"
 
@@ -576,9 +577,9 @@ msgid "unknown"
 msgstr "неизвестен"
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
-msgid "Paid"
-msgstr "Оплачено"
+#: view:pos.order.line:0
+msgid "POS Order line"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
@@ -610,13 +611,19 @@ msgid "Sales by user"
 msgstr "Продажи по пользователям"
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
-msgstr "Применить скидку"
+#: wizard_button:pos.add_product,init,add:0
+#: view:pos.order:0
+msgid "_Add product"
+msgstr "Добавить продукцию"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
+#: rml:pos.receipt:0
+msgid ":"
+msgstr ":"
+
+#. module: point_of_sale
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Period:"
 msgstr "Период:"
 
@@ -636,25 +643,14 @@ msgid "Total:"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,pickings:0
-msgid "Picking"
-msgstr ""
-
-#. module: point_of_sale
 #: field:pos.order.line,create_date:0
 msgid "Creation date"
 msgstr "Дата создания"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
-#: rml:pos.details:0
-msgid "Total discount"
-msgstr "Всего скидка"
-
-#. module: point_of_sale
-#: field:pos.order,pricelist_id:0
-msgid "Pricelist"
-msgstr "Каталог"
+#: field:pos.order,pickings:0
+msgid "Picking"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
@@ -668,8 +664,8 @@ msgid "Create _Invoice"
 msgstr "Создать счет"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: wizard_field:pos.add_product,init,quantity:0
+#: rml:pos.invoice:0
 #: field:pos.order.line,qty:0
 msgid "Quantity"
 msgstr "Количество"
@@ -680,8 +676,8 @@ msgid "Refund"
 msgstr "Возвраты"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Mode of payment"
 msgstr "Режим оплаты"
 
@@ -691,9 +687,9 @@ msgid "Ma_ke payment"
 msgstr "Провести платеж"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ":"
-msgstr ":"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
+msgstr "Применить скидку"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -701,9 +697,9 @@ msgid "Total Paid"
 msgstr "Всего уплачено"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-msgid "VAT(%)"
-msgstr "НДС(%)"
+#: field:pos.order,pricelist_id:0
+msgid "Pricelist"
+msgstr "Каталог"
 
 #. module: point_of_sale
 #: wizard_field:pos.discount,init,discount:0
@@ -716,10 +712,9 @@ msgid "Receipt"
 msgstr "Чек"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Modify line failed !"
-msgstr ""
+#: field:pos.order,state:0
+msgid "State"
+msgstr "Состояние"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
@@ -744,9 +739,11 @@ msgid "Cannot delete a point of sale which is already confirmed !"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Other"
-msgstr "Прочие"
+#: rml:pos.invoice:0
+#: rml:pos.lines:0
+#: field:pos.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Цена за ед."
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
@@ -754,24 +751,24 @@ msgid "Done"
 msgstr "Выполнено"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
-#: wizard_field:pos.payment,ask_pay,invoice_wanted:0
+#: rml:pos.invoice:0
 #: field:pos.order,invoice_id:0
+#: wizard_field:pos.payment,ask_pay,invoice_wanted:0
 #: field:report.transaction.pos,invoice_id:0
 msgid "Invoice"
 msgstr "Счет"
 
 #. module: point_of_sale
 #: wizard_button:pos.add_product,init,end:0
+#: wizard_button:pos.config.journal,init,end:0
 #: wizard_button:pos.discount,init,end:0
+#: view:pos.order:0
+#: selection:pos.order,state:0
 #: wizard_button:pos.payment,ask_pay,end:0
 #: wizard_button:pos.refund_order,init,end:0
 #: wizard_button:pos.sale.get,init,end:0
 #: wizard_button:pos.scan_product,init,end:0
-#: wizard_button:pos.config.journal,init,end:0
-#: selection:pos.order,state:0
-#: view:pos.order:0
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -786,14 +783,15 @@ msgid "Order lines"
 msgstr "Позиции заказа"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
-msgid "Sales (summary)"
-msgstr "Продажи (обзор)"
+#: field:pos.order.line,order_id:0
+#: field:pos.payment,order_id:0
+msgid "Order Ref"
+msgstr "Ссылка на заказ"
 
 #. module: point_of_sale
-#: field:pos.order.line,name:0
-msgid "Line Description"
-msgstr "Описание позиции"
+#: wizard_view:pos.payment,ask_pay:0
+msgid "Add payment :"
+msgstr "Добавить платеж"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
@@ -801,9 +799,10 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Ma_ke Payment"
-msgstr "Провести платеж"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total of the day"
+msgstr "Итоги дня"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
@@ -811,11 +810,15 @@ msgid "Pos Payment"
 msgstr "Платеж кассового терминала"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
-#: field:pos.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Цена за ед."
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total discount"
+msgstr "Всего скидка"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Other"
+msgstr "Прочие"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
@@ -839,19 +842,16 @@ msgid "Amount total"
 msgstr "Общая сумма"
 
 #. module: point_of_sale
-#: rml:pos.details:0
 #: wizard_field:pos.add_product,init,product:0
+#: rml:pos.details:0
 #: field:pos.order.line,product_id:0
 msgid "Product"
 msgstr "Продукция"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.receipt:0
-#: field:pos.config.journal,name:0
-#: field:pos.payment,name:0
-msgid "Description"
-msgstr "Описание"
+#: view:pos.order:0
+msgid "Invoicing"
+msgstr "Выставление счетов"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -859,11 +859,13 @@ msgid "Number of print"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.details:0
-#: rml:pos.receipt:0
-msgid "Price"
-msgstr "Цена"
+#: field:pos.config.journal,journal_id:0
+#: field:pos.order,sale_journal:0
+#: wizard_field:pos.payment,ask_pay,journal:0
+#: field:pos.payment,journal_id:0
+#: field:report.transaction.pos,journal_id:0
+msgid "Journal"
+msgstr "Книга"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -886,9 +888,9 @@ msgid "Tel. :"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
-msgstr "Операция №:"
+#: wizard_field:pos.config.journal,init,default_journal_gift:0
+msgid "Default gift journal"
+msgstr "Книга подарков по умолчанию"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_payment
@@ -902,9 +904,9 @@ msgid "All orders"
 msgstr "Все заказы"
 
 #. module: point_of_sale
-#: field:stock.picking,pos_order:0
-msgid "Pos order"
-msgstr ""
+#: wizard_field:pos.sale.get,init,picking_id:0
+msgid "Sale Order"
+msgstr "Заказ"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -932,21 +934,23 @@ msgid "Ce bon est valide jusqu'au"
 msgstr "Купон действителен до"
 
 #. module: point_of_sale
-#: wizard_button:pos.add_product,init,add:0
 #: view:pos.order:0
-msgid "_Add product"
-msgstr "Добавить продукцию"
+msgid "Payments"
+msgstr "Платежи"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 msgid "Summary"
 msgstr "Обзор"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Invoicing"
-msgstr "Выставление счетов"
+#: field:pos.config.journal,name:0
+#: rml:pos.invoice:0
+#: field:pos.payment,name:0
+#: rml:pos.receipt:0
+msgid "Description"
+msgstr "Описание"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
@@ -960,12 +964,10 @@ msgid "Payment Term"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: wizard_field:pos.payment,ask_pay,amount:0
-#: field:pos.payment,amount:0
-#: field:report.transaction.pos,amount:0
-msgid "Amount"
-msgstr "Сумма"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Mode of Taxes"
+msgstr "Режим налогов"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -973,8 +975,8 @@ msgid "Actions"
 msgstr "Действия"
 
 #. module: point_of_sale
-#: rml:pos.details_summary:0
 #: rml:pos.details:0
+#: rml:pos.details_summary:0
 #: rml:pos.lines:0
 msgid "Company:"
 msgstr "Организация:"
@@ -990,11 +992,9 @@ msgid "Total"
 msgstr "Всего"
 
 #. module: point_of_sale
-#: wizard_field:pos.payment,ask_pay,journal:0
-#: field:pos.config.journal,journal_id:0
-#: field:pos.order,sale_journal:0
-#: field:pos.payment,journal_id:0
-#: field:report.transaction.pos,journal_id:0
-msgid "Journal"
-msgstr "Книга"
+#: rml:pos.details:0
+#: rml:pos.invoice:0
+#: rml:pos.receipt:0
+msgid "Price"
+msgstr "Цена"
 

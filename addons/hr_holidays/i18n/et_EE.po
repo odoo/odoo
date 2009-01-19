@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:05:36+0000\n"
-"PO-Revision-Date: 2009-01-03 02:05:36+0000\n"
+"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
+"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,9 @@ msgid "Requests Awaiting for Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
-msgid "My Holidays Request Draft"
-msgstr ""
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Blue"
+msgstr "Helesinine"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -59,7 +59,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
-msgstr ""
+msgstr "Töötaja Puhkused"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr.py:0
@@ -91,7 +91,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Green"
-msgstr ""
+msgstr "Heleroheline"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_employeedeclaration0
@@ -99,11 +99,11 @@ msgid "Employee Declaration"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
 #: view:hr.holidays:0
+#: selection:hr.holidays,state:0
 #: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "Valideeri"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
@@ -113,23 +113,23 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
-msgstr ""
+msgstr "Heakskiidetud"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Both"
-msgstr ""
+msgstr "Mõlemad"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
-msgstr ""
+msgstr "Keeldu"
 
 #. module: hr_holidays
 #: wizard_button:hr.holidays.summary,notify,end:0
 #: wizard_button:hr.holidays.summary.employee,notify,end:0
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
@@ -140,7 +140,7 @@ msgstr ""
 #: field:hr.holidays,notes:0
 #: field:hr.holidays.per.user,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Märkmed"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status:0
@@ -170,8 +170,8 @@ msgid "Summary Of Holidays"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_setholiday0
-msgid "Holiday is set in the calendar."
+#: model:process.node,note:hr_holidays.process_node_calendar0
+msgid "The holiday is set in the calendar"
 msgstr ""
 
 #. module: hr_holidays
@@ -182,7 +182,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 msgid "Holidays Status"
-msgstr ""
+msgstr "Puhkuste Staatus"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
@@ -192,7 +192,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.per.user:0
 msgid "Holidays Allowed"
-msgstr ""
+msgstr "Puhkused Lubatud"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
@@ -207,24 +207,19 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
 msgid "Holidays Per User"
-msgstr ""
+msgstr "Puhkused Pasutaja Kohta"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Define holiday status"
-msgstr ""
+msgstr "Defineeri puhkuse Staatus"
 
 #. module: hr_holidays
+#: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
-#: selection:hr.holidays,state:0
 msgid "Confirmed"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.process,name:hr_holidays.process_process_holidaysworkflow0
-msgid "Holidays Workflow"
-msgstr ""
+msgstr "Kinnitatud"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,date_from:0
@@ -236,17 +231,17 @@ msgstr ""
 #: view:hr.holidays:0
 #: model:process.transition.action,name:hr_holidays.process_transition_action_confirm0
 msgid "Confirm"
+msgstr "Kinnita"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
+msgid "My Awaiting Confirmation Holidays Requests"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.status,section_id:0
-msgid "Section"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_approved0
-msgid "His manager approves the request"
-msgstr ""
+#: field:hr.holidays,user_id:0
+msgid "Employee_id"
+msgstr "Töötaja_id"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
@@ -258,17 +253,17 @@ msgstr ""
 #: field:hr.holidays.log,employee_id:0
 #: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Töötaja"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Red"
+#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
+msgid "Employee get holidays"
 msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
-msgstr ""
+msgstr "Helekollane"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -281,16 +276,21 @@ msgid "Number of Holidays Requested"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Number of Days"
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+msgid "My Holiday Requests"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
+#: view:hr.holidays:0
+msgid "Number of Days"
+msgstr "Päevade Arv"
+
+#. module: hr_holidays
 #: field:hr.holidays.status,name:0
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Holiday Status"
-msgstr ""
+msgstr "Puhkuse Staatus"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,init:0
@@ -301,22 +301,22 @@ msgstr ""
 #. module: hr_holidays
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Vigane vaate arhitektuuri XML!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: hr_holidays
-#: field:hr.holidays,user_id:0
-msgid "Employee_id"
+#: model:process.node,note:hr_holidays.process_node_approved0
+msgid "His manager approves the request"
 msgstr ""
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
 msgid "If holidays available, employee can take it and fill it."
-msgstr ""
+msgstr "Kui puhkused on saadaval, saab töötaja neid võtta ja täita."
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary.employee,notify:0
 msgid "You have to select at least 1 Employee. Try again."
-msgstr ""
+msgstr "Pead valima vähemalt 1 Töötaja. Proovi uuesti."
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
@@ -326,7 +326,7 @@ msgstr ""
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary.employee,init,emp:0
 msgid "Employee(s)"
-msgstr ""
+msgstr "Töötaja(d)"
 
 #. module: hr_holidays
 #: field:hr.holidays,number_of_days:0
@@ -334,9 +334,9 @@ msgid "Number of Days in this Holiday Request"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.per.user:0
 #: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
 #: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
-#: view:hr.holidays.per.user:0
 msgid "Holidays Per Employee"
 msgstr ""
 
@@ -361,14 +361,14 @@ msgid "hr.holidays.log"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Violet"
+#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
+msgid "Print Summary of Employee's Holidays"
 msgstr ""
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_calendar0
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_from:0
@@ -387,13 +387,8 @@ msgid "Employee fills in a request for holidays"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
-msgid "Employee get holidays"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_calendar0
-msgid "The holiday is set in the calendar"
+#: model:process.transition,note:hr_holidays.process_transition_setholiday0
+msgid "Holiday is set in the calendar."
 msgstr ""
 
 #. module: hr_holidays
@@ -405,12 +400,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_available
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_available
 msgid "My Available Holidays"
-msgstr ""
+msgstr "Minu Saadaolevad Puhkused"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
-msgstr ""
+msgstr "Must"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
@@ -420,7 +415,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_setholiday0
 msgid "Set Holiday"
-msgstr ""
+msgstr "Sea Puhkus"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
@@ -435,7 +430,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
-msgstr ""
+msgstr "Staatus"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -450,7 +445,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
 msgid "Color of the status"
-msgstr ""
+msgstr "Staatuse värv"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary,init,holiday_type:0
@@ -465,22 +460,22 @@ msgstr ""
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
-msgstr ""
+msgstr "puhkused."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "draft"
-msgstr ""
+msgstr "mustand"
 
 #. module: hr_holidays
 #: field:hr.holidays.per.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kasutaja"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
 msgid "Document for employee"
-msgstr ""
+msgstr "Dokument töötajale"
 
 #. module: hr_holidays
 #: field:hr.holidays.log,date:0
@@ -493,18 +488,13 @@ msgid "Reufse"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
-msgid "My Awaiting Confirmation Holidays Requests"
+#: field:hr.holidays.status,section_id:0
+msgid "Section"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
 msgid "My Holidays Request Waiting confirmation"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
-msgid "Print Summary of Employee's Holidays"
 msgstr ""
 
 #. module: hr_holidays
@@ -516,16 +506,11 @@ msgstr ""
 #: field:hr.holidays.per.user,active:0
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiivne"
 
 #. module: hr_holidays
-#: field:hr.holidays.log,name:0
-msgid "Action"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Blue"
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
+msgid "My Holidays Request Draft"
 msgstr ""
 
 #. module: hr_holidays
@@ -540,8 +525,8 @@ msgid "Approved Request"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.per.user,history:0
 #: view:hr.holidays.per.user:0
+#: field:hr.holidays.per.user,history:0
 msgid "History"
 msgstr ""
 
@@ -558,7 +543,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
-msgstr ""
+msgstr "Üldine"
 
 #. module: hr_holidays
 #: view:hr.holidays.per.user:0
@@ -566,12 +551,12 @@ msgid "General Information"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays,state:0
 #: wizard_button:hr.holidays.summary,init,end:0
 #: wizard_button:hr.holidays.summary.employee,init,end:0
-#: selection:hr.holidays,state:0
-#: view:hr.holidays:0
 msgid "Cancel"
-msgstr ""
+msgstr "Tühista"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
@@ -582,7 +567,7 @@ msgstr ""
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Validated"
-msgstr ""
+msgstr "Kinnitatud"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
@@ -598,7 +583,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #: wizard_button:hr.holidays.summary,init,checkdept:0
 #: wizard_button:hr.holidays.summary.employee,init,checkemp:0
 msgid "Print"
-msgstr ""
+msgstr "Trüki"
 
 #. module: hr_holidays
 #: model:ir.actions.wizard,name:hr_holidays.holidays_summary
@@ -641,7 +626,7 @@ msgstr ""
 #: wizard_field:hr.holidays.summary,init,holiday_type:0
 #: wizard_field:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Select Holiday Type"
-msgstr ""
+msgstr "Vali Puhkuse Tüüp"
 
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
@@ -656,6 +641,21 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_legaldeclaration0
 msgid "Secretariat Social"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Violet"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Red"
+msgstr "Punane"
+
+#. module: hr_holidays
+#: model:process.process,name:hr_holidays.process_process_holidaysprocess0
+msgid "Holidays Process"
 msgstr ""
 
 #. module: hr_holidays
@@ -676,12 +676,12 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Yellow"
-msgstr ""
+msgstr "Helekollane"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
-msgstr ""
+msgstr "Heleroosa"
 
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0

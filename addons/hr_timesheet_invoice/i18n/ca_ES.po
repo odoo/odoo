@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,17 +26,16 @@ msgid "Profit"
 msgstr "Benefici"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Analytic account incomplete"
 msgstr "Compte analític incomplet"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_profit
-#: model:ir.ui.menu,name:hr_timesheet_invoice.print_account_analytic_profit
-msgid "Timesheet profit"
-msgstr "Benefici full de treball"
+#: wizard_view:hr.timesheet.invoice.create,init:0
+msgid "Force to use a specific product"
+msgstr "Força per utilitzar un producte específic"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -44,9 +43,9 @@ msgid "Income"
 msgstr "Ingrés"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Balance"
-msgstr "Saldo pendent"
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Visible name"
+msgstr "Nom visible"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date1:0
@@ -56,7 +55,7 @@ msgstr "Inici del període"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,price:0
 msgid "The cost of each work done will be displayed on the invoice. You probably don't want to check this."
-msgstr ""
+msgstr "El cost de cada treball realitzat es mostrarà en la factura. Probablement no voleu marcar aquesta opció."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_invoice_create
@@ -66,9 +65,10 @@ msgstr "Línies analítiques de factura"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,time:0
 msgid "Display time in the history of works"
-msgstr ""
+msgstr "Mostra temps en l'historial de treballs"
 
 #. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_draft_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_draft_analytic_accounts
 msgid "Draft Analytic Accounts"
 msgstr "Comptes analítics esborrany"
@@ -87,18 +87,18 @@ msgstr "Import facturat"
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
 msgid "Check this field if you plan to automatically generate invoices based on the costs in this analytic account: timesheets, expenses, ...You can configure an automatic invoice rate on analytic accounts."
-msgstr ""
+msgstr "Marqueu aquest camp si voleu generar automàticament factures basades en els costos en aquest compte analític: fulls de serveis, despeses, ... Podeu configurar una taxa de factura automàtica sobre comptes analítics."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Partner incomplete"
-msgstr ""
+msgstr "Empresa incompleta"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,name:0
 msgid "The detail of each work done will be displayed on the invoice"
-msgstr ""
+msgstr "El detall de cada treball realitzat es mostrarà en la factura"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init:0
@@ -111,9 +111,10 @@ msgid "Period to enddate"
 msgstr "Període fins data final"
 
 #. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Force to use a specific product"
-msgstr "Força per utilitzar un producte específic"
+#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_profit
+#: model:ir.ui.menu,name:hr_timesheet_invoice.print_account_analytic_profit
+msgid "Timesheet profit"
+msgstr "Benefici full de treball"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -123,7 +124,7 @@ msgstr "Període des de data inicial"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,time:0
 msgid "The time of each work done will be displayed on the invoice"
-msgstr ""
+msgstr "El temps de cada treball realitzat es mostrarà en la factura"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,balance_product:0
@@ -131,9 +132,9 @@ msgid "Balance product"
 msgstr "Balanç de producte"
 
 #. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,date_from:0
-msgid "From"
-msgstr "Des de"
+#: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_final_invoice_create
+msgid "Final Invoice"
+msgstr "Factura final"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.final.invoice.create,init:0
@@ -157,8 +158,8 @@ msgid "Debit"
 msgstr "Deure"
 
 #. module: hr_timesheet_invoice
-#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,report:0
 #: wizard_button:account.analytic.profit,init,report:0
+#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,report:0
 msgid "Print"
 msgstr "Imprimeix"
 
@@ -185,12 +186,6 @@ msgid "Code / Date"
 msgstr "Codi / Data"
 
 #. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.final.invoice.create,init,name:0
-#: wizard_field:hr.timesheet.invoice.create,init,name:0
-msgid "Name of entry"
-msgstr "Nom de l'entrada"
-
-#. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "/"
 msgstr "/"
@@ -213,7 +208,7 @@ msgstr "Llista de preus de venda"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,name:0
 msgid "Display detail of work in the invoice line."
-msgstr ""
+msgstr "Mostra detall del treball en la línia de factura."
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -249,9 +244,10 @@ msgid "You can not modify an invoiced analytic line!"
 msgstr "No podeu modificar una línia analítica facturada!"
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,factor:0
-msgid "Discount (%)"
-msgstr "Descompte (%)"
+#: wizard_field:hr.timesheet.final.invoice.create,init,name:0
+#: wizard_field:hr.timesheet.invoice.create,init,name:0
+msgid "Name of entry"
+msgstr "Nom de l'entrada"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -262,7 +258,7 @@ msgstr "Empleat o nom de diari"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -277,7 +273,7 @@ msgstr "Cost comptable -"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,product:0
 msgid "Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost."
-msgstr ""
+msgstr "Completeu aquest camp només si voleu obligar a utilitzar un producte específic. Deixeu-lo buit per utilitzar el producte real que ve del cost."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced
@@ -308,9 +304,9 @@ msgid "Invoice rate by user"
 msgstr "Proporció de facturació per usuari"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_final_invoice_create
-msgid "Final Invoice"
-msgstr "Factura final"
+#: wizard_field:account.analytic.profit,init,date_from:0
+msgid "From"
+msgstr "Des de"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
@@ -330,7 +326,7 @@ msgstr "Període fins"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,balance_product:0
 msgid "The product that will be used to invoice the remaining amount."
-msgstr ""
+msgstr "El producte que s'utilitzarà per facturar l'import restant."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
@@ -341,13 +337,18 @@ msgstr "Cost comptable"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,date:0
 msgid "Display date in the history of works"
-msgstr ""
+msgstr "Mostra data en l'historial de treballs"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,date:0
 #: wizard_field:hr.timesheet.invoice.create,init,date:0
 msgid "Date"
 msgstr "Data"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,factor:0
+msgid "Discount (%)"
+msgstr "Descompte (%)"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -358,11 +359,6 @@ msgstr "Ef."
 #: wizard_field:hr.timesheet.invoice.create,init,accounts:0
 msgid "Analytic Accounts"
 msgstr "Comptes analítics"
-
-#. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,employee_ids:0
-msgid "Employee"
-msgstr "Empleat"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_max:0
@@ -381,9 +377,9 @@ msgid "End of period"
 msgstr "Fi del període"
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Visible name"
-msgstr "Nom visible"
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Balance"
+msgstr "Saldo pendent"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
@@ -422,9 +418,9 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: hr_timesheet_invoice
-#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,end:0
 #: wizard_button:account.analytic.profit,init,end:0
 #: wizard_button:hr.timesheet.final.invoice.create,init,end:0
+#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,end:0
 #: wizard_button:hr.timesheet.invoice.create,init,end:0
 msgid "Cancel"
 msgstr "Cancel·la"
@@ -441,9 +437,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Units"
-msgstr "Unitats"
+#: wizard_field:account.analytic.profit,init,employee_ids:0
+msgid "Employee"
+msgstr "Empleat"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -453,18 +449,17 @@ msgstr "a les"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,date:0
 msgid "The real date of each work will be displayed on the invoice"
-msgstr ""
+msgstr "La data real de cada treball serà mostrada en la factura"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,price:0
 msgid "Display cost of the item you reinvoice"
-msgstr ""
+msgstr "Mostra el cost de l'article que torneu a facturar"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#, python-format
-msgid "Please fill a Balance product in the wizard"
-msgstr "Indiqueu un producte de balanç en l'assistent"
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "1cm 27.7cm 20cm 27.7cm"
+msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
@@ -477,19 +472,24 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "%"
-msgstr "%"
+#: view:hr_timesheet_invoice.factor:0
+msgid "Types of invoicing"
+msgstr "Tipus de facturació"
 
 #. module: hr_timesheet_invoice
-#: field:account.analytic.line,to_invoice:0
-msgid "Invoicing"
-msgstr "Facturat"
+#: field:hr_timesheet_invoice.factor,name:0
+msgid "Internal name"
+msgstr "Nom intern"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,journal_ids:0
 msgid "Journal"
 msgstr "Diari"
+
+#. module: hr_timesheet_invoice
+#: rml:account.analytic.profit:0
+msgid "Units"
+msgstr "Unitats"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -503,8 +503,8 @@ msgid "Pending Analytic Accounts"
 msgstr "Comptes analítics pendents"
 
 #. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
 #: view:account.analytic.account:0
+#: wizard_view:hr.timesheet.invoice.create,init:0
 msgid "Invoicing Data"
 msgstr "Dades facturació"
 
@@ -514,19 +514,14 @@ msgid "Invoice rate"
 msgstr "Taxa factura"
 
 #. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Types of invoicing"
-msgstr "Tipus de facturació"
-
-#. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Page"
 msgstr "Pàgina"
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,name:0
-msgid "Internal name"
-msgstr "Nom intern"
+#: field:account.analytic.line,to_invoice:0
+msgid "Invoicing"
+msgstr "Facturat"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -540,9 +535,10 @@ msgid "Unclosed Invoiceable Accounts"
 msgstr "Comptes facturables no tancats"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "1cm 27.7cm 20cm 27.7cm"
-msgstr "1cm 27.7cm 20cm 27.7cm"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Please fill a Balance product in the wizard"
+msgstr "Indiqueu un producte de balanç en l'assistent"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -555,5 +551,5 @@ msgstr "Cost"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Please fill in the address field in the partner: %s."
-msgstr ""
+msgstr "Introduïu el camp direcció en l'empresa: %s."
 

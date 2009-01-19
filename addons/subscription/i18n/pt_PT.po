@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,14 +22,15 @@ msgid "Source Document"
 msgstr "Documento fonte"
 
 #. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr "Quantidade do intervalo"
+#: field:subscription.document,model:0
+msgid "Object"
+msgstr "Objecto"
 
 #. module: subscription
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -57,10 +58,9 @@ msgid "Current Date"
 msgstr "Data actual"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "Please provide another source document.\nThis one does not exist !"
-msgstr ""
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -73,15 +73,14 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: subscription
-#: model:ir.ui.menu,name:subscription.next_id_45
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr "Subscrições"
+#: model:ir.model,name:subscription.model_subscription_document_fields
+msgid "Subscription document fields"
+msgstr "Campo do documento de subscrição"
 
 #. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr "Objecto"
+#: field:subscription.subscription,interval_number:0
+msgid "Interval Qty"
+msgstr "Quantidade do intervalo"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -94,9 +93,9 @@ msgid "Set to Draft"
 msgstr "Definido como rascunho"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document_fields
-msgid "Subscription document fields"
-msgstr "Campo do documento de subscrição"
+#: model:ir.model,name:subscription.model_subscription_document
+msgid "Subscription document"
+msgstr "Documento de subscrição"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -139,9 +138,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Months"
-msgstr "Meses"
+#: selection:subscription.subscription.history,document_id:0
+msgid "Sale Order"
+msgstr "Ordem de Venda"
 
 #. module: subscription
 #: field:subscription.document,name:0
@@ -160,15 +159,9 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Sale Order"
-msgstr "Ordem de Venda"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription
-#: field:subscription.subscription.history,subscription_id:0
-msgid "Subscription"
-msgstr "Subscrição"
+#: selection:subscription.subscription,interval_type:0
+msgid "Months"
+msgstr "Meses"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -176,7 +169,6 @@ msgid "Days"
 msgstr "Dias"
 
 #. module: subscription
-#: field:subscription.document,active:0
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Activo"
@@ -185,6 +177,12 @@ msgstr "Activo"
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
 msgstr "Cron job"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: field:subscription.subscription.history,subscription_id:0
+msgid "Subscription"
+msgstr "Subscrição"
 
 #. module: subscription
 #: field:subscription.subscription,partner_id:0
@@ -197,15 +195,10 @@ msgid "Subsription Data"
 msgstr "Data de subscrição"
 
 #. module: subscription
-#: field:subscription.document.fields,document_id:0
 #: view:subscription.document:0
+#: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
 msgstr "Documento de Subscrição"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Process"
-msgstr "Processo"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -213,9 +206,9 @@ msgid "False"
 msgstr "Falso"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-msgid "Subscription document"
-msgstr "Documento de subscrição"
+#: view:subscription.subscription:0
+msgid "Process"
+msgstr "Processo"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -224,6 +217,13 @@ msgid "All Subscriptions"
 msgstr "Todas as subscrições"
 
 #. module: subscription
+#: model:ir.ui.menu,name:subscription.next_id_45
+#: view:subscription.subscription:0
+msgid "Subscriptions"
+msgstr "Subscrições"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
 msgstr "Tipos de documentos"
@@ -232,7 +232,7 @@ msgstr "Tipos de documentos"
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Fonte do documento errado!"
 
 #. module: subscription
 #: view:subscription.document.fields:0
@@ -255,8 +255,8 @@ msgid "Default Value"
 msgstr "Valor por defeito"
 
 #. module: subscription
-#: field:subscription.subscription,doc_lines:0
 #: view:subscription.subscription:0
+#: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
 msgstr "Documentos criados"
 

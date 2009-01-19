@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:07:39+0000\n"
-"PO-Revision-Date: 2009-01-03 02:07:39+0000\n"
+"POT-Creation-Date: 2009-01-19 19:35:34+0000\n"
+"PO-Revision-Date: 2009-01-19 19:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,8 +52,8 @@ msgid "Note"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Supplier Invoice"
+#: wizard_button:wizard.notify_message,init,print:0
+msgid "Print"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -72,11 +72,6 @@ msgid "Notify By Messages"
 msgstr ""
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,print:0
-msgid "Print"
-msgstr ""
-
-#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Document"
 msgstr ""
@@ -87,8 +82,8 @@ msgid "PRO-FORMA"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes:"
+#: field:account.invoice,abstract_line_ids:0
+msgid "Invoice Lines"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -127,13 +122,18 @@ msgid "Canceled Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: field:account.invoice,abstract_line_ids:0
-msgid "Invoice Lines"
+#: rml:account.invoice.layout:0
+msgid "Taxes:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
+msgstr ""
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -162,13 +162,18 @@ msgid ":"
 msgstr ""
 
 #. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Tel. :"
+msgstr ""
+
+#. module: account_invoice_layout
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -187,13 +192,8 @@ msgid "Product"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices with Layout"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -207,8 +207,8 @@ msgid "Total (excl. taxes):"
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
-msgid "Invoices with Layout"
+#: rml:account.invoice.layout:0
+msgid "Taxes"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -243,17 +243,17 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "Supplier Invoice"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Tel. :"
+msgid "Invoice"
 msgstr ""
 
 #. module: account_invoice_layout

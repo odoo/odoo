@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:01:35+0000\n"
-"PO-Revision-Date: 2009-01-03 02:01:35+0000\n"
+"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
+"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,10 +21,9 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-msgid "Download URL"
-msgstr "URL descàrrega"
+#: wizard_field:base_module_publish.module_export,zip,module_file:0
+msgid "Module .zip file"
+msgstr "Fitxer .zip del mòdul"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_export,zip,module_filename:0
@@ -34,12 +33,17 @@ msgstr "Nom de fitxer"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,operation:0
 msgid "Modification"
+msgstr "Modificació"
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "/fixed assets"
 msgstr ""
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr ""
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Accounting & Finance"
+msgstr "Taullells & Informes/Comptabilitat & Finances"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_export,zip:0
@@ -49,22 +53,22 @@ msgstr "Finalitza"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Human ressources"
-msgstr ""
+msgstr "Taullells & Informes/Recursos humans"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Administration tools"
-msgstr ""
+msgid "Vertical modules/Manufacturing industries"
+msgstr "Mòduls verticals/Industries manufactureres"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Foods industries"
-msgstr ""
+msgstr "Mòduls verticals/Industries d'alimentació"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Services companies/IT Companies"
-msgstr ""
+msgstr "Companyies de serveis/Companyies TI"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
@@ -73,15 +77,15 @@ msgid "Login failed!"
 msgstr "Error al iniciar la sessió!"
 
 #. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Dashboards & reporting/Manufacturing"
+msgstr "Taullells & Informes/Fabricació"
+
+#. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,init,zip:0
 #: wizard_button:base_module_publish.module_publish_all,init,login:0
 msgid "Ok"
 msgstr "Ok"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "/Dashboards & Reporting"
-msgstr ""
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/module_zip.py:0
@@ -92,18 +96,17 @@ msgstr "No podeu exportar un mòdul que no està insatl.lat!"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Purchases & Procurement"
-msgstr ""
+msgstr "Taullells & Informes/Compres & Proveïments"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Services companies"
-msgstr ""
+msgstr "Mòduls verticals/Companyies de serveis"
 
 #. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish_all,login:0
-msgid "User information"
-msgstr "Informació d'usuari"
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Vertical modules/Profiles"
+msgstr "Mòduls verticals/Perfils"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
@@ -114,7 +117,7 @@ msgstr "No podeu publicar un mòdul que no està instal.lat!"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Sales & Marketing"
-msgstr ""
+msgstr "Taulers & Informes/Vendes & Marketing"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,operation:0
@@ -124,11 +127,11 @@ msgstr "Operació"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Reporting"
-msgstr ""
+msgstr "Connexions externes/Informes"
 
 #. module: base_module_publish
-#: wizard_button:base_module_publish.module_publish,step2,step1:0
 #: wizard_button:base_module_publish.module_publish,step1,init:0
+#: wizard_button:base_module_publish.module_publish,step2,step1:0
 msgid "Previous"
 msgstr "Enrera"
 
@@ -151,12 +154,17 @@ msgstr "Versió"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "Other proprietary"
+msgstr "Altre propietari"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_export,init,include_src:0
+msgid "Include sources"
 msgstr ""
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Others"
-msgstr ""
+msgstr "Localització/Altres"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,email:0
@@ -179,7 +187,7 @@ msgstr "Error al pujar el fitxer"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Accounting & finance"
-msgstr ""
+msgstr "Localització/Comptabilitat & Finances"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,update:0
@@ -192,19 +200,19 @@ msgid "Documentation URL"
 msgstr "URL documentació"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Accounting & Finance"
-msgstr ""
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
+msgstr "només s'admeten fitxers .png"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Base"
-msgstr ""
+msgstr "Taullells & Informes/Base"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Inventory control"
-msgstr ""
+msgstr "Taullells & Informes/Control inventari"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_export,init:0
@@ -215,42 +223,42 @@ msgstr "Exporta mòdul"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Accounting & Finance"
-msgstr ""
+msgstr "Mòduls genèrics/Comptabilitat & Finances"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Manufacturing"
-msgstr ""
+msgid "Generic modules/Security"
+msgstr "Mòduls genèrics/Seguretat"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/eCommerce"
-msgstr ""
+msgstr "Connexions externes/eCommerce"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/CRM & SRM"
-msgstr ""
+msgstr "Taullells & Informes/CRM & SRM"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Human ressources"
-msgstr ""
+msgstr "Mòduls genèrics/Recursos humans"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Developpers tools"
-msgstr ""
+msgstr "Eines/Eines del desenvolupador"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,docurl:0
 msgid "Empty to keep existing value"
-msgstr ""
+msgstr "Deixeu-ho buit per a mantenir valor existent"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/EDI"
-msgstr ""
+msgstr "Connexions externes/EDI"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,category:0
@@ -265,7 +273,7 @@ msgstr "Descripció breu"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Localisations/Payroll"
-msgstr ""
+msgstr "Localització/Sistemes de pagament"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
@@ -276,7 +284,7 @@ msgstr "Informació de publicació"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Vertical modules/Others"
-msgstr ""
+msgstr "Mòduls verticals/Altres"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,publish,result:0
@@ -291,22 +299,17 @@ msgstr "Mòduls en error"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Others/Education"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Security"
-msgstr ""
+msgstr "Altres/Educació"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,demourl:0
 msgid "empty to keep existing value"
-msgstr ""
+msgstr "Deixeu-ho buit per a mantenir valor existent"
 
 #. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,url_download:0
 msgid "Keep empty for an auto upload of the module"
-msgstr ""
+msgstr "Deixeu-ho buit per pujar automàticament el mòdul"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,website:0
@@ -316,11 +319,11 @@ msgstr "Lloc web"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Sales & Marketing"
-msgstr ""
+msgstr "Mòduls genèrics/Vendes & Marketing"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Manufacturing"
+msgid "Manufacturing/Manufacturing"
 msgstr ""
 
 #. module: base_module_publish
@@ -331,7 +334,7 @@ msgstr "Resum"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Base"
-msgstr ""
+msgstr "Mòduls genèrics/Base"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,already:0
@@ -339,24 +342,27 @@ msgid "Modules already updated"
 msgstr "Mòduls ja actualitzats"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_export,zip,module_file:0
-msgid "Module .zip file"
-msgstr "Fitxer .zip del mòdul"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
+msgstr "Errors"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Profiles"
-msgstr ""
+#: wizard_view:base_module_publish.module_publish,step2:0
+#: wizard_view:base_module_publish.module_publish_all,login:0
+msgid "User information"
+msgstr "Informació d'usuari"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Portal Management"
-msgstr ""
+msgstr "Connexions externes/Gestió de portals web"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Sample modules"
-msgstr ""
+msgstr "Eines/Mòduls d'exemple"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,include_src:0
@@ -371,8 +377,8 @@ msgstr "General"
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,init,end:0
 #: wizard_button:base_module_publish.module_publish,init,end:0
-#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish,step1,end:0
+#: wizard_button:base_module_publish.module_publish,step2,end:0
 #: wizard_button:base_module_publish.module_publish_all,init,end:0
 #: wizard_button:base_module_publish.module_publish_all,login,end:0
 msgid "Cancel"
@@ -388,12 +394,12 @@ msgstr "Tancat"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Inventory control"
-msgstr ""
+msgstr "Mòduls genèrics/Control inventari"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Dashboards & reporting/Others"
-msgstr ""
+msgstr "Taulells & Informes/Altres"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0
@@ -409,12 +415,17 @@ msgstr "Introducció"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "External interfaces/Others"
-msgstr ""
+msgstr "Connexions externes/Altres"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Purchases & Procurement"
-msgstr ""
+msgstr "Mòduls genèrics/Compres & Proveïments"
+
+#. module: base_module_publish
+#: selection:base_module_publish.module_publish,step1,category:0
+msgid "Generic modules/Manufacturing"
+msgstr "Mòduls genèrics/Fabricació"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,demourl:0
@@ -422,28 +433,21 @@ msgid "Demo URL"
 msgstr "URL demo"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,description:0
 #: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_field:base_module_publish.module_publish,step1,description:0
 msgid "Description"
 msgstr "Descripció"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Manufacturing industries"
-msgstr ""
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
-msgstr "Errors"
+msgid "Tools/Administration tools"
+msgstr "Eines/Eines administratives"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish,step1:0
 #: wizard_view:base_module_publish.module_publish,publish:0
+#: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,init:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 #: wizard_view:base_module_publish.module_publish_all,publish:0
@@ -479,7 +483,7 @@ msgstr "Nom"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/Others"
-msgstr ""
+msgstr "Mòduls genèrics/Altres"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
@@ -490,7 +494,7 @@ msgstr "Aquesta versió del mòdul ja existeix en el servidor"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Generic modules/CRM & SRM"
-msgstr ""
+msgstr "Mòduls genèrics/CRM & SRM"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,init,step1:0
@@ -502,7 +506,7 @@ msgstr "Contínua"
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "Please provide here your login on the Open ERP website."
-msgstr ""
+msgstr "Introduïu aquí el vostre nom d'usuari del lloc web d'OpenERP."
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,login:0
@@ -513,7 +517,7 @@ msgstr "Usuari"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "GPL-2"
-msgstr ""
+msgstr "GPL-2"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
@@ -523,12 +527,18 @@ msgstr "Càrrega informació"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,operation:0
 msgid "Creation"
-msgstr ""
+msgstr "Creació"
 
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,category:0
 msgid "Tools/Others"
-msgstr ""
+msgstr "Eines/Altres"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "URL descàrrega"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,image:0

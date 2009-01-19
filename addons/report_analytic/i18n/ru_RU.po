@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:12:32+0000\n"
-"PO-Revision-Date: 2009-01-03 02:12:32+0000\n"
+"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
+"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: report_analytic
-#: model:ir.model,name:report_analytic.model_report_analytic_account_close
-msgid "Analytic account to close"
-msgstr "Счет аналитики к закрытию"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: report_analytic
 #: constraint:ir.model:0
@@ -31,14 +31,9 @@ msgid "Max. Quantity"
 msgstr "Макс. кол-во"
 
 #. module: report_analytic
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: report_analytic
-#: field:report.analytic.account.close,name:0
-msgid "Analytic account"
-msgstr "Счет аналитики"
+#: model:ir.model,name:report_analytic.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Счет аналитики к закрытию"
 
 #. module: report_analytic
 #: field:report.analytic.account.close,state:0
@@ -61,6 +56,7 @@ msgid "Balance"
 msgstr "Баланс"
 
 #. module: report_analytic
+#: model:ir.actions.act_window,name:report_analytic.action_analytic_account_tree
 #: model:ir.ui.menu,name:report_analytic.menu_action_analytic_account_tree
 #: view:report.analytic.account.close:0
 msgid "Expired analytic accounts"

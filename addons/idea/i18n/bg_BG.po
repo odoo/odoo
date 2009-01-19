@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:00:56+0000\n"
-"PO-Revision-Date: 2009-01-03 02:00:56+0000\n"
+"POT-Creation-Date: 2009-01-19 19:28:41+0000\n"
+"PO-Revision-Date: 2009-01-19 19:28:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,15 +29,16 @@ msgid "Very Good"
 msgstr "Много добре"
 
 #. module: idea
-#: field:idea.idea,stat_vote_ids:0
 #: view:idea.idea:0
+#: field:idea.idea,stat_vote_ids:0
 msgid "Statistics"
 msgstr "Статистики"
 
 #. module: idea
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
+#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
+#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
+msgid "My Ideas"
+msgstr "Мои идеи"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -65,26 +66,14 @@ msgid "Ideas"
 msgstr "Идеи"
 
 #. module: idea
-#: model:ir.model,name:idea.model_idea_comment
-#: field:idea.idea,comment_ids:0
-#: view:idea.comment:0
+#: field:idea.category,child_ids:0
+msgid "Child Categories"
+msgstr "Дъщерни категории"
+
+#. module: idea
 #: view:idea.idea:0
-msgid "Comments"
-msgstr "Коментари"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Много лошо"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Лошо"
+msgid "New Idea"
+msgstr "Нова идея"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
@@ -114,13 +103,18 @@ msgid "Statistics on Votes"
 msgstr "Статистики по вотове"
 
 #. module: idea
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Category for an idea"
 msgstr ""
 
 #. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
+#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
+msgid "Vote Statistics"
 msgstr ""
 
 #. module: idea
@@ -153,11 +147,6 @@ msgid "Reporting"
 msgstr "Справки"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Close"
-msgstr "Затвори"
-
-#. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
 msgstr ""
@@ -179,11 +168,12 @@ msgid "Your comment"
 msgstr "Вашият коментар"
 
 #. module: idea
-#: selection:idea.idea,state:0
-msgid "Accepted"
-msgstr "Прието"
+#: model:ir.ui.menu,name:idea.menu_config
+msgid "Configuration"
+msgstr "Настройка"
 
 #. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
 msgstr "Категории"
@@ -230,31 +220,36 @@ msgid "idea.idea"
 msgstr "idea.idea"
 
 #. module: idea
-#: field:idea.category,summary:0
-msgid "Summary"
-msgstr "Обобщение"
+#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
+#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
+msgid "My Draft Ideas"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,vote_ids:0
+msgid "Vote"
+msgstr "Глас"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Bad"
+msgstr "Лошо"
 
 #. module: idea
 #: view:idea.idea:0
-msgid "Cancel"
-msgstr "Откажи"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
-msgid "My Ideas"
-msgstr "Мои идеи"
-
-#. module: idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
-#: view:idea.idea:0
 msgid "All Ideas"
 msgstr "Всички идеи"
 
 #. module: idea
-#: field:idea.category,child_ids:0
-msgid "Child Categories"
-msgstr "Дъщерни категории"
+#: view:idea.comment:0
+#: view:idea.idea:0
+#: field:idea.idea,comment_ids:0
+#: model:ir.model,name:idea.model_idea_comment
+msgid "Comments"
+msgstr "Коментари"
 
 #. module: idea
 #: field:idea.idea,count_comments:0
@@ -267,19 +262,21 @@ msgid "Idea Summary"
 msgstr ""
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
+#: view:idea.category:0
+msgid "Category of ideas"
 msgstr ""
 
 #. module: idea
-#: view:idea.idea:0
-msgid "New Idea"
-msgstr "Нова идея"
+#: field:idea.category,summary:0
+msgid "Summary"
+msgstr "Обобщение"
 
 #. module: idea
-#: field:idea.idea,vote_avg:0
-msgid "Average Score"
-msgstr "Средна оценка"
+#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
+#: model:ir.actions.act_window,name:idea.action_idea_idea_open
+#: model:ir.ui.menu,name:idea.menu_idea_idea_open
+msgid "Open Ideas"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
@@ -288,16 +285,11 @@ msgid "vote_stat of ideas"
 msgstr ""
 
 #. module: idea
-#: field:idea.comment,content:0
 #: view:idea.comment:0
+#: field:idea.comment,content:0
 #: view:idea.idea:0
 msgid "Comment"
 msgstr "Коментар"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_config
-msgid "Configuration"
-msgstr "Настройка"
 
 #. module: idea
 #: field:idea.category,parent_id:0
@@ -310,17 +302,24 @@ msgid "Creator"
 msgstr "Създал"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Open"
-msgstr "Отвoри"
+#: model:ir.ui.menu,name:idea.menu_tools
+msgid "Tools"
+msgstr "Инструменти"
 
 #. module: idea
 #: field:idea.comment,idea_id:0
+#: view:idea.idea:0
 #: field:idea.vote,idea_id:0
 #: field:idea.vote.stat,idea_id:0
-#: view:idea.idea:0
 msgid "Idea"
 msgstr "Идея"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Bad"
+msgstr "Много лошо"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -333,27 +332,24 @@ msgid "All Votes"
 msgstr ""
 
 #. module: idea
-#: field:idea.idea,vote_ids:0
-msgid "Vote"
-msgstr "Глас"
+#: view:idea.idea:0
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
-msgid "My Draft Ideas"
-msgstr ""
+#: view:idea.idea:0
+msgid "Close"
+msgstr "Затвори"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open
-msgid "Open Ideas"
-msgstr ""
+#: field:idea.idea,vote_avg:0
+msgid "Average Score"
+msgstr "Средна оценка"
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_tools
-msgid "Tools"
-msgstr "Инструменти"
+#: view:idea.idea:0
+msgid "Open"
+msgstr "Отвoри"
 
 #. module: idea
 #: help:idea.idea,description:0

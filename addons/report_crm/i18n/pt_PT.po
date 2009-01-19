@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-03 02:11:07+0000\n"
-"PO-Revision-Date: 2009-01-03 02:11:07+0000\n"
+"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
+"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Probabilidade média"
 #. module: report_crm
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: report_crm
 #: model:ir.model,name:report_crm.model_report_crm_case_categ
@@ -43,7 +43,6 @@ msgid "Section"
 msgstr "Secção"
 
 #. module: report_crm
-#: field:report.crm.case.categ,nbr:0
 #: field:report.crm.case.user,nbr:0
 msgid "# of Cases"
 msgstr "Número de Processos"
@@ -95,10 +94,9 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: report_crm
-#: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_my
-#: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_my
-msgid "My cases by section"
-msgstr "Meus processos por secção"
+#: field:report.crm.case.user,delay_close:0
+msgid "Delay to close"
+msgstr "Atrasar fecho"
 
 #. module: report_crm
 #: model:ir.actions.act_window,name:report_crm.act_crm_case_section_2_report_crm_case_user
@@ -135,11 +133,6 @@ msgid "Cases by User and Section"
 msgstr "Processos por utilizador e secção"
 
 #. module: report_crm
-#: field:report.crm.case.user,delay_close:0
-msgid "Delay to close"
-msgstr "Atrasar fecho"
-
-#. module: report_crm
 #: model:ir.ui.menu,name:report_crm.next_id_65
 msgid "This Month"
 msgstr "Este mês"
@@ -150,6 +143,7 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: report_crm
+#: model:ir.actions.act_window,name:report_crm.act_crm_case_categ_2_report_crm_case_categ
 #: model:ir.actions.act_window,name:report_crm.act_res_users_2_report_crm_case_user
 msgid "Monthly cases"
 msgstr "Processos mensais"
@@ -171,6 +165,12 @@ msgstr "Processos por utilizador e secção (mês actual)"
 #: model:ir.ui.menu,name:report_crm.menu_crm_case_categ_tree
 msgid "Cases by Categories and Section"
 msgstr "Processos por categorias e secção"
+
+#. module: report_crm
+#: model:ir.actions.act_window,name:report_crm.action_report_crm_case_user_tree_my
+#: model:ir.ui.menu,name:report_crm.menu_crm_case_user_tree_my
+msgid "My cases by section"
+msgstr "Meus processos por secção"
 
 #. module: report_crm
 #: field:report.crm.case.categ,name:0
