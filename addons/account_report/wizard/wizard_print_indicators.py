@@ -54,8 +54,8 @@ def _load_base(self, cr, uid, data, context):
     return data['form']
 
 def _check_len(self, cr, uid, data, context):
-    if len(data['form']['base_selection'][0][2])>12:
-        raise wizard.except_wizard('User Error!',"Please select maximum 12 records to fit the page-width.")
+    if len(data['form']['base_selection'][0][2])>8:
+        raise wizard.except_wizard('User Error!',"Please select maximum 8 records to fit the page-width.")
     return data['form']
 
 class wizard_print_indicators(wizard.interface):
