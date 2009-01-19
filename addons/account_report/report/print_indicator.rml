@@ -116,24 +116,6 @@
 <para style="P3">
 <font color="white"> </font>
 </para>
-<section>
-      <para style="P13">[[ o['array_table'] and repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
-      <blockTable colWidths="0.0" style="Table5">
-      	<tr>
-			<td>
-            <para style="P9"> </para>
-          </td>
-        </tr>
-        <tr>
-			<td>
-            <para style="P9"> </para>
-          </td>
-        </tr>
-	 </blockTable>
-</section>
-<para style="P3">
-<font color="white"> </font>
-</para>
 <blockTable colWidths="14.0,500.0,14.0" repeatRows="1" style="Table6">
 <tr>
 <td>
@@ -166,8 +148,24 @@
 <para style="P3">
 <font color="white"> </font>
 </para>
-<hr color="black" thickness="1.5"/>
 </section>
+<section>
+	<para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
+	  <para style="P13">[[ o['array_table'] and repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
+	  <blockTable colWidths="0.0" style="Table5">
+	  	<tr>
+			<td>
+	        <para style="P9"> </para>
+	      </td>
+	    </tr>
+	    <tr>
+			<td>
+	        <para style="P9"> </para>
+	      </td>
+	    </tr>
+	 </blockTable>
+</section>
+<hr color="black" thickness="1.5"/>
 </story>
 </document>
 

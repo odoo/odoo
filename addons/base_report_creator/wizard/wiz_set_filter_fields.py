@@ -118,7 +118,7 @@ def _set_filter_value(self, cr, uid, data, context):
     value_field = set_value_fields.get('value')
     field_type = value_field.get('type',False)
     field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[form_data.get('field_id')],fields=['ttype','relation','model_id','name','field_description'])[0]
-    model_name = field_data['model_id'][1]
+    model_name = pooler.get_pool(cr.dbname).get('ir.model').browse(cr, uid, field_data['model_id'][0]).model
     model_pool = pooler.get_pool(cr.dbname).get(model_name)
     table_name = model_pool._table
     model_name = model_pool._description
@@ -145,7 +145,7 @@ def _set_filter_value(self, cr, uid, data, context):
 def _set_form_value(self, cr, uid, data, context):
     field_id = data['form']['field_id']
     field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[field_id])[0]
-    fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model_id')[1]).fields_get(cr,uid,fields=[field_data.get('name')])
+    fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model')).fields_get(cr,uid,fields=[field_data.get('name')])
     value_field = set_value_fields.get('value')
 #   print "fields_dict :",fields_dict.get(field_data.get('name'))
 #   set_value_fields['value']= fields_dict.get(field_data.get('name'))

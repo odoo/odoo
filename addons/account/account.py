@@ -77,7 +77,8 @@ class account_payment_term_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
         'value_amount': fields.float('Value Amount'),
-        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month."),
+        'days': fields.integer('Number of Days',required=True, help="Number of days to add before computation of the day of month." \
+            "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month',required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
         'payment_id': fields.many2one('account.payment.term','Payment Term', required=True, select=True),
     }
@@ -129,6 +130,7 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
+    _parent_order = 'length(code),code'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -559,8 +561,8 @@ class account_period(osv.osv):
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
-        'special': fields.boolean('Special Period', size=12,
-            help="Special periods are periods that can overlap, like the 13rd period in fiscal years for closing entries."),
+        'special': fields.boolean('Opening/Closing Period', size=12,
+            help="These periods can overlap."),
         'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
@@ -680,7 +682,6 @@ class account_fiscalyear(osv.osv):
     _inherit = "account.fiscalyear"
     _description = "Fiscal Year"
     _columns = {
-        'start_journal_period_id':fields.many2one('account.journal.period','New Entries Journal'),
         'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
     }
 
@@ -1136,6 +1137,19 @@ class account_tax_code(osv.osv):
             res[record.id] = round(_rec_get(record), 2)
         return res
 
+    def _sum_year(self, cr, uid, ids, name, args, context):
+        if 'fiscalyear_id' in context and context['fiscalyear_id']:
+            fiscalyear_id = context['fiscalyear_id']
+        else:
+            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+        where = ''
+        if fiscalyear_id:
+             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
+             if pids:
+                 where = ' and period_id in (' + (','.join(pids))+')'
+        return self._sum(cr, uid, ids, name, args, context,
+                where=where)
+
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
             period_id = context['period_id']
@@ -1154,7 +1168,7 @@ class account_tax_code(osv.osv):
         'name': fields.char('Tax Case Name', size=64, required=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
-        'sum': fields.function(_sum, method=True, string="Year Sum"),
+        'sum': fields.function(_sum_year, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
         'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
@@ -1216,8 +1230,10 @@ class account_tax(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax childs. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
         'active': fields.boolean('Active'),
-        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
-        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
+        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'),('balance','Balance')], 'Tax Type', required=True,
+            help="The computation method for the tax amount."),
+        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True,
+            help="If not applicable (computed through a Python code), the tax do not appears on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developpers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account', 'Refund Tax Account'),
@@ -1330,13 +1346,31 @@ class account_tax(osv.osv):
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
+            elif tax.type=='balance':
+                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+                data['balance'] = cur_price_unit
+
             amount2 = data['amount']
             if len(tax.child_ids):
                 if tax.child_depend:
-                    del res[-1]
+                    latest = res.pop()
                 amount = amount2
                 child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner)
                 res.extend(child_tax)
+                if tax.child_depend:
+                    for r in res:
+                        for name in ('base','ref_base'):
+                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
+                                r[name+'_code_id'] = latest[name+'_code_id']
+                                r[name+'_sign'] = latest[name+'_sign']
+                                r['price_unit'] = latest['price_unit']
+                                latest[name+'_code_id'] = False
+                        for name in ('tax','ref_tax'):
+                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
+                                r[name+'_code_id'] = latest[name+'_code_id']
+                                r[name+'_sign'] = latest[name+'_sign']
+                                r['amount'] = data['amount']
+                                latest[name+'_code_id'] = False
             if tax.include_base_amount:
                 cur_price_unit+=amount2
         return res
@@ -1352,8 +1386,14 @@ class account_tax(osv.osv):
             one tax for each tax id in IDS and their childs
         """
         res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner)
+        total = 0.0
         for r in res:
-            r['amount'] *= quantity
+            if r.get('balance',False):
+                r['amount'] = round(r['balance'] * quantity, 2) - total
+            else:
+                r['amount'] = round(r['amount'] * quantity, 2)
+                total += r['amount']
+
         return res
 
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
@@ -1383,6 +1423,10 @@ class account_tax(osv.osv):
                 localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
+            elif tax.type=='balance':
+                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+                data['balance'] = cur_price_unit
+
 
             if tax.include_base_amount:
                 cur_price_unit -= amount
@@ -1435,8 +1479,13 @@ class account_tax(osv.osv):
             one tax for each tax id in IDS and their childs
         """
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
+        total = 0.0
         for r in res:
-            r['amount'] *= quantity
+            if r.get('balance',False):
+                r['amount'] = round(r['balance'] * quantity, 2) - total
+            else:
+                r['amount'] = round(r['amount'] * quantity, 2)
+                total += r['amount']
         return res
 account_tax()
 

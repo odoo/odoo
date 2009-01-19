@@ -118,7 +118,7 @@ class hr_employee(osv.osv):
         'user_id' : fields.many2one('res.users', 'Related User'),
 
         'country_id' : fields.many2one('res.country', 'Nationality'),
-        'birthday' : fields.date("Started on"),
+        'birthday' : fields.date("Birthday"),
         'ssnid': fields.char('SSN No', size=32),
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),

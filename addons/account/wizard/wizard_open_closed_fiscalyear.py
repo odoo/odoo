@@ -27,7 +27,7 @@ from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Choose Fiscal Year">
-    <field name="fyear_id" domain="[('state','=','done')]"/>
+    <field name="fyear_id" domain="[('state','=','draft')]"/>
 </form>
 """
 
@@ -41,19 +41,18 @@ def _remove_entries(self, cr, uid, data, context):
     if not data_fyear.end_journal_period_id:
         raise wizard.except_wizard(_('Error'), _('No journal for ending writings have been defined for the fiscal year'))
     period_journal = data_fyear.end_journal_period_id
-    if not period_journal.journal_id.centralisation:
-        raise wizard.except_wizard(_('UserError'), _('The journal must have centralised counterpart'))
     ids_move = pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
-    pool.get('account.move').unlink(cr,uid,ids_move)
-    cr.execute('UPDATE account_journal_period ' \
-            'SET state = %s ' \
-            'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
-            ('draft',data_fyear))
-    cr.execute('UPDATE account_period SET state = %s ' \
-            'WHERE fiscalyear_id = %s', ('draft',data_fyear))
-    cr.execute('UPDATE account_fiscalyear ' \
-            'SET state = %s, end_journal_period_id = null '\
-            'WHERE id = %s', ('draft',data_fyear))
+    if ids_move:
+        cr.execute('delete from account_move where id in ('+','.join(map(str,ids_move))+')')
+    #cr.execute('UPDATE account_journal_period ' \
+    #        'SET state = %s ' \
+    #        'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
+    #        ('draft',data_fyear))
+    #cr.execute('UPDATE account_period SET state = %s ' \
+    #        'WHERE fiscalyear_id = %s', ('draft',data_fyear))
+    #cr.execute('UPDATE account_fiscalyear ' \
+    #        'SET state = %s, end_journal_period_id = null '\
+    #        'WHERE id = %s', ('draft',data_fyear))
     return {}
 
 class open_closed_fiscal(wizard.interface):
