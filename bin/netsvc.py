@@ -303,7 +303,7 @@ class HttpDaemon(threading.Thread):
             Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can not load the certificate and/or the private key files")
             sys.exit(1)
         except Exception, e:
-            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when strarting the server daemon: %s" % (e,))
+            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
             sys.exit(1)
 
 

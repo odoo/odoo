@@ -104,7 +104,7 @@ def _contact_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
     ids = obj.search(cr, uid, [('domain', '=', 'contact')])
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res]
+    return [(r['shortcut'], r['name']) for r in res] + [('','')]
 
 def _partner_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
@@ -116,7 +116,7 @@ def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res]
+    return [(r['code'], r['name']) for r in res] + [('','')]
 
 
 class res_partner(osv.osv):

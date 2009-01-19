@@ -327,7 +327,7 @@ def register_class(m):
 
     def log(e):
         mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
-        msg = "Couldn't load%s module %s" % (mt, m)
+        msg = "Couldn't load %smodule %s" % (mt, m)
         logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
         logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
 
@@ -336,6 +336,7 @@ def register_class(m):
         return
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
     mod_path = get_module_path(m)
+
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):

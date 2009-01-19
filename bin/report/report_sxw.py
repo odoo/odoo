@@ -635,40 +635,66 @@ class report_sxw(report_rml):
             fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
-        logo = None
         if not context:
             context={}
-        context = context.copy()
-
         pool = pooler.get_pool(cr.dbname)
-        ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
-        report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
+        ir_obj = pool.get('ir.actions.report.xml')
+        report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
-        report_type = 'pdf'
-        report_xml = None
-        title=''
-        attach = False
-        want_header = self.header
-        if report_xml_ids:
-            report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
-                    context=context)
-            title = report_xml.name
-            attach = report_xml.attachment
-            rml = report_xml.report_rml_content
-            report_type = report_xml.report_type
-            want_header = report_xml.header
-        else:
-            ir_menu_report_obj = pool.get('ir.ui.menu')
-            report_menu_ids = ir_menu_report_obj.search(cr, uid,
-                    [('id', 'in', ids)], context=context)
-            if report_menu_ids:
-                report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
-                    context=context)
-                title = report_name.name
-            rml = tools.file_open(self.tmpl, subdir=None).read()
-            report_type= data.get('report_type', report_type)
+        report_xml = ir_obj.browse(cr, uid, report_xml_ids[0], context=context)
 
-        if report_type in ['sxw','odt'] and report_xml:
+        if report_xml.attachment:
+            objs = self.getObjects(cr, uid, ids, context)
+            results = []
+            for obj in objs:
+                aname = eval(report_xml.attachment, {'object':obj, 'time':time})
+                result = False
+                if report_xml.attachment_use and aname and context.get('attachment_use', True):
+                    aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
+                    if aids:
+                        d = base64.decodestring(pool.get('ir.attachment').browse(cr, uid, aids[0]).datas)
+                        results.append((d,'pdf'))
+                        continue
+
+                result = self.create_single(cr, uid, [obj.id], data, report_xml, context)
+                if aname:
+                    name = aname+'.'+result[1]
+                    pool.get('ir.attachment').create(cr, uid, {
+                        'name': aname,
+                        'datas': base64.encodestring(result[0]),
+                        'datas_fname': name,
+                        'res_model': self.table,
+                        'res_id': obj.id,
+                        }, context=context
+                    )
+                    cr.commit()
+                results.append(result)
+
+            if results[0][1]=='pdf':
+                from pyPdf import PdfFileWriter, PdfFileReader
+                import cStringIO
+                output = PdfFileWriter()
+                for r in results:
+                    reader = PdfFileReader(cStringIO.StringIO(r[0]))
+                    for page in range(reader.getNumPages()):
+                        output.addPage(reader.getPage(page))
+                s = cStringIO.StringIO()
+                output.write(s)
+                return s.getvalue(), results[0][1]
+        return self.create_single(cr, uid, ids, data, report_xml, context)
+
+    def create_single(self, cr, uid, ids, data, report_xml, context={}):
+        logo = None
+        context = context.copy()
+        pool = pooler.get_pool(cr.dbname)
+        want_header = self.header
+        title = report_xml.name
+        attach = report_xml.attachment
+        rml = report_xml.report_rml_content
+        report_type = report_xml.report_type
+        want_header = report_xml.header
+
+        if report_type in ['sxw','odt']:
             context['parents'] = sxw_parents
             sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
             sxw_z = zipfile.ZipFile(sxw_io, mode='r')
@@ -694,8 +720,6 @@ class report_sxw(report_rml):
                         if cnd.nodeType in (cnd.CDATA_SECTION_NODE, cnd.TEXT_NODE):
                             pe.appendChild(cnd)
                             pp.removeChild(de)
-
-
 
             # Add Information : Resource ID and Model
             rml_dom_meta = xml.dom.minidom.parseString(meta)
@@ -749,20 +773,5 @@ class report_sxw(report_rml):
         create_doc = self.generators[report_type]
         pdf = create_doc(rml2, logo, title.encode('utf8'))
 
-        if attach:
-            # TODO: save multiple print with symbolic links in attach            
-            pool.get('ir.attachment').create(cr, uid, {
-                'name': (title or _('print'))+':'+time.strftime('%Y-%m-%d %H:%M:%S'),
-                'datas': base64.encodestring(pdf),
-                'datas_fname': attach+time.strftime('%Y-%m-%d')+'.'+report_type,
-                'res_model': self.table,
-                'res_id': ids[0]
-                }, context=context
-            )
-            cr.commit()
         return (pdf, report_type)
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
