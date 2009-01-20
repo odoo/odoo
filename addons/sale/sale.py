@@ -785,7 +785,8 @@ class sale_order_line(osv.osv):
                 if uosqty:
                     pu = round(line.price_unit * line.product_uom_qty / uosqty,
                             int(config['price_accuracy']))
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, line.order_id.partner_id, a)
+                fpos = line.order_id.fiscal_position or False
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
                     'origin':line.order_id.name,
@@ -849,7 +850,7 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False):
         warning={}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
@@ -905,11 +906,11 @@ class sale_order_line(osv.osv):
         result .update({'type': product_obj.procure_method})
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
-
+        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
             partner = partner_obj.browse(cr, uid, partner_id)
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, product_obj.taxes_id)
+            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
 
         result['name'] = product_obj.partner_ref
         domain = {}
