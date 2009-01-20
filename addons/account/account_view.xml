@@ -599,9 +599,9 @@
                             <field groups="base.group_extended" name="include_base_amount"/>
                             <field groups="base.group_extended" name="domain"/>
                             <newline/>
-                            <field name="account_collected_id"/>
+                            <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
-                            <field name="account_paid_id"/>
+                            <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
