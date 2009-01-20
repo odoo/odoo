@@ -590,13 +590,35 @@ class report_sxw(report_rml):
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
-        report_xml = ir_obj.browse(cr, uid, report_xml_ids[0], context=context)
 
-        if report_xml.attachment:
+        if report_xml_ids:
+            report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
+                    context=context)
+            attach = report_xml.attachment
+        else:
+            ir_menu_report_obj = pool.get('ir.ui.menu')
+            report_menu_ids = ir_menu_report_obj.search(cr, uid,
+                    [('id', 'in', ids)], context=context)
+            title = ''
+            if report_menu_ids:
+                report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
+                    context=context)
+                title = report_name.name
+            rml = tools.file_open(self.tmpl, subdir=None).read()
+            report_type= data.get('report_type', 'pdf')
+            class a(object):
+                def __init__(self, *args, **argv):
+                    for key,arg in argv.items():
+                        setattr(self, key, arg)
+            report_xml = a(title=title, report_type=report_type, rml=rml, name=self.name, attachment=False, header=True)
+            attach = False
+
+
+        if attach:
             objs = self.getObjects(cr, uid, ids, context)
             results = []
             for obj in objs:
-                aname = eval(report_xml.attachment, {'object':obj, 'time':time})
+                aname = eval(attach, {'object':obj, 'time':time})
                 result = False
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
                     aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
@@ -639,7 +661,6 @@ class report_sxw(report_rml):
         want_header = self.header
         title = report_xml.name
         attach = report_xml.attachment
-        rml = report_xml.report_rml_content
         report_type = report_xml.report_type
         want_header = report_xml.header
 
@@ -708,6 +729,7 @@ class report_sxw(report_rml):
             rml2 = sxw_io.getvalue()
             sxw_io.close()
         else:
+            rml = report_xml.rml
             context['parents'] = rml_parents
             rml_parser = self.parser(cr, uid, self.name2, context)
             rml_parser.parents = rml_parents
