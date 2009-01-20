@@ -205,8 +205,10 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Description', size=64, select=1),
-        'user_id': fields.many2one('res.users', 'User', required=True, select=1),
+        'name': fields.char('Description', size=64, select=1, 
+                            states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'User', required=True, select=1,
+                            states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_current': fields.date('Current date', required=True),
