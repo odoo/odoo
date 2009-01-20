@@ -200,7 +200,7 @@ class purchase_order(osv.osv):
     _description = "Purchase order"
     _order = "name desc"
 
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         purchase_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in purchase_orders:
@@ -208,7 +208,7 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)
+        return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def button_dummy(self, cr, uid, ids, context={}):
         return True
