@@ -108,16 +108,16 @@ class accounting_report_indicator(report_sxw.rml_parse):
             return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
         
         array_header = eval(data,{'year':'Fiscal Year','periods':'Periods'})
-        value = [array_header]
+#        value = [array_header]
+        value = []
         value.extend(self.header_name)
 
-        type=['string']
         if name=='array':
-            type.extend(['float']*len(self.header_name))
+            type = ['float']*len(self.header_name)
         else:
-            type=['lable'] * (len(self.header_name)+1)
+            type = ['lable'] * (len(self.header_name))
         
-        width = [538/float(len(value))]*(len(value))
+        width = [438/float(len(value))]*(len(value))
         
         if not lst:
             lst.append(1)
@@ -132,6 +132,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
                         width.append(30)
                 for v in range(len(width)):
                     width_str +=',%d'%width[v]
+                
                 ns.setAttribute('colWidths',width_str)
 
                 child_list =  ns.childNodes

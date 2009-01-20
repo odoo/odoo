@@ -74,9 +74,9 @@
 <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
-<paraStyle name="Index" fontName="Times-Roman"/>
+<paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+<paraStyle name="Index" fontName="Helvetica"/>
 <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
 </stylesheet>
 <images/>
@@ -148,21 +148,27 @@
 </para>
 <section>
 	<para style="P13">[[ repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array_header',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
-	  <blockTable colWidths="0.0" style="Table4">
+	  <blockTable colWidths="0.00,90.00" style="Table4">
 	  	<tr>
 			<td>
 	        <para style="P3"> </para>
+	      </td>
+	      <td>
+	        <para style="P3">Indicators</para>
 	      </td>
 	    </tr>
 	 </blockTable>
 </section>
 <section>
-	<para style="P1">[[ repeatIn(lines(data['form']),'o')]]</para>
-	<para style="P13">[[ repeatIn(getarray(data['form'],o,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
-	  <blockTable colWidths="0.00" style="Table3">
+	<para style="P1">[[ repeatIn(lines(data['form']),'obj')]]</para>
+	<para style="P13">[[ repeatIn(getarray(data['form'],obj,array_header=data['form']['select_base']),'array',td=len(data['form']['base_selection'][0][2]),data=data['form']['select_base']) or removeParentNode('section') ]]</para>
+	  <blockTable colWidths="0.00,90.00" style="Table3">
 	  <tr>
-			<td>
-	        <para style="P9">  </para>
+		  <td>
+	        <para style="P9"> </para>
+	      </td>
+	      <td>
+	        <para style="P5"><font>[['.....'*(obj['level']) ]][[ setTag('font','font',{'color':'white'}) ]]</font>[[ obj['code'] ]]</para>
 	      </td>
 	    </tr>
 	    
