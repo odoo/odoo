@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -108,7 +108,7 @@ class invoice_create(wizard.interface):
                     price = 0.0
 
                 taxes = product.taxes_id
-                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
                 curr_line = {
@@ -194,7 +194,7 @@ class invoice_create(wizard.interface):
 
     states = {
         'init' : {
-            'actions' : [_get_accounts], 
+            'actions' : [_get_accounts],
             'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create invoices')]},
         },
         'create' : {

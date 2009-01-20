@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -82,8 +82,8 @@ class stock_picking(osv.osv):
             taxes_ids = [x.id for x in picking.carrier_id.product_id.taxes_id]
             if partner_id:
                 partner = picking.address_id.partner_id
-                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
-                taxes_ids = self.pool.get('account.fiscal.position').map_tax(cursor, user, partner, taxes)
+                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
+                taxes_ids = self.pool.get('account.fiscal.position').map_tax(cursor, user, partner.property_account_position, taxes)
 
             invoice_line_obj.create(cursor, user, {
                 'name': picking.carrier_id.name,

@@ -795,7 +795,7 @@ class mrp_procurement(osv.osv):
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
-     
+
     def unlink(self, cr, uid, ids):
         procurements = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -804,8 +804,8 @@ class mrp_procurement(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)        
-    
+        return osv.osv.unlink(self, cr, uid, unlink_ids)
+
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         if product_id:
             w=self.pool.get('product.product').browse(cr,uid,product_id, context)
@@ -1051,7 +1051,7 @@ class mrp_procurement(osv.osv):
             }
 
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes_ids)
+            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes_ids)
             line.update({
                 'taxes_id':[(6,0,taxes_ids)]
             })

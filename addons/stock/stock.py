@@ -587,7 +587,7 @@ class stock_picking(osv.osv):
             return self.pool.get('account.fiscal.position').map_tax(
                 cursor,
                 user,
-                move_line.picking_id.address_id.partner_id,
+                move_line.picking_id.address_id.partner_id.property_account_position,
                 taxes
             )
         else:
@@ -630,15 +630,15 @@ class stock_picking(osv.osv):
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
 
-            comment = self._get_comment_invoice(cursor, user, picking)            
+            comment = self._get_comment_invoice(cursor, user, picking)
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
-                invoice=invoice_obj.browse(cursor, user,invoice_id)      
+                invoice=invoice_obj.browse(cursor, user,invoice_id)
                 invoice_vals = {
                     'name': invoice.name +', '+picking.name,
-                    'origin': invoice.origin+', '+picking.name+(picking.origin and (':' + picking.origin) or ''),    
+                    'origin': invoice.origin+', '+picking.name+(picking.origin and (':' + picking.origin) or ''),
                     'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
-                }                 
+                }
                 invoice_obj.write(cursor, user, [invoice_id],invoice_vals,context=context)
             else:
                 invoice_vals = {
@@ -690,7 +690,7 @@ class stock_picking(osv.osv):
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
 
-                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner, account_id)
+                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'origin':origin,
@@ -1072,7 +1072,7 @@ class stock_move(osv.osv):
 
         for pick in self.pool.get('stock.picking').browse(cr,uid,pickings.keys()):
             if all(move.state == 'cancle' for move in pick.move_lines):
-                self.pool.get('stock.picking').write(cr,uid,[pick.id],{'state':'cancel'}) 
+                self.pool.get('stock.picking').write(cr,uid,[pick.id],{'state':'cancel'})
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
