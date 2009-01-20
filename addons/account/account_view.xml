@@ -461,6 +461,7 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="sign"/>
+		    
                     <field name="close_method"/>
                     <field name="partner_account"/>
                 </form>
@@ -543,6 +544,7 @@
                     <field name="code" select="1"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
+		    <field name="notprintable"/>
                     <newline/>
                     <field name="sum"/>
                     <field name="sum_period"/>
@@ -1659,6 +1661,7 @@
                     <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
                     <field name="company_id" />
                     <field name ="code_digits" />
+                    <field name ="seq_journal" />
                     <field name="chart_template_id" colspan="4"/>
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                         <form string="Bank Information">
