@@ -169,6 +169,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
 #        find_child(obj_inds)
 
         for obj_ind in obj_inds:
+            level = 0
             res = {
                 'id':obj_ind.id,
                 'name':obj_ind.name,
@@ -177,9 +178,15 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 'disp_graph':obj_ind.disp_graph,
                 'disp_tree':obj_ind.disp_tree,
                 'note':obj_ind.note,
+                'level' : obj_ind.parent_id or 0,
                 'type':obj_ind.type,
                 'array_table' : False,
                 }
+            if obj_ind.parent_id:
+                for record in result:
+                    if record['id'] == obj_ind.parent_id.id:
+                        res['level'] = record['level'] + 1
+                        break
             if len(obj_ind.expression)>=2:
                 res['array_table'] = True
             result.append(res)
