@@ -1226,7 +1226,7 @@ class account_tax(osv.osv):
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
-        'name': fields.char('Tax Name', size=64, required=True, help="This name will be used to be displayed on reports"),
+        'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be used to be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax childs. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
         'active': fields.boolean('Active'),
@@ -1261,7 +1261,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Internal Name',size=32),
+        'description': fields.char('Tax Code',size=32),
         'price_include': fields.boolean('Tax Included in Price', help="Check this is the price you use on the product and invoices is including this tax.")
     }
 
