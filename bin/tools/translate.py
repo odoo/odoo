@@ -148,7 +148,7 @@ class TinyPoFile(object):
     def write_infos(self, modules):
         import release
         self.buffer.write("# Translation of %(project)s.\n" \
-                          "# This file containt the translation of the following modules:\n" \
+                          "# This file contains the translation of the following modules:\n" \
                           "%(modules)s" \
                           "#\n" \
                           "msgid \"\"\n" \

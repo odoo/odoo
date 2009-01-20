@@ -179,7 +179,7 @@ class assertion_report(object):
     def record_assertion(self, success, severity):
         """
             Records the result of an assertion for the failed/success count
-            retrurns success
+            returns success
         """
         if severity in self._report:
             self._report[severity][success] += 1
@@ -836,7 +836,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
             logger = netsvc.Logger()
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "Can not import the line: %s" % line)
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "Cannot import the line: %s" % line)
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
@@ -858,7 +858,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         relaxng.assert_(doc)
     except Exception, e:
         logger = netsvc.Logger()
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file do not fit the required schema !')
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file does not fit the required schema !')
         logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
         raise
 
