@@ -299,6 +299,12 @@ class hr_timesheet_sheet(osv.osv):
                 for r in self.read(cr, uid, ids, ['date_from', 'date_to'],
                     context, load='_classic_write')]
 
+    def unlink(self, cr, uid, ids, context=None):
+        sheets = self.read(cr, uid, ids, ['state'])
+        if any(s['state'] in ('confirm', 'done') for s in sheets):
+            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+        return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
+
 hr_timesheet_sheet()
 
 
