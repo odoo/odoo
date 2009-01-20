@@ -115,7 +115,7 @@ class account_move_line(osv.osv):
 
                 if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data:
                     part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
-                    account = self.pool.get('account.fiscal.position').map_account(cr, uid, part, account.id)
+                    account = self.pool.get('account.fiscal.position').map_account(cr, uid, part.property_account_position, account.id)
                     account = self.pool.get('account.account').browse(cr, uid, account)
                     data['account_id'] =  account.id
 
@@ -199,14 +199,14 @@ class account_move_line(osv.osv):
 
         part = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id) or False
         # part = False is acceptable for fiscal position.
-        account = self.pool.get('account.fiscal.position').map_account(cr, uid, part, account.id)
+        account = self.pool.get('account.fiscal.position').map_account(cr, uid, part.property_account_position, account.id)
         account = self.pool.get('account.account').browse(cr, uid, account)
 
         if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
             data['account_id'] = account.id
             # Propose the price VAT excluded, the VAT will be added when confirming line
             if account.tax_ids:
-                taxes = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, account.tax_ids)
+                taxes = self.pool.get('account.fiscal.position').map_tax(cr, uid, part.property_account_position, account.tax_ids)
                 tax = self.pool.get('account.tax').browse(cr, uid, taxes)
                 for t in self.pool.get('account.tax').compute_inv(cr, uid, tax, total, 1):
                     total -= t['amount']
@@ -472,10 +472,10 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 if jt=='sale':
-                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part, id2)
+                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part.property_account_position, id2)
 
                 elif jt=='purchase':
-                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part, id1)
+                    val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part.property_account_position, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
@@ -489,7 +489,7 @@ class account_move_line(osv.osv):
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
                 part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part, tax_ids)[0]
+                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, part.property_account_position, tax_ids)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
             val['account_tax_id'] = tax_id

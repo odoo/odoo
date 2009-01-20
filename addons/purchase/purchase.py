@@ -200,7 +200,7 @@ class purchase_order(osv.osv):
     _description = "Purchase order"
     _order = "name desc"
 
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         purchase_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in purchase_orders:
@@ -208,7 +208,7 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)
+        return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def button_dummy(self, cr, uid, ids, context={}):
         return True
@@ -301,7 +301,8 @@ class purchase_order(osv.osv):
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
                     a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, o.partner_id, a)
+                fpos = o.fiscal_position or False
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 il.append(self.inv_line_create(a,ol))
 
             a = o.partner_id.property_account_payable.id
@@ -445,7 +446,7 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False):
+            partner_id, date_order=False, fiscal_position=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not product:
@@ -488,7 +489,8 @@ class purchase_order_line(osv.osv):
 
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
-        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner, taxes)
+        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = prod.uom_id.category_id.id

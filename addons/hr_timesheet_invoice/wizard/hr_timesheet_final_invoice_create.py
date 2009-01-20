@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -88,14 +88,14 @@ class final_invoice_create(wizard.interface):
                     sum(line.amount),
                     line.general_account_id,
                     line.product_uom_id,
-                    move_line.ref 
+                    move_line.ref
                 FROM
                     account_analytic_line as line
                     LEFT JOIN account_move_line as move_line on (line.move_id=move_line.id)
                     LEFT JOIN account_analytic_journal as journal on (line.journal_id=journal.id)
                 WHERE
-                    line.account_id = %s AND 
-                    line.move_id IS NOT NULL AND 
+                    line.account_id = %s AND
+                    line.move_id IS NOT NULL AND
                     journal.type = 'sale'
                 GROUP BY
                     line.product_id,
@@ -110,7 +110,7 @@ class final_invoice_create(wizard.interface):
                 else:
                     taxes = []
 
-                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -130,7 +130,7 @@ class final_invoice_create(wizard.interface):
             product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
 
             taxes = product.taxes_id
-            tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id, taxes)
+            tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
             account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
             curr_line = {
                 'price_unit': account.amount_max - amount_total,
@@ -182,7 +182,7 @@ class final_invoice_create(wizard.interface):
 
     states = {
         'init' : {
-            'actions' : [_get_defaults], 
+            'actions' : [_get_defaults],
             'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create invoices')]},
         },
         'create' : {

@@ -140,6 +140,7 @@
   <images/>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <para style="P5">
       <font color="white"> </font>
     </para>
@@ -158,11 +159,11 @@
               <td>
                 <para style="P5">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="P4">Shipping address :</para>
-                <para style="P5">[[ o.partner_id.title or '' ]][[ o.partner_id.name ]]</para>
-                <para style="P5">[[ addr.title or '' ]][[ addr.name ]]</para>
+                <para style="P5">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+                <para style="P5">[[ addr.title or '' ]] [[ addr.name ]]</para>
                 <para style="P5">[[ addr.street ]]</para>
                 <para style="P5">[[ addr.street2 or '' ]]</para>
-                <para style="P5">[[ addr.zip or '' ]][[ addr.city or '' ]]</para>
+                <para style="P5">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
                 <para style="P5">[[ addr.state_id and addr.state_id.name or '' ]]</para>
                 <para style="P5">[[ addr.country_id and addr.country_id.name or '' ]]</para>
               </td>
@@ -178,11 +179,11 @@
           </para>
         </td>
         <td>
-          <para style="P5">[[ o.partner_id.title or '' ]][[ o.partner_id.name ]]</para>
-          <para style="P5">[[ o.partner_address_id.title or '' ]][[ o.partner_address_id.name ]]</para>
+          <para style="P5">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="P5">[[ o.partner_address_id.title or '' ]] [[ o.partner_address_id.name ]]</para>
           <para style="P5">[[ o.partner_address_id.street ]]</para>
           <para style="P5">[[ o.partner_address_id.street2 or '' ]]</para>
-          <para style="P5">[[ o.partner_address_id.zip or '' ]][[ o.partner_address_id.city or '' ]]</para>
+          <para style="P5">[[ o.partner_address_id.zip or '' ]] [[ o.partner_address_id.city or '' ]]</para>
           <para style="P5">[[ o.partner_address_id.state_id and o.partner_address_id.state_id.name or '' ]]</para>
           <para style="P5">[[ o.partner_address_id.country_id and o.partner_address_id.country_id.name or '' ]]</para>
           <para style="P5">
@@ -203,7 +204,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P6">[[ (o.state=='draft' or removeParentNode('font')) and 'Request for Quotation' ]][[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and 'Purchase Order Confirmation' ]] N° [[ o.name ]]</para>
+    <para style="P6">[[ (o.state=='draft' or removeParentNode('font')) and 'Request for Quotation' ]] [[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and 'Purchase Order Confirmation' ]] N° [[ o.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -229,20 +230,20 @@
           <para style="terp_default_Centre_8">[[ o.name or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.partner_ref or ''  ]]</para>
+          <para style="terp_default_Centre_8">[[ o.partner_ref or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ time.strftime('%d/%m/%Y', time.strptime(o.date_order, '%Y-%m-%d')) ]]</para>
+          <para style="terp_default_Centre_8">[[formatLang(o.date_order,date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.validator and o.validator.name or ''  ]]</para>
+          <para style="terp_default_Centre_8">[[ o.validator and o.validator.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="251.0,52.0,62.0,46.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="251.0,53.0,62.0,47.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -266,19 +267,19 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.order_line,'line') ]]</para>
-      <blockTable colWidths="252.0,52.0,61.0,28.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="252.0,52.0,61.0,29.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id))  or '0.00' ]]</para>
+            <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) or '0.00' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
+            <para style="terp_default_9">[[ formatLang( line.date_planned, date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.product_qty or '0.00' ]]</para>
+            <para style="terp_default_Right_9">[[ line.product_qty or '0.00' ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_uom.name ]]</para>
@@ -341,7 +342,7 @@
           <para style="terp_default_Right_9">[[ o.amount_untaxed or '0.00' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name  ]]</para>
+          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
         </td>
       </tr>
       <tr>
@@ -357,7 +358,7 @@
           <para style="terp_default_Right_9">[[ o.amount_tax or '0.00' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name  ]]</para>
+          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
         </td>
       </tr>
       <tr>

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -44,11 +44,11 @@ def _delivery_default(self, cr, uid, data, context):
     </form>
     """ % (data['id'],)
 
-    
+
     if not order.state in ('draft'):
         raise wizard.except_wizard(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
 
-    
+
     carrier_id = order.partner_id.property_delivery_carrier.id
     return {'carrier_id': carrier_id}
 
@@ -65,15 +65,15 @@ def _delivery_set(self, cr, uid, data, context):
         grid = grid_obj.browse(cr, uid, [grid_id])[0]
 
         taxes = grid.carrier_id.product_id.taxes_id
-        taxes_ids = pooler.get_pool(cr.dbname).get('account.fiscal.position').map_tax(cr, uid, order.partner_id, taxes)
-
+        fpos = order.fiscal_position or False
+        taxes_ids = pooler.get_pool(cr.dbname).get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         line_obj.create(cr, uid, {
             'order_id': order.id,
             'name': grid.carrier_id.name,
             'product_uom_qty': 1,
             'product_uom': grid.carrier_id.product_id.uom_id.id,
             'product_id': grid.carrier_id.product_id.id,
-            'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context), 
+            'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
             'tax_id': [(6,0,taxes_ids)],
             'type': 'make_to_stock'
         })

@@ -40,7 +40,7 @@ pay_fields = {
     'amount': {'string': 'Amount paid', 'type':'float', 'required':True},
     'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
     'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
+    'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
     'period_id': {'string': 'Period', 'type': 'many2one', 'relation':'account.period', 'required':True},
 }
 
