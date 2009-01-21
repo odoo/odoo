@@ -334,12 +334,12 @@ class rml_parse(object):
                         obj._cache[table][id] = {'id': id}
 
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
-        if not value:
-            return ''
+    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=False):
+        
         pool_lang=self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
+        
         if date or date_time:
             date_format = lang_obj.date_format
             if date_time:
@@ -357,6 +357,7 @@ class rml_parse(object):
             else:
                 date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
             return date.strftime(date_format)
+        
         return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
     
 #    def formatLang(self, value, digit=2, date=False):
@@ -590,34 +591,13 @@ class report_sxw(report_rml):
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
+        report_xml = ir_obj.browse(cr, uid, report_xml_ids[0], context=context)
 
-        if report_xml_ids:
-            report_xml = ir_obj.browse(cr, uid, report_xml_ids[0],
-                    context=context)
-            attach = report_xml.attachment
-        else:
-            ir_menu_report_obj = pool.get('ir.ui.menu')
-            report_menu_ids = ir_menu_report_obj.search(cr, uid,
-                    [('id', 'in', ids)], context=context)
-            title = ''
-            if report_menu_ids:
-                report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
-                    context=context)
-                title = report_name.name
-            rml = tools.file_open(self.tmpl, subdir=None).read()
-            report_type= data.get('report_type', 'pdf')
-            class a(object):
-                def __init__(self, *args, **argv):
-                    for key,arg in argv.items():
-                        setattr(self, key, arg)
-            report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
-            attach = False
-
-        if attach:
+        if report_xml.attachment:
             objs = self.getObjects(cr, uid, ids, context)
             results = []
             for obj in objs:
-                aname = eval(attach, {'object':obj, 'time':time})
+                aname = eval(report_xml.attachment, {'object':obj, 'time':time})
                 result = False
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
                     aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
@@ -660,6 +640,7 @@ class report_sxw(report_rml):
         want_header = self.header
         title = report_xml.name
         attach = report_xml.attachment
+        rml = report_xml.report_rml_content
         report_type = report_xml.report_type
         want_header = report_xml.header
 
@@ -728,7 +709,6 @@ class report_sxw(report_rml):
             rml2 = sxw_io.getvalue()
             sxw_io.close()
         else:
-            rml = report_xml.report_rml_content
             context['parents'] = rml_parents
             rml_parser = self.parser(cr, uid, self.name2, context)
             rml_parser.parents = rml_parents
