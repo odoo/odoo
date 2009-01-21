@@ -307,7 +307,7 @@ class stock_tracking(osv.osv):
         res = [(r['id'], r['name']+' ['+(r['serial'] or '')+']') for r in self.read(cr, uid, ids, ['name','serial'], context)]
         return res
 
-    def unlink(self, cr ,uid, ids):
+    def unlink(self, cr ,uid, ids, context=None):
         raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
 stock_tracking()
 

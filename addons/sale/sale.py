@@ -268,7 +268,7 @@ class sale_order(osv.osv):
     _order = 'name desc'
 
     # Form filling
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         sale_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in sale_orders:
@@ -276,7 +276,7 @@ class sale_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
-        return osv.osv.unlink(self, cr, uid, unlink_ids)
+        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
 
     def onchange_shop_id(self, cr, uid, ids, shop_id):

@@ -284,7 +284,7 @@ class account_invoice(osv.osv):
         'reference_type': lambda *a: 'none',
     }
 
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for t in invoices:
@@ -292,7 +292,7 @@ class account_invoice(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
 #   def get_invoice_address(self, cr, uid, ids):

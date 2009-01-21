@@ -173,7 +173,7 @@ class account_voucher(osv.osv):
         return True
 
     
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         vouchers = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for t in vouchers:
@@ -181,7 +181,7 @@ class account_voucher(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
-        osv.osv.unlink(self, cr, uid, unlink_ids)
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
     
 
