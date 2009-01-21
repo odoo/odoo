@@ -87,8 +87,11 @@ class process_process(osv.osv):
 
         pool = pooler.get_pool(cr.dbname)
         
-        process = pool.get('process.process').browse(cr, uid, [id])[0]
-        title = process.name
+        process = pool.get('process.process').browse(cr, uid, [id], context)[0]
+
+        name = process.name
+        resource = None
+        state = 'N/A'
 
         expr_context = {}
         states = {}
@@ -101,7 +104,9 @@ class process_process(osv.osv):
             current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
             current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
             expr_context = Env(current_object, current_user)
-            title = _("%s - Resource: %s, State: %s") % (process.name, current_object.name, states.get(getattr(current_object, 'state'), 'N/A'))
+            resource = current_object.name
+            if 'state' in current_object:
+                state = states.get(current_object.state, 'N/A')
             perm = pool.get(res_model).perm_read(cr, uid, [res_id], context)[0]
 
         notes = process.note or "N/A"
@@ -247,7 +252,7 @@ class process_process(osv.osv):
             y = v['y']
             v['y'] = min(y - miny + 10, y)
 
-        return dict(title=title, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
+        return dict(name=name, resource=resource, state=state, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
 
     def copy(self, cr, uid, id, default=None, context={}):
         """ Deep copy the entire process.
