@@ -21,6 +21,7 @@
 ##############################################################################
 import time
 import netsvc
+
 from osv import fields, osv
 
 from tools.misc import currency
@@ -1175,7 +1176,9 @@ class account_tax_code(osv.osv):
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Sign for parent', required=True),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want that any vat related to this Tax Code appears on invoices"),
     }
+
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -1194,6 +1197,7 @@ class account_tax_code(osv.osv):
     _defaults = {
         'company_id': _default_company,
         'sign': lambda *args: 1.0,
+        'notprintable': lambda *a: False,
     }
     def _check_recursion(self, cr, uid, ids):
         level = 100
@@ -1802,10 +1806,12 @@ class account_tax_code_template(osv.osv):
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
         'sign': fields.float('Sign for parent', required=True),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want that any vat related to this Tax Code appears on invoices"),
     }
 
     _defaults = {
         'sign': lambda *args: 1.0,
+        'notprintable': lambda *a: False,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -1990,6 +1996,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'chart_template_id': fields.many2one('account.chart.template','Chart Template',required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
         'code_digits':fields.integer('# of Digits',required=True,help="No. of Digits to use for account code"),
+        'seq_journal':fields.boolean('Separated Journal Sequences',help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
     }
 
     def _get_chart(self, cr, uid, context={}):
@@ -2008,6 +2015,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
+        obj_sequence = self.pool.get('ir.sequence')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
@@ -2120,16 +2128,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # Creating Journals
         vals_journal={}
         view_id = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Journal View')])[0]
-        seq_id = self.pool.get('ir.sequence').search(cr,uid,[('code','=','account.journal')])[0]
-        seq_code = self.pool.get('ir.sequence').get(cr, uid, 'account.journal')
+        seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
+        
+        if obj_multi.seq_journal:
+            seq_id_sale = obj_sequence.search(cr,uid,[('name','=','Sale Journal')])[0]
+            seq_id_purchase = obj_sequence.search(cr,uid,[('name','=','Purchase Journal')])[0]
+        else:
+            seq_id_sale = seq_id
+            seq_id_purchase = seq_id
 
-        vals_journal['view_id']=view_id
-        vals_journal['sequence_id']=seq_id
+        vals_journal['view_id'] = view_id
 
         #Sales Journal
         vals_journal['name'] = _('Sales Journal')
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
+        vals_journal['sequence_id'] = seq_id_sale
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
@@ -2138,9 +2152,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Purchase Journal
-        vals_journal['name']=_('Purchase Journal')
-        vals_journal['type']='purchase'
-        vals_journal['code']=_('EXJ')
+        vals_journal['name'] = _('Purchase Journal')
+        vals_journal['type'] = 'purchase'
+        vals_journal['code'] = _('EXJ')
+        vals_journal['sequence_id'] = seq_id_purchase
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
@@ -2158,7 +2173,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account for this bank journal
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
             dig = obj_multi.code_digits
-            vals={
+            vals = {
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': str(ref_acc_bank.code.ljust(dig,'0') + str(current_num)),
@@ -2169,6 +2184,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'company_id': company_id,
             }
             acc_cash_id  = obj_acc.create(cr,uid,vals)
+
+            if obj_multi.seq_journal:
+                vals_seq={
+                        'name': _('Bank Journal ') + vals['name'],
+                        'code': 'account.journal',
+                }
+                seq_id = obj_sequence.create(cr,uid,vals_seq)
 
             #create the bank journal
             vals_journal['name']= vals['name']
@@ -2181,7 +2203,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             else:
                 vals_journal['view_id'] = view_id_cash
             vals_journal['default_credit_account_id'] = acc_cash_id
-            vals_journal['default_debit_account_id']= acc_cash_id
+            vals_journal['default_debit_account_id'] = acc_cash_id
             obj_journal.create(cr,uid,vals_journal)
 
             current_num += 1
