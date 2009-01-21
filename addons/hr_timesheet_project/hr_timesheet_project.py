@@ -20,8 +20,13 @@
 #
 ##############################################################################
 
-import hr_timesheet_project
-import wizard
+from osv import osv, fields
+
+class project_work(osv.osv):
+    _inherit = 'project.task.work'
+    _columns = {
+        'date' : fields.datetime('Date', required=True),
+    }
+project_work()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
