@@ -457,7 +457,7 @@ class MigrationManager(object):
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data.get('version', '0')))
-
+        
         versions = _get_migration_versions(pkg)
 
         for version in versions:
@@ -477,7 +477,7 @@ class MigrationManager(object):
                         fp = tools.file_open(opj(modulename, pyfile))
 
                         # imp.load_source need a real file object, so we create
-                        # on from the file-like object we get from file_open
+                        # one from the file-like object we get from file_open
                         fp2 = os.tmpfile()
                         fp2.write(fp.read())
                         fp2.seek(0)
@@ -582,24 +582,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
                     fp = tools.file_open(opj(m, xml))
                     if ext == '.csv':
-                        tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, noupdate=True)
+                        tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
                     else:
-                        tools.convert_xml_import(cr, m, fp, idref, noupdate=True, **kwargs)
+                        tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
                     fp.close()
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
             package_todo.append(package.name)
-            ver = release.major_version + '.' + package.data.get('version', '1.0')
-            # update the installed version in database...
-            #cr.execute("update ir_module_module set state='installed', latest_version=%s where id=%s", (ver, mid,))
 
-            # Set new modules and dependencies
-            modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
-            cr.commit()
-
-            # Update translations for all installed languages
             if modobj:
+                ver = release.major_version + '.' + package.data.get('version', '1.0')
+                # Set new modules and dependencies
+                modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
+                # Update translations for all installed languages
                 modobj.update_translations(cr, 1, [mid], None)
                 cr.commit()
+
             migrations.migrate_module(package, 'post')
 
         statusi += 1
