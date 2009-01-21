@@ -273,22 +273,22 @@
             <para style="terp_default_9">[[ line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) or '0.00' ]]</para>
+            <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) or formatLang(0.00) ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ formatLang( line.date_planned, date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.product_qty or '0.00' ]] </para>
+            <para style="terp_default_Right_9">[[ line.product_qty or formatLang(0.00) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_unit or '0.00' ]]</para>
+            <para style="terp_default_Right_9">[[ line.price_unit or formatLang(0.00) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_subtotal or '0.00' ]]</para>
+            <para style="terp_default_Right_9">[[ line.price_subtotal or formatLang(0.00) ]]</para>
           </td>
         </tr>
         <tr>
@@ -339,7 +339,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.amount_untaxed or '0.00' ]]</para>
+          <para style="terp_default_Right_9">[[ o.amount_untaxed or formatLang(0.00) ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -355,7 +355,7 @@
           <para style="P1">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.amount_tax or '0.00' ]]</para>
+          <para style="terp_default_Right_9">[[ o.amount_tax or formatLang(0.00) ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -371,7 +371,7 @@
           <para style="P3">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9_Right">[[ o.amount_total or '0.00' ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ o.amount_total or formatLang(0.00) ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9_Right">[[ o.pricelist_id.currency_id.name ]]</para>
