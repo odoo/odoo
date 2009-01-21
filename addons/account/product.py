@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -54,10 +54,10 @@ class product_template(osv.osv):
     _columns = {
         'taxes_id': fields.many2many('account.tax', 'product_taxes_rel',
             'prod_id', 'tax_id', 'Customer Taxes',
-            domain=[('parent_id','=',False)]),
+            domain=[('parent_id','=',False),('type_tax_use','=','sale')]),
         'supplier_taxes_id': fields.many2many('account.tax',
             'product_supplier_taxes_rel', 'prod_id', 'tax_id',
-            'Supplier Taxes', domain=[('parent_id', '=', False)]),
+            'Supplier Taxes', domain=[('parent_id', '=', False),('type_tax_use','=','purchase')]),
         'property_account_income': fields.property(
             'account.account',
             type='many2one',

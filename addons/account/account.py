@@ -1266,8 +1266,18 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this is the price you use on the product and invoices is including this tax.")
+        'price_include': fields.boolean('Tax Included in Price', help="Check this is the price you use on the product and invoices is including this tax."),
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use in')
+
     }
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        if context and context.has_key('type'):
+            if context['type'] in ('out_invoice','out_refund'):
+                args.append(('type_tax_use','=','sale'))
+            elif context['type'] in ('in_invoice','in_refund'):
+                args.append(('type_tax_use','=','purchase'))
+        return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
@@ -1898,6 +1908,7 @@ class account_tax_template(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
         'description': fields.char('Internal Name', size=32),
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use in')
     }
 
     def name_get(self, cr, uid, ids, context={}):
@@ -2073,6 +2084,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'include_base_amount': tax.include_base_amount,
                 'description':tax.description,
                 'company_id': company_id,
+                'type_tax_use': tax.type_tax_use
             }
             new_tax = obj_acc_tax.create(cr,uid,vals_tax)
             #as the accounts have not been created yet, we have to wait before filling these fields

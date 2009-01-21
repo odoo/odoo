@@ -608,6 +608,7 @@
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
                             <field groups="base.group_extended" name="price_include"/>
+                            <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>
                         </page>
@@ -1550,6 +1551,7 @@
                         <field name="chart_template_id" select="1"/>
                         <field name="tax_group" select="1"/>
                         <field name="type" select="2"/>
+                        <field name="type_tax_use" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
