@@ -255,7 +255,7 @@
                 <form string="POS ">
                     <field name="user_id" select="1"/>
                     <field name="journal_id" select="1"/>
-                    <field name="date_create" select="1"/>
+                    <field name="date_create" select="1" widget="date"/>
                     <field name="no_trans" select="2"/>
                     <field name="amount" select="2"/>
                     <field name="invoice_id" select="2"/>
@@ -270,7 +270,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="date_create"/>
+                    <field name="date_create" widget="date" />
                     <field name="user_id"/>
                     <field name="journal_id"/>
                     <field name="no_trans" sum="Total Transaction"/>

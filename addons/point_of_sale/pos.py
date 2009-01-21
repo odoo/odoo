@@ -25,6 +25,7 @@ import netsvc
 from osv import fields, osv
 from mx import DateTime
 from tools.translate import _
+import tools
 
 
 class pos_config_journal(osv.osv):
@@ -915,7 +916,7 @@ class report_transaction_pos(osv.osv):
     _description = "transaction for the pos"
     _auto = False
     _columns = {
-        'date_create': fields.date('Date', readonly=True),
+        'date_create': fields.char('Date', size=16, readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
         'no_trans': fields.float('Number of transaction', readonly=True),
@@ -924,6 +925,7 @@ class report_transaction_pos(osv.osv):
     }
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_transaction_pos')
         cr.execute("""
             create or replace view report_transaction_pos as (
                 select
@@ -931,7 +933,7 @@ class report_transaction_pos(osv.osv):
                     count(pp.id) as no_trans,
                     sum(amount) as amount,
                     pp.journal_id,
-                    date_trunc('day',pp.create_date)::date as date_create,
+                    date_trunc('day',pp.create_date)::text as date_create,
                     ps.user_id,
                     ps.invoice_id
                 from
