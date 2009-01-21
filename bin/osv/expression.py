@@ -34,8 +34,7 @@ class expression(object):
     """
 
     def _is_operator(self, element):
-        return (isinstance(element, str) or isinstance(element, unicode)) \
-           and element in ['&', '|', '!']
+        return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
         OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
@@ -246,7 +245,7 @@ class expression(object):
 
             if len_after:
                 if left == 'id':
-                     instr = ','.join(['%s'] * len_after)
+                    instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
