@@ -153,7 +153,7 @@ class _format(object):
         lang = self.object._context.get('lang', 'en_US') or 'en_US'
         try:
             if os.name == 'nt':
-                locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+                locale.setlocale(locale.LC_ALL, str(_LOCALE2WIN32.get(lang, lang) + '.' + encoding))
             else:
                 locale.setlocale(locale.LC_ALL,str( lang + '.' + encoding))
         except Exception:
@@ -335,8 +335,8 @@ class rml_parse(object):
 
 
     def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
-        if not value:
-            return ''
+#        if not value:
+#            return ''
         pool_lang=self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
