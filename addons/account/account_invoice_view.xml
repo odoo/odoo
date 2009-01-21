@@ -197,7 +197,7 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id"/>
-                            <field name="fiscal_position"/>
+                            <field name="fiscal_position" groups="base.group_extended"/>
                             <newline/>
                             <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             <field name="name" select="2"/>
@@ -284,7 +284,7 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id"/>
-                            <field name="fiscal_position"/>
+                            <field name="fiscal_position" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_due" select="1"/>
                             <newline/>
