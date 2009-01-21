@@ -40,42 +40,22 @@
         
         <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
         
-        <!--
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
         </assert>
-        -->
-        <!--
-		 journal_id: bank_journal
-		 period_id: period_7 (or 'period_' +time.strftime('m'))
-		 pay_amount: 1850 (or amount_total)
-		 acc_id = pool.get('account.journal').browse(cr, uid, journal_id, context).default_credit_account_id.id
-		 pay_and_reconcile(self, cr, uid,
-		 	ids,
-			pay_amount,
-			pay_account_id,
-			period_id,
-			pay_journal_id,
-			writeoff_acc_id,
-			writeoff_period_id,
-			writeoff_journal_id,
-			context={}):
-		-->
-        <!--
         <function model="account.invoice" name="pay_and_reconcile">
-            <value eval="[ref('test_invoice_1')]"/>
-            <value eval="1850"/>
-            <value eval="ref('cash')"/>
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <value eval="ref('bank_journal')"/>
-            <value eval="ref('cash')"/>
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
-            <value eval="ref('bank_journal')"/>
+			<!-- ids = -->					<value eval="[ref('test_invoice_1')]"/>
+			<!-- pay_amount = -->			<value eval="1850"/>
+			<!-- pay_account_id = -->		<value eval="ref('cash')"/>
+			<!-- period_id = -->			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+			<!-- pay_journal_id = -->		<value eval="ref('bank_journal')"/>
+			<!-- writeoff_acc_id = -->		<value eval="ref('cash')"/>
+			<!-- writeoff_period_id = -->	<value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+			<!-- writeoff_journal_id = -->	<value eval="ref('bank_journal')"/>
         </function>
         
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
             <test expr="state">paid</test>
         </assert>
-        -->
     </data>
 </openerp>
