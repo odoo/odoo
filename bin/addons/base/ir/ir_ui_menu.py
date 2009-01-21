@@ -84,7 +84,6 @@ class ir_ui_menu(osv.osv):
         for menu in self.browse(cr, uid, ids):
             # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
             key = (cr.dbname, menu.id, tuple(user_groups))
-            
             if key in self._cache:
                 if self._cache[key]:
                     result.append(menu.id)
