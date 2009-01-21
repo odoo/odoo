@@ -18,13 +18,6 @@
             string="Invoices"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/',''))"
             attachment_use="1"/>
-         <report
-            auto="False"
-            id="account_invoices_preview"
-            model="account.invoice"
-            name="account.invoice.preview"
-            rml="account/report/invoice.rml"
-            string="Print Preview"/>
         <report id="account_transfers" model="account.transfer" name="account.transfer" string="Transfers" xml="account/report/transfer.xml" xsl="account/report/transfer.xsl"/>
         <report auto="False" id="account_intracom" menu="False" model="account.move.line" name="account.intracom" string="IntraCom"/>
 

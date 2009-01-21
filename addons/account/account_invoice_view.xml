@@ -63,7 +63,7 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
                             <newline/>
                             <field name="price_subtotal"/>
-                            <field colspan="4" name="invoice_line_tax_id" domain="[('parent_id','=',False)]"/>
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -156,7 +156,7 @@
                                 <tree string="Invoice lines" editable="top">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
-                                    <field name="invoice_line_tax_id" view_mode="2" domain="[('parent_id','=',False)]"/>
+                                    <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
@@ -197,7 +197,7 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id"/>
-                            <field name="fiscal_position"/>
+                            <field name="fiscal_position" groups="base.group_extended"/>
                             <newline/>
                             <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             <field name="name" select="2"/>
@@ -284,7 +284,7 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id"/>
-                            <field name="fiscal_position"/>
+                            <field name="fiscal_position" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_due" select="1"/>
                             <newline/>

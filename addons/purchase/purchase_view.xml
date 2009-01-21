@@ -82,7 +82,7 @@
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
                                 <field name="invoice_id" readonly="1"/>
-                                <field name="fiscal_position"/>
+                                <field name="fiscal_position" groups="base.group_extended"/>
                             </group>
                             <newline/>
                             <separator string="Purchase Control" colspan="4"/>
@@ -180,7 +180,7 @@
                             <field name="price_unit"/>
                             <field name="account_analytic_id"/>
                             <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False)]"/>
+                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','=','purchase')]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>

@@ -6637,6 +6637,7 @@
             <field name="tax_code_id" ref="vat_code_a49"/>
             <field name="ref_base_code_id" ref="vat_code_a54"/>
             <field name="ref_tax_code_id" ref="vat_code_a63"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_6_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6645,6 +6646,7 @@
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund06"/>
             <field name="account_paid_id" ref="vat_payable06"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_12" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6653,6 +6655,7 @@
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable12"/>
             <field name="account_paid_id" ref="vat_refund12"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_12_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6661,6 +6664,7 @@
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund12"/>
             <field name="account_paid_id" ref="vat_payable12"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6673,6 +6677,7 @@
             <field name="tax_code_id" ref="vat_code_a54"/>
             <field name="ref_base_code_id" ref="vat_code_a49"/>
             <field name="ref_tax_code_id" ref="vat_code_a64"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_21_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6680,6 +6685,7 @@
             <field eval="1.0" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_21_buy_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6693,6 +6699,8 @@
             <field name="tax_code_id" ref="vat_code_a59"/>
             <field name="ref_base_code_id" ref="vat_code_a85"/>
             <field name="ref_tax_code_id" ref="vat_code_a63"/>
+            <field name="type_tax_use">purchase</field>
+
         </record>
         <record id="vat_21_buy_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6702,6 +6710,7 @@
             <field name="type">percent</field>
             <field name="ref_base_code_id" ref="vat_code_a82"/>
             <field eval="-1" name="ref_base_sign"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6710,6 +6719,7 @@
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
             <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_CO" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6721,6 +6731,7 @@
             <field eval="vat_code_a82" name="base_code_id"/>
             <field eval="vat_code_a82" name="ref_base_code_id"/>
             <field eval="True" name="child_depend"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_CO_0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6732,6 +6743,7 @@
             <field name="account_paid_id" ref="vat_refund0"/>
             <field eval="vat_code_a59" name="tax_code_id"/>
             <field eval="vat_code_a59" name="ref_tax_code_id"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_CO_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6743,6 +6755,7 @@
             <field name="account_paid_id" ref="vat_refund0"/>
             <field eval="vat_code_a56" name="tax_code_id"/>
             <field eval="vat_code_a56" name="ref_tax_code_id"/>
+            <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_Ex" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6751,6 +6764,7 @@
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
             <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_I0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6760,6 +6774,7 @@
             <field eval="True" name="child_depend"/>
             <field eval="vat_code_a81" name="base_code_id"/>
             <field eval="vat_code_a81" name="ref_base_code_id"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_I0_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6771,6 +6786,7 @@
             <field name="account_paid_id" ref="vat_refund0"/>
             <field eval="vat_code_a59" name="tax_code_id"/>
             <field eval="vat_code_a59" name="ref_tax_code_id"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_I0_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6782,6 +6798,7 @@
             <field name="account_paid_id" ref="vat_payable0"/>
             <field eval="vat_code_a55" name="tax_code_id"/>
             <field eval="vat_code_a55" name="ref_tax_code_id"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_XO" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6791,6 +6808,7 @@
             <field name="account_collected_id" ref="vat_payable0"/>
             <field name="account_paid_id" ref="vat_refund0"/>
             <field eval="True" name="child_depend"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_XO_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6802,6 +6820,7 @@
             <field name="account_paid_id" ref="vat_refund0"/>
             <field eval="vat_code_a59" name="tax_code_id"/>
             <field eval="vat_code_a59" name="ref_tax_code_id"/>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="vat_XO_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
@@ -6813,6 +6832,7 @@
             <field name="account_paid_id" ref="vat_payable0"/>
             <field eval="vat_code_a57" name="tax_code_id"/>
             <field eval="vat_code_a57" name="ref_tax_code_id"/>
+            <field name="type_tax_use">sale</field>
         </record>
 
     </data>

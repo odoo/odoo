@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
     <record id="view_repair_order_form" model="ir.ui.view">
             <field name="name">mrp.repair.form</field>
             <field name="model">mrp.repair</field>
@@ -26,25 +26,25 @@
                             <field name="guarantee_limit" />
                             <newline/>
                             <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
-                                <form string="Operations"> 
+                                <form string="Operations">
                                     <notebook>
-                                        <page string="Repair Line">                                                                      
-		                                    <field name="name" colspan="4"/>		                                     
-		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>                                            
+                                        <page string="Repair Line">
+		                                    <field name="name" colspan="4"/>
+		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>
 		                                    <field name="product_uom_qty" string="Qty" />
 		                                    <field name="product_uom" string="UoM"/>
-		                                    <field name="price_unit"/>     
-		                                    <field name="price_subtotal"/> 		                                    
+		                                    <field name="price_unit"/>
+		                                    <field name="price_subtotal"/>
 		                                    <field name="location_id"/>
 		                                    <field name="location_dest_id"/>
                                             <newline/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
                                             <group colspan="2">
                                                 <field name="to_invoice"/>
-    		                                    <field name="invoiced"/>  
+    		                                    <field name="invoiced"/>
                                             </group>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False)]"/>
+                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
                                             <separator colspan="4" string="States"/>
                                             <field name="state"/>
 										</page>
@@ -52,7 +52,7 @@
                                             <field colspan="4" name="move_id" />
                                             <field colspan="4" name="invoice_line_id"/>
                                         </page>
-		                                         
+
                                      </notebook>
                                 </form>
                                 <tree string="Operations" editable="bottom">
@@ -88,7 +88,7 @@
                                 <button name="action_invoice_create" states="2binvoiced" string="Make Invoice"/>
 								<button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                                <button name="cancel" states="draft" string="Cancel Repair"/>                                
+                                <button name="cancel" states="draft" string="Cancel Repair"/>
                                 <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
                             </group>
                         </page>
@@ -100,25 +100,25 @@
                             <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
                                 <form string="Fees">
                                     <notebook>
-                                        <page string="Fees Line"> 
-                                            <field name='name'/>  
+                                        <page string="Fees Line">
+                                            <field name='name'/>
 		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
 		                                    <field name="product_uom_qty" string="Qty"/>
-		                                    <field name="product_uom" string="UoM" /> 
-		                                    <field name="price_unit"/>  
-		                                    <field name="price_subtotal"/>  
+		                                    <field name="product_uom" string="UoM" />
+		                                    <field name="price_unit"/>
+		                                    <field name="price_subtotal"/>
                                             <newline/>
-                                            <group colspan="2">                                                
+                                            <group colspan="2">
                                                 <field name="to_invoice"/>
-    		                                    <field name="invoiced"/>  
+    		                                    <field name="invoiced"/>
                                             </group>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False)]"/>
+                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
                                          </page>
-										 <page string="History" groups="base.group_extended">                                            
-                                            <field colspan="4" name="invoice_line_id" />                                            
-                                        </page>     
-                                      </notebook>                     
+										 <page string="History" groups="base.group_extended">
+                                            <field colspan="4" name="invoice_line_id" />
+                                        </page>
+                                      </notebook>
                                 </form>
                                 <tree string="Fees" editable="bottom">
                                     <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
@@ -137,7 +137,7 @@
                             <separator colspan="4" string="Quotation Notes"/>
                             <field colspan="4" name="quotation_notes" nolabel="1"/>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">                            
+                        <page string="Extra Info" groups="base.group_extended">
                             <field name="invoice_id"/>
                             <field name="picking_id"/>
                             <field name="location_id"/>
@@ -147,7 +147,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_repair_order_tree" model="ir.ui.view">
             <field name="name">mrp.repair.tree</field>
             <field name="model">mrp.repair</field>
@@ -167,7 +167,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_repair_order_form" model="ir.actions.act_window">
             <field name="name">New Repair</field>
             <field name="type">ir.actions.act_window</field>
@@ -175,7 +175,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        
+
          <record id="action_repair_order_tree" model="ir.actions.act_window">
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -183,7 +183,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
          <record id="action_repair_quotation_tree" model="ir.actions.act_window">
             <field name="name">Repairs in quotation</field>
             <field name="type">ir.actions.act_window</field>
@@ -192,7 +192,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
-        
+
         <record id="action_repair_progress_tree" model="ir.actions.act_window">
             <field name="name">Repairs in progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -219,19 +219,19 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','2binvoiced')]</field>
         </record>
-        
+
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_root" name="Repairs"/>
-        
+
         <menuitem action="action_repair_quotation_tree" id="menu_repair_quotation" parent="menu_repair_order"/>
 
         <menuitem action="action_repair_progress_tree" id="menu_repair_progress" parent="menu_repair_order"/>
 
         <menuitem action="action_repair_ready_tree" id="menu_repair_ready" parent="menu_repair_order"/>
-    	
+
     	<menuitem action="action_repair_2binvoiced_tree" id="menu_repair_2binvoiced" parent="menu_repair_order"/>
-    	
+
     	<menuitem action="action_repair_order_form" id="menu_repair_form" parent="menu_repair_order" sequence = "50"/>
-    	
-    	
+
+
     </data>
 </openerp>

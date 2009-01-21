@@ -461,6 +461,7 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="sign"/>
+		    
                     <field name="close_method"/>
                     <field name="partner_account"/>
                 </form>
@@ -539,8 +540,9 @@
             <field name="arch" type="xml">
                 <form string="Account Tax Code">
                     <field name="name" select="1"/>
-                    <field name="company_id"/>
                     <field name="code" select="1"/>
+                    <field name="company_id"/>
+                    <field name="notprintable"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
                     <newline/>
@@ -606,6 +608,7 @@
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
                             <field groups="base.group_extended" name="price_include"/>
+                            <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>
                         </page>
@@ -1548,6 +1551,7 @@
                         <field name="chart_template_id" select="1"/>
                         <field name="tax_group" select="1"/>
                         <field name="type" select="2"/>
+                        <field name="type_tax_use" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
@@ -1659,7 +1663,8 @@
                     <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
                     <field name="company_id" />
                     <field name ="code_digits" />
-                    <field name="chart_template_id" colspan="4"/>
+                    <field name="chart_template_id"/>
+                    <field name ="seq_journal" />
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                         <form string="Bank Information">
                             <field name="acc_no"/>

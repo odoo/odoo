@@ -40,7 +40,7 @@ FIELDS = {
 
 START_FIELD = {
     'date': {'string': 'Date payment', 'type': 'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale and purchase journals.'},
+    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
 }
 
 START_FORM = '''<?xml version="1.0"?>
@@ -60,26 +60,12 @@ def _search_invoices(obj, cr, uid, data, context):
     journal_ids = data['form']['journal_id'][0][2]
 
     if journal_ids == []:
-        sale_journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale')], context=context)
-        pur_journal_ids = journal_obj.search(cr, uid, [('type', '=', 'purchase')], context=context)
-    else:
-        pur_journal_ids = sale_journal_ids = []
-        for journal in pool.get('account.journal').browse(cr, uid, journal_ids):
-            if journal.type == 'sale':
-                sale_journal_ids.append(journal.id)
-            else:
-                pur_journal_ids.append(journal.id)
-    
+        journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','cash','purchase'))], context=context)
+
     line_ids = line_obj.search(cr, uid, [
         ('reconcile_id', '=', False),
-        ('journal_id', 'in', sale_journal_ids),
-        ('account_id.type', '=', 'receivable')],
-        #order='date DESC, id DESC', #doesn't work
-        context=context)
-    line_ids += line_obj.search(cr, uid, [
-        ('reconcile_id', '=', False),
-        ('journal_id', 'in', pur_journal_ids),
-        ('account_id.type', '=', 'payable')],
+        ('journal_id', 'in', journal_ids),
+        ('account_id.reconcile', '=', True)],
         #order='date DESC, id DESC', #doesn't work
         context=context)
         
@@ -88,8 +74,7 @@ def _search_invoices(obj, cr, uid, data, context):
     <field name="lines" colspan="4" height="300" width="800" nolabel="1"
         domain="[('id', 'in', [%s])]"/>
 </form>''' % (','.join([str(x) for x in line_ids]))
-    return {'type':'customer'}
-    # return {'lines': line_ids,'type':'customer'}
+    return {}
 
 def _populate_statement(obj, cursor, user, data, context):
     line_ids = data['form']['lines'][0][2]
@@ -124,10 +109,17 @@ def _populate_statement(obj, cursor, user, data, context):
         reconcile_id = statement_reconcile_obj.create(cursor, user, {
             'line_ids': [(6, 0, [line.id])]
             }, context=context)
+        if line.journal_id.type == 'sale':
+            type = 'customer'
+        elif line.journal_id.type == 'purchase':
+            type = 'supplier'
+        else:
+            type = 'general'
+        
         statement_line_obj.create(cursor, user, {
             'name': line.name or '?',
             'amount': amount,
-            'type': data['form']['type'],
+            'type': type,
             'partner_id': line.partner_id.id,
             'account_id': line.account_id.id,
             'statement_id': statement.id,

@@ -140,7 +140,7 @@
                                             <field name="type"/>
                                             <field name="delay" select="2"/>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False)]"/>
+                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
                                             <separator colspan="4" string="States"/>
                                             <field name="state" select="2"/>
                                             <group col="3" colspan="2">
@@ -206,7 +206,7 @@
                             <field groups="base.group_extended" name="origin"/>
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
                             <field name="payment_term"/>
-                            <field name="fiscal_position"/>
+                            <field name="fiscal_position" groups="base.group_extended"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -398,7 +398,7 @@
                             <field name="type"/>
                             <field name="delay" select="2"/>
                             <field name="price_subtotal"/>
-                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False)]"/>
+                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
                             <group col="2" colspan="2">
