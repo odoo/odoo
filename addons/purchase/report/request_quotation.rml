@@ -137,7 +137,7 @@
             <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date = True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ order_line.product_qty or '' ]]</para>
+            <para style="terp_default_Right_9">[[ order_line.product_qty or formatLang(0.00)]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>

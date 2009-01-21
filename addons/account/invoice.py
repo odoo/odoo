@@ -196,11 +196,11 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True),
 
-        'number': fields.char('Invoice Number', size=32, readonly=True, help="Uniq number of the invoice, computed automatically when the invoice is created."),
+        'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
-        'comment': fields.text('Additionnal Information'),
+        'comment': fields.text('Additional Information'),
 
         'state': fields.selection([
             ('draft','Draft'),
@@ -208,7 +208,7 @@ class account_invoice(osv.osv):
             ('proforma2','Pro-forma'),
             ('open','Open'),
             ('paid','Done'),
-            ('cancel','Canceled')
+            ('cancel','Cancelled')
         ],'State', select=True, readonly=True),
 
         'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
@@ -284,7 +284,7 @@ class account_invoice(osv.osv):
         'reference_type': lambda *a: 'none',
     }
 
-    def unlink(self, cr, uid, ids):
+    def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for t in invoices:
@@ -292,7 +292,7 @@ class account_invoice(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
-        osv.osv.unlink(self, cr, uid, unlink_ids)
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
 #   def get_invoice_address(self, cr, uid, ids):
@@ -429,6 +429,7 @@ class account_invoice(osv.osv):
             for taxe in ait_obj.compute(cr, uid, id).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
+        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)    
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
@@ -622,7 +623,7 @@ class account_invoice(osv.osv):
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
-                        _('Can not create invoice move on centralized journal'))
+                        _('Can not create invoice move on centralised journal'))
             move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:

@@ -84,7 +84,33 @@ class stock_location(osv.osv):
             if 'stock_virtual' in field_names:
                 res[loc]['stock_virtual'] = prod.virtual_available
         return res
-
+    
+    
+    def product_detail(self, cr, uid, id, field):
+        res = {}
+        res[id] = {}
+        final_value = 0.0
+        field_to_read = 'virtual_available'
+        if field == 'stock_real_value':
+            field_to_read = 'qty_available'
+        cr.execute('select distinct product_id from stock_move where location_id=%s',(id,))
+        result = cr.dictfetchall()
+        if result:
+            for r in result:
+                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price','name'])
+                final_value += (product[field_to_read] * product['standard_price'])
+        return final_value
+    
+    def _product_value(self, cr, uid, ids, field_names, arg, context={}):
+        result = {}
+        for id in ids:
+            result[id] = {}.fromkeys(field_names, 0.0)
+        for field_name in field_names:
+            for loc in ids:
+                ret_dict = self.product_detail(cr,uid,loc,field=field_name)
+                result[loc][field_name] = ret_dict
+        return result
+    
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
@@ -123,6 +149,8 @@ class stock_location(osv.osv):
 
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
+        'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
+        'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -307,7 +335,7 @@ class stock_tracking(osv.osv):
         res = [(r['id'], r['name']+' ['+(r['serial'] or '')+']') for r in self.read(cr, uid, ids, ['name','serial'], context)]
         return res
 
-    def unlink(self, cr ,uid, ids):
+    def unlink(self, cr ,uid, ids, context=None):
         raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
 stock_tracking()
 
