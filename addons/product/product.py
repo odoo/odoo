@@ -39,7 +39,7 @@ class product_uom_categ(osv.osv):
     _name = 'product.uom.categ'
     _description = 'Product uom categ'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
     }
 product_uom_categ()
 
@@ -78,7 +78,7 @@ class product_uom(osv.osv):
                 }, context=ctx)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Unit of Measure of the same category can be converted between each others."),
         'factor': fields.float('Rate', digits=(12, 6), required=True,
