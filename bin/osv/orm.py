@@ -2039,19 +2039,18 @@ class orm(orm_template):
         if not context:
             return
         if context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access:
+            def key(oid):
+                return "%s,%s" % (self._name, oid)
             santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
             for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = tools.flatten(((i, context[self.CONCURRENCY_CHECK_FIELD][str(i)]) 
-                                          for i in ids[i:i+cr.IN_MAX] 
-                                          if str(i) in context[self.CONCURRENCY_CHECK_FIELD]))
+                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)]) 
+                                          for oid in ids[i:i+cr.IN_MAX] 
+                                          if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
                 if sub_ids:
                     cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
                     res = cr.fetchone()
                     if res and res[0]:
                         raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
-
-            del context[self.CONCURRENCY_CHECK_FIELD]
-
 
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
