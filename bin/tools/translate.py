@@ -529,6 +529,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             encoding = 'UTF-8'
         if encoding == 'cp1252':
             encoding= '1252'
+        if encoding == 'iso-8859-1':
+            encoding= 'iso-8859-15'
+        if encoding == 'latin1':
+            encoding= 'latin9'
 
         try:
             if os.name == 'nt':
@@ -536,9 +540,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             else:
                 locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
         except Exception:
+            locale.setlocale(locale.LC_ALL, str('en_US' + '.' + encoding))
             netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
                     'unable to set locale "%s"' % (lang)) 
-            locale.setlocale(locale.LC_ALL, str('en_US' + '.' + encoding))
+            
 
         if not ids:
             if not lang_name:
@@ -549,21 +554,20 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'code': lang,
                 'name': lang_name,
                 'translatable': 1,
-                'date_format' : locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
-                'time_format' : locale.nl_langinfo(locale.T_FMT),
+                'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
+                'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
                 'grouping' : [],
-                'decimal_point' : locale.nl_langinfo(locale.RADIXCHAR),
-                'thousands_sep' : locale.nl_langinfo(locale.THOUSEP)
+                'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
+                'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
                 })
         else:
             lang_obj.write(cr, uid, ids, {'translatable':1,
-                                          'date_format' : locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
-                                          'time_format' : locale.nl_langinfo(locale.T_FMT),
+                                          'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
+                                          'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
                                           'grouping' : [],
-                                          'decimal_point' : locale.nl_langinfo(locale.RADIXCHAR),
-                                          'thousands_sep' : locale.nl_langinfo(locale.THOUSEP)
+                                          'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
+                                          'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
                                             })
-        
         locale.resetlocale(locale.LC_ALL)
         lang_ids = lang_obj.search(cr, uid, [])
         langs = lang_obj.read(cr, uid, lang_ids)
