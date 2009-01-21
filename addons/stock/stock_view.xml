@@ -403,7 +403,7 @@
             <field name="view_id" ref="view_location_tree"/>
         </record>
         <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>
-
+		
         =============================
         Warehouse
         =============================
@@ -1360,7 +1360,7 @@
             context="{'location': active_id}"
             domain="[('product_id','=',active_id),('state','in',('waiting','confirmed','assigned'))]"
             id="act_product_stock_move_futur_open"
-            name="Futur Stock Moves"
+            name="Future Stock Moves"
             res_model="stock.move" 
             src_model="product.product"/>
 
@@ -1380,9 +1380,6 @@
             <field eval="'ir.actions.wizard,%d'%ref('location_product')" name="value"/>
             <field eval="True" name="object"/>
         </record>  
-
-         
-
 
     </data>
 </openerp>

@@ -236,7 +236,7 @@ class account_report_history(osv.osv):
         cr.execute('''create or replace view account_report as (select ar.id as tmp,((pr.id*100000)+ar.id) as id,ar.id as name,pr.id as period_id,pr.fiscalyear_id as fiscalyear_id from account_report_report as ar cross join account_period as pr group by ar.id,pr.id,pr.fiscalyear_id)''')
 
     def unlink(self, cr, uid, ids, context={}):
-        raise osv.except_osv(_('Error !'), _('You can not delete an indicator history record. You may have to delete the concerned Indicator!'))
+        raise osv.except_osv(_('Error !'), _('You cannot delete an indicator history record. You may have to delete the concerned Indicator!'))
 
 account_report_history()
 
