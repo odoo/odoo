@@ -1520,8 +1520,46 @@ class account_model(osv.osv):
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
-
     }
+    def generate(self, cr, uid, ids, datas={}, context={}):
+        move_ids = []
+        for model in self.browse(cr, uid, ids, context):
+            period_id = self.pool.get('account.period').find(cr,uid, context=context)
+            if not period_id:
+                raise osv.except_osv('No period found !', 'Unable to find a valid period !')
+            period_id = period_id[0]
+            name = model.name
+            if model.journal_id.sequence_id:
+                name = self.pool.get('ir.sequence').get_id(cr, uid, model.journal_id.sequence_id.id)
+            move_id = self.pool.get('account.move').create(cr, uid, {
+                'name': name,
+                'ref': model.ref,
+                'period_id': period_id,
+                'journal_id': model.journal_id.id,
+            })
+            move_ids.append(move_id)
+            for line in model.lines_id:
+                val = {
+                    'move_id': move_id,
+                    'journal_id': model.journal_id.id,
+                    'period_id': period_id
+                }
+                val.update({
+                    'name': line.name,
+                    'quantity': line.quantity,
+                    'debit': line.debit,
+                    'credit': line.credit,
+                    'account_id': line.account_id.id,
+                    'move_id': move_id,
+                    'ref': line.ref,
+                    'partner_id': line.partner_id.id,
+                    'date': time.strftime('%Y-%m-%d'),
+                    'date_maturity': time.strftime('%Y-%m-%d')
+                })
+                c = context.copy()
+                c.update({'journal_id': model.journal_id.id,'period_id': period_id})
+                self.pool.get('account.move.line').create(cr, uid, val, context=c)
+        return move_ids    
 
 account_model()
 
