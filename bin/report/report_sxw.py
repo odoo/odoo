@@ -335,7 +335,7 @@ class rml_parse(object):
 
 
     def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
-        if not value:
+        if (not isinstance(value,float)) and (not value):
             return ''
         pool_lang=self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
