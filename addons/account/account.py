@@ -1267,7 +1267,7 @@ class account_tax(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
         'price_include': fields.boolean('Tax Included in Price', help="Check this is the price you use on the product and invoices is including this tax."),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use in')
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -1301,6 +1301,7 @@ class account_tax(osv.osv):
         'amount': lambda *a: 0,
         'price_include': lambda *a: 0,
         'active': lambda *a: 1,
+        'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,
         'tax_group': lambda *a: 'vat',
         'ref_tax_sign': lambda *a: 1,

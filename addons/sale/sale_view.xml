@@ -140,7 +140,7 @@
                                             <field name="type"/>
                                             <field name="delay" select="2"/>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
+                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <separator colspan="4" string="States"/>
                                             <field name="state" select="2"/>
                                             <group col="3" colspan="2">
@@ -398,7 +398,7 @@
                             <field name="type"/>
                             <field name="delay" select="2"/>
                             <field name="price_subtotal"/>
-                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','=','sale')]"/>
+                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
                             <group col="2" colspan="2">

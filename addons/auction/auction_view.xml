@@ -103,8 +103,8 @@ Auction Management/Auction Dates/New Auction Dates
 				<field name="auction1" select="1"/>
 				<field name="auction2" select="1"/>
 				<separator string="Commissions" colspan="4"/>
-				<field name="seller_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','=','sale')]"/>
-				<field name="buyer_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','=','purchase')]"/>
+				<field name="seller_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','purchase')]"/>
+				<field name="buyer_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','sale')]"/>
 				<separator string="Accounting" colspan="4"/>
 				<field name="acc_expense"/>
 				<field name="acc_income"/>
@@ -208,7 +208,7 @@ Auction Management/Auction Dates/Reporting
 				<field name="vnd_lim"/>
 				<field name="vnd_lim_net"/>
 				<field name="lot_est1"/>
-				<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+				<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
 				<field name="lot_est2"/>
 				<field name="product_id"/>
 				<field name="state" readonly="1"/>
@@ -319,7 +319,7 @@ Auction Management/Auction Dates/Reporting
 					<field name="obj_comm" select="2"/>
 					<field name="obj_ret"/>
 					<field name="ach_emp"/>
-					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
 					<field name="buyer_price"/>
 					<field name="seller_price"/>
 					<field name="gross_revenue"/>
@@ -430,7 +430,7 @@ Auction Management/Auction Dates/Reporting
 					<field name="name" readonly="1" select="1"/>
 					<field name="name2" readonly="2" select="1"/>
 					<field name="artist_id" readonly="1"/>
-					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
 					<newline/>
 					<field name="buyer_price"/>
 					<field name="is_ok" select="1"/>
@@ -510,7 +510,7 @@ Auction Management/Auction Dates/Reporting
 						<field name="partner_id" select="1" on_change="partner_id_change(partner_id)"/>
 						<field name="method"/>
 						<newline/>
-						<field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','=','sale')]"/>
+						<field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
 						<field name="transfer"/>
 						<newline/>
 						<field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
@@ -545,7 +545,7 @@ Auction Management/Auction Dates/Reporting
 									<field name="lot_est1"/>
 									<field name="lot_est2"/>
 
-									<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+									<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
 									<field name="product_id" domain="[('sale_ok','=',True)]"/>
 									<field name="state" readonly="1"/>
 								</page><page string="Photos">

@@ -180,7 +180,7 @@
                             <field name="price_unit"/>
                             <field name="account_analytic_id"/>
                             <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','=','purchase')]"/>
+                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
