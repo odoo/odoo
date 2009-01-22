@@ -113,7 +113,11 @@ class Cursor(object):
         if self.sql_log:
             now = mdt.now()
         
-        res = self._obj.execute(query, params)
+        try:
+            res = self._obj.execute(query, params)
+        except:
+            log("bad query: %s" % self._obj.query, netsvc.LOG_ERROR)
+            raise
 
         if self.sql_log:
             log("query: %s" % self._obj.query)
