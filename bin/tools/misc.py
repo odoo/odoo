@@ -890,6 +890,26 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
 ])
 
+def extract_zip_file(zip_file, outdirectory):
+    import zipfile
+    import os
+
+    zf = zipfile.ZipFile(zip_file, 'r')
+    out = outdirectory
+    for path in zf.namelist():
+        tgt = os.path.join(out, path)
+        tgtdir = os.path.dirname(tgt)
+        if not os.path.exists(tgtdir):
+            os.makedirs(tgtdir)
+
+        if not tgt.endswith(os.sep):
+            fp = open(tgt, 'wb')
+            fp.write(zf.read(path))
+            fp.close()
+    zf.close()
+
+
+
 
 
 if __name__ == '__main__':
