@@ -152,16 +152,16 @@
         <td></td>
         <td></td>
         <td>
-          <para style="P12"><u>[[ '%.2f' % sum_debit(o.period_id.id, o.journal_id.id) or '0.00' ]]</u></para>
+          <para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]]</u></para>
         </td>
         <td>
-          <para style="P12"><u>[[ '%.2f' % sum_credit(o.period_id.id, o.journal_id.id) or '0.00' ]]</u></para>
+          <para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para>
         </td>
       </tr>
        <tr>
         <td>
           <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para>
-          <para style="terp_default_8">[[ line.date ]]</para>
+          <para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ line.ref ]]</para>
@@ -176,10 +176,10 @@
           <para style="terp_default_8">[[ line.name ]]</para>
         </td>
         <td>
-          <para style="P8">[[ line.debit and '%.2f' % line.debit or '0.00' ]]</para>
+          <para style="P8">[[ formatLang(line.debit) ]]</para>
         </td>
         <td>
-          <para style="P8">[[ line.credit and '%.2f' % line.credit or '0.00' ]]</para>
+          <para style="P8">[[ formatLang(line.credit) ]]</para>
         </td>
         <para style="Standard">
       <font color="white"> </font>

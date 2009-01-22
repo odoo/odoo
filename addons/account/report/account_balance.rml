@@ -214,16 +214,16 @@
           [[ a['name'] ]]</para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['debit'] and formatLang(a['debit']) or '0.00' ]]</font>
-			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['debit'] and formatLang(a['debit']) or '0.00' ]]</font></para>
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['debit']) ]]</font></para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['credit'] and formatLang(a['credit']) or '0.00' ]]</font>
-			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['credit'] and formatLang(a['credit']) or '0.00' ]]</font></para>
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['credit']) ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['credit']) ]]</font></para>
         </td>
         <td>
-		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ a['balance'] and formatLang(a['balance']) or '0.00' ]]</font>
-			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[a['balance'] and formatLang(a['balance']) or '0.00' ]]</font></para>
+		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance']) ]]</font>
+			<font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance']) ]]</font></para>
         </td>
       </tr>
     </blockTable>
