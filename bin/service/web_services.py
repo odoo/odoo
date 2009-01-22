@@ -401,24 +401,54 @@ GNU Public Licence.
 
             zips = rc.retrieve_updates(rc.id)
             
-            from shutil import rmtree
+            from shutil import rmtree, copytree, copy
+
+            backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
+            if zips and not os.path.isdir(backup_directory):
+                l.notifyChannel('migration', netsvc.LOG_INFO, 'create a new backup directory to \
+                                store the old modules: %s' % (backup_directory,))
+                os.makedirs(backup_directory)
+
             for module in zips:
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
                 mp = addons.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
+                        copytree(mp, os.path.join(backup_directory, module))
                         if os.path.islink(mp):
                             os.unlink(mp)
                         else:
                             rmtree(mp)
                     else:
+                        copy(mp + 'zip', backup_directory)
                         os.unlink(mp + '.zip')
 
-                mp = os.path.join(tools.config['addons_path'], module + '.zip')
+                try:
+                    try:
+                        base64_decoded = base64.decodestring(zips[module])
+                    except:
+                        l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
+                        raise
 
-                zip = open(mp, 'w')
-                zip.write(base64.decodestring(zips[module]))
-                zip.close()
+                    zip_contents = cStringIO.StringIO(base64_decoded)
+                    zip_contents.seek(0)
+                    try:
+                        try:
+                            tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
+                        except:
+                            l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
+                            rmtree(module)
+                            raise
+                    finally:
+                        zip_contents.close()
+                except:
+                    l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
+                    nmp = os.path.join(backup_directory, module)
+                    if os.path.isdir(nmp):
+                        copytree(nmp, tools.config['addons_path'])
+                    else:
+                        copy(nmp+'.zip', tools.config['addons_path'])
+                    raise
 
             return True
         except tm.RemoteContractException, e:
