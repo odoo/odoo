@@ -380,6 +380,7 @@ class ir_model_access(osv.osv):
         return res
 
     def create(self, cr, uid, *args, **argv):
+        self.call_cache_clearing_methods()
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
         self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res

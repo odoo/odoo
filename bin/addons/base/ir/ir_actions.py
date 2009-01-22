@@ -122,7 +122,8 @@ class report_xml(osv.osv):
             ('odt', 'odt'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'attachment': fields.char('Save As Attachment Prefix', size=32, help='This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports')
+        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment to store the printing result. Keep empty to not save the printed reports. You can use python expression using the object and time variables.'),
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, the second time the user print with same attachment name, it returns the previour report.')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',

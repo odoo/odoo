@@ -72,7 +72,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         try:
             cr.autocommit(True)
-            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
@@ -153,7 +153,7 @@ class db(netsvc.Service):
         cr.autocommit(True)
         try:
             try:
-                cr.execute('DROP DATABASE ' + db_name)
+                cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
                 logger.notifyChannel("web-services", netsvc.LOG_ERROR,
                         'DROP DB: %s failed:\n%s' % (db_name, e))
@@ -204,7 +204,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         cr.autocommit(True)
         try:
-            cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
@@ -249,7 +249,6 @@ class db(netsvc.Service):
         cr = db.cursor()
         try:
             try:
-                cr = db.cursor()
                 db_user = tools.config["db_user"]
                 if not db_user and os.name == 'posix':
                     import pwd
@@ -259,9 +258,9 @@ class db(netsvc.Service):
                     res = cr.fetchone()
                     db_user = res and str(res[0])
                 if db_user:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres')", (db_user,))
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
                 else:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres')")
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
                 res = [str(name) for (name,) in cr.fetchall()]
             except:
                 res = []
@@ -402,24 +401,54 @@ GNU Public Licence.
 
             zips = rc.retrieve_updates(rc.id)
             
-            from shutil import rmtree
+            from shutil import rmtree, copytree, copy
+
+            backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
+            if zips and not os.path.isdir(backup_directory):
+                l.notifyChannel('migration', netsvc.LOG_INFO, 'create a new backup directory to \
+                                store the old modules: %s' % (backup_directory,))
+                os.makedirs(backup_directory)
+
             for module in zips:
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
                 mp = addons.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
+                        copytree(mp, os.path.join(backup_directory, module))
                         if os.path.islink(mp):
                             os.unlink(mp)
                         else:
                             rmtree(mp)
                     else:
+                        copy(mp + 'zip', backup_directory)
                         os.unlink(mp + '.zip')
 
-                mp = os.path.join(tools.config['addons_path'], module + '.zip')
+                try:
+                    try:
+                        base64_decoded = base64.decodestring(zips[module])
+                    except:
+                        l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
+                        raise
 
-                zip = open(mp, 'w')
-                zip.write(base64.decodestring(zips[module]))
-                zip.close()
+                    zip_contents = cStringIO.StringIO(base64_decoded)
+                    zip_contents.seek(0)
+                    try:
+                        try:
+                            tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
+                        except:
+                            l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
+                            rmtree(module)
+                            raise
+                    finally:
+                        zip_contents.close()
+                except:
+                    l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
+                    nmp = os.path.join(backup_directory, module)
+                    if os.path.isdir(nmp):
+                        copytree(nmp, tools.config['addons_path'])
+                    else:
+                        copy(nmp+'.zip', tools.config['addons_path'])
+                    raise
 
             return True
         except tm.RemoteContractException, e:
@@ -518,6 +547,13 @@ wizard()
 # Report state:
 #     False -> True
 #
+
+class ExceptionWithTraceback(Exception):
+    def __init__(self, msg, tb):
+        self.message = msg
+        self.traceback = tb
+        self.args = (msg, tb)
+
 class report_spool(netsvc.Service):
     def __init__(self, name='report'):
         netsvc.Service.__init__(self, name)
@@ -553,12 +589,12 @@ class report_spool(netsvc.Service):
             except Exception, exception:
                 import traceback
                 import sys
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                    sys.exc_type, sys.exc_value, sys.exc_traceback))
+                tb = sys.exc_info()
+                tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
-                self._reports[id]['exception'] = exception
+                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.close()
             return True

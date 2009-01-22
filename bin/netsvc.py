@@ -228,7 +228,10 @@ class OpenERPDispatcher:
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
-            tb = sys.exc_info()
+            if hasattr(e, 'traceback'):
+                tb = e.traceback
+            else:
+                tb = sys.exc_info()
             tb_s = "".join(traceback.format_exception(*tb))
             if tools.config['debug_mode']:
                 import pdb
@@ -334,7 +337,7 @@ class HttpDaemon(threading.Thread):
             Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can not load the certificate and/or the private key files")
             sys.exit(1)
         except Exception, e:
-            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when strarting the server daemon: %s" % (e,))
+            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
             sys.exit(1)
 
 

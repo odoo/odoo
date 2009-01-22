@@ -33,6 +33,7 @@ import mx.DateTime as mxdt
 import tempfile
 import tarfile
 import codecs
+import locale
 
 
 class UNIX_LINE_TERMINATOR(csv.excel):
@@ -163,7 +164,7 @@ class TinyPoFile(object):
     def write_infos(self, modules):
         import release
         self.buffer.write("# Translation of %(project)s.\n" \
-                          "# This file containt the translation of the following modules:\n" \
+                          "# This file contains the translation of the following modules:\n" \
                           "%(modules)s" \
                           "#\n" \
                           "msgid \"\"\n" \
@@ -550,8 +551,29 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     try:
         uid = 1
         cr = pooler.get_db(db_name).cursor()
-
         ids = lang_obj.search(cr, uid, [('code','=',lang)])
+        lc, encoding = locale.getdefaultlocale()
+        if not encoding:
+            encoding = 'UTF-8'
+        if encoding == 'utf':
+            encoding = 'UTF-8'
+        if encoding == 'cp1252':
+            encoding= '1252'
+        if encoding == 'iso-8859-1':
+            encoding= 'iso-8859-15'
+        if encoding == 'latin1':
+            encoding= 'latin9'
+
+        try:
+            if os.name == 'nt':
+                locale.setlocale(locale.LC_ALL, str(_LOCALE2WIN32.get(lang, lang) + '.' + encoding))
+            else:
+                locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
+        except Exception:
+            netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
+                    'unable to set locale "%s"' % (lang)) 
+            
+
         if not ids:
             if not lang_name:
                 lang_name=lang
@@ -561,9 +583,21 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'code': lang,
                 'name': lang_name,
                 'translatable': 1,
+                'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
+                'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
+                'grouping' : [],
+                'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
+                'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
                 })
         else:
-            lang_obj.write(cr, uid, ids, {'translatable':1})
+            lang_obj.write(cr, uid, ids, {'translatable':1,
+                                          'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
+                                          'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
+                                          'grouping' : [],
+                                          'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
+                                          'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
+                                            })
+        locale.resetlocale(locale.LC_ALL)
         lang_ids = lang_obj.search(cr, uid, [])
         langs = lang_obj.read(cr, uid, lang_ids)
         ls = map(lambda x: (x['code'],x['name']), langs)

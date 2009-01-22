@@ -84,21 +84,23 @@ class Cursor(object):
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.autocommit(False)
         self.dbname = pool.dbname
-        
-        from inspect import stack
-        self.__caller = tuple(stack()[2][1:3])
+
+        if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
+            from inspect import stack
+            self.__caller = tuple(stack()[2][1:3])
         
     def __del__(self):
         if hasattr(self, '_obj'):
-            # Oops. 'self' has not been closed explicitly.
-            # The cursor will be deleted by the garbage collector, 
-            # but the database connection is not put back into the connection
-            # pool, preventing some operation on the database like dropping it.
-            # This can also lead to a server overload.
-            msg = "Cursor not closed explicitly\n"  \
-                  "Cursor was created at %s:%s" % self.__caller
+            if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
+                # Oops. 'self' has not been closed explicitly.
+                # The cursor will be deleted by the garbage collector, 
+                # but the database connection is not put back into the connection
+                # pool, preventing some operation on the database like dropping it.
+                # This can also lead to a server overload.
+                msg = "Cursor not closed explicitly\n"  \
+                      "Cursor was created at %s:%s" % self.__caller
 
-            log(msg, netsvc.LOG_WARNING)
+                log(msg, netsvc.LOG_WARNING)
             self.close()
 
     @check

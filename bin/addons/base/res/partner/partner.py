@@ -104,7 +104,7 @@ def _contact_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
     ids = obj.search(cr, uid, [('domain', '=', 'contact')])
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res]
+    return [(r['shortcut'], r['name']) for r in res] + [('','')]
 
 def _partner_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
@@ -116,7 +116,7 @@ def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res]
+    return [(r['code'], r['name']) for r in res] + [('','')]
 
 
 class res_partner(osv.osv):
@@ -132,7 +132,7 @@ class res_partner(osv.osv):
         'ref': fields.char('Code', size=64),
         'lang': fields.selection(_lang_get, 'Language', size=5, help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
         'user_id': fields.many2one('res.users', 'Dedicated Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
+        'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64),
         'comment': fields.text('Notes'),
@@ -285,8 +285,8 @@ class res_partner_address(osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', change_default=True, domain="[('country_id','=',country_id)]"),
-        'country_id': fields.many2one('res.country', 'Country', change_default=True),
+        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
+        'country_id': fields.many2one('res.country', 'Country'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -328,6 +328,10 @@ class res_partner_address(osv.osv):
                 ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
                 ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
+
+    def get_city(self, cr, uid, id):
+        return self.browse(cr, uid, id).city
+
 res_partner_address()
 
 class res_partner_bank_type(osv.osv):

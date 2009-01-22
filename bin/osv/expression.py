@@ -34,8 +34,7 @@ class expression(object):
     """
 
     def _is_operator(self, element):
-        return isinstance(element, str) \
-           and element in ['&', '|', '!']
+        return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
         OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
@@ -192,7 +191,9 @@ class expression(object):
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring): # and not isinstance(field, fields.related):
-                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None)
+                        c = context.copy()
+                        c['active_test'] = False
+                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
             else:
@@ -244,7 +245,7 @@ class expression(object):
 
             if len_after:
                 if left == 'id':
-                     instr = ','.join(['%s'] * len_after)
+                    instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)

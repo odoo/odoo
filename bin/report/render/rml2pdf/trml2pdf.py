@@ -48,7 +48,7 @@ import reportlab
 import re
 from reportlab.pdfgen import canvas
 from reportlab import platypus
-
+import cStringIO
 import utils
 import color
 import os
@@ -351,26 +351,28 @@ class _rml_canvas(object):
         import urllib
         from reportlab.lib.utils import ImageReader
 
-        s = StringIO()
+#        s = StringIO()
         if not node.hasAttribute('file'):
 
             if node.hasAttribute('name'):
                 image_data = self.images[node.getAttribute('name')]
-                s.write(image_data)
+                s = cStringIO.StringIO(image_data)
             else:
                 import base64
                 image_data = base64.decodestring(node.firstChild.nodeValue)
                 if not image_data: return False
-                s.write(image_data)
+                s = cStringIO.StringIO(image_data)                
+#                s.write(image_data)
         else:
             if node.getAttribute('file') in self.images:
-                s.write(self.images[node.getAttribute('file')])
+                s = cStringIO.StringIO(self.images[node.getAttribute('file')])                
+#                s.write(self.images[node.getAttribute('file')])
             else:
                 try:
                     u = urllib.urlopen(str(node.getAttribute('file')))
                 except:
                     u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
-                s.write(u.read())
+                s = cStringIO.StringIO(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 

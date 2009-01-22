@@ -21,6 +21,7 @@
 #
 ##############################################################################
 
+# TODO handle the case of zip modules
 
 import os
 import sys
@@ -46,6 +47,8 @@ while len(modules):
             for name in info['depends']:
                 if name not in done+modules:
                     modules.append(name)
+                if not os.path.exists(name):
+                    print '\t%s [color=red]' % (name,)
                 print '\t%s -> %s;' % (f, name)
 print '}'
 

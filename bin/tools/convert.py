@@ -184,7 +184,7 @@ class assertion_report(object):
     def record_assertion(self, success, severity):
         """
             Records the result of an assertion for the failed/success count
-            retrurns success
+            returns success
         """
         if severity in self._report:
             self._report[severity][success] += 1
@@ -208,8 +208,17 @@ class assertion_report(object):
 
 class xml_import(object):
 
-    def isnoupdate(self, data_node = None):
-        return self.noupdate or (data_node and data_node.getAttribute('noupdate').strip() not in ('', '0', 'False'))
+    @staticmethod
+    def nodeattr2bool(node, attr, default=False):
+        if not node.hasAttribute(attr):
+            return default
+        val = node.getAttribute(attr).strip()
+        if not val:
+            return default
+        return val.lower() not in ('0', 'false', 'off')
+    
+    def isnoupdate(self, data_node=None):
+        return self.noupdate or (data_node and self.nodeattr2bool(data_node, 'noupdate', False)) 
 
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (data_node and data_node.getAttribute('context').encode('utf8'))
@@ -263,7 +272,7 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.getAttribute(f).encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment')):
+        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
             if rec.hasAttribute(field):
                 res[dest] = rec.getAttribute(field).encode('utf8')
         if rec.hasAttribute('auto'):
@@ -684,12 +693,11 @@ form: module.record_id""" % (xml_id,)
                     return None
                 else:
                     # if the resource didn't exist
-                    if rec.getAttribute("forcecreate"):
-                        # we want to create it, so we let the normal "update" behavior happen
-                        pass
-                    else:
-                        # otherwise do nothing
+                    if not self.nodeattr2bool(rec, 'forcecreate', True):
+                        # we don't want to create it, so we skip it
                         return None
+                    # else, we let the record to be created
+                
             else:
                 # otherwise it is skipped
                 return None
@@ -843,7 +851,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
             logger = netsvc.Logger()
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "Can not import the line: %s" % line)
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "Cannot import the line: %s" % line)
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
@@ -865,7 +873,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         relaxng.assert_(doc)
     except Exception, e:
         logger = netsvc.Logger()
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file do not fit the required schema !')
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file does not fit the required schema !')
         logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
         raise
 

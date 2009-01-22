@@ -290,6 +290,8 @@ def get_pg_type(f):
         f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
+    elif isinstance(f, fields.function) and f._type == 'char':
+        f_type = ('varchar', 'VARCHAR(%d)' % (f.size))
     else:
         logger = netsvc.Logger()
         logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
@@ -305,6 +307,7 @@ class orm_template(object):
     _rec_name = 'name'
     _parent_name = 'parent_id'
     _parent_store = False
+    _parent_order = False
     _date_name = 'date'
     _order = 'id'
     _sequence = None
@@ -312,6 +315,8 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
+    
+    CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -449,7 +454,7 @@ class orm_template(object):
                         break
                     i += 1
                 if i == len(f):
-                    data[fpos] = str(r or '')
+                    data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
     def export_data(self, cr, uid, ids, fields, context=None):
@@ -490,7 +495,7 @@ class orm_template(object):
                     if line[i]:
                         if fields_def[field[len(prefix)][:-3]]['type']=='many2many':
                             res_id = []
-                            for word in line[i].split(','):
+                            for word in line[i].split(config.get('csv_internal_sep')):
                                 if '.' in word:
                                     module, xml_id = word.rsplit('.', 1)
                                 else:
@@ -562,7 +567,7 @@ class orm_template(object):
                         res = []
                         if line[i]:
                             relation = fields_def[field[len(prefix)]]['relation']
-                            for word in line[i].split(','):
+                            for word in line[i].split(config.get('csv_internal_sep')):
                                 res2 = self.pool.get(relation).name_search(cr,
                                         uid, word, [], operator='=')
                                 res3 = (res2 and res2[0][0]) or False
@@ -781,7 +786,7 @@ class orm_template(object):
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
-    def __view_look_dom(self, cr, user, node, context=None):
+    def __view_look_dom(self, cr, user, node, view_id, context=None):
         if not context:
             context = {}
         result = False
@@ -807,7 +812,7 @@ class orm_template(object):
                             node.removeChild(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
-                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, ctx)
+                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
                             views[str(f.localName)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -857,45 +862,47 @@ class orm_template(object):
 
         if childs:
             for f in node.childNodes:
-                fields.update(self.__view_look_dom(cr, user, f, context))
-
-        if ('state' not in fields) and (('state' in self._columns) or ('state' in self._inherit_fields)):
-            fields['state'] = {}
+                fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
         return fields
 
-    def __view_look_dom_arch(self, cr, user, node, context=None):
-        fields_def = self.__view_look_dom(cr, user, node, context=context)
+    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
 
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = xpath.Evaluate('//button', node)
-        if buttons:
-            for button in buttons:
-                if button.getAttribute('type') == 'object':
-                    continue
+        buttons = xpath.Evaluate("//button[@type != 'object']", node)
+        for button in buttons:
+            ok = True
+            if user != 1:   # admin user has all roles
+                user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
+                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                roles = cr.fetchall()
+                for role in roles:
+                    if role[0]:
+                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
 
-                ok = True
-
-                if user != 1:   # admin user has all roles
-                    user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                    cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
-                    roles = cr.fetchall()
-                    for role in roles:
-                        if role[0]:
-                            ok = ok and rolesobj.check(cr, user, user_roles, role[0])
-
-                if not ok:
-                    button.setAttribute('readonly', '1')
-                else:
-                    button.setAttribute('readonly', '0')
+            if not ok:
+                button.setAttribute('readonly', '1')
+            else:
+                button.setAttribute('readonly', '0')
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
-        for field in fields:
-	    if field in fields_def:
+        for field in fields_def:
+            if field in fields:
                 fields[field].update(fields_def[field])
+            else:
+                cr.execute('select name, model from ir_ui_view where (id=%s or inherit_id=%s) and arch like %s', (view_id, view_id, '%%%s%%' % field))
+                res = cr.fetchall()[:]
+                model = res[0][1]
+                res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
+                msg = "\n * ".join([r[0] for r in res])
+                msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
+                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+                raise except_orm('View error', msg)
+
         return arch, fields
 
     def __get_default_calendar_view(self):
@@ -1082,7 +1089,7 @@ class orm_template(object):
             result['view_id'] = 0
 
         doc = dom.minidom.parseString(encode(result['arch']))
-        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, context=context)
+        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
         if toolbar:
@@ -1367,7 +1374,6 @@ class orm_memory(orm_template):
 
 class orm(orm_template):
     _sql_constraints = []
-    _log_access = True
     _table = None
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
 
@@ -1379,6 +1385,8 @@ class orm(orm_template):
             where = self._parent_name+'='+str(root)
             if not root:
                 where = self._parent_name+' IS NULL'
+            if self._parent_order:
+                where += ' order by '+self._parent_order
             cr.execute('SELECT id FROM '+self._table+' WHERE '+where)
             pos2 = pos + 1
             childs = cr.fetchall()
@@ -1679,6 +1687,11 @@ class orm(orm_template):
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
+        
+        if not hasattr(self, '_log_access'):
+            # if not access is not specify, it is the same value as _auto
+            self._log_access = not hasattr(self, "_auto") or self._auto
+
         self._columns = self._columns.copy()
         for store_field in self._columns:
             f = self._columns[store_field]
@@ -1873,13 +1886,20 @@ class orm(orm_template):
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields_to_read) + self._inherits.values()
+        fields_pre = [f for f in fields_to_read if
+                           f == self.CONCURRENCY_CHECK_FIELD 
+                        or (f in self._columns and getattr(self._columns[f], '_classic_write'))
+                     ] + self._inherits.values()
 
         res = []
         if len(fields_pre):
             def convert_field(f):
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f, f)
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    if self._log_access:
+                        return "COALESCE(write_date, create_date, now())::timestamp AS %s" % (f,)
+                    return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return "length(%s) as %s" % (f,f)
                 return '"%s"' % (f,)
@@ -1904,6 +1924,8 @@ class orm(orm_template):
             res = map(lambda x: {'id': x}, ids)
 
         for f in fields_pre:
+            if f == self.CONCURRENCY_CHECK_FIELD:
+                continue
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
@@ -2024,26 +2046,32 @@ class orm(orm_template):
             return res[ids]
         return res
 
-    def unlink(self, cr, uid, ids, context=None):
+    def _check_concurrency(self, cr, ids, context):
         if not context:
-            context = {}
+            return
+        if context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access:
+            def key(oid):
+                return "%s,%s" % (self._name, oid)
+            santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)]) 
+                                          for oid in ids[i:i+cr.IN_MAX] 
+                                          if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
+                if sub_ids:
+                    cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
+                    res = cr.fetchone()
+                    if res and res[0]:
+                        raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
+
+    def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
 
         result_store = self._store_get_values(cr, uid, ids, None, context)
-        delta = context.get('read_delta', False)
-        if delta and self._log_access:
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
-                        "from \"%s\" where id in (%s)" %
-                        (delta, self._table, ",".join(map(str, sub_ids))))
-            res = cr.fetchone()
-            if res and res[0]:
-                raise except_orm(_('ConcurrencyException'),
-                        _('This record was modified in the meanwhile'))
+        
+        self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
@@ -2124,24 +2152,11 @@ class orm(orm_template):
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
-        delta = context.get('read_delta', False)
-        if delta and self._log_access:
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
-                        "from %s where id in (%s)" %
-                        (delta, self._table, ",".join(map(str, sub_ids))))
-                res = cr.fetchone()
-                if res and res[0]:
-                    for field in vals:
-                        if field in self._columns and self._columns[field]._classic_write:
-                            raise except_orm(_('ConcurrencyException'),
-                                    _('This record was modified in the meanwhile'))
+
+        self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
-        #for v in self._inherits.values():
-        #   assert v not in vals, (v, vals)
         upd0 = []
         upd1 = []
         upd_todo = []
@@ -2289,10 +2304,6 @@ class orm(orm_template):
                     ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
                         cwidth,cleft,cright,treeshift,leftrange,rightrange))
 
-        if 'read_delta' in context:
-            del context['read_delta']
-
-
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
             self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
@@ -2324,8 +2335,9 @@ class orm(orm_template):
         for f in self._columns.keys(): # + self._inherit_fields.keys():
             if not f in vals:
                 default.append(f)
+
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (not self._inherit_fields[f][0] in avoid_table):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
                 default.append(f)
 
         if len(default):
@@ -2344,7 +2356,7 @@ class orm(orm_template):
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
-        
+
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
         try:        

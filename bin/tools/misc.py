@@ -299,7 +299,7 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False,subtype='plain'):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain'):
     """Send an email."""
     import smtplib
     from email.MIMEText import MIMEText
@@ -889,6 +889,26 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
 ])
+
+def extract_zip_file(zip_file, outdirectory):
+    import zipfile
+    import os
+
+    zf = zipfile.ZipFile(zip_file, 'r')
+    out = outdirectory
+    for path in zf.namelist():
+        tgt = os.path.join(out, path)
+        tgtdir = os.path.dirname(tgt)
+        if not os.path.exists(tgtdir):
+            os.makedirs(tgtdir)
+
+        if not tgt.endswith(os.sep):
+            fp = open(tgt, 'wb')
+            fp.write(zf.read(path))
+            fp.close()
+    zf.close()
+
+
 
 
 

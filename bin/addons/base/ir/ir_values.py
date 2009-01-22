@@ -43,8 +43,8 @@ class ir_values(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        if 'read_delta' in ctx:
-            del ctx['read_delta']
+        if self.CONCURRENCY_CHECK_FIELD in ctx:
+            del ctx[self.CONCURRENCY_CHECK_FIELD]
         if not self.browse(cursor, user, id, context=context).object:
             value = pickle.dumps(eval(value))
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)

@@ -155,26 +155,27 @@ class _format(object):
             if os.name == 'nt':
                 locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
             else:
-                locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
+                locale.setlocale(locale.LC_ALL,str( lang + '.' + encoding))
         except Exception:
             netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
                     'report %s: unable to set locale "%s"' % (self.name,
                         self.object._context.get('lang', 'en_US') or 'en_US'))
 
+
 class _float_format(float, _format):
     def __str__(self):
         if not self.object._context:
-            return self.name
+            return locale.format('%f', self.name, True)
         digit = 2
         if hasattr(self._field, 'digits') and self._field.digits:
             digit = self._field.digits[1]
         return locale.format('%.' + str(digit) + 'f', self.name, True)
 
+
 class _int_format(int, _format):
     def __str__(self):
-        if not self.object._context:
-            return self.name
         return locale.format('%d', self.name, True)
+
 
 class _date_format(str, _format):
     def __str__(self):
@@ -188,7 +189,8 @@ class _date_format(str, _format):
                     datedata)
             except :
                 pass
-	return ''
+        return ''
+
 
 _fields_process = {
     'float': _float_format,
@@ -243,7 +245,7 @@ class rml_parse(object):
         self.cr = cr
         self.uid = uid
         self.pool = pooler.get_pool(cr.dbname)
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user = self.pool.get('res.users').browse(cr, uid, uid, fields_process=_fields_process)
         self.localcontext = {
             'user': user,
             'company': user.company_id,
@@ -331,34 +333,30 @@ class rml_parse(object):
                     else:
                         obj._cache[table][id] = {'id': id}
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
-        if not value:
-            return ''
 
+    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
+        if isinstance(value, (str, unicode)) and not value:
+            return ''
         pool_lang=self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
-                
         if date or date_time:
             date_format = lang_obj.date_format
             if date_time:
                 date_format = lang_obj.date_format + " " + lang_obj.time_format
-                        
             if not isinstance(value, time.struct_time):
                 # assume string, parse it
                 if len(str(value)) == 10:
                     # length of date like 2001-01-01 is ten
                     # assume format '%Y-%m-%d'
-                    date = mx.DateTime.strptime(str(value),DT_FORMAT)
+                    date = mx.DateTime.strptime(value,DT_FORMAT)
                 else:
                     # assume format '%Y-%m-%d %H:%M:%S'
                     value = str(value)[:19]
                     date = mx.DateTime.strptime(str(value),DHM_FORMAT)
             else:
                 date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
-            
             return date.strftime(date_format)
-        
         return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
     
 #    def formatLang(self, value, digit=2, date=False):
@@ -582,41 +580,90 @@ class report_sxw(report_rml):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
-        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
+        return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context,
+            fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
-        logo = None
         if not context:
             context={}
-        context = context.copy()
-
         pool = pooler.get_pool(cr.dbname)
-        ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
-        report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
+        ir_obj = pool.get('ir.actions.report.xml')
+        report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
-        report_type = 'pdf'
-        report_xml = None
-        title=''
-        attach = False
+
         if report_xml_ids:
-            report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
+            report_xml = ir_obj.browse(cr, uid, report_xml_ids[0],
                     context=context)
-            title = report_xml.name
             attach = report_xml.attachment
-            rml = report_xml.report_rml_content
-            report_type = report_xml.report_type
         else:
             ir_menu_report_obj = pool.get('ir.ui.menu')
             report_menu_ids = ir_menu_report_obj.search(cr, uid,
                     [('id', 'in', ids)], context=context)
+            title = ''
             if report_menu_ids:
                 report_name = ir_menu_report_obj.browse(cr, uid, report_menu_ids[0],
                     context=context)
                 title = report_name.name
             rml = tools.file_open(self.tmpl, subdir=None).read()
-            report_type= data.get('report_type', report_type)
+            report_type= data.get('report_type', 'pdf')
+            class a(object):
+                def __init__(self, *args, **argv):
+                    for key,arg in argv.items():
+                        setattr(self, key, arg)
+            report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
+            attach = False
 
-        if report_type in ['sxw','odt'] and report_xml:
+        if attach:
+            objs = self.getObjects(cr, uid, ids, context)
+            results = []
+            for obj in objs:
+                aname = eval(attach, {'object':obj, 'time':time})
+                result = False
+                if report_xml.attachment_use and aname and context.get('attachment_use', True):
+                    aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
+                    if aids:
+                        d = base64.decodestring(pool.get('ir.attachment').browse(cr, uid, aids[0]).datas)
+                        results.append((d,'pdf'))
+                        continue
+
+                result = self.create_single(cr, uid, [obj.id], data, report_xml, context)
+                if aname:
+                    name = aname+'.'+result[1]
+                    pool.get('ir.attachment').create(cr, uid, {
+                        'name': aname,
+                        'datas': base64.encodestring(result[0]),
+                        'datas_fname': name,
+                        'res_model': self.table,
+                        'res_id': obj.id,
+                        }, context=context
+                    )
+                    cr.commit()
+                results.append(result)
+
+            if results[0][1]=='pdf':
+                from pyPdf import PdfFileWriter, PdfFileReader
+                import cStringIO
+                output = PdfFileWriter()
+                for r in results:
+                    reader = PdfFileReader(cStringIO.StringIO(r[0]))
+                    for page in range(reader.getNumPages()):
+                        output.addPage(reader.getPage(page))
+                s = cStringIO.StringIO()
+                output.write(s)
+                return s.getvalue(), results[0][1]
+        return self.create_single(cr, uid, ids, data, report_xml, context)
+
+    def create_single(self, cr, uid, ids, data, report_xml, context={}):
+        logo = None
+        context = context.copy()
+        pool = pooler.get_pool(cr.dbname)
+        want_header = self.header
+        title = report_xml.name
+        attach = report_xml.attachment
+        report_type = report_xml.report_type
+        want_header = report_xml.header
+
+        if report_type in ['sxw','odt']:
             context['parents'] = sxw_parents
             sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
             sxw_z = zipfile.ZipFile(sxw_io, mode='r')
@@ -643,8 +690,6 @@ class report_sxw(report_rml):
                             pe.appendChild(cnd)
                             pp.removeChild(de)
 
-
-
             # Add Information : Resource ID and Model
             rml_dom_meta = xml.dom.minidom.parseString(meta)
             node = rml_dom_meta.documentElement
@@ -657,14 +702,14 @@ class report_sxw(report_rml):
                         pe.childNodes[0].data=data['model']
             meta = rml_dom_meta.documentElement.toxml('utf-8')
 
-            rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+            rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
             sxw_z = zipfile.ZipFile(sxw_io, mode='a')
             sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                     rml2)
             sxw_z.writestr('meta.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                     meta)
 
-            if self.header:
+            if want_header:
                 #Add corporate header/footer
                 if report_type=='odt':
                     rml = tools.file_open('custom/corporate_odt_header.xml').read()
@@ -676,13 +721,14 @@ class report_sxw(report_rml):
                 objs = self.getObjects(cr, uid, ids, context)
                 rml_parser.preprocess(objs, data, ids)
                 rml_dom = xml.dom.minidom.parseString(rml)
-                rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+                rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
                 sxw_z.writestr('styles.xml',"<?xml version='1.0' encoding='UTF-8'?>" + \
                         rml2)
             sxw_z.close()
             rml2 = sxw_io.getvalue()
             sxw_io.close()
         else:
+            rml = report_xml.report_rml_content
             context['parents'] = rml_parents
             rml_parser = self.parser(cr, uid, self.name2, context)
             rml_parser.parents = rml_parents
@@ -690,27 +736,12 @@ class report_sxw(report_rml):
             objs = self.getObjects(cr, uid, ids, context)
             rml_parser.preprocess(objs, data, ids)
             rml_dom = xml.dom.minidom.parseString(rml)
-            rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+            rml2 = rml_parser._parse(rml_dom, objs, data, header=want_header)
             if rml_parser.logo:
                 logo = base64.decodestring(rml_parser.logo)
 
         create_doc = self.generators[report_type]
-        pdf = create_doc(rml2, logo,title)
+        pdf = create_doc(rml2, logo, title.encode('utf8'))
 
-        if attach:
-            # TODO: save multiple print with symbolic links in attach            
-            pool.get('ir.attachment').create(cr, uid, {
-                'name': (title or _('print'))+':'+time.strftime('%Y-%m-%d %H:%M:%S'),
-                'datas': base64.encodestring(pdf),
-                'datas_fname': attach+time.strftime('%Y-%m-%d')+'.'+report_type,
-                'res_model': self.table,
-                'res_id': ids[0]
-                }, context=context
-            )
-            cr.commit()
         return (pdf, report_type)
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
