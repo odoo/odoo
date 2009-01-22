@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -54,17 +54,26 @@ def _makeInvoices(self, cr, uid, data, context):
     for o in order_obj.browse(cr, uid, data['ids'], context):
         for i in o.invoice_ids:
             newinv.append(i.id)
-    return {
-        'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
-        'name': 'Invoices',
-        'view_type': 'form',
-        'view_mode': 'tree,form',
-        'res_model': 'account.invoice',
-        'view_id': False,
-        'context': "{'type':'out_refund'}",
-        'type': 'ir.actions.act_window'
-    }
-    return {}
+    pool = pooler.get_pool(cr.dbname)
+    mod_obj = pool.get('ir.model.data')
+    act_obj = pool.get('ir.actions.act_window')
+    xml_id='action_invoice_tree5'
+    result = mod_obj._get_id(cr, uid, 'account', xml_id)
+    id = mod_obj.read(cr, uid, result, ['res_id'])['res_id']
+    result = act_obj.read(cr, uid, id)
+    result['domain'] ="[('id','in', ["+','.join(map(str,newinv))+"])]"
+    return result
+    #return {
+    #    'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
+    #    'name': 'Invoices',
+    #    'view_type': 'form',
+    #    'view_mode': 'tree,form',
+    #    'res_model': 'account.invoice',
+    #    'view_id': False,
+    #    'context': "{'type':'out_refund'}",
+    #    'type': 'ir.actions.act_window'
+    #}
+    #return {}
 
 class make_invoice(wizard.interface):
     states = {
