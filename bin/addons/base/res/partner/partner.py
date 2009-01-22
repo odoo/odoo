@@ -369,7 +369,7 @@ class res_partner_bank(osv.osv):
 
         result = []
         type_ids = bank_type_obj.search(cr, uid, [])
-        bank_types = bank_type_obj.browse(cr, uid, type_ids)
+        bank_types = bank_type_obj.browse(cr, uid, type_ids, context=context)
         for bank_type in bank_types:
             result.append((bank_type.code, bank_type.name))
         return result
