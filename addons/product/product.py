@@ -83,11 +83,11 @@ class product_uom(osv.osv):
             help="Unit of Measure of the same category can be converted between each others."),
         'factor': fields.float('Rate', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coef (this unit)'),
+                    '1 (base unit) = coef (this unit). Rate = 1 / Factor.'),
         'factor_inv': fields.function(_factor, fnct_inv=_factor_inv, digits=(12, 6),
             method=True, string='Factor',
             help='The coefficient for the formula:\n' \
-                    'coef (base unit) = 1 (this unit)'),
+                    'coef (base unit) = 1 (this unit). Factor = 1 / Rate.'),
         'factor_inv_data': fields.float('Factor', digits=(12, 6)),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
             help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be splitted."),
