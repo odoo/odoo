@@ -67,7 +67,7 @@ class report_custom(report_int):
         result['info_vatnum'] = partner.vat
         if partner.address:
             result['info_address'] = partner.address[0].street
-            result['info_address2'] = str(partner.address[0].zip) + ' ' + str(partner.address[0].city)
+            result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
 
         tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
         self.obj = external_pdf(file('/tmp/output.pdf').read())
