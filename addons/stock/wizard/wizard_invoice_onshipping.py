@@ -66,7 +66,7 @@ def _get_type(obj, cr, uid, data, context):
     picking_obj=pooler.get_pool(cr.dbname).get('stock.picking')
     usage = 'customer'
     pick = picking_obj.browse(cr, uid, data['id'], context)  
-    if pick.invoice_state=='Invoiced':
+    if pick.invoice_state=='invoiced':
         raise wizard.except_wizard('UserError','Invoice is already created')
     if pick.invoice_state=='none':
         raise wizard.except_wizard('UserError','Invoice can not create from Packing')
