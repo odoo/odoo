@@ -458,8 +458,8 @@ class MigrationManager(object):
             m = self.migrations[pkg.name]
             lst = []
 
-            mapping = {'module': {'module': pkg.name, 'rootdir': opj('migrations')},
-                       'maintenance': {'module': 'base', 'rootdir': opj('maintenance', 'migrations', pkg.name)},
+            mapping = {'module': opj(pkg.name, 'migrations'),
+                       'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
                       }
 
             for x in mapping.keys():
@@ -469,7 +469,8 @@ class MigrationManager(object):
                             continue
                         if not f.startswith(stage + '-'):
                             continue
-                        lst.append((mapping[x]['module'], opj(mapping[x]['rootdir'], version, f)))
+                        lst.append(opj(mapping[x], version, f))
+            lst.sort()
             return lst
 
         def mergedict(a, b):
@@ -492,13 +493,13 @@ class MigrationManager(object):
                           'version': stageformat[stage] % version,
                           }
 
-                for modulename, pyfile in _get_migration_files(pkg, version, stage):
+                for pyfile in _get_migration_files(pkg, version, stage):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
                     mod = fp = fp2 = None
                     try:
-                        fp = tools.file_open(opj(modulename, pyfile))
+                        fp = tools.file_open(pyfile)
 
                         # imp.load_source need a real file object, so we create
                         # one from the file-like object we get from file_open
@@ -507,10 +508,10 @@ class MigrationManager(object):
                         fp2.seek(0)
                         try:
                             mod = imp.load_source(name, pyfile, fp2)
-                            logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s"' % mergedict({'name': mod.__name__}, strfmt))
+                            logger.notifyChannel('migration', netsvc.LOG_INFO, 'module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
                             mod.migrate(self.cr, pkg.installed_version)
                         except ImportError:
-                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': opj(modulename, pyfile)}, strfmt))
+                            logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
                             raise
                         except AttributeError:
                             logger.notifyChannel('migration', netsvc.LOG_ERROR, 'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
