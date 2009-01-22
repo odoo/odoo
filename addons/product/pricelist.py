@@ -73,7 +73,7 @@ class product_pricelist_type(osv.osv):
     _name = "product.pricelist.type"
     _description = "Pricelist Type"
     _columns = {
-        'name': fields.char('Name',size=64, required=True),
+        'name': fields.char('Name',size=64, required=True, translate=True),
         'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
 product_pricelist_type()
@@ -250,7 +250,7 @@ class product_pricelist_version(osv.osv):
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True),
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True),

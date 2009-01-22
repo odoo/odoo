@@ -251,7 +251,7 @@ class mrp_bom(osv.osv):
                 result = bom.id
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=10):
+    def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=0):
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
         if factor<bom.product_rounding:
@@ -287,7 +287,7 @@ class mrp_bom(osv.osv):
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
-                        'sequence': level,
+                        'sequence': level+(wc_use.sequence or 0),
                         'cycle': cycle,
                         'hour': float(wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
                     })
