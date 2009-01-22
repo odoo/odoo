@@ -185,8 +185,15 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
+def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=True):
+    """Compress a module directory
 
-def get_module_as_zip(modulename, b64enc=True, src=True):
+    @param module_directory: The module directory
+    @param base64enc: if True the function will encode the zip file with base64
+    @param src: Integrate the source files
+
+    @return: a stream to store in a file-like object
+    """
 
     RE_exclude = re.compile('(?:^\..+\.swp$)|(?:\.py[oc]$)|(?:\.bak$)|(?:\.~.~$)', re.I)
 
@@ -198,6 +205,29 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
             if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
+    archname = StringIO()
+    archive = PyZipFile(archname, "w", ZIP_DEFLATED)
+    archive.writepy(module_directory)
+    _zippy(archive, module_directory, src=src)
+    archive.close()
+    val = archname.getvalue()
+    archname.close()
+
+    if b64enc:
+        val = base64.encodestring(val)
+
+    return val
+
+def get_module_as_zip(modulename, b64enc=True, src=True):
+    """Generate a module as zip file with the source or not and can do a base64 encoding
+
+    @param modulename: The module name
+    @param b64enc: if True the function will encode the zip file with base64
+    @param src: Integrate the source files
+
+    @return: a stream to store in a file-like object
+    """
+
     ap = get_module_path(str(modulename))
     if not ap:
         raise Exception('Unable to find path for module %s' % modulename)
@@ -205,17 +235,11 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
     ap = ap.encode('utf8')
     if os.path.isfile(ap + '.zip'):
         val = file(ap + '.zip', 'rb').read()
+        if b64enc:
+            val = base64.encodestring(val)
     else:
-        archname = StringIO()
-        archive = PyZipFile(archname, "w", ZIP_DEFLATED)
-        archive.writepy(ap)
-        _zippy(archive, ap, src=src)
-        archive.close()
-        val = archname.getvalue()
-        archname.close()
+        val = get_module_as_zip_from_module_directory(ap, b64enc, src)
 
-    if b64enc:
-        val = base64.encodestring(val)
     return val
 
 
