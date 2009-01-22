@@ -91,13 +91,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" rightIndent="0.0" leftIndent="14.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P4" rightIndent="0.0" leftIndent="11.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P5" rightIndent="0.0" leftIndent="-2.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P6" rightIndent="0.0" leftIndent="11.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P7" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -129,8 +122,9 @@
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Italic" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Preformatted Text" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -250,27 +244,27 @@
             <para style="terp_default_9">[[ line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ ', '.join(map(lambda x: x.name, line.tax_id)) or formatLang(0.00) ]]</para>
+            <para style="terp_default_Centre_9">[[ ', '.join(map(lambda x: x.name, line.tax_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty or formatLang(0.00) ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line.product_uos and line.product_uos_qty or line.product_uom_qty) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_unit or formatLang(0.00) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_unit ) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.discount and str(line.discount) or formatLang(0.00) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.discount) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ line.price_subtotal or formatLang(0.00) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal ) ]]</para>
           </td>
         </tr>
         <tr>
           <td>
-            <para style="P6">[[ format(line.notes or removeParentNode('tr')) ]]</para>
+            <para style="terp_default_Italic">[[ format(line.notes or removeParentNode('tr')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">
@@ -313,29 +307,13 @@
           </para>
         </td>
         <td>
-          <para style="P5">Net Total :</para>
+          <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.amount_untaxed or formatLang(0.00) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed ) ]]</para>
         </td>
         <td>
-          <para style="P1">[[ o.pricelist_id.currency_id.name ]]</para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P4">Taxes :</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[ o.amount_tax or formatLang(0.00) ]]</para>
-        </td>
-        <td>
-          <para style="P1">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
         </td>
       </tr>
       <tr>
@@ -345,13 +323,29 @@
           </para>
         </td>
         <td>
-          <para style="P3">Total :</para>
+          <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ o.amount_total or formatLang(0.00) ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax ) ]]</para>
         </td>
         <td>
-          <para style="P2">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_Bold_9">Total :</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total ) ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ o.pricelist_id.currency_id.name ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -370,7 +364,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="P7">
+    <para style="terp_default_8">
       <font color="white"> </font>
     </para>
   </story>

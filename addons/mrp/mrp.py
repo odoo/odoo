@@ -447,6 +447,14 @@ class mrp_production(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default:
+            default = {}
+        default.update({            
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
+        })
+        return super(mrp_production, self).copy(cr, uid, id, default, context)
+
     def location_id_change(self, cr, uid, ids, src, dest, context={}):
         if dest:
             return {}

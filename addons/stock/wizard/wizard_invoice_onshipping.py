@@ -65,7 +65,12 @@ invoice_fields = {
 def _get_type(obj, cr, uid, data, context):
     picking_obj=pooler.get_pool(cr.dbname).get('stock.picking')
     usage = 'customer'
-    pick = picking_obj.browse(cr, uid, data['id'], context)
+    pick = picking_obj.browse(cr, uid, data['id'], context)  
+    if pick.invoice_state=='invoiced':
+        raise wizard.except_wizard('UserError','Invoice is already created')
+    if pick.invoice_state=='none':
+        raise wizard.except_wizard('UserError','Invoice can not create from Packing')
+
     if pick.move_lines:
         usage=pick.move_lines[0].location_id.usage
 
@@ -96,10 +101,9 @@ def _create_invoice(obj, cr, uid, data, context):
             journal_id=data['form']['journal_id'],group=data['form']['group'],
             type=type, context= context)
 
-    invoice_ids = res.values()
-
+    invoice_ids = res.values()    
     if not invoice_ids:
-        return {}
+        raise  wizard.except_wizard('Error','Invoice is not created')
 
     if type == 'out_invoice':
         xml_id = 'action_invoice_tree5'
@@ -111,9 +115,9 @@ def _create_invoice(obj, cr, uid, data, context):
         xml_id = 'action_invoice_tree12'
 
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
-    id = mod_obj.read(cr, uid, result, ['res_id'])['res_id']
-    result = act_obj.read(cr, uid, id)
-    result['res_id'] = invoice_ids
+    id = mod_obj.read(cr, uid, result, ['res_id'])    
+    result = act_obj.read(cr, uid, id['res_id'])
+    result['res_id'] = invoice_ids    
     return result
 
 

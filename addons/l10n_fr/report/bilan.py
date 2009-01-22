@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
@@ -25,33 +26,14 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
+import base_report
+from report import report_sxw
 
-dates_form = '''<?xml version="1.0"?>
-<form string="Select year">
-	<field name="fiscalyear" colspan="4"/>
-</form>'''
+class bilan(base_report.base_report):
+    def __init__(self, cr, uid, name, context):
+        super(bilan, self).__init__(cr, uid, name, context)
 
-dates_fields = {
-	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True}
-}
+report_sxw.report_sxw('report.l10n.fr.pcg.bilan', 'account.move.line','addons/l10n_fr_pcg/report/bilan.rml', parser=bilan, header=False)
 
-class wizard_report(wizard.interface):
-	def _get_defaults(self, cr, uid, data, context):
-		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-		data['form']['fiscalyear'] =fiscalyear_obj.find(cr, uid)
-		return data['form']
-
-	states = {
-		'init': {
-			'actions': [_get_defaults],
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
-		},
-		'report': {
-			'actions': [],
-			'result': {'type':'print', 'report':'l10n.fr.bilan', 'state':'end'}
-		}
-	}
-wizard_report('l10n.fr.bilan.report')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
@@ -26,5 +27,7 @@
 ##############################################################################
 
 import base_report
-import report_bilan
-import report_cdr
+import bilan
+import cdr
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

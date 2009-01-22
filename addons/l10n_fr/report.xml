@@ -563,14 +563,14 @@
 
     <record id="pcg_bpvar17" model="l10n.fr.line">
       <field name="name">Dettes : Emprunts et dettes auprès des établissements de crédit</field>
-      <field name="definition">{'load':['-:164:S','-:16884:S','-:519:S','-:5181:S','-:512:C','-:514:C','-:517:C'], 'except':[]}</field>
+      <field name="definition">{'load':['-:164:S','-:16884:S','-:519:S','-:5181:S','+:512:C','+:514:C','+:517:C'], 'except':[]}</field>
       <field name="code">bpvar17</field>
       <field name="report_id" ref="pcg_bilan"/>
     </record>
 
     <record id="pcg_bpvar18" model="l10n.fr.line">
       <field name="name">Dettes : Emprunts et dettes financières diverses</field>
-      <field name="definition">{'load':['-:165:S','-:166:S','-:1675:S','-:168:S','-:17:S','-:426:S','-:45:C'], 'except':['16881','16883','16884','457']}</field>
+      <field name="definition">{'load':['-:165:S','-:166:S','-:1675:S','-:168:S','-:17:S','-:426:S','+:45:C'], 'except':['16881','16883','16884','457']}</field>
       <field name="code">bpvar18</field>
       <field name="report_id" ref="pcg_bilan"/>
     </record>
@@ -591,7 +591,7 @@
 
     <record id="pcg_bpvar21" model="l10n.fr.line">
       <field name="name">Dettes : Dettes fiscales et sociales</field>
-      <field name="definition">{'load':['-:421:S','-:422:S','-:424:S','-:427:S','-:4282:S','-:4284:S','-:4286:S','-:43:S','-:442:S','-:4455:S','-:4457:S','-:44584:S','-:44587:S','-:446:S','-:447:S','-:4482:S','-:4486:S','-:457:S','-:443:C','-:444:C'],'except':['4387']}</field>
+      <field name="definition">{'load':['-:421:S','-:422:S','-:424:S','-:427:S','-:4282:S','-:4284:S','-:4286:S','-:43:S','-:442:S','-:4455:S','-:4457:S','-:44584:S','-:44587:S','-:446:S','-:447:S','-:4482:S','-:4486:S','-:457:S','+:443:C','+:444:C'],'except':['4387']}</field>
       <field name="code">bpvar21</field>
       <field name="report_id" ref="pcg_bilan"/>
     </record>
@@ -605,7 +605,7 @@
 
     <record id="pcg_bpvar23" model="l10n.fr.line">
       <field name="name">Dettes : Autres dettes</field>
-      <field name="definition">{'load':['-:4196:S','-:4197:S','-:4198:S','-:464:S','-:467:C','-:4686:S','-:478:C','-:509:S'], 'except':[]}</field>
+      <field name="definition">{'load':['-:4196:S','-:4197:S','-:4198:S','-:464:S','+:467:C','-:4686:S','+:478:C','-:509:S'], 'except':[]}</field>
       <field name="code">bpvar23</field>
       <field name="report_id" ref="pcg_bilan"/>
     </record>

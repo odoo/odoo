@@ -332,9 +332,10 @@ def tmp_fct(fct_src):
             for thisrule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
                     logged_uids.append(user.id)
-                if field in ('read','write','create','unlink'):
-                    if getattr(thisrule, 'log_'+field):
-                        return log_fct(db, uid, passwd, object, method, fct_src , *args)
+                if not len(logged_uids) or uid in logged_uids:
+                    if field in ('read','write','create','unlink'):
+                        if getattr(thisrule, 'log_'+field):
+                            return log_fct(db, uid, passwd, object, method, fct_src , *args)
                 return fct_src(  db, uid, passwd, object, method, *args)
         res = my_fct( db, uid, passwd, object, method, *args)
         cr.close()
