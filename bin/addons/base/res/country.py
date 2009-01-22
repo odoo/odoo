@@ -28,7 +28,7 @@ class Country(osv.osv):
     _description = 'Country'
     _columns = {
         'name': fields.char('Country Name', size=64,
-            help='The full name of the country.', required=True),
+            help='The full name of the country.', required=True, translate=True),
         'code': fields.char('Country Code', size=2,
             help='The ISO country code in two chars.\n'
             'You can use this field for quick search.', required=True),
