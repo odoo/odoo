@@ -195,7 +195,7 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
         base = os.path.basename(path)
         for f in tools.osutil.listdir(path, True):
             bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not path.endswith('.py')):
+            if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
     ap = get_module_path(str(modulename))
