@@ -58,7 +58,7 @@ class res_partner(osv.osv):
         return {'value': {'vat_subjected': bool(value)}}
 
     _columns = {
-        'vat_subjected': fields.boolean('Subjected', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
+        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
     _constraints = [(check_vat, "The VAT doesn't seem to be correct.", ["vat"])]
 

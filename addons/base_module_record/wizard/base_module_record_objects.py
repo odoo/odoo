@@ -69,6 +69,7 @@ def _record_objects(self, cr, uid, data, context):
     user=(pool.get('res.users').browse(cr,uid,uid)).login
     mod = pool.get('ir.module.record')
     mod_obj = pool.get('ir.model')
+    mod.recording_data = []
 
     for id in data['form']['objects'][0][2]:
         obj_name=(mod_obj.browse(cr,uid,id)).model
