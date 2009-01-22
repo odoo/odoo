@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -205,22 +205,23 @@ class mrp_procurement(osv.osv):
                         continue
                     if qty<=0:
                         continue
-                    proc_id = procurement_obj.create(cr, uid, {
-                        'name': 'OP:'+str(op.id),
-                        'date_planned': newdate.strftime('%Y-%m-%d'),
-                        'product_id': op.product_id.id,
-                        'product_qty': qty,
-                        'product_uom': op.product_uom.id,
-                        'location_id': op.warehouse_id.lot_input_id.id,
-                        'procure_method': 'make_to_order',
-                        'origin': op.name
-                    })
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
-                            'button_confirm', cr)
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
-                            'button_check', cr)
-                    orderpoint_obj.write(cr, uid, [op.id],
-                            {'procurement_id': proc_id})
+                    if op.product_id.type not in ('consu'):
+                        proc_id = procurement_obj.create(cr, uid, {
+                            'name': 'OP:'+str(op.id),
+                            'date_planned': newdate.strftime('%Y-%m-%d'),
+                            'product_id': op.product_id.id,
+                            'product_qty': qty,
+                            'product_uom': op.product_uom.id,
+                            'location_id': op.warehouse_id.lot_input_id.id,
+                            'procure_method': 'make_to_order',
+                            'origin': op.name
+                        })
+                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                                'button_confirm', cr)
+                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                                'button_check', cr)
+                        orderpoint_obj.write(cr, uid, [op.id],
+                                {'procurement_id': proc_id})
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

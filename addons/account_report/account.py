@@ -89,8 +89,11 @@ class account_report(osv.osv):
             if not context['fiscalyear']:
                 del context['fiscalyear']
             acc = self.pool.get('account.account')
-            acc_id = acc.search(cr, uid, [('code','in',code)])
-            return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, acc_id, context),0.0)
+            account_ids = []
+            for c in code:
+                for i in c.split('-'):
+                    account_ids += acc.search(cr, uid, [('code', 'ilike', i)])
+            return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, account_ids, context),0.0)
 
         def _calc_report(*code):
             acc = self.pool.get('account.report.report')

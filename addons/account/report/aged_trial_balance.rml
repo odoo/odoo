@@ -103,7 +103,7 @@
           <para style="P2">Partners</para>
         </td>
         <td>
-          <para style="P8">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]] [[data['form']['date1'] ]]</para>
+          <para style="P8">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]] [[formatLang(data['form']['date1'],date=True) ]]</para>
         </td>
         <td>
           <para style="P8">[[ data['form']['4']['name'] ]]</para>
