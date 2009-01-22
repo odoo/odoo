@@ -540,7 +540,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             else:
                 locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
         except Exception:
-            locale.setlocale(locale.LC_ALL, str('en_US' + '.' + encoding))
             netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
                     'unable to set locale "%s"' % (lang)) 
             
