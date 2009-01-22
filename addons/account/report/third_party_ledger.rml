@@ -130,6 +130,7 @@
     		<font color="white">[[ data['form']['page_split'] == True or removeParentNode('para') ]] </font>
     		<font color="white">[[ repeatIn(objects, 'p') ]] [[ setLang(p.partner_id.lang) ]]</font>
     		</para>
+    		
     <blockTable colWidths="50.0,30.0,42.0,220.0,69.0,72.0,63.0" repeatRows="1" style="tbl_heading">
   	 <tr>
         <td>
@@ -165,13 +166,13 @@
 	        	<para style="Balance">Balance brought forward</para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_debit(data)) or '0.0' ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_debit(data)) or 0.00) ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_credit(data)) or '0.0' ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_credit(data)) or 0.00) ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ (sum_debit(data) - sum_credit(data)) or '0.0' ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_debit(data) - sum_credit(data)) or 0.0) ]]</u></para>
 	        </td>
 	     </tr>
 	    </blockTable>
@@ -192,13 +193,13 @@
 			        <para style="total"></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_debit_partner(p,data)) or '0.0' ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data)) or 0.00) ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_credit_partner(p,data)) or '0.0' ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_credit_partner(p,data)) or 0.00) ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ (sum_debit_partner(p,data) - sum_credit_partner(p,data)) or '0.0' ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data) - sum_credit_partner(p,data)) or 0.00) ]]</u></para>
 		        </td>
 		     </tr>
 		    </blockTable>
@@ -217,13 +218,13 @@
 		           	<para style="P4"></para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['debit']) or '0.0' ]]</para>
+		           	<para style="P5">[[ formatLang((line['debit']) or 0.00) ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['credit']) or '0.0' ]]</para>
+		           	<para style="P5">[[ formatLang((line['credit']) or 0.00) ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ (line['progress'])  or '0.0' ]]</para>
+		           	<para style="P5">[[ formatLang((line['progress'])  or 0.00) ]]</para>
 		         </td>
 		     </tr>
 		    </blockTable>
