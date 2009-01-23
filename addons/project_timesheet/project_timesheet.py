@@ -23,6 +23,7 @@ from osv import fields, osv
 import time
 import datetime
 import pooler
+import tools
 
 
 class project_work(osv.osv):
@@ -55,7 +56,7 @@ class project_work(osv.osv):
         vals_line['general_account_id'] = a
         vals_line['journal_id'] = emp.journal_id.id
 
-        vals_line['name'] = '%s: %s' % (obj_task.name, vals['name'] or '/')
+        vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
         vals_line['user_id'] = vals['user_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
