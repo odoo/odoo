@@ -498,8 +498,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
-        'location_id': fields.many2one('stock.location', 'Source Location', domain=[('type','!=','view')], required=True, select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', domain=[('type','!=','view')], required=True, select=True),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
         'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', required=True, readonly=True),
     }
