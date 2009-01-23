@@ -138,7 +138,7 @@ class project_gtd_timebox(osv.osv):
     </form>
             """
         doc = dom.minidom.parseString(res['arch'])
-        xarch, xfields = self._view_look_dom_arch(cr, uid, doc, context=context)
+        xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
         res['arch'] = xarch
         res['fields'] = xfields
         return res

@@ -163,7 +163,7 @@ class account_analytic_plan_instance(osv.osv):
                     i+=1
                 res['arch'] += "</form>"
                 doc = dom.minidom.parseString(res['arch'])
-                xarch, xfields = self._view_look_dom_arch(cr, uid, doc, context=context)
+                xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
                 res['arch'] = xarch
                 res['fields'] = xfields
             return res
