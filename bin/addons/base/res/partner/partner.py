@@ -47,10 +47,10 @@ class res_payterm(osv.osv):
 res_payterm()
 
 class res_partner_category(osv.osv):
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -59,9 +59,10 @@ class res_partner_category(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = self.name_get(cr, uid, ids)
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
