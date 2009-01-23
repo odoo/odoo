@@ -51,10 +51,10 @@ class wizard_report(wizard.interface):
         },
         'report': {
             'actions': [],
-            'result': {'type':'print', 'report':'l10n.fr.pcg.bilan', 'state':'end'}
+            'result': {'type':'print', 'report':'l10n.fr.bilan', 'state':'end'}
         }
     }
-wizard_report('l10n.fr.pcg.bilan.report')
+wizard_report('l10n.fr.bilan.report')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
