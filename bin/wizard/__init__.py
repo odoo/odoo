@@ -63,11 +63,7 @@ class interface(netsvc.Service):
             context={}
         res = {}
         try:
-            try:
-                state_def = self.states[state]
-            except Exception, e:
-                import pydb; pydb.debugger()
-                raise
+            state_def = self.states[state]
 
             result_def = state_def.get('result', {})
             
