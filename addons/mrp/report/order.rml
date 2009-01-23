@@ -239,7 +239,7 @@
       <blockTable colWidths="128.0,137.0,132.0,131.0" style="Table2">
         <tr>
           <td>
-            <para style="P9">[[ formatLang( time.strftime('%d/%m/%Y'),date=True) ]]</para>
+            <para style="P9">[[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</para>
           </td>
           <td>
             <para style="P12">[[ formatLang(o.date_planned, date=True) ]]</para>
