@@ -44,6 +44,9 @@ opj = os.path.join
 
 execfile(opj('bin', 'release.py'))
 
+if sys.argv[1] != 'bdist_rpm':
+    version = version + '-' + release
+
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
 
