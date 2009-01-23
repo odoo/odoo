@@ -16,7 +16,7 @@
 
 
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
 
@@ -130,7 +130,7 @@
           <para style="terp_default_Bold_9">Printing Date :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+          <para style="terp_default_Bold_9">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -178,10 +178,10 @@
 	          </para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right"><u>[[ '%.2f' % sum_debit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2]) ]]</u></para>
+	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2])) ]]</u></para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right"><u>[[ '%.2f' % sum_credit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2]) ]]</u></para>
+	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2])) ]]</u></para>
 	        </td>
 	      </tr>
 	    </blockTable>
@@ -208,10 +208,10 @@
 	            </para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Bold_9_Right"><u>[[ '%.2f' % sum_debit_period( line[0]['pid'],data['form']['journal_id'][0][2]) ]]</u></para>
+	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit_period( line[0]['pid'],data['form']['journal_id'][0][2])) ]]</u></para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Bold_9_Right"><u>[[ '%.2f' % sum_credit_period(line[0]['pid'],data['form']['journal_id'][0][2]) ]]</u></para>
+	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit_period(line[0]['pid'],data['form']['journal_id'][0][2])) ]]</u></para>
 	          </td>
 	        </tr>
 			 <tr>
@@ -229,10 +229,10 @@
 			            <para style="terp_default_9">[[ line[0]['period_name'] ]]</para>
 			          </td>
 			          <td>
-			            <para style="terp_default_Right_9">[[ l['debit'] and ('%.2f' % l['debit']) or '' ]]</para>
+			            <para style="terp_default_Right_9">[[ formatLang(l['debit'])]]</para>
 			          </td>
 			          <td>
-			            <para style="terp_default_Right_9">[[ l['credit'] and ('%.2f' % l['credit']) or '' ]]</para>
+			            <para style="terp_default_Right_9">[[ formatLang(l['credit']) ]]</para>
 			          </td>
 			        </tr>
 			      </blockTable>

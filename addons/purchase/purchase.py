@@ -452,6 +452,8 @@ class purchase_order_line(osv.osv):
             partner_id, date_order=False, fiscal_position=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
+        if not  partner_id:
+            raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid,product)
