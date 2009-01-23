@@ -16,7 +16,7 @@
 
 
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
 
@@ -169,7 +169,7 @@
           <para style="terp_tblheader_General_Centre">[[ line[0]['journal'].name ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -208,10 +208,10 @@
 	          </para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right">[[ '%.2f' % sum_debit(line[0]['period'].id, line[0]['journal'].id) ]]</para>
+	          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit(line[0]['period'].id, line[0]['journal'].id)) ]]</para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right">[[ '%.2f' % sum_credit(line[0]['period'].id, line[0]['journal'].id) ]]</para>
+	          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit(line[0]['period'].id, line[0]['journal'].id)) ]]</para>
 	        </td>
 	      </tr>
 	    </blockTable>
@@ -230,10 +230,10 @@
 	            <para style="terp_default_9">[[ l['name'] ]]</para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Right_9">[[ formatLang(l['debit']) and '%.2f' % l['debit'] or '0.00' ]]</para>
+	            <para style="terp_default_Right_9">[[ formatLang(l['debit']) ]]</para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Right_9">[[ formatLang(l['credit']) and '%.2f' % l['credit'] or '0.00' ]]</para>
+	            <para style="terp_default_Right_9">[[ formatLang(l['credit']) ]]</para>
 	          </td>
 	        </tr>
 	      </blockTable>

@@ -24,7 +24,7 @@
 
 
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
 
@@ -145,7 +145,7 @@
       </tr>
        <tr>
         <td>
-            <para style="P11">[[line[0].period_id.name ]]</para>
+            <para style="P11">[[ line[0].period_id.name ]]</para>
         </td>
         <td>
           <para style="P11a">[[line[0].journal_id.code ]]</para></td>
@@ -153,16 +153,16 @@
         <td></td>
         <td></td>
         <td>
-          <para style="P12"><u>[[ '%.2f' % sum_debit(line[0].period_id.id, line[0].journal_id.id) or '0.00' ]]</u></para>
+          <para style="P12"><u>[[ formatLang(sum_debit(line[0].period_id.id, line[0].journal_id.id))  ]]</u></para>
         </td>
         <td>
-          <para style="P12"><u>[[ '%.2f' % sum_credit(line[0].period_id.id, line[0].journal_id.id) or '0.00' ]]</u></para>
+          <para style="P12"><u>[[ formatLang(sum_credit(line[0].period_id.id, line[0].journal_id.id))  ]]</u></para>
         </td>
       </tr >
        <tr>
       <para style="terp_default_8">[[repeatIn(line,'l')]]</para>
         <td>
-          <para style="terp_default_8">[[ l.date ]]</para>
+          <para style="terp_default_8">[[ formatLang(l.date,date=True) ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ l.ref ]]</para>
@@ -177,10 +177,10 @@
           <para style="terp_default_8">[[ l.name ]]</para>
         </td>
         <td>
-          <para style="P8">[[ l.debit and '%.2f' % l.debit or '0.00' ]]</para>
+          <para style="P8">[[ formatLang(l.debit)  ]]</para>
         </td>
         <td>
-          <para style="P8">[[ l.credit and '%.2f' % l.credit or '0.00' ]]</para>
+          <para style="P8">[[ formatLang(l.credit) ]]</para>
         </td>
         <para style="Standard">
       <font color="white"> </font>
