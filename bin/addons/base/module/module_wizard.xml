@@ -22,6 +22,12 @@
         </record>
         <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
 
+        <record id="wizard_tech_guide_rst" model="ir.actions.wizard">
+            <field name="name">Create RST Technical Guide</field>
+            <field name="wiz_name">tech.guide.rst</field>
+        </record>
+        <wizard id="wiz_tech_guide_rst" model="ir.module.module" name="tech.guide.rst" string="Create RST Technical Guide"/>
+
         <record id="wizard_lang_export" model="ir.ui.view">
             <field name="name">Export a Translation File</field>
             <field name="model">wizard.module.lang.export</field>

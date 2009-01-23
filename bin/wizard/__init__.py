@@ -64,6 +64,7 @@ class interface(netsvc.Service):
         res = {}
         try:
             state_def = self.states[state]
+
             result_def = state_def.get('result', {})
             
             actions_res = {}
