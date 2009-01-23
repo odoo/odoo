@@ -206,7 +206,7 @@
           <para style="P22">[[ '['+ o.product_id.code +']' ]] [[ o.product_id.name ]]</para>
         </td>
         <td>
-          <para style="P22">[['%.2f' % o.product_qty or '0.00' ]]</para>
+          <para style="P22">[[ formatLang(o.product_qty) ]]</para>
         </td>
         <td>
           <para style="P22">[[o.priority or '']]</para>
@@ -239,10 +239,10 @@
       <blockTable colWidths="128.0,137.0,132.0,131.0" style="Table2">
         <tr>
           <td>
-            <para style="P9">[[ time.strftime('%d/%m/%Y') ]]</para>
+            <para style="P9">[[ formatLang( time.strftime('%d/%m/%Y'),date=True) ]]</para>
           </td>
           <td>
-            <para style="P12">[[ time.strftime('%d/%m/%Y', time.strptime(o.date_planned, '%Y-%m-%d %H:%M:%S')) ]]</para>
+            <para style="P12">[[ formatLang(o.date_planned, date=True) ]]</para>
           </td>
           <td>
             <para style="P9">[[ o.sale_ref or ' ' ]]</para>
@@ -292,10 +292,10 @@
           <para style="P22">[[ line2.workcenter_id.name ]]</para>
         </td>
         <td>
-          <para style="P22">[[ line2.cycle or '0.00' ]]</para>
+          <para style="P22">[[ formatLang(line2.cycle) ]]</para>
         </td>
         <td>
-          <para style="P22">[[ line2.hour or '0.00' ]]</para>
+          <para style="P22">[[ formatLang(line2.hour) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -327,7 +327,7 @@
           <para style="P4">[[ '['+line.product_id.code +']' ]][[ line.product_id.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ '%.2f' % line.product_qty ]] [[line.product_uom.name]]</para>
+          <para style="P5">[[ formatLang(line.product_qty) ]] [[line.product_uom.name]]</para>
         </td>
         <td>
           <para style="P25">[[ line.location_id.name ]]</para>
