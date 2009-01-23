@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* product
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:42:51+0000\n"
-"PO-Revision-Date: 2009-01-19 19:42:51+0000\n"
+"POT-Creation-Date: 2009-01-23 14:15:43+0000\n"
+"PO-Revision-Date: 2009-01-23 14:15:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -163,6 +163,11 @@ msgid "Prices Types"
 msgstr "Tipos de precios"
 
 #. module: product
+#: selection:product.template,supply_method:0
+msgid "Produce"
+msgstr "Producir"
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
 msgstr "Producto almacenable"
@@ -246,7 +251,7 @@ msgstr "Tarifa de venta"
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
-msgstr "Tarifa alternativa"
+msgstr "Lista Precios Base"
 
 #. module: product
 #: help:product.template,type:0
@@ -283,10 +288,9 @@ msgid "Units of Measure Categories"
 msgstr "Categorías de unidades de medida"
 
 #. module: product
-#: model:ir.model,name:product.model_product_pricelist
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Tarifa"
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Price Max. Margin"
+msgstr "Margen precio máx."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -484,9 +488,9 @@ msgid "UOM"
 msgstr "UdM"
 
 #. module: product
-#: view:product.product:0
-msgid "Product Variant"
-msgstr "Variantes de producto"
+#: model:product.uom,name:product.product_uom_unit
+msgid "PCE"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -665,6 +669,11 @@ msgid "HDD Seagate 7200.8 160GB"
 msgstr "HDD Seagate 7200.8 160GB"
 
 #. module: product
+#: view:product.product:0
+msgid "Product Variant"
+msgstr "Variantes de producto"
+
+#. module: product
 #: field:product.packaging,ul:0
 msgid "Type of Package"
 msgstr "Tipo de empaquetado"
@@ -698,6 +707,11 @@ msgstr "Unidad de venta"
 #: field:product.template,mes_type:0
 msgid "Measure Type"
 msgstr "Tipo de medida"
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
@@ -1187,6 +1201,7 @@ msgstr "RAM bajo pedido"
 
 #. module: product
 #: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Unidad"
 
@@ -1355,9 +1370,10 @@ msgid "Quantity-3"
 msgstr "Cantidad-3"
 
 #. module: product
-#: selection:product.template,supply_method:0
-msgid "Produce"
-msgstr "Producir"
+#: model:ir.model,name:product.model_product_pricelist
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Tarifa"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1599,9 +1615,9 @@ msgid "The volume in m3."
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Price Max. Margin"
-msgstr "Margen precio máx."
+#: model:product.uom,name:product.product_uom_kgm
+msgid "KGM"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0

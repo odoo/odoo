@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* stock
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:32:47+0000\n"
-"PO-Revision-Date: 2009-01-19 19:32:47+0000\n"
+"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
+"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,6 +102,12 @@ msgid "Packing list"
 msgstr "Paklijst"
 
 #. module: stock
+#: code:addons/stock/report_stock.py:0
+#, python-format
+msgid "You cannot delete any record!"
+msgstr ""
+
+#. module: stock
 #: xsl:stock.location.overview:0
 #: xsl:stock.location.overview.all:0
 msgid "Amount"
@@ -191,9 +197,9 @@ msgid "State"
 msgstr "Staat"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-administration"
-msgstr "terp-administratie"
+#: field:stock.location,stock_real_value:0
+msgid "Real Stock Value"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -881,7 +887,7 @@ msgstr "Alle voorraadbewegingen"
 #. module: stock
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw"
+msgstr "Ongeldige XML voor overzicht"
 
 #. module: stock
 #: field:res.partner,property_stock_supplier:0
@@ -976,6 +982,11 @@ msgstr "Voorraden"
 #: field:stock.location,allocation_method:0
 msgid "Allocation Method"
 msgstr "Allocatiemethode"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-administration"
+msgstr "terp-administratie"
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -1438,6 +1449,12 @@ msgid "Future Stock Forecast"
 msgstr "Toekomstig voorraadniveau"
 
 #. module: stock
+#: code:addons/stock/report_stock.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,chained_location_type:0
 msgid "Fixed Location"
 msgstr "Vaste locatie"
@@ -1709,11 +1726,6 @@ msgstr "Werkplaats"
 #: selection:stock.picking,state:0
 msgid "Done"
 msgstr "Gereed"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
-msgid "Futur Stock Moves"
-msgstr "Toekomstige voorraadbewegingen"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -2011,6 +2023,11 @@ msgid "Getting Goods"
 msgstr "Getting Goods"
 
 #. module: stock
+#: view:stock.location:0
+msgid "Stock Location"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PLAY"
 msgstr "STOCK_MEDIA_PLAY"
@@ -2131,6 +2148,11 @@ msgid "Automatic Move"
 msgstr "Automatische verwerking"
 
 #. module: stock
+#: field:stock.location,stock_virtual_value:0
+msgid "Virtual Stock Value"
+msgstr ""
+
+#. module: stock
 #: selection:stock.move,state:0
 msgid "Canceled"
 msgstr "Geannuleerd"
@@ -2234,6 +2256,11 @@ msgstr ""
 #: view:stock.picking:0
 msgid "Split in Two"
 msgstr "Splits in tweeën"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
+msgid "Future Stock Moves"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2391,6 +2418,12 @@ msgstr "Vastgezette locatiesoort"
 #: selection:stock.location,chained_location_type:0
 msgid "Customer"
 msgstr "Klant"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_location_tree_3
+#: model:ir.ui.menu,name:stock.menu_action_location_tree_3
+msgid "Locations' Values"
+msgstr ""
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0

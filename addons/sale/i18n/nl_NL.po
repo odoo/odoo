@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* sale
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:32:47+0000\n"
-"PO-Revision-Date: 2009-01-19 19:32:47+0000\n"
+"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
+"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -465,12 +465,12 @@ msgstr "Totaalbedrag"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr ""
+msgstr "Factureren na levering"
 
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw"
+msgstr "Ongeldige XML voor overzicht"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -545,7 +545,11 @@ msgid "The Shipping Policy is used to synchronise invoice and delivery operation
 "  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
 "  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
 "  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."
-msgstr ""
+msgstr "De verzendpolicy wordt gebruikt om facturering en verzending te synchroniseren\n"
+"  - De 'Vooraf betalen' optie genereert eerst een factuur en genereerd de verzendopdracht nadat de factuur is betaald\n"
+"  - De 'Verzenden en handmatig factureren' optie genereerd direct een verzendopdracht en wacht tot de gebruiker op 'Factureren' knop klikt om een concept factuur te maken\n"
+"  - De 'Factureren na verzending' optie genereert een concept factuur nadat alle pakbonnen zijn verwerkt.\n"
+"  - De 'Factureren op basis van pakbonnen' optie wordt gebruikt om de factuur te genereren in het verzend proces."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -587,7 +591,7 @@ msgstr "Standaard verpakmethode"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Manages the delivery and invoicing progress"
-msgstr ""
+msgstr "Beheert de voortgang van levering en facturerings"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
@@ -637,9 +641,9 @@ msgid "Invoiced"
 msgstr "Gefactureerd"
 
 #. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "Offerte / Order"
+#: model:ir.actions.wizard,name:sale.advance_payment
+msgid "Advance Invoice"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,state:0
@@ -655,7 +659,7 @@ msgstr "Niet-gefactureerde regels"
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
 msgid "This Configuration step use to set default picking policy when make sale order"
-msgstr ""
+msgstr "In deze stap  wordt de standaard picking policy ingesteld bij het maken van een verkooporder"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -972,7 +976,6 @@ msgid "Sales Orders"
 msgstr "Verkooporders"
 
 #. module: sale
-#: model:ir.actions.wizard,name:sale.advance_payment
 #: wizard_view:sale.advance_payment_inv,init:0
 msgid "Advance Payment"
 msgstr "Vooruitbetaling"
@@ -995,7 +998,7 @@ msgstr "Paklijst en pakbon"
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Uitzondering"
 
 #. module: sale
 #: view:sale.order:0
@@ -1087,6 +1090,11 @@ msgid "Product UOS"
 msgstr "Product Verkoopeenh."
 
 #. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Offerte / Order"
+
+#. module: sale
 #: rml:sale.order:0
 msgid "Tel. :"
 msgstr "Tel.:"
@@ -1138,7 +1146,7 @@ msgstr "Klant"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You can not cancel a sale order line that has already been invoiced !"
-msgstr ""
+msgstr "U kunt geen verkooporder annuleren die al is verzonden !"
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
@@ -1228,7 +1236,7 @@ msgstr "Betalingsconditie"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Vooraf betalen"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
