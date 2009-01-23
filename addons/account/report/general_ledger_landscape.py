@@ -300,8 +300,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 			sum = l['debit'] - l ['credit']
 
-			c = time.strptime(l['date'],"%Y-%m-%d")
-			l['date'] = time.strftime("%d-%m-%Y",c)
+#			c = time.strptime(l['date'],"%Y-%m-%d")
+#			l['date'] = time.strftime("%d-%m-%Y",c)
 			l['progress'] = sum
 			l['line_corresp'] = self._calc_contrepartie(self.cr,self.uid,[l['id']])[l['id']]
 			# Modification du amount Currency
