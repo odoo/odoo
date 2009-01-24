@@ -136,7 +136,8 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False):
+            lang=False, update_tax=True, date_order=False, packaging=False,
+            fiscal_position=False):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
@@ -151,7 +152,7 @@ class sale_order_line(osv.osv):
             message= product_info.sale_line_warn_msg
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax, date_order, packaging)
+            lang, update_tax, date_order, packaging, fiscal_position)
         if title and message:
              warning['title']=title[0]
              warning['message']=message
@@ -165,7 +166,7 @@ sale_order_line()
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     def product_id_change(self,cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False):
+            partner_id, date_order=False, fiscal_position=False):
         warning = {}
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
@@ -178,7 +179,7 @@ class purchase_order_line(osv.osv):
             message =  product_info.purchase_line_warn_msg
             
         result =  super(purchase_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order)
+            partner_id, date_order, fiscal_position)
         if title and message:
              warning['title']=title[0]
              warning['message']=message
