@@ -283,13 +283,14 @@ class mrp_bom(osv.osv):
                 for wc_use in bom.routing_id.workcenter_lines:
                     wc = wc_use.workcenter_id
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
-                    cycle = (d + (m and 1.0 or 0.0)) * wc_use.cycle_nbr
+                    mult = (d + (m and 1.0 or 0.0))
+                    cycle = mult * wc_use.cycle_nbr
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
                         'sequence': level+(wc_use.sequence or 0),
                         'cycle': cycle,
-                        'hour': float(wc_use.hour_nbr + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
+                        'hour': float(wc_use.hour_nbr*mult + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
