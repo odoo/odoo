@@ -49,10 +49,12 @@ class stock_report_prodlots(osv.osv):
                         sm.location_id,
                         sm.product_id,
                         sm.prodlot_id,
-                        -sum(sm.product_qty) as qty
+                        -sum(sm.product_qty /uo.factor) as qty
                     from stock_move as sm
                     left join stock_location sl
                         on (sl.id = sm.location_id)
+                    left join product_uom uo
+                        on (uo.id=sm.product_uom)
                     where state = 'done'
                     group by sm.location_id, sm.product_id, sm.product_uom, sm.prodlot_id
                     union all
@@ -60,10 +62,12 @@ class stock_report_prodlots(osv.osv):
                         sm.location_dest_id as location_id,
                         sm.product_id,
                         sm.prodlot_id,
-                        sum(sm.product_qty) as qty
+                        sum(sm.product_qty /uo.factor) as qty
                     from stock_move as sm
                     left join stock_location sl
                         on (sl.id = sm.location_dest_id)
+                    left join product_uom uo
+                        on (uo.id=sm.product_uom)
                     where sm.state = 'done'
                     group by sm.location_dest_id, sm.product_id, sm.product_uom, sm.prodlot_id
                 ) as report
