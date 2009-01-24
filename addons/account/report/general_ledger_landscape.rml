@@ -20,7 +20,7 @@
 
 				<!--COL 2-->
 				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.3cm" y="0.90cm"> [[ time.strftime("%d-%m-%Y %H:%M", time.localtime()) ]]</drawString>
+				<drawString x="1.3cm" y="0.90cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
 				<drawString x="37.20cm" y="0.90cm">Page <pageNumber/></drawString>
 
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
