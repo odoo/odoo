@@ -484,13 +484,16 @@ def create_directory(path):
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
+
+    def _get_filestore(self, cr):
+        return os.path.join(tools.config['root_path'], 'filestore', cr.dbname)
+
     def _data_get(self, cr, uid, ids, name, arg, context):
         result = {}
         cr.execute('select id,store_fname,link from ir_attachment where id in ('+','.join(map(str,ids))+')')
         for id,r,l in cr.fetchall():
 	    try:
-	        path = os.path.join(os.getcwd(), 'filestore', cr.dbname)
-	        value = file(os.path.join(path,r), 'rb').read()
+	        value = file(os.path.join(self._get_filestore(cr), r), 'rb').read()
 	        result[id] = base64.encodestring(value)
 	    except:
 	        result[id]=''
@@ -507,7 +510,7 @@ class document_file(osv.osv):
         if not value:
             return True
         #if (not context) or context.get('store_method','fs')=='fs':
-        path = os.path.join(os.getcwd(), "filestore", cr.dbname)
+        path = self._get_filestore(cr)
         if not os.path.isdir(path):
             os.makedirs(path)
         flag = None
@@ -658,8 +661,7 @@ class document_file(osv.osv):
         for f in self.browse(cr, uid, ids, context):
             #if f.store_method=='fs':
             try:
-                path = os.path.join(os.getcwd(), cr.dbname, 'filestore',f.store_fname)
-                os.unlink(path)
+                os.unlink(os.path.join(self._get_filestore(cr), f.store_fname))
             except:
                 pass
         return super(document_file, self).unlink(cr, uid, ids, context)

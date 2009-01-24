@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* account
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:29:21+0000\n"
-"PO-Revision-Date: 2009-01-19 19:29:21+0000\n"
+"POT-Creation-Date: 2009-01-23 13:47:07+0000\n"
+"PO-Revision-Date: 2009-01-23 13:47:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,6 @@ msgid "Integrity Error !"
 msgstr "Error d'integritat!"
 
 #. module: account
-#: view:account.move:0
-msgid "Account entry"
-msgstr "Assentament comptable"
-
-#. module: account
-#: field:account.tax,description:0
 #: field:account.tax.template,description:0
 msgid "Internal Name"
 msgstr "Nom intern"
@@ -432,6 +426,11 @@ msgid "Date:"
 msgstr "Data:"
 
 #. module: account
+#: rml:account.invoice:0
+msgid "Disc. (%)"
+msgstr "Desc. %"
+
+#. module: account
 #: selection:account.account.type,sign:0
 msgid "Negative"
 msgstr "Negatiu"
@@ -490,11 +489,6 @@ msgstr "Confirma extracte bancari amb/sense conciliació a partir de l'extracte 
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_check_tree
 msgid "Bank reconciliation"
 msgstr "Conciliació bancària"
-
-#. module: account
-#: rml:account.invoice:0
-msgid "Disc.(%)"
-msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -588,6 +582,12 @@ msgstr ""
 #: model:ir.model,name:account.model_account_tax
 msgid "account.tax"
 msgstr "account.tax"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "Bank Journal "
+msgstr ""
 
 #. module: account
 #: rml:account.central.journal:0
@@ -732,15 +732,15 @@ msgid "account.analytic.line.extended"
 msgstr "account.analytic.line.extended"
 
 #. module: account
-#: wizard_button:populate_statement_from_inv,init,customer:0
-msgid "_Customer invoices"
-msgstr "_Factures de client"
-
-#. module: account
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Primer heu de seleccionar una empresa!"
+
+#. module: account
+#: field:account.invoice,comment:0
+msgid "Additional Information"
+msgstr ""
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -751,6 +751,11 @@ msgstr "Factura d'abonament de client"
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Import invoices in statement"
 msgstr "Importa factures en extractes"
+
+#. module: account
+#: field:wizard.multi.charts.accounts,seq_journal:0
+msgid "Separated Journal Sequences"
+msgstr ""
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -907,6 +912,12 @@ msgstr "Conciliació bancària"
 #: model:ir.model,name:account.model_account_account_template
 msgid "Templates for Accounts"
 msgstr "Plantilles per comptes"
+
+#. module: account
+#: field:account.tax,type_tax_use:0
+#: field:account.tax.template,type_tax_use:0
+msgid "Tax Use in"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
@@ -1441,7 +1452,6 @@ msgstr "Tipus de comptes"
 #: wizard_field:account.central.journal.report,init,journal_id:0
 #: wizard_field:account.general.journal.report,init,journal_id:0
 #: field:account.invoice,journal_id:0
-#: wizard_field:account.invoice.pay,init,journal_id:0
 #: field:account.journal.period,journal_id:0
 #: field:account.model,journal_id:0
 #: field:account.move,journal_id:0
@@ -1453,6 +1463,7 @@ msgstr "Tipus de comptes"
 #: field:fiscalyear.seq,journal_id:0
 #: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.model,name:account.model_account_journal
+#: wizard_field:populate_statement_from_inv,init,journal_id:0
 #: field:report.hr.timesheet.invoice.journal,journal_id:0
 msgid "Journal"
 msgstr "Diari"
@@ -1660,6 +1671,8 @@ msgstr "Línies d'assentaments periòdics"
 #. module: account
 #: selection:account.analytic.journal,type:0
 #: selection:account.journal,type:0
+#: selection:account.tax,type_tax_use:0
+#: selection:account.tax.template,type_tax_use:0
 msgid "Purchase"
 msgstr "Compra"
 
@@ -1769,11 +1782,6 @@ msgid "Skip"
 msgstr "Omet"
 
 #. module: account
-#: wizard_button:populate_statement_from_inv,init,supplier:0
-msgid "_Supplier invoices"
-msgstr "Factures de _proveïdor"
-
-#. module: account
 #: field:account.invoice,period_id:0
 msgid "Force Period"
 msgstr "Forçar període"
@@ -1787,11 +1795,6 @@ msgstr "Indica l'ordre de seqüència al mostrar una llista de tipus de compte."
 #: view:account.invoice:0
 msgid "Re-Open"
 msgstr "Reobre"
-
-#. module: account
-#: help:account.invoice,number:0
-msgid "Uniq number of the invoice, computed automatically when the invoice is created."
-msgstr "Número únic de la factura, calculat automàticament quan es crea la factura."
 
 #. module: account
 #: wizard_view:account.fiscalyear.close,init:0
@@ -1867,6 +1870,8 @@ msgstr "Resums"
 #. module: account
 #: selection:account.analytic.journal,type:0
 #: selection:account.journal,type:0
+#: selection:account.tax,type_tax_use:0
+#: selection:account.tax.template,type_tax_use:0
 msgid "Sale"
 msgstr "Venda"
 
@@ -2114,6 +2119,11 @@ msgstr "Nom impost del cas"
 #: wizard_field:account.third_party_ledger.report,init,result_selection:0
 msgid "Partner"
 msgstr "Empresa"
+
+#. module: account
+#: help:account.invoice,number:0
+msgid "Unique number of the invoice, computed automatically when the invoice is created."
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,partner_id:0
@@ -2748,6 +2758,12 @@ msgid "In dispute"
 msgstr "A quadrar"
 
 #. module: account
+#: help:account.tax.code,notprintable:0
+#: help:account.tax.code.template,notprintable:0
+msgid "Check this box if you don't want that any vat related to this Tax Code appears on invoices"
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Estimat Sr./Sra.,"
@@ -2798,10 +2814,19 @@ msgid "You have to define an analytic journal of type '%s' !"
 msgstr "Heu de definir un diari analític del tipus '%s'!"
 
 #. module: account
-#: wizard_button:populate_statement_from_inv,customer,finish:0
-#: wizard_button:populate_statement_from_inv,supplier,finish:0
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.analytic.account.inverted.balance:0
+#: rml:account.analytic.account.quantity_cost_ledger:0
+#: field:account.invoice,amount_total:0
+#: field:account.invoice,check_total:0
+msgid "Total"
+msgstr "Total"
+
+#. module: account
+#: wizard_button:populate_statement_from_inv,go,finish:0
 msgid "O_k"
-msgstr "_Accepta"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
@@ -2844,6 +2869,11 @@ msgstr "Conciliació de transaccions"
 #: wizard_field:account.aged.trial.balance,init,direction_selection:0
 msgid "Analysis Direction"
 msgstr "Direcció anàlisi"
+
+#. module: account
+#: wizard_button:populate_statement_from_inv,init,go:0
+msgid "_Go"
+msgstr ""
 
 #. module: account
 #: field:res.partner,ref_companies:0
@@ -2951,8 +2981,6 @@ msgstr "No podeu eliminar el moviment fixat: \"%s\"!"
 #: rml:account.analytic.account.inverted.balance:0
 #: rml:account.analytic.account.journal:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: rml:account.central.journal:0
-#: rml:account.general.journal:0
 #: rml:account.general.ledger:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
@@ -3032,6 +3060,7 @@ msgstr "Centralització"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
+#: field:account.tax,description:0
 #: field:account.tax,tax_code_id:0
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
@@ -3314,6 +3343,7 @@ msgstr "Codificació d'extractes crea assentaments de pagament"
 #: field:account.analytic.line,code:0
 #: field:account.config.wizard,code:0
 #: field:account.fiscalyear,code:0
+#: rml:account.general.journal:0
 #: field:account.journal,code:0
 #: rml:account.partner.balance:0
 #: field:account.period,code:0
@@ -3364,7 +3394,6 @@ msgstr "(heu de trencar la conciliació si desitgeu obrir la factura)"
 
 #. module: account
 #: view:account.invoice:0
-#: field:account.invoice,comment:0
 msgid "Additionnal Information"
 msgstr "Informació addicional"
 
@@ -3391,9 +3420,20 @@ msgid "Couldn't create move between different companies"
 msgstr "No s'ha pogut crear moviment entre diferents companyies"
 
 #. module: account
+#: field:account.chart.template,tax_code_root_id:0
+msgid "Root Tax Code"
+msgstr "Codi impost arrel"
+
+#. module: account
 #: help:account.bank.statement.reconcile,total_second_amount:0
 msgid "The amount in the currency of the journal"
 msgstr "La quantitat en la moneda del diari"
+
+#. module: account
+#: field:account.tax.code,notprintable:0
+#: field:account.tax.code.template,notprintable:0
+msgid "Not Printable in Invoice"
+msgstr ""
 
 #. module: account
 #: field:account.move.line,move_id:0
@@ -3911,9 +3951,9 @@ msgid "This account will be used, instead of the default one, to value incoming 
 msgstr "Aquest compte s'utilitzarà, en lloc del compte per defecte, per calcular l'estoc d'entrada per l'actual categoria de producte"
 
 #. module: account
-#: model:process.node,note:account.process_node_manually0
-msgid "Encode manually the statement"
-msgstr "Codifica manualment l'extracte"
+#: rml:account.overdue:0
+msgid "Balance:"
+msgstr "Balanç:"
 
 #. module: account
 #: rml:account.overdue:0
@@ -4256,11 +4296,6 @@ msgid "Type Controls"
 msgstr "Controls de tipus"
 
 #. module: account
-#: wizard_view:populate_statement_from_inv,init:0
-msgid "Choose invoice type and payment date"
-msgstr "Selecciona tipus de factura i data de pagament"
-
-#. module: account
 #: field:account.analytic.account,complete_name:0
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
@@ -4318,9 +4353,9 @@ msgid "Account period"
 msgstr "Període comptable"
 
 #. module: account
-#: field:account.chart.template,tax_code_root_id:0
-msgid "Root Tax Code"
-msgstr "Codi impost arrel"
+#: wizard_field:account.invoice.pay,init,journal_id:0
+msgid "Journal/Payment Mode"
+msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
@@ -4366,6 +4401,11 @@ msgstr "Tipus intern"
 #: field:account.account,balance:0
 msgid "Closing Balance"
 msgstr "Balanç en el tancament"
+
+#. module: account
+#: rml:account.central.journal:0
+msgid "Central Journal-"
+msgstr ""
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -4505,6 +4545,7 @@ msgid "States"
 msgstr "Estats"
 
 #. module: account
+#: view:account.move:0
 #: model:process.node,name:account.process_node_accountingentries0
 #: model:process.node,name:account.process_node_supplieraccountingentries0
 msgid "Accounting Entries"
@@ -4526,14 +4567,10 @@ msgid "Date Start"
 msgstr "Data inicial"
 
 #. module: account
-#: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0
-#: field:account.invoice,check_total:0
-msgid "Total"
-msgstr "Total"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Can not create invoice move on centralised journal"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -4771,6 +4808,11 @@ msgstr ""
 #: selection:account.third_party_ledger.report,init,state:0
 msgid "By Date"
 msgstr "Per data"
+
+#. module: account
+#: selection:account.invoice,state:0
+msgid "Cancelled"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -5093,9 +5135,8 @@ msgid "Entry is already reconciled"
 msgstr "L'assentament ja està conciliat"
 
 #. module: account
-#: wizard_button:populate_statement_from_inv,customer,end:0
+#: wizard_button:populate_statement_from_inv,go,end:0
 #: wizard_button:populate_statement_from_inv,init,end:0
-#: wizard_button:populate_statement_from_inv,supplier,end:0
 msgid "_Cancel"
 msgstr "_Cancel·la"
 
@@ -5134,6 +5175,11 @@ msgstr "Grup de l'impost"
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3_new
 msgid "New Customer Refund"
 msgstr "Nova factura d'abonament de client"
+
+#. module: account
+#: help:wizard.multi.charts.accounts,seq_journal:0
+msgid "Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
@@ -5175,9 +5221,9 @@ msgid "Account Tax Code Template"
 msgstr "Plantilla codis impostos comptables"
 
 #. module: account
-#: rml:account.overdue:0
-msgid "Balance:"
-msgstr "Balanç:"
+#: model:process.node,note:account.process_node_manually0
+msgid "Encode manually the statement"
+msgstr "Codifica manualment l'extracte"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
@@ -5193,8 +5239,7 @@ msgstr "Manualment"
 #: model:ir.actions.act_window,name:account.action_invoice_tree
 #: model:ir.actions.report.xml,name:account.account_invoices
 #: model:ir.ui.menu,name:account.menu_finance_invoice
-#: wizard_field:populate_statement_from_inv,customer,lines:0
-#: wizard_field:populate_statement_from_inv,supplier,lines:0
+#: wizard_field:populate_statement_from_inv,go,lines:0
 msgid "Invoices"
 msgstr "Factures"
 
@@ -5214,11 +5259,6 @@ msgstr "Línia factura"
 #: wizard_field:account.invoice.pay,addendum,writeoff_journal_id:0
 msgid "Write-Off journal"
 msgstr "Diari de desajust"
-
-#. module: account
-#: selection:account.invoice,state:0
-msgid "Canceled"
-msgstr "Cancel·lat"
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -5314,6 +5354,11 @@ msgid "Date Filter"
 msgstr "Filtrat per data"
 
 #. module: account
+#: wizard_view:populate_statement_from_inv,init:0
+msgid "Choose Journal and Payment Date"
+msgstr ""
+
+#. module: account
 #: selection:account.analytic.account,state:0
 #: selection:account.bank.statement,state:0
 #: selection:account.fiscalyear,state:0
@@ -5392,11 +5437,6 @@ msgid "Supplier Invoice Process"
 msgstr ""
 
 #. module: account
-#: rml:account.general.journal:0
-msgid "Jrl Code"
-msgstr "Codi diari"
-
-#. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Optional Information"
@@ -5434,11 +5474,6 @@ msgstr "En data"
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
 msgid "and Journals"
 msgstr "i diaris"
-
-#. module: account
-#: rml:account.central.journal:0
-msgid "Central Journal -"
-msgstr "Diari central -"
 
 #. module: account
 #: help:account.account.template,reconcile:0
@@ -5610,6 +5645,11 @@ msgid "General Information"
 msgstr "Informació general"
 
 #. module: account
+#: help:populate_statement_from_inv,init,journal_id:0
+msgid "This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 msgid "Taxes Report"
 msgstr "Informe impostos"
@@ -5720,12 +5760,6 @@ msgstr "Aquest compte s'utilitzarà, en lloc del compte per defecte, per calcula
 #: field:account.fiscalyear,date_start:0
 msgid "Start date"
 msgstr "Data inicial"
-
-#. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "Can not create invoice move on centralized journal"
-msgstr "No es pot crear assentament de factura en diari centralitzat"
 
 #. module: account
 #: wizard_view:account.print.journal.report,init:0
@@ -5988,8 +6022,6 @@ msgstr "Codi Python (invers)"
 #: rml:account.analytic.account.inverted.balance:0
 #: rml:account.analytic.account.journal:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: rml:account.central.journal:0
-#: rml:account.general.journal:0
 #: rml:account.general.ledger:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
@@ -6094,8 +6126,6 @@ msgstr "Filtres"
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: rml:account.central.journal:0
-#: rml:account.general.journal:0
 msgid "at"
 msgstr "a les"
 

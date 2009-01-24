@@ -166,13 +166,13 @@
 	        	<para style="Balance">Balance brought forward</para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ formatLang((sum_debit(data)) or 0.00) ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_debit(data))) ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ formatLang((sum_credit(data)) or 0.00) ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_credit(data))) ]]</u></para>
 	        </td>
 	        <td>
-	        	<para style="P8"><u>[[ formatLang((sum_debit(data) - sum_credit(data)) or 0.0) ]]</u></para>
+	        	<para style="P8"><u>[[ formatLang((sum_debit(data) - sum_credit(data))) ]]</u></para>
 	        </td>
 	     </tr>
 	    </blockTable>
@@ -193,20 +193,20 @@
 			        <para style="total"></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data)) or 0.00) ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data))) ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ formatLang((sum_credit_partner(p,data)) or 0.00) ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_credit_partner(p,data))) ]]</u></para>
 		        </td>
 		        <td>
-		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data) - sum_credit_partner(p,data)) or 0.00) ]]</u></para>
+		            <para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data) - sum_credit_partner(p,data))) ]]</u></para>
 		        </td>
 		     </tr>
 		    </blockTable>
 		    <blockTable colWidths="45.0,30.0,262.0,0.0,69.0,72.0,63.0" style="Table2">
 		     <tr>
 			     <td>
-		    	 	<para style="P15"><font face="Helvetica">[[ repeatIn(lines(p,data), 'line') ]]</font>[[ line['date'] ]]</para>
+		    	 	<para style="P15"><font face="Helvetica">[[ repeatIn(lines(p,data), 'line') ]]</font>[[ formatLang(line['date'],date=True) ]]</para>
 		         </td>
 		         <td>
 		         	<para style="P3">[[ line['code'] ]]</para>
@@ -218,13 +218,13 @@
 		           	<para style="P4"></para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ formatLang((line['debit']) or 0.00) ]]</para>
+		           	<para style="P5">[[ formatLang((line['debit'])) ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ formatLang((line['credit']) or 0.00) ]]</para>
+		           	<para style="P5">[[ formatLang((line['credit'])) ]]</para>
 		         </td>
 		         <td>
-		           	<para style="P5">[[ formatLang((line['progress'])  or 0.00) ]]</para>
+		           	<para style="P5">[[ formatLang((line['progress'])) ]]</para>
 		         </td>
 		     </tr>
 		    </blockTable>

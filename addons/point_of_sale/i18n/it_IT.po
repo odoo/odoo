@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* point_of_sale
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:36:17+0000\n"
-"PO-Revision-Date: 2009-01-19 19:36:17+0000\n"
+"POT-Creation-Date: 2009-01-23 14:01:51+0000\n"
+"PO-Revision-Date: 2009-01-23 14:01:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr "Sconto"
 #: wizard_field:pos.payment,ask_pay,payment_nb:0
 #: field:pos.payment,payment_nb:0
 msgid "Piece number"
-msgstr ""
+msgstr "Totale pezzi"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
@@ -55,7 +55,7 @@ msgstr "Descrizione Ordine"
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
 msgid "Scan Product"
-msgstr ""
+msgstr "Codice a Barre"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -100,7 +100,7 @@ msgstr "Base"
 #. module: point_of_sale
 #: wizard_view:pos.scan_product,init:0
 msgid "Scan product"
-msgstr ""
+msgstr "Codice a Barre"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
@@ -130,7 +130,7 @@ msgstr "Ok"
 #. module: point_of_sale
 #: wizard_view:pos.scan_product,init:0
 msgid "Scan gencod"
-msgstr ""
+msgstr "Leggi Barcode"
 
 #. module: point_of_sale
 #: field:pos.order,last_out_picking:0
@@ -246,7 +246,7 @@ msgstr "Registro:"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: point_of_sale
 #: field:pos.order,partner_id:0
@@ -280,6 +280,7 @@ msgid "POS Orders"
 msgstr "Ordini Punto Vendita"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
 #: rml:pos.lines:0
 msgid "Disc. (%)"
 msgstr "Sconto (%)"
@@ -310,7 +311,7 @@ msgstr "Somma Subtotali"
 #: wizard_field:pos.payment,ask_pay,payment_date:0
 #: field:pos.payment,payment_date:0
 msgid "Payment date"
-msgstr ""
+msgstr "Data Pagamento"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
@@ -330,11 +331,6 @@ msgstr ""
 #: field:pos.order,lines:0
 msgid "Order Lines"
 msgstr "Righe Ordine"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Disc.(%)"
-msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -514,7 +510,7 @@ msgstr "Produci Pagamento"
 #. module: point_of_sale
 #: wizard_field:pos.scan_product,init,gencod:0
 msgid "Gencod"
-msgstr ""
+msgstr "Barcode"
 
 #. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
@@ -539,7 +535,7 @@ msgstr "Tasse Totali"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "Partita IVA:"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -640,7 +636,7 @@ msgstr "Calcola"
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Totale:"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -656,7 +652,7 @@ msgstr "Presa"
 #: code:addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -796,7 +792,7 @@ msgstr "Aggiungi pagamento:"
 #. module: point_of_sale
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Il nome oggetto deve iniziare con x_ e non può contenere caratteri speciali !"
+msgstr "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri speciali!"
 
 #. module: point_of_sale
 #: rml:pos.details:0

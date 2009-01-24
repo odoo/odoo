@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* account_report
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:39:11+0000\n"
-"PO-Revision-Date: 2009-01-19 19:39:11+0000\n"
+"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
+"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgstr "Debito da conta:"
 #: selection:account.report.report,type:0
 msgid "Others"
 msgstr "Outros"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Tabular Summary"
+msgstr ""
 
 #. module: account_report
 #: view:account.report.report:0
@@ -203,9 +208,9 @@ msgid "Account Credit:"
 msgstr "Credito da conta:"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+#: wizard_view:print.indicators,init:0
+msgid "Select the criteria based on which Indicators will be printed."
+msgstr "Seleccione o critério baseado em qual indicador será usado."
 
 #. module: account_report
 #: help:account.report.report,badness_limit:0
@@ -344,12 +349,6 @@ msgid "Legend of operators"
 msgstr "Legenda dos operadores"
 
 #. module: account_report
-#: code:addons/account_report/account.py:0
-#, python-format
-msgid "You can not delete an indicator history record. You may have to delete the concerned Indicator!"
-msgstr "Você não pode apagar um indicador de gravação do histórico. Você pode ter de apagar o indicador em questão!"
-
-#. module: account_report
 #: wizard_button:print.indicators,init,end:0
 #: wizard_button:print.indicators,next,end:0
 #: wizard_button:print.indicators.pdf,init,end:0
@@ -357,14 +356,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: account_report
-#: wizard_view:print.indicators,init:0
-msgid "Select the criteria based on which Indicators will be printed."
-msgstr "Seleccione o critério baseado em qual indicador será usado."
+#: view:account.report.report:0
+msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
+msgstr ""
 
 #. module: account_report
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
 
 #. module: account_report
 #: selection:print.indicators,init,select_base:0
@@ -462,6 +461,12 @@ msgid "Select Criteria"
 msgstr "Seleccionar critério"
 
 #. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr ""
+
+#. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
 msgstr ""
@@ -480,9 +485,19 @@ msgid "Custom reporting"
 msgstr "Relatório do cliente"
 
 #. module: account_report
+#: rml:print.indicators:0
+msgid "Page"
+msgstr ""
+
+#. module: account_report
 #: selection:account.report.report,type:0
 msgid "View"
 msgstr "Ver"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Indicators -"
+msgstr ""
 
 #. module: account_report
 #: view:account.report.report:0
@@ -498,4 +513,9 @@ msgstr "Sequência"
 #: rml:accounting.report:0
 msgid "Amount"
 msgstr "Montante"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "1cm 27.7cm 20cm 27.7cm"
+msgstr ""
 

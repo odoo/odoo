@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* auction
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:40:38+0000\n"
-"PO-Revision-Date: 2009-01-19 19:40:38+0000\n"
+"POT-Creation-Date: 2009-01-23 14:11:02+0000\n"
+"PO-Revision-Date: 2009-01-23 14:11:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -289,6 +289,7 @@ msgid "Items"
 msgstr "Элементы"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "Стоимости продавца"
@@ -715,6 +716,11 @@ msgstr ""
 #: field:auction.lot.history,price:0
 msgid "Withdrawn price"
 msgstr "Снятая цена"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax4
+msgid "Seller Costs1"
+msgstr ""
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -1633,6 +1639,11 @@ msgid "Total:"
 msgstr "Итого:"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax2
+msgid "TVA1"
+msgstr ""
+
+#. module: auction
 #: view:report.auction.object.date:0
 msgid "Objects per Day"
 msgstr "Объектов в день"
@@ -1938,10 +1949,21 @@ msgid "Antique/Engravings"
 msgstr "Антиквариат/ Гравюры"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax20
+#: model:account.tax,name:auction.auction_tax6
+msgid "Frais de vente"
+msgstr ""
+
+#. module: auction
 #: wizard_view:auction.lots.numerotate_cont,init:0
 #: wizard_field:auction.lots.numerotate_cont,init,number:0
 msgid "First Number"
 msgstr "Первый номер"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax
+msgid "Droit d'auteur"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_view2
@@ -2278,6 +2300,7 @@ msgid "Not sold"
 msgstr "Не продано"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr ""
@@ -2318,6 +2341,11 @@ msgstr "Сумма к оплате"
 #: field:auction.lots,artist_id:0
 msgid "Artist/Author"
 msgstr "Художник/автор"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.total_result1

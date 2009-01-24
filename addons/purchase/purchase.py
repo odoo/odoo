@@ -289,6 +289,7 @@ class purchase_order(osv.osv):
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
+        journal_obj = self.pool.get('account.journal')
         for o in self.browse(cr, uid, ids):
             il = []
             for ol in o.order_line:
@@ -305,7 +306,8 @@ class purchase_order(osv.osv):
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 il.append(self.inv_line_create(a,ol))
 
-            a = o.partner_id.property_account_payable.id
+            a = o.partner_id.property_account_payable.id            
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
             inv = {
                 'name': o.partner_ref or o.name,
                 'reference': "P%dPO%d" % (o.partner_id.id, o.id),
@@ -315,6 +317,7 @@ class purchase_order(osv.osv):
                 'currency_id': o.pricelist_id.currency_id.id,
                 'address_invoice_id': o.partner_address_id.id,
                 'address_contact_id': o.partner_address_id.id,
+                'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
             }
@@ -449,6 +452,8 @@ class purchase_order_line(osv.osv):
             partner_id, date_order=False, fiscal_position=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
+        if not  partner_id:
+            raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid,product)

@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* product
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:33:29+0000\n"
-"PO-Revision-Date: 2009-01-19 19:33:29+0000\n"
+"POT-Creation-Date: 2009-01-23 13:55:50+0000\n"
+"PO-Revision-Date: 2009-01-23 13:55:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -103,7 +103,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr ""
+msgstr "Standardhind"
 
 #. module: product
 #: code:addons/product/product.py:0
@@ -134,7 +134,7 @@ msgstr "Komplekt Klaviatuur + Hiir"
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
-msgstr "Hind Nimi"
+msgstr "Hinna nimi"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -144,7 +144,7 @@ msgstr ""
 #. module: product
 #: field:product.product,price:0
 msgid "Customer Price"
-msgstr ""
+msgstr "Kliendihind"
 
 #. module: product
 #: field:product.template,company_id:0
@@ -154,13 +154,18 @@ msgstr "Ettevõte"
 #. module: product
 #: field:product.product,lst_price:0
 msgid "List Price"
-msgstr ""
+msgstr "Hinnakirjahind"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type_action
 msgid "Prices Types"
 msgstr "Hinnatüübid"
+
+#. module: product
+#: selection:product.template,supply_method:0
+msgid "Produce"
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -180,12 +185,12 @@ msgstr "Teenused"
 #. module: product
 #: help:product.template,list_price:0
 msgid "Base price for computing the customer price. Sometimes called the catalog price."
-msgstr ""
+msgstr "Baashind arvutamaks kliendihinda. Vahetevahel kutsutakse kui kataloogihind."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "Starting date for validity of this pricelist version."
-msgstr ""
+msgstr "Alguse kuupäev millal hakkab kehtima see hinnakirja versioon."
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -283,10 +288,9 @@ msgid "Units of Measure Categories"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_pricelist
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Hinnakiri"
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Price Max. Margin"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -482,8 +486,8 @@ msgid "UOM"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-msgid "Product Variant"
+#: model:product.uom,name:product.product_uom_unit
+msgid "PCE"
 msgstr ""
 
 #. module: product
@@ -562,7 +566,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr ""
+msgstr "Tarbekaup"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -663,6 +667,11 @@ msgid "HDD Seagate 7200.8 160GB"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
+msgid "Product Variant"
+msgstr ""
+
+#. module: product
 #: field:product.packaging,ul:0
 msgid "Type of Package"
 msgstr ""
@@ -695,6 +704,11 @@ msgstr ""
 #. module: product
 #: field:product.template,mes_type:0
 msgid "Measure Type"
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
 msgstr ""
 
 #. module: product
@@ -1010,7 +1024,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_4
 msgid "Dello Computer"
-msgstr ""
+msgstr "Dello arvuti"
 
 #. module: product
 #: view:product.product:0
@@ -1074,7 +1088,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Computer Stuff"
-msgstr ""
+msgstr "Arvutikaubad"
 
 #. module: product
 #: field:product.packaging,code:0
@@ -1184,6 +1198,7 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "Ühik"
 
@@ -1351,9 +1366,10 @@ msgid "Quantity-3"
 msgstr ""
 
 #. module: product
-#: selection:product.template,supply_method:0
-msgid "Produce"
-msgstr ""
+#: model:ir.model,name:product.model_product_pricelist
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Hinnakiri"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1447,7 +1463,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
 msgid "Basic+ PC (assembly on order)"
-msgstr ""
+msgstr "Elementaarne+ PC (pannakse kokku tellimusel)"
 
 #. module: product
 #: field:product.template,cost_method:0
@@ -1594,8 +1610,8 @@ msgid "The volume in m3."
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Price Max. Margin"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "KGM"
 msgstr ""
 
 #. module: product

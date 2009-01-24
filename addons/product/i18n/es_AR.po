@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* product
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:42:06+0000\n"
-"PO-Revision-Date: 2009-01-19 19:42:06+0000\n"
+"POT-Creation-Date: 2009-01-23 14:14:09+0000\n"
+"PO-Revision-Date: 2009-01-23 14:14:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -163,6 +163,11 @@ msgid "Prices Types"
 msgstr ""
 
 #. module: product
+#: selection:product.template,supply_method:0
+msgid "Produce"
+msgstr "Producir"
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
 msgstr "Producto físico"
@@ -283,10 +288,9 @@ msgid "Units of Measure Categories"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_pricelist
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Lista de Precios"
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Price Max. Margin"
+msgstr "Margen máximo de Precio"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -482,9 +486,9 @@ msgid "UOM"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-msgid "Product Variant"
-msgstr "Variante de Producto"
+#: model:product.uom,name:product.product_uom_unit
+msgid "PCE"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -663,6 +667,11 @@ msgid "HDD Seagate 7200.8 160GB"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
+msgid "Product Variant"
+msgstr "Variante de Producto"
+
+#. module: product
 #: field:product.packaging,ul:0
 msgid "Type of Package"
 msgstr ""
@@ -695,6 +704,11 @@ msgstr "Unidad de Venta"
 #. module: product
 #: field:product.template,mes_type:0
 msgid "Measure Type"
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
 msgstr ""
 
 #. module: product
@@ -1184,6 +1198,7 @@ msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr ""
 
@@ -1351,9 +1366,10 @@ msgid "Quantity-3"
 msgstr ""
 
 #. module: product
-#: selection:product.template,supply_method:0
-msgid "Produce"
-msgstr "Producir"
+#: model:ir.model,name:product.model_product_pricelist
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Lista de Precios"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1594,9 +1610,9 @@ msgid "The volume in m3."
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Price Max. Margin"
-msgstr "Margen máximo de Precio"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "KGM"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0

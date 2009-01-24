@@ -111,22 +111,22 @@
 			<tr>
 			  <td><para style="Standard">[[ o.code or '']] [[ o.name or '']]</para></td>
 			  <td><para style="Standard"></para></td>
-			  <td alignment="right"><para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0' ]]</u></para></td>
-			  <td alignment="right"><para style="P9b"><u>[[sum_credit_account(o, data['form']) or '0.0' ]]</u></para></td>
-			  <td><para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u>[[formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
 			</tr>
 			<tr>
 				<td>[[ repeatIn(lines(o, data['form']), 'line') ]]
 					 <blockTable colWidths="54.0,123.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_content">
 					 <tr>
-			          <td><para style="P3">[[ line['date']  or ''  ]]</para></td>
+			          <td><para style="P3">[[ formatLang(line['date'],date=True) ]]</para></td>
 			          <td><para style="P3">[[ line['partner'] or '']]</para></td>
 			          <td><para style="P3">[[ line['ref'] or '']]</para></td>
 			          <td><para style="P3">[[ line['move'] or '']]</para></td>
 			          <td><para style="P3">[[ line['name'] or '' ]]</para></td>
-			          <td><para style="P4">[[ line['debit']  or '0.0' ]]</para></td>
-			          <td><para style="P4">[[ line['credit']  or '0.0' ]]</para></td>
-			          <td><para style="P4">[[ line['progress']  or '0.0' ]]</para></td>
+			          <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
+			          <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
+			          <td><para style="P4">[[ formatLang(line['progress']) ]]</para></td>
 			        </tr>
 					  </blockTable>
 				</td>
@@ -159,24 +159,24 @@
 			<tr>
 			  <td><para style="Standard">[[ o.code or '' ]] [[ o.name or '' ]]</para></td>
 			  <td><para style="Standard"></para></td>
-			  <td alignment="right"><para style="P9b"><u>[[ sum_debit_account(o, data['form']) or '0.0' ]]</u></para></td>
-			  <td alignment="right"><para style="P9b"><u>[[sum_credit_account(o, data['form']) or '0.0' ]]</u></para></td>
-			  <td><para style="P9b"><u>[[sum_solde_account(o, data['form']) or '0.0' ]]</u></para></td>
-			  <td><para style="P9b"><u> [[ sum_currency_amount_account(a, data['form']) or '0.0' ]]</u></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
+			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u>[[formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(a, data['form'])) ]]</u></para></td>
 			</tr>
 			<tr>
 				<td>[[ repeatIn(lines(o, data['form']), 'line') ]]
 					<blockTable colWidths="59.0,93.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_content">
 						<tr>
-				          <td><para style="P3">[[ line['date'] or '' ]]</para></td>
+				          <td><para style="P3">[[ formatLang(line['date'],date=True) ]]</para></td>
 				          <td><para style="P3">[[ line['partner'] or '' ]]</para></td>
 				          <td><para style="P3">[[ line['ref'] or '']]</para></td>
 				          <td><para style="P3">[[ line['move'] or '' ]]</para></td>
 				          <td><para style="P3">[[ line['name'] or '' ]]</para></td>
-				          <td><para style="P4">[[ line['debit'] and line['debit'] or '0.0' ]]</para></td>
-				          <td><para style="P4">[[ line['credit'] and line['credit'] or '0.0' ]]</para></td>
-				          <td><para style="P4">[[ line['progress'] and line['progress'] or '0.0' ]]</para></td>
-				          <td><para style="P4">[[ line['amount_currency'] or  '0.0' ]] [[ line['currency_code'] or '']]</para></td>
+				          <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
+				          <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
+				          <td><para style="P4">[[ formatLang(line['progress']) ]]</para></td>
+				          <td><para style="P4">[[ formatLang(line['amount_currency'] or 0.00) ]] [[ line['currency_code'] or '']]</para></td>
 				        </tr>
 					</blockTable>
 				</td>

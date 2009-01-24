@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
-# This file containt the translation of the following modules:
+# This file contains the translation of the following modules:
 #	* account_report
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-19 19:39:53+0000\n"
-"PO-Revision-Date: 2009-01-19 19:39:53+0000\n"
+"POT-Creation-Date: 2009-01-23 14:09:28+0000\n"
+"PO-Revision-Date: 2009-01-23 14:09:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,11 @@ msgstr ""
 #. module: account_report
 #: selection:account.report.report,type:0
 msgid "Others"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Tabular Summary"
 msgstr ""
 
 #. module: account_report
@@ -203,8 +208,8 @@ msgid "Account Credit:"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
+#: wizard_view:print.indicators,init:0
+msgid "Select the criteria based on which Indicators will be printed."
 msgstr ""
 
 #. module: account_report
@@ -344,12 +349,6 @@ msgid "Legend of operators"
 msgstr ""
 
 #. module: account_report
-#: code:addons/account_report/account.py:0
-#, python-format
-msgid "You can not delete an indicator history record. You may have to delete the concerned Indicator!"
-msgstr ""
-
-#. module: account_report
 #: wizard_button:print.indicators,init,end:0
 #: wizard_button:print.indicators,next,end:0
 #: wizard_button:print.indicators.pdf,init,end:0
@@ -357,8 +356,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: account_report
-#: wizard_view:print.indicators,init:0
-msgid "Select the criteria based on which Indicators will be printed."
+#: view:account.report.report:0
+msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
 msgstr ""
 
 #. module: account_report
@@ -462,6 +461,12 @@ msgid "Select Criteria"
 msgstr ""
 
 #. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr ""
+
+#. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
 msgstr ""
@@ -480,8 +485,18 @@ msgid "Custom reporting"
 msgstr ""
 
 #. module: account_report
+#: rml:print.indicators:0
+msgid "Page"
+msgstr ""
+
+#. module: account_report
 #: selection:account.report.report,type:0
 msgid "View"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Indicators -"
 msgstr ""
 
 #. module: account_report
@@ -497,5 +512,10 @@ msgstr ""
 #. module: account_report
 #: rml:accounting.report:0
 msgid "Amount"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
 

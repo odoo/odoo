@@ -321,16 +321,16 @@
           <para style="P8"></para>
         </td>
         <td>
-          <para style="P8"><u>[[ sum_debit(data) or '0.0' ]]</u></para>
+          <para style="P8"><u>[[ formatLang(sum_debit(data)) ]]</u></para>
         </td>
         <td>
-          <para style="P8"><u>[[ sum_credit(data) or '0.0' ]]</u></para>
+          <para style="P8"><u>[[ formatLang(sum_credit(data)) ]]</u></para>
         </td>
         <td>
-          <para style="P8"><u>[[ (solde_debit(data)-solde_credit(data)) or '0.0' ]]</u></para>
+          <para style="P8"><u>[[ formatLang((solde_debit(data)-solde_credit(data))) ]]</u></para>
         </td>
         <td>
-          <para style="P8"><u>[[ sum_litige(data) or '0.0' ]]</u></para>
+          <para style="P8"><u>[[ formatLang(sum_litige(data)) ]]</u></para>
         </td>
       </tr>
      <!-- <tr>
@@ -339,10 +339,10 @@
         </td><td>
         </td> <td>
         </td><td>
-          <para style="P8">[[ solde_debit(data) or '0.0' ]]</para>
+          <para style="P8">[[ formatLang(solde_debit(data)) ]]</para>
         </td>
         <td>
-          <para style="P8">[[ solde_credit(data) or '0.0' ]]</para>
+          <para style="P8">[[ formatLang(solde_credit(data)) ]]</para>
         </td>
         <td>
         </td>
@@ -356,26 +356,26 @@
         </td>
         <td>
           <para style="P4">
-          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ a['debit'] or '0.0' ]]</u></font>
-          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ a['debit'] or '0.0' ]]</font>
+          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ formatLang(a['debit']) ]]</u></font>
+          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ formatLang(a['debit']) ]]</font>
 		  </para>
         </td>
         <td>
           <para style="P4">
-          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ a['credit'] or '0.0' ]]</u></font>
-          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ a['credit'] or '0.0' ]]</font>
+          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ formatLang(a['credit']) ]]</u></font>
+          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ formatLang(a['credit']) ]]</font>
 		  </para>
         </td>
         <td>
           <para style="P4">
-          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ a['balance'] or '0.0' ]]</u></font>
-          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ a['balance'] or '0.0' ]]</font>
+          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ formatLang(a['balance']) ]]</u></font>
+          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ formatLang(a['balance'])  ]]</font>
 		  </para>
         </td>
         <td>
           <para style="P4">
-          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ a['enlitige'] or '0.0' ]]</u></font>
-          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ a['enlitige'] or '0.0' ]]</font>
+          	<font><u>[[ (a['type']==3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica-Bold'}) ]] [[ formatLang(a['enlitige'] or 0.00) ]]</u></font>
+          	<font>[[ (a['type']!=3 or removeParentNode('font')) and setTag('para','para',{'fontName':'Helvetica'}) ]] [[ formatLang(a['enlitige'] or 0.00) ]]</font>
 		  </para>
         </td>
       </tr>
