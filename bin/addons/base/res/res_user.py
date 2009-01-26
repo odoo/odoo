@@ -66,7 +66,7 @@ class roles(osv.osv):
     _columns = {
         'name': fields.char('Role Name', size=64, required=True),
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
+        'child_id': fields.one2many('res.roles', 'parent_id', 'Children'),
         'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
     }
     _defaults = {
