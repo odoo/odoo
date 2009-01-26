@@ -610,14 +610,7 @@ class account_move_line(osv.osv):
                 })
             ]
 
-            name = 'Write-Off'
-            if writeoff_journal_id:
-                journal = self.pool.get('account.journal').browse(cr, uid, writeoff_journal_id)
-                if journal.sequence_id:
-                    name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-
             writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
-                'name': name,
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
 

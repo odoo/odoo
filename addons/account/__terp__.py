@@ -58,7 +58,8 @@
         'account_assert_test.xml',
         'process/statement_process.xml',
         'process/customer_invoice_process.xml',
-        'process/supplier_invoice_process.xml'
+        'process/supplier_invoice_process.xml',
+        'sequence_view.xml'
     ],
     'demo_xml': [
         'account_demo.xml',

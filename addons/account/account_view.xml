@@ -262,10 +262,11 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field name="view_id"/>
+                            <field name="currency"/>
                             <field name="sequence_id"/>
+                            <field name="invoice_sequence_id"/>
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="currency"/>
                             <field name="user_id" groups="base.group_extended"/>
                             <newline/>
                             <field name="centralisation"/>
@@ -273,16 +274,6 @@
 
                             <field name="update_posted"/>
                             <field name="entry_posted"/>
-                            <field name="fy_seq_id" colspan="4" widget="one2many_list" >
-								<tree string="Invoice Sequences">
-									<field name="fiscalyear_id"/>
-									<field name="sequence_id"/>
-								</tree>
-								<form string="Invoice Sequences">
-									<field name="fiscalyear_id"/>
-									<field name="sequence_id"/>
-								</form>
-							</field>
                         </page>
                         <page string="Entry Controls">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>

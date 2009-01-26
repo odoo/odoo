@@ -635,9 +635,6 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
-            if not 'name' in move:
-                move['name'] = inv.name or '/'
-
             move_id = self.pool.get('account.move').create(cr, uid, move)
             new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
@@ -673,13 +670,10 @@ class account_invoice(osv.osv):
         obj_inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
-                flag = True
-                for seq in obj_inv.journal_id.fy_seq_id:
-                    if seq.fiscalyear_id.id == obj_inv.move_id.period_id.fiscalyear_id.id:
-                        number =  self.pool.get('ir.sequence').get_id(cr, uid,seq.sequence_id.id)
-                        flag = False
-                        break
-                if flag:
+                if obj_inv.journal_id.invoice_sequence_id:
+                    sid = obj_inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj.period_id.fiscalyear_id.id})
+                else:
                     number = self.pool.get('ir.sequence').get(cr, uid,
                             'account.invoice.' + invtype)
                 if invtype in ('in_invoice', 'in_refund'):

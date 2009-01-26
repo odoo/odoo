@@ -460,7 +460,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want that new account moves pass through the \'draft\' state and goes direclty to the \'posted state\' without any manual validation.'),
         'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
-        'fy_seq_id': fields.one2many('fiscalyear.seq', 'journal_id', 'Sequences'),
+        'invoice_sequence_id': fields.many2one('ir.sequence', 'Sequence'),
     }
 
     _defaults = {
@@ -789,7 +789,8 @@ class account_move(osv.osv):
                     new_name = False
                     journal = move.journal_id
                     if journal.sequence_id:
-                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                        c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id, context=c)
                     else:
                         raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
                     if new_name:
@@ -1529,11 +1530,7 @@ class account_model(osv.osv):
             if not period_id:
                 raise osv.except_osv('No period found !', 'Unable to find a valid period !')
             period_id = period_id[0]
-            name = model.name
-            if model.journal_id.sequence_id:
-                name = self.pool.get('ir.sequence').get_id(cr, uid, model.journal_id.sequence_id.id)
             move_id = self.pool.get('account.move').create(cr, uid, {
-                'name': name,
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
@@ -1560,8 +1557,7 @@ class account_model(osv.osv):
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
                 self.pool.get('account.move.line').create(cr, uid, val, context=c)
-        return move_ids    
-
+        return move_ids
 account_model()
 
 class account_model_line(osv.osv):

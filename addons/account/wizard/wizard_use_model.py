@@ -54,21 +54,7 @@ def _create_entries(self, cr, uid, data, context):
             if not period_id:
                 raise wizard.except_wizard('No period found !', 'Unable to find a valid period !')
             period_id = period_id[0]
-            name = model.name
-            if model.journal_id.sequence_id:
-                name_seq = pool_obj.get('ir.sequence').get_id(cr, uid, model.journal_id.sequence_id.id)
-
-            if name.find("%(year)s") != -1:
-                name=name.decode('utf-8').replace("%(year)s",str(time.strftime("%Y")))
-
-            if name.find("%(month)s") != -1:
-               name=name.decode('utf-8').replace("%(month)s",str(time.strftime("%B")))
-
-            if name.find("%(date)s") != -1:
-               name=name.decode('utf-8').replace("%(date)s",str(time.strftime("%Y-%m-%d")))
-
             move_id = pool_obj.get('account.move').create(cr, uid, {
-                'name': str(name_seq) + " : " +name,
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
