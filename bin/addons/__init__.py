@@ -700,7 +700,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod, rid in cr.fetchall():
                     uid = 1
-                    pool.get(rmod).unlink(cr, uid, [rid])
+		    rmod_module= pool.get(rmod)
+		    if rmod_module:
+		        rmod_module.unlink(cr, uid, [rid])
+		    else:
+		    	logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not locate %s to remove res=%d' % (rmod,rid))
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
