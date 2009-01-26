@@ -1064,8 +1064,8 @@ class orm_template(object):
             # otherwise, build some kind of default view
             if view_type == 'form':
                 res = self.fields_get(cr, user, context=context)
-                xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
-                '''<form string="%s">''' % (self._description,)
+                xml = '<?xml version="1.0" encoding="utf-8"?> ' \
+                     '<form string="%s">' % (self._description,)
                 for x in res:
                     if res[x]['type'] not in ('one2many', 'many2many'):
                         xml += '<field name="%s"/>' % (x,)
@@ -1076,19 +1076,25 @@ class orm_template(object):
                 _rec_name = self._rec_name
                 if _rec_name not in self._columns:
                     _rec_name = self._columns.keys()[0]
-                xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
-                '''<tree string="%s"><field name="%s"/></tree>''' \
-                % (self._description, self._rec_name)
+                xml = '<?xml version="1.0" encoding="utf-8"?>' \
+                       '<tree string="%s"><field name="%s"/></tree>' \
+                       % (self._description, self._rec_name)
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
             else:
-                xml = ''
+                xml = '<?xml version="1.0"?>'	# what happens here, graph case?
             result['arch'] = xml
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
 
-        doc = dom.minidom.parseString(encode(result['arch']))
+	try:
+        	doc = dom.minidom.parseString(encode(result['arch']))
+	except Exception, ex:
+		logger = netsvc.Logger()
+        	logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Wrong arch in %s (%s):\n %s' % (result['name'], view_type, result['arch'] ))
+		raise except_orm('Error',
+                        ('Invalid xml in view %s(%d) of %s: %s' % (result['name'], result['view_id'], self._name, str(ex))))
         xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
