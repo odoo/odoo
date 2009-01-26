@@ -34,6 +34,8 @@ class account_fiscal_position(osv.osv):
     }
 
     def map_tax(self, cr, uid, fposition_id, taxes, context={}):
+        if not taxes:
+            return []
         if not fposition_id:
             return map(lambda x: x.id, taxes)
         result = []
