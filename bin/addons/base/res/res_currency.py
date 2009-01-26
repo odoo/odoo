@@ -51,7 +51,7 @@ class res_currency(osv.osv):
     _columns = {
         'name': fields.char('Currency', size=32, required=True),
         'code': fields.char('Code', size=3),
-        'rate': fields.function(_current_rate, method=True, string='Current rate', digits=(12,6),
+        'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),

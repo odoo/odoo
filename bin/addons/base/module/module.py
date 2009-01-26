@@ -43,12 +43,12 @@ class module_repository(osv.osv):
     _description = "Module Repository"
     _columns = {
         'name': fields.char('Name', size=128),
-        'url': fields.char('Url', size=256, required=True),
+        'url': fields.char('URL', size=256, required=True),
         'sequence': fields.integer('Sequence', required=True),
         'filter': fields.char('Filter', size=128, required=True,
             help='Regexp to search module on the repository webpage:\n'
             '- The first parenthesis must match the name of the module.\n'
-            '- The second parenthesis must match all the version number.\n'
+            '- The second parenthesis must match the whole version number.\n'
             '- The last parenthesis must match the extension of the module.'),
         'active': fields.boolean('Active'),
     }
@@ -76,8 +76,8 @@ class module_category(osv.osv):
     _columns = {
         'name': fields.char("Name", size=128, required=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Parent Category'),
-        'module_nr': fields.function(_module_nbr, method=True, string='# of Modules', type='integer')
+        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
+        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer')
     }
     _order = 'name'
 module_category()
@@ -140,7 +140,7 @@ class module(osv.osv):
     _columns = {
         'name': fields.char("Name", size=128, readonly=True, required=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True),
-        'shortdesc': fields.char('Short description', size=256, readonly=True, translate=True),
+        'shortdesc': fields.char('Short Description', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),

@@ -61,7 +61,7 @@
             </field>
         </record>
         <record id="action_partner_addess_tree" model="ir.actions.act_window">
-            <field name="name">Partner contacts</field>
+            <field name="name">Partner Contacts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.address</field>
             <field name="view_type">tree</field>
@@ -161,7 +161,7 @@
             <field name="model">res.partner.title</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partners Titles">
+                <form string="Partner Titles">
                     <field name="name" select="1"/>
                     <field name="shortcut" select="1"/>
                     <field name="domain"/>
@@ -177,7 +177,7 @@
         <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Partners Titles</field>
+            <field name="name">Partner Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -186,7 +186,7 @@
         <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_partner_title"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
-            <field name="name">Contacts Titles</field>
+            <field name="name">Contact Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -232,7 +232,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1">
-                                <form string="Partner contacts">
+                                <form string="Partner Contacts">
                                     <field name="name" select="2"/>
                                     <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
                                     <field name="function"/>
@@ -252,7 +252,7 @@
                                     <field name="mobile"/>
                                     <field name="email" select="2" widget="email"/>
                                 </form>
-                                <tree string="Partner contacts">
+                                <tree string="Partner Contacts">
                                     <field name="name"/>
                                     <field name="zip"/>
                                     <field name="city"/>
@@ -347,7 +347,7 @@
             <field name="model">res.payterm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payment term">
+                <form string="Payment Term">
                     <field colspan="4" name="name"/>
                 </form>
             </field>
@@ -400,7 +400,7 @@
                     <newline/>
                     <field name="sequence"/>
                     <field colspan="4" name="name"/>
-                    <separator colspan="4" string="Bank account owner"/>
+                    <separator colspan="4" string="Bank Account Owner"/>
                     <field colspan="4" name="owner_name" select="2"/>
                     <field colspan="4" name="street"/>
                     <field name="city"/>
@@ -415,7 +415,7 @@
             <field name="model">res.partner.bank</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Bank accounts">
+                <tree string="Bank Accounts">
                     <field name="state"/>
                     <field name="acc_number"/>
                     <field name="partner_id"/>
@@ -468,7 +468,7 @@
             <field name="model">res.partner.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner category">
+                <form string="Partner Category">
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="parent_id"/>

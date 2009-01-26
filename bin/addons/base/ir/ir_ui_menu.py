@@ -225,10 +225,10 @@ class ir_ui_menu(osv.osv):
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
-        'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
+        'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child IDs'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups', help="If you put groups, the visibility of this menu will be based on these groups. "\
+            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),

@@ -79,7 +79,7 @@ class ir_values(osv.osv):
             help="The kind of action or button in the client side that will trigger the action."),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
-            method=True, type='text', string='Meta Datas'),
+            method=True, type='text', string='Metadata'),
         'res_id': fields.integer('Object ID', help="Keep 0 if the action must appear on all resources."),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company')
