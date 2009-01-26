@@ -358,11 +358,9 @@ class ir_model_access(osv.osv):
     __cache_clearing_methods = []
 
     def register_cache_clearing_method(self, model, method):
-        print 'Register'
         self.__cache_clearing_methods.append((model, method))
 
     def unregister_cache_clearing_method(self, model, method):
-        print 'Unregister'
         try:
             i = self.__cache_clearing_methods.index((model, method))
             del self.__cache_clearing_methods[i]
