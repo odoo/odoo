@@ -69,7 +69,7 @@ class ir_sequence(osv.osv):
             'sec': time.strftime('%S'),
         }
 
-    def get_id(self, cr, uid, sequence_id, test='id=%s'):
+    def get_id(self, cr, uid, sequence_id, test='id=%s', context={}):
         cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True FOR UPDATE', (sequence_id,))
         res = cr.dictfetchone()
         if res:
