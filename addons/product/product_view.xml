@@ -443,17 +443,17 @@
             <field name="view_mode">tree,form</field>
         </record>
        <record model="ir.actions.act_window.view" id="act_variant_tree_view">
-				<field name="sequence" eval="1"/>
-				<field name="view_mode">tree</field>
-				<field name="view_id" ref="product_variant_tree_view"/>
-				<field name="act_window_id" ref="product_variant_form_action"/>
-		</record>
-		<record model="ir.actions.act_window.view" id="act_variant_form_view">
-			<field name="sequence" eval="1"/>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="product_variant_form_view"/>
-			<field name="act_window_id" ref="product_variant_form_action"/>
-		</record>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product_variant_tree_view"/>
+            <field name="act_window_id" ref="product_variant_form_action"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_variant_form_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_variant_form_view"/>
+            <field name="act_window_id" ref="product_variant_form_action"/>
+        </record>
  
         <menuitem action="product_variant_form_action" groups="base.group_extended" id="menu_product_variant_form_action" parent="product.menu_config_product" sequence="2"/>
 
