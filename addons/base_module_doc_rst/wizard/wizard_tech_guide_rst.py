@@ -88,7 +88,7 @@ class RstDoc(object):
             "-----------",
             "",
             "::",
-            "  ",
+            "",
             "  %(description)s",
             ""]
         return '\n'.join(sl) % (dico)
@@ -107,10 +107,10 @@ class RstDoc(object):
     def _write_menus(self):
         sl = ["",
               "Menus",
-              "-------"]
+              "-------",
+              ""]
         for menu in self.dico['menu_list']:
             if menu:
-                sl.append("")
                 sl.append(" * %s" % menu)
 
         sl.append("")
@@ -119,10 +119,10 @@ class RstDoc(object):
     def _write_views(self):
         sl = ["",
               "Views",
-              "-----"]
+              "-----",
+              ""]
         for view in self.dico['view_list']:
             if view:
-                sl.append("")
                 sl.append(" * %s" % view)
         sl.append("")
         return '\n'.join(sl)
@@ -130,9 +130,9 @@ class RstDoc(object):
     def _write_depends(self):
         sl = ["",
               "Dependencies",
-              "------------"]
+              "------------",
+              ""]
         for dependency in self.dico['depends']:
-            sl.append("")
             sl.append(" * %s - %s" % (dependency.name, dependency.state))
         return '\n'.join(sl)
 
@@ -150,21 +150,19 @@ class RstDoc(object):
             else:
                 field_help = ''
 
-            s = ""
-            s += ":%s: " % (field_name)
-            s += field_dict.get('string', 'Unknown')
-            s += ", " + field_dict['type']
-            s += field_required
-            s += field_readonly
-            s += "\n\n%s" % (field_help)
-            return s
+            sl = ["",
+                  ":%s: %s, %s%s%s" % (field_name, field_dict.get('string', 'Unknown'), field_dict['type'], field_required, field_readonly),
+                  "",
+                  field_help,
+                 ]
+            return '\n'.join(sl)
 
         sl = ["",
               "",
               "Objects",
               "-------"]
         for obj in self.objects:
-            title = obj['object'].name
+            title = "Object: %s" % (obj['object'].name)
             sl.append("")
             sl.append(title)
             sl.append('#' * len(title))
@@ -209,7 +207,7 @@ class wizard_tech_guide_rst(wizard.interface):
                     'name': module.name,
                     'shortdesc': module.shortdesc,
                 }
-                module_index.append(index_dict )
+                module_index.append(index_dict)
 
                 objects = self._get_objects(cr, uid, module)
                 rstdoc = RstDoc(module, objects)
