@@ -3,30 +3,39 @@
 <data>
 
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
-        <field name="name">mrp.production.workcenter.line.inherit.tree</field>
+        <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view"/>
         <field name="type">tree</field>
+        <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <field name="hour" position="after">
-                <field name="state" />
+            <tree string="Work Orders">
                 <field name="production_id"/>
                 <field name="product"/>
                 <field name="qty"/>
                 <field name="uom"/>
+                <field name="name"/>
+                <field name="workcenter_id"/>
+                <field name="cycle"/>
+                <field name="hour"/>
+                <field name="state" />
                 <button name="button_start_working" string="Start working" states="draft,pause"/>
                 <button name="button_done" string="Finished" states="startworking"/>
-            </field>
+            </tree>
         </field>
     </record>
 
     <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
-        <field name="name">mrp.production.workcenter.line.form.inherit</field>
+        <field name="name">mrp.production.workcenter.line.form</field>
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">form</field>
-        <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view"/>
+        <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <field name="hour" position="after">
+            <form string="Work Orders">
+                <field colspan="4" name="name" select="1"/>
+                <field colspan="4" name="workcenter_id" select="1"/>
+                <field name="sequence"/>
+                <field name="cycle"/>
+                <field name="hour"/>
                 <field name="production_id"/>
                 <field name="delay"/>
                 <group colspan="8" col="8">
@@ -38,7 +47,7 @@
                     <button name="button_pause" string="Pause" states="startworking"/>
                     <button name="button_cancel" string="Cancel" states="draft,startworking"/>
                 </group>
-            </field>
+            </form>
         </field>
     </record>
 
@@ -72,7 +81,7 @@
     <!-- Action for tree view of workcenter line   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
-        <field name="name">Work Order</field>
+        <field name="name">Work Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
@@ -83,7 +92,7 @@
     <!-- Action for All Operations   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action">
-        <field name="name">All Work Order</field>
+        <field name="name">All Work Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
@@ -93,18 +102,18 @@
     <!-- Action for Confirm Operations   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_confirm_action">
-        <field name="name">Confirm Work Order</field>
+        <field name="name">Confirmed Work Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph,gantt,calendar</field>
-        <field name="domain">[('state','=','confirm')]</field>
+        <field name="domain">[('production_state','=','ready')]</field>
     </record>
 
     <!-- Action for Draft Operations   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_draft_action">
-        <field name="name">Draft Work Order</field>
+        <field name="name">Future Work Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
@@ -115,15 +124,15 @@
     <record model="ir.values" id="mrp_production_wc_action_open">
         <field name="key2" eval="'tree_but_open'"/>
         <field name="model" eval="'mrp.production.workcenter.line'"/>
-        <field name="name">Work Order</field>
+        <field name="name">Work Orders</field>
         <field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
         <field name="object" eval="True"/>
 
     </record>
 
-    <menuitem name="All Work Order" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
+    <menuitem name="All Work Orders" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
     <menuitem name="Work Orders to Do" parent="menu_mrp_production_wc_action" action="mrp_production_wc_confirm_action" id="menu_mrp_production_wc_confirm_action"/>
-    <menuitem name="Waiting Work Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
+    <menuitem name="Future Work Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
 
 <!-- Operation codes -->
 

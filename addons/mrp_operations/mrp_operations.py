@@ -40,14 +40,13 @@ from mx import DateTime
 
 class mrp_production_workcenter_line(osv.osv):
     _inherit = 'mrp.production.workcenter.line'
-    _name = 'mrp.production.workcenter.line'
-    _description = 'Production workcenters used'
     _columns = {
        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'Status', readonly=True),
        'date_planned': fields.related('production_id', 'date_planned', type='datetime', string='Date Planned'),
        'date_start': fields.datetime('Start Date'),
        'date_finnished': fields.datetime('End Date'),
        'delay': fields.char('Delay',size=128,help="This is delay between operation start and stop in this workcenter",readonly=True),
+       'production_state':fields.related('production_id','state',type='char',string='Prod.State'),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product'),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty'),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='UOM'),
@@ -60,9 +59,12 @@ class mrp_production_workcenter_line(osv.osv):
     def modify_production_order_state(self,cr,uid,ids,action):
         wf_service = netsvc.LocalService("workflow")
         oper_obj=self.browse(cr,uid,ids)[0]
-        prod_obj=self.pool.get('mrp.production').browse(cr,uid,[oper_obj.production_id.id])[0]
+        prod_obj=oper_obj.production_id
         if action=='start':
-               if prod_obj.state =='ready':
+               if prod_obj.state =='confirmed':
+                   self.pool.get('mrp.production').force_production(cr, uid, [prod_obj.id])
+                   wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
+               elif prod_obj.state =='ready':
                    wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
                elif prod_obj.state =='in_production':
                    return
