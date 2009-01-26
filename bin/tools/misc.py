@@ -828,6 +828,28 @@ def logged(f):
 
     return wrapper
 
+class profile(object):
+    def __init__(self, fname=None):
+        self.fname = fname
+
+    def __call__(self, f):
+        from tools.func import wraps
+
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            class profile_wrapper(object):
+                def __init__(self):
+                    self.result = None
+                def __call__(self):
+                    self.result = f(*args, **kwargs)
+            pw = profile_wrapper()
+            import cProfile
+            fname = self.fname or ("%s.cprof" % (f.func_name,))
+            cProfile.runctx('pw()', globals(), locals(), filename=fname)
+            return pw.result
+
+        return wrapper
+
 def debug(what):
     """
         This method allow you to debug your code without print
