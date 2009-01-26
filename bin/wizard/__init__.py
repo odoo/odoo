@@ -82,7 +82,7 @@ class interface(netsvc.Service):
             if result_def['type'] == 'action':
                 res['action'] = result_def['action'](self, cr, uid, data, context)
             elif result_def['type'] == 'form':
-                fields = copy.copy(result_def['fields'])
+                fields = copy.deepcopy(result_def['fields'])
                 arch = copy.copy(result_def['arch'])
                 button_list = copy.copy(result_def['state'])
 
