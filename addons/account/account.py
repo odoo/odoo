@@ -975,45 +975,6 @@ class account_move(osv.osv):
                     continue
 
                 for line in move.line_id:
-                    if move.journal_id.type == 'sale':
-                        if line.debit:
-                            field_base = 'ref_'
-                            key = 'account_paid_id'
-                        else:
-                            field_base = ''
-                            key = 'account_collected_id'
-                    else:
-                        if line.debit:
-                            field_base = ''
-                            key = 'account_collected_id'
-                        else:
-                            field_base = 'ref_'
-                            key = 'account_paid_id'
-                    if line.account_id.tax_ids:
-                        code = amount = False
-                        for tax in line.account_id.tax_ids:
-                            if tax.tax_code_id:
-                                acc = getattr(tax, key).id
-                                account[acc] = (getattr(tax,
-                                    field_base + 'tax_code_id').id,
-                                    getattr(tax, field_base + 'tax_sign'))
-                                account2[(acc,getattr(tax,
-                                    field_base + 'tax_code_id').id)] = (getattr(tax,
-                                        field_base + 'tax_code_id').id,
-                                        getattr(tax, field_base + 'tax_sign'))
-                                code = getattr(tax, field_base + 'base_code_id').id
-                                amount = getattr(tax, field_base+'base_sign') * \
-                                        (line.debit + line.credit)
-                                break
-                        if code and not (line.tax_code_id or line.tax_amount):
-                            self.pool.get('account.move.line').write(cr, uid,
-                                    [line.id], {
-                                'tax_code_id': code,
-                                'tax_amount': amount
-                            }, context=context, check=False)
-                    else:
-                        todo.append(line)
-                for line in todo:
                     code = amount = 0
                     key = (line.account_id.id, line.tax_code_id.id)
                     if key in account2:
