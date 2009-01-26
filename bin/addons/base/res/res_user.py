@@ -48,7 +48,7 @@ class groups(osv.osv):
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
         self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        self.pool.get('ir.model.access').call_cache_clearing_methods()
+        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -168,7 +168,7 @@ class users(osv.osv):
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
         self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        self.pool.get('ir.model.access').call_cache_clearing_methods()
+        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
