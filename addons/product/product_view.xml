@@ -200,7 +200,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
         </record>
-        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="16"/>
+        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="1"/>
         
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>
@@ -209,7 +209,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_category_list_view"/>
         </record>
-        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="product.menu_config_product"/>
+        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="product.menu_config_product" sequence="1"/>
         
         
         <record id="product_normal_action_tree" model="ir.actions.act_window">
@@ -288,7 +288,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
         
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
@@ -319,7 +319,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="product.menu_config_product"/>
+        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="product.menu_config_product" sequence="4"/>
         
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
@@ -435,7 +435,28 @@
                 </tree>
             </field>
         </record>
-        
+        <record id="product_variant_form_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+       <record model="ir.actions.act_window.view" id="act_variant_tree_view">
+				<field name="sequence" eval="1"/>
+				<field name="view_mode">tree</field>
+				<field name="view_id" ref="product_variant_tree_view"/>
+				<field name="act_window_id" ref="product_variant_form_action"/>
+		</record>
+		<record model="ir.actions.act_window.view" id="act_variant_form_view">
+			<field name="sequence" eval="1"/>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="product_variant_form_view"/>
+			<field name="act_window_id" ref="product_variant_form_action"/>
+		</record>
+ 
+        <menuitem action="product_variant_form_action" groups="base.group_extended" id="menu_product_variant_form_action" parent="product.menu_config_product" sequence="2"/>
+
         <record id="product_template_tree_view" model="ir.ui.view">
             <field name="name">product.template.product.tree</field>
             <field name="model">product.template</field>
@@ -542,6 +563,14 @@
                 </form>
             </field>
         </record>
+        <record id="product_template_form_action" model="ir.actions.act_window">
+            <field name="name">Product Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="product_template_form_action" groups="base.group_extended" id="menu_product_template_form_action" parent="product.menu_config_product" sequence="3"/>
         
         
     </data>
