@@ -96,11 +96,6 @@ class ir_model_grid(osv.osv):
     _table = 'ir_model'
     _inherit = 'ir.model'
     _description = "Objects Security Grid"
-    #_rec_name = 'name'
-    #_columns = {
-    #    'name': fields.char('Object', size=64),
-    #    'model': fields.char('Object Name', size=64),
-    #}
 
     def create(self, cr, uid, vals, context=None):
         raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
