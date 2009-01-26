@@ -22,6 +22,45 @@
         </record>
         <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
 
+				<record id="wizard_lang_export" model="ir.ui.view">
+            <field name="name">Export a Translation File</field>
+            <field name="model">wizard.module.lang.export</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form col="3" string="Export language">
+                    <notebook>
+                        <page string="Export Data">
+                            <group col="2" fill="0" states="choose">
+                                <separator colspan="2" string="Export translation file"/>
+                                <field name="lang" required="1" width="300"/>
+                                <field name="format" required="1"/>
+                                <field height="200" name="modules" width="500"/>
+                                <field invisible="1" name="state"/>
+                            </group>
+                            <group col="1" fill="0" states="get">
+                                <separator string="Export done"/>
+                                <field name="name" invisible="1"/>
+                                <field name="data" nolabel="1" readonly="1" fieldname="name"/>
+                                <field height="80" name="advice" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Help">
+                            <label align="0.0" colspan="4" string="The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."/>
+                            <label align="0.0" colspan="4" string="To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once."/>
+                            <label align="0.0" colspan="4" string="To browse official translations, you can visit this link: "/>
+                            <label align="0.0" colspan="4" string="https://translations.launchpad.net/openobject"/>
+                        </page>
+                    </notebook>
+
+                    <group col="2" colspan="3" fill="0">
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Cancel" type="object"/>
+                        <button icon="gtk-ok" name="act_getfile" states="choose" string="Get file" type="object"/>
+                        <button icon="gtk-close" name="act_destroy" special="cancel" states="get" string="Close" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="action_wizard_lang_export" model="ir.actions.act_window">
             <field name="name">Export a Translation File</field>
             <field name="type">ir.actions.act_window</field>
