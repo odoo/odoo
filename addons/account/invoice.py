@@ -255,7 +255,11 @@ class account_invoice(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean',
-            store=True, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
+            store={
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'account.move.line': (_get_invoice_from_line, None, 50),
+                'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
+            }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
@@ -875,7 +879,7 @@ class account_invoice(osv.osv):
         line = self.pool.get('account.move.line')
         cr.execute('select id from account_move_line where move_id in ('+str(move_id)+','+str(invoice.move_id.id)+')')
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
-        for l in lines:
+        for l in lines+invoice.payment_ids:
             if l.account_id.id==src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)

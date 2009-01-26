@@ -732,7 +732,7 @@
                             <field name="state" select="2"/>
                         </page>
                         <page string="Analytic Lines">
-                            <field colspan="4" name="analytic_lines" nolabel="1"/>
+                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                         </page>
                     </notebook>
                 </form>
