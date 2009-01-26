@@ -28,7 +28,6 @@ import wizard_export_lang
 import wizard_import_lang
 import wizard_module_import
 import wizard_update_translations
-import wizard_tech_guide_rst
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

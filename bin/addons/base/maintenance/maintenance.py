@@ -140,7 +140,7 @@ class maintenance_contract_wizard(osv.osv_memory):
 
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
 
-        contract_info = remote_contact(contract['name'], contract['password'], modules)
+        contract_info = remote_contract(contract['name'], contract['password'], modules)
 
         is_ok = contract_info['status'] in ('partial', 'full')
         if is_ok:
