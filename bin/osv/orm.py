@@ -1368,7 +1368,7 @@ class orm(orm_template):
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
+        logger.notifyChannel('orm', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
         def browse_rec(root, pos=0):
 # TODO: set order
             where = self._parent_name+'='+str(root)
@@ -1388,7 +1388,7 @@ class orm(orm_template):
 
     def _update_store(self, cr, f, k):
         logger = netsvc.Logger()
-        logger.notifyChannel('init', netsvc.LOG_INFO, "storing computed values of fields.function '%s'" % (k,))
+        logger.notifyChannel('orm', netsvc.LOG_INFO, "storing computed values of fields.function '%s'" % (k,))
         ss = self._columns[k]._symbol_set
         update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
         cr.execute('select id from '+self._table)
@@ -1425,11 +1425,11 @@ class orm(orm_template):
                     """, (self._table, 'parent_left'))
                 if not cr.rowcount:
                     if 'parent_left' not in self._columns:
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
                     if 'parent_right' not in self._columns:
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
                     if self._columns[self._parent_name].ondelete<>'cascade':
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, "the columns %s on object must be set as ondelete='cascasde'" % (self._name, self._parent_name))
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "the columns %s on object must be set as ondelete='cascasde'" % (self._name, self._parent_name))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
                     cr.commit()
@@ -1454,15 +1454,20 @@ class orm(orm_template):
 
             # iterate on the database columns to drop the NOT NULL constraints
             # of fields which were required but have been removed
-            cr.execute(
-                "SELECT a.attname, a.attnotnull "\
-                "FROM pg_class c, pg_attribute a "\
-                "WHERE c.oid=a.attrelid AND c.relname=%s", (self._table,))
-            db_columns = cr.dictfetchall()
-            for column in db_columns:
-                if column['attname'] not in ('id', 'oid', 'tableoid', 'ctid', 'xmin', 'xmax', 'cmin', 'cmax'):
-                    if column['attnotnull'] and column['attname'] not in self._columns:
-                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
+            columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
+            columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
+            cr.execute("SELECT a.attname, a.attnotnull"
+                       "  FROM pg_class c, pg_attribute a"
+                       " WHERE c.relname=%%s"
+                       "   AND c.oid=a.attrelid"
+                       "   AND a.attisdropped=%%s"
+                       "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
+                       "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)), 
+                           [self._table, False] + columns)
+            for column in cr.dictfetchall():
+                logger.notifyChannel("orm", netsvc.LOG_WARNING, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
+                if column['attnotnull']:
+                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
 
             # iterate on the "object columns"
             todo_update_store = []
@@ -1512,9 +1517,9 @@ class orm(orm_template):
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
                                 cr.execute(query, (ss[1](default),))
                                 cr.commit()
-                                logger.notifyChannel('init', netsvc.LOG_DEBUG, 'setting default value of new column %s of table %s'% (k, self._table))
+                                logger.notifyChannel('orm', netsvc.LOG_DEBUG, 'setting default value of new column %s of table %s'% (k, self._table))
                             elif not create:
-                                logger.notifyChannel('init', netsvc.LOG_DEBUG, 'creating new column %s of table %s'% (k, self._table))
+                                logger.notifyChannel('orm', netsvc.LOG_DEBUG, 'creating new column %s of table %s'% (k, self._table))
 
                             if isinstance(f, fields.function):
                                 order = 10
@@ -1539,7 +1544,7 @@ class orm(orm_template):
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                 except Exception, e:
-                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
                         f_pg_def = res[0]
@@ -1547,7 +1552,7 @@ class orm(orm_template):
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
-                            logger.notifyChannel('init', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
                             cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
@@ -1563,7 +1568,7 @@ class orm(orm_template):
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
                             ]
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
-                                logger.notifyChannel('init', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
+                                logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
@@ -1571,7 +1576,7 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    logger.notifyChannel('init', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                    logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
                                     ok = True
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
@@ -1581,7 +1586,7 @@ class orm(orm_template):
 
                             if f_pg_type != f_obj_type:
                                 if not ok:
-                                    logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) but unable to migrate this change !" % (k, self._table, f_pg_type, f._type))
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) but unable to migrate this change !" % (k, self._table, f_pg_type, f._type))
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
@@ -1598,7 +1603,7 @@ class orm(orm_template):
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     cr.commit()
                                 except Exception, e:
-                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
@@ -1644,7 +1649,6 @@ class orm(orm_template):
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
                     else:
-                        logger = netsvc.Logger()
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error !")
             for order,f,k in todo_update_store:
                 todo_end.append((order, self._update_store, (f, k)))
@@ -1661,7 +1665,7 @@ class orm(orm_template):
                     cr.execute('alter table "%s" add constraint "%s_%s" %s' % (self._table, self._table, key, con,))
                     cr.commit()
                 except:
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
+                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
 
         if create:
             if hasattr(self, "_sql"):
