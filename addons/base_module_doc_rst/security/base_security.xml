@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="0">
+
+<!--
+ Users Groups
+-->
+    <record model="res.groups" id="group_system">
+        <field name="name">Administrator / Configuration</field>
+    </record>
+    
+    <record model="res.groups" id="group_erp_manager">
+        <field name="name">Administrator / Access Rights</field>
+    </record>
+    
+    <record model="res.groups" id="group_user">
+        <field name="name">Employee</field>
+    </record>
+
+    <record model="res.groups" id="group_extended">
+        <field name="name">Useability / Extended View</field>
+    </record>
+    
+    <record model="res.groups" id="group_no_one">
+        <field name="name">Useability / No One</field>
+    </record>
+
+<!--
+ Users
+-->
+    <record model="res.users" id="base.user_root">
+        <field name="signature">Administrator</field>
+        <field name="address_id" ref="main_address"/>
+        <field name="company_id" ref="main_company"/>
+        <field name="action_id" ref="action_menu_admin"/>
+        <field name="menu_id" ref="action_menu_admin"/>
+    </record>
+
+
+	<!-- Set accesses to menu -->
+	<record model="ir.ui.menu" id="base.menu_administration">
+		<field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+	</record>
+
+	<record id="base.menu_security" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+	</record>
+
+	<record id="base.menu_users" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+	</record>
+	
+	<record id="base.menu_action_currency_form" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+	</record>
+
+	<record id="base.menu_custom" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+	</record>
+
+	<record id="base.menu_translation" model="ir.ui.menu">
+		<!-- FIXME: a "Usability / Translations" group ?? -->
+		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+	</record>
+
+	<record id="base.menu_management" model="ir.ui.menu">
+		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+	</record>
+
+</data>
+</openerp>
+
