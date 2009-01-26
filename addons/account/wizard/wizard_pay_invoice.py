@@ -90,7 +90,7 @@ def _wo_check(self, cr, uid, data, context):
 _transaction_add_form = '''<?xml version="1.0"?>
 <form string="Information addendum">
     <separator string="Write-Off Move" colspan="4"/>
-    <field name="writeoff_acc_id"/>
+    <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
     <field name="writeoff_journal_id"/>
     <field name="comment"/>
 </form>'''
