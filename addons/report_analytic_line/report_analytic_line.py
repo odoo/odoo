@@ -58,7 +58,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
                 WHERE
                     (invoice_id IS NULL) and (to_invoice IS NOT NULL)
                 GROUP BY
-                    to_char(date,'YYYY-MM-DD'), product_id, product_uom_id, account_id
+                    to_char(l.date,'YYYY-MM-DD'), product_id, product_uom_id, account_id
             )
         """)
 report_account_analytic_line_to_invoice()

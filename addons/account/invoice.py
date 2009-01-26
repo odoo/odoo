@@ -960,20 +960,8 @@ class account_invoice_line(osv.osv):
 
         lang=part.lang
         context.update({'lang': lang})
+        result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        taxep=None
-        tax_obj = self.pool.get('account.tax')
-        if type in ('out_invoice', 'out_refund'):
-            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, res.taxes_id)
-        else:
-            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, res.supplier_taxes_id)
-        if type in ('in_invoice', 'in_refund'):
-            result = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
-        else:
-            result = {'price_unit': res.list_price, 'invoice_line_tax_id': tax_id}
-
-        if not name:
-            result['name'] = res.name
 
         if type in ('out_invoice','out_refund'):
             a =  res.product_tmpl_id.property_account_income.id
@@ -987,6 +975,23 @@ class account_invoice_line(osv.osv):
         a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
+
+        taxep=None
+        tax_obj = self.pool.get('account.tax')
+        if type in ('out_invoice', 'out_refund'):
+            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid,a).tax_ids or False)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        else:
+            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid,a).tax_ids or False)
+            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        if type in ('in_invoice', 'in_refund'):
+            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
+            result.update(to_update)
+        else:
+            result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
+
+        if not name:
+            result['name'] = res.name
 
         domain = {}
         result['uos_id'] = uom or res.uom_id.id or False
@@ -1052,10 +1057,10 @@ class account_invoice_line(osv.osv):
             'taxes':line.invoice_line_tax_id,
         }
     #
-    # Set the tax field according to the account and the partner
+    # Set the tax field according to the account and the fiscal position
     #
     def onchange_account_id(self, cr, uid, ids, fposition_id, account_id):
-        if not (fposition_id and account_id):
+        if not account_id:
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
