@@ -44,7 +44,7 @@ START_FIELD = {
 }
 
 START_FORM = '''<?xml version="1.0"?>
-<form string="Import invoices in statement">
+<form string="Import Invoices in Statement">
     <label string="Choose Journal and Payment Date" colspan="4"/>
     <field name="date"/>
     <field name="journal_id" colspan="4"/>
@@ -70,7 +70,7 @@ def _search_invoices(obj, cr, uid, data, context):
         context=context)
         
     FORM.string = '''<?xml version="1.0"?>
-<form string="Import entries from customer invoice">
+<form string="Import Entries">
     <field name="lines" colspan="4" height="300" width="800" nolabel="1"
         domain="[('id', 'in', [%s])]"/>
 </form>''' % (','.join([str(x) for x in line_ids]))
