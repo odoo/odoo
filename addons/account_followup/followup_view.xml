@@ -14,7 +14,23 @@
                     <field name="start" select="1"/>
                     <newline/>
                     <field colspan="4" name="description" select="1"/>
+                    <separator string="Legend" colspan="4"/>
+
+                    <label string="%%(partner_name)s: Partner name" colspan="2"/>
+                    <label string="%%(user_signature)s: User name" colspan="2"/>
+                    <label string="%%(followup_amount)s: Total Amount Due" colspan="2"/>
+                    <label string="%%(date)s: Current Date" colspan="2"/>
+                    <label string="%%(company_name)s: User's Company name" colspan="2"/>
+                    <label string="%%(company_currency)s: User's Company Currency" colspan="2"/>
+                    <label string="%%(heading)s: Move line header" colspan="2"/>
+                    <label string="%%(line)s: Account Move lines" colspan="2"/>
                 </form>
+                <tree string="Follow-Up lines">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="delay"/>
+                    <field name="start"/>
+                </tree>
             </field>
         </record>
         
@@ -25,13 +41,28 @@
             <field name="arch" type="xml">
                 <form string="Follow-Up">
                     <field name="name" select="1"/>
+                    <field name="company_id" select="1"/>
                     <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1"/>
+                    <field colspan="4" name="description" nolabel="1" select="1"/>
                     <separator colspan="4" string="Lines"/>
-                    <field colspan="4" name="followup_line" nolabel="1" widget="one2many_list"/>
+                    <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
         </record>
+
+        <record id="view_account_followup_followup_tree" model="ir.ui.view">
+            <field name="name">account_followup.followup.tree</field>
+            <field name="model">account_followup.followup</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-Up">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_account_followup_definition_form" model="ir.actions.act_window">
             <field name="name">Follow-Ups</field>
             <field name="type">ir.actions.act_window</field>
