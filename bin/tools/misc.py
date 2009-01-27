@@ -99,6 +99,9 @@ def init_db(cr):
                 id, info.get('author', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
+            cr.execute('insert into ir_model_data \
+                (name,model,module, res_id) values (%s,%s,%s,%s)', (
+                    'module_meta_information', 'ir.module.module', i, id))
             dependencies = info.get('depends', [])
             for d in dependencies:
                 cr.execute('insert into ir_module_module_dependency \
