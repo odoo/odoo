@@ -252,16 +252,18 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
+                            <group col="3" colspan="2">
                             <field
                                 name="planned_hours" 
                                 widget="float_time"
                                 on_change="onchange_planned(planned_hours,effective_hours)"/>
-                            <field name="delay_hours" widget="float_time"/>
-                            <group col="3" colspan="2">
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending"/>
                             </group>
+                            <group col="2" colspan="2">
+                            <field name="delay_hours" widget="float_time"/>
                             <field name="effective_hours" widget="float_time"/>
+                            </group>
 
                             <field colspan="4" name="description" nolabel="1" select="2"/>
                             <field colspan="4" name="work_ids" nolabel="1"/>
