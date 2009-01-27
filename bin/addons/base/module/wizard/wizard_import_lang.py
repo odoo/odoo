@@ -30,7 +30,7 @@ view_form="""<?xml version="1.0"?>
 <form string="Import language">
     <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
-        <separator string="Import new language" colspan="4"/>
+        <separator string="Import New Language" colspan="4"/>
         <field name="name" width="200"/>
         <field name="code"/>
         <field name="data" colspan="4"/>

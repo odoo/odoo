@@ -39,7 +39,7 @@ finish_form ='''<?xml version="1.0"?>
 
 ask_form ='''<?xml version="1.0"?>
 <form string="Module import">
-    <separator string="Module import" colspan="4"/>
+    <separator string="Module Import" colspan="4"/>
     <label string="Please give your module .ZIP file to import." colspan="4"/>
     <field name="module_file"/>
 </form>
