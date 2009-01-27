@@ -83,8 +83,8 @@
     <blockTable colWidths="450.0,48.0,48.0" style="tbl_code_name">
       <tr>
   		<td><para style="total">[[ o.code ]] - [[ o.name ]]</para></td>
-        <td><para style="total_right"><u>[[ '%.2f' % sum_general(o.id,data['form']['date1'],data['form']['date2']) ]]</u></para></td>
-        <td><para style="total_right"><u>[[ '%.2f' % sum_analytic(o.id,data['form']['date1'],data['form']['date2']) ]]</u></para></td>
+        <td><para style="total_right"><u>[[ formatLang(sum_general(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para></td>
+        <td><para style="total_right"><u>[[ formatLang(sum_analytic(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para></td>
       </tr>
     </blockTable>
     
@@ -99,7 +99,7 @@
         <td><para style="tbl_content">[[ move.name ]]</para></td>
         <td><para style="tbl_content">[[ move.account_id.code ]] - [[ move.account_id.name ]]</para></td>
         <td><para style="tbl_content"></para></td>
-        <td><para style="tbl_content_right">[[ '%.2f' % (move.debit-move.credit) ]]</para></td>
+        <td><para style="tbl_content_right">[[ formatLang(move.debit-move.credit) ]]</para></td>
         
       </tr>
     </blockTable>
@@ -108,13 +108,13 @@
         <tr> 
           <td>
               <para style="tbl_content">[[ repeatIn(lines_a(move.id,o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
-              <para style="tbl_content">[[ move_a.date ]]</para>
+              <para style="tbl_content">[[ formatLang(move_a.date,date = True) ]]</para>
           </td>
           <td><para style="tbl_content">[[ move_a.code ]]</para></td>
           <td><para style="tbl_content">[[ move_a.name ]]</para></td>
           <td><para style="tbl_content">[[ move_a.account_id.code ]] - [[ move_a.account_id.name ]]</para></td>
           <td><para style="tbl_content"></para></td>
-          <td><para style="tbl_content_right">[[ '%.2f' % move_a.amount ]]</para></td>
+          <td><para style="tbl_content_right">[[ formatLang( move_a.amount) ]]</para></td>
         
         </tr>
     </blockTable>
@@ -124,12 +124,12 @@
     
       <tr>
       <para style="tbl_content">[[ repeatIn(lines_a(False,o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
-        <td><para style="tbl_content">[[ move_a.date ]]</para></td>
+        <td><para style="tbl_content">[[ formatLang(move_a.date,date = True) ]]</para></td>
         <td><para style="tbl_content">[[ move_a.code ]]</para></td>
         <td><para style="tbl_content">[[ move_a.name ]]</para></td>
         <td><para style="tbl_content">[[move_a.account_id.code ]] - [[ move_a.account_id.name ]]</para></td>
         <td><para style="tbl_content"></para></td>
-        <td><para style="tbl_content_right">[[ '%.2f' % move_a.amount ]]</para></td>
+        <td><para style="tbl_content_right">[[ formatLang( move_a.amount) ]]</para></td>
         
       </tr>
     </blockTable>
