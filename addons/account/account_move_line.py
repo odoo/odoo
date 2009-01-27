@@ -200,7 +200,8 @@ class account_move_line(osv.osv):
         part = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id) or False
         # part = False is acceptable for fiscal position.
         account = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, account.id)
-        account = self.pool.get('account.account').browse(cr, uid, account)
+        if account:
+            account = self.pool.get('account.account').browse(cr, uid, account)
 
         if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
             data['account_id'] = account.id
@@ -215,7 +216,7 @@ class account_move_line(osv.osv):
         data['debit'] = s>0  and s or 0.0
         data['credit'] = s<0  and -s or 0.0
 
-        if account.currency_id:
+        if account and account.currency_id:
             data['currency_id'] = account.currency_id.id
             acc = account
             if s>0:
