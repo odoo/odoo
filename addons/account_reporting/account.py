@@ -94,7 +94,7 @@ class account_report_bs(osv.osv):
         'color_back' : fields.many2one('color.rml','Back Color'),
         'font_style' : fields.selection(_font, 'Font'),
         'parent_id': fields.many2one('account.report.bs', 'Parent'),
-        'child_id': fields.one2many('account.report.bs', 'parent_id', 'Childs'),
+        'child_id': fields.one2many('account.report.bs', 'parent_id', 'Children'),
         'report_type' : fields.selection([('only_obj', 'Report Objects Only'),('with_account', 'Report Objects With Accounts'),('acc_with_child', 'Report Objects With Accounts and child of Accounts')],"Report Type")
     }
     _defaults = {

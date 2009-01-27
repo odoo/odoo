@@ -59,10 +59,10 @@ class crm_case_section(osv.osv):
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active'),
         'sequence': fields.integer('Sequence'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address wich is the 'Reply-To' of all email sent by Open ERP for cases in this section"),
+        'user_id': fields.many2one('res.users', 'Responsible User'),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Childs Sections'),
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
     }
     _defaults = {
         'active': lambda *a: 1,

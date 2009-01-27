@@ -196,11 +196,11 @@ partner()
 class crm_segmentation(osv.osv):
     _inherit="crm.segmentation"
     _columns={
-        "answer_yes": fields.many2many("crm_profiling.answer","profile_question_yes_rel","profile","answer","Inclued answers"),
-        "answer_no": fields.many2many("crm_profiling.answer","profile_question_no_rel","profile","answer","Excluded answers"),
+        "answer_yes": fields.many2many("crm_profiling.answer","profile_question_yes_rel","profile","answer","Included Answers"),
+        "answer_no": fields.many2many("crm_profiling.answer","profile_question_no_rel","profile","answer","Excluded Answers"),
         'parent_id': fields.many2one('crm.segmentation', 'Parent Profile'),
-        'child_ids': fields.one2many('crm.segmentation', 'parent_id', 'Childs profile'),
-        'profiling_active': fields.boolean('Use The Profiling Rules', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
+        'child_ids': fields.one2many('crm.segmentation', 'parent_id', 'Child Profiles'),
+        'profiling_active': fields.boolean('Use The Profiling Rules', help='Check this box if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
         }
     _constraints = [
         (orm.orm.check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])

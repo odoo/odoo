@@ -27,7 +27,7 @@ from osv import fields,osv
 class sale_order(osv.osv):
     _inherit = 'sale.order' 
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on packings made."),
+        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on packing."),
         'id': fields.integer('ID', readonly=True,invisible=True),
     }
 

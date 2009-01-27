@@ -26,8 +26,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Accounting',
     'description': """
-India Accounting module includes all the basic requirenment of 
-Basic Accounting, plus new things which available are:
+India Accounting module includes all the basic requirements of 
+Basic Accounting, plus new things that are available:
     * New Invoice - (Local, Retail)
     * Invoice Report
     * Tax structure

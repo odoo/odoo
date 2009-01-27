@@ -108,8 +108,8 @@ class mrp_routing(osv.osv):
         'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Workcenters'),
 
         'location_id': fields.many2one('stock.location', 'Production Location',
-            help="Keep empty if you produce at the location where the finnished products are needed." \
-                "Put a location if you produce at a fixed location. This can be a partner location " \
+            help="Keep empty if you produce at the location where the finished products are needed." \
+                "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations."
         ),
     }
@@ -192,7 +192,7 @@ class mrp_bom(osv.osv):
         'product_efficiency': fields.float('Product Efficiency', required=True, help="Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
+        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type'),
@@ -401,10 +401,10 @@ class mrp_production(osv.osv):
         'product_uos_qty': fields.float('Product Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOM'),
 
-        'location_src_id': fields.many2one('stock.location', 'Raw Products Location', required=True,
+        'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             help="Location where the system will look for products used in raw materials."),
-        'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True,
-            help="Location where the system will stock the finnished products."),
+        'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
+            help="Location where the system will stock the finished products."),
 
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Planned Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),

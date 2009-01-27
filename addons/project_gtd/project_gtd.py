@@ -66,7 +66,7 @@ class project_gtd_timebox(osv.osv):
     _columns = {
         'name': fields.char('Timebox', size=64, required=True, select=1),
         'user_id': fields.many2one('res.users', 'User', required=True, select=1),
-        'child_ids': fields.one2many('project.gtd.timebox', 'parent_id', 'Childs Timebox'),
+        'child_ids': fields.one2many('project.gtd.timebox', 'parent_id', 'Child Timeboxes'),
         'parent_id': fields.many2one('project.gtd.timebox', 'Parent Timebox'),
         'task_ids': fields.one2many('project.task', 'timebox_id', 'Tasks'),
         'type': fields.selection([('daily','Daily'),('weekly','Weekly'),('monthly','Monthly'),('other','Other')], 'Type', required=True),
