@@ -362,7 +362,8 @@ class ir_model_access(osv.osv):
         except ValueError:
             pass
 
-    def call_cache_clearing_methods(self):
+    def call_cache_clearing_methods(self, cr):
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             getattr(self.pool.get(model), method)()
 
@@ -370,21 +371,18 @@ class ir_model_access(osv.osv):
     # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def create(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def unlink(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
 ir_model_access()

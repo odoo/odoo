@@ -99,6 +99,9 @@ def init_db(cr):
                 id, info.get('author', ''),
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state))
+            cr.execute('insert into ir_model_data \
+                (name,model,module, res_id) values (%s,%s,%s,%s)', (
+                    'module_meta_information', 'ir.module.module', i, id))
             dependencies = info.get('depends', [])
             for d in dependencies:
                 cr.execute('insert into ir_module_module_dependency \
@@ -827,6 +830,28 @@ def logged(f):
         return res
 
     return wrapper
+
+class profile(object):
+    def __init__(self, fname=None):
+        self.fname = fname
+
+    def __call__(self, f):
+        from tools.func import wraps
+
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            class profile_wrapper(object):
+                def __init__(self):
+                    self.result = None
+                def __call__(self):
+                    self.result = f(*args, **kwargs)
+            pw = profile_wrapper()
+            import cProfile
+            fname = self.fname or ("%s.cprof" % (f.func_name,))
+            cProfile.runctx('pw()', globals(), locals(), filename=fname)
+            return pw.result
+
+        return wrapper
 
 def debug(what):
     """

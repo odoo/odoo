@@ -487,6 +487,20 @@ class module(osv.osv):
                     logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
+
+    def create(self, cr, uid, data, context={}):
+        id = super(module, self).create(cr, uid, data, context)
+        print 'Create', {
+            'name': 'module_name_translation',
+            'model': 'ir.module.module',
+            'res_id': id,
+        }
+        self.pool.get('ir.model.data').create(cr, uid, {
+            'name': 'module_name_translation',
+            'model': 'ir.module.module',
+            'res_id': id,
+        })
+        return id
 module()
 
 class module_dependency(osv.osv):
