@@ -184,17 +184,17 @@ class pos_order(osv.osv):
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking',
             readonly=True),
         'last_out_picking': fields.many2one('stock.picking',
-                                            'Last output picking',
+                                            'Last Output Picking',
                                             readonly=True),
         'note': fields.text('Notes'),
-        'nb_print': fields.integer('Number of print', readonly=True),
+        'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal',
             required=True, states={'draft': [('readonly', False)]},
             readonly=True, ),
         'account_receivable': fields.many2one('account.account',
             'Default Receivable', required=True, states={'draft': [('readonly', False)]},
             readonly=True, ),
-        'invoice_wanted': fields.boolean('Create invoice')
+        'invoice_wanted': fields.boolean('Create Invoice')
         }
 
     def _journal_default(self, cr, uid, context={}):
@@ -794,7 +794,7 @@ class pos_order_line(osv.osv):
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
-        'create_date': fields.datetime('Creation date', readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
         }
 
     _defaults = {
@@ -885,9 +885,9 @@ class pos_payment(osv.osv):
         'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
         'journal_id': fields.many2one('account.journal', "Journal", required=True),
         'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
-        'payment_nb': fields.char('Piece number', size=32),
-        'payment_name': fields.char('Payment name', size=32),
-        'payment_date': fields.date('Payment date', required=True),
+        'payment_nb': fields.char('Piece Number', size=32),
+        'payment_name': fields.char('Payment Name', size=32),
+        'payment_date': fields.date('Payment Date', required=True),
         'amount': fields.float('Amount', required=True),
     }
     _defaults = {
@@ -919,7 +919,7 @@ class report_transaction_pos(osv.osv):
         'date_create': fields.char('Date', size=16, readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'no_trans': fields.float('Number of transaction', readonly=True),
+        'no_trans': fields.float('Number of Transaction', readonly=True),
         'amount': fields.float('Amount', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
     }

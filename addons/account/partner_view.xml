@@ -12,21 +12,21 @@
                     <field name="company_id"/>
                     <newline/>
                     <field name="tax_ids" colspan="4">
-                        <tree string="Taxes Mapping" editable="bottom">
+                        <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </tree>
-                        <form string="Taxes Mapping">
+                        <form string="Tax Mapping">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
                     <field name="account_ids" colspan="4">
-                        <tree string="Accounts Mapping" editable="bottom">
+                        <tree string="Account Mapping" editable="bottom">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
                         </tree>
-                        <form string="Accounts Mapping">
+                        <form string="Account Mapping">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
                         </form>

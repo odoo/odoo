@@ -53,16 +53,21 @@ class RstDoc(object):
             'shortdesc': module.shortdesc,
             'latest_version': module.latest_version,
             'website': module.website,
-            'description': self._handle_text(module.description or 'None'),
+            'description': self._handle_text(module.description.strip() or 'None'),
             'report_list': self._handle_list_items(module.reports_by_module),
             'menu_list': self._handle_list_items(module.menus_by_module),
             'view_list': self._handle_list_items(module.views_by_module),
             'depends': module.dependencies_id,
         }
         self.objects = objects
+        self.module = module
 
     def _handle_list_items(self, list_item_as_string):
-        return [item.replace('*', '\*') for item in list_item_as_string.split('\n')]
+        list_item_as_string = list_item_as_string.strip()
+        if list_item_as_string:
+            return [item.replace('*', '\*') for item in list_item_as_string.split('\n')]
+        else:
+            return []
 
     def _handle_text(self, txt):
         lst = ['  %s' % line for line in txt.split('\n')]
@@ -74,6 +79,7 @@ class RstDoc(object):
         title_underline = "=" * len(title)
         dico['title'] = title
         dico['title_underline'] = title_underline
+
         sl = [
             "",
             "%(title)s",
@@ -89,7 +95,7 @@ class RstDoc(object):
             "",
             "::",
             "",
-            "  %(description)s",
+            "%(description)s",
             ""]
         return '\n'.join(sl) % (dico)
 
@@ -97,10 +103,15 @@ class RstDoc(object):
         sl = ["",
               "Reports",
               "-------"]
-        for report in self.dico['report_list']:
-            if report:
-                sl.append("")
-                sl.append(" * %s" % report)
+        reports = self.dico['report_list']
+        if reports:
+            for report in reports:
+                if report:
+                    sl.append("")
+                    sl.append(" * %s" % report)
+        else:
+            sl.extend(["", "None", ""])
+
         sl.append("")
         return '\n'.join(sl)
 
@@ -109,9 +120,13 @@ class RstDoc(object):
               "Menus",
               "-------",
               ""]
-        for menu in self.dico['menu_list']:
-            if menu:
-                sl.append(" * %s" % menu)
+        menus = self.dico['menu_list']
+        if menus:
+            for menu in menus:
+                if menu:
+                    sl.append(" * %s" % menu)
+        else:
+            sl.extend(["", "None", ""])
 
         sl.append("")
         return '\n'.join(sl)
@@ -121,9 +136,14 @@ class RstDoc(object):
               "Views",
               "-----",
               ""]
-        for view in self.dico['view_list']:
-            if view:
-                sl.append(" * %s" % view)
+        views = self.dico['view_list']
+        if views:
+            for view in views:
+                if view:
+                    sl.append(" * %s" % view)
+        else:
+            sl.extend(["", "None", ""])
+
         sl.append("")
         return '\n'.join(sl)
 
@@ -132,12 +152,23 @@ class RstDoc(object):
               "Dependencies",
               "------------",
               ""]
-        for dependency in self.dico['depends']:
-            sl.append(" * %s - %s" % (dependency.name, dependency.state))
+        depends = self.dico['depends']
+        if depends:
+            for dependency in depends:
+                sl.append(" * %s - %s" % (dependency.name, dependency.state))
+        else:
+            sl.extend(["", "None", ""])
+        sl.append("")
         return '\n'.join(sl)
 
     def _write_objects(self):
         def write_field(field_def):
+            if not isinstance(field_def, tuple):
+                logger = netsvc.Logger()
+                msg = "Error on Object %s: field_def: %s [type: %s]" % (obj_name.encode('utf8'), field_def.encode('utf8'), type(field_def))
+                logger.notifyChannel("error", netsvc.LOG_ERROR, msg)
+                return ""
+
             field_name = field_def[0]
             field_dict = field_def[1]
             field_required = field_dict.get('required', '') and ', required'
@@ -161,27 +192,45 @@ class RstDoc(object):
               "",
               "Objects",
               "-------"]
-        for obj in self.objects:
-            title = "Object: %s" % (obj['object'].name)
-            sl.append("")
-            sl.append(title)
-            sl.append('#' * len(title))
-            sl.append("")
+        if self.objects:
+            for obj in self.objects:
+                obj_name = obj['object'].name
+                title = "Object: %s" % (obj_name)
+                slo = [
+                       "",
+                       title,
+                       '#' * len(title),
+                       "",
+                       ".. index::",
+                       "  single: %s object" % (obj_name),
+                       ".. ",
+                      ]
 
-            for field in obj['fields']:
-                sl.append("")
-                sl.append(write_field(field))
-                sl.append("")
+                for field in obj['fields']:
+                    slf = [
+                           "",
+                           write_field(field),
+                           "",
+                           #".. index::",
+                           #"  single: %s field" % (field[0]),
+                           #".. ",
+                           #"",
+                           #"",
+                          ]
+                    slo.extend(slf)
+                sl.extend(slo)
+        else:
+            sl.extend(["", "None", ""])
 
         return '\n'.join(sl)
 
     def write(self):
         s = ''
         s += self._write_header()
+        s += self._write_depends()
         s += self._write_reports()
         s += self._write_menus()
         s += self._write_views()
-        s += self._write_depends()
         s += self._write_objects()
 
         return s
@@ -231,16 +280,17 @@ class wizard_tech_guide_rst(wizard.interface):
         finally:
             tarf.close()
 
-        try:
-            os.unlink(tmp_file)
-        except Exception, e:
-            logger = netsvc.Logger()
-            logger.notifyChannel("warning", netsvc.LOG_WARNING,
-                "Temporary file %s could not be deleted. (%s)" % (tmp_file.name, e))
-
         f = open(tgz_tmp_filename, 'rb')
         out = f.read()
         f.close()
+
+        if os.path.exists(tgz_tmp_filename):
+            try:
+                os.unlink(tgz_tmp_filename)
+            except Exception, e:
+                logger = netsvc.Logger()
+                msg = "Temporary file %s could not be deleted. (%s)" % (tgz_tmp_filename, e)
+                logger.notifyChannel("warning", netsvc.LOG_WARNING, msg)
 
         return {
             'rst_file': base64.encodestring(out),
@@ -267,9 +317,10 @@ class wizard_tech_guide_rst(wizard.interface):
         res = []
         objects = self._object_find(cr, uid, module)
         for obj in objects:
+            fields = self._fields_find(cr, uid, obj.model)
             dico = {
                 'object': obj,
-                'fields': self._fields_find(cr, uid, obj.model)
+                'fields': fields
             }
             res.append(dico)
         return res
@@ -286,8 +337,14 @@ class wizard_tech_guide_rst(wizard.interface):
     def _fields_find(self, cr, uid, obj):
         pool = pooler.get_pool(cr.dbname)
         modobj = pool.get(obj)
-        res = modobj.fields_get(cr, uid).items()
-        return res
+        if modobj:
+            res = modobj.fields_get(cr, uid).items()
+            return res
+        else:
+            logger = netsvc.Logger()
+            msg = "Object %s not found" % (obj)
+            logger.notifyChannel("error", netsvc.LOG_ERROR, msg)
+            return ""
 
 ##     def _object_doc(self, cr, uid, obj):
 ##         pool = pooler.get_pool(cr.dbname)

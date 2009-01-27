@@ -41,7 +41,7 @@ For example, you can define the following analytic structure:
 
 Here, we have two plans: Projects and Salesman. An invoice line must
 be able to write analytic entries in the 2 plans: SubProj 1.1 and
-Fabien. The amount can also be splitted. The following example is for
+Fabien. The amount can also be split. The following example is for
 an invoice that touches the two subproject and assigned to one salesman:
 
 Plan1:

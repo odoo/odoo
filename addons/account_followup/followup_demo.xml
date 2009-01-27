@@ -4,6 +4,7 @@
         
         <record id="demo_followup1" model="account_followup.followup">
             <field name="name">Default follow-up</field>
+            <field name="company_id" ref="base.main_company"/>
             <field name="description">First letter after 15 net days, 30 net days and 45 days end of month levels.</field>
         </record>
         
@@ -13,20 +14,51 @@
             <field name="start">days</field>
             <field name="delay">15</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="description">Date : %(date)s
+
+Dear %(partner_name)s,
+
+Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
+
+Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39.
+
+Best regards,</field>
         </record>
+
         <record id="demo_followup_line2" model="account_followup.followup.line">
             <field name="name">Level 1 : 30 net days</field>
             <field name="sequence">1</field>
             <field name="start">days</field>
             <field name="delay">30</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="description">LEVEL 1:
+Date : %(date)s
+
+Dear %(partner_name)s,
+
+Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
+
+Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39.
+
+Best regards,</field>
         </record>
+
         <record id="demo_followup_line3" model="account_followup.followup.line">
             <field name="name">Level 2 : 45 days end of month</field>
             <field name="sequence">2</field>
             <field name="start">end_of_month</field>
             <field name="delay">45</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="description">LEVEL 2:
+Date : %(date)s
+
+Dear %(partner_name)s,
+
+Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
+
+Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at (+32).10.68.94.39.
+
+Best regards,</field>
         </record>
         
     </data>

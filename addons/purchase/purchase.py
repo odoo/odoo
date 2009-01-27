@@ -343,7 +343,7 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Could not cancel purchase order !'),
-                        _('You must first cancel all packings attached to this purchase order.'))
+                        _('You must first cancel all packing attached to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)

@@ -80,17 +80,17 @@ class product_uom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
-            help="Unit of Measure of the same category can be converted between each others."),
+            help="Unit of Measure of a category can be converted between each others in the same category."),
         'factor': fields.float('Rate', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coef (this unit). Rate = 1 / Factor.'),
+                    '1 (base unit) = coeff (this unit). Rate = 1 / Factor.'),
         'factor_inv': fields.function(_factor, fnct_inv=_factor_inv, digits=(12, 6),
             method=True, string='Factor',
             help='The coefficient for the formula:\n' \
-                    'coef (base unit) = 1 (this unit). Factor = 1 / Rate.'),
+                    'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
         'factor_inv_data': fields.float('Factor', digits=(12, 6)),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
-            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be splitted."),
+            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
         'active': fields.boolean('Active'),
     }
 
@@ -164,7 +164,7 @@ class product_ul(osv.osv):
     _description = "Shipping Unit"
     _columns = {
         'name' : fields.char('Name', size=64,select=True, required=True, translate=True),
-        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('palet', 'Palet')], 'Type', required=True),
+        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('palet', 'Pallet')], 'Type', required=True),
     }
 product_ul()
 
@@ -196,7 +196,7 @@ class product_category(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
-        'child_id': fields.one2many('product.category', 'parent_id', string='Childs Categories'),
+        'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence'),
     }
     _order = "sequence"
@@ -240,15 +240,15 @@ class product_template(osv.osv):
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed, consumable are stockable products with infinite stock, or without a stock management in the system."),
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
-        'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
+        'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."),
-        'rental': fields.boolean('Rentable product'),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'rental': fields.boolean('Rentable Product'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="The cost of the product for accounting stock valorisation. It can serves as a base price for supplier price."),
+        'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross weight', help="The gross weight in Kg."),
         'weight_net': fields.float('Net weight', help="The net weight in Kg."),

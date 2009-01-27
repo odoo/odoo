@@ -114,7 +114,7 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type', required=True),
+        'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
@@ -311,8 +311,8 @@ class stock_tracking(osv.osv):
         'name': fields.char('Tracking', size=64, required=True),
         'active': fields.boolean('Active'),
         'serial': fields.char('Reference', size=64),
-        'move_ids' : fields.one2many('stock.move', 'tracking_id', 'Moves tracked'),
-        'date': fields.datetime('Date create', required=True),
+        'move_ids' : fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
+        'date': fields.datetime('Date Created', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -344,7 +344,7 @@ stock_tracking()
 #----------------------------------------------------------
 class stock_picking(osv.osv):
     _name = "stock.picking"
-    _description = "Packing list"
+    _description = "Packing List"
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value: return False
         if isinstance(ids, (int, long)):
@@ -427,7 +427,7 @@ class stock_picking(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Partner'),
         'invoice_state':fields.selection([
             ("invoiced","Invoiced"),
-            ("2binvoiced","To be invoiced"),
+            ("2binvoiced","To Be Invoiced"),
             ("none","Not from Packing")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
@@ -788,7 +788,7 @@ class stock_production_lot(osv.osv):
 
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
-        'ref': fields.char('Internal Ref.', size=64),
+        'ref': fields.char('Internal Ref', size=64),
         'product_id': fields.many2one('product.product','Product',required=True),
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, method=True, type="float", string="Available", select="2"),
@@ -809,9 +809,9 @@ class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
     _description = 'Production lot revisions'
     _columns = {
-        'name': fields.char('Revision name', size=64, required=True),
+        'name': fields.char('Revision Name', size=64, required=True),
         'description': fields.text('Description'),
-        'date': fields.date('Revision date'),
+        'date': fields.date('Revision Date'),
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
@@ -868,7 +868,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
 
         'date': fields.datetime('Date Created'),
-        'date_planned': fields.datetime('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled Date', required=True),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
@@ -882,8 +882,8 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'address_id' : fields.many2one('res.partner.address', 'Dest. Address'),
 
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Production lot', help="Production lot is used to put a serial number on the production"),
-        'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', select=True, help="Tracking lot is the code that will be put on the logistic unit/pallet"),
+        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
+        'tracking_id': fields.many2one('stock.tracking', 'Tracking Lot', select=True, help="Tracking lot is the code that will be put on the logistical unit/pallet"),
 #       'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
 
         'auto_validate': fields.boolean('Auto Validate'),
@@ -891,7 +891,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
         'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History'),
-        'picking_id': fields.many2one('stock.picking', 'Packing list', select=True),
+        'picking_id': fields.many2one('stock.picking', 'Packing List', select=True),
 
         'note': fields.text('Notes'),
 

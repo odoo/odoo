@@ -104,7 +104,7 @@ class mrp_procurement(osv.osv):
             summary = '''Here is the procurement scheduling report.
 
     Computation Started; %s
-    Computation Finnished; %s
+    Computation Finished; %s
 
     Total procurement: %d
     Exception procurement: %d

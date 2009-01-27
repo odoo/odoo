@@ -29,37 +29,27 @@ import tools
 from osv import fields, osv
 from tools.translate import _
 
-_followup_wizard_date_form = """<?xml version="1.0"?>
-<form string="Select a date">
+_followup_wizard_screen1_form = """<?xml version="1.0"?>
+<form string="Follow-up and Date Selection">
+    <field name="followup_id"/>
     <field name="date"/>
 </form>"""
 
-_followup_wizard_date_fields = {
-        'date': {'string': 'Date', 'type': 'date', 'required': True},
+_followup_wizard_screen1_fields = {
+    'date': {'string': 'Follow-up Sending Date', 'type': 'date', 'required': True, 'help':"This field allow you to select a forecast date to plan your follow-ups"},
+    'followup_id': {'string': 'Follow-up', 'type':'many2one', 'relation':'account_followup.followup', 'required': True,},
 }
 
-form = """<?xml version="1.0"?>
-<form string="Mail">
-    <field name="mail_sent" colspan="4"/>
-    <newline/>
-    <newline/>
-    <separator string="Mail not sent to following Partners , Email not available !" colspan="4"/>
-    <field name="mail_notsent" colspan="4" nolabel="1"/>
-</form>"""
 
-fields = {
-    'mail_sent': {'string':'Number of Mail sent', 'type':'char', 'readonly':True },
-    'mail_notsent': {'string':'Error Messages', 'type':'text', 'readonly':True , 'nolabel':'1'},
-        }
 
 _followup_wizard_all_form = """<?xml version="1.0"?>
 <form string="Select partners" colspan="4">
     <notebook>
-        <page string="FollowUp selection">
+        <page string="Partner Selection">
             <separator string="Select partners to remind" colspan="4"/>
             <field name="partner_ids" colspan="4" nolabel="1"/>
         </page>
-        <page string="Email confirmation">
+        <page string="Email Settings">
             <field name="email_conf" colspan="4"/>
             <field name="email_subject" colspan="4"/>
             <separator string="Email body" colspan="4"/>
@@ -67,12 +57,13 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
             <separator string="Legend" colspan="4"/>
 
             <label string="%(partner_name)s: Partner name" colspan="2"/>
-            <label string="%(followup_amount)s: Total Amount Due" colspan="2"/>
             <label string="%(user_signature)s: User name" colspan="2"/>
-            <label string="%(company_name)s: User's Company name" colspan="2"/>
-            <label string="%(line)s: Account Move lines" colspan="2"/>
-            <label string="%(heading)s: Move line header" colspan="2"/>
+            <label string="%(followup_amount)s: Total Amount Due" colspan="2"/>
             <label string="%(date)s: Current Date" colspan="2"/>
+            <label string="%(company_name)s: User's Company name" colspan="2"/>
+            <label string="%(company_currency)s: User's Company Currency" colspan="2"/>
+            <label string="%(heading)s: Move line header" colspan="2"/>
+            <label string="%(line)s: Account Move lines" colspan="2"/>
         </page>
     </notebook>
 </form>"""
@@ -81,8 +72,8 @@ _followup_wizard_all_fields = {
     'partner_ids': {
         'string': "Partners",
         'type': 'many2many',
+        'required': True,
         'relation': 'account_followup.stat',
-        'domain':"[('account_type','=','receivable')]"
     },
     'email_conf': {
         'string': "Send email confirmation",
@@ -92,7 +83,7 @@ _followup_wizard_all_fields = {
         'string' : "Email Subject",
         'type' : "char",
         'size': 64,
-        'default': 'Account Follow-up'
+        'default': 'Invoices Reminder'
         },
     'email_body': {
         'string': "Email body",
@@ -102,18 +93,10 @@ Date : %(date)s
 
 Dear %(partner_name)s,
 
-Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate
-measures in order to carry out this payment in the next 8 days.
+Please find in attachment a reminder of all your unpaid invoices, for a total amount due of:
 
-Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not
-hesitate to contact our accounting departement at (+32).10.68.94.39.
+%(followup_amount).2f %(company_currency)s
 
-Best regards,
-
-%(heading)s
-%(line)s
-
-Total Amount due: %(followup_amount).2f EUR
 
 Thanks,
 --
@@ -126,6 +109,8 @@ Thanks,
 class followup_all_print(wizard.interface):
     def _update_partners(self, cr, uid, data, context):
         to_update = data['form']['to_update']
+        if data['form']['email_conf']:
+            self._sendmail(cr, uid, data, context)
         for id in to_update.keys():
             cr.execute(
                 "UPDATE account_move_line "\
@@ -136,70 +121,78 @@ class followup_all_print(wizard.interface):
         return {}
 
     def _sendmail(self ,cr, uid, data, context):
-        self._update_partners(cr, uid, data, context)
         mail_notsent = ''
         count = 0
-        if data['form']['email_conf']:
-            pool = pooler.get_pool(cr.dbname)
-            data_user = pool.get('res.users').browse(cr,uid,uid)
-            line_obj = pool.get('account_followup.stat')
-            move_lines = line_obj.browse(cr,uid,data['form']['partner_ids'][0][2])
-            partners = []
-            dict_lines = {}
-            for line in move_lines:
-                partners.append(line.name)
-                dict_lines[line.name.id] =line
-            for partner in partners:
-                ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable','payable'])])
-                data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
-                followup_data = dict_lines[partner.id]
-                dest = False
-                if partner.address:
-                    for adr in partner.address:
-                        if adr.type=='contact':
-                            if adr.email:
-                                dest = [adr.email]
-                        if (not dest) and adr.type=='default':
-                            if adr.email:
-                                dest = [adr.email]
-                src = tools.config.options['smtp_user']
-                body=data['form']['email_body']
-                total_amt = followup_data.debit - followup_data.credit
-                move_line = ''
-                subtotal_due = 0.0
-                subtotal_paid = 0.0
-                subtotal_maturity = 0.0
-                balance = 0.0
-                l = '--------------------------------------------------------------------------------------------------------------------------'
-                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
-                for i in data_lines:
-                    maturity = ''
-                    if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
-                        maturity = i.debit - i.credit
-                    subtotal_due = subtotal_due + i.debit
-                    subtotal_paid = subtotal_paid + i.credit
-                    subtotal_maturity = subtotal_maturity + int(maturity)
-                    balance = balance + (i.debit - i.credit)
-                    move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
-                move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
-                move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
-                val = {
-                    'partner_name':partner.name,
-                    'followup_amount':total_amt,
-                    'user_signature':data_user.name,
-                    'company_name':data_user.company_id.name,
-                    'line':move_line,
-                    'heading': head,
-                    'date':time.strftime('%Y-%m-%d')
-                }
-                body = body%val
-                sub = str(data['form']['email_subject'])
-                if dest:
-                    tools.email_send(src,dest,sub,body)
-                    count = count + 1
-                else:
-                    mail_notsent = mail_notsent + partner.name + ','
-        return {'mail_notsent' : str(mail_notsent) , 'mail_sent' : str(count)}
+        pool = pooler.get_pool(cr.dbname)
+        data_user = pool.get('res.users').browse(cr,uid,uid)
+        line_obj = pool.get('account_followup.stat')
+        move_lines = line_obj.browse(cr,uid,data['form']['partner_ids'][0][2])
+        partners = []
+        dict_lines = {}
+        for line in move_lines:
+            partners.append(line.name)
+            dict_lines[line.name.id] =line
+        for partner in partners:
+            ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
+            data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
+            followup_data = dict_lines[partner.id]
+            dest = False
+            if partner.address:
+                for adr in partner.address:
+                    if adr.type=='contact':
+                        if adr.email:
+                            dest = [adr.email]
+                    if (not dest) and adr.type=='default':
+                        if adr.email:
+                            dest = [adr.email]
+            src = tools.config.options['smtp_user']
+            body=data['form']['email_body']
+            total_amt = followup_data.debit - followup_data.credit
+            move_line = ''
+            subtotal_due = 0.0
+            subtotal_paid = 0.0
+            subtotal_maturity = 0.0
+            balance = 0.0
+            l = '--------------------------------------------------------------------------------------------------------------------------'
+            head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
+            for i in data_lines:
+                maturity = ''
+                if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
+                    maturity = i.debit - i.credit
+                subtotal_due = subtotal_due + i.debit
+                subtotal_paid = subtotal_paid + i.credit
+                subtotal_maturity = subtotal_maturity + int(maturity)
+                balance = balance + (i.debit - i.credit)
+                move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
+            move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
+            move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
+            val = {
+                'partner_name':partner.name,
+                'followup_amount':total_amt,
+                'user_signature':data_user.name,
+                'company_name':data_user.company_id.name,
+                'company_currency':data_user.company_id.currency_id.name,
+                'line':move_line,
+                'heading': head,
+                'date':time.strftime('%Y-%m-%d'),
+            }
+            body = body%val
+            sub = str(data['form']['email_subject'])
+            msg = ''
+            if dest:
+                tools.email_send(src,dest,sub,body)
+            else:
+                msg += partner.name + '\n'
+
+            if not msg:
+                msg = _("All emails have been successfully sent.")
+            else:
+                msg = _("Mail not sent to following Partners, Email not available !\n\n") + msg
+        warning = {
+            'title': _('Email Sending Report'),
+            'message': msg,
+        }
+        return {'warning' : warning}
 
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -211,19 +204,13 @@ class followup_all_print(wizard.interface):
             "WHERE (l.reconcile_id IS NULL) "\
                 "AND (a.type='receivable') "\
                 "AND (l.state<>'draft') "\
-                "AND (l.reconcile_id is NULL) "\
-                "AND partner_id is NOT NULL "\
-                "AND a.active "\
+                "AND (l.partner_id is NOT NULL) "\
+                "AND (a.active) "\
             "ORDER BY l.date")
         move_lines = cr.fetchall()
-
         old = None
         fups = {}
-        fup_ids = pool.get('account_followup.followup').search(cr, uid, [])
-        if not fup_ids:
-            raise wizard.except_wizard(_('No Follow up Defined'),
-                _('You must define at least one follow up for your company !'))
-        fup_id = fup_ids[0]
+        fup_id = data['form']['followup_id']
 
         current_date = datetime.date(*time.strptime(data['form']['date'],
             '%Y-%m-%d')[:3])
@@ -246,27 +233,33 @@ class followup_all_print(wizard.interface):
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             if not partner_id:
                 continue
-            if partner_id in partner_list:
-                to_update[str(id)] = fups[followup_line_id][1]
             if followup_line_id not in fups:
                 continue
-            if date_maturity and date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                partner_list.append(partner_id)
-                to_update[str(id)] = fups[followup_line_id][1]
+            if date_maturity:
+                if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
+                    if partner_id not in partner_list:
+                        partner_list.append(partner_id)
+                    to_update[str(id)] = fups[followup_line_id][1]
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                partner_list.append(partner_id)
+                if partner_id not in partner_list:
+                    partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
+
         return {'partner_ids': partner_list, 'to_update': to_update}
 
-    def _get_date(self, cursor, user, data, context):
-        return {'date': time.strftime('%Y-%m-%d')}
+    def _get_screen1_values(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        company_id = pool.get('res.users').browse(cr, uid, uid).company_id.id
+        tmp = pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)])
+        followup = tmp and tmp[0] or False
+        return {'date': time.strftime('%Y-%m-%d'), 'followup_id': followup}
 
     states = {
         'init': {
-            'actions': [_get_date],
+            'actions': [_get_screen1_values],
             'result': {'type': 'form',
-                'arch': _followup_wizard_date_form,
-                'fields': _followup_wizard_date_fields,
+                'arch': _followup_wizard_screen1_form,
+                'fields': _followup_wizard_screen1_fields,
                 'state': [
                     ('end', 'Cancel'),
                     ('next', 'Continue'),
@@ -280,8 +273,7 @@ class followup_all_print(wizard.interface):
                 'fields': _followup_wizard_all_fields,
                 'state': [
                     ('end','Cancel'),
-                    ('print','Print Follow Ups'),
-                    ('sendmail','Send Mail')
+                    ('print','Print Follow Ups & Send Mails'),
                 ]
             },
         },
@@ -290,13 +282,6 @@ class followup_all_print(wizard.interface):
             'result': {'type': 'print',
                 'report':'account_followup.followup.print',
                 'state':'end'},
-        },
-        'sendmail': {
-            'actions': [_sendmail],
-            'result': {'type': 'form',
-                'arch': form,
-                'fields': fields,
-                'state':[('end','Ok')]},
         },
     }
 

@@ -254,8 +254,8 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active'),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True),
-        'date_start': fields.date('Start Date', help="Starting date for validity of this pricelist version."),
-        'date_end': fields.date('End Date', help="Ending date for validity of this pricelist version."),
+        'date_start': fields.date('Start Date', help="Starting date for this pricelist version to be valid."),
+        'date_end': fields.date('End Date', help="Ending date for this pricelist version to be valid."),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -337,9 +337,9 @@ class product_pricelist_item(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
 
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only apply if the partner buys/sells more than this quantity."),
+        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
         'sequence': fields.integer('Sequence', required=True),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode of computation of the price for this rule."),
+        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode for computing the price for this rule."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
@@ -349,11 +349,11 @@ class product_pricelist_item(osv.osv):
             digits=(16, int(config['price_accuracy'])),
             help="Sets the price so that it is a multiple of this value.\n" \
               "Rounding is applied after the discount and before the surcharge.\n" \
-              "To have prices that ends by 9.99, set rounding 10, surcharge -0.01" \
+              "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
             ),
-        'price_min_margin': fields.float('Price Min. Margin',
+        'price_min_margin': fields.float('Min. Price Margin',
             digits=(16, int(config['price_accuracy']))),
-        'price_max_margin': fields.float('Price Max. Margin',
+        'price_max_margin': fields.float('Max. Price Margin',
             digits=(16, int(config['price_accuracy']))),
     }
     def product_id_change(self, cr, uid, ids, product_id, context={}):
