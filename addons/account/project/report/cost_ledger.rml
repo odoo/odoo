@@ -3,30 +3,6 @@
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-      <header>
-			<pageGraphics>
-				<setFont name="Helvetica-Bold" size="9"/>
-
-
-				<!--COL 1-->
-				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawRightString x="20cm" y="28.1cm">Cost Ledger - [[ company.currency_id.name ]]</drawRightString>
-				
-				<!-- Header -->
-				
-				
-				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
-				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
-				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
-
-			    <lineMode width="0.7"/>
-				<lines>1cm 27.7cm 20cm 27.7cm</lines>
-				<setFont name="Helvetica" size="8"/>
-			
-			</pageGraphics>
-		</header>   
     </pageTemplate>
   </template>
   <stylesheet>
@@ -69,29 +45,35 @@
     <blockTableStyle id="Table_Header_Title">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table_Grant_Total">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Grant_Total">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <blockLeftPadding length="13.0" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Account_Detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#b3b3b3" start="0,0" stop="-1,0"/>
-      <blockLeftPadding length="13.0" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Move_Line_Detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="1,1"/>
-      <lineStyle kind="LINEBELOW" colorName="white" start="0,1" stop="-1,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Move_Line_Content">
       <blockAlignment value="LEFT"/>
@@ -113,49 +95,48 @@
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="RIGHT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="9" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Centre_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="9" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_Default_Bold_Right_9" fontName="Helvetica-Bold" fontSize="9.0" leading="9" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_Default_Bold_Right_9_U" fontName="Helvetica-Bold" fontSize="9.0" leading="9" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_Default_Bold_Right_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_Default_Bold_Right_9_U" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_Default_Right_9_U" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_8_Italic" fontName="Times-Italic" fontSize="8.0" leading="5" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_8_Italic_Center" fontName="Times-Italic" fontSize="8.0" leading="5" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_8_italic_Rignt" fontName="Times-Italic" fontSize="8.0" leading="5" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_Italic" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_italic_Rignt" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
-    <!--blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Table_Heading_Content">
+    <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Table_Heading_Content">
       <tr>
-        <td>
-          <para style="terp_default_9">[[ company.name ]]</para>
-        </td>
         <td>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
         </td>
         <td>
-          <para style="terp_header_Right">Cost Ledger-[[ company.currency_id.name ]]</para>
+          <para style="terp_header_Centre">Cost Ledger</para>
+        </td>
+        <td>
+          <para style="terp_header_Right">
+            <font color="white"> </font>
+          </para>
         </td>
       </tr>
-    </blockTable-->
+    </blockTable>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -165,7 +146,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="178.0,178.0,178.0" style="Table_Date_Sub_detail">
+    <blockTable colWidths="161.0,161.0,161.0" style="Table_Date_Sub_detail">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Period from </para>
@@ -178,30 +159,29 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="178.0,178.0,178.0" style="Table_Sub_Content">
+    <blockTable colWidths="161.0,161.0,161.0" style="Table_Sub_Content">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date1'] ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ formatLang(data['form']['date1'],date = True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date2'] ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ formatLang(data['form']['date2'],date = True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <section>
-    <blockTable colWidths="67.0,296.0,59.0,59.0,58.0" style="Table_Header_Title" repeatRows="1">
+    <blockTable colWidths="63.0,249.0,57.0,57.0,57.0" style="Table_Header_Title">
       <tr>
         <td>
-          <para style="terp_tblheader_Details_Centre">Code / Date</para>
+          <para style="terp_tblheader_Details">Date or Code</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">J.C. / Move name</para>
+          <para style="terp_tblheader_Details">J.C. or Move name</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Debit </para>
@@ -213,106 +193,114 @@
           <para style="terp_tblheader_Details_Right">Balance</para>
         </td>
       </tr>
+    </blockTable>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="62.0,250.0,57.0,56.0,57.0" style="Table_Grant_Total">
       <tr>
-      <td>
-      		<blockTable colWidths="62.0,300.0,57.0,57.0,57.0" style="Table_Grant_Total">
-		      <tr>
-		        <td>
-		          <para style="terp_default_Bold_9">Total :</para>
-		        </td>
-		        <td>
-		          <para style="terp_default_Bold_9"><font color="white"> </font></para>
-		        </td>
-		        <td>
-		          <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (sum_debit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
-		        </td>
-		        <td>
-		          <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (sum_credit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
-		        </td>
-		        <td>
-		          <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (sum_balance(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
-		        </td>
-		      </tr>
-		    </blockTable> 
-      </td>
+        <td>
+          <para style="terp_default_Bold_9">Total:</para>
+        </td>
+        <td>
+          <para style="terp_default_Bold_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
+        </td>
+        <td>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
+        </td>
+        <td>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_balance(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
+        </td>
       </tr>
-      <tr>
-      <td>
-      	<para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-      	<blockTable colWidths="55.0,306.0,58.0,57.0,57.0" style="Table_Account_Detail">
-        	<tr>
-	          	<td>
-	            	<para style="terp_default_Bold_9">[[ o.code ]]</para>
-	          	</td>
-	          	<td>
-	            	<para style="terp_default_Bold_9">[[ o.complete_name ]]</para>
-	          	</td>
-	          	<td>
-	            	<para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (account_sum_debit(o.id,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
-	          	</td>
-	          	<td>
-	            	<para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (account_sum_credit(o.id,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
-	          	</td>
-	          	<td>
-	            	<para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % (account_sum_balance(o.id,data['form']['date1'],data['form']['date2']) or 0.0)]]</u></para>
-	          	</td>
-        	</tr>
-        	
-      		<tr>
-      		<td>
-        		<para style="Standard">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
-        		<blockTable colWidths="55.0,300.0,58.0,56.0,57.0" style="Table_Move_Line_Detail">
-		          <tr>
-		            <td>
-		              <para style="terp_default_Bold_9">[[ move_g['code'] ]]</para>
-		            </td>
-		            <td>
-		              <para style="terp_default_Bold_9">[[ move_g['name'] ]]</para>
-		            </td>
-		            <td>
-		              <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % move_g['debit'] ]]</u></para>
-		            </td>
-		            <td>
-		              <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % move_g['credit'] ]]</u></para>
-		            </td>
-		            <td>
-		              <para style="terp_Default_Bold_Right_9_U"><u>[[ '%.2f' % move_g['balance'] ]]</u></para>
-		            </td>
-		          </tr>
-      	  		  <tr>
-      	  		  <td>
-			          <para style="terp_default_9">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
-			          <blockTable colWidths="48.0,299.0,59.0,55.0,58.0" style="Table_Move_Line_Content">
-			            <tr>
-			              <td>
-			                <para style="terp_default_8_Italic_Center">[[ move_a['date'] ]]</para>
-			              </td>
-			              <td>
-			                <para style="terp_default_8_Italic">[[ move_a['cj'] ]] / [[ move_a['name'] ]]</para>
-			              </td>
-			              <td>
-			                <para style="terp_default_8_italic_Rignt">[[ '%.2f' % move_a['debit'] ]]</para>
-			              </td>
-			              <td>
-			                <para style="terp_default_8_italic_Rignt">[[ '%.2f' % move_a['credit'] ]]</para>
-			              </td>
-			              <td>
-			                <para style="terp_default_8_italic_Rignt">[[ '%.2f' % move_a['balance'] ]]</para>
-			              </td>
-			            </tr>
-			          </blockTable> 
-			       </td>
-			       </tr>
-			     </blockTable>
-			   </td>
-			   </tr> 
-			  </blockTable>
-			 </td>
-			 </tr>
-			 <para style="terp_default_8">
-      			<font color="white"> </font>
-    	  	</para>
-		</blockTable>
+    </blockTable>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+      <blockTable colWidths="62.0,249.0,57.0,57.0,57.0" style="Table_Account_Detail">
+        <tr>
+          <td>
+            <para style="terp_default_Bold_9">[[ o.code ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9">[[ o.complete_name ]]</para>
+          </td>
+          <td>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]]</para>
+          </td>
+          <td>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]]</para>
+          </td>
+          <td>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(o.id,data['form']['date1'],data['form']['date2']))]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="terp_default_2">
+        <font color="white"> </font>
+      </para>
+      <section>
+        <para style="Standard">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
+        <blockTable colWidths="62.0,249.0,58.0,56.0,57.0" style="Table_Move_Line_Detail">
+          <tr>
+            <td>
+              <para style="terp_default_Bold_9">[[ move_g['code'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Bold_9">[[ move_g['name'] ]]</para>
+            </td>
+            <td>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['debit']) ]]</para>
+            </td>
+            <td>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['credit']) ]]</para>
+            </td>
+            <td>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['balance']) ]]</para>
+            </td>
+          </tr>
+        </blockTable>
+        <para style="terp_default_2">
+          <font color="white"> </font>
+        </para>
+        <section>
+          <para style="terp_default_9">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
+          <blockTable colWidths="60.0,46.0,204.0,59.0,55.0,58.0" style="Table_Move_Line_Content">
+            <tr>
+              <td>
+                <para style="terp_default_9_Italic">[[ formatLang(move_a['date'],date = True) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9_Italic">[[ move_a['cj'] ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9_Italic">[[ move_a['name'] ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['debit'] )]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['credit']) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['balance']) ]]</para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="terp_default_2">
+            <font color="white"> </font>
+          </para>
+        </section>
+        <para style="terp_default_8">
+          <font color="white"> </font>
+        </para>
+      </section>
     </section>
     <para style="terp_default_8">
       <font color="white"> </font>
