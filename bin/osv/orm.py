@@ -1471,7 +1471,8 @@ class orm(orm_template):
                        "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)), 
                            [self._table, False] + columns)
             for column in cr.dictfetchall():
-                logger.notifyChannel("orm", netsvc.LOG_WARNING, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
+                # TODO display this information only when all modules are loaded
+                logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
                 if column['attnotnull']:
                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
 
