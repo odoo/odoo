@@ -87,8 +87,8 @@ class hr_employee_category(osv.osv):
     
     _columns = {
         'name' : fields.char("Category", size=64, required=True),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent category', select=True),
-        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Childs Categories')
+        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
+        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
     
     def _check_recursion(self, cr, uid, ids):

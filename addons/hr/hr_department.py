@@ -29,7 +29,7 @@ class hr_department(osv.osv):
         'name': fields.char('Department Name', size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=True),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
-        'child_ids': fields.one2many('hr.department', 'parent_id', 'Childs Departments'),
+        'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
         'note': fields.text('Note'),
         'manager_id': fields.many2one('res.users', 'Manager', required=True),
         'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),

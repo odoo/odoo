@@ -101,7 +101,7 @@ class account_account_type(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows to change the displayed amount of the balance in the reports, in order to see positive results instead of negative ones in expenses accounts.'),
+        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
     }
     _defaults = {
         'close_method': lambda *a: 'none',
@@ -267,11 +267,11 @@ class account_account(osv.osv):
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
-        'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
+        'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Child Accounts"),
         'balance': fields.function(__compute, digits=(16,2), method=True, string='Balance', multi='balance'),
         'credit': fields.function(__compute, digits=(16,2), method=True, string='Credit', multi='balance'),
         'debit': fields.function(__compute, digits=(16,2), method=True, string='Debit', multi='balance'),
-        'reconcile': fields.boolean('Reconcile', help="Check this account if the user can make a reconciliation of the entries in this account."),
+        'reconcile': fields.boolean('Reconcile', help="Check this if the user is allowed to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id','tax_id', 'Default Taxes'),
@@ -284,10 +284,10 @@ class account_account(osv.osv):
         'parent_right': fields.integer('Parent Right', select=1),
         'currency_mode': fields.selection([('current','At Date'),('average','Average Rate')], 'Outgoing Currencies Rate',
             help=
-            'This will select how is computed the current currency rate for outgoing transactions. '\
-            'In most countries the legal method is "average" but only a few softwares are able to '\
-            'manage this. So if you import from another software, you may have to use the rate at date. ' \
-            'Incoming transactions, always use the rate at date.', \
+            'This will select how the current currency rate for outgoing transactions is computed. '\
+            'In most countries the legal method is "average" but only a few software systems are able to '\
+            'manage this. So if you import from another software system you may have to use the rate at date. ' \
+            'Incoming transactions always use the rate at date.', \
             required=True),
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
@@ -451,14 +451,14 @@ class account_journal(osv.osv):
         'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
-        'centralisation': fields.boolean('Centralised counterpart', help="Check this box if you want that each entry doesn't create a counterpart but share the same counterpart for each entry of this journal. This is used in fiscal year closing."),
+        'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries'),
-        'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is cheked, the system will try to group the accouting lines when generating them from invoices."),
+        'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
-        'user_id': fields.many2one('res.users', 'User', help="The responsible user of this journal"),
+        'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
-        'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want that new account moves pass through the \'draft\' state and goes direclty to the \'posted state\' without any manual validation.'),
+        'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
         'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
@@ -501,10 +501,10 @@ class account_fiscalyear(osv.osv):
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company',
             help="Keep empty if the fiscal year belongs to several companies."),
-        'date_start': fields.date('Start date', required=True),
-        'date_stop': fields.date('End date', required=True),
+        'date_start': fields.date('Start Date', required=True),
+        'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', redonly=True),
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True),
     }
 
     _defaults = {
@@ -519,7 +519,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error ! The date duration of the Fiscal Year is invalid. ', ['date_stop'])
+        (_check_duration, 'Error ! The duration of the Fiscal Year is invalid. ', ['date_stop'])
     ]
 
     def create_period3(self,cr, uid, ids, context={}):
@@ -565,8 +565,8 @@ class account_period(osv.osv):
         'code': fields.char('Code', size=12),
         'special': fields.boolean('Opening/Closing Period', size=12,
             help="These periods can overlap."),
-        'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
-        'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
+        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
+        'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True)
     }
@@ -595,8 +595,8 @@ class account_period(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error ! The date duration of the Period(s) is invalid. ', ['date_stop']),
-        (_check_year_limit, 'Invalid period ! Some periods overlap or the date duration is not in the limit of the fiscal year. ', ['date_stop'])
+        (_check_duration, 'Error ! The duration of the Period(s) is/are invalid. ', ['date_stop']),
+        (_check_year_limit, 'Invalid period ! Some periods overlap or the date period is not in the scope of the fiscal year. ', ['date_stop'])
     ]
 
     def next(self, cr, uid, period, step, context={}):
@@ -777,10 +777,10 @@ class account_move(osv.osv):
 
     _constraints = [
         (_check_centralisation,
-            'You can not create more than one move per period on centralized journal',
+            'You cannot create more than one move per period on centralized journal',
             ['journal_id']),
         (_check_period_journal,
-            'You can not create entries on different period/journal in the same move',
+            'You cannot create entries on different periods/journals in the same move',
             ['line_id']),
     ]
     def post(self, cr, uid, ids, context=None):
@@ -799,7 +799,7 @@ class account_move(osv.osv):
 
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
         else:
-            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non balanced entry !'))
+            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -808,7 +808,7 @@ class account_move(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         for line in self.browse(cr, uid, ids, context):
             if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should mark the journal to allow canceling entries.'))
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
             cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
         return True
@@ -960,7 +960,7 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                            raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different than the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
+                            raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
             if abs(amount) < 0.0001:
                 if not len(line_draft_ids):
@@ -1024,7 +1024,7 @@ class account_move_reconcile(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Type', size=16, required=True),
-        'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry lines'),
+        'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
     }
@@ -1135,11 +1135,11 @@ class account_tax_code(osv.osv):
         'sum': fields.function(_sum_year, method=True, string="Year Sum"),
         'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
         'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
-        'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
+        'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Child Codes'),
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Sign for parent', required=True),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want that any vat related to this Tax Code appears on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
 
@@ -1193,24 +1193,24 @@ class account_tax(osv.osv):
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
-        'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be used to be displayed on reports"),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax childs. In this case, the evaluation order is important."),
+        'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
+        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
         'active': fields.boolean('Active'),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'),('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True,
-            help="If not applicable (computed through a Python code), the tax do not appears on the invoice."),
-        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developpers to create specific taxes in a custom domain."),
+            help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
+        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax', 'Parent Tax Account', select=True),
-        'child_ids':fields.one2many('account.tax', 'parent_id', 'Childs Tax Account'),
-        'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+        'child_ids':fields.one2many('account.tax', 'parent_id', 'Child Tax Accounts'),
+        'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),
-        'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
+        'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax is given in the partner it only overrides taxes from accounts (or products) in the same group."),
 
         #
         # Fields used for the VAT declaration
@@ -1229,7 +1229,7 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this is the price you use on the product and invoices is including this tax."),
+        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1527,8 +1527,8 @@ class account_model_line(osv.osv):
     _description = "Account Model Entries"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from the lowest sequences to the higher ones"),
-        'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity on entries"),
+        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones"),
+        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity on entries"),
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
 
@@ -1565,11 +1565,11 @@ class account_subscription(osv.osv):
     _description = "Account Subscription"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'ref': fields.char('Ref.', size=16),
+        'ref': fields.char('Ref', size=16),
         'model_id': fields.many2one('account.model', 'Model', required=True),
 
-        'date_start': fields.date('Starting date', required=True),
-        'period_total': fields.integer('Number of period', required=True),
+        'date_start': fields.date('Start Date', required=True),
+        'period_total': fields.integer('Number of Periods', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
@@ -1670,8 +1670,8 @@ class account_config_wizard(osv.osv_memory):
     _columns = {
         'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
         'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
-        'date1': fields.date('Starting Date', required=True),
-        'date2': fields.date('Ending Date', required=True),
+        'date1': fields.date('Start Date', required=True),
+        'date2': fields.date('End Date', required=True),
         'period':fields.selection([('month','Month'),('3months','3 Months')], 'Periods', required=True),
         'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
     }
@@ -1758,7 +1758,7 @@ class account_account_template(osv.osv):
             ('closed','Closed'),
             ], 'Internal Type', required=True,),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
-        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
+        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
         'parent_id': fields.many2one('account.account.template','Parent Account Template', ondelete='cascade'),
@@ -1811,9 +1811,9 @@ class account_tax_code_template(osv.osv):
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
-        'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
+        'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign for parent', required=True),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want that any vat related to this Tax Code appears on invoices"),
+        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
     _defaults = {
@@ -1875,7 +1875,7 @@ class account_tax_template(osv.osv):
     _columns = {
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'name': fields.char('Tax Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax children. In this case, the evaluation order is important."),
+        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
@@ -1883,7 +1883,7 @@ class account_tax_template(osv.osv):
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
-        'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+        'child_depend':fields.boolean('Tax on Children', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),
@@ -1903,9 +1903,9 @@ class account_tax_template(osv.osv):
         'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
-        'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
+        'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name', size=32),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use in')
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use In')
     }
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1951,15 +1951,15 @@ class account_fiscal_position_template(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Accounts Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Taxes Mapping')
+        'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
+        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
     }
 
 account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
     _name = 'account.fiscal.position.tax.template'
-    _description = 'Fiscal Position Template Taxes Mapping'
+    _description = 'Fiscal Position Template Tax Mapping'
     _rec_name = 'position_id'
 
     _columns = {
@@ -1972,7 +1972,7 @@ account_fiscal_position_tax_template()
 
 class account_fiscal_position_account_template(osv.osv):
     _name = 'account.fiscal.position.account.template'
-    _description = 'Fiscal Position Template Accounts Mapping'
+    _description = 'Fiscal Position Template Account Mapping'
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
@@ -1987,15 +1987,15 @@ account_fiscal_position_account_template()
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
     Create a new account chart for a company.
-    Wizards ask:
+    Wizards ask for:
         * a company
         * an account chart template
         * a number of digits for formatting code of non-view accounts
-        * a list of bank account owned by the company
+        * a list of bank accounts owned by the company
     Then, the wizard:
-        * generates all accounts from the template and assign them to the right company
+        * generates all accounts from the template and assigns them to the right company
         * generates all taxes and tax codes, changing account assignations
-        * generates all accounting properties and assign correctly
+        * generates all accounting properties and assigns them correctly
     """
     _name='wizard.multi.charts.accounts'
 

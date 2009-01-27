@@ -91,7 +91,7 @@ sale_journal()
 
 class picking_journal(osv.osv):
     _name = 'sale_journal.picking.journal'
-    _description = 'Packings Journal'
+    _description = 'Packing Journal'
     _columns = {
         'name': fields.char('Journal', size=64, required=True),
         'code': fields.char('Code', size=16, required=True),

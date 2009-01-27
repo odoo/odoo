@@ -32,9 +32,9 @@ class sale_shop(osv.osv):
     _name = "sale.shop"
     _description = "Sale Shop"
     _columns = {
-        'name': fields.char('Shop name',size=64, required=True),
+        'name': fields.char('Shop Name',size=64, required=True),
         'payment_default_id': fields.many2one('account.payment.term','Default Payment Term',required=True),
-        'payment_account_id': fields.many2many('account.account','sale_shop_account','shop_id','account_id','Payment accounts'),
+        'payment_account_id': fields.many2many('account.account','sale_shop_account','shop_id','account_id','Payment Accounts'),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
@@ -182,18 +182,18 @@ class sale_order(osv.osv):
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Origin', size=64),
-        'client_order_ref': fields.char('Customer Ref.',size=64),
+        'client_order_ref': fields.char('Customer Ref',size=64),
 
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
-            ('manual','Manual in progress'),
-            ('progress','In progress'),
+            ('manual','Manual In Progress'),
+            ('progress','In Progress'),
             ('shipping_except','Shipping Exception'),
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
             ('cancel','Cancel')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to be on the date 'Date Ordered'.", select=True),
+            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'.", select=True),
         'date_order':fields.date('Date Ordered', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 
         'user_id':fields.many2one('res.users', 'Salesman', states={'draft':[('readonly',False)]}, select=True),
@@ -204,24 +204,24 @@ class sale_order(osv.osv):
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
         'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')],
-            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shippings or not."""),
+            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
             ('prepaid','Payment Before Delivery'),
             ('manual','Shipping & Manual Invoice'),
             ('postpaid','Invoice on Order After Delivery'),
-            ('picking','Invoice from the packings'),
+            ('picking','Invoice from the Packing'),
         ], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]},
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
   - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
-  - The 'Invoice from the packings' choice is used to create an invoice during the packing process."""),
+  - The 'Invoice from the packing' choice is used to create an invoice during the packing process."""),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'project_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly', False)]}),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
-        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packings', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
+        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packing', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped':fields.boolean('Picked', readonly=True),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
@@ -444,7 +444,7 @@ class sale_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Could not cancel sale order !'),
-                        _('You must first cancel all packings attached to this sale order.'))
+                        _('You must first cancel all packing attached to this sale order.'))
             for r in self.read(cr,uid,ids,['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service = netsvc.LocalService("workflow")
@@ -721,12 +721,12 @@ class sale_order_line(osv.osv):
         'address_allotment_id' : fields.many2one('res.partner.address', 'Allotment Partner'),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
-        'product_uos_qty': fields.float('Quantity (UOS)'),
-        'product_uos': fields.many2one('product.uom', 'Product UOS'),
+        'product_uos_qty': fields.float('Quantity (UoS)'),
+        'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16,2)),
-        'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number packages'),
+        'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight' : fields.float('Weight'),
         'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled'),('exception','Exception')], 'Status', required=True, readonly=True),

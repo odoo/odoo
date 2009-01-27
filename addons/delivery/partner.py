@@ -32,7 +32,7 @@ class res_partner(osv.osv):
           string="Delivery Method", 
           method=True,
           view_load=True,
-          help="This delivery method will be used when invoicing from packings."),
+          help="This delivery method will be used when invoicing from packing."),
     }
 res_partner()
 

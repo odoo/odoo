@@ -32,7 +32,7 @@ and requests. It manages key tasks such as communication,
 identification, prioritization, assignment, resolution and notification.
 
 This module provide screens like: jobs hiring process, leads, business
-opportunities, fund raising trackings, support & helpdesk, calendar of
+opportunities, fund raising tracking, support & helpdesk, calendar of
 meetings, eso.
 """,
     'author': 'Tiny',
