@@ -26,7 +26,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-This module can be used by developpers to automatically publish their modules
+This module can be used by developers to automatically publish their modules
 in a few click to the following websites:
 * http://OpenERP.com, section module
 * http://TinyForge.org

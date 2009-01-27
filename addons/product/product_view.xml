@@ -130,11 +130,11 @@
                                     <field name="qty" select="1"/>
                                     <field name="ul"/>
                                     <field name="weight_ul"/>
-                                    <separator colspan="4" string="Paletization"/>
+                                    <separator colspan="4" string="Palletization"/>
                                     <field name="ul_qty"/>
                                     <field name="rows"/>
                                     <field name="weight"/>
-                                    <separator colspan="4" string="Palette Dimension"/>
+                                    <separator colspan="4" string="Pallet Dimension"/>
                                     <field name="height"/>
                                     <field name="width"/>
                                     <field name="length"/>
@@ -295,7 +295,7 @@
             <field name="model">product.ul</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Packagings">
+                <form string="Packaging">
                     <field name="name"/>
                     <field name="type"/>
                 </form>
@@ -306,14 +306,14 @@
             <field name="model">product.ul</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Packagings">
+                <tree string="Packaging">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                 </tree>
             </field>
         </record>
         <record id="product_ul_form_action" model="ir.actions.act_window">
-            <field name="name">Packagings</field>
+            <field name="name">Packaging</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
@@ -349,11 +349,11 @@
                     <field name="qty" select="1"/>
                     <field name="ul"/>
                     <field name="weight_ul"/>
-                    <separator colspan="4" string="Paletization"/>
+                    <separator colspan="4" string="Palletization"/>
                     <field name="ul_qty"/>
                     <field name="rows"/>
                     <field name="weight"/>
-                    <separator colspan="4" string="Palette Dimension"/>
+                    <separator colspan="4" string="Pallet Dimension"/>
                     <field name="height"/>
                     <field name="width"/>
                     <field name="length"/>

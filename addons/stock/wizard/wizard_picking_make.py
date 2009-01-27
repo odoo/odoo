@@ -32,7 +32,7 @@ ARCH = '''<?xml version="1.0"?>
 
 FIELDS = {
     'pickings': {
-        'string': 'Packings',
+        'string': 'Packing',
         'type': 'one2many',
         'relation': 'stock.picking',
         'readonly': True,
