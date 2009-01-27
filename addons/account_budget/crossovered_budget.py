@@ -159,7 +159,7 @@ class crossovered_budget_lines(osv.osv):
     def _prac_amt(self, cr, uid, ids,context={}):
         res = {}
         for line in self.browse(cr, uid, ids):
-            acc_ids = ','.join([str(x.id) for x in line.general_budget_id.account_ids])
+            acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv('Error!',"The General Budget '" + str(line.general_budget_id.name) + "' has no Accounts!" )
             date_to = line.date_to
@@ -168,11 +168,13 @@ class crossovered_budget_lines(osv.osv):
                 date_from = context['wizard_date_from']
             if context.has_key('wizard_date_to'):
                 date_to = context['wizard_date_to']
-            cr.execute("select sum(amount) from account_analytic_line where account_id=%s and (date between to_date(%s,'yyyy-mm-dd') and to_date(%s,'yyyy-mm-dd')) and general_account_id in (%s)", (line.analytic_account_id.id,date_from,date_to,acc_ids))
-            result=cr.fetchone()[0]
-            if result==None:
-                result=0.00
-            res[line.id]=result
+            cr.execute("select sum(amount) from account_analytic_line where account_id=%%s and (date "
+                       "between to_date(%%s,'yyyy-mm-dd') and to_date(%%s,'yyyy-mm-dd')) and "
+                       "general_account_id in (%s)" % ",".join(['%s']*len(acc_ids)), (line.analytic_account_id.id,date_from,date_to,acc_ids))
+            result = cr.fetchone()[0]
+            if result is None:
+                result = 0.00
+            res[line.id] = result
         return res
 
     def _prac(self, cr, uid, ids,name,args,context):
