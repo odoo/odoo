@@ -211,11 +211,11 @@ class RstDoc(object):
                            "",
                            write_field(field),
                            "",
-                           ".. index::",
-                           "  single: %s field" % (field[0]),
-                           ".. ",
-                            "",
-                           "",
+                           #".. index::",
+                           #"  single: %s field" % (field[0]),
+                           #".. ",
+                           #"",
+                           #"",
                           ]
                     slo.extend(slf)
                 sl.extend(slo)
