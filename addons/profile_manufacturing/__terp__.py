@@ -27,7 +27,7 @@
     'category': 'Profile',
     'description': """Profile for manufacturing industries""",
     'author': 'Tiny',
-    'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin'],
+    'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin', 'sale_delivery_report'],
     'update_xml': ['security/ir.model.access.csv', 'profile_manufacturing.xml'],
     'demo_xml': [],
     'installable': True,
