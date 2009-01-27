@@ -1382,8 +1382,15 @@ class orm(orm_template):
             for id in childs:
                 pos2 = browse_rec(id[0], pos2)
             cr.execute('update '+self._table+' set parent_left=%s, parent_right=%s where id=%s', (pos,pos2,root))
+            print 'Updating', self._table, pos,pos2,root
             return pos2+1
-        browse_rec(None)
+        query = 'SELECT id FROM '+self._table+' WHERE '+self._parent_name+' IS NULL'
+        if self._parent_order:
+            query += ' order by '+self._parent_order
+        pos = 0
+        cr.execute(query)
+        for (root,) in cr.fetchall():
+            pos = browse_rec(root, pos)
         return True
 
     def _update_store(self, cr, f, k):

@@ -490,16 +490,13 @@ class module(osv.osv):
 
     def create(self, cr, uid, data, context={}):
         id = super(module, self).create(cr, uid, data, context)
-        print 'Create', {
-            'name': 'module_name_translation',
-            'model': 'ir.module.module',
-            'res_id': id,
-        }
-        self.pool.get('ir.model.data').create(cr, uid, {
-            'name': 'module_name_translation',
-            'model': 'ir.module.module',
-            'res_id': id,
-        })
+        if data.get('name'):
+            self.pool.get('ir.model.data').create(cr, uid, {
+                'name': 'module_name_translation',
+                'model': 'ir.module.module',
+                'res_id': id,
+                'module': data['name']
+            })
         return id
 module()
 
