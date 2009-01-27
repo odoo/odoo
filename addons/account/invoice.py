@@ -82,7 +82,7 @@ class account_invoice(osv.osv):
         tt = type2journal.get(type_inv, 'sale')
         result = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=',tt)], context=context)
         if not result:
-            raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal of type '%s' !") % (tt,))
+            raise osv.except_osv(_('No Analytic Journal !'),_("You must define an analytic journal of type '%s' !") % (tt,))
         return result[0]
 
     def _get_type(self, cr, uid, context=None):
@@ -221,7 +221,7 @@ class account_invoice(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "\
-                "The payment term may compute several due dates: 50% now, 50% in one month."),
+                "The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation date."),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
@@ -295,7 +295,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -489,7 +489,7 @@ class account_invoice(osv.osv):
                 continue
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
-                raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
+                raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe actual total does not match the computed total.'))
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
@@ -511,7 +511,7 @@ class account_invoice(osv.osv):
                     key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
                     tax_key.append(key)
                     if not key in compute_taxes:
-                        raise osv.except_osv(_('Warning !'), _('Global taxes defined, but not in invoice lines !'))
+                        raise osv.except_osv(_('Warning !'), _('Global taxes defined, but are not in invoice lines !'))
                     base = compute_taxes[key]['base']
                     if abs(base - tax.base) > inv.company_id.currency_id.rounding:
                         raise osv.except_osv(_('Warning !'), _('Tax base different !\nClick on compute to update tax base'))
@@ -1085,9 +1085,9 @@ class account_invoice_tax(osv.osv):
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence'),
 
-        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The case of the tax declaration."),
+        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,2)),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The case of the tax declaration."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
     }
     def base_change(self, cr, uid, ids, base):

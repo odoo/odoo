@@ -29,8 +29,8 @@ class account_fiscal_position(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Position', size=64, translate=True, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Accounts Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Taxes Mapping')
+        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
+        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping')
     }
 
     def map_tax(self, cr, uid, fposition_id, taxes, context={}):
@@ -139,7 +139,7 @@ class res_partner(osv.osv):
         return [('id','in',map(lambda x:x[0], res))]
 
     _columns = {
-        'credit': fields.function(_credit_debit_get, fnct_search=_credit_search, method=True, string='Total Receivable', multi='dc', help="Total amount this customer owns you."),
+        'credit': fields.function(_credit_debit_get, fnct_search=_credit_search, method=True, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, method=True, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
         'property_account_payable': fields.property(
@@ -150,7 +150,7 @@ class res_partner(osv.osv):
             method=True,
             view_load=True,
             domain="[('type', '=', 'payable')]",
-            help="This account will be used, instead of the default one, as the payable account for the current partner",
+            help="This account will be used instead of the default one as the payable account for the current partner",
             required=True),
         'property_account_receivable': fields.property(
             'account.account',
@@ -160,7 +160,7 @@ class res_partner(osv.osv):
             method=True,
             view_load=True,
             domain="[('type', '=', 'receivable')]",
-            help="This account will be used, instead of the default one, as the receivable account for the current partner",
+            help="This account will be used instead of the default one as the receivable account for the current partner",
             required=True),
         'property_account_position': fields.property(
             'account.fiscal.position',
@@ -178,7 +178,7 @@ class res_partner(osv.osv):
             string ='Payment Term',
             method=True,
             view_load=True,
-            help="This payment term will be used, instead of the default one, for the current partner"),
+            help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
     }

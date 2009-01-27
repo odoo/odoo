@@ -24,7 +24,7 @@ from osv import fields,osv
 
 class report_sale_journal_invoice_type_stats(osv.osv):
     _name = "sale_journal.invoice.type.stats"
-    _description = "Stats on packings by invoice method"
+    _description = "Stats on packing by invoice method"
     _auto = False
     _columns = {
         'name': fields.date('Month', readonly=True),
