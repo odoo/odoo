@@ -2,12 +2,26 @@
 <openerp>
     <data>
         
+        <record id="view_account_followup_followup_line_tree" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.tree</field>
+            <field name="model">account_followup.followup.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-Up Lines">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="delay"/>
+                    <field name="start"/>
+                </tree>
+            </field>
+        </record>
+        
         <record id="view_account_followup_followup_line_form" model="ir.ui.view">
             <field name="name">account_followup.followup.line.form</field>
             <field name="model">account_followup.followup.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up lines">
+                <form string="Follow-Up Lines">
                     <field name="sequence" select="1"/>
                     <field name="name" select="1"/>
                     <field name="delay" select="1"/>
@@ -25,12 +39,6 @@
                     <label string="%%(heading)s: Move line header" colspan="2"/>
                     <label string="%%(line)s: Account Move lines" colspan="2"/>
                 </form>
-                <tree string="Follow-Up lines">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                    <field name="delay"/>
-                    <field name="start"/>
-                </tree>
             </field>
         </record>
         
