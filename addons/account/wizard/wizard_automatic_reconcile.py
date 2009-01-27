@@ -219,7 +219,7 @@ def _reconcile(self, cr, uid, data, context):
     power = form['power']
     reconciled = unreconciled = 0
     if not form['account_ids'][0][2]:
-        form['account_ids'][0][2] = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid, [('reconcile','=',True)])
+        raise wizard.except_wizard(_('UserError'), _('You must select accounts to reconcile'))
     for account_id in form['account_ids'][0][2]:
     
         # reconcile automatically all transactions from partners whose balance is 0
@@ -231,7 +231,7 @@ def _reconcile(self, cr, uid, data, context):
             "AND state <> 'draft' " \
             "GROUP BY partner_id " \
             "HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0",
-            (account_id, max_amount))
+            (account_id, max_amount or 0.0))
         partner_ids = [id for (id,) in cr.fetchall()]
 
         for partner_id in partner_ids:

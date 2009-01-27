@@ -262,10 +262,11 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field name="view_id"/>
+                            <field name="currency"/>
                             <field name="sequence_id"/>
+                            <field name="invoice_sequence_id"/>
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="currency"/>
                             <field name="user_id" groups="base.group_extended"/>
                             <newline/>
                             <field name="centralisation"/>
@@ -273,16 +274,6 @@
 
                             <field name="update_posted"/>
                             <field name="entry_posted"/>
-                            <field name="fy_seq_id" colspan="4" widget="one2many_list" >
-								<tree string="Invoice Sequences">
-									<field name="fiscalyear_id"/>
-									<field name="sequence_id"/>
-								</tree>
-								<form string="Invoice Sequences">
-									<field name="fiscalyear_id"/>
-									<field name="sequence_id"/>
-								</form>
-							</field>
                         </page>
                         <page string="Entry Controls">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
@@ -741,7 +732,7 @@
                             <field name="state" select="2"/>
                         </page>
                         <page string="Analytic Lines">
-                            <field colspan="4" name="analytic_lines" nolabel="1"/>
+                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                         </page>
                     </notebook>
                 </form>
@@ -976,7 +967,7 @@
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
                                     <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id}" name="reconcile_id"/>
+                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="date"/>

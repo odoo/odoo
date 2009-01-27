@@ -484,7 +484,23 @@
                             <field colspan="4" name="move_created_ids" nolabel="1"/>
                         </page>
                         <page string="Work Orders">
-                            <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="workcenter_lines" nolabel="1">
+                                <form string="Production Workcenters">
+                                    <field colspan="4" name="name" select="1"/>
+                                    <field colspan="4" name="workcenter_id" select="1"/>
+                                    <field name="sequence"/>
+                                    <field name="cycle"/>
+                                    <field name="hour"/>
+                                </form>
+                                <tree string="Production Workcenters">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="workcenter_id"/>
+                                    <field name="cycle"/>
+                                    <field name="hour"/>
+                                </tree>
+                            </field>
+
                         </page>
                         <page string="Extra Information">
                             <field name="priority" groups="base.group_extended"/>
@@ -560,35 +576,6 @@
             <field name="view_mode">form,tree,calendar,graph,gantt</field>
         </record>
         <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
-
-        <record id="mrp_production_workcenter_form_view" model="ir.ui.view">
-            <field name="name">mrp.production.workcenter.line.form</field>
-            <field name="model">mrp.production.workcenter.line</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Production Workcenters">
-                    <field colspan="4" name="name" select="1"/>
-                    <field colspan="4" name="workcenter_id" select="1"/>
-                    <field name="sequence"/>
-                    <field name="cycle"/>
-                    <field name="hour"/>
-                </form>
-            </field>
-        </record>
-        <record id="mrp_production_workcenter_tree_view" model="ir.ui.view">
-            <field name="name">mrp.production.workcenter.line.tree</field>
-            <field name="model">mrp.production.workcenter.line</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Production Workcenters">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                    <field name="workcenter_id"/>
-                    <field name="cycle"/>
-                    <field name="hour"/>
-                </tree>
-            </field>
-        </record>
 
         <record id="mrp_production_lot_form_view" model="ir.ui.view">
             <field name="name">mrp.production.lot.line.form</field>

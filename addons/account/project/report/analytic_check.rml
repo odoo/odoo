@@ -141,22 +141,22 @@
         </td>
         <td></td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % general_debit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( general_debit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % general_credit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( general_credit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % analytic_debit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( analytic_debit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % analytic_credit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( analytic_credit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % delta_debit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( delta_debit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ '%.2f' % delta_credit(data['form']['date1'],data['form']['date2']) ]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang( delta_credit(data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
       </tr>
       <tr>
@@ -167,22 +167,22 @@
           <para style="terp_default_8">[[ acc['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_8">[[ '%.2f' % acc['gen_debit'] ]]</para>
+          <para style="terp_default_Right_8">[[ formatLang( acc['gen_debit']) ]]</para>
         </td>
         <td>
-           <para style="terp_default_Right_8">[[ '%.2f' % acc['gen_credit'] ]]</para>
+           <para style="terp_default_Right_8">[[ formatLang( acc['gen_credit']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_8">[[ '%.2f' % acc['ana_debit'] ]]</para>
+          <para style="terp_default_Right_8">[[ formatLang( acc['ana_debit']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_8">[[ '%.2f' % acc['ana_credit'] ]]</para>
+          <para style="terp_default_Right_8">[[ formatLang( acc['ana_credit']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_8">[[ '%.2f' % acc['delta_debit'] ]]</para>
+          <para style="terp_default_Right_8">[[ formatLang( acc['delta_debit']) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_8">[[ '%.2f' % acc['delta_credit'] ]]</para>
+          <para style="terp_default_Right_8">[[ formatLang( acc['delta_credit']) ]]</para>
         </td>
       </tr>
     </blockTable>

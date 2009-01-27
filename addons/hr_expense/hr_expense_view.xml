@@ -40,16 +40,18 @@
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
-                    <notebook>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="employee_id" select="1"/>
+                        <field name="id" select="2"/>
+                        <field name="date" select="1"/>
+                        <field name="amount"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Expense Sheet">
-                            <field name="name" select="1"/>
-                            <field name="id" select="2"/>
-                            <field name="employee_id" select="1"/>
-                            <field name="date" select="1"/>
                             <field name="ref" select="2"/>
                             <newline/>
-                            <field name="amount"/>
-                            <field name="currency_id"/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
                                     <field name="product_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>

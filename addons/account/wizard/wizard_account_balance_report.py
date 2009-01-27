@@ -35,17 +35,17 @@ period_form = '''<?xml version="1.0"?>
     <separator string="Filters" colspan="4"/>
     <field name="state" required="True"/>
     <newline/>
-    <group attrs="{'invisible':[('state','=','byperiod'),('state','=','none')]}" colspan="4">
-        <separator string="Date Filter" colspan="4"/>
-        <field name="date_from"/>
-        <field name="date_to"/>
+    <group attrs="{'invisible':[('state','=','none')]}" colspan="4">
+        <group attrs="{'invisible':[('state','=','byperiod')]}" colspan="4">
+            <separator string="Date Filter" colspan="4"/>
+            <field name="date_from"/>
+            <field name="date_to"/>
+        </group>
+        <group attrs="{'invisible':[('state','=','bydate')]}" colspan="4">
+            <separator string="Filter on Periods" colspan="4"/>
+            <field name="periods" colspan="4" nolabel="1"/>
+        </group>
     </group>
-    <group attrs="{'invisible':[('state','=','bydate'),('state','=','none')]}" colspan="4">
-        <separator string="Filter on Periods" colspan="4"/>
-        <field name="periods" colspan="4" nolabel="1"/>
-
-    </group>
-
 </form>'''
 
 period_fields = {

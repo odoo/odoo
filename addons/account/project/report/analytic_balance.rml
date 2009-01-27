@@ -128,16 +128,16 @@
           </td>
           <td></td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ sum_debit(objects,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ sum_credit(objects,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ sum_balance(objects,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_balance(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ sum_quantity(objects,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_quantity(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
         </tr>
             
@@ -153,16 +153,16 @@
                   <para style="terp_default_8_bold">[[ o.complete_name ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  move_sum_debit(o.id,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  move_sum_credit(o.id,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  move_sum_balance(o.id,data['form']['date1'],data['form']['date2']) or '0.0' ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_balance(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  move_sum_quantity(o.id,data['form']['date1'],data['form']['date2']) or '0.0']]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_quantity(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
                 </td>
               </tr>
               <tr>
@@ -174,16 +174,16 @@
                   <para style="terp_default_8">[[ move_g['name']  ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_Right_8">[[ move_g['debit'] or '0.0']]</para>
+                  <para style="terp_default_Right_8">[[ formatLang(move_g['debit'])]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_Right_8">[[ move_g['credit'] or '0.0']]</para>
+                  <para style="terp_default_Right_8">[[ formatLang(move_g['credit']) ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_Right_8">[[ move_g['balance'] or '0.0']]</para>
+                  <para style="terp_default_Right_8">[[ formatLang(move_g['balance'])]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_Right_8">[[ (move_g['quantity'] or '0.0') ]]</para>
+                  <para style="terp_default_Right_8">[[ formatLang(move_g['quantity']) ]]</para>
                 </td>
               </tr>
             </blockTable>

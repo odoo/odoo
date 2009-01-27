@@ -274,14 +274,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cases">
+                    <field colspan="4" name="name" select="1"/>
+                    <field colspan="3" name="section_id"/>
+                    <field name="date" select="1"/>
+                    <field name="date_deadline" select="2"/>
+                    <field colspan="3" name="priority"/>
                     <notebook>
                         <page string="General">
                             <group col="8" colspan="4">
-                                <field colspan="4" name="name" select="1"/>
-                                <field colspan="3" name="section_id"/>
-                                <field name="date" select="1"/>
-                                <field name="date_deadline" select="2"/>
-                                <field colspan="3" name="priority"/>
                                 <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" select="1"/>
                                 <field colspan="3" name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" select="2"/>
                                 <newline/>

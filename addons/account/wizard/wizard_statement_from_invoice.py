@@ -98,6 +98,7 @@ def _populate_statement(obj, cursor, user, data, context):
         #     ctx['date'] = line.date_maturity 
         # else:
         ctx['date'] = line_date
+        amount = 0.0
         if line.amount_currency:
             amount = currency_obj.compute(cursor, user, line.currency_id.id,
                 statement.currency.id, line.amount_currency, context=ctx)

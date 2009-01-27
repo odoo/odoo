@@ -132,17 +132,17 @@
         </td>
         <td></td>
         <td>
-          <para style="terp_tblheader_Details_Right"><u>[[ '%.2f' % (sum_debit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
+          <para style="terp_tblheader_Details_Right"><u>[[ formatLang(sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
 
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right"><u>[[ '%.2f' % (sum_credit(objects,data['form']['date1'],data['form']['date2']) or 0.0)]]</u></para>
+          <para style="terp_tblheader_Details_Right"><u>[[ formatLang(sum_credit(objects,data['form']['date1'],data['form']['date2']))]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right"><u>[[ '%.2f' % (sum_balance(objects,data['form']['date1'],data['form']['date2']) or 0.0)]]</u></para>
+          <para style="terp_tblheader_Details_Right"><u>[[ formatLang(sum_balance(objects,data['form']['date1'],data['form']['date2']))]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right"><u>[[ '%.2f' % (sum_quantity(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</u></para>
+          <para style="terp_tblheader_Details_Right"><u>[[ formatLang(sum_quantity(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
         </td>
       </tr>
 
@@ -160,16 +160,16 @@
                 <para style="terp_default_8"><b>[[ move_g['name'] ]]</b></para>
               </td>
               <td>
-                <para style="terp_default_Right_8"><b><u>[[ '%.2f' % (move_g['debit'] or 0.0)]]</u></b></para>
+                <para style="terp_default_Right_8"><b><u>[[ formatLang(move_g['debit'])]]</u></b></para>
               </td>
               <td>
-                <para style="terp_default_Right_8"><b><u>[[ '%.2f' % (move_g['credit'] or 0.0)]]</u></b></para>
+                <para style="terp_default_Right_8"><b><u>[[formatLang(move_g['credit'])]]</u></b></para>
               </td>
               <td>
-                <para style="terp_default_Right_8"><b><u>[[ '%.2f' % (move_g['balance'] or 0.0)]]</u></b></para>
+                <para style="terp_default_Right_8"><b><u>[[ formatLang(move_g['balance'])]]</u></b></para>
               </td>
               <td>
-                <para style="terp_default_Right_8"><b><u>[[ '%.2f' % (move_g['quantity'] or 0.0) ]]</u></b></para>
+                <para style="terp_default_Right_8"><b><u>[[formatLang(move_g['quantity']) ]]</u></b></para>
               </td>
             </tr>
             <tr>
@@ -182,16 +182,16 @@
 
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ '%.2f' % move_a['debit'] ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(move_a['debit']) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ '%.2f' % move_a['credit'] ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(move_a['credit']) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ '%.2f' % move_a['balance'] ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(move_a['balance']) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ '%.2f' % (move_a['quantity'] or 0.0) ]]</para>
+                <para style="terp_default_Right_8">[[ formatLang(move_a['quantity'] or 0.00) ]]</para>
               </td>
             </tr>
           </blockTable>

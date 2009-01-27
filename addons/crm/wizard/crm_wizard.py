@@ -48,22 +48,23 @@ section_fields = {
 }
 
 menu_lst = [
-    (1,'My ',"[('section_id','=',SECTION_ID),('user_id','=',uid)]", 0, 'form,tree'),
-    (2,'My Unclosed ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','done')]", 1, 'tree,form'),
-    (5,'My Open ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','open')]", 2, 'tree,form'),
-    (6,'My Pending ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','pending')]", 2, 'tree,form'),
-    (7,'My Draft ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','draft')]", 2, 'tree,form'),
-    (3,'My Late ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 1, 'tree,form'),
+    (1,'My ',"[('section_id','=',SECTION_ID),('user_id','=',uid)]", 0, 'tree,form,calendar'),
+    (2,'My Unclosed ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','done')]", 1, 'tree,form,calendar'),
+    (5,'My Open ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','open')]", 2, 'tree,form,calendar'),
+    (6,'My Pending ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','pending')]", 2, 'tree,form,calendar'),
+    (7,'My Draft ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','draft')]", 2, 'tree,form,calendar'),
+    (3,'My Late ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 1, 'tree,form,calendar'),
     (4,'My Canceled ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('state','=','cancel')]", 1, 'no'),
-    (8,'All ',"[('section_id','=',SECTION_ID),]", 0, 'tree,form'),
+    (8,'All ',"[('section_id','=',SECTION_ID),]", 0, 'tree,form,calendar'),
     (9,'All Unassigned ',"[('section_id','=',SECTION_ID),('user_id','=',False)]", 8, 'no'),
     (10,'All Late ',"[('section_id','=',SECTION_ID),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 8, 'no'),
     (11,'All Canceled ',"[('section_id','=',SECTION_ID),('state','=','cancel')]", 8, 'no'),
-    (12,'All Unclosed ',"[('section_id','=',SECTION_ID),('state','<>','cancel'), ('state','<>','done')]", 8, 'tree,form'),
-    (13,'All Open ',"[('section_id','=',SECTION_ID),('state','=','open')]", 12, 'tree,form'),
-    (14,'All Pending ',"[('section_id','=',SECTION_ID),('state','=','pending')]", 12, 'tree,form'),
-    (15,'All Draft ',"[('section_id','=',SECTION_ID),('state','=','draft')]", 12, 'tree,form'),
-    (16,'All Unclosed and Unassigned ',"[('section_id','=',SECTION_ID),('user_id','=',False),('state','<>','cancel'),('state','<>','done')]", 12, 'no')
+    (12,'All Unclosed ',"[('section_id','=',SECTION_ID),('state','<>','cancel'), ('state','<>','done')]", 8, 'tree,form,calendar'),
+    (13,'All Open ',"[('section_id','=',SECTION_ID),('state','=','open')]", 12, 'tree,form,calendar'),
+    (14,'All Pending ',"[('section_id','=',SECTION_ID),('state','=','pending')]", 12, 'tree,form,calendar'),
+    (15,'All Draft ',"[('section_id','=',SECTION_ID),('state','=','draft')]", 12, 'tree,form,calendar'),
+    (16,'All Unclosed and Unassigned ',"[('section_id','=',SECTION_ID),('user_id','=',False),('state','<>','cancel'),('state','<>','done')]", 12, 'no'),
+    (17,'New ',"[('section_id','=',SECTION_ID)]", 0, 'form,tree,calendar'),
 ]
 
 section_menu_form = '''<?xml version="1.0"?>
@@ -86,7 +87,7 @@ for menu in menu_lst:
             ('no',"Don't Create"),
             ('form,tree','New Form'),
             ('form,tree,calendar','New With Calendar'),
-            ('tree,form','List'),
+            ('tree,form,calendar','List'),
             ('tree,form,calendar','List With Calendar'),
             ('calendar,tree,form','Calendar'),
         ],
