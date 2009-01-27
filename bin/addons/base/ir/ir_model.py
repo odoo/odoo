@@ -40,7 +40,7 @@ class ir_model(osv.osv):
     _rec_name = 'name'
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
-        'model': fields.char('Object Name', size=64, required=True, select=1),
+        'model': fields.char('Object', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manually Created',readonly=True),
@@ -96,11 +96,6 @@ class ir_model_grid(osv.osv):
     _table = 'ir_model'
     _inherit = 'ir.model'
     _description = "Objects Security Grid"
-    #_rec_name = 'name'
-    #_columns = {
-    #    'name': fields.char('Object', size=64),
-    #    'model': fields.char('Object Name', size=64),
-    #}
 
     def create(self, cr, uid, vals, context=None):
         raise osv.except_osv('Error !', 'You cannot add an entry to this view !')

@@ -233,6 +233,7 @@ act_window_view()
 
 class act_wizard(osv.osv):
     _name = 'ir.actions.wizard'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_wizard'
     _sequence = 'ir_actions_id_seq'
     _columns = {
@@ -669,12 +670,8 @@ actions_server()
 
 class act_window_close(osv.osv):
     _name = 'ir.actions.act_window_close'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
-    _sequence = 'ir_actions_id_seq'
-    _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
-    }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window_close',
     }
