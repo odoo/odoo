@@ -655,6 +655,7 @@ class account_invoice(osv.osv):
             'date_maturity': x.get('date_maturity', False),
             'partner_id':part,
             'name':x['name'][:64],
+            'date': date,
             'debit':x['price']>0 and x['price'],
             'credit':x['price']<0 and -x['price'],
             'account_id':x['account_id'],
