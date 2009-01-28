@@ -223,6 +223,10 @@ class Partner(osv.osv):
         list_partner = []
         for data in data_inv:
             list_partner.append(data.partner.id)
+        ids2 = list_partner
+        while ids2:
+            ids2 = self.pool.get('res.partner').search(cr, uid, [('associate_member','in',ids2)], context=context)
+            list_partner += ids2
         return list_partner
 
     def _get_invoice_partner(self, cr, uid, ids, context=None):
@@ -230,6 +234,10 @@ class Partner(osv.osv):
         list_partner = []
         for data in data_inv:
             list_partner.append(data.partner_id.id)
+        ids2 = list_partner
+        while ids2:
+            ids2 = self.pool.get('res.partner').search(cr, uid, [('associate_member','in',ids2)], context=context)
+            list_partner += ids2
         return list_partner
 
     def _membership_state(self, cr, uid, ids, name, args, context=None):
