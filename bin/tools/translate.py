@@ -567,7 +567,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                                           'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
                                           'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
                                             })
-        locale.resetlocale(locale.LC_ALL)
+        try:
+            locale.resetlocale(locale.LC_ALL)
+        except:
+            pass
         lang_ids = lang_obj.search(cr, uid, [])
         langs = lang_obj.read(cr, uid, lang_ids)
         ls = map(lambda x: (x['code'],x['name']), langs)
