@@ -185,17 +185,17 @@
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state" select="2"/>
-                                <button name="order_confirm" states="draft" string="Confirm Order"/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement"/>
-                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice"/>
-                                <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
-                                <button name="cancel" states="draft" string="Cancel Order"/>
-                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
+                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-execute"/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-execute"/>
+                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-go-forward"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-execute"/>
+                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-go-forward"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-execute"/>
+                                <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
+                                <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other data">
