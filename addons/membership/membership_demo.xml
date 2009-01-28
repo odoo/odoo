@@ -22,31 +22,6 @@
 		<field name="type">service</field>
 	</record>
 
-<!-- Demo data for paid member -->
-	<record id="paid_member_0" model="res.partner">
-		<field name="name">Milieu Defensie - Member</field>
-	</record>
-
-<!-- Demo data for invoiced member -->
-	<record id="inv_member_0" model="res.partner">
-		<field name="name">MSF - PI</field>
-	</record>
-
-<!-- Demo data for cancel member -->
-	<record id="cancel_member_0" model="res.partner">
-		<field name="name">WWF - C</field>
-		<field name="membership_cancel">2008-01-01</field>
-	</record>
-
-<!-- Demo data for waiting member -->
-	<record id="waiting_member_0" model="res.partner">
-		<field name="name">Organisation A</field>
-	</record>
-
-<!-- Demo data for res.partner.address -->
-	<record id="res_partner_address_0" model="res.partner.address">
-		<field name="partner_id" ref="membership.paid_member_0"/>
-	</record>
 
 <!-- Demo data for Accounts -->
 	<record id="account_account_membershipaccount0" model="account.account">
@@ -65,8 +40,8 @@
 		<field name="account_id" ref="account_account_membershipaccount0"/>
 		<field name="company_id" ref="base.main_company"/>
 		<field name="currency_id" ref="base.EUR"/>
-		<field name="address_invoice_id" ref="res_partner_address_0"/>
-		<field name="partner_id" ref="membership.paid_member_0"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_8"/>
+		<field name="partner_id" ref="base.res_partner_agrolait"/>
 		<field name="date_invoice">2008-05-09</field>
 		<field name="journal_id" ref="account.sales_journal"/>
 		<field name="state">paid</field>
@@ -76,8 +51,8 @@
 		<field name="account_id" ref="account_account_membershipaccount0"/>
 		<field name="company_id" ref="base.main_company"/>
 		<field name="currency_id" ref="base.EUR"/>
-		<field name="address_invoice_id" ref="res_partner_address_0"/>
-		<field name="partner_id" ref="membership.inv_member_0"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_9"/>
+		<field name="partner_id" ref="base.res_partner_2"/>
 		<field name="date_invoice">2008-05-09</field>
 		<field name="journal_id" ref="account.sales_journal"/>
 		<field name="state">open</field>
@@ -87,8 +62,8 @@
 		<field name="account_id" ref="account_account_membershipaccount0"/>
 		<field name="company_id" ref="base.main_company"/>
 		<field name="currency_id" ref="base.EUR"/>
-		<field name="address_invoice_id" ref="res_partner_address_0"/>
-		<field name="partner_id" ref="membership.cancel_member_0"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_zen"/>
+		<field name="partner_id" ref="base.res_partner_3"/>
 		<field name="date_invoice">2008-05-09</field>
 		<field name="journal_id" ref="account.sales_journal"/>
 		<field name="state">cancel</field>
@@ -98,8 +73,8 @@
 		<field name="account_id" ref="account_account_membershipaccount0"/>
 		<field name="company_id" ref="base.main_company"/>
 		<field name="currency_id" ref="base.EUR"/>
-		<field name="address_invoice_id" ref="res_partner_address_0"/>
-		<field name="partner_id" ref="membership.waiting_member_0"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_14"/>
+		<field name="partner_id" ref="base.res_partner_15"/>
 		<field name="date_invoice">2008-05-09</field>
 		<field name="journal_id" ref="account.sales_journal"/>
 		<field name="state">draft</field>
@@ -150,14 +125,14 @@
 		<field name="date_to">2009-08-01</field>
 		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct0" />
 		<field name="state">paid</field>
-		<field name="partner" ref="paid_member_0"/>
+		<field name="partner" ref="base.res_partner_agrolait"/>
 	</record>
 	<record id="member_line_2" model="membership.membership_line">
 		<field name="date_from">2008-01-01</field>
 		<field name="date_to">2009-08-01</field>
 		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct1" />
 		<field name="state">invoiced</field>
-		<field name="partner" ref="inv_member_0"/>
+		<field name="partner" ref="base.res_partner_2"/>
 	</record>
 	<record id="member_line_3" model="membership.membership_line">
 		<field name="date_from">2008-01-01</field>
@@ -165,35 +140,32 @@
 		<field name="date_cancel">2008-08-05</field>
 		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct2" />
 		<field name="state">canceled</field>
-		<field name="partner" ref="cancel_member_0"/>
+		<field name="partner" ref="base.res_partner_3"/>
 	</record>
 	<record id="member_line_3" model="membership.membership_line">
 		<field name="date_from">2008-01-01</field>
 		<field name="date_to">2009-08-01</field>
 		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct3" />
 		<field name="state">waiting</field>
-		<field name="partner" ref="waiting_member_0"/>
+		<field name="partner" ref="base.res_partner_15"/>
+	</record>
+
+<!-- Demo data for cancel member -->
+	<record id="base.res_partner_3" model="res.partner">
+		<field name="membership_cancel">2009-01-01</field>
 	</record>
 
 <!-- Demo data for free member -->
-	<record id="free_member_0" model="res.partner">
-		<field name="name">Oasis - Free</field>
+	<record id="base.res_partner_desertic_hispafuentes" model="res.partner">
 		<field name="free_member">True</field>
 	</record>
 
 <!-- Demo data for associate member -->
-	<record id="associate_member_0" model="res.partner">
-		<field name="name">Silicium NGO - Associate</field>
-		<field name="associate_member" ref="paid_member_0"/>
+	<record id="base.res_partner_9" model="res.partner">
+		<field name="associate_member" ref="base.res_partner_agrolait"/>
 	</record>
-	<record id="associate_member_1" model="res.partner">
-		<field name="name">Partner - Associate</field>
-		<field name="associate_member" ref="paid_member_0"/>
-	</record>
-
-<!-- Demo data for non member -->
-	<record id="non_member_0" model="res.partner">
-		<field name="name">MSF - Switzerland</field>
+	<record id="base.res_partner_8" model="res.partner">
+		<field name="associate_member" ref="base.res_partner_agrolait"/>
 	</record>
 
 	</data>

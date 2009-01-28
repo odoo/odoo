@@ -44,102 +44,97 @@ STATE_PRIOR = {
         'paid' : 7
         }
 
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-    _columns = {
-        'associate_member': fields.many2one('res.partner', 'Associate member'),
-                }
-res_partner()
 
-REQUETE = '''SELECT partner, state FROM (
-SELECT members.partner AS partner,
-CASE WHEN MAX(members.state) = 0 THEN 'none'
-ELSE CASE WHEN MAX(members.state) = 1 THEN 'canceled'
-ELSE CASE WHEN MAX(members.state) = 2 THEN 'old'
-ELSE CASE WHEN MAX(members.state) = 3 THEN 'waiting'
-ELSE CASE WHEN MAX(members.state) = 4 THEN 'invoiced'
-ELSE CASE WHEN MAX(members.state) = 6 THEN 'free'
-ELSE CASE WHEN MAX(members.state) = 7 THEN 'paid'
-END END END END END END END END
-    AS state FROM (
-SELECT partner,
-    CASE WHEN MAX(inv_digit.state) = 4 THEN 7
-    ELSE CASE WHEN MAX(inv_digit.state) = 3 THEN 4
-    ELSE CASE WHEN MAX(inv_digit.state) = 2 THEN 3
-    ELSE CASE WHEN MAX(inv_digit.state) = 1 THEN 1
-END END END END
-AS state
-FROM (
-    SELECT p.id as partner,
-    CASE WHEN ai.state = 'paid' THEN 4
-    ELSE CASE WHEN ai.state = 'open' THEN 3
-    ELSE CASE WHEN ai.state = 'proforma' THEN 2
-    ELSE CASE WHEN ai.state = 'draft' THEN 2
-    ELSE CASE WHEN ai.state = 'cancel' THEN 1
-END END END END END
-AS state
-FROM res_partner p
-JOIN account_invoice ai ON (
-    p.id = ai.partner_id
-)
-JOIN account_invoice_line ail ON (
-    ail.invoice_id = ai.id
-)
-JOIN membership_membership_line ml ON (
-    ml.account_invoice_line  = ail.id
-)
-WHERE ml.date_from <= '%s'
-AND ml.date_to >= '%s'
-GROUP BY
-p.id,
-ai.state
-    )
-    AS inv_digit
-    GROUP by partner
-UNION
-SELECT p.id AS partner,
-    CASE WHEN  p.free_member THEN 6
-    ELSE CASE WHEN p.associate_member IN (
-        SELECT ai.partner_id FROM account_invoice ai JOIN
-        account_invoice_line ail ON (ail.invoice_id = ai.id AND ai.state = 'paid')
-        JOIN membership_membership_line ml ON (ml.account_invoice_line = ail.id)
-        WHERE ml.date_from <= '%s'
-        AND ml.date_to >= '%s'
-    )
-    THEN 5
-END END
-AS state
-FROM res_partner p
-WHERE p.free_member
-OR p.associate_member > 0
-UNION
-SELECT p.id as partner,
-    MAX(CASE WHEN ai.state = 'paid' THEN 2
-    ELSE 0
-    END)
-AS state
-FROM res_partner p
-JOIN account_invoice ai ON (
-    p.id = ai.partner_id
-)
-JOIN account_invoice_line ail ON (
-    ail.invoice_id = ai.id
-)
-JOIN membership_membership_line ml ON (
-    ml.account_invoice_line  = ail.id
-)
-WHERE ml.date_from < '%s'
-AND ml.date_to < '%s'
-AND ml.date_from <= ml.date_to
-GROUP BY
-p.id
-)
-AS members
-GROUP BY members.partner
-)
-AS final
-%s
-'''
+
+#~ REQUETE = '''SELECT partner, state FROM (
+#~ SELECT members.partner AS partner,
+#~ CASE WHEN MAX(members.state) = 0 THEN 'none'
+#~ ELSE CASE WHEN MAX(members.state) = 1 THEN 'canceled'
+#~ ELSE CASE WHEN MAX(members.state) = 2 THEN 'old'
+#~ ELSE CASE WHEN MAX(members.state) = 3 THEN 'waiting'
+#~ ELSE CASE WHEN MAX(members.state) = 4 THEN 'invoiced'
+#~ ELSE CASE WHEN MAX(members.state) = 6 THEN 'free'
+#~ ELSE CASE WHEN MAX(members.state) = 7 THEN 'paid'
+#~ END END END END END END END END
+    #~ AS state FROM (
+#~ SELECT partner,
+    #~ CASE WHEN MAX(inv_digit.state) = 4 THEN 7
+    #~ ELSE CASE WHEN MAX(inv_digit.state) = 3 THEN 4
+    #~ ELSE CASE WHEN MAX(inv_digit.state) = 2 THEN 3
+    #~ ELSE CASE WHEN MAX(inv_digit.state) = 1 THEN 1
+#~ END END END END
+#~ AS state
+#~ FROM (
+    #~ SELECT p.id as partner,
+    #~ CASE WHEN ai.state = 'paid' THEN 4
+    #~ ELSE CASE WHEN ai.state = 'open' THEN 3
+    #~ ELSE CASE WHEN ai.state = 'proforma' THEN 2
+    #~ ELSE CASE WHEN ai.state = 'draft' THEN 2
+    #~ ELSE CASE WHEN ai.state = 'cancel' THEN 1
+#~ END END END END END
+#~ AS state
+#~ FROM res_partner p
+#~ JOIN account_invoice ai ON (
+    #~ p.id = ai.partner_id
+#~ )
+#~ JOIN account_invoice_line ail ON (
+    #~ ail.invoice_id = ai.id
+#~ )
+#~ JOIN membership_membership_line ml ON (
+    #~ ml.account_invoice_line  = ail.id
+#~ )
+#~ WHERE ml.date_from <= '%s'
+#~ AND ml.date_to >= '%s'
+#~ GROUP BY
+#~ p.id,
+#~ ai.state
+    #~ )
+    #~ AS inv_digit
+    #~ GROUP by partner
+#~ UNION
+#~ SELECT p.id AS partner,
+    #~ CASE WHEN  p.free_member THEN 6
+    #~ ELSE CASE WHEN p.associate_member IN (
+        #~ SELECT ai.partner_id FROM account_invoice ai JOIN
+        #~ account_invoice_line ail ON (ail.invoice_id = ai.id AND ai.state = 'paid')
+        #~ JOIN membership_membership_line ml ON (ml.account_invoice_line = ail.id)
+        #~ WHERE ml.date_from <= '%s'
+        #~ AND ml.date_to >= '%s'
+    #~ )
+    #~ THEN 5
+#~ END END
+#~ AS state
+#~ FROM res_partner p
+#~ WHERE p.free_member
+#~ OR p.associate_member > 0
+#~ UNION
+#~ SELECT p.id as partner,
+    #~ MAX(CASE WHEN ai.state = 'paid' THEN 2
+    #~ ELSE 0
+    #~ END)
+#~ AS state
+#~ FROM res_partner p
+#~ JOIN account_invoice ai ON (
+    #~ p.id = ai.partner_id
+#~ )
+#~ JOIN account_invoice_line ail ON (
+    #~ ail.invoice_id = ai.id
+#~ )
+#~ JOIN membership_membership_line ml ON (
+    #~ ml.account_invoice_line  = ail.id
+#~ )
+#~ WHERE ml.date_from < '%s'
+#~ AND ml.date_to < '%s'
+#~ AND ml.date_from <= ml.date_to
+#~ GROUP BY
+#~ p.id
+#~ )
+#~ AS members
+#~ GROUP BY members.partner
+#~ )
+#~ AS final
+#~ %s
+#~ '''
 
 
 class membership_line(osv.osv):
@@ -214,13 +209,14 @@ class membership_line(osv.osv):
     _order = 'id desc'
     _constraints = [
             (_check_membership_date, 'Error, this membership product is out of date', [])
-            ]
+    ]
 
 membership_line()
 
 
 class Partner(osv.osv):
     '''Partner'''
+    _inherit = 'res.partner'
 
     def _get_partner_id(self, cr, uid, ids, context=None):
         data_inv = self.pool.get('membership.membership_line').browse(cr, uid, ids, context)
@@ -285,23 +281,16 @@ class Partner(osv.osv):
             if partner_data.free_member and s!=0:
                 res[id] = 'free'
             if partner_data.associate_member:
+                associate_partners_list = []
+                query="SELECT DISTINCT associate_member FROM res_partner"
+                cr.execute(query)
+                for p in cr.fetchall():
+                    if p != partner_data.id:
+                        associate_partners_list.append(p)
+                if associate_partners_list != []:
+                    self._membership_state(cr, uid, associate_partners_list, name, args, context)
                 res[id] = partner_data.associate_member.membership_state
         return res
-
-#no more need becaz of new functionality store attribut on function field
-#   def _membership_state_search(self, cr, uid, obj, name, args):
-#       '''Search on membership state'''
-#
-#       today = time.strftime('%Y-%m-%d')
-#       clause = 'WHERE '
-#       for i in range(len(args)):
-#           if i!=0:
-#               clause += 'OR '
-#           clause += 'state '+args[i][1]+" '"+args[i][2]+"' "
-#       cr.execute(REQUETE % (today, today, today, today, today, today, clause))
-#       ids=[x[0] for x in cr.fetchall()]
-#
-#       return [('id', 'in', ids)]
 
     def _membership_start(self, cr, uid, ids, name, args, context=None):
         '''Return the start date of membership'''
@@ -320,25 +309,6 @@ class Partner(osv.osv):
             else:
                 res[partner.id] = False
         return res
-
-#    def _membership_start_search(self, cr, uid, obj, name, args):
-#        '''Search on membership start date'''
-#        if not len(args):
-#            return []
-#        where = ' AND '.join(['date_from '+x[1]+' \''+str(x[2])+'\''
-#            for x in args])
-#        cr.execute('SELECT partner, MIN(date_from) \
-#                FROM ( \
-#                    SELECT partner, MIN(date_from) AS date_from \
-#                    FROM membership_membership_line \
-#                    GROUP BY partner \
-#                ) AS foo \
-#                WHERE '+where+' \
-#                GROUP BY partner')
-#        res = cr.fetchall()
-#        if not res:
-#            return [('id', '=', '0')]
-#        return [('id', 'in', [x[0] for x in res])]
 
     def _membership_stop(self, cr, uid, ids, name, args, context=None):
         '''Return the stop date of membership'''
@@ -359,25 +329,6 @@ class Partner(osv.osv):
             else:
                 res[partner.id] = False
         return res
-#
-#    def _membership_stop_search(self, cr, uid, obj, name, args):
-#        '''Search on membership stop date'''
-#        if not len(args):
-#            return []
-#        where = ' AND '.join(['date_to '+x[1]+' \''+str(x[2])+'\''
-#            for x in args])
-#        cr.execute('SELECT partner, MAX(date_to) \
-#                FROM ( \
-#                    SELECT partner, MAX(date_to) AS date_to \
-#                    FROM membership_membership_line \
-#                    GROUP BY partner \
-#                ) AS foo \
-#                WHERE '+where+' \
-#                GROUP BY partner')
-#        res = cr.fetchall()
-#        if not res:
-#            return [('id', '=', '0')]
-#        return [('id', 'in', [x[0] for x in res])]
 
     def _membership_cancel(self, cr, uid, ids, name, args, context=None):
         '''Return the cancel date of membership'''
@@ -393,28 +344,6 @@ class Partner(osv.osv):
                 res[partner_id] = False
         return res
 
-#    def _membership_cancel_search(self, cr, uid, obj, name, args):
-#        '''Search on membership cancel date'''
-#        if not len(args):
-#            return []
-#        where = ' AND '.join(['date_cancel '+x[1]+' \''+str(x[2])+'\''
-#            for x in args])
-#        cr.execute('SELECT partner, MIN(date_cancel) \
-#                FROM ( \
-#                    SELECT partner, MIN(date_cancel) AS date_cancel \
-#                    FROM membership_membership_line \
-#                    GROUP BY partner \
-#                ) AS foo \
-#                WHERE '+where+' \
-#                GROUP BY partner')
-#        res = cr.fetchall()
-#        if not res:
-#            return [('id', '=', '0')]
-#        return [('id', 'in', [x[0] for x in res])]
-
-
-
-    _inherit = 'res.partner'
     def _get_partners(self, cr, uid, ids, context={}):
         ids2 = ids
         while ids2:
@@ -423,44 +352,68 @@ class Partner(osv.osv):
         return ids
 
     _columns = {
-        'member_lines': fields.one2many('membership.membership_line', 'partner',
-            'Membership'),
-        'membership_amount': fields.float('Membership amount', digites=(16, 2),
-            help='The price negociated by the partner'),
-#       'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
-#           type='selection', selection=STATE, fnct_search=_membership_state_search),
-        'membership_state': fields.function(_membership_state, method=True, string='Current membership state',
-            type='selection',selection=STATE,store={'account.invoice':(_get_invoice_partner,['state'], 10),
-                                                    'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(_get_partners, ['free_member'], 10)}),
-#       'associate_member': fields.many2one('res.partner', 'Associate member'),
+        'associate_member': fields.many2one('res.partner', 'Associate member'),
+        'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
         'free_member': fields.boolean('Free member'),
-#        'membership_start': fields.function(_membership_start, method=True,
-#            string='Start membership date', type='date',
-#            fnct_search=_membership_start_search),
-        'membership_start': fields.function(_membership_start, method=True,
-            string='Start membership date', type='date',store={'account.invoice':(_get_invoice_partner,['state'], 10),
-                                                    'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
-#        'membership_stop': fields.function(_membership_stop, method=True,
-#            string='Stop membership date', type='date',
-#            fnct_search=_membership_stop_search),
-        'membership_stop': fields.function(_membership_stop, method=True,
-            string='Stop membership date', type='date',store={'account.invoice':(_get_invoice_partner,['state'], 10),
-                                                    'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
-#        'membership_cancel': fields.function(_membership_cancel, method=True,
-#            string='Cancel membership date', type='date',
-#            fnct_search=_membership_cancel_search),
-        'membership_cancel': fields.function(_membership_cancel, method=True,
-            string='Cancel membership date', type='date',store={'account.invoice':(_get_invoice_partner,['state'], 10),
-                                                    'membership.membership_line':(_get_partner_id,['state'], 10),
-                                                    'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)}),
+        'membership_amount': fields.float(
+                    'Membership amount', digites=(16, 2), 
+                    help='The price negociated by the partner'),
+        'membership_state': fields.function(
+                    _membership_state, method = True, 
+                    string = 'Current membership state', type = 'selection',
+                    selection = STATE ,store = {
+                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'membership.membership_line':(_get_partner_id,['state'], 10),
+                        'res.partner':(_get_partners, ['free_member'], 10)
+                        }
+                    ),
+        'membership_start': fields.function(
+                    _membership_start, method=True,
+                    string = 'Start membership date', type = 'date',
+                    store = {
+                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'membership.membership_line':(_get_partner_id,['state'], 10),
+                        'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)
+                        }
+                    ),
+        'membership_stop': fields.function(
+                    _membership_stop, method = True, 
+                    string = 'Stop membership date', type = 'date', 
+                    store = {
+                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'membership.membership_line':(_get_partner_id,['state'], 10),
+                        'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)
+                        }
+                    ),
+
+        'membership_cancel': fields.function(
+                    _membership_cancel, method = True,
+                    string = 'Cancel membership date', type='date',
+                    store = {
+                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'membership.membership_line':(_get_partner_id,['state'], 10),
+                        'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)
+                        }
+                    ),
     }
     _defaults = {
         'free_member': lambda *a: False,
         'membership_cancel' : lambda *d : False,
     }
+
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct associate_member from res_partner where id in ('+','.join(map(str,ids))+')')
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
+    ]
 
 Partner()
 
@@ -525,36 +478,6 @@ class Invoice(osv.osv):
                         'account_invoice_line': line.id,
                         })
         return result
-
-#    def action_move_create(self, cr, uid, ids, context=None):
-#        '''Create membership.membership_line if the product is for membership'''
-#        if context is None:
-#            context = {}
-#        member_line_obj = self.pool.get('membership.membership_line')
-#        partner_obj = self.pool.get('res.partner')
-#        for invoice in self.browse(cr, uid, ids):
-#
-#            # fetch already existing member lines
-#            former_mlines = member_line_obj.search(cr,uid,
-#                    [('account_invoice_line','in',
-#                        [ l.id for l in invoice.invoice_line])], context)
-#            # empty them :
-#            if former_mlines:
-#                member_line_obj.write(cr,uid,former_mlines, {'account_invoice_line':False}, context)
-#
-#            for line in invoice.invoice_line:
-#                if line.product_id and line.product_id.membership:
-#                    date_from = line.product_id.membership_date_from
-#                    date_to  = line.product_id.membership_date_to
-#                    if invoice.date_invoice > date_from and invoice.date_invoice < date_to:
-#                        date_from = invoice.date_invoice
-#                    line_id = member_line_obj.create(cr, uid, {
-#                        'partner': invoice.partner_id.id,
-#                        'date_from': date_from,
-#                        'date_to': date_to,
-#                        'account_invoice_line': line.id,
-#                        })
-#        return super(Invoice, self).action_move_create(cr, uid, ids, context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
