@@ -47,7 +47,8 @@ Credits: Sistheo Zeekom CrysaLEAD
         "l10n_fr_pcg_account_report.xml",
         "l10n_fr_pcg_report.xml",
         "l10n_fr_pcg_wizard.xml",
-        "l10n_fr_pcg_view.xml"
+        "l10n_fr_pcg_view.xml",
+        "security/ir.model.access.csv",
     ],
     "demo_xml" : [],
     "certificate" : "435321693876313629",
