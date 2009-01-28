@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:52:53+0000\n"
-"PO-Revision-Date: 2009-01-23 13:52:53+0000\n"
+"POT-Creation-Date: 2009-01-28 00:43:35+0000\n"
+"PO-Revision-Date: 2009-01-28 00:43:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,23 +28,18 @@ msgid "Select a PDF File"
 msgstr ""
 
 #. module: account_report
-#: selection:account.report.report,type:0
-msgid "Fiscal statement"
-msgstr ""
-
-#. module: account_report
 #: view:account.report.report:0
 msgid "Operators:"
 msgstr ""
 
 #. module: account_report
-#: help:account.report.report,disp_graph:0
-msgid "If the field is set to True,information will be printed as a Graph; as an array otherwise."
+#: field:account.report.report,parent_id:0
+msgid "Parent"
 msgstr ""
 
 #. module: account_report
-#: field:account.report.report,parent_id:0
-msgid "Parent"
+#: field:account.report.report,disp_graph:0
+msgid "Display As Graph"
 msgstr ""
 
 #. module: account_report
@@ -55,6 +50,11 @@ msgstr ""
 #. module: account_report
 #: selection:account.report.report,type:0
 msgid "Others"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
 msgstr ""
 
 #. module: account_report
@@ -100,11 +100,6 @@ msgid "Select the PDF file on which Indicators will be printed."
 msgstr ""
 
 #. module: account_report
-#: field:account.report.report,child_ids:0
-msgid "Childs"
-msgstr ""
-
-#. module: account_report
 #: view:account.report.report:0
 msgid "> Goodness Indicator Limit:"
 msgstr ""
@@ -142,6 +137,11 @@ msgstr ""
 #. module: account_report
 #: wizard_button:print.indicators,init,next:0
 msgid "Next"
+msgstr ""
+
+#. module: account_report
+#: model:ir.module.module,shortdesc:account_report.module_meta_information
+msgid "Reporting for accounting"
 msgstr ""
 
 #. module: account_report
@@ -188,13 +188,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_report
-#: wizard_field:print.indicators,init,select_base:0
-msgid "Choose Criteria"
+#: help:account.report.report,badness_limit:0
+msgid "This Value sets the limit of badness."
 msgstr ""
 
 #. module: account_report
-#: help:account.report.report,disp_tree:0
-msgid "When the indicators will be printed, if one indicator is set with this field to True, then it will display one more graph with all its children in tree"
+#: wizard_field:print.indicators,init,select_base:0
+msgid "Choose Criteria"
 msgstr ""
 
 #. module: account_report
@@ -210,11 +210,6 @@ msgstr ""
 #. module: account_report
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
-msgstr ""
-
-#. module: account_report
-#: help:account.report.report,badness_limit:0
-msgid "This Value depicts the limit of badness."
 msgstr ""
 
 #. module: account_report
@@ -234,12 +229,6 @@ msgid "Note"
 msgstr ""
 
 #. module: account_report
-#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
-#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
-msgid "Others reportings"
-msgstr ""
-
-#. module: account_report
 #: rml:accounting.report:0
 #: rml:print.indicators:0
 msgid "Currency:"
@@ -248,6 +237,11 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,status:0
 msgid "Status"
+msgstr ""
+
+#. module: account_report
+#: help:account.report.report,disp_tree:0
+msgid "When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree"
 msgstr ""
 
 #. module: account_report
@@ -271,8 +265,8 @@ msgid "Display Tree"
 msgstr ""
 
 #. module: account_report
-#: field:account.report.report,disp_graph:0
-msgid "Display as a Graph"
+#: selection:print.indicators,init,select_base:0
+msgid "Based On Fiscal Years"
 msgstr ""
 
 #. module: account_report
@@ -286,19 +280,8 @@ msgid "Account Balance:"
 msgstr ""
 
 #. module: account_report
-#: help:account.report.report,goodness_limit:0
-msgid "This Value depicts the limit of goodness."
-msgstr ""
-
-#. module: account_report
 #: rml:print.indicators:0
 msgid "Expression :"
-msgstr ""
-
-#. module: account_report
-#: model:ir.actions.act_window,name:account_report.account_report_history_record
-#: model:ir.ui.menu,name:account_report.menu_account_report_history_record
-msgid "All Indicators History"
 msgstr ""
 
 #. module: account_report
@@ -356,8 +339,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
+#: field:account.report.report,child_ids:0
+msgid "Children"
 msgstr ""
 
 #. module: account_report
@@ -366,8 +349,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: account_report
-#: selection:print.indicators,init,select_base:0
-msgid "Based On Fiscal Years"
+#: help:account.report.report,goodness_limit:0
+msgid "This Value sets the limit of goodness."
 msgstr ""
 
 #. module: account_report
@@ -408,6 +391,12 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,goodness_limit:0
 msgid "Goodness Indicator Limit"
+msgstr ""
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
+msgid "Other reports"
 msgstr ""
 
 #. module: account_report
@@ -500,6 +489,11 @@ msgid "Indicators -"
 msgstr ""
 
 #. module: account_report
+#: help:account.report.report,disp_graph:0
+msgid "If the field is set to True, information will be printed as a Graph, otherwise as an array."
+msgstr ""
+
+#. module: account_report
 #: view:account.report.report:0
 msgid "Return value for status"
 msgstr ""
@@ -517,5 +511,18 @@ msgstr ""
 #. module: account_report
 #: rml:print.indicators:0
 msgid "1cm 27.7cm 20cm 27.7cm"
+msgstr ""
+
+#. module: account_report
+#: model:ir.module.module,description:account_report.module_meta_information
+msgid "Financial and accounting reporting\n"
+"    Fiscal statements\n"
+"    Indicators\n"
+"    "
+msgstr ""
+
+#. module: account_report
+#: selection:account.report.report,type:0
+msgid "Fiscal Statement"
 msgstr ""
 

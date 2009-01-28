@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:01:51+0000\n"
-"PO-Revision-Date: 2009-01-23 14:01:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:47:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:47:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,11 @@ msgstr "Movimenti"
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Data di scadenza"
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Account Entry Line"
+msgstr ""
 
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
@@ -249,6 +254,11 @@ msgid "Created"
 msgstr "Creato"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Seleziona le fatture da pagare"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Totale corrente"
@@ -264,15 +274,9 @@ msgid "Communication Type"
 msgstr "Tipo di comunicazione"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicazione"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -309,6 +313,12 @@ msgstr "Importo del pagamento nella valuta del Partner"
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Bozza"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Partner"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -429,9 +439,9 @@ msgid "Done"
 msgstr "Fatto"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Seleziona le fatture da pagare"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicazione"
 
 #. module: account_payment
 #: view:payment.order:0

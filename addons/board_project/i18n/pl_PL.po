@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:04:52+0000\n"
-"PO-Revision-Date: 2009-01-23 14:04:52+0000\n"
+"POT-Creation-Date: 2009-01-28 00:48:56+0000\n"
+"PO-Revision-Date: 2009-01-28 00:48:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,7 @@ msgstr ""
 
 #. module: board_project
 #: view:board.board:0
-msgid "My Deadlines"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
-msgid "User's timesheets"
+msgid "My project's planning"
 msgstr ""
 
 #. module: board_project
@@ -32,20 +27,20 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: board_project
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.act_my_project
+msgid "My projects"
+msgstr ""
+
+#. module: board_project
+#: model:ir.actions.act_window,name:board_project.action_view_task_tree_deadline
+msgid "My Task's Deadlines"
+msgstr ""
+
+#. module: board_project
 #: view:project.task:0
 msgid "My Tasks"
 msgstr "Moje zadania"
-
-#. module: board_project
-#: model:ir.actions.act_window,name:board_project.open_board_project_manager
-#: model:ir.ui.menu,name:board_project.menu_board_project_manager
-msgid "Project Manager Dashboard"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
-msgid "My project's planning"
-msgstr ""
 
 #. module: board_project
 #: view:board.board:0
@@ -54,28 +49,24 @@ msgid "Public Notes"
 msgstr ""
 
 #. module: board_project
+#: model:ir.actions.act_window,name:board_project.open_board_project
+#: model:ir.ui.menu,name:board_project.menu_board_project
+msgid "Project Dashboard"
+msgstr ""
+
+#. module: board_project
+#: model:ir.module.module,shortdesc:board_project.module_meta_information
+msgid "Board for project users"
+msgstr ""
+
+#. module: board_project
 #: model:ir.actions.act_window,name:board_project.action_project_pipeline_user
 msgid "Pipeline of tasks"
 msgstr ""
 
 #. module: board_project
-#: model:ir.ui.menu,name:board_project.next_id_86
-msgid "Project"
-msgstr "Projekt"
-
-#. module: board_project
 #: view:board.board:0
-msgid "My Timesheet"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
-msgid "Project manager board"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
-msgid "My tasks board"
+msgid "My Planning"
 msgstr ""
 
 #. module: board_project
@@ -85,9 +76,34 @@ msgid "My accounts to invoice"
 msgstr ""
 
 #. module: board_project
+#: model:ir.actions.act_window,name:board_project.open_board_project_manager
+#: model:ir.ui.menu,name:board_project.menu_board_project_manager
+msgid "Project Manager Dashboard"
+msgstr ""
+
+#. module: board_project
 #: view:board.board:0
-#: model:ir.actions.act_window,name:board_project.act_my_project
-msgid "My projects"
+msgid "My Deadlines"
+msgstr ""
+
+#. module: board_project
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#. module: board_project
+#: view:board.board:0
+msgid "User's timesheets"
+msgstr ""
+
+#. module: board_project
+#: model:ir.ui.menu,name:board_project.next_id_86
+msgid "Project"
+msgstr "Projekt"
+
+#. module: board_project
+#: view:board.board:0
+msgid "Project manager board"
 msgstr ""
 
 #. module: board_project
@@ -102,23 +118,17 @@ msgid "My Board"
 msgstr ""
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_view_task_tree_deadline
-msgid "My Task's Deadlines"
-msgstr ""
-
-#. module: board_project
-#: model:ir.actions.act_window,name:board_project.open_board_project
-#: model:ir.ui.menu,name:board_project.menu_board_project
-msgid "Project Dashboard"
-msgstr ""
-
-#. module: board_project
 #: view:board.board:0
-msgid "My Planning"
+msgid "My tasks board"
 msgstr ""
 
 #. module: board_project
 #: view:board.board:0
 msgid "My user's pipeline"
+msgstr ""
+
+#. module: board_project
+#: view:board.board:0
+msgid "My Timesheet"
 msgstr ""
 

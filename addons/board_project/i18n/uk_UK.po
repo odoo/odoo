@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:20:26+0000\n"
-"PO-Revision-Date: 2009-01-23 14:20:26+0000\n"
+"POT-Creation-Date: 2009-01-28 00:56:03+0000\n"
+"PO-Revision-Date: 2009-01-28 00:56:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,13 +17,8 @@ msgstr ""
 
 #. module: board_project
 #: view:board.board:0
-msgid "My Deadlines"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
-msgid "User's timesheets"
-msgstr "Табелі користувача"
+msgid "My project's planning"
+msgstr "Моє планування проектів"
 
 #. module: board_project
 #: view:hr_timesheet_sheet.sheet:0
@@ -32,9 +27,53 @@ msgid "Timesheets"
 msgstr "Табелі"
 
 #. module: board_project
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.act_my_project
+msgid "My projects"
+msgstr "Мої проекти"
+
+#. module: board_project
+#: model:ir.actions.act_window,name:board_project.action_view_task_tree_deadline
+msgid "My Task's Deadlines"
+msgstr ""
+
+#. module: board_project
 #: view:project.task:0
 msgid "My Tasks"
 msgstr ""
+
+#. module: board_project
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.action_view_board_note_tree
+msgid "Public Notes"
+msgstr ""
+
+#. module: board_project
+#: model:ir.actions.act_window,name:board_project.open_board_project
+#: model:ir.ui.menu,name:board_project.menu_board_project
+msgid "Project Dashboard"
+msgstr "Панель проекту"
+
+#. module: board_project
+#: model:ir.module.module,shortdesc:board_project.module_meta_information
+msgid "Board for project users"
+msgstr ""
+
+#. module: board_project
+#: model:ir.actions.act_window,name:board_project.action_project_pipeline_user
+msgid "Pipeline of tasks"
+msgstr "Діаграма завдань"
+
+#. module: board_project
+#: view:board.board:0
+msgid "My Planning"
+msgstr ""
+
+#. module: board_project
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board_project.act_my_account
+msgid "My accounts to invoice"
+msgstr "Мої рахунки до виписки"
 
 #. module: board_project
 #: model:ir.actions.act_window,name:board_project.open_board_project_manager
@@ -44,19 +83,18 @@ msgstr "Панель Менеджера Проекту"
 
 #. module: board_project
 #: view:board.board:0
-msgid "My project's planning"
-msgstr "Моє планування проектів"
-
-#. module: board_project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board_project.action_view_board_note_tree
-msgid "Public Notes"
+msgid "My Deadlines"
 msgstr ""
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_project_pipeline_user
-msgid "Pipeline of tasks"
-msgstr "Діаграма завдань"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильний XML для Архітектури Вигляду!"
+
+#. module: board_project
+#: view:board.board:0
+msgid "User's timesheets"
+msgstr "Табелі користувача"
 
 #. module: board_project
 #: model:ir.ui.menu,name:board_project.next_id_86
@@ -65,30 +103,8 @@ msgstr "Проект"
 
 #. module: board_project
 #: view:board.board:0
-msgid "My Timesheet"
-msgstr ""
-
-#. module: board_project
-#: view:board.board:0
 msgid "Project manager board"
 msgstr "Панель менеджера проектів"
-
-#. module: board_project
-#: view:board.board:0
-msgid "My tasks board"
-msgstr "Моя панель завдань"
-
-#. module: board_project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board_project.act_my_account
-msgid "My accounts to invoice"
-msgstr "Мої рахунки до виписки"
-
-#. module: board_project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board_project.act_my_project
-msgid "My projects"
-msgstr "Мої проекти"
 
 #. module: board_project
 #: view:board.board:0
@@ -102,23 +118,17 @@ msgid "My Board"
 msgstr ""
 
 #. module: board_project
-#: model:ir.actions.act_window,name:board_project.action_view_task_tree_deadline
-msgid "My Task's Deadlines"
-msgstr ""
-
-#. module: board_project
-#: model:ir.actions.act_window,name:board_project.open_board_project
-#: model:ir.ui.menu,name:board_project.menu_board_project
-msgid "Project Dashboard"
-msgstr "Панель проекту"
-
-#. module: board_project
 #: view:board.board:0
-msgid "My Planning"
-msgstr ""
+msgid "My tasks board"
+msgstr "Моя панель завдань"
 
 #. module: board_project
 #: view:board.board:0
 msgid "My user's pipeline"
 msgstr "Канали мого користувача"
+
+#. module: board_project
+#: view:board.board:0
+msgid "My Timesheet"
+msgstr ""
 

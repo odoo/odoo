@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:51:25+0000\n"
-"PO-Revision-Date: 2009-01-23 13:51:25+0000\n"
+"POT-Creation-Date: 2009-01-28 00:42:56+0000\n"
+"PO-Revision-Date: 2009-01-28 00:42:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,18 +21,23 @@ msgid "Install more modules. A few modules are proposed according to the Account
 msgstr ""
 
 #. module: profile_accounting
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: profile_accounting
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,name:0
-msgid "Name"
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Services Management"
+msgstr ""
+
+#. module: profile_accounting
+#: help:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Resources Management"
 msgstr ""
 
 #. module: profile_accounting
@@ -46,23 +51,8 @@ msgid "Asset Management"
 msgstr ""
 
 #. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Services Management"
-msgstr ""
-
-#. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
-msgid "Analytic Accounting"
-msgstr ""
-
-#. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,account_analytic_plans:0
 msgid "Multiple Analytic Plans"
-msgstr ""
-
-#. module: profile_accounting
-#: help:profile.accounting.config.install_modules_wizard,board_document:0
-msgid "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."
 msgstr ""
 
 #. module: profile_accounting
@@ -71,23 +61,28 @@ msgid "Accounting Profile : Install Extra Modules"
 msgstr ""
 
 #. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Resources Management"
-msgstr ""
-
-#. module: profile_accounting
 #: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
 msgid "Invoice on Analytic Entries"
 msgstr ""
 
 #. module: profile_accounting
-#: field:profile.accounting.config.install_modules_wizard,board_document:0
-msgid "Document Management"
+#: model:ir.module.module,description:profile_accounting.module_meta_information
+msgid "Profile for Accounting"
 msgstr ""
 
 #. module: profile_accounting
-#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
-msgid "profile.accounting.config.install_modules_wizard"
+#: help:profile.accounting.config.install_modules_wizard,account_budget:0
+msgid "Helps you to manage financial and analytic budgets."
+msgstr ""
+
+#. module: profile_accounting
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,name:0
+msgid "Name"
 msgstr ""
 
 #. module: profile_accounting
@@ -101,17 +96,32 @@ msgid "Install"
 msgstr ""
 
 #. module: profile_accounting
-#: help:profile.accounting.config.install_modules_wizard,account_budget:0
-msgid "Helps you to manage financial and analytic budgets."
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Install Extra Module"
+msgstr ""
+
+#. module: profile_accounting
+#: model:ir.module.module,shortdesc:profile_accounting.module_meta_information
+msgid "Accounting only profile"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
+msgid "Analytic Accounting"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,board_document:0
+msgid "Document Management"
+msgstr ""
+
+#. module: profile_accounting
+#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
+msgid "profile.accounting.config.install_modules_wizard"
 msgstr ""
 
 #. module: profile_accounting
 #: view:profile.accounting.config.install_modules_wizard:0
 msgid "Cancel"
-msgstr ""
-
-#. module: profile_accounting
-#: view:profile.accounting.config.install_modules_wizard:0
-msgid "Install Extra Module"
 msgstr ""
 

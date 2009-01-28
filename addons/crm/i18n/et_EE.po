@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:55:50+0000\n"
-"PO-Revision-Date: 2009-01-23 13:55:50+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:54+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -274,9 +274,10 @@ msgid "Maximim Priority"
 msgstr "Maksimaalne Prioriteet"
 
 #. module: crm
-#: field:crm.case.section,child_ids:0
-msgid "Childs Sections"
-msgstr "Alamjaotised"
+#: wizard_field:crm.case.section.menu,design_menu,menu17:0
+#: wizard_field:crm.case.section.menu,design_menu,menu17_option:0
+msgid "New "
+msgstr ""
 
 #. module: crm
 #: view:res.partner.events:0
@@ -342,6 +343,28 @@ msgstr "Täiendav info"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_subject)s = Case subject"
+msgstr ""
+
+#. module: crm
+#: model:ir.module.module,description:crm.module_meta_information
+msgid "The generic Open ERP Customer Relationship Management\n"
+"system enables a group of people to intelligently and efficiently manage\n"
+"leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.\n"
+"It manages key tasks such as communication, identification, prioritization,\n"
+"assignment, resolution and notification.\n"
+"\n"
+"Open ERP ensures that all cases are successfully tracked by users, customers and\n"
+"suppliers. It can automatically send reminders, escalate the request, trigger\n"
+"specific methods and lots of others actions based on your enterprise own rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do anything\n"
+"special. They can just send email to the request tracker. Open ERP will take\n"
+"care of thanking them for their message, automatically routing it to the\n"
+"appropriate staff, and making sure all future correspondence gets to the right\n"
+"place.\n"
+"\n"
+"The CRM module has a email gateway for the synchronisation interface\n"
+"between mails and Open ERP."
 msgstr ""
 
 #. module: crm
@@ -605,6 +628,7 @@ msgstr "Minu Pooleliolevad "
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0
@@ -703,6 +727,7 @@ msgstr "Päevi Perioodis"
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0
@@ -766,6 +791,7 @@ msgstr ""
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0
@@ -791,6 +817,7 @@ msgstr "Ei Tööta"
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0
@@ -907,6 +934,11 @@ msgid "You must put a Partner eMail to use this action!"
 msgstr "Pead sisestama Partneri E-Maili kasutamaks seda tegevust!"
 
 #. module: crm
+#: model:ir.module.module,shortdesc:crm.module_meta_information
+msgid "Customer & Supplier Relationship Management"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.rule,trg_priority_from:0
 msgid "Minimum Priority"
 msgstr "Minimaalne Prioriteet"
@@ -966,11 +998,6 @@ msgid ">"
 msgstr ""
 
 #. module: crm
-#: help:crm.case.section,reply_to:0
-msgid "The email address wich is the 'Reply-To' of all email sent by Open ERP for cases in this section"
-msgstr ""
-
-#. module: crm
 #: field:crm.case.section,parent_id:0
 msgid "Parent Section"
 msgstr "Ülemjaotis"
@@ -1008,6 +1035,7 @@ msgstr "Kuud"
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0
@@ -1023,6 +1051,11 @@ msgstr "Ära Loo"
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,menu_name:0
 msgid "Base Menu Name"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,child_ids:0
+msgid "Child Sections"
 msgstr ""
 
 #. module: crm
@@ -1161,6 +1194,11 @@ msgid "Section Code"
 msgstr "Jaotise Kood"
 
 #. module: crm
+#: field:crm.case.section,user_id:0
+msgid "Responsible User"
+msgstr ""
+
+#. module: crm
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
@@ -1173,7 +1211,6 @@ msgstr "Üldine kirjeldus"
 #. module: crm
 #: field:crm.case,user_id:0
 #: field:crm.case.rule,trg_user_id:0
-#: field:crm.case.section,user_id:0
 msgid "Responsible"
 msgstr "Vastutav"
 
@@ -1282,6 +1319,11 @@ msgid "Sale Amount"
 msgstr ""
 
 #. module: crm
+#: help:crm.case.section,reply_to:0
+msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
+msgstr ""
+
+#. module: crm
 #: view:crm.case.rule:0
 #: model:ir.model,name:crm.model_crm_case_rule
 msgid "Case Rule"
@@ -1340,6 +1382,7 @@ msgstr "Peata Protsess"
 #: selection:crm.case.section.menu,design_menu,menu14_option:0
 #: selection:crm.case.section.menu,design_menu,menu15_option:0
 #: selection:crm.case.section.menu,design_menu,menu16_option:0
+#: selection:crm.case.section.menu,design_menu,menu17_option:0
 #: selection:crm.case.section.menu,design_menu,menu1_option:0
 #: selection:crm.case.section.menu,design_menu,menu2_option:0
 #: selection:crm.case.section.menu,design_menu,menu3_option:0

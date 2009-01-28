@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "Werktijden Categorieën"
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "Fout! U kunt geen recursieve afdelingen aanmaken."
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -38,6 +38,7 @@ msgid "SIN No"
 msgstr "SIN no"
 
 #. module: hr
+#: model:ir.module.module,shortdesc:hr.module_meta_information
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
 msgstr "Personeelszaken"
@@ -90,11 +91,6 @@ msgid "Parent Department"
 msgstr "Bovenliggende afdeling"
 
 #. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Childs Categories"
-msgstr "Onderliggende Categorieën"
-
-#. module: hr
 #: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
@@ -123,6 +119,11 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
+msgstr "Ongetrouwd"
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Vrouw"
@@ -139,6 +140,12 @@ msgid "Working Time Category"
 msgstr "Werktijdcategorie"
 
 #. module: hr
+#: code:addons/hr/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-in must be right after a sign-out !"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
@@ -153,6 +160,11 @@ msgstr "BSN (SoFi) nummer"
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
 msgstr "Telefoon werk"
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -208,6 +220,11 @@ msgid "Divorced"
 msgstr "Gescheiden"
 
 #. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
 #: model:ir.ui.menu,name:hr.menu_department_def
@@ -236,9 +253,9 @@ msgid "Male"
 msgstr "Man"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr "Ongetrouwd"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
+msgstr "Maak een OpenERP gebruiker aan"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -335,12 +352,6 @@ msgid "Employee Complete Form"
 msgstr "Maak formulier compleet"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Mederwerkerscategorien"
-
-#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Bedrijven"
@@ -351,19 +362,15 @@ msgid "Wednesday"
 msgstr "Woensdag"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr "Maak een OpenERP gebruiker aan"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Mederwerkerscategorien"
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
 msgid "Starting date"
 msgstr "Startdatum"
-
-#. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent category"
-msgstr "Bovenliggende categorie"
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -418,11 +425,6 @@ msgid "Employees Categories"
 msgstr "Mederwerkerscategorien"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Childs Departments"
-msgstr "Onderliggende afdelingen"
-
-#. module: hr
 #: view:hr.department:0
 msgid "department"
 msgstr "Afdeling"
@@ -458,6 +460,11 @@ msgstr "Werknemers"
 #: field:hr.department,name:0
 msgid "Department Name"
 msgstr "Afdelingsnaam"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0

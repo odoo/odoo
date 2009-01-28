@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,9 +33,10 @@ msgid "Analytic account incomplete"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Force to use a specific product"
-msgstr ""
+#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_profit
+#: model:ir.ui.menu,name:hr_timesheet_invoice.print_account_analytic_profit
+msgid "Timesheet profit"
+msgstr "Lucro do horário"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -111,10 +112,9 @@ msgid "Period to enddate"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_profit
-#: model:ir.ui.menu,name:hr_timesheet_invoice.print_account_analytic_profit
-msgid "Timesheet profit"
-msgstr "Lucro do horário"
+#: wizard_view:hr.timesheet.invoice.create,init:0
+msgid "Force to use a specific product"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -140,6 +140,11 @@ msgstr ""
 #: wizard_view:hr.timesheet.final.invoice.create,init:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "Você quer detalhes para cada uma das linhas das facturas?"
+
+#. module: hr_timesheet_invoice
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Date or Code"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -181,23 +186,8 @@ msgid "Filter on Accounts"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Code / Date"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "/"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
 msgid "Timesheet Profit"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Total :"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -208,6 +198,11 @@ msgstr "Lista de preços das vendas"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,name:0
 msgid "Display detail of work in the invoice line."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "J.C. or Move name"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -263,11 +258,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Currency"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Cost Ledger -"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -329,6 +319,7 @@ msgid "The product that will be used to invoice the remaining amount."
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
 #: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_account_cost_ledger_report
 msgid "Cost Ledger"
@@ -361,9 +352,14 @@ msgid "Analytic Accounts"
 msgstr "Contas da contabilidade analítica"
 
 #. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_max:0
-msgid "Max. Invoice Price"
-msgstr "Preço máximo da factura"
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Total:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Credit"
+msgstr "Crédito"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
@@ -413,6 +409,11 @@ msgid "Period from"
 msgstr "Periodo a partir de"
 
 #. module: hr_timesheet_invoice
+#: field:account.analytic.account,amount_max:0
+msgid "Max. Invoice Price"
+msgstr "Preço máximo da factura"
+
+#. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
 msgid "Invoice"
 msgstr "Factura"
@@ -434,17 +435,12 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,employee_ids:0
 msgid "Employee"
 msgstr "Empregado"
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "at"
-msgstr "às"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,date:0
@@ -454,11 +450,6 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,price:0
 msgid "Display cost of the item you reinvoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -472,9 +463,9 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Types of invoicing"
-msgstr "Tipos de facturação"
+#: rml:account.analytic.profit:0
+msgid "%"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
@@ -492,8 +483,8 @@ msgid "Units"
 msgstr "Unidades"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "J.C. / Move name"
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Invoice on analytic lines"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -514,19 +505,14 @@ msgid "Invoice rate"
 msgstr "Taxa da factura"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Page"
-msgstr ""
+#: view:hr_timesheet_invoice.factor:0
+msgid "Types of invoicing"
+msgstr "Tipos de facturação"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoicing"
 msgstr "Facturação"
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Credit"
-msgstr "Crédito"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_invoice_analytic_accounts

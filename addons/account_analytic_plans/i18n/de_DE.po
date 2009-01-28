@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "Verkaufscode /ID"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
 msgid "Plan Id"
-msgstr ""
+msgstr "Plan ID"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -119,7 +119,7 @@ msgstr "Wähle Information"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr ""
+msgstr "Konto3 ID"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -210,6 +210,43 @@ msgid "Distribution Models"
 msgstr ""
 
 #. module: account_analytic_plans
+#: model:ir.module.module,description:account_analytic_plans.module_meta_information
+msgid "This module allows to use several analytic plans, according to the general journal,\n"
+"so that multiple analytic lines are created when the invoice or the entries\n"
+"are confirmed.\n"
+"\n"
+"For example, you can define the following analytic structure:\n"
+"  Projects\n"
+"      Project 1\n"
+"          SubProj 1.1\n"
+"          SubProj 1.2\n"
+"      Project 2\n"
+"  Salesman\n"
+"      Eric\n"
+"      Fabien\n"
+"\n"
+"Here, we have two plans: Projects and Salesman. An invoice line must\n"
+"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+"Fabien. The amount can also be split. The following example is for\n"
+"an invoice that touches the two subproject and assigned to one salesman:\n"
+"\n"
+"Plan1:\n"
+"    SubProject 1.1 : 50%\n"
+"    SubProject 1.2 : 50%\n"
+"Plan2:\n"
+"    Eric: 100%\n"
+"\n"
+"So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
+"for one account entry.\n"
+"        "
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
+msgid "Multiple-plans management in Analytic Accounting"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
@@ -268,7 +305,7 @@ msgstr "OK"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "Oberstes Konto"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,print:0
@@ -278,12 +315,12 @@ msgstr "Drucke"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenz"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Period from"
-msgstr ""
+msgstr "Gültig ab"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
@@ -298,22 +335,22 @@ msgstr "Druckdatum:"
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
+msgstr "Kostnerechnung Umlage Modell"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
+msgstr "Das Umlagemodel wurde gesichert, es ist nunmehr verwendbar."
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Abbruch"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date1:0
 msgid "Start Date"
-msgstr ""
+msgstr "Start Datum"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:20:26+0000\n"
-"PO-Revision-Date: 2009-01-23 14:20:26+0000\n"
+"POT-Creation-Date: 2009-01-28 00:56:04+0000\n"
+"PO-Revision-Date: 2009-01-28 00:56:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,11 @@ msgstr "Зауваження. Замовлення будуть об'єднан�
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Pricelist !"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packing"
 msgstr ""
 
 #. module: purchase
@@ -481,9 +486,15 @@ msgid "This is the list of picking list that have been generated for this purcha
 msgstr "Список відбірних листів, згенерований для цього придбання"
 
 #. module: purchase
+#: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 msgid "Purchase Management"
 msgstr "Закупівлі"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Пос. на партнера"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -511,6 +522,12 @@ msgstr "Адреса куди"
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Рядок заявки на придбання"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -542,11 +559,6 @@ msgstr "Заявка на придбання"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
 msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Packings"
-msgstr "Пакети"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -640,9 +652,9 @@ msgid "Subtotal"
 msgstr "Попередня сума"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Partner Ref."
-msgstr "Пос. на партнера"
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -739,9 +751,21 @@ msgid "Could not cancel this purchase order !"
 msgstr ""
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid "Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
+msgstr ""
+
+#. module: purchase
 #: field:purchase.order.line,product_id:0
 msgid "Product"
 msgstr "Продукт"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "No Partner!"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -800,7 +824,7 @@ msgstr ""
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "You must first cancel all packings attached to this purchase order."
+msgid "You must first cancel all packing attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -831,6 +855,7 @@ msgid "Request For Quotations"
 msgstr ""
 
 #. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
 msgstr "Прейскурант придбання"

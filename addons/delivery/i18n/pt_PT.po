@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Grelha de entrega"
-
-#. module: delivery
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -41,9 +36,9 @@ msgid "Destination"
 msgstr "Destino"
 
 #. module: delivery
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr ""
 
 #. module: delivery
 #: constraint:ir.ui.view:0
@@ -62,9 +57,14 @@ msgid "States"
 msgstr "Estados"
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
-msgid "Delivery by Poste"
+#: help:res.partner,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from packing."
 msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Grelha de entrega"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -100,6 +100,12 @@ msgid "Generate Draft Invoices On Receptions"
 msgstr "Gerar rascunhos de facturas em recepção"
 
 #. module: delivery
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Variável"
+
+#. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid matching for this carrier !"
@@ -114,12 +120,6 @@ msgstr "Linha de entrega da grelha"
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
 msgstr "Entrega"
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree4
-#: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
-msgid "Packings to be invoiced"
-msgstr "Embalagens a ser facturados"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -146,11 +146,6 @@ msgstr "Activo"
 #: view:delivery.grid:0
 msgid "Grid definition"
 msgstr "Definição da grelha"
-
-#. module: delivery
-#: help:res.partner,property_delivery_carrier:0
-msgid "This delivery method will be used when invoicing from packings."
-msgstr "Este método de entrega será usado ao facturar da embalagem."
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -199,9 +194,9 @@ msgid "Countries"
 msgstr "Países"
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
-msgid "Operator"
-msgstr "Operador"
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
 
 #. module: delivery
 #: view:sale.order:0
@@ -263,10 +258,14 @@ msgid "ID"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "Variável"
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr "Operador"
+
+#. module: delivery
+#: model:ir.module.module,shortdesc:delivery.module_meta_information
+msgid "Carriers and deliveries"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -297,9 +296,8 @@ msgid "Carrier Partner"
 msgstr "Terceiro portador"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
+#: model:ir.module.module,description:delivery.module_meta_information
+msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
 msgstr ""
 
 #. module: delivery
@@ -308,9 +306,21 @@ msgid "To Zip"
 msgstr "Patra zip"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_picking_tree4
+#: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
+msgid "Packing to be invoiced"
+msgstr ""
+
+#. module: delivery
 #: help:sale.order,carrier_id:0
-msgid "Complete this field if you plan to invoice the shipping based on packings made."
-msgstr "Termine este campo se você planeia facturar o transporte baseado na embalagem feita."
+msgid "Complete this field if you plan to invoice the shipping based on packing."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add

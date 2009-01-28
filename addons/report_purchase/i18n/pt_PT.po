@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Compras por produtos"
 #. module: report_purchase
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0
@@ -81,6 +81,11 @@ msgstr "Produto"
 #: model:ir.ui.menu,name:report_purchase.next_id_73
 msgid "Reporting"
 msgstr "Relatório"
+
+#. module: report_purchase
+#: model:ir.module.module,shortdesc:report_purchase.module_meta_information
+msgid "Purchase Management - Reporting"
+msgstr ""
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0
@@ -114,12 +119,13 @@ msgstr "Compras mensais"
 #. module: report_purchase
 #: model:ir.ui.menu,name:report_purchase.next_id_74
 msgid "This Month"
-msgstr "Mês actual"
+msgstr "Este mês"
 
 #. module: report_purchase
-#: field:report.purchase.order.category,category_id:0
-msgid "Categories"
-msgstr "Categorias"
+#: model:ir.module.module,description:report_purchase.module_meta_information
+msgid "Module to add views like\n"
+"    Purchase By Product, Purchase By Category of Product, All Months, Current Month."
+msgstr ""
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0
@@ -172,6 +178,11 @@ msgstr "Nº de Linhas"
 #: selection:report.purchase.order.product,state:0
 msgid "Done"
 msgstr "Concluído"
+
+#. module: report_purchase
+#: field:report.purchase.order.category,category_id:0
+msgid "Categories"
+msgstr "Categorias"
 
 #. module: report_purchase
 #: selection:report.purchase.order.category,state:0

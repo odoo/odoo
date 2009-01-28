@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:17:16+0000\n"
-"PO-Revision-Date: 2009-01-23 14:17:16+0000\n"
+"POT-Creation-Date: 2009-01-28 00:54:37+0000\n"
+"PO-Revision-Date: 2009-01-28 00:54:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,9 +31,8 @@ msgid "Entries Selection Based on"
 msgstr ""
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Account Information"
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
 msgstr ""
 
 #. module: account_balance
@@ -101,6 +100,24 @@ msgstr ""
 #. module: account_balance
 #: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
 msgid "Account balance-Compare Years"
+msgstr ""
+
+#. module: account_balance
+#: model:ir.module.module,description:account_balance.module_meta_information
+msgid "Account Balance Module is an added functionality to the Financial Management module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
 msgstr ""
 
 #. module: account_balance
@@ -182,8 +199,8 @@ msgid "1. You have selected more than 3 years in any case."
 msgstr ""
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "You have to select at least 1 Fiscal Year. Try again."
+#: model:ir.module.module,shortdesc:account_balance.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
 msgstr ""
 
 #. module: account_balance
@@ -213,8 +230,9 @@ msgid "You might have done following mistakes. Please correct them and try again
 msgstr ""
 
 #. module: account_balance
-#: help:account.balance.account.balance.report,init,select_account:0
-msgid "Keep empty for comparision to its parent"
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Account Information"
 msgstr ""
 
 #. module: account_balance
@@ -240,6 +258,11 @@ msgstr ""
 #. module: account_balance
 #: wizard_button:account.balance.account.balance.report,init,end:0
 msgid "Cancel"
+msgstr ""
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
 msgstr ""
 
 #. module: account_balance

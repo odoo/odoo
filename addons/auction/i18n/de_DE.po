@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -452,7 +452,7 @@ msgstr "Versteigert"
 #. module: auction
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -545,6 +545,15 @@ msgstr "Gesamtzahlbetrag"
 #: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
 msgid "My Latest Deposits"
 msgstr "Meine letzten Anzahlungen"
+
+#. module: auction
+#: field:auction.lots,lot_est1:0
+#: wizard_field:auction.lots.numerotate,search,lot_est1:0
+#: field:report.auction.estimation.adj.category,lot_est1:0
+#: field:report.auction.view,min_est:0
+#: field:report.unclassified.objects,lot_est1:0
+msgid "Minimum Estimation"
+msgstr "Minimum Schätzung"
 
 #. module: auction
 #: view:auction.dates:0
@@ -643,6 +652,15 @@ msgstr "# Einlieferer"
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Fehler: Falscher EAN code"
+
+#. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid "This module provides functionality to \n"
+"     manage artists, articles, sellers, buyers and auction.\n"
+"     Manage bids, track of sold, paid and unpaid objects.\n"
+"     Delivery Management. \n"
+"    "
+msgstr ""
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -1186,7 +1204,7 @@ msgstr "Erzeugt am"
 #: code:addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "Verbindung schlägt fehl !"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
@@ -1413,13 +1431,9 @@ msgid ", ID"
 msgstr ", ID"
 
 #. module: auction
-#: field:auction.lots,lot_est1:0
-#: wizard_field:auction.lots.numerotate,search,lot_est1:0
-#: field:report.auction.estimation.adj.category,lot_est1:0
-#: field:report.auction.view,min_est:0
-#: field:report.unclassified.objects,lot_est1:0
-msgid "Minimum Estimation"
-msgstr "Minimum Schätzung"
+#: model:ir.module.module,shortdesc:auction.module_meta_information
+msgid "Auction module"
+msgstr ""
 
 #. module: auction
 #: field:auction.bid_line,auction:0
@@ -2320,7 +2334,7 @@ msgstr "Ende Auktion"
 #: code:addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 #. module: auction
 #: field:auction.lots,ach_inv_id:0

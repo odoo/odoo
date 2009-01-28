@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:57:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:57:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:45:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:45:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Time by Account"
-msgstr "Temps par COmpte"
+#: rml:report_account_analytic.planning.print:0
+msgid "To:"
+msgstr "A:"
 
 #. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
@@ -56,12 +56,6 @@ msgid "Analytic account"
 msgstr "Compte analytique"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current_my
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_current_my
-msgid "My Current Plannings"
-msgstr "Mon Planning Courant"
-
-#. module: report_analytic_planning
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
@@ -95,9 +89,9 @@ msgid "My Planning Statistics"
 msgstr "Mes Statistiques de Planning"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "Summary by user"
-msgstr "Résumé par utilisateur"
+#: model:ir.module.module,description:report_analytic_planning.module_meta_information
+msgid "Planning on analytic accounts."
+msgstr ""
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning,name:0
@@ -137,15 +131,19 @@ msgid "Quantity"
 msgstr "Quantité"
 
 #. module: report_analytic_planning
+#: view:report_account_analytic.planning:0
+msgid "Quantities by Account"
+msgstr "Quantités par Compte"
+
+#. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
 msgid "From:"
 msgstr "De:"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_my
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_my2
-msgid "My Plannings"
-msgstr "Mes Plannings"
+#: view:report_account_analytic.planning:0
+msgid "Time by Account"
+msgstr "Temps par COmpte"
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning,date_to:0
@@ -169,15 +167,15 @@ msgid "Planning Statistics of My Projects"
 msgstr "Statistiques des Plannings de mes Projets"
 
 #. module: report_analytic_planning
-#: view:report_account_analytic.planning:0
-msgid "Quantities by Account"
-msgstr "Quantités par Compte"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_current
+msgid "Current Planning"
+msgstr ""
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning
-msgid "Plannings"
-msgstr "Plannings"
+#: rml:report_account_analytic.planning.print:0
+msgid "Summary by user"
+msgstr "Résumé par utilisateur"
 
 #. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
@@ -225,14 +223,19 @@ msgid "Planning analysis"
 msgstr "Analyse planifiée"
 
 #. module: report_analytic_planning
+#: rml:report_account_analytic.planning.print:0
+msgid "["
+msgstr "["
+
+#. module: report_analytic_planning
 #: field:report_account_analytic.planning,line_ids:0
 msgid "Planning lines"
 msgstr "Ligne planifiées"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "["
-msgstr "["
+#: model:ir.module.module,shortdesc:report_analytic_planning.module_meta_information
+msgid "Analytic planning - Reporting"
+msgstr ""
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -240,9 +243,10 @@ msgid "]"
 msgstr "]"
 
 #. module: report_analytic_planning
-#: rml:report_account_analytic.planning.print:0
-msgid "To:"
-msgstr "A:"
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_my
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_my2
+msgid "My Planning"
+msgstr ""
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning,stat_user_ids:0
@@ -266,15 +270,15 @@ msgid "Planning by account"
 msgstr "Planning par compte"
 
 #. module: report_analytic_planning
-#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current
-#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_current
-msgid "Current Plannings"
-msgstr "Plannings Courants"
-
-#. module: report_analytic_planning
 #: view:report_account_analytic.planning:0
 msgid "Quantities by User"
 msgstr "Quantités par Utilisateur"
+
+#. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form_current_my
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning_current_my
+msgid "My Current Planning"
+msgstr ""
 
 #. module: report_analytic_planning
 #: field:report_account_analytic.planning.stat.account,account_id:0
@@ -287,8 +291,10 @@ msgid "Manager"
 msgstr "Gestionnaire"
 
 #. module: report_analytic_planning
+#: model:ir.actions.act_window,name:report_analytic_planning.action_account_analytic_planning_form
 #: model:ir.actions.report.xml,name:report_analytic_planning.report_planning
 #: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning
+#: model:ir.ui.menu,name:report_analytic_planning.menu_report_account_analytic_planning
 #: model:ir.ui.menu,name:report_analytic_planning.next_id_85
 #: model:ir.ui.menu,name:report_analytic_planning.planning_main
 #: view:report_account_analytic.planning:0

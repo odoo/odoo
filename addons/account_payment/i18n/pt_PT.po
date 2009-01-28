@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,11 @@ msgstr "Entradas"
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Data de Vencimento"
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Account Entry Line"
+msgstr "Linha de movimento de conta"
 
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
@@ -249,6 +254,11 @@ msgid "Created"
 msgstr "Criado"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Seleccionar facturas a pagar"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Total de quantidade da moeda"
@@ -264,15 +274,9 @@ msgid "Communication Type"
 msgstr "Tipo de comunicação"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Terceiro"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicação"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -309,6 +313,12 @@ msgstr "Montante do pagamento na moeda do terceiro"
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Rascunho"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Terceiro"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -429,9 +439,9 @@ msgid "Done"
 msgstr "Concluído"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Seleccionar facturas a pagar"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicação"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -447,7 +457,7 @@ msgstr "Informação"
 #. module: account_payment
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:57:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:57:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:45:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:45:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,11 @@ msgstr ""
 #. module: scrum
 #: selection:scrum.project,state:0
 msgid "Template"
+msgstr ""
+
+#. module: scrum
+#: model:ir.module.module,shortdesc:scrum.module_meta_information
+msgid "Scrum, Agile Development Method"
 msgstr ""
 
 #. module: scrum
@@ -526,6 +531,7 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: scrum
+#: field:scrum.product.backlog,active:0
 #: field:scrum.project,active:0
 #: field:scrum.task,active:0
 msgid "Active"
@@ -583,6 +589,11 @@ msgid "Sum of spent hours of all tasks related to this project."
 msgstr ""
 
 #. module: scrum
+#: help:scrum.task,project_id:0
+msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
+msgstr ""
+
+#. module: scrum
 #: help:scrum.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr ""
@@ -604,6 +615,11 @@ msgid "Task summary"
 msgstr "Résumé de la tâche"
 
 #. module: scrum
+#: help:scrum.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
+msgstr ""
+
+#. module: scrum
 #: selection:scrum.product.backlog,state:0
 #: selection:scrum.project,state:0
 #: selection:scrum.sprint,state:0
@@ -615,11 +631,6 @@ msgstr "Terminé"
 #: wizard_button:scrum.product.backlog.task.create,init,end:0
 msgid "Cancel"
 msgstr "Annuler"
-
-#. module: scrum
-#: help:scrum.project,category_id:0
-msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
-msgstr ""
 
 #. module: scrum
 #: selection:scrum.product.backlog,state:0

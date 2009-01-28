@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:01:51+0000\n"
-"PO-Revision-Date: 2009-01-23 14:01:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:47:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:47:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,11 @@ msgid "Triggers an automatic procurement for all products that have a virtual st
 msgstr ""
 
 #. module: mrp
+#: model:ir.module.module,shortdesc:mrp.module_meta_information
+msgid "Manufacturing Resource Planning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
 msgstr "Revisione"
@@ -51,11 +56,6 @@ msgstr ""
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
 msgstr "Laboratori di Smistamento"
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Finnished Products"
-msgstr "Prodotti Finiti"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -99,6 +99,11 @@ msgstr "Configurazione"
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "Riferimento"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Finished Products"
+msgstr ""
 
 #. module: mrp
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
@@ -244,9 +249,9 @@ msgid "Scheduled goods"
 msgstr "Merci Programmate"
 
 #. module: mrp
-#: field:mrp.production,location_dest_id:0
-msgid "Finnished Products Location"
-msgstr "Punto di Stoccaggio Prodotti Finiti"
+#: model:process.transition,note:mrp.process_transition_producttostockrules0
+msgid "you can see the minimum stock rules from product"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -393,9 +398,9 @@ msgid "Bill Of Material"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,bom_lines:0
-msgid "BoM Lines"
-msgstr "Righe Distinta Base"
+#: help:mrp.routing,location_id:0
+msgid "Keep empty if you produce at the location where the finished products are needed.Set a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,move_id:0
@@ -515,6 +520,11 @@ msgstr "Ultimo Errore"
 #, python-format
 msgid "from stock and no minimum orderpoint rule defined"
 msgstr ""
+
+#. module: mrp
+#: field:mrp.bom,bom_lines:0
+msgid "BoM Lines"
+msgstr "Righe Distinta Base"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
@@ -773,11 +783,6 @@ msgid "Serivce Stockable Order"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0
-msgid "The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."
-msgstr "La lista di operazioni per completare il prodotto. Lo smistamento viene utilizzato principalmente per calcolare il costo dei laboratori durante le operazioni e per pianificare il futuro carico di lavoro dei laboratori nella pianificazione della produzione."
-
-#. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
 msgid "From minimum stock rules, it goes for procure product."
 msgstr ""
@@ -884,9 +889,14 @@ msgid "Description of the workcenter. Explain here what's a cycle according to t
 msgstr ""
 
 #. module: mrp
-#: help:mrp.production,location_dest_id:0
-msgid "Location where the system will stock the finnished products."
+#: rml:bom.structure:0
+msgid "-"
 msgstr ""
+
+#. module: mrp
+#: selection:mrp.workcenter,type:0
+msgid "Human Resource"
+msgstr "Risorse Umane"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -933,11 +943,6 @@ msgstr "Nome"
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Create Procurement"
 msgstr ""
-
-#. module: mrp
-#: field:mrp.production,location_src_id:0
-msgid "Raw Products Location"
-msgstr "Punto di Stoccaggio Prodotti Grezzi"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -994,6 +999,11 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount in cycles"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production,location_dest_id:0
+msgid "Finished Products Location"
 msgstr ""
 
 #. module: mrp
@@ -1059,6 +1069,11 @@ msgstr "Seleziona Unità di Tempo"
 #: wizard_field:product_price,init,number:0
 msgid "Number of products to produce"
 msgstr "Numero prodotti da produrre"
+
+#. module: mrp
+#: help:mrp.production,location_dest_id:0
+msgid "Location where the system will stock the finished products."
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1231,11 +1246,6 @@ msgid "Method"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.routing,location_id:0
-msgid "Keep empty if you produce at the location where the finnished products are needed.Put a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."
-msgstr ""
-
-#. module: mrp
 #: wizard_view:product_price,init:0
 msgid "Paid ?"
 msgstr "Pagato ?"
@@ -1386,6 +1396,11 @@ msgid "Total Hours"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.production,location_src_id:0
+msgid "Raw Materials Location"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
 msgstr "Struttura Distinta Base Prodotto"
@@ -1452,9 +1467,9 @@ msgid "Purchase Order"
 msgstr "Ordine Acquisto"
 
 #. module: mrp
-#: view:mrp.production.workcenter.line:0
+#: view:mrp.production:0
 msgid "Production Workcenters"
-msgstr "Laboratori di Produzione"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1538,16 +1553,6 @@ msgstr ""
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
-
-#. module: mrp
-#: selection:mrp.workcenter,type:0
-msgid "Human Resource"
-msgstr "Risorse Umane"
-
-#. module: mrp
-#: model:process.transition,note:mrp.process_transition_producttostockrules0
-msgid "you can see the minimum stock rules from product"
 msgstr ""
 
 #. module: mrp
@@ -1750,6 +1755,11 @@ msgid "BoM"
 msgstr "Distinta base"
 
 #. module: mrp
+#: help:mrp.bom,routing_id:0
+msgid "The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Merci in Attesa"
@@ -1791,11 +1801,6 @@ msgstr "Riprova"
 #: selection:mrp.production,state:0
 msgid "Draft"
 msgstr "Bozza"
-
-#. module: mrp
-#: rml:mrp.production.order:0
-msgid "........."
-msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:47:07+0000\n"
-"PO-Revision-Date: 2009-01-23 13:47:07+0000\n"
+"POT-Creation-Date: 2009-01-28 00:41:01+0000\n"
+"PO-Revision-Date: 2009-01-28 00:41:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,11 @@ msgstr "Crea tasca des de backlogs"
 #: selection:scrum.project,state:0
 msgid "Template"
 msgstr "Plantilla"
+
+#. module: scrum
+#: model:ir.module.module,shortdesc:scrum.module_meta_information
+msgid "Scrum, Agile Development Method"
+msgstr ""
 
 #. module: scrum
 #: field:scrum.project,progress_rate:0
@@ -526,6 +531,7 @@ msgid "User"
 msgstr "Usuari"
 
 #. module: scrum
+#: field:scrum.product.backlog,active:0
 #: field:scrum.project,active:0
 #: field:scrum.task,active:0
 msgid "Active"
@@ -583,6 +589,11 @@ msgid "Sum of spent hours of all tasks related to this project."
 msgstr "Suma de les hores dedicades de totes les tasques relacionades amb aquest projecte."
 
 #. module: scrum
+#: help:scrum.task,project_id:0
+msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
+msgstr ""
+
+#. module: scrum
 #: help:scrum.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr "Suma de les hores previstes de totes les tasques relacionades amb aquest projecte."
@@ -604,6 +615,11 @@ msgid "Task summary"
 msgstr "Resum de tasca"
 
 #. module: scrum
+#: help:scrum.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
+msgstr ""
+
+#. module: scrum
 #: selection:scrum.product.backlog,state:0
 #: selection:scrum.project,state:0
 #: selection:scrum.sprint,state:0
@@ -615,11 +631,6 @@ msgstr "Realitzat"
 #: wizard_button:scrum.product.backlog.task.create,init,end:0
 msgid "Cancel"
 msgstr "Cancel·la"
-
-#. module: scrum
-#: help:scrum.project,category_id:0
-msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
-msgstr "Enllaceu aquest projecte amb un compte analític si necessita gestió financera basada en projectes. Permet relacionar projectes amb pressupostos, planificacions, anàlisi de costos e ingressos, fulls de horaris sobre projectes, etc."
 
 #. module: scrum
 #: selection:scrum.product.backlog,state:0

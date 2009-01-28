@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:22:01+0000\n"
-"PO-Revision-Date: 2009-01-23 14:22:01+0000\n"
+"POT-Creation-Date: 2009-01-28 00:57:32+0000\n"
+"PO-Revision-Date: 2009-01-28 00:57:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -547,6 +547,15 @@ msgid "My Latest Deposits"
 msgstr ""
 
 #. module: auction
+#: field:auction.lots,lot_est1:0
+#: wizard_field:auction.lots.numerotate,search,lot_est1:0
+#: field:report.auction.estimation.adj.category,lot_est1:0
+#: field:report.auction.view,min_est:0
+#: field:report.unclassified.objects,lot_est1:0
+msgid "Minimum Estimation"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Accounting"
 msgstr ""
@@ -642,6 +651,15 @@ msgstr ""
 #. module: auction
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid "This module provides functionality to \n"
+"     manage artists, articles, sellers, buyers and auction.\n"
+"     Manage bids, track of sold, paid and unpaid objects.\n"
+"     Delivery Management. \n"
+"    "
 msgstr ""
 
 #. module: auction
@@ -1413,12 +1431,8 @@ msgid ", ID"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,lot_est1:0
-#: wizard_field:auction.lots.numerotate,search,lot_est1:0
-#: field:report.auction.estimation.adj.category,lot_est1:0
-#: field:report.auction.view,min_est:0
-#: field:report.unclassified.objects,lot_est1:0
-msgid "Minimum Estimation"
+#: model:ir.module.module,shortdesc:auction.module_meta_information
+msgid "Auction module"
 msgstr ""
 
 #. module: auction

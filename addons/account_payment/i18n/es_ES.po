@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:15:43+0000\n"
-"PO-Revision-Date: 2009-01-23 14:15:43+0000\n"
+"POT-Creation-Date: 2009-01-28 00:53:54+0000\n"
+"PO-Revision-Date: 2009-01-28 00:53:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,6 +80,11 @@ msgid "Due Date"
 msgstr "Fecha vencimiento"
 
 #. module: account_payment
+#: view:account.move.line:0
+msgid "Account Entry Line"
+msgstr "Línea del asiento contable"
+
+#. module: account_payment
 #: wizard_button:populate_payment,search,create:0
 msgid "_Add to payment order"
 msgstr "_Añadir a la orden de pago"
@@ -121,7 +126,7 @@ msgstr "Referencia"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
+msgstr "Órdenes de pago"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -182,7 +187,7 @@ msgstr "Información de transacción"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Modo de pago"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
@@ -249,6 +254,11 @@ msgid "Created"
 msgstr "Creado"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Seleccionar facturas a pagar"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Importe total monetario"
@@ -264,15 +274,9 @@ msgid "Communication Type"
 msgstr "Tipo de comunicación"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicación"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -309,6 +313,12 @@ msgstr "Importe pagado en la moneda de la empresa"
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Borrador"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Empresa"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -429,9 +439,9 @@ msgid "Done"
 msgstr "Realizado"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Seleccionar facturas a pagar"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicación"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -464,7 +474,7 @@ msgstr "Orden de pago"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft Payment Order"
-msgstr ""
+msgstr "Orden de pago borrador"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -562,7 +572,7 @@ msgstr "Orden"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr ""
+msgstr "Órdenes de pago a validar"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
