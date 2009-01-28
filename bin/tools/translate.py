@@ -606,7 +606,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                                             })
 	# Here we try to reset the locale regardless.
         try:
-            locale.setlocale(locale.LC_ALL, str(lc + '.' + encoding))
+            locale.resetlocale(locale.LC_ALL)
         except:
             pass
         lang_ids = lang_obj.search(cr, uid, [])

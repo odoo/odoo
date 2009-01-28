@@ -92,7 +92,7 @@ def init_logger():
 
     logger = logging.getLogger()
     # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%Y-%m-%d %H:%M:%S')
 
     if tools.config['syslog']:
         # SysLog Handler
