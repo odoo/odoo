@@ -26,13 +26,13 @@ from osv import osv
 
 form_gencod = """<?xml version="1.0"?>
 <form string="Scan product">
-<label string="Scan gencod" colspan="4"/>
+<label string="Scan Barcode" colspan="4"/>
 <field name="gencod" colspan="4" nolabel="1"/>
 </form>
 """
 
 fields_gencod = {
-    'gencod': {'string': 'Gencod',
+    'gencod': {'string': 'Barcode',
                'type': 'char',
                'size': 13,
                'required': True}
