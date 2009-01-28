@@ -458,8 +458,7 @@ class orm_template(object):
             datas += self.__export_row(cr, uid, row, fields, context)
         return datas
 
-    def import_data(self, cr, uid, fields, datas, mode='init',
-            current_module=None, noupdate=False, context=None, filename=None):
+    def import_data(self, cr, uid, fields, datas, mode='init', current_module=None, noupdate=False, context=None, filename=None):
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
@@ -757,8 +756,7 @@ class orm_template(object):
                     # call the 'dynamic selection' function
                     res[f]['selection'] = self._columns[f].selection(self, cr,
                             user, context)
-            if res[f]['type'] in ('one2many', 'many2many',
-                    'many2one', 'one2one'):
+            if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
                 res[f]['relation'] = self._columns[f]._obj
                 res[f]['domain'] = self._columns[f]._domain
                 res[f]['context'] = self._columns[f]._context
@@ -2342,7 +2340,13 @@ class orm(orm_template):
                 default.append(f)
 
         if len(default):
-            vals.update(self.default_get(cr, user, default, context))
+            default_values = self.default_get(cr, user, default, context)
+            for dv in default_values:
+                if dv in self._columns and self._columns[dv]._type == 'many2many':
+                    if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
+                        default_values[dv] = [(6, 0, default_values[dv])]
+
+            vals.update(default_values)
 
         tocreate = {}
         for v in self._inherits:
