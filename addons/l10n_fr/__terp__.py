@@ -50,6 +50,7 @@ Credits: Sistheo Zeekom CrysaLEAD
         "l10n_fr_pcg_view.xml"
     ],
     "demo_xml" : [],
+    "certificate" : "435321693876313629",
     "active": False,
     "installable": True
 }

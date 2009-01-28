@@ -42,8 +42,7 @@ class followup_line(osv.osv):
         'delay': fields.integer('Days of delay'),
         'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
-        'description': fields.text('Printed Message'),
-        #'prints': fields.one2many('account_followup.followup.print', 'line_id'),
+        'description': fields.text('Printed Message', translate=True),
     }
 followup_line()
 

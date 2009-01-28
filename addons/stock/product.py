@@ -66,8 +66,11 @@ class product_product(osv.osv):
             location_ids = [id for (id,) in cr.fetchall()]
 
         # build the list of ids of children of the location given by id
-        child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-        location_ids= len(child_location_ids) and child_location_ids or location_ids
+        if context.get('compute_child',True):
+            child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
+            location_ids= len(child_location_ids) and child_location_ids or location_ids
+        else:
+            location_ids= location_ids
 
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
 
