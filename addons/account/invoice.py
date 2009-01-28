@@ -430,7 +430,9 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
-            for taxe in ait_obj.compute(cr, uid, id).values():
+            partner = self.browse(cr, uid, id).partner_id
+            context.update({'lang': partner.lang})
+            for taxe in ait_obj.compute(cr, uid, id, context=context).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)    
@@ -481,7 +483,7 @@ class account_invoice(osv.osv):
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
-
+        context = {}
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -495,7 +497,9 @@ class account_invoice(osv.osv):
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
-            compute_taxes = ait_obj.compute(cr, uid, inv.id)
+
+            context.update({'lang': inv.partner_id.lang})
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
             if not inv.tax_line:
                 for tax in compute_taxes.values():
                     ait_obj.create(cr, uid, tax)
@@ -1099,11 +1103,11 @@ class account_invoice_tax(osv.osv):
         'base_amount': lambda *a: 0.0,
         'tax_amount': lambda *a: 0.0,
     }
-    def compute(self, cr, uid, invoice_id):
+    def compute(self, cr, uid, invoice_id, context={}):
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context)
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
 
