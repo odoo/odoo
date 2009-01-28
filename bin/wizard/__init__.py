@@ -21,7 +21,7 @@
 ##############################################################################
 
 import netsvc
-import copy
+from tools import copy
 from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import translate
 from xml import dom
