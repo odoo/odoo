@@ -14,10 +14,6 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Table3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-    </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -31,7 +27,6 @@
       <blockBackground colorName="#e6e6e6" start="6,0" stop="6,0"/>
       <blockBackground colorName="#e6e6e6" start="7,0" stop="7,0"/>
       <blockBackground colorName="#e6e6e6" start="8,0" stop="8,0"/>
-      <blockBackground colorName="#e6e6e6" start="9,0" stop="9,0"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
@@ -44,7 +39,7 @@
     <paraStyle name="P1" fontName="Times-Roman" fontSize="11.0" leading="14"/>
     <paraStyle name="P2" fontName="Times-Roman" fontSize="11.0" leading="14"/>
     <paraStyle name="P3" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P4" fontName="Times-Roman" alignment="LEFT"/>
+    <paraStyle name="P4" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
     <paraStyle name="P5" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="CENTER"/>
     <paraStyle name="P6" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P7" fontName="Times-Roman" fontSize="6.0" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -57,13 +52,13 @@
     <paraStyle name="P14" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P15" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P16" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P17" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P18" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P17" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P18" fontName="Times-Roman" alignment="LEFT"/>
     <paraStyle name="P19" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P20" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
-    <paraStyle name="P21" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P20" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P21" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P22" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P23" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P23" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P24" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -106,33 +101,14 @@
       <font face="Times-Roman">[[ time.strftime('%d/%m/%Y') ]]</font>
     </para>
     <para style="P3"><font face="Times-Roman">Customer Ref:</font> [[ o.id ]]</para>
-    <para style="P3">
-      <font color="white"> </font>
-    </para>
-    <para style="P3">Dear [[ a['name'] ]], </para>
-    <para style="P19">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="18.0,492.0" style="Table3">
-      <tr>
-        <td>
-          <para style="P17">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P20">[[ format(get_text(o)) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="P20">
       <font color="white"> </font>
     </para>
-    <para style="P20">Best Regards,</para>
-    <para style="P4">
+    <para style="P4">[[ format(get_text(o)) ]]</para>
+    <para style="P18">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="55.0,81.0,63.0,73.0,42.0,31.0,54.0,19.0,46.0,45.0" style="Table1">
+    <blockTable colWidths="49.0,92.0,58.0,70.0,57.0,52.0,56.0,55.0,20.0" style="Table1">
       <tr>
         <td>
           <para style="P8">Date</para>
@@ -156,13 +132,10 @@
           <para style="P9">Maturity</para>
         </td>
         <td>
-          <para style="P9">Li.</para>
-        </td>
-        <td>
           <para style="P9">Amount</para>
         </td>
         <td>
-          <para style="P9">cur.</para>
+          <para style="P9">Li.</para>
         </td>
       </tr>
       <tr>
@@ -182,43 +155,40 @@
           <para style="P12">[[ line['date_maturity'] ]]</para>
         </td>
         <td>
-          <para style="P15">[[ line['debit'] and '%.2f' % line['debit'] or '' ]]</para>
+          <para style="P15">[[ line['debit'] and '%.2f' % line['debit'] or '' ]] [[ company.currency_id.name]] </para>
         </td>
         <td>
-          <para style="P13">[[ line['credit'] and '%.2f' % line['credit'] or '' ]]</para>
+          <para style="P13">[[ line['credit'] and '%.2f' % line['credit'] or '0.00' ]] <font face="Times-Roman">[[ company.currency_id.name]] </font></para>
         </td>
         <td>
-          <para style="P13">[[ (line['date_maturity'] &lt; time.strftime('%Y-%m-%d')) and (line['debit'] - line['credit']) or '' ]]</para>
+          <para style="P13">[[ (line['date_maturity'] &lt; time.strftime('%Y-%m-%d')) and (line['debit'] - line['credit']) or '' ]] <font face="Times-Roman">[[ company.currency_id.name]] </font></para>
+        </td>
+        <td>
+          <para style="P13">[[ '%.2f' % line['amount_currency'] ]] [[ line['currency_id'] and line['currency_id'][1] or '' ]] </para>
         </td>
         <td>
           <para style="P13">[[ line['blocked'] and 'X' or '' ]]</para>
         </td>
-        <td>
-          <para style="P13">[[ line['amount_currency'] ]]</para>
-        </td>
-        <td>
-          <para style="P13">[[ line['currency_id'] and line['currency_id'][1] or '' ]] </para>
-        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="273.0,41.0,31.0,54.0,110.0" style="Table2">
+    <blockTable colWidths="270.0,57.0,52.0,56.0,76.0" style="Table2">
       <tr>
         <td>
           <para style="P16">Sub-Total: </para>
         </td>
         <td>
-          <para style="P16">[[ '%.2f' % (reduce(lambda x,y: x+y['debit'], getLines(o), 0)) ]]</para>
+          <para style="P16">[[ '%.2f' % (reduce(lambda x,y: x+y['debit'], getLines(o), 0)) ]] [[ company.currency_id.name]] </para>
         </td>
         <td>
-          <para style="P13">
-            <font face="Times-Bold">[[ '%.2f' % (reduce(lambda x,y: x+y['credit'], getLines(o), 0)) ]]</font>
+          <para style="P24">
+            <font face="Times-Roman">[[ '%.2f' % (reduce(lambda x,y: x+y['credit'], getLines(o), 0)) ]] [[ company.currency_id.name]] </font>
           </para>
         </td>
         <td>
-          <para style="P15">[[ reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0) ]]</para>
+          <para style="P15">[[ reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0) ]] [[ company.currency_id.name]] </para>
         </td>
         <td>
-          <para style="P18">
+          <para style="P17">
             <font color="white"> </font>
           </para>
         </td>
@@ -228,7 +198,7 @@
           <para style="P16">Balance: </para>
         </td>
         <td>
-          <para style="P16">[[ '%.2f' % (reduce(lambda x,y: x+(y['debit'] - y['credit']), getLines(o), 0)) ]]</para>
+          <para style="P16">[[ '%.2f' % (reduce(lambda x,y: x+(y['debit'] - y['credit']), getLines(o), 0)) ]] <font face="Times-Roman">[[ company.currency_id.name]] </font></para>
         </td>
         <td>
           <para style="P14">
@@ -241,7 +211,7 @@
           </para>
         </td>
         <td>
-          <para style="P18">
+          <para style="P17">
             <font color="white"> </font>
           </para>
         </td>
@@ -251,11 +221,7 @@
       <font color="white"> </font>
     </para>
     <para style="P2">
-      <font face="Times-Roman">Total amount due: </font>
-      <font face="Times-Roman">[[ '%.2f' % (reduce(lambda x,y: x+(y['debit']-y['credit']), getLines(o), 0)) ]] [[ company.currency_id.name]].</font>
-    </para>
-    <para style="P2">
-      <font color="white"> </font>
+      <font face="Times-Roman"/>
     </para>
   </story>
 </document>
