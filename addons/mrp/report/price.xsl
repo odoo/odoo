@@ -93,7 +93,9 @@
 			<spacer length="2mm" width="2mm"/>
 		</xsl:if>
 		<xsl:if test="@style='total'">
-			<pageBreak/>
+			<xsl:if test="position() &lt; last()">
+				<pageBreak/>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
