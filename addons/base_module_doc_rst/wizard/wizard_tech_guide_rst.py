@@ -75,7 +75,7 @@ class RstDoc(object):
 
     def _write_header(self):
         dico = self.dico
-        title = "Module %s (*%s*)" % (dico['shortdesc'], dico['name'])
+        title = "%s (*%s*)" % (dico['shortdesc'], dico['name'])
         title_underline = "=" * len(title)
         dico['title'] = title
         dico['title_underline'] = title_underline
@@ -201,9 +201,9 @@ class RstDoc(object):
                        title,
                        '#' * len(title),
                        "",
-                       ".. index::",
-                       "  single: %s object" % (obj_name),
-                       ".. ",
+                       #".. index::",
+                       #"  single: %s object" % (obj_name),
+                       #".. ",
                       ]
 
                 for field in obj['fields']:
