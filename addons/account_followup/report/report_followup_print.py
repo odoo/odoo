@@ -61,10 +61,10 @@ class report_rappel(report_sxw.rml_parse):
         movelines = moveline_obj.read(self.cr, self.uid, movelines)
         return movelines
 
-    def _get_text(self, data):
+    def _get_text(self, partner):
         text = ""
         a = {}
-        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',data.id)])
+        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id)])
         for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line):
             if  i.followup_line_id and str(i.followup_line_id.delay)=='45':
                 text = i.followup_line_id.description
@@ -76,6 +76,7 @@ class report_rappel(report_sxw.rml_parse):
                 text = i.followup_line_id.description
                 a['15'] = text
         text = (a.has_key('45') and a['45']) or (a.has_key('30') and a['30']) or (a.has_key('15') and a['15'])
+        text = text % {'partner_name':partner.name}
         return text
 
 
