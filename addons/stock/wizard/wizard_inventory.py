@@ -63,7 +63,8 @@ def _fill_inventory(self, cr, uid, data, context):
             res=location_obj._product_get(cr, uid, location)
             res_location[location]=res
     else:
-        res=location_obj._product_get(cr, uid, data['form']['location_id'])
+        context.update({'compute_child':False})
+        res=location_obj._product_get(cr, uid, data['form']['location_id'],context=context)
         res_location[data['form']['location_id']]=res
 
     product_ids=[]
@@ -73,7 +74,8 @@ def _fill_inventory(self, cr, uid, data, context):
             #product_ids.append(product_id)
             prod = pool.get('product.product').browse(cr, uid, [product_id])[0]
             uom = prod.uom_id.id
-            amount=pool.get('stock.location')._product_get(cr, uid, location, [product_id], {'uom': uom})[product_id]
+            context.update({'uom': uom})
+            amount=pool.get('stock.location')._product_get(cr, uid, location, [product_id], context=context)[product_id]
 
             if(amount):
                 line_ids=inventory_line_obj.search(cr,uid,[('inventory_id','=',data['id']),('location_id','=',location),('product_id','=',product_id),('product_uom','=',uom),('product_qty','=',amount)])
