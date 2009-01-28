@@ -515,9 +515,6 @@ class many2many(_column):
             return
         obj = obj.pool.get(self._obj)
         for act in values:
-	    if not isinstance(act,tuple):
-		print("incorrect values passed in many2many.set:",values)
-		return
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2])
                 cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, idnew))
