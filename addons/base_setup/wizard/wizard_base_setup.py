@@ -105,7 +105,7 @@ class wizard_base_setup(wizard.interface):
         module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
         ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'),
             ('state', '<>', 'uninstallable')])
-        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
+        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids, context=context)]
         res.append((-1, 'Minimal Profile'))
         res.sort()
         return res
@@ -128,7 +128,7 @@ class wizard_base_setup(wizard.interface):
         pool=pooler.get_pool(cr.dbname)
         state_obj=pool.get('res.country.state')
         ids=state_obj.search(cr, uid, [])
-        res=[(state.id, state.name) for state in state_obj.browse(cr, uid, ids)]
+        res=[(state.id, state.name) for state in state_obj.browse(cr, uid, ids, context=context)]
         res.append((-1, ''))
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
@@ -137,7 +137,7 @@ class wizard_base_setup(wizard.interface):
         pool=pooler.get_pool(cr.dbname)
         country_obj=pool.get('res.country')
         ids=country_obj.search(cr, uid, [])
-        res=[(country.id, country.name) for country in country_obj.browse(cr, uid, ids)]
+        res=[(country.id, country.name) for country in country_obj.browse(cr, uid, ids, context=context)]
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
 
@@ -145,7 +145,7 @@ class wizard_base_setup(wizard.interface):
         pool=pooler.get_pool(cr.dbname)
         currency_obj=pool.get('res.currency')
         ids=currency_obj.search(cr, uid, [])
-        res=[(currency.id, currency.name) for currency in currency_obj.browse(cr, uid, ids)]
+        res=[(currency.id, currency.name) for currency in currency_obj.browse(cr, uid, ids, context=context)]
         res.sort(lambda x,y: cmp(x[1],y[1]))
         return res
 
