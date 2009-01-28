@@ -370,7 +370,7 @@ def trans_generate(lang, modules, dbname=None):
                     
                     def_params = {
                         'string': ('wizard_field', lambda s: [encode(s)]),
-                        'selection': ('selection', lambda s: [encode(e[1]) for e in (callable(s) and s(None, cr, uid, {}) or s)]),
+                        'selection': ('selection', lambda s: [encode(e[1]) for e in ((not callable(s)) and s or [])]),
                         'help': ('help', lambda s: [encode(s)]),
                     }
 
