@@ -52,7 +52,6 @@ class report_stock(report_int):
 
         loc_ids = pooler.get_pool(cr.dbname).get('stock.location').search(cr, uid, [('location_id','child_of',[location_id])])
 
-        loc_ids_s = ','.join(map(str,loc_ids))
         now = time.strftime('%Y-%m-%d')
         dt_from = now
         dt_to = now
@@ -60,13 +59,24 @@ class report_stock(report_int):
         names = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, product_ids))
         products = {}
         prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids)
-        prod_ids_s = ','.join(map(str,product_ids))
 
         for p in prods:
             products[p] = [(now,prods[p])]
             prods[p] = 0
 
-        cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id from stock_move r left join product_uom u on (r.product_uom=u.id) where state in ('confirmed','assigned','waiting') and location_id in ("+loc_ids_s+") and product_id in ("+prod_ids_s+") group by date_planned,product_id")
+        if not loc_ids or not product_ids:
+            return (False, 'pdf')
+
+        loc_ids_s = ",".join(['%s']*len(loc_ids))
+        prod_ids_s = ",".join(['%s']*len(product_ids))
+
+        cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
+                   "from stock_move r left join product_uom u on (r.product_uom=u.id) "
+                   "where state in ('confirmed','assigned','waiting') "
+                   "and location_id in (%s) "
+                   "and product_id in (%s) "
+                   "group by date_planned,product_id" % (loc_ids_s, prod_ids_s),
+                   loc_ids + product_ids)
 
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
@@ -76,7 +86,14 @@ class report_stock(report_int):
             products.setdefault(prod_id, [])
             products[prod_id].append((dt,-qty))
 
-        cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id from stock_move r left join product_uom u on (r.product_uom=u.id) where state in ('confirmed','assigned','waiting') and location_dest_id in ("+loc_ids_s+") and product_id in ("+prod_ids_s+") group by date_planned,product_id")
+        cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
+                   "from stock_move r left join product_uom u on (r.product_uom=u.id) "
+                   "where state in ('confirmed','assigned','waiting') "
+                   "and location_dest_id in (%s) "
+                   "and product_id in (%s) "
+                   "group by date_planned,product_id" % (loc_ids_s, prod_ids_s),
+                   loc_ids + product_ids)
+
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
                 dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
