@@ -401,7 +401,7 @@ class actions_server(osv.osv):
         ], 'Action Type', required=True, size=32, help="Type of the Action that is to be executed"),
         'code':fields.text('Python Code', help="Python code to be executed"),
         'sequence': fields.integer('Sequence', help="Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the obect on which the action will work (read, write, create)."),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the object on which the action will work (read, write, create)."),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Action Window, Report, Wizard to be executed."),
         'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be used as the trigger."),
         'wkf_model_id': fields.many2one('ir.model', 'Workflow On', help="Workflow to be executed on this model."),
