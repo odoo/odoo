@@ -168,7 +168,6 @@ class res_partner(osv.osv):
     ]
 
     def copy(self, cr, uid, id, default=None, context={}):
-        print 'XXXXXXXXXXXXXXXXXXXXXX : ', self.browse(cr, uid, id, fields_process=['name']).name
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+' (copy)'})
         return super(res_partner, self).copy(cr, uid, id, default, context)
