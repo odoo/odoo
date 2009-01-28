@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,9 +22,10 @@ msgid "Total paid"
 msgstr "Total pago"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Pickings"
-msgstr ""
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Qty of product"
+msgstr "Quantidade"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -43,7 +44,6 @@ msgstr "Desconto"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_nb:0
-#: field:pos.payment,payment_nb:0
 msgid "Piece number"
 msgstr "Número do artigo"
 
@@ -86,6 +86,11 @@ msgstr "Selecionar um Pedido de Venda Aberta"
 #: rml:pos.invoice:0
 msgid "Invoice Date"
 msgstr "Data da factura"
+
+#. module: point_of_sale
+#: rml:pos.receipt:0
+msgid ","
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -133,17 +138,6 @@ msgid "Scan gencod"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,last_out_picking:0
-msgid "Last output picking"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Qty of product"
-msgstr "Quantidade"
-
-#. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,note:0
 msgid "Notes"
@@ -166,11 +160,6 @@ msgstr "Detalhe de vendas"
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
 msgstr "Impostos"
-
-#. module: point_of_sale
-#: field:report.transaction.pos,no_trans:0
-msgid "Number of transaction"
-msgstr "Número de transação"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -211,6 +200,11 @@ msgstr "IVA"
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_refund
 msgid "Refund Orders"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.order,last_out_picking:0
+msgid "Last Output Picking"
 msgstr ""
 
 #. module: point_of_sale
@@ -309,13 +303,11 @@ msgstr "Soma dos sub-totais"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_date:0
-#: field:pos.payment,payment_date:0
 msgid "Payment date"
 msgstr "Data de pagamento"
 
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
-#: field:pos.payment,payment_name:0
 msgid "Payment name"
 msgstr "Designação do pagamento"
 
@@ -333,9 +325,20 @@ msgid "Order Lines"
 msgstr "Linhas do pedido"
 
 #. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.receipt:0
+msgid "Qty"
+msgstr "Qt"
+
+#. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Total Sold"
 msgstr "Saldo total"
+
+#. module: point_of_sale
+#: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
+msgid "Point Of Sale"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
@@ -343,11 +346,9 @@ msgid "User :"
 msgstr "Utilizador :"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-#: rml:pos.lines:0
-msgid "Print Date:"
-msgstr "Data da impressão"
+#: field:pos.order.line,create_date:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -373,11 +374,6 @@ msgstr "Loja de Venda "
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Point of Sale journal configuration."
 msgstr "Configuração do diário da Loja de Venda"
-
-#. module: point_of_sale
-#: field:pos.order,invoice_wanted:0
-msgid "Create invoice"
-msgstr "Criar factura"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
@@ -417,6 +413,13 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+#: rml:pos.lines:0
+#: field:pos.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preço Unitário"
+
+#. module: point_of_sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
@@ -427,9 +430,19 @@ msgid "POS Lines of the day"
 msgstr "Linhas do dia da Loja de Venda"
 
 #. module: point_of_sale
+#: field:pos.order,nb_print:0
+msgid "Number of Print"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_default_journal
 msgid "Default journals"
 msgstr "Diários por defeito"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Draft Invoice"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order.line,discount:0
@@ -593,6 +606,16 @@ msgid "User"
 msgstr "Utilizador"
 
 #. module: point_of_sale
+#: field:pos.payment,payment_date:0
+msgid "Payment Date"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.payment,payment_name:0
+msgid "Payment Name"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.details:0
 #: rml:pos.lines:0
 #: field:report.transaction.pos,date_create:0
@@ -639,11 +662,7 @@ msgid "Total:"
 msgstr "Total:"
 
 #. module: point_of_sale
-#: field:pos.order.line,create_date:0
-msgid "Creation date"
-msgstr "Data de criação"
-
-#. module: point_of_sale
+#: view:pos.order:0
 #: field:pos.order,pickings:0
 msgid "Picking"
 msgstr ""
@@ -718,10 +737,9 @@ msgid "Refund order :"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.receipt:0
-msgid "Qty"
-msgstr "Qt"
+#: field:report.transaction.pos,no_trans:0
+msgid "Number of Transaction"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -735,11 +753,9 @@ msgid "Cannot delete a point of sale which is already confirmed !"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
-#: field:pos.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preço Unitário"
+#: view:pos.order:0
+msgid "Other"
+msgstr "Outro"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
@@ -792,7 +808,7 @@ msgstr "Adicionar pagamento"
 #. module: point_of_sale
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -812,9 +828,9 @@ msgid "Total discount"
 msgstr "Total do desconto"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Other"
-msgstr "Outro"
+#: field:pos.order,invoice_wanted:0
+msgid "Create Invoice"
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
@@ -850,11 +866,6 @@ msgid "Invoicing"
 msgstr "Facturando"
 
 #. module: point_of_sale
-#: field:pos.order,nb_print:0
-msgid "Number of print"
-msgstr "Número de impressão"
-
-#. module: point_of_sale
 #: field:pos.config.journal,journal_id:0
 #: field:pos.order,sale_journal:0
 #: wizard_field:pos.payment,ask_pay,journal:0
@@ -881,6 +892,11 @@ msgstr ""
 #. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Tel. :"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.payment,payment_nb:0
+msgid "Piece Number"
 msgstr ""
 
 #. module: point_of_sale
@@ -969,6 +985,13 @@ msgstr "Modo de impostos"
 #: view:pos.order:0
 msgid "Actions"
 msgstr "Acções"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+#: rml:pos.lines:0
+msgid "Print Date:"
+msgstr "Data da impressão"
 
 #. module: point_of_sale
 #: rml:pos.details:0

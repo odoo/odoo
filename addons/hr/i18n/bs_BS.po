@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:44:12+0000\n"
-"PO-Revision-Date: 2009-01-23 13:44:12+0000\n"
+"POT-Creation-Date: 2009-01-28 00:39:46+0000\n"
+"PO-Revision-Date: 2009-01-28 00:39:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,7 @@ msgid "SIN No"
 msgstr ""
 
 #. module: hr
+#: model:ir.module.module,shortdesc:hr.module_meta_information
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
 msgstr ""
@@ -90,11 +91,6 @@ msgid "Parent Department"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Childs Categories"
-msgstr ""
-
-#. module: hr
 #: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
@@ -123,6 +119,11 @@ msgid "Configuration"
 msgstr ""
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr ""
@@ -139,6 +140,12 @@ msgid "Working Time Category"
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-in must be right after a sign-out !"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
@@ -152,6 +159,11 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
 msgstr ""
 
 #. module: hr
@@ -208,6 +220,11 @@ msgid "Divorced"
 msgstr ""
 
 #. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
 #: model:ir.ui.menu,name:hr.menu_department_def
@@ -236,8 +253,8 @@ msgid "Male"
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
 msgstr ""
 
 #. module: hr
@@ -335,12 +352,6 @@ msgid "Employee Complete Form"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr ""
-
-#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr ""
@@ -351,18 +362,14 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
 msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
 msgid "Starting date"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent category"
 msgstr ""
 
 #. module: hr
@@ -418,11 +425,6 @@ msgid "Employees Categories"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Childs Departments"
-msgstr ""
-
-#. module: hr
 #: view:hr.department:0
 msgid "department"
 msgstr ""
@@ -457,6 +459,11 @@ msgstr ""
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
 msgstr ""
 
 #. module: hr

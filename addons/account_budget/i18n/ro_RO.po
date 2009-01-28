@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:09:28+0000\n"
-"PO-Revision-Date: 2009-01-23 14:09:28+0000\n"
+"POT-Creation-Date: 2009-01-28 00:51:02+0000\n"
+"PO-Revision-Date: 2009-01-28 00:51:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -133,6 +133,29 @@ msgid "Status"
 msgstr ""
 
 #. module: account_budget
+#: model:ir.module.module,description:account_budget.module_meta_information
+msgid "This module allows accountants to manage analytic and crossovered budgets.\n"
+"\n"
+"Once the Master Budgets and the Budgets defined (in Financial\n"
+"Management/Budgets/), the Project Managers can set the planned amount on each\n"
+"Analytic Account.\n"
+"\n"
+"The accountant has the possibility to see the total of amount planned for each\n"
+"Budget and Master Budget in order to ensure the total planned is not\n"
+"greater/lower than what he planned for this Budget/Master Budget. Each list of\n"
+"record can also be switched to a graphical view of it.\n"
+"\n"
+"Three reports are available:\n"
+"    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+"\n"
+"    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.\n"
+"\n"
+"    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
+"\n"
+""
+msgstr ""
+
+#. module: account_budget
 #: rml:account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "%"
@@ -208,6 +231,11 @@ msgstr ""
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Validate"
+msgstr ""
+
+#. module: account_budget
+#: wizard_view:account.budget.report,init:0
+msgid "Select period"
 msgstr ""
 
 #. module: account_budget
@@ -419,8 +447,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: account_budget
-#: wizard_view:account.budget.report,init:0
-msgid "Select period"
+#: model:ir.module.module,shortdesc:account_budget.module_meta_information
+msgid "Budget Management"
 msgstr ""
 
 #. module: account_budget

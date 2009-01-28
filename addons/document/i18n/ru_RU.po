@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:11:02+0000\n"
-"PO-Revision-Date: 2009-01-23 14:11:02+0000\n"
+"POT-Creation-Date: 2009-01-28 00:51:45+0000\n"
+"PO-Revision-Date: 2009-01-28 00:51:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,ressource_id:0
-msgid "Ressource ID"
+msgid "Resource ID"
 msgstr ""
 
 #. module: document
@@ -52,6 +52,11 @@ msgid "Document Configuration"
 msgstr ""
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Preview"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,store_method:0
 msgid "Storing Method"
 msgstr ""
@@ -72,8 +77,8 @@ msgid "Check this field if you want that the name of the file start by the recor
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-msgid "Seq."
+#: selection:document.directory,type:0
+msgid "Other Resources"
 msgstr ""
 
 #. module: document
@@ -107,13 +112,8 @@ msgid "Directory Content Type"
 msgstr ""
 
 #. module: document
-#: model:ir.actions.todo,note:document.config_auto_directory
-msgid "This wizard will be configure directory for ressource model."
-msgstr ""
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Preview"
+#: help:document.directory,ressource_tree:0
+msgid "Check this if you want to use the same tree structure as the object selected in the system."
 msgstr ""
 
 #. module: document
@@ -128,8 +128,8 @@ msgid "Directorie's Structure"
 msgstr ""
 
 #. module: document
-#: selection:document.directory,type:0
-msgid "Other Ressources"
+#: field:document.directory,parent_id:0
+msgid "Parent Item"
 msgstr ""
 
 #. module: document
@@ -141,6 +141,11 @@ msgstr ""
 #: field:document.directory,file_ids:0
 #: view:ir.attachment:0
 msgid "Files"
+msgstr ""
+
+#. module: document
+#: field:ir.attachment,store_fname:0
+msgid "Stored Filename"
 msgstr ""
 
 #. module: document
@@ -165,18 +170,13 @@ msgid "Resource Title"
 msgstr ""
 
 #. module: document
+#: model:ir.actions.todo,note:document.config_auto_directory
+msgid "This wizard will configure the URL of the server of the document management system."
+msgstr ""
+
+#. module: document
 #: model:ir.model,name:document.model_document_directory_content
 msgid "Directory Content"
-msgstr ""
-
-#. module: document
-#: field:document.directory,parent_id:0
-msgid "Parent Item"
-msgstr ""
-
-#. module: document
-#: help:document.directory,domain:0
-msgid "Use a domain if you want to apply an automatic filter on visible ressources."
 msgstr ""
 
 #. module: document
@@ -247,13 +247,22 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: document
+#: model:ir.module.module,description:document.module_meta_information
+msgid "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+""
+msgstr ""
+
+#. module: document
 #: field:document.directory,name:0
 msgid "Name"
 msgstr ""
 
 #. module: document
-#: help:document.directory,ressource_tree:0
-msgid "Check this if you want to use the same tree structure than the selected object in the system."
+#: field:document.directory.content.type,code:0
+msgid "Extension"
 msgstr ""
 
 #. module: document
@@ -273,8 +282,13 @@ msgid "Directories"
 msgstr ""
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
+#: view:document.directory:0
+msgid "Seq."
+msgstr ""
+
+#. module: document
+#: model:ir.module.module,shortdesc:document.module_meta_information
+msgid "Integrated Document Management System"
 msgstr ""
 
 #. module: document
@@ -284,8 +298,9 @@ msgid "Directory"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content.type,code:0
-msgid "Extension"
+#: field:document.directory,user_id:0
+#: field:ir.attachment,user_id:0
+msgid "Owner"
 msgstr ""
 
 #. module: document
@@ -353,11 +368,6 @@ msgid "Domain"
 msgstr ""
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Childs"
-msgstr ""
-
-#. module: document
 #: field:document.directory,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
@@ -390,12 +400,6 @@ msgid "Directory name must be unique!"
 msgstr ""
 
 #. module: document
-#: field:document.directory,user_id:0
-#: field:ir.attachment,user_id:0
-msgid "Owner"
-msgstr ""
-
-#. module: document
 #: field:document.directory,create_uid:0
 msgid "Creator"
 msgstr ""
@@ -403,6 +407,11 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "Auto-Generated Files"
+msgstr ""
+
+#. module: document
+#: help:document.directory,domain:0
+msgid "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
 
 #. module: document
@@ -438,6 +447,11 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
+msgstr ""
+
+#. module: document
+#: field:document.directory,child_ids:0
+msgid "Children"
 msgstr ""
 
 #. module: document

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:54:20+0000\n"
-"PO-Revision-Date: 2009-01-23 13:54:20+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -85,8 +85,8 @@ msgid "Pro-forma Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,state:0
-msgid "State"
+#: rml:voucher.cash_receipt:0
+msgid "Receiver's Signature"
 msgstr ""
 
 #. module: account_voucher
@@ -136,8 +136,8 @@ msgid "PRO-FORMA"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_posted_cash_rec_voucher_form
-msgid "Posted Cash Receipt"
+#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
+msgid "Accounting - Voucher Management"
 msgstr ""
 
 #. module: account_voucher
@@ -173,15 +173,18 @@ msgid "Currency"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
-#: rml:voucher.cash_receipt:0
-msgid "Cash Payment Voucher"
+#: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
+msgid "Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
 #: rml:voucher.cash_receipt:0
 msgid "Authorised Signatory"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_receipt:0
+msgid "-"
 msgstr ""
 
 #. module: account_voucher
@@ -323,8 +326,8 @@ msgid "Entry"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Receiver's Signature"
+#: model:ir.ui.menu,name:account_voucher.menu_action_posted_cash_rec_voucher_form
+msgid "Posted Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -351,6 +354,11 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,state:0
+msgid "State"
 msgstr ""
 
 #. module: account_voucher
@@ -427,8 +435,10 @@ msgid "Bank Payment Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
-msgid "Cash Receipt"
+#: selection:account.voucher,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
+#: rml:voucher.cash_receipt:0
+msgid "Cash Payment Voucher"
 msgstr ""
 
 #. module: account_voucher

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -60,6 +60,11 @@ msgstr "Bitte berücksichtige folgendes: Aufträge werden nur zusammengefasst we
 #, python-format
 msgid "No Pricelist !"
 msgstr "Keine Preisliste!"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packing"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -281,7 +286,7 @@ msgstr "Bestätigt"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Product Receipt"
-msgstr ""
+msgstr "Produkt Empfangsbestätigung"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
@@ -297,7 +302,7 @@ msgstr "Eingangsrechnung"
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "Angebotsanfrage"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -483,9 +488,15 @@ msgid "This is the list of picking list that have been generated for this purcha
 msgstr "Diese Packliste wurde abgearbeitet für diese Rechnung"
 
 #. module: purchase
+#: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 msgid "Purchase Management"
 msgstr "Einkauf"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Partner Ref."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -513,6 +524,12 @@ msgstr "Lieferanschrift:"
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Einkaufspositionen"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -544,11 +561,6 @@ msgstr "Beschaffungsauftrag"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
 msgstr "Angebotsanfragen werden vom System bereitgestellt"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Packings"
-msgstr "Packaufträge"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -642,9 +654,9 @@ msgid "Subtotal"
 msgstr "Zwischenbetrag"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Partner Ref."
-msgstr "Partner Ref."
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -667,7 +679,7 @@ msgstr "Rechnung"
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: wizard_button:purchase.order.merge,init,end:0
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Aktion Auslassen"
 
 #. module: purchase
 #: view:res.partner:0
@@ -741,9 +753,21 @@ msgid "Could not cancel this purchase order !"
 msgstr "Konnte den Beschaffungsauftrag nicht abbrechen!"
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid "Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
+msgstr ""
+
+#. module: purchase
 #: field:purchase.order.line,product_id:0
 msgid "Product"
 msgstr "Produkt"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "No Partner!"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -802,8 +826,8 @@ msgstr "Eingangsrechnung"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "You must first cancel all packings attached to this purchase order."
-msgstr "Sie sollten zuallererst alle Packaufträge die diesem Beschaffungsauftrag zugeordnet wurden entfernen."
+msgid "You must first cancel all packing attached to this purchase order."
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -833,6 +857,7 @@ msgid "Request For Quotations"
 msgstr "Angebotsanfrage (Request)"
 
 #. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
 msgstr "Einkaufspreisliste"

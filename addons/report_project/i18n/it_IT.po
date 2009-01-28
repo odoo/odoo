@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:01:51+0000\n"
-"PO-Revision-Date: 2009-01-23 14:01:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:47:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:47:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: report_project
-#: model:ir.model,name:report_project.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Attività per Utente e Progetto"
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "Attività per Progetto e Utente"
 
 #. module: report_project
 #: constraint:ir.model:0
@@ -72,14 +72,20 @@ msgid "Project"
 msgstr "Progetto"
 
 #. module: report_project
+#: field:report.project.task,closing_days:0
 #: field:report.project.task.user,closing_days:0
 msgid "Avg Closing Delay"
 msgstr "Ritardo Medio di Chiusura"
 
 #. module: report_project
-#: view:report.project.task:0
-msgid "Tasks by Project"
-msgstr "Attività per Progetto"
+#: model:ir.module.module,shortdesc:report_project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: report_project
+#: model:ir.model,name:report_project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Attività per Utente e Progetto"
 
 #. module: report_project
 #: model:ir.model,name:report_project.model_report_project_task
@@ -100,9 +106,9 @@ msgid "Tasks finished by project and user (this month)"
 msgstr ""
 
 #. module: report_project
-#: view:report.project.task.user:0
-msgid "Tasks by Project and User"
-msgstr "Attività per Progetto e Utente"
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "Attività per Progetto"
 
 #. module: report_project
 #: model:ir.ui.menu,name:report_project.next_id_63

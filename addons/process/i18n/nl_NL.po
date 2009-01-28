@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,9 +122,9 @@ msgid "Workflow Transitions"
 msgstr "Werkschema transities"
 
 #. module: process
-#: field:process.process,active:0
-msgid "Active"
-msgstr "Actief"
+#: field:process.transition.action,action:0
+msgid "Action ID"
+msgstr "Actie ID"
 
 #. module: process
 #: view:process.transition:0
@@ -201,9 +201,14 @@ msgid "Subflow"
 msgstr "Subschema"
 
 #. module: process
-#: field:process.transition.action,action:0
-msgid "Action ID"
-msgstr "Actie ID"
+#: field:process.process,active:0
+msgid "Active"
+msgstr "Actief"
+
+#. module: process
+#: selection:process.transition.action,state:0
+msgid "Action"
+msgstr ""
 
 #. module: process
 #: field:process.node,flow_start:0
@@ -233,6 +238,11 @@ msgstr "Eindigende overgangen"
 #: view:process.process:0
 msgid "Process"
 msgstr "Processen"
+
+#. module: process
+#: model:ir.module.module,shortdesc:process.module_meta_information
+msgid "Enterprise Process"
+msgstr ""
 
 #. module: process
 #: view:process.node:0

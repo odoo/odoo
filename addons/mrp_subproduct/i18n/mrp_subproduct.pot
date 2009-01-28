@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:23:35+0000\n"
-"PO-Revision-Date: 2009-01-23 14:23:35+0000\n"
+"POT-Creation-Date: 2009-01-28 00:58:16+0000\n"
+"PO-Revision-Date: 2009-01-28 00:58:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,18 +31,18 @@ msgid "sub products"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr ""
-
-#. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
 msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Mrp Sub Product"
+msgstr ""
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -51,12 +51,22 @@ msgid "Product UOM"
 msgstr ""
 
 #. module: mrp_subproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr ""
+
+#. module: mrp_subproduct
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr ""
+
+#. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
 msgid "sub_products"
 msgstr ""
 
 #. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Mrp Sub Product"
+#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
+msgid "MRP Sub Product"
 msgstr ""
 

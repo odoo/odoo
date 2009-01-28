@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:07:57+0000\n"
-"PO-Revision-Date: 2009-01-23 14:07:57+0000\n"
+"POT-Creation-Date: 2009-01-28 00:50:20+0000\n"
+"PO-Revision-Date: 2009-01-28 00:50:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Bruto"
 #. module: hr_contract
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um caracter especial!"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -67,9 +67,9 @@ msgid "Net"
 msgstr "Rede"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tipo"
+#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
+msgid "Human Resources Contracts"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,factor_days:0
@@ -103,6 +103,11 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: hr_contract
+#: field:hr.contract.wage.type,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: hr_contract
 #: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type
@@ -115,9 +120,9 @@ msgid "Period Name"
 msgstr "Nome do período"
 
 #. module: hr_contract
-#: field:hr.employee,nationality:0
-msgid "Nationality"
-msgstr "Nacionalidade"
+#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
+msgid "Employee Marital Status"
+msgstr "Estado civil do empregado"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -178,9 +183,14 @@ msgid "Wage Period"
 msgstr "Período do salário"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Estado civil do empregado"
+#: field:hr.employee,nationality:0
+msgid "Nationality"
+msgstr "Nacionalidade"
+
+#. module: hr_contract
+#: field:hr.employee,audiens_num:0
+msgid "AUDIENS Number"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0

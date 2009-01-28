@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:45:38+0000\n"
-"PO-Revision-Date: 2009-01-23 13:45:38+0000\n"
+"POT-Creation-Date: 2009-01-28 00:40:23+0000\n"
+"PO-Revision-Date: 2009-01-28 00:40:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,11 @@ msgstr "Записи"
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Дата на падеж"
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Account Entry Line"
+msgstr "Ред от запис на сметка"
 
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
@@ -249,6 +254,11 @@ msgid "Created"
 msgstr "Създаден"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Избор на фактура за плащане"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Обща сума за валута"
@@ -264,15 +274,9 @@ msgid "Communication Type"
 msgstr "Вид комуникация"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Партньор"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Комуникация"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -309,6 +313,12 @@ msgstr "Сума за плащане във валутата на партньо
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Проект"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Партньор"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -429,9 +439,9 @@ msgid "Done"
 msgstr ""
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Избор на фактура за плащане"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Комуникация"
 
 #. module: account_payment
 #: view:payment.order:0

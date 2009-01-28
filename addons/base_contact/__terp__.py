@@ -49,7 +49,7 @@
         'process/base_contact_process.xml'
     ],
     'demo_xml': ['base_contact_demo.xml'],
-    'installable': True,
+    'installable': False,
     'active': False,
     'certificate': '31287885469',
 }

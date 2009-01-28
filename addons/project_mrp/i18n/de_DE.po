@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:13+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Falls Produkttyp \"Service\" (Dienstleistung) wird eine Aufgabe erzeugt.
 #. module: project_mrp
 #: field:project.task,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "Beschaffung"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -47,9 +47,19 @@ msgid "Product type is service, then its creates the task."
 msgstr "Bei Produktart Service (Dienstleistungen), wird diese Aufgabe generiert."
 
 #. module: project_mrp
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Project Management - MRP and Sale Integration"
+msgstr ""
+
+#. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procure Task"
 msgstr "Beschaffung Aufgabe"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
@@ -59,7 +69,7 @@ msgstr "Bestelle Aufgabe"
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr ""
+msgstr "Verkaufsauftrag Aufgabe"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -69,5 +79,5 @@ msgstr "Erzeuge Aufgabe"
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr ""
+msgstr "Im Falle dass Sie Dienstleistungen aufgrund von Verkaufsaufträgen verkaufen"
 

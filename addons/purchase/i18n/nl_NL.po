@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -60,6 +60,11 @@ msgstr "Alleen orders met dezelfde leverancier en met dezelfde bestemming worden
 #, python-format
 msgid "No Pricelist !"
 msgstr "Geen prijslijst!"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packing"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -481,9 +486,15 @@ msgid "This is the list of picking list that have been generated for this purcha
 msgstr "Dit is een lijst van pakbonnen welke zijn gegenereerd op basis van deze inkoop"
 
 #. module: purchase
+#: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 msgid "Purchase Management"
 msgstr "Inkoopbeheer"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Partner Ref."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -511,6 +522,12 @@ msgstr "Bestemmingsadres"
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Inkooporderregel"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -542,11 +559,6 @@ msgstr "Inkooporder"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
 msgstr "Inkoopaanvraag wordt voorgesteld door het systeem"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Packings"
-msgstr "Pakbonnen"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -640,9 +652,9 @@ msgid "Subtotal"
 msgstr "Subtotaal"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Partner Ref."
-msgstr "Partner Ref."
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -739,9 +751,21 @@ msgid "Could not cancel this purchase order !"
 msgstr "Inkooporder kan niet geannuleerd worden."
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid "Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
+msgstr ""
+
+#. module: purchase
 #: field:purchase.order.line,product_id:0
 msgid "Product"
 msgstr "Product"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "No Partner!"
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -800,8 +824,8 @@ msgstr "Inkoopfactuur"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "You must first cancel all packings attached to this purchase order."
-msgstr "Eerst moeten alle ontvangsbonnen behorende bij deze order worden geannuleerd."
+msgid "You must first cancel all packing attached to this purchase order."
+msgstr ""
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -831,6 +855,7 @@ msgid "Request For Quotations"
 msgstr "Inkoopofferte-aanvraag"
 
 #. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
 msgstr "Inkoopprijslijst"

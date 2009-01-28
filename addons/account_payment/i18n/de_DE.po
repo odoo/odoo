@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,12 +57,12 @@ msgstr "Der Betrag der zum aktuellen Datum bezahlt werden soll \n"
 #. module: account_payment
 #: help:payment.line,date:0
 msgid "If no payment date is specified, the bank will treat this payment line directly"
-msgstr ""
+msgstr "Wenn kein Zahlungsdatum vorgegeben ist, wird die Banks sofort überweisen."
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "bevorzugtes Datum"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -80,6 +80,11 @@ msgid "Due Date"
 msgstr "Fälligkeitsdatum"
 
 #. module: account_payment
+#: view:account.move.line:0
+msgid "Account Entry Line"
+msgstr "Buchungszeile"
+
+#. module: account_payment
 #: wizard_button:populate_payment,search,create:0
 msgid "_Add to payment order"
 msgstr "_Add to payment order"
@@ -93,7 +98,7 @@ msgstr "Betrag"
 #. module: account_payment
 #: rml:payment.order:0
 msgid "Execution date:"
-msgstr ""
+msgstr "Ausführungsdatum:"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -192,7 +197,7 @@ msgstr "Effektives Datum"
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "Rechung Ref."
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -249,6 +254,11 @@ msgid "Created"
 msgstr "Erzeugt"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Wähle Rechnungen"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Betrag in Fremdwährung"
@@ -264,15 +274,9 @@ msgid "Communication Type"
 msgstr "Betreffzeile Empfänger"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Betreffzeile"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -311,6 +315,12 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Journal für Zahlungsmodus"
@@ -345,17 +355,17 @@ msgstr "Benutzer"
 #: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 #: wizard_field:populate_statement,init,lines:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Buchungszeilen"
 
 #. module: account_payment
 #: rml:payment.order:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: account_payment
 #: rml:payment.order:0
 msgid "Reference:"
-msgstr ""
+msgstr "Referenz:"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -429,9 +439,9 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Wähle Rechnungen"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Betreffzeile"
 
 #. module: account_payment
 #: view:payment.order:0

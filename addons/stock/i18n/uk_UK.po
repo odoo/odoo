@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:20:26+0000\n"
-"PO-Revision-Date: 2009-01-23 14:20:26+0000\n"
+"POT-Creation-Date: 2009-01-28 00:56:04+0000\n"
+"PO-Revision-Date: 2009-01-28 00:56:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,7 @@ msgid "terp-account"
 msgstr ""
 
 #. module: stock
+#: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
 msgid "Stock Management"
 msgstr ""
@@ -94,8 +95,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
-#: model:ir.model,name:stock.model_stock_picking
-#: field:stock.move,picking_id:0
 #: view:stock.picking:0
 #: field:stock.picking.move.wizard,picking_id:0
 msgid "Packing list"
@@ -165,7 +164,6 @@ msgstr "Історія переміщень"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
-#: field:stock.move,prodlot_id:0
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
 msgid "Production lot"
@@ -249,6 +247,11 @@ msgid "terp-hr"
 msgstr ""
 
 #. module: stock
+#: field:stock.location,usage:0
+msgid "Location Type"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-purchase"
 msgstr ""
@@ -272,14 +275,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 msgid "Internal Moves"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree2
-#: model:ir.actions.act_window,name:stock.action_picking_tree7
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree7
-#: model:ir.ui.menu,name:stock.menu_picking_waiting
-msgid "Available Packings"
 msgstr ""
 
 #. module: stock
@@ -343,11 +338,6 @@ msgstr "Інформація про переміщення"
 #. module: stock
 #: view:stock.picking:0
 msgid "Unreceived Products"
-msgstr ""
-
-#. module: stock
-#: field:stock.production.lot,ref:0
-msgid "Internal Ref."
 msgstr ""
 
 #. module: stock
@@ -518,9 +508,8 @@ msgid "For the current product (template), this stock location will be used, ins
 msgstr "Для поточного продукту (шаблону) буде використано це місце складування замість типового як початкове місце для складських операцій, згенерованих інвентаризацією"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree9
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree9
-msgid "New Internal Packings"
+#: field:stock.move,date_planned:0
+msgid "Scheduled Date"
 msgstr ""
 
 #. module: stock
@@ -548,16 +537,6 @@ msgstr ""
 #: field:product.product,track_incoming:0
 msgid "Track Incomming Lots"
 msgstr ""
-
-#. module: stock
-#: field:stock.tracking,move_ids:0
-msgid "Moves tracked"
-msgstr "Відслідковані переміщення"
-
-#. module: stock
-#: model:ir.actions.report.xml,name:stock.report_location_overview_all
-msgid "Location Content (With childs)"
-msgstr "Вміст місця (з підлеглими)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -634,6 +613,11 @@ msgid "Production Location"
 msgstr "Розміщення продукту"
 
 #. module: stock
+#: field:stock.move,tracking_id:0
+msgid "Tracking Lot"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_FORWARD"
 msgstr ""
@@ -691,6 +675,11 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
+msgstr ""
+
+#. module: stock
+#: help:stock.move,tracking_id:0
+msgid "Tracking lot is the code that will be put on the logistical unit/pallet"
 msgstr ""
 
 #. module: stock
@@ -778,9 +767,12 @@ msgid "Waiting"
 msgstr "Очікування"
 
 #. module: stock
-#: wizard_button:stock.move.split,init,split:0
-msgid "Split"
-msgstr "Розділити"
+#: model:ir.actions.act_window,name:stock.action_picking_tree2
+#: model:ir.actions.act_window,name:stock.action_picking_tree7
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree7
+#: model:ir.ui.menu,name:stock.menu_picking_waiting
+msgid "Available Packing"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -804,6 +796,11 @@ msgid "Generic IT Suppliers"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview_all
+msgid "Location Content (With children)"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_FILE"
 msgstr ""
@@ -824,6 +821,13 @@ msgid "STOCK_CONNECT"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_all
+#: model:ir.ui.menu,name:stock.menu_action_picking_all
+#: wizard_field:stock.picking.make,init,pickings:0
+msgid "Packing"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_DOWN"
 msgstr ""
@@ -837,6 +841,12 @@ msgstr "Розміщення"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_OK"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree9
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree9
+msgid "New Internal Packing"
 msgstr ""
 
 #. module: stock
@@ -870,7 +880,6 @@ msgstr "Головне розміщення"
 
 #. module: stock
 #: field:stock.inventory,date:0
-#: field:stock.tracking,date:0
 msgid "Date create"
 msgstr "Дата створення"
 
@@ -923,6 +932,7 @@ msgstr ""
 
 #. module: stock
 #: field:stock.move,date:0
+#: field:stock.tracking,date:0
 msgid "Date Created"
 msgstr "Дата створення"
 
@@ -947,9 +957,9 @@ msgid "STOCK_GO_BACK"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,tracking_id:0
-msgid "Tracking lot"
-msgstr "Відслідковування партії"
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr ""
 
 #. module: stock
 #: view:product.product:0
@@ -1014,12 +1024,6 @@ msgstr ""
 #: wizard_view:stock.partial_picking,end2:0
 msgid "The packing has been successfully made !"
 msgstr "Пакування було виконане успішно !"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree5
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree5
-msgid "Packings to Process"
-msgstr ""
 
 #. module: stock
 #: field:stock.move,address_id:0
@@ -1096,15 +1100,12 @@ msgid "Split in production lots"
 msgstr "Розподілити на партії"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_location
-#: rml:lot.location:0
-#: wizard_field:stock.fill_inventory,init,location_id:0
-#: field:stock.inventory.line,location_id:0
-#: field:stock.picking,location_id:0
-#: rml:stock.picking.list:0
-#: field:stock.report.prodlots,location_id:0
-msgid "Location"
-msgstr "Розміщення"
+#: model:ir.model,name:stock.model_stock_inventory
+#: field:stock.inventory,name:0
+#: field:stock.inventory.line,inventory_id:0
+#: selection:stock.location,usage:0
+msgid "Inventory"
+msgstr "Інвентаризація"
 
 #. module: stock
 #: view:product.template:0
@@ -1215,6 +1216,12 @@ msgid "Input Packing List"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_picking
+#: field:stock.move,picking_id:0
+msgid "Packing List"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_COPY"
 msgstr ""
@@ -1275,6 +1282,11 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
+msgstr ""
+
+#. module: stock
+#: field:stock.production.lot,ref:0
+msgid "Internal Ref"
 msgstr ""
 
 #. module: stock
@@ -1421,12 +1433,15 @@ msgid "Priority"
 msgstr "Пріоритет"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory
-#: field:stock.inventory,name:0
-#: field:stock.inventory.line,inventory_id:0
-#: selection:stock.location,usage:0
-msgid "Inventory"
-msgstr "Інвентаризація"
+#: model:ir.model,name:stock.model_stock_location
+#: rml:lot.location:0
+#: wizard_field:stock.fill_inventory,init,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: field:stock.picking,location_id:0
+#: rml:stock.picking.list:0
+#: field:stock.report.prodlots,location_id:0
+msgid "Location"
+msgstr "Розміщення"
 
 #. module: stock
 #: field:stock.picking,invoice_state:0
@@ -1452,6 +1467,21 @@ msgstr ""
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
+msgstr ""
+
+#. module: stock
+#: model:ir.module.module,description:stock.module_meta_information
+msgid "OpenERP Stock Management module can manage multi-warehouses, multi and structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful and flexible:\n"
+"* Moves history and planning,\n"
+"* Different inventory methods (FIFO, LIFO, ...)\n"
+"* Stock valuation (standard or average price, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"* Automatic reordering rules (stock level, JIT, ...)\n"
+"* Bar code supported\n"
+"* Rapid detection of mistakes through double entry system\n"
+"* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+"    "
 msgstr ""
 
 #. module: stock
@@ -1515,14 +1545,6 @@ msgstr ""
 #: selection:stock.location,usage:0
 msgid "Procurement"
 msgstr "Заготовка"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree3
-#: model:ir.actions.act_window,name:stock.action_picking_tree8
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree3
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree8
-msgid "Confirmed Packings Waiting Availability"
-msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -1598,6 +1620,11 @@ msgid "Create invoices"
 msgstr "Створити інвойси"
 
 #. module: stock
+#: field:stock.production.lot.revision,date:0
+msgid "Revision Date"
+msgstr ""
+
+#. module: stock
 #: rml:stock.picking.list:0
 msgid "Lot"
 msgstr ""
@@ -1613,9 +1640,15 @@ msgid "Quantity (UOS)"
 msgstr "Кількість (ОП)"
 
 #. module: stock
-#: field:stock.location,usage:0
-msgid "Location type"
-msgstr "Тип місця"
+#: model:ir.actions.act_window,name:stock.action_picking_tree5
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree5
+msgid "Packing to Process"
+msgstr ""
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_MEDIA_STOP"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -1696,6 +1729,11 @@ msgid "To"
 msgstr ""
 
 #. module: stock
+#: field:stock.production.lot.revision,name:0
+msgid "Revision Name"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_SELECT_COLOR"
 msgstr ""
@@ -1768,11 +1806,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
 msgstr "Склади"
-
-#. module: stock
-#: help:stock.move,tracking_id:0
-msgid "Tracking lot is the code that will be put on the logistic unit/pallet"
-msgstr "Відслідковування партії - є код, який буде проставлено на логістичну одиницю/піддон"
 
 #. module: stock
 #: help:product.product,track_outgoing:0
@@ -2097,6 +2130,11 @@ msgid "Confirm (Do Not Process Now)"
 msgstr ""
 
 #. module: stock
+#: field:stock.tracking,move_ids:0
+msgid "Moves Tracked"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
 msgstr "Звіти"
@@ -2116,11 +2154,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
 msgid "Configuration"
 msgstr "Налаштування"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_STOP"
-msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2200,9 +2233,12 @@ msgid "STOCK_JUSTIFY_CENTER"
 msgstr ""
 
 #. module: stock
-#: selection:stock.picking,invoice_state:0
-msgid "To be invoiced"
-msgstr "Буде виписано"
+#: model:ir.actions.act_window,name:stock.action_picking_tree3
+#: model:ir.actions.act_window,name:stock.action_picking_tree8
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree3
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree8
+msgid "Confirmed Packing Waiting Availability"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2213,13 +2249,6 @@ msgstr "Позиція Y"
 #: model:ir.actions.wizard,name:stock.wizard_merge_inventory_zero
 msgid "Set Stock to 0"
 msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_all
-#: model:ir.ui.menu,name:stock.menu_action_picking_all
-#: wizard_field:stock.picking.make,init,pickings:0
-msgid "Packings"
-msgstr "Пакети"
 
 #. module: stock
 #: view:stock.location:0
@@ -2280,6 +2309,7 @@ msgstr ""
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
+#: field:stock.move,prodlot_id:0
 #: view:stock.production.lot:0
 msgid "Production Lot"
 msgstr "Виробнича партія"
@@ -2318,11 +2348,6 @@ msgid "General Information"
 msgstr "Загальне"
 
 #. module: stock
-#: field:stock.production.lot.revision,date:0
-msgid "Revision date"
-msgstr "Дата ревізії"
-
-#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-product"
 msgstr ""
@@ -2349,9 +2374,9 @@ msgid "Dest. Location"
 msgstr "Куди перемістити"
 
 #. module: stock
-#: field:stock.move,date_planned:0
-msgid "Scheduled date"
-msgstr "Запланована дата"
+#: wizard_button:stock.move.split,init,split:0
+msgid "Split"
+msgstr "Розділити"
 
 #. module: stock
 #: field:stock.location,account_id:0
@@ -2424,11 +2449,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_location_tree_3
 msgid "Locations' Values"
 msgstr ""
-
-#. module: stock
-#: field:stock.production.lot.revision,name:0
-msgid "Revision name"
-msgstr "Назва ревізії"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output

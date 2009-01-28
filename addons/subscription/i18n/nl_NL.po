@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:54:21+0000\n"
-"PO-Revision-Date: 2009-01-23 13:54:21+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -93,9 +93,9 @@ msgid "Set to Draft"
 msgstr "Naar Concept"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-msgid "Subscription document"
-msgstr "Subscription document"
+#: model:ir.module.module,description:subscription.module_meta_information
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr ""
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -169,9 +169,19 @@ msgid "Days"
 msgstr "Dagen"
 
 #. module: subscription
+#: model:ir.module.module,shortdesc:subscription.module_meta_information
+msgid "Subscription and recurring operations"
+msgstr ""
+
+#. module: subscription
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Actief"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+msgid "Subscription document"
+msgstr "Subscription document"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0

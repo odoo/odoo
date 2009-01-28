@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:04:52+0000\n"
-"PO-Revision-Date: 2009-01-23 14:04:52+0000\n"
+"POT-Creation-Date: 2009-01-28 00:48:56+0000\n"
+"PO-Revision-Date: 2009-01-28 00:48:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -85,12 +85,6 @@ msgid "Start"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action
-msgid "All Work Order"
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
 msgstr ""
@@ -116,11 +110,6 @@ msgid "Set Draft"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-msgid "Work Order"
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Date Planned"
 msgstr ""
@@ -141,8 +130,9 @@ msgid "Production Operation Code"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
-msgid "Confirm Work Order"
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid " You cannot Resume the operation other then Pause state !"
 msgstr ""
 
 #. module: mrp_operations
@@ -156,8 +146,8 @@ msgid "Start Cancel Operation"
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:0
-msgid "Production Operation"
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Canceled"
 msgstr ""
 
 #. module: mrp_operations
@@ -171,9 +161,9 @@ msgid "("
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "You cannot finish the operation without Starting/Resuming it !"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_draft_action
+msgid "Future Work Orders"
 msgstr ""
 
 #. module: mrp_operations
@@ -211,6 +201,12 @@ msgid "Finished"
 msgstr ""
 
 #. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: view:mrp.production.workcenter.line:0
+msgid "Work Orders"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
@@ -225,6 +221,11 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Production order for any products"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
+msgid "Workcenter Production start end workflow"
 msgstr ""
 
 #. module: mrp_operations
@@ -251,7 +252,7 @@ msgstr ""
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
 #, python-format
-msgid "You cannot Pause the Operation other then Start/Resume state !"
+msgid "You cannot finish the operation without Starting/Resuming it !"
 msgstr ""
 
 #. module: mrp_operations
@@ -282,6 +283,11 @@ msgid "Error!"
 msgstr ""
 
 #. module: mrp_operations
+#: field:mrp.production.workcenter.line,production_state:0
+msgid "Prod.State"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
 msgstr ""
@@ -289,6 +295,12 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Production Work Center"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Operation is Already Cancelled  !"
 msgstr ""
 
 #. module: mrp_operations
@@ -313,8 +325,9 @@ msgid "Operations"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_draft_action
-msgid "Waiting Work Orders"
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "You cannot Pause the Operation other then Start/Resume state !"
 msgstr ""
 
 #. module: mrp_operations
@@ -324,9 +337,8 @@ msgid "Code"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Operation is Already Cancelled  !"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
 msgstr ""
 
 #. module: mrp_operations
@@ -366,8 +378,14 @@ msgid "Qty"
 msgstr ""
 
 #. module: mrp_operations
-#: selection:mrp.production.workcenter.line,state:0
-msgid "Canceled"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action
+msgid "All Work Orders"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp_operations.operation:0
+msgid "Production Operation"
 msgstr ""
 
 #. module: mrp_operations
@@ -395,11 +413,6 @@ msgstr ""
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 #: model:process.transition,note:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation is cancelled"
-msgstr ""
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
-msgid "Draft Work Order"
 msgstr ""
 
 #. module: mrp_operations

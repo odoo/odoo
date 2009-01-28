@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:15:43+0000\n"
-"PO-Revision-Date: 2009-01-23 14:15:43+0000\n"
+"POT-Creation-Date: 2009-01-28 00:53:54+0000\n"
+"PO-Revision-Date: 2009-01-28 00:53:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,12 @@ msgid "Report Objects With Accounts and child of Accounts"
 msgstr "Objetos del informe con cuentas y cuentas hijas"
 
 #. module: account_reporting
+#: model:ir.module.module,description:account_reporting.module_meta_information
+msgid "Financial and accounting reporting\n"
+"    Balance Sheet Report"
+msgstr ""
+
+#. module: account_reporting
 #: selection:account.report.bs,report_type:0
 msgid "Report Objects With Accounts"
 msgstr "Objetos del informe con cuentas"
@@ -118,14 +124,19 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: account_reporting
+#: selection:account.report.bs,font_style:0
+msgid "Times-BoldItalic"
+msgstr "Times-NegritaCursiva"
+
+#. module: account_reporting
 #: model:ir.model,name:account_reporting.model_account_report_bs
 msgid "Account reporting for Balance Sheet"
 msgstr "Informe contable para hoja de balance"
 
 #. module: account_reporting
-#: field:account.report.bs,code:0
-msgid "Code"
-msgstr "Código"
+#: selection:account.report.bs,font_style:0
+msgid "Courier-Bold"
+msgstr "Courier-Negrita"
 
 #. module: account_reporting
 #: selection:account.report.bs,font_style:0
@@ -143,14 +154,14 @@ msgid "Rml Colors"
 msgstr "Colores RML"
 
 #. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Times-BoldItalic"
-msgstr "Times-NegritaCursiva"
+#: model:ir.module.module,shortdesc:account_reporting.module_meta_information
+msgid "Reporting of Balancesheet for accounting"
+msgstr ""
 
 #. module: account_reporting
-#: field:account.report.bs,child_id:0
-msgid "Childs"
-msgstr "Hijos"
+#: field:account.report.bs,code:0
+msgid "Code"
+msgstr "Código"
 
 #. module: account_reporting
 #: field:account.report.bs,parent_id:0
@@ -178,11 +189,6 @@ msgid "Fiscal year"
 msgstr "Ejercicio fiscal"
 
 #. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Courier-Bold"
-msgstr "Courier-Negrita"
-
-#. module: account_reporting
 #: view:account.report.bs:0
 #: field:account.report.bs,account_id:0
 msgid "Accounts"
@@ -197,6 +203,11 @@ msgstr ""
 #: field:account.report.bs,color_back:0
 msgid "Back Color"
 msgstr "Color fondo"
+
+#. module: account_reporting
+#: field:account.report.bs,child_id:0
+msgid "Children"
+msgstr ""
 
 #. module: account_reporting
 #: wizard_button:account.account.balancesheet.report,init,end:0

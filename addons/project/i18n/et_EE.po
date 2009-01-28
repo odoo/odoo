@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:55:50+0000\n"
-"PO-Revision-Date: 2009-01-23 13:55:50+0000\n"
+"POT-Creation-Date: 2009-01-28 00:44:54+0000\n"
+"PO-Revision-Date: 2009-01-28 00:44:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -140,6 +140,12 @@ msgid "Set pending"
 msgstr "Määra lahtiseks"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.action_view_task7
+#: model:ir.ui.menu,name:project.menu_action_view_task7
+msgid "Unassigned Tasks"
+msgstr "Määramata ülesanded"
+
+#. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Defineeri nõuded ja määra planeeritud tunnid"
@@ -169,6 +175,13 @@ msgstr "Väga pakiline"
 #: wizard_button:project.task.delegate,init,valid:0
 msgid "Validate"
 msgstr "Kinnita"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid "Project management module that track multi-level projects, tasks,\n"
+"works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
+"    "
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
@@ -457,10 +470,10 @@ msgid "Tasks in Progress"
 msgstr "Töös olevad ülesanded"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task7
-#: model:ir.ui.menu,name:project.menu_action_view_task7
-msgid "Unassigned Tasks"
-msgstr "Määramata ülesanded"
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Done"
+msgstr "Toiming teostatud"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,name:0
@@ -538,16 +551,12 @@ msgid "Delegate"
 msgstr "Volita"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_new
-msgid "Create a Task"
-msgstr "Loo ülesanne"
-
-#. module: project
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
 #: model:ir.ui.menu,name:project.menu_main
 #: view:res.company:0
 msgid "Project Management"
@@ -813,6 +822,11 @@ msgid "Sum of spent hours of all tasks related to this project."
 msgstr "Kõigi selle projektiga seotud ülesannetele kulunud aeg."
 
 #. module: project
+#: help:project.task,project_id:0
+msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
+msgstr ""
+
+#. module: project
 #: help:project.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr "Kõigi selle projektiga seotud ülesannetele planeeritud aeg."
@@ -849,10 +863,9 @@ msgid "Date Start: %(date_start)s"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Operation Done"
-msgstr "Toiming teostatud"
+#: help:project.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -875,9 +888,9 @@ msgid "Cancel"
 msgstr "Loobu"
 
 #. module: project
-#: help:project.project,category_id:0
-msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
-msgstr "Seo see projekt analüütilise kontoga, kui sa vajad finantshaldust sellele projektile. See võimaldab sul ühendada projekte eelarvetega, planeerimistega, kulude ja tulude analüüsiga, projektide tööakalehtedega jms."
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_new
+msgid "Create a Task"
+msgstr "Loo ülesanne"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -987,6 +1000,11 @@ msgstr "Töö tehtud"
 #: selection:project.project,state:0
 msgid "Running"
 msgstr "Töötab"
+
+#. module: project
+#: help:project.project,parent_id:0
+msgid "If you have [?] in the name, it means there are no analytic account linked to project."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task

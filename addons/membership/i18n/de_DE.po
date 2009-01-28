@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
 msgid "invoice to associate"
-msgstr ""
+msgstr "Rechnung zuzuordnen"
 
 #. module: membership
 #: model:process.process,name:membership.process_process_membershipprocess0
@@ -40,17 +40,17 @@ msgstr "Währung"
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
 msgid "Set an associate member of partner."
-msgstr ""
+msgstr "Definiere ein Mitglied eines Partners"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
 msgid "Invoice is be paid."
-msgstr ""
+msgstr "Rechnung ist bezahlt"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
-msgstr ""
+msgstr "Definiere Mitgliedschaftsprodukt"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
@@ -60,12 +60,12 @@ msgstr "Bis"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
 msgid "Waiting to invoice"
-msgstr ""
+msgstr "Wartet auf Abrechnung"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
 msgid "Product to member"
-msgstr ""
+msgstr "Produkt an Mitglied"
 
 #. module: membership
 #: field:res.partner,associate_member:0
@@ -75,17 +75,17 @@ msgstr "Verbundenes Mitglied"
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
-msgstr ""
+msgstr "Mitgleid ist dazugehörig"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr ""
+msgstr "dazugehöriger Partner"
 
 #. module: membership
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Konten definieren."
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -106,7 +106,7 @@ msgstr "Freie Mitglieder"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetopaid0
 msgid "Invoice to paid"
-msgstr ""
+msgstr "Rechnung zu bezahlen"
 
 #. module: membership
 #: view:res.partner:0
@@ -131,7 +131,7 @@ msgstr "Bestätige"
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr ""
+msgstr "Erzeuge"
 
 #. module: membership
 #: constraint:ir.ui.view:0
@@ -156,7 +156,7 @@ msgstr "Start Mitgliedschaft"
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
-msgstr ""
+msgstr "Mitglied bezahlt"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_partner_member_year
@@ -184,7 +184,7 @@ msgstr "Kein Mitglied"
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
 msgid "Open invoice."
-msgstr ""
+msgstr "offene Rechnung"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_conf
@@ -194,12 +194,12 @@ msgstr "Konfiguration"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
 msgid "Define product for membership."
-msgstr ""
+msgstr "Definiere Produkt für Mitgleidschaft"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
 msgid "Invoiced member may be Associated member."
-msgstr ""
+msgstr "in Rechnung gestelltes Mitglied kann aufgenommenes Mitglied werden"
 
 #. module: membership
 #: constraint:product.template:0
@@ -220,7 +220,7 @@ msgstr "Zukünftige Mitglieder (Rechnung nicht bestätigt)"
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
 msgid "Set association"
-msgstr ""
+msgstr "Setze Mitgliedschaft"
 
 #. module: membership
 #: model:product.template,name:membership.member_product_1_product_template
@@ -260,6 +260,11 @@ msgid "Free Member"
 msgstr "Freie Mitglieder"
 
 #. module: membership
+#: model:product.pricelist.version,name:membership.ver1m
+msgid "Member Sale Pricelist Version"
+msgstr ""
+
+#. module: membership
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr "Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben Kategorie sein."
@@ -272,7 +277,7 @@ msgstr "Vom Partner ausgehandelter Preis"
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
-msgstr ""
+msgstr "augenommenes MItglied"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -287,7 +292,7 @@ msgstr "Mitgliedschaft Produkte"
 #. module: membership
 #: model:process.node,note:membership.process_node_paidmember0
 msgid "Membership invoice paid."
-msgstr ""
+msgstr "Mitgleidschaft bezahlt."
 
 #. module: membership
 #: field:report.partner_member.year,paid_amount:0
@@ -304,6 +309,7 @@ msgid "Invoiced Member"
 msgstr "Abrechnung Mitglieder"
 
 #. module: membership
+#: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: view:product.product:0
 #: field:product.product,membership:0
@@ -326,7 +332,7 @@ msgstr "Wartendes (neues) Mitglied"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
 msgid "Association Partner"
-msgstr ""
+msgstr "aufgenommener Partner"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_invoiced
@@ -372,7 +378,7 @@ msgstr "Warteliste"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
 msgid "Draft invoice is now open."
-msgstr ""
+msgstr "Rechnungsentwurf ist nun offen."
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_waiting
@@ -407,6 +413,11 @@ msgid "Information"
 msgstr "Information"
 
 #. module: membership
+#: field:membership.membership_line,account_invoice_line:0
+msgid "Account Invoice line"
+msgstr ""
+
+#. module: membership
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
@@ -414,7 +425,7 @@ msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen b
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
-msgstr ""
+msgstr "Rechnungsentwurf für Mitgliedschaft"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -454,7 +465,7 @@ msgstr "Neue Mitgliedschaft nach Jahren"
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
 msgid "Invoiced member"
-msgstr ""
+msgstr "In Rechnung gestelltes Mitglied"
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
@@ -464,7 +475,7 @@ msgstr "Ende Datum"
 #. module: membership
 #: model:process.node,name:membership.process_node_waitingmember0
 msgid "Waiting member"
-msgstr ""
+msgstr "wartendes MItglied"
 
 #. module: membership
 #: model:ir.actions.wizard,name:membership.wizard_invoice_membership

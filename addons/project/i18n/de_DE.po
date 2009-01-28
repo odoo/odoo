@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -140,6 +140,12 @@ msgid "Set pending"
 msgstr "Setze in Wartezustand"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.action_view_task7
+#: model:ir.ui.menu,name:project.menu_action_view_task7
+msgid "Unassigned Tasks"
+msgstr "Nicht erledigte Aufgaben"
+
+#. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Definiere Anforderungen sowie Eintrag der geplanten Stunden."
@@ -169,6 +175,13 @@ msgstr "Sehr dringend"
 #: wizard_button:project.task.delegate,init,valid:0
 msgid "Validate"
 msgstr "Validieren"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid "Project management module that track multi-level projects, tasks,\n"
+"works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
+"    "
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
@@ -457,10 +470,10 @@ msgid "Tasks in Progress"
 msgstr "Aufgaben in Bearbeitung"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task7
-#: model:ir.ui.menu,name:project.menu_action_view_task7
-msgid "Unassigned Tasks"
-msgstr "Nicht erledigte Aufgaben"
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Done"
+msgstr "Durchgeführt"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,name:0
@@ -538,16 +551,12 @@ msgid "Delegate"
 msgstr "Delegiere"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_new
-msgid "Create a Task"
-msgstr "Erzeuge Aufgabe"
-
-#. module: project
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
 #: model:ir.ui.menu,name:project.menu_main
 #: view:res.company:0
 msgid "Project Management"
@@ -645,7 +654,7 @@ msgstr "E-Mails"
 #. module: project
 #: model:process.node,note:project.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "Erzeugt Rechungen basierend auf Verkaufsaufträgen"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -813,6 +822,11 @@ msgid "Sum of spent hours of all tasks related to this project."
 msgstr "Summe projektbezogene Stunden"
 
 #. module: project
+#: help:project.task,project_id:0
+msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
+msgstr ""
+
+#. module: project
 #: help:project.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr "Summe geplanter Stunden über alle Aufgaben des Projektes."
@@ -849,10 +863,9 @@ msgid "Date Start: %(date_start)s"
 msgstr "Datum Start: %(date_start)s"
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Operation Done"
-msgstr "Durchgeführt"
+#: help:project.project,category_id:0
+msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -875,9 +888,9 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: project
-#: help:project.project,category_id:0
-msgid "Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."
-msgstr "Verlinke Projekt mit analyt. Konto, falls Sie eine finanzielle Auswertung für Projekte brauchen. Sie können Projekte auf diesem Wege mit Planzahlen, Umsatzwerten, timesheets etc.verbinden."
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_new
+msgid "Create a Task"
+msgstr "Erzeuge Aufgabe"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -989,6 +1002,11 @@ msgid "Running"
 msgstr "In Weiterbearbeitung"
 
 #. module: project
+#: help:project.project,parent_id:0
+msgid "If you have [?] in the name, it means there are no analytic account linked to project."
+msgstr ""
+
+#. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
 msgid "Delegate Task"
 msgstr "Delegiere Aufgaben"
@@ -1043,7 +1061,7 @@ msgstr "Meine Projektvorlage"
 #: field:project.project,priority:0
 #: field:project.task,sequence:0
 msgid "Sequence"
-msgstr "Sequenzer"
+msgstr "Sequenz"
 
 #. module: project
 #: help:project.project,warn_footer:0

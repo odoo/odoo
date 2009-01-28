@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:01:51+0000\n"
-"PO-Revision-Date: 2009-01-23 14:01:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:47:34+0000\n"
+"PO-Revision-Date: 2009-01-28 00:47:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,17 +21,16 @@ msgid "Monthly sales"
 msgstr "Vendite Mensili"
 
 #. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_assigned
+msgid "Assigned packing"
+msgstr ""
+
+#. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
 #: selection:sale_journal.picking.stats,state:0
 msgid "assigned"
 msgstr "assegnato"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_month
-#: view:sale_journal.invoice.type.stats:0
-msgid "Packings by invoice method"
-msgstr "Metodo Preparazione Merci da Fattura"
 
 #. module: sale_journal
 #: selection:sale_journal.sale.stats,state:0
@@ -56,6 +55,12 @@ msgid "Sale Stats"
 msgstr "Statistiche Vendite"
 
 #. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "waiting"
+msgstr "in attesa"
+
+#. module: sale_journal
 #: view:sale_journal.picking.journal:0
 #: view:sale_journal.sale.journal:0
 msgid "Set to Draft"
@@ -68,9 +73,16 @@ msgid "Journal date"
 msgstr "Data Registro"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and packings."
-msgstr "Tipo di Registro utlizzato per Vendite e Preparazione Merci"
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice_method
+#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_menu
+msgid "Packing by Invoice Method"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking
+msgid "Packing Journals"
+msgstr ""
 
 #. module: sale_journal
 #: view:sale_journal.picking.journal:0
@@ -79,24 +91,12 @@ msgid "Notes"
 msgstr "Note"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_month
-msgid "Packings by journal"
-msgstr "Preparazioni Merci da Registro"
-
-#. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_my
 msgid "My open journals"
 msgstr "I Miei Registri Aperti"
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking
-msgid "Packings Journals"
-msgstr "Registri di Preparazione Merci"
-
-#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,count:0
 #: field:sale_journal.picking.stats,count:0
 #: field:sale_journal.sale.stats,count:0
 msgid "# of Lines"
@@ -109,15 +109,15 @@ msgid "All Open Journals"
 msgstr "Tutti i Registri Aperti"
 
 #. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr ""
+
+#. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
 #: selection:sale_journal.picking.stats,state:0
 msgid "done"
 msgstr "fatto"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
-msgid "Statistics on packings to invoice"
-msgstr "Statistiche su Preparazioni Merci da Fatturare"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type.stats,price_average:0
@@ -157,6 +157,11 @@ msgid "Total Price"
 msgstr "Prezzo Totale"
 
 #. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal
+msgid "Packing journals"
+msgstr ""
+
+#. module: sale_journal
 #: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales
 msgid "Reporting"
 msgstr "Reportistica"
@@ -177,26 +182,19 @@ msgid "Open journals"
 msgstr ""
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "waiting"
-msgstr "in attesa"
+#: view:sale_journal.picking.journal:0
+msgid "Packing"
+msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_picking_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting
-msgid "Packings Journal"
-msgstr "Registro Preparazione Merci"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and packing."
+msgstr ""
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,invoice_state:0
 msgid "None"
 msgstr "Nessuno"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type_stats
-msgid "Stats on packings by invoice method"
-msgstr "Statistiche su metodo Preparazione Merci da Fattura"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_sale_sale_stats_open_menu_month
@@ -209,14 +207,33 @@ msgid "Manual in progress"
 msgstr "Manuale in corso"
 
 #. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Shipping Exception"
-msgstr "Eccezione Spedizione"
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_all
+#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_all
+#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_month
+msgid "Packing by journal"
+msgstr ""
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+msgid "Cancel Packing"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_confirmed
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_confirmed
+msgid "Confirmed packing"
+msgstr ""
 
 #. module: sale_journal
 #: selection:sale_journal.sale.stats,state:0
 msgid "In progress"
 msgstr "In corso"
+
+#. module: sale_journal
+#: view:sale_journal.picking.stats:0
+msgid "Packing by journals"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type.stats,name:0
@@ -231,9 +248,11 @@ msgid "Invoice state"
 msgstr "Stato Fattura"
 
 #. module: sale_journal
-#: view:sale_journal.picking.stats:0
-msgid "Packings by journals"
-msgstr "Preparazione Merci da Registro"
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_all
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_month
+#: view:sale_journal.invoice.type.stats:0
+msgid "Packing by invoice method"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.sale.stats,state:0
@@ -241,11 +260,9 @@ msgid "Order State"
 msgstr "Stato Ordine"
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
-msgid "Packings by Journal"
-msgstr "Preparazioni Merci da Registro"
+#: selection:sale_journal.sale.stats,state:0
+msgid "Shipping Exception"
+msgstr "Eccezione Spedizione"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -261,21 +278,10 @@ msgid "Draft"
 msgstr "Bozza"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_assigned
-msgid "Assigned packings"
-msgstr "Preparazioni Merci Assegnate"
-
-#. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
 #: selection:sale_journal.picking.stats,state:0
 msgid "cancel"
 msgstr "Annulla"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_open
-msgid "Packings to invoice"
-msgstr "Preparazioni Merci da Fatturare"
 
 #. module: sale_journal
 #: selection:sale_journal.sale.stats,state:0
@@ -283,20 +289,10 @@ msgid "Invoice Exception"
 msgstr "Eccezione Fattura"
 
 #. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Packings"
-msgstr "Preparazione Merci"
-
-#. module: sale_journal
 #: field:sale_journal.picking.journal,date_validation:0
 #: field:sale_journal.sale.journal,date_validation:0
 msgid "Validation date"
 msgstr "Data di Conferma"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Cancel Packings"
-msgstr "Annulla Preparazione Merci"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type.stats,state:0
@@ -308,11 +304,6 @@ msgstr "Bozza"
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
 msgstr "Attivo"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice
-msgid "Packings to Invoice"
-msgstr "Preparazioni Merci da Fatturare"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_draft
@@ -369,6 +360,8 @@ msgid "Sales"
 msgstr "Vendite"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_picking_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting
 #: view:sale_journal.picking.journal:0
 msgid "Packing Journal"
 msgstr "Registro Preparazioni Merci"
@@ -419,16 +412,14 @@ msgid "My Open Journals"
 msgstr "I Miei Registri Aperti"
 
 #. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
+msgid "Statistics on packing to invoice"
+msgstr ""
+
+#. module: sale_journal
 #: view:sale_journal.sale.journal:0
 msgid "Cancel Sales"
 msgstr "Annulla Vendite"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice_method
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_menu
-msgid "Packings by Invoice Method"
-msgstr "Metodo Preparazione Merci da Fattura"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -474,21 +465,10 @@ msgid "Journal"
 msgstr "Registro"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_confirmed
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_confirmed
-msgid "Confirmed packings"
-msgstr "Preparazioni Merce Confermate"
-
-#. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 #: field:sale_journal.invoice.type.stats,invoice_type_id:0
 msgid "Invoicing method"
 msgstr "Metodo fatturazione"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal
-msgid "Packings journals"
-msgstr "Registri Preparazioni Merce"
 
 #. module: sale_journal
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_this
@@ -505,15 +485,30 @@ msgid "Sales by Journal"
 msgstr "Vendite da Registro"
 
 #. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoicing Methods"
+msgstr "Metodi Fatturazione"
+
+#. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
 msgstr "Nn raggruppato"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_open
+msgid "Packing to invoice"
+msgstr ""
 
 #. module: sale_journal
 #: view:sale_journal.picking.journal:0
 #: view:sale_journal.sale.journal:0
 msgid "Journal Information"
 msgstr "Informazioni Registro"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type_stats
+msgid "Stats on packing by invoice method"
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
@@ -527,15 +522,22 @@ msgid "States"
 msgstr "Stati"
 
 #. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
+msgid "Packing by Journal"
+msgstr ""
+
+#. module: sale_journal
 #: view:sale_journal.picking.journal:0
 #: view:sale_journal.sale.journal:0
 msgid "Close Journal"
 msgstr "Chiudi Registro"
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoicing Methods"
-msgstr "Metodi Fatturazione"
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice
+msgid "Packing to Invoice"
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_approved

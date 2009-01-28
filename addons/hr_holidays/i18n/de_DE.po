@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 13:58:51+0000\n"
-"PO-Revision-Date: 2009-01-23 13:58:51+0000\n"
+"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
+"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgstr "Mitarbeiter Urlaub"
 #: code:addons/hr_holidays/hr.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Warnung"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -278,7 +278,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 msgid "My Holiday Requests"
-msgstr ""
+msgstr "Meine Urlaubsanträge"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -448,6 +448,29 @@ msgid "Color of the status"
 msgstr "Farbe des Status"
 
 #. module: hr_holidays
+#: model:ir.module.module,description:hr_holidays.module_meta_information
+msgid "Human Ressources: Holidays tracking and workflow\n"
+"\n"
+"    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.\n"
+"\n"
+"    Note that:\n"
+"    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in\n"
+"                HR \ Configuration \ Holidays Status\n"
+"    - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).\n"
+"    - There are two ways to print the employee's holidays:\n"
+"        * The first will allow to choose employees by department and is used by clicking the menu item located in\n"
+"                HR \ Holidays Request \ Print Summary of Holidays\n"
+"        * The second will allow you to choose the holidays report for specific employees. Go on the list\n"
+"                HR \ Employees \ Employees\n"
+"            then select the ones you want to choose, click on the print icon and select the option\n"
+"                'Print Summary of Employee's Holidays'\n"
+"    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in\n"
+"                Administration \ Users \ Users\n"
+"            for example, you maybe will do it for the user 'admin'.\n"
+""
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.summary,init,holiday_type:0
 msgid "Both Validated and Confirmed"
 msgstr "Bestätigt und Angenommen"
@@ -480,7 +503,7 @@ msgstr "Dokument zu Mitarbeiter"
 #. module: hr_holidays
 #: field:hr.holidays.log,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_holidays
 #: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
@@ -528,7 +551,7 @@ msgstr "Bestätigte Urlaubsanfrage"
 #: view:hr.holidays.per.user:0
 #: field:hr.holidays.per.user,history:0
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
@@ -548,7 +571,7 @@ msgstr "Allgemein"
 #. module: hr_holidays
 #: view:hr.holidays.per.user:0
 msgid "General Information"
-msgstr ""
+msgstr "Grundinformation"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -652,6 +675,11 @@ msgstr "Violet"
 #: selection:hr.holidays.status,color_name:0
 msgid "Red"
 msgstr "Rot"
+
+#. module: hr_holidays
+#: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
+msgid "Human Resources: Holidays management"
+msgstr ""
 
 #. module: hr_holidays
 #: model:process.process,name:hr_holidays.process_process_holidaysprocess0
