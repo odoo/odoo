@@ -72,7 +72,9 @@
 				<xsl:apply-templates select="contact[1]"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		<nextFrame/>
+		<xsl:if test="position() &lt; last()">
+			<nextFrame/>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="contact">
