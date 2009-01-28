@@ -110,6 +110,11 @@ class interface(netsvc.Service):
                         if not isinstance(fields[val]['selection'], (tuple, list)):
                             fields[val] = copy.copy(fields[val])
                             fields[val]['selection'] = fields[val]['selection'](self, cr, uid, context)
+                        elif lang:
+                            res_name = "%s,%s,%s" % (self.wiz_name, state, field)
+                            trans = lambda x: translate(cr, res_name, 'selection', lang, x) or x
+                            for idx, (key, val2) in enumerate(fields[val]['selection']):
+                                fields[field]['selection'][idx] = (key, trans(val2))
 
                 if lang:
                     # translate fields
@@ -119,11 +124,6 @@ class interface(netsvc.Service):
                         trans = translate(cr, res_name, 'wizard_field', lang)
                         if trans:
                             fields[field]['string'] = trans
-                        
-                        if 'selection' in fields[field]:
-                            trans = lambda x: translate(cr, res_name, 'selection', lang, x) or x
-                            for idx, (key, val) in enumerate(fields[field]['selection']):
-                                fields[field]['selection'][idx] = (key, trans(val))
 
                         if 'help' in fields[field]:
                             t = translate(cr, res_name, 'help', lang, fields[field]['help']) 
