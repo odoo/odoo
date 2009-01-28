@@ -115,7 +115,7 @@ class browse_record(object):
     def __init__(self, cr, uid, id, table, cache, context=None, list_class = None, fields_process={}):
         '''
         table : the object (inherited from orm)
-        context : a dictionnary with an optionnal context
+        context : a dictionary with an optional context
         '''
         if not context:
             context = {}
@@ -178,7 +178,8 @@ class browse_record(object):
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
-                            d[n].set_value(d[n], self, f)
+                            if d[n]:
+                                d[n].set_value(self._cr, self._uid, d[n], self, f)
 
 
             # create browse records for 'remote' objects
@@ -675,7 +676,7 @@ class orm_template(object):
             if not fun(self, cr, uid, ids):
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
-                        _("Error occured while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+                        _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
                 self._invalids.update(fields)
         if error_msgs:
@@ -888,7 +889,7 @@ class orm_template(object):
                 model = res[0][1]
                 res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
                 msg = "\n * ".join([r[0] for r in res])
-                msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
+                msg += "\n\nEither you wrongly customised this view, or some modules bringing those views are not compatible with your current data model"
                 netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
                 raise except_orm('View error', msg)
 
