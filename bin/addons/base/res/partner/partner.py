@@ -31,10 +31,14 @@ class res_partner_function(osv.osv):
     _name = 'res.partner.function'
     _description = 'Function of the contact'
     _columns = {
-        'name': fields.char('Function name', size=64, required=True),
+        'name': fields.char('Function Name', size=64, required=True),
         'code': fields.char('Code', size=8),
+        'ref':fields.char('Notes', size=32, required=True),
     }
     _order = 'name'
+    _sql_constraints = [
+        ('ref_uniq', 'unique (ref)', 'The Notes of the Partner Function must be unique !')
+    ]
 res_partner_function()
 
 
@@ -42,15 +46,15 @@ class res_payterm(osv.osv):
     _description = 'Payment term'
     _name = 'res.payterm'
     _columns = {
-        'name': fields.char('Payment term (short name)', size=64),
+        'name': fields.char('Payment Term (short name)', size=64),
     }
 res_payterm()
 
 class res_partner_category(osv.osv):
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -59,9 +63,10 @@ class res_partner_category(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = self.name_get(cr, uid, ids)
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -77,9 +82,9 @@ class res_partner_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
-        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
-        'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Childs Category'),
-        'active' : fields.boolean('Active', help="The active field allows you to hide the category, without removing it."),
+        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Full Name'),
+        'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
+        'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
     }
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -348,8 +353,8 @@ class res_partner_bank_type_fields(osv.osv):
     _description='Bank type fields'
     _name = 'res.partner.bank.type.field'
     _columns = {
-        'name': fields.char('Field name', size=64, required=True, translate=True),
-        'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank type', required=True, ondelete='cascade'),
+        'name': fields.char('Field Name', size=64, required=True, translate=True),
+        'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank Type', required=True, ondelete='cascade'),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
         'size': fields.integer('Max. Size'),
@@ -369,7 +374,7 @@ class res_partner_bank(osv.osv):
 
         result = []
         type_ids = bank_type_obj.search(cr, uid, [])
-        bank_types = bank_type_obj.browse(cr, uid, type_ids)
+        bank_types = bank_type_obj.browse(cr, uid, type_ids, context=context)
         for bank_type in bank_types:
             result.append((bank_type.code, bank_type.name))
         return result
@@ -390,9 +395,9 @@ class res_partner_bank(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=128),
-        'acc_number': fields.char('Account number', size=64, required=False),
+        'acc_number': fields.char('Account Number', size=64, required=False),
         'bank': fields.many2one('res.bank', 'Bank'),
-        'owner_name': fields.char('Account owner', size=64),
+        'owner_name': fields.char('Account Owner', size=64),
         'street': fields.char('Street', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
@@ -402,7 +407,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True,
             ondelete='cascade', select=True),
-        'state': fields.selection(_bank_type_get, 'Bank type', required=True,
+        'state': fields.selection(_bank_type_get, 'Bank Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
     }

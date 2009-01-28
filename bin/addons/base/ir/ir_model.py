@@ -40,10 +40,10 @@ class ir_model(osv.osv):
     _rec_name = 'name'
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
-        'model': fields.char('Object Name', size=64, required=True, search=1),
+        'model': fields.char('Object', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manualy Created',readonly=1),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manually Created',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
     }
     _defaults = {
@@ -94,18 +94,14 @@ ir_model()
 class ir_model_grid(osv.osv):
     _name = 'ir.model.grid'
     _table = 'ir_model'
+    _inherit = 'ir.model'
     _description = "Objects Security Grid"
-    _rec_name = 'name'
-    _columns = {
-        'name': fields.char('Object', size=64),
-        'model': fields.char('Object Name', size=64),
-    }
 
     def create(self, cr, uid, vals, context=None):
         raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
 
     def unlink(self, *args, **argv):
-        raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
+        raise osv.except_osv('Error !', 'You cannot delete an entry of this view !')
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
@@ -199,7 +195,7 @@ class ir_model_fields(osv.osv):
         'model': fields.char('Object Name', size=64, required=True),
         'relation': fields.char('Object Relation', size=64),
         'relation_field': fields.char('Relation Field', size=64),
-        'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object ID', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
         'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
         'selection': fields.char('Field Selection',size=128),
@@ -208,7 +204,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created', required=True, readonly=True),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
@@ -366,7 +362,8 @@ class ir_model_access(osv.osv):
         except ValueError:
             pass
 
-    def call_cache_clearing_methods(self):
+    def call_cache_clearing_methods(self, cr):
+        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             getattr(self.pool.get(model), method)()
 
@@ -374,21 +371,18 @@ class ir_model_access(osv.osv):
     # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def create(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).create(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
     def unlink(self, cr, uid, *args, **argv):
-        self.call_cache_clearing_methods()
+        self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
         return res
 
 ir_model_access()
@@ -588,7 +582,7 @@ class ir_model_config(osv.osv):
     _name = 'ir.model.config'
     _columns = {
         'password': fields.char('Password', size=64),
-        'password_check': fields.char('confirmation', size=64),
+        'password_check': fields.char('Confirmation', size=64),
     }
 
     def action_cancel(self, cr, uid, ids, context={}):

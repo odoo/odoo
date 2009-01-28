@@ -22,7 +22,7 @@
         </record>
         <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
 
-        <record id="wizard_lang_export" model="ir.ui.view">
+				<record id="wizard_lang_export" model="ir.ui.view">
             <field name="name">Export a Translation File</field>
             <field name="model">wizard.module.lang.export</field>
             <field name="type">form</field>
@@ -60,6 +60,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_wizard_lang_export" model="ir.actions.act_window">
             <field name="name">Export a Translation File</field>
             <field name="type">ir.actions.act_window</field>

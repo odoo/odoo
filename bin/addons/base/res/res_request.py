@@ -62,7 +62,7 @@ class res_request(osv.osv):
         return (ids, ids2)
 
     _columns = {
-        'create_date': fields.datetime('Created date', readonly=True),
+        'create_date': fields.datetime('Created Date', readonly=True),
         'name': fields.char('Subject', states={'waiting':[('readonly',True)],'active':[('readonly',True)],'closed':[('readonly',True)]}, required=True, size=128),
         'active': fields.boolean('Active'),
         'priority': fields.selection([('0','Low'),('1','Normal'),('2','High')], 'Priority', states={'waiting':[('readonly',True)],'closed':[('readonly',True)]}, required=True),

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="True">
 
         <!--
 		Resource: res.partner.title
@@ -35,14 +35,15 @@
         
         <record id="function_director" model="res.partner.function">
             <field name="name">Director</field>
-            <field name="code">CEO</field>
+            <field name="ref">CEO</field>
         </record>
         <record id="function_it" model="res.partner.function">
             <field name="name">Chief Technical Officer</field>
-            <field name="code">CTO</field>
+            <field name="ref">CTO</field>
         </record>
         <record id="function_sale" model="res.partner.function">
             <field name="name">Salesman</field>
+            <field name="ref">SAL</field>
         </record>
 
         <!-- Default bank account description -->

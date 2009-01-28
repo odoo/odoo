@@ -48,7 +48,7 @@ class groups(osv.osv):
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
         self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        self.pool.get('ir.model.access').check.clear_cache(cr.dbname)
+        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -66,7 +66,7 @@ class roles(osv.osv):
     _columns = {
         'name': fields.char('Role Name', size=64, required=True),
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
+        'child_id': fields.one2many('res.roles', 'parent_id', 'Children'),
         'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
     }
     _defaults = {
@@ -111,7 +111,7 @@ class users(osv.osv):
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
-            if 'password' in o:
+            if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
 
@@ -168,6 +168,7 @@ class users(osv.osv):
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
         self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
+        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):

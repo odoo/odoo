@@ -50,7 +50,7 @@ class report_custom(osv.osv):
         'model':fields.char('Object', size=64, required=True),
         'report_id': fields.integer('Report Ref.', required=True),
         'usage': fields.char('Action Usage', size=32),
-        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
     }
     _defaults = {
         'multi': lambda *a: False,
@@ -112,7 +112,7 @@ class report_xml(osv.osv):
         'header': fields.boolean('Add RML header',
             help="Add or not the coporate RML header"),
         'multi': fields.boolean('On multiple doc.',
-            help="If set to true, the action will not be displayed on the right toolbar of a form views."),
+            help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'report_type': fields.selection([
             ('pdf', 'pdf'),
             ('html', 'html'),
@@ -122,8 +122,8 @@ class report_xml(osv.osv):
             ('odt', 'odt'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment to store the printing result. Keep empty to not save the printed reports. You can use python expression using the object and time variables.'),
-        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, the second time the user print with same attachment name, it returns the previour report.')
+        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',
@@ -187,8 +187,8 @@ class act_window(osv.osv):
         'res_model': fields.char('Object', size=64),
         'src_model': fields.char('Source Object', size=64),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
-        'view_mode': fields.char('Mode of view', size=250),
+        'view_type': fields.selection((('tree','Tree'),('form','Form')),string='View Type'),
+        'view_mode': fields.char('View Mode', size=250),
         'usage': fields.char('Action Usage', size=32),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
@@ -221,10 +221,10 @@ class act_window_view(osv.osv):
             ('form', 'Form'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
-            ('gantt', 'Gantt')), string='Type of view', required=True),
+            ('gantt', 'Gantt')), string='View Type', required=True),
         'act_window_id': fields.many2one('ir.actions.act_window', 'Action', ondelete='cascade'),
-        'multi': fields.boolean('On multiple doc.',
-            help="If set to true, the action will not be displayed on the right toolbar of a form views."),
+        'multi': fields.boolean('On Multiple Doc.',
+            help="If set to true, the action will not be displayed on the right toolbar of a form view."),
     }
     _defaults = {
         'multi': lambda *a: False,
@@ -234,13 +234,14 @@ act_window_view()
 
 class act_wizard(osv.osv):
     _name = 'ir.actions.wizard'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_wizard'
     _sequence = 'ir_actions_id_seq'
     _columns = {
-        'name': fields.char('Wizard info', size=64, required=True, translate=True),
-        'type': fields.char('Action type', size=32, required=True),
-        'wiz_name': fields.char('Wizard name', size=64, required=True),
-        'multi': fields.boolean('Action on multiple doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form views."),
+        'name': fields.char('Wizard Info', size=64, required=True, translate=True),
+        'type': fields.char('Action Type', size=32, required=True),
+        'wiz_name': fields.char('Wizard Name', size=64, required=True),
+        'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form view."),
         'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups'),
         'model': fields.char('Object', size=64),
     }
@@ -257,7 +258,7 @@ class act_url(osv.osv):
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
-        'url': fields.text('Action Url',required=True),
+        'url': fields.text('Action URL',required=True),
         'target': fields.selection((
             ('new', 'New Window'),
             ('self', 'This Window')),
@@ -385,8 +386,8 @@ class actions_server(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name i.e. One Sales Order -> Many Invoice"),
-        'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be test before execute action,  i.e : object.list_price > object.cost_price"),
+        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name e.g. One Sales Order -> Many Invoices"),
+        'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"),
         'state': fields.selection([
             ('client_action','Client Action'),
             ('dummy','Dummy'),
@@ -398,28 +399,28 @@ class actions_server(osv.osv):
             ('object_create','Create Object'),
             ('object_write','Write Object'),
             ('other','Multi Actions'),
-        ], 'Action Type', required=True, size=32, help="Type of the Action that is to be execute"),
-        'code':fields.text('Python Code', help="python code to be execute"),
-        'sequence': fields.integer('Sequence', help="Important when you deal with the multi action, the execution order will be decided based on this, low number higher priority"),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, help="select the obect on which the action will work (read, write, create)"),
-        'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Ation Window, Report, Wizard to be execute"),
-        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be "),
-        'wkf_model_id': fields.many2one('ir.model', 'Workflow on', help="Workflow to be execute on which model"),
-        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On', help="select the object from the model on which the workflow will execute"),
-        'email': fields.char('Email Address', size=512, help="provides the fiels that will refer to the tiny to fetch the email address, i.e. you select the invoice, then `object.invoice_address_id.email` is the field which give the correct address"),
-        'subject': fields.char('Subject', size=1024, translate=True, help="Specify the subject, you can use the fields from the object. like `Hello [[ object.partner_id.name ]]`"),
-        'message': fields.text('Message', translate=True, help="Specify the Message, you can use the fields from the object. like `Dear [[ object.partner_id.name ]]`"),
-        'mobile': fields.char('Mobile No', size=512, help="provides the fiels that will refer to the tiny to fetch the mobile number, i.e. you select the invoice, then `object.invoice_address_id.mobile` is the field which give the correct mobile number"),
+        ], 'Action Type', required=True, size=32, help="Type of the Action that is to be executed"),
+        'code':fields.text('Python Code', help="Python code to be executed"),
+        'sequence': fields.integer('Sequence', help="Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the obect on which the action will work (read, write, create)."),
+        'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Action Window, Report, Wizard to be executed."),
+        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be used as the trigger."),
+        'wkf_model_id': fields.many2one('ir.model', 'Workflow On', help="Workflow to be executed on this model."),
+        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On', help="Select the object from the model on which the workflow will executed."),
+        'email': fields.char('Email Address', size=512, help="Provides the fields that will be used to fetch the email address, e.g. when you select the invoice, then `object.invoice_address_id.email` is the field which gives the correct address"),
+        'subject': fields.char('Subject', size=1024, translate=True, help="Specify the subject. You can use fields from the object, e.g. `Hello [[ object.partner_id.name ]]`"),
+        'message': fields.text('Message', translate=True, help="Specify the message. You can use the fields from the object. e.g. `Dear [[ object.partner_id.name ]]`"),
+        'mobile': fields.char('Mobile No', size=512, help="Provides fields that be used to fetch the mobile number, e.g. you select the invoice, then `object.invoice_address_id.mobile` is the field which gives the correct mobile number"),
         'sms': fields.char('SMS', size=160, translate=True),
-        'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Others Actions'),
+        'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Other Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Action Type', size=32, required=True),
-        'srcmodel_id': fields.many2one('ir.model', 'Model', help="In which object you want to create / write the object if its empty refer to the Object field"),
-        'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
-        'record_id':fields.many2one('ir.model.fields', 'Create Id', help="Provide the field name from where the record id stores after the create operations, if its empty, you can not track the new record"),
-        'write_id':fields.char('Write Id', size=256, help="Provide the field name from where the record id refer for the write operation, if its empty it will refer to the active id of the object"),
-        'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="select the action, which will be executes. Loop action will not be avaliable inside loop"),
-        'expression':fields.char('Loop Expression', size=512, help="enter the field/expression that will return the list, i.e. select the sale order in Object, and we can have loop on sales order line. Expression = `object.order_line`"),
+        'srcmodel_id': fields.many2one('ir.model', 'Model', help="Object in which you want to create / write the object. If it is empty then refer to the Object field."),
+        'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Field Mappings.'),
+        'record_id':fields.many2one('ir.model.fields', 'Create Id', help="Provide the field name where the record id is stored after the create operations. If it is empty, you can not track the new record."),
+        'write_id':fields.char('Write Id', size=256, help="Provide the field name that the record id refers to for the write operation. If it is empty it will refer to the active id of the object."),
+        'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="Select the action that will be executed. Loop action will not be avaliable inside loop."),
+        'expression':fields.char('Loop Expression', size=512, help="Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."),
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -670,12 +671,8 @@ actions_server()
 
 class act_window_close(osv.osv):
     _name = 'ir.actions.act_window_close'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
-    _sequence = 'ir_actions_id_seq'
-    _columns = {
-        'name': fields.char('Action Name', size=64, translate=True),
-        'type': fields.char('Action Type', size=32, required=True),
-    }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window_close',
     }

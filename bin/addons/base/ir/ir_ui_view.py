@@ -42,7 +42,7 @@ def _check_xml(self, cr, uid, ids, context={}):
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _columns = {
-        'ref_id': fields.many2one('ir.ui.view', 'Orignal View'),
+        'ref_id': fields.many2one('ir.ui.view', 'Original View'),
         'user_id': fields.many2one('res.users', 'User'),
         'arch': fields.text('View Architecture', required=True),
     }
@@ -62,7 +62,7 @@ class view(osv.osv):
             ('gantt', 'Gantt')), 'View Type', required=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
-        'field_parent': fields.char('Childs Field',size=64),
+        'field_parent': fields.char('Child Field',size=64),
     }
     _defaults = {
         'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',

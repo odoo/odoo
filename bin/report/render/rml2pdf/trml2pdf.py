@@ -641,8 +641,10 @@ class _rml_flowable(object):
                 else:
                     import base64
                     image_data = base64.decodestring(node.firstChild.nodeValue)
+
                 image = StringIO()
                 image.write(image_data)
+                image.seek(0)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
                 return platypus.Image(node.getAttribute('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))

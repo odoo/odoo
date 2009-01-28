@@ -28,7 +28,7 @@ view_form_end = """<?xml version="1.0"?>
 <form string="Language file loaded.">
     <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
-        <separator string="Installation done" colspan="4"/>
+        <separator string="Installation Done" colspan="4"/>
         <label align="0.0" string="The selected language has been successfully installed.\nYou must change the preferences of the user and open a new menu to view changes." colspan="4"/>
     </group>
 </form>"""

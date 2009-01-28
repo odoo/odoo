@@ -255,9 +255,9 @@ class expression(object):
         else:
             params = []
             if (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
-                query = '%s IS NULL' % left
+                query = '%s.%s IS NULL' % (table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
-                query = '%s IS NOT NULL' % left
+                query = '%s.%s IS NOT NULL' % (table._table, left)
             else:
                 if left == 'id':
                     query = '%s.id %s %%s' % (table._table, operator)

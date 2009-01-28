@@ -110,8 +110,8 @@ class wkf_activity(osv.osv):
         'flow_stop': fields.boolean('Flow Stop'),
         'subflow_id': fields.many2one('workflow', 'Subflow'),
         'signal_send': fields.char('Signal (subflow.*)', size=32),
-        'out_transitions': fields.one2many('workflow.transition', 'act_from', 'Outgoing transitions'),
-        'in_transitions': fields.one2many('workflow.transition', 'act_to', 'Incoming transitions'),
+        'out_transitions': fields.one2many('workflow.transition', 'act_from', 'Outgoing Transitions'),
+        'in_transitions': fields.one2many('workflow.transition', 'act_to', 'Incoming Transitions'),
     }
     _defaults = {
         'kind': lambda *a: 'dummy',
