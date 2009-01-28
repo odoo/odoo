@@ -1077,7 +1077,7 @@ class account_invoice_tax(osv.osv):
     _description = "Invoice Tax"
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
-        'name': fields.char('Tax Description', size=64, required=True),
+        'name': fields.char('Tax Description', size=64, required=True, translate=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
         'base': fields.float('Base', digits=(16,2)),
         'amount': fields.float('Amount', digits=(16,2)),
