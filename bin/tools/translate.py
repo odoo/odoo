@@ -555,7 +555,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         lc, encoding = locale.getdefaultlocale()
         if not encoding:
             encoding = 'UTF-8'
-        if encoding == 'utf':
+        if encoding == 'utf' or encoding == 'UTF8':
             encoding = 'UTF-8'
         if encoding == 'cp1252':
             encoding= '1252'
@@ -564,6 +564,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         if encoding == 'latin1':
             encoding= 'latin9'
 
+	# this block temporarily sets the locale to the requested lang, so that
+	# some defaults are read from it.
         try:
             if os.name == 'nt':
                 locale.setlocale(locale.LC_ALL, str(_LOCALE2WIN32.get(lang, lang) + '.' + encoding))
@@ -571,8 +573,13 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
         except Exception:
             netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
-                    'unable to set locale "%s"' % (lang)) 
-            
+                    'unable to set locale "%s"' % (str(lang + '.' + encoding)))
+	    # Now, the default locale is still active, so the values can be
+	    # read from that.
+	    try:
+		locale.setlocale(locale.LC_ALL, str(lc + '.' + encoding))
+	    except:
+		pass
 
         if not ids:
             if not lang_name:
@@ -597,7 +604,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                                           'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
                                           'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
                                             })
-        locale.resetlocale(locale.LC_ALL)
+	# Here we try to reset the locale regardless.
+        locale.setlocale(locale.LC_ALL, str(lc + '.' + encoding))
         lang_ids = lang_obj.search(cr, uid, [])
         langs = lang_obj.read(cr, uid, lang_ids)
         ls = map(lambda x: (x['code'],x['name']), langs)
@@ -691,6 +699,12 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     except IOError:
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
         logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+	cr.commit()
+	cr.close()
+    except:
+	cr.commit()
+	cr.close()
+	raise
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
