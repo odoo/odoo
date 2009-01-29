@@ -8,12 +8,14 @@ Required dependencies:
 
 You need the following software installed:
 
-    * Python 2.3 or above
-    * Postgresql 7 or above
-    * Psycopg python module for python2.3
-    * libxml2 and python2.3 bindings
-    * libxslt and python2.3 bindings
-    * Reportlab pdf generation library for python2.3 
+    * Python 2.4 or 2.5
+    * Postgresql 8.2 or above
+    * Psycopg2 python module 
+    * libxml2 and python bindings
+    * libxslt and python bindings
+    * Reportlab pdf generation library for python
+    * lxml python module
+    * pytz python module
 
 Some dependencies are only required for specific purposes:
 
@@ -22,33 +24,24 @@ for rendering workflows graphs, you need:
     * pyparsing
 
 for generating reports using non .jpg images, you need:
-    * Python Imaging Library for python2.3
+    * Python Imaging Library for python
 
 For Debian-based distributions, the required packages can be installed with the 
-following commands:
+following command:
 
-  apt-get install python2.3 python2.3-xml postgresql postgresql-client libxml2-python2.3
-  apt-get install libxslt1-python2.3 python2.3-psycopg python2.3-reportlab
-  apt-get install python2.3-imaging python2.3-pyparsing graphviz
-
-For newer Debian-based distributions such as Etch, the required packages can be
-installed with the following commands:
-
-  apt-get install python2.4 python-xml postgresql postgresql-client python-libxml2
-  apt-get install python-libxslt1 python-psycopg python-reportlab 
-  apt-get install python-imaging python-pyparsing graphviz
-
+  #> apt-get install -y postgresql graphviz python-psycopg2 python-xml python-lxml python-libxml2 python-libxslt1 python-tz python-imaging
 
 For Fedora 
 if they are not installed, install:
 python and postgresql
 
 uses yum or you can recover required packages on fedora web site in "core" or "extra" repository :
-postgresql-python-
+postgresql-python
 libxml2-python
 libxslt-python
+python-lxml
 python-imaging
-python-psycopg
+python-psycopg2
 python-reportlab
 graphviz
 You can find pyparsing at http://pyparsing.sourceforge.net/ 
