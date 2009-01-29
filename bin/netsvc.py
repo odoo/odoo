@@ -163,7 +163,10 @@ class Logger(object):
         if isinstance(msg, Exception):
             msg = tools.exception_to_unicode(msg)
 
-        result = tools.ustr(msg).strip().split('\n')
+	try:
+        	result = tools.ustr(msg).strip().split('\n')
+	except UnicodeDecodeError:
+		result = msg.strip().split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
                 level_method('[%02d]: %s' % (idx+1, s,))
