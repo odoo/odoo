@@ -173,7 +173,7 @@ class db(netsvc.Service):
         cmd = ['pg_dump', '--format=c']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
-        if tools.config['db_host']:
+        if tools.config['db_host'] and tools.config['db_host'] not in ('127.0.0.1', 'localhost'):
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
             cmd.append('--port=' + tools.config['db_port'])
@@ -184,11 +184,9 @@ class db(netsvc.Service):
         data = stdout.read()
         res = stdout.close()
         if res:
-            logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                    'DUMP DB: %s failed\n%s' % (db_name, data))
+            logger.notifyChannel("web-services", netsvc.LOG_ERROR, 'DUMP DB: %s failed\n%s' % (db_name, data))
             raise Exception, "Couldn't dump database"
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'DUMP DB: %s' % (db_name))
+        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
         return base64.encodestring(data)
 
     def restore(self, password, db_name, data):
