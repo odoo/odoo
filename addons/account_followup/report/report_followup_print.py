@@ -75,7 +75,7 @@ class report_rappel(report_sxw.rml_parse):
             elif i.followup_line_id and str(i.followup_line_id.delay)=='15':
                 text = i.followup_line_id.description
                 a['15'] = text
-        text = (a.has_key('45') and a['45']) or (a.has_key('30') and a['30']) or (a.has_key('15') and a['15'])
+        text = (a.has_key('45') and a['45']) or (a.has_key('30') and a['30']) or (a.has_key('15') and a['15']) or ''
         text = text % {'partner_name':partner.name}
         return text
 
