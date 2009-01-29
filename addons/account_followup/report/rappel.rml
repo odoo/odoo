@@ -55,8 +55,7 @@
     <paraStyle name="P17" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P18" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P19" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P20" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P21" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P20" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -101,7 +100,7 @@
     <para style="P4">
       <font color="white"> </font>
     </para>
-    <para style="P5">[[ format(get_text(o)) ]]</para>
+    <para style="P5">[[ format(get_text(o,data['form']['followup_id'])) ]]</para>
     <para style="P7">
       <font color="white"> </font>
     </para>
@@ -177,7 +176,7 @@
           <para style="P18">[[ '%.2f' % (reduce(lambda x,y: x+y['debit'], getLines(o), 0)) ]] [[ company.currency_id.name]] </para>
         </td>
         <td>
-          <para style="P21">[[ '%.2f' % (reduce(lambda x,y: x+y['credit'], getLines(o), 0)) ]] [[ company.currency_id.name]] </para>
+          <para style="P20">[[ '%.2f' % (reduce(lambda x,y: x+y['credit'], getLines(o), 0)) ]] [[ company.currency_id.name]] </para>
         </td>
         <td>
           <para style="P17">[[ reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0) ]] [[ company.currency_id.name]] </para>
