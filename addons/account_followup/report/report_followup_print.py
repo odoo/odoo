@@ -72,7 +72,9 @@ class report_rappel(report_sxw.rml_parse):
         a = {}
         partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id)])
         partner_delay = []
-        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line):
+        context={}
+        context.update({'lang': partner.lang})
+        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line, context):
             for delay in li_delay:
                 if  i.followup_line_id and str(i.followup_line_id.delay)==str(delay):
                     text = i.followup_line_id.description
