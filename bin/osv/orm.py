@@ -1381,7 +1381,6 @@ class orm(orm_template):
             for id in childs:
                 pos2 = browse_rec(id[0], pos2)
             cr.execute('update '+self._table+' set parent_left=%s, parent_right=%s where id=%s', (pos,pos2,root))
-            print 'Update', self._table, pos,pos2,root
             return pos2+1
         query = 'SELECT id FROM '+self._table+' WHERE '+self._parent_name+' IS NULL'
         if self._parent_order:
@@ -2303,7 +2302,6 @@ class orm(orm_template):
                             parent_left<%s OR parent_right>%s;
                     ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
                         cwidth,cleft,cright,treeshift,leftrange,rightrange))
-                    print 'Write Update'
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
