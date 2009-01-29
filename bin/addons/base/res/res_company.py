@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import fields,osv
+import os
 import tools
 
 class res_company(osv.osv):
@@ -122,7 +123,7 @@ class res_company(osv.osv):
 </header>"""
     def _get_header(self,cr,uid,ids):
         try :
-            return tools.file_open('custom/corporate_rml_header.rml').read()
+            return tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml')).read()
         except:
             return """
     <header>

@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-import os,re
+import os
+import re
 
 #Ged> Why do we use libxml2 here instead of xml.dom like in other places of the code?
 import libxml2
@@ -120,7 +121,7 @@ class report_rml(report_int):
         pos_xml = i.end()
 
         doc = print_xml.document(cr, uid, {}, {})
-        tmpl_path = addons.get_module_resource('custom', 'corporate_defaults.xml')
+        tmpl_path = addons.get_module_resource('base', 'report', 'corporate_defaults.xml')
         doc.parse(tmpl_path, [uid], 'res.users', context)
         corporate_header = doc.xml_get()
         doc.close()
