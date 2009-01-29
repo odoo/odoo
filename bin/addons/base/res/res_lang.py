@@ -55,6 +55,10 @@ class lang(osv.osv):
         'decimal_point':lambda *a: '.',
         'thousands_sep':lambda *a: ',',
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
+        ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
+    ]
     
     def _group(self,cr,uid,ids,s, monetary=False):
         conv = localeconv()

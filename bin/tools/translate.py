@@ -447,7 +447,7 @@ def trans_generate(lang, modules, dbname=None):
                     push_translation(module, report_type, name, 0, t)
             except IOError, xml.dom.expatbuilder.expat.ExpatError:
                 if fname:
-                    logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
+                    logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
@@ -506,14 +506,13 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
+            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
     logger = netsvc.Logger()
     if verbose:
-        logger.notifyChannel("init", netsvc.LOG_INFO,
-                'loading translation file for language %s' % (lang))
+        logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -521,62 +520,57 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     try:
         uid = 1
         cr = pooler.get_db(db_name).cursor()
-        ids = lang_obj.search(cr, uid, [('code','=',lang)])
-        lc, encoding = locale.getdefaultlocale()
-        if not encoding:
-            encoding = 'UTF-8'
-        if encoding == 'utf':
-            encoding = 'UTF-8'
-        if encoding == 'cp1252':
-            encoding= '1252'
-        if encoding == 'iso-8859-1':
-            encoding= 'iso-8859-15'
-        if encoding == 'latin1':
-            encoding= 'latin9'
-
-        try:
-            if os.name == 'nt':
-                locale.setlocale(locale.LC_ALL, str(_LOCALE2WIN32.get(lang, lang) + '.' + encoding))
-            else:
-                locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
-        except Exception:
-            netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
-                    'unable to set locale "%s"' % (lang)) 
-            
-
+        ids = lang_obj.search(cr, uid, [('code','=', lang)])
+        
         if not ids:
+            # lets create the language with locale information
+
+            lc, encoding = locale.getdefaultlocale()
+            if not encoding:
+                encoding = 'UTF-8'
+            if encoding == 'utf':
+                encoding = 'UTF-8'
+            if encoding == 'cp1252':
+                encoding= '1252'
+            if encoding == 'iso-8859-1':
+                encoding= 'iso-8859-15'
+            if encoding == 'latin1':
+                encoding= 'latin9'
+
+            try:
+                if os.name == 'nt':
+                    from report.report_sxw import _LOCALE2WIN32
+                    code = _LOCALE2WIN32.get(lang, lang)
+                else:
+                    code = lang
+                locale.setlocale(locale.LC_ALL, locale.normalize(str(lang + '.' + encoding)))
+            except Exception:
+                msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
+                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc)) 
+                
             if not lang_name:
-                lang_name=lang
-                languages=tools.get_languages()
-                lang_name = languages.get(lang, lang)
-            ids = lang_obj.create(cr, uid, {
+                lang_name = tools.get_languages().get(lang, lang)
+            
+            lang_info = {
                 'code': lang,
                 'name': lang_name,
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'grouping' : [],
                 'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
                 'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
-                })
-        else:
-            lang_obj.write(cr, uid, ids, {'translatable':1,
-                                          'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-                                          'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                                          'grouping' : [],
-                                          'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
-                                          'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
-                                            })
-        try:
-            locale.resetlocale(locale.LC_ALL)
-        except:
-            pass
-        lang_ids = lang_obj.search(cr, uid, [])
-        langs = lang_obj.read(cr, uid, lang_ids)
-        ls = map(lambda x: (x['code'],x['name']), langs)
+            }
+            
+            try: 
+                lang_obj.create(cr, uid, lang_info)
+            finally:
+                # locale.resetlocale is bugged with some locales. 
+                # we need to normalize the result of locale.getdefaultlocale()
+                locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
 
+
+        # now, the serious things: we read the language file
         fileobj.seek(0)
-
         if fileformat == 'csv':
             reader = csv.reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
@@ -659,11 +653,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             cr.commit()
         cr.close()
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_INFO,
+            logger.notifyChannel("i18n", netsvc.LOG_INFO,
                     "translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+        logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
