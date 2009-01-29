@@ -247,7 +247,9 @@ class configmanager(object):
             self.options['pg_path'] = opt.pg_path
 
         if self.options.get('language', False):
-            assert len(self.options['language'])<=5, 'ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE'
+            if len(self.options['language']) <= 5:
+                raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
+
         if opt.save:
             self.save()
 
