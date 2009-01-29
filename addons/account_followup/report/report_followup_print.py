@@ -80,7 +80,7 @@ class report_rappel(report_sxw.rml_parse):
                     text = i.followup_line_id.description
                     a[delay] = text
                     partner_delay.append(delay)
-        text = a[max(partner_delay)] or ''
+        text = partner_delay and a[max(partner_delay)] or ''
         if text:
             text = text % {'partner_name':partner.name}
         return text

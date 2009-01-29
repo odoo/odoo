@@ -29,6 +29,15 @@ import tools
 from osv import fields, osv
 from tools.translate import _
 
+_email_summary_form = """<?xml version="1.0"?>
+<form string="Summary">
+    <field name="summary" height="300" width="800"/>
+</form>"""
+
+_email_summary_fields = {
+    'summary': {'string': 'Summary', 'type': 'text', 'required': False, 'readonly': True},
+}
+
 _followup_wizard_screen1_form = """<?xml version="1.0"?>
 <form string="Follow-up and Date Selection">
     <field name="followup_id"/>
@@ -109,8 +118,6 @@ Thanks,
 class followup_all_print(wizard.interface):
     def _update_partners(self, cr, uid, data, context):
         to_update = data['form']['to_update']
-        if data['form']['email_conf']:
-            self._sendmail(cr, uid, data, context)
         for id in to_update.keys():
             cr.execute(
                 "UPDATE account_move_line "\
@@ -121,78 +128,83 @@ class followup_all_print(wizard.interface):
         return {}
 
     def _sendmail(self ,cr, uid, data, context):
-        mail_notsent = ''
-        count = 0
-        pool = pooler.get_pool(cr.dbname)
-        data_user = pool.get('res.users').browse(cr,uid,uid)
-        line_obj = pool.get('account_followup.stat')
-        move_lines = line_obj.browse(cr,uid,data['form']['partner_ids'][0][2])
-        partners = []
-        dict_lines = {}
-        for line in move_lines:
-            partners.append(line.name)
-            dict_lines[line.name.id] =line
-        for partner in partners:
-            ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
-            data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
-            followup_data = dict_lines[partner.id]
-            dest = False
-            if partner.address:
-                for adr in partner.address:
-                    if adr.type=='contact':
-                        if adr.email:
-                            dest = [adr.email]
-                    if (not dest) and adr.type=='default':
-                        if adr.email:
-                            dest = [adr.email]
-            src = tools.config.options['smtp_user']
-            body=data['form']['email_body']
-            total_amt = followup_data.debit - followup_data.credit
-            move_line = ''
-            subtotal_due = 0.0
-            subtotal_paid = 0.0
-            subtotal_maturity = 0.0
-            balance = 0.0
-            l = '--------------------------------------------------------------------------------------------------------------------------'
-            head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
-            for i in data_lines:
-                maturity = ''
-                if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
-                    maturity = i.debit - i.credit
-                subtotal_due = subtotal_due + i.debit
-                subtotal_paid = subtotal_paid + i.credit
-                subtotal_maturity = subtotal_maturity + int(maturity)
-                balance = balance + (i.debit - i.credit)
-                move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
-            move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
-            move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
-            val = {
-                'partner_name':partner.name,
-                'followup_amount':total_amt,
-                'user_signature':data_user.name,
-                'company_name':data_user.company_id.name,
-                'company_currency':data_user.company_id.currency_id.name,
-                'line':move_line,
-                'heading': head,
-                'date':time.strftime('%Y-%m-%d'),
-            }
-            body = body%val
-            sub = str(data['form']['email_subject'])
-            msg = ''
-            if dest:
-                tools.email_send(src,dest,sub,body)
+        if data['form']['email_conf']:
+            mail_notsent = ''
+            msg_sent = ''
+            msg_unsent = ''
+            count = 0
+            pool = pooler.get_pool(cr.dbname)
+            data_user = pool.get('res.users').browse(cr,uid,uid)
+            line_obj = pool.get('account_followup.stat')
+            move_lines = line_obj.browse(cr,uid,data['form']['partner_ids'][0][2])
+            partners = []
+            dict_lines = {}
+            for line in move_lines:
+                partners.append(line.name)
+                dict_lines[line.name.id] =line
+            for partner in partners:
+                ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
+                data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
+                followup_data = dict_lines[partner.id]
+                dest = False
+                if partner.address:
+                    for adr in partner.address:
+                        if adr.type=='contact':
+                            if adr.email:
+                                dest = [adr.email]
+                        if (not dest) and adr.type=='default':
+                            if adr.email:
+                                dest = [adr.email]
+                src = tools.config.options['smtp_user']
+                body=data['form']['email_body']
+                total_amt = followup_data.debit - followup_data.credit
+                move_line = ''
+                subtotal_due = 0.0
+                subtotal_paid = 0.0
+                subtotal_maturity = 0.0
+                balance = 0.0
+                l = '--------------------------------------------------------------------------------------------------------------------------'
+                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
+                for i in data_lines:
+                    maturity = ''
+                    if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
+                        maturity = i.debit - i.credit
+                    subtotal_due = subtotal_due + i.debit
+                    subtotal_paid = subtotal_paid + i.credit
+                    subtotal_maturity = subtotal_maturity + int(maturity)
+                    balance = balance + (i.debit - i.credit)
+                    move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
+                move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
+                move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
+                val = {
+                    'partner_name':partner.name,
+                    'followup_amount':total_amt,
+                    'user_signature':data_user.name,
+                    'company_name':data_user.company_id.name,
+                    'company_currency':data_user.company_id.currency_id.name,
+                    'line':move_line,
+                    'heading': head,
+                    'date':time.strftime('%Y-%m-%d'),
+                }
+                body = body%val
+                sub = str(data['form']['email_subject'])
+                msg = ''
+                if dest:
+                    tools.email_send(src,dest,sub,body)
+                    msg_sent += partner.name + '\n'
+                else:
+                    msg += partner.name + '\n'
+                    msg_unsent += msg
+            if not msg_unsent:
+                summary = _("All emails have been successfully sent to Partners:.\n\n") + msg_sent
             else:
-                msg += partner.name + '\n'
-
-            if not msg:
-                msg = _("All emails have been successfully sent.")
-            else:
-                msg = _("Mail not sent to following Partners, Email not available !\n\n") + msg
-        warning = {
-            'title': _('Email Sending Report'),
-            'message': msg,
-        }
-        return {'warning' : warning}
+                msg_unsent = _("Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
+                msg_sent = msg_sent and _("\n\nMail sent to following Partners successfully, !\n\n") + msg_sent
+                line = '=========================================================================='
+                summary = msg_unsent + line + msg_sent
+            return {'summary' : summary}
+        else:
+            return {'summary' : '\n\n\nMain not sent to any partner if you want to sent it please tick send email confirmation on wizard'}
 
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -281,7 +293,15 @@ class followup_all_print(wizard.interface):
             'actions': [_update_partners],
             'result': {'type': 'print',
                 'report':'account_followup.followup.print',
-                'state':'end'},
+                'state':'summary'},
+        },
+        'summary': {
+            'actions': [_sendmail],
+            'result': {'type': 'form',
+                'arch': _email_summary_form,
+                'fields': _email_summary_fields,
+                'state':[('end','Ok')]
+            },
         },
     }
 
