@@ -1176,6 +1176,8 @@ class orm_template(object):
                 self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
         return True
 
+    def _check_removed_columns(self, cr, log=False):
+        raise NotImplementedError()
 
 class orm_memory(orm_template):
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count']
@@ -1359,6 +1361,10 @@ class orm_memory(orm_template):
                 'id': id
             })
         return result
+    
+    def _check_removed_columns(self, cr, log=False):
+        # nothing to check in memory...
+        pass
 
 class orm(orm_template):
     _sql_constraints = []
@@ -1411,6 +1417,26 @@ class orm(orm_template):
                 if (val<>False) or (type(val)<>bool):
                     cr.execute(update_query, (ss[1](val), key))
 
+    def _check_removed_columns(self, cr, log=False):
+        logger = netsvc.Logger()
+        # iterate on the database columns to drop the NOT NULL constraints
+        # of fields which were required but have been removed (or will be added by another module)
+        columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
+        columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
+        cr.execute("SELECT a.attname, a.attnotnull"
+                   "  FROM pg_class c, pg_attribute a"
+                   " WHERE c.relname=%%s"
+                   "   AND c.oid=a.attrelid"
+                   "   AND a.attisdropped=%%s"
+                   "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
+                   "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)), 
+                       [self._table, False] + columns)
+        for column in cr.dictfetchall():
+            if log:
+                logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
+            if column['attnotnull']:
+                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
+
     def _auto_init(self, cr, context={}):
         store_compute =  False
         logger = netsvc.Logger()
@@ -1456,24 +1482,8 @@ class orm(orm_template):
                     if not cr.rowcount:
                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
                         cr.commit()
-
-            # iterate on the database columns to drop the NOT NULL constraints
-            # of fields which were required but have been removed
-            columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
-            columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
-            cr.execute("SELECT a.attname, a.attnotnull"
-                       "  FROM pg_class c, pg_attribute a"
-                       " WHERE c.relname=%%s"
-                       "   AND c.oid=a.attrelid"
-                       "   AND a.attisdropped=%%s"
-                       "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                       "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)), 
-                           [self._table, False] + columns)
-            for column in cr.dictfetchall():
-                # TODO display this information only when all modules are loaded
-                logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
-                if column['attnotnull']:
-                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
+            
+            self._check_removed_columns(cr, log=False)
 
             # iterate on the "object columns"
             todo_update_store = []
