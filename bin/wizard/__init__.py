@@ -111,10 +111,10 @@ class interface(netsvc.Service):
                             fields[val] = copy.copy(fields[val])
                             fields[val]['selection'] = fields[val]['selection'](self, cr, uid, context)
                         elif lang:
-                            res_name = "%s,%s,%s" % (self.wiz_name, state, field)
+                            res_name = "%s,%s,%s" % (self.wiz_name, state, val)
                             trans = lambda x: translate(cr, res_name, 'selection', lang, x) or x
                             for idx, (key, val2) in enumerate(fields[val]['selection']):
-                                fields[field]['selection'][idx] = (key, trans(val2))
+                                fields[val]['selection'][idx] = (key, trans(val2))
 
                 if lang:
                     # translate fields
