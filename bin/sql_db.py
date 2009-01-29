@@ -204,8 +204,6 @@ class PoolManager(object):
             cls._dsn = ''
             for p in ('host', 'port', 'user', 'password'):
                 cfg = tools.config['db_' + p]
-                if p == 'host' and cfg in ('127.0.0.1', 'localhost'):
-                    continue
                 if cfg:
                     cls._dsn += '%s=%s ' % (p, cfg)
         return '%s dbname=%s' % (cls._dsn, db_name)
