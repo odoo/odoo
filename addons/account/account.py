@@ -935,6 +935,8 @@ class account_move(osv.osv):
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
     def validate(self, cr, uid, ids, context={}):
+        if '__last_update' in context:
+            del context['__last_update']
         ok = True
         for move in self.browse(cr, uid, ids, context):
             #unlink analytic lines on move_lines
