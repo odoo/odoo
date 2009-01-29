@@ -70,14 +70,18 @@ class ir_sequence(osv.osv):
         }
 
     def get_id(self, cr, uid, sequence_id, test='id=%s', context={}):
-        cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True FOR UPDATE', (sequence_id,))
-        res = cr.dictfetchone()
-        if res:
-            cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%s and active=True', (res['id'],))
-            if res['number_next']:
-                return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
-            else:
-                return self._process(res['prefix']) + self._process(res['suffix'])
+        try:
+            cr.execute('lock table ir_sequence')
+            cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True', (sequence_id,))
+            res = cr.dictfetchone()
+            if res:
+                cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%s and active=True', (res['id'],))
+                if res['number_next']:
+                    return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
+                else:
+                    return self._process(res['prefix']) + self._process(res['suffix'])
+        finally:
+            cr.commit()
         return False
 
     def get(self, cr, uid, code):
