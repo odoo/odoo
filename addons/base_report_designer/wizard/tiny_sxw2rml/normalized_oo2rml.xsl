@@ -233,6 +233,7 @@
 		</xsl:apply-templates>
 		<frameEnd />
 	</xsl:for-each>
+	<para><seqReset id="{//text:ordered-list/@text:style-name}"/></para>
   </story>
 </xsl:template>
 
@@ -371,7 +372,7 @@
 
 <xsl:template match="text:ordered-list">
   <xsl:apply-templates />
-  <para><seqreset id="ordered_list" /></para>
+
   <!-- Reset the counter. seqreset is not a trml2pdf tag, but a Platypus Intra Paragraph Markup,
        so it needs a dummy paragraph to enclose it -->
 </xsl:template>
@@ -396,7 +397,7 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:attribute name="bulletFontName">ZapfDingbats</xsl:attribute>
-        <xsl:attribute name="bulletText">l</xsl:attribute>        
+        <xsl:attribute name="bulletText">l</xsl:attribute>
       </xsl:when>
       <xsl:otherwise>
         <!-- Generate the numbers for an ordered list -->
@@ -411,7 +412,7 @@
               <xsl:value-of select="$size" />
             </xsl:attribute>
           </xsl:if>
-          <seq id="ordered_list" />.</bullet>
+          <seq id="{//text:ordered-list/@text:style-name}"/>.</bullet>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:if>
@@ -481,7 +482,7 @@
 </xsl:template>
 
 -->
-            
+
 <xsl:template match="style:style[@style:family='paragraph']">
   <paraStyle>
     <xsl:attribute name="name">
@@ -504,12 +505,12 @@
   <xsl:if test="not($right_indent='') and boolean(style:properties/@fo:margin-right)">
     <xsl:attribute name="rightIndent">
       <xsl:value-of select="$right_indent" />
-    </xsl:attribute>      
+    </xsl:attribute>
   </xsl:if>
   <xsl:if test="not($left_indent='') and boolean(style:properties/@fo:margin-left)">
     <xsl:attribute name="leftIndent">
       <xsl:value-of select="$left_indent" />
-    </xsl:attribute>      
+    </xsl:attribute>
   </xsl:if>
 </xsl:template>
 
@@ -544,7 +545,7 @@
 </xsl:template>
 
 <xsl:template name="make_fontsize">
-  <xsl:variable name="fontSize">       
+  <xsl:variable name="fontSize">
     <xsl:value-of select="style:properties/@fo:font-size" />
   </xsl:variable>
   <xsl:if test="not($fontSize='') and boolean(style:properties/@fo:font-size)">
@@ -560,10 +561,10 @@
 
 <!--this template is not needed anymore for "normalized" sxw files -->
 <xsl:template name="make_parent">
-  <xsl:variable name="parent">       
+  <xsl:variable name="parent">
     <xsl:value-of select="@style:parent-style-name" />
   </xsl:variable>
-  <xsl:if test="not($parent='') and boolean(@style:parent-style-name)">    
+  <xsl:if test="not($parent='') and boolean(@style:parent-style-name)">
     <xsl:attribute name="parent">
       <xsl:value-of select="$parent" />
     </xsl:attribute>
@@ -639,7 +640,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>Helvetica</xsl:text>
-        </xsl:otherwise>        
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
@@ -655,14 +656,14 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>Times-Roman</xsl:text>
-        </xsl:otherwise>        
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:when>
 <xsl:otherwise>
   <!--Use this as default -->
-  <xsl:text>Times-Roman</xsl:text>   
+  <xsl:text>Times-Roman</xsl:text>
 </xsl:otherwise>
 </xsl:choose>
 </xsl:template>
