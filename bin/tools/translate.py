@@ -118,7 +118,11 @@ class TinyPoFile(object):
 
             while line.startswith('#'):
                 if line.startswith('#:'):
-                    tmp_tnrs.append( line[2:].strip().split(':') )
+		    if ' ' in line[2:].strip():
+			for lpart in line[2:].strip().split(' '):
+				tmp_tnrs.append(lpart.strip().split(':',2))
+		    else:
+                        tmp_tnrs.append( line[2:].strip().split(':',2) )
 		elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
 			fuzzy = True
                 line = self.lines.pop(0).strip()
