@@ -244,10 +244,10 @@
           <para style="P16">[[ o.prodlot_id.name or ' ' ]]</para>
         </td>
         <td>
-          <para style="P16">[[ time.strftime('%d/%m/%Y', time.strptime(o.guarantee_limit, '%Y-%m-%d')) ]]</para>
+          <para style="P16">[[ formatLang(o.guarantee_limit,date = True) ]]</para>
         </td>
         <td>
-          <para style="P16">[[ time.strftime('%d/%m/%Y')]] </para>
+          <para style="P16">[[ formatLang(time.strftime('%Y-%m-%d'),date = True)]] </para>
         </td>
       </tr>
     </blockTable>
@@ -291,23 +291,22 @@
             <para style="P3">[[ line.name ]][[ (line.to_invoice==True) or removeParentNode('tr') ]]</para>
           </td>
           <td>
-            <para style="P6">[[ ','.join(map( lambda x: x.name, line.tax_id)) or '0.00' ]]</para>
+            <para style="P6">[[ ','.join(map( lambda x: x.name, line.tax_id)) ]]</para>
           </td>
           <td>
-            <para style="P20">[[ line.product_uom_qty or '0.00' ]] [[ line.product_uom.name ]]</para>
+            <para style="P20">[[ formatLang(line.product_uom_qty) ]] [[ line.product_uom.name ]]</para>
 
           </td>
           <td>
-            <para style="P1">[[ line.price_unit ]]</para>
+            <para style="P1">[[ formatLang(line.price_unit) ]]</para>
           </td>
           <td>
-            <para style="P2">[[ line.price_subtotal ]]</para>
+            <para style="P2">[[ formatLang(line.price_subtotal) ]]</para>
           </td>
         </tr>
       </blockTable>
     </section>
-    <para style="P23">Fees Line(s)</para>
-    <para style="P21"/>
+   	<para style="P23">Fees Line(s) [[ (o.fees_lines ==[] and  removeParentNode('para') )  ]]</para>
     <blockTable colWidths="28.0,145.0,150.0,96.0,51.0,69.0" style="Table6">
       <tr>
         <td>
@@ -317,16 +316,16 @@
           <para style="P3">[[ fees.name ]][[ (fees.to_invoice==True) or removeParentNode('tr') ]]</para>
         </td>
         <td>
-          <para style="P6">[[ ','.join(map( lambda x: x.name, fees.tax_id)) or '0.00' ]]</para>
+          <para style="P6">[[ ','.join(map( lambda x: x.name, fees.tax_id)) ]]</para>
         </td>
         <td>
-          <para style="P20">[[ fees.product_uom_qty or '0.00' ]] [[ fees.product_uom.name ]] </para>
+          <para style="P20">[[ formatLang(fees.product_uom_qty) ]] [[ fees.product_uom.name ]] </para>
         </td>
         <td>
-          <para style="P1">[[ fees.price_unit ]]</para>
+          <para style="P1">[[ formatLang(fees.price_unit) ]]</para>
         </td>
         <td>
-          <para style="P2">[[ fees.price_subtotal ]]</para>
+          <para style="P2">[[ formatLang(fees.price_subtotal) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -347,7 +346,7 @@
           <para style="P25">Net Total :</para>
         </td>
         <td>
-          <para style="P26">[[ o.amount_untaxed or '0.00' ]]</para>
+          <para style="P26">[[ formatLang(o.amount_untaxed)]]</para>
         </td>
         <td>
           <para style="P26">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -363,7 +362,7 @@
           <para style="P25">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ o.amount_tax or '0.00']]</para>
+          <para style="P26">[[ formatLang(o.amount_tax)]]</para>
         </td>
         <td>
           <para style="P26">[[ o.pricelist_id.currency_id.name ]]</para>
@@ -379,7 +378,7 @@
           <para style="P25">Total :</para>
         </td>
         <td>
-          <para style="P27">[[ total(o) ]]</para>
+          <para style="P27">[[ formatLang(total(o)) ]]</para>
         </td>
         <td>
           <para style="P26">[[ o.pricelist_id.currency_id.name ]]</para>
