@@ -723,7 +723,7 @@ def get_languages():
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
-        'el_EL': u'Greek / Ελληνικά',
+        'el_GR': u'Greek / Ελληνικά',
         'en_CA': u'English (CA)',
         'en_EN': u'English (default)',
         'en_GB': u'English (UK)',
