@@ -204,7 +204,7 @@ class db(netsvc.Service):
         cr = db.cursor()
         cr.autocommit(True)
         try:
-            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE 'template0'""" % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
