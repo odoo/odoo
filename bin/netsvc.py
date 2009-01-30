@@ -127,7 +127,7 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(tools.config['log_level'] or '0')
 
-    if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
+    if handler is logging.StreamHandler and os.name != 'nt':
         # change color of level names
         # uses of ANSI color codes
         # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
