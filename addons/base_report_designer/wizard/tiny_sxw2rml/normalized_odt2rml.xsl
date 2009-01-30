@@ -233,7 +233,9 @@
 		</xsl:apply-templates>
 		<frameEnd />
 	</xsl:for-each>
-	<para><seqReset id="{//text:ordered-list/@text:style-name}"/></para>
+	<xsl:for-each select="//text:ordered-list">
+		<para><seqReset id="{//text:ordered-list/@text:style-name}"/></para>
+	</xsl:for-each>
   </story>
 </xsl:template>
 
@@ -412,7 +414,7 @@
               <xsl:value-of select="$size" />
             </xsl:attribute>
           </xsl:if>
-          <seq id="{//text:ordered-list/@text:style-name}"/>.</bullet>
+          <seq id="{../../@text:style-name}"/>.</bullet>.</bullet>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:if>
