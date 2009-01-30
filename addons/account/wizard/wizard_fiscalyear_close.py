@@ -56,13 +56,13 @@ def _data_save(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
 
     fy_id = data['form']['fy_id']
-    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
+    period_ids = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', fy_id)])
+    fy_period_set = ','.join(map(str, period_ids))
+    periods_fy2 = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fy2_id'])])
+    fy2_period_set = ','.join(map(str, periods_fy2))
 
-    periods_fy2 = new_fyear.period_ids
-    if not periods_fy2:
-        raise wizard.except_wizard(_('UserError'),
-                    _('There are no periods defined on New Fiscal Year.'))
-    period=periods_fy2[0]
+    period = pool.get('account.period').browse(cr, uid, data['form']['period_id'], context=context)
+    new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'], context=context)
 
     new_journal = data['form']['journal_id']
     new_journal = pool.get('account.journal').browse(cr, uid, new_journal, context=context)
@@ -87,6 +87,7 @@ def _data_save(self, cr, uid, data, context):
     ids = map(lambda x: x[0], cr.fetchall())
     for account in pool.get('account.account').browse(cr, uid, ids,
         context={'fiscalyear': fy_id}):
+        
         accnt_type_data = account.user_type
         if not accnt_type_data:
             continue
@@ -120,7 +121,40 @@ def _data_save(self, cr, uid, data, context):
                 if not result:
                     break
                 for move in result:
-                    parent_id = move['id']
+                    move.pop('id')
+                    move.update({
+                        'date': period.date_start,
+                        'journal_id': new_journal.id,
+                        'period_id': period.id,
+                    })
+                    pool.get('account.move.line').create(cr, uid, move, {
+                        'journal_id': new_journal.id,
+                        'period_id': period.id,
+                        })
+                offset += limit
+
+            #We have also to consider all move_lines that were reconciled 
+            #on another fiscal year, and report them too
+            offset = 0
+            limit = 100
+            while True:
+                #TODO: this query could be improved in order to work if there is more than 2 open FY
+                # a.period_id IN ('+fy2_period_set+') is the problematic clause
+                cr.execute('SELECT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
+                            'b.amount_currency, b.currency_id, b.blocked, b.partner_id, ' \
+                            'b.date_maturity, b.date_created ' \
+                        'FROM account_move_line a, account_move_line b ' \
+                        'WHERE b.account_id = %s ' \
+                            'AND b.reconcile_id is NOT NULL ' \
+                            'AND a.reconcile_id = b.reconcile_id ' \
+                            'AND b.period_id IN ('+fy_period_set+') ' \
+                            'AND a.period_id IN ('+fy2_period_set+') ' \
+                        'ORDER BY id ' \
+                        'LIMIT %s OFFSET %s', (account.id, limit, offset))
+                result = cr.dictfetchall()
+                if not result:
+                    break
+                for move in result:
                     move.pop('id')
                     move.update({
                         'date': period.date_start,
@@ -148,7 +182,6 @@ def _data_save(self, cr, uid, data, context):
                 if not result:
                     break
                 for move in result:
-                    parent_id = move['id']
                     move.pop('id')
                     move.update({
                         'date': period.date_start,
@@ -160,10 +193,8 @@ def _data_save(self, cr, uid, data, context):
 
     ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
         ('period_id.fiscalyear_id','=',new_fyear.id)])
-
-    context['same_account'] = False
+    context['fy_closing'] = True
     pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
-
     new_period = data['form']['period_id']
     ids = pool.get('account.journal.period').search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])
     if ids:
