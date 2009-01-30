@@ -93,7 +93,8 @@ def init_logger():
     logger = logging.getLogger()
     # create a format for log messages and dates
     formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
-
+    
+    logging_to_stdout = False
     if tools.config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
@@ -113,11 +114,13 @@ def init_logger():
                 os.makedirs(dirname)
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except Exception, ex:
-            sys.stderr.write("ERROR: couldn't create the logfile directory\n")
-            handler = logging.StreamHandler(sys.stdout)
+            sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
+            handler = logging.StreamHandler(sys.stdout) 
+            logging_to_stdout = True
     else:
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
+        logging_to_stdout = True
 
 
     # tell the handler to use this format
@@ -127,7 +130,7 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(tools.config['log_level'] or '0')
 
-    if handler is logging.StreamHandler and os.name != 'nt':
+    if logging_to_stdout and os.name != 'nt':
         # change color of level names
         # uses of ANSI color codes
         # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
