@@ -3403,6 +3403,7 @@
       <field name="type">view</field>
       <field name="user_type" ref="account_type_view"/>
       <field name="parent_id" ref="pcg_Classe_4"/>
+      <field name="reconcile" eval="True"/>
     </record>
 
     <record id="pcg_400" model="account.account.template">
@@ -3417,7 +3418,7 @@
     <record id="pcg_401" model="account.account.template">
       <field name="name">Fournisseurs</field>
       <field name="code">401</field>
-      <field name="type">payable</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_payable"/>
       <field name="parent_id" ref="pcg_40"/>
       <field name="reconcile" eval="True"/>
@@ -3530,7 +3531,7 @@
     <record id="pcg_409" model="account.account.template">
       <field name="name">Fournisseurs débiteurs</field>
       <field name="code">409</field>
-      <field name="type">payable</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_payable"/>
 
       <field name="parent_id" ref="pcg_40"/>
@@ -3561,7 +3562,7 @@
       <field name="name">Fournisseurs - Autres avoirs</field>
       <field name="code">4097</field>
       <field name="type">other</field>
-                        <field name="user_type" ref="account_type_stocks" />
+      <field name="user_type" ref="account_type_stocks" />
 
       <field name="parent_id" ref="pcg_409"/>
       <field name="reconcile" eval="True"/>
@@ -3604,6 +3605,7 @@
       <field name="user_type" ref="account_type_view"/>
 
       <field name="parent_id" ref="pcg_Classe_4"/>
+      <field name="reconcile" eval="True"/>
     </record>
 
     <record id="pcg_410" model="account.account.template">
@@ -3619,7 +3621,7 @@
     <record id="pcg_411" model="account.account.template">
       <field name="name">Clients</field>
       <field name="code">411</field>
-      <field name="type">receivable</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_receivable"/>
 
       <field name="parent_id" ref="pcg_41"/>
@@ -3701,7 +3703,7 @@
     <record id="pcg_419" model="account.account.template">
       <field name="name">Clients créditeurs</field>
       <field name="code">419</field>
-      <field name="type">receivable</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_receivable"/>
 
       <field name="parent_id" ref="pcg_41"/>
@@ -3760,7 +3762,7 @@
     <record id="pcg_421" model="account.account.template">
       <field name="name">Personnel - Rémunérations dues</field>
       <field name="code">421</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_dettes"/>
 
       <field name="parent_id" ref="pcg_42"/>
@@ -3909,7 +3911,7 @@
     <record id="pcg_437" model="account.account.template">
       <field name="name">Autres organismes sociaux</field>
       <field name="code">437</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_dettes"/>
 
       <field name="parent_id" ref="pcg_43"/>
@@ -4168,7 +4170,7 @@
     <record id="pcg_4456" model="account.account.template">
       <field name="name">Taxes sur le chiffre d'affaires déductibles</field>
       <field name="code">4456</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_tax"/>
 
       <field name="parent_id" ref="pcg_445"/>
@@ -4239,7 +4241,7 @@
     <record id="pcg_4457" model="account.account.template">
       <field name="name">Taxes sur le chiffre d'affaires collectées par l'entreprise</field>
       <field name="code">4457</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_tax"/>
 
       <field name="parent_id" ref="pcg_445"/>
@@ -5268,7 +5270,7 @@
     <record id="fr_pcg_cash" model="account.account.template">
       <field name="name">Banques</field>
       <field name="code">512</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_cash"/>
       <field name="note">Créer 1 compte par compte bancaire</field>
 
@@ -5472,6 +5474,7 @@
       <field name="user_type" ref="account_type_view"/>
 
       <field name="parent_id" ref="pcg_Classe_5"/>
+      <field name="reconcile" eval="True"/>
     </record>
 
     <record id="pcg_59" model="account.account.template">
@@ -6940,7 +6943,7 @@
     <record id="pcg_645" model="account.account.template">
       <field name="name">Charges de Sécurité sociale et de prévoyance</field>
       <field name="code">645</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_expense"/>
 
       <field name="parent_id" ref="pcg_64"/>
@@ -6994,7 +6997,7 @@
     <record id="pcg_646" model="account.account.template">
       <field name="name">Cotisations sociales personnelles de l'exploitant</field>
       <field name="code">646</field>
-      <field name="type">other</field>
+      <field name="type">view</field>
       <field name="user_type" ref="account_type_expense"/>
 
       <field name="parent_id" ref="pcg_64"/>
