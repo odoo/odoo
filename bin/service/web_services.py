@@ -69,9 +69,9 @@ class db(netsvc.Service):
         self.actions[id] = {'clean': False}
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
+        cr = db.serialized_cursor()
         try:
-            cr.autocommit(True)
+            cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
             cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
@@ -149,8 +149,8 @@ class db(netsvc.Service):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
-        cr.autocommit(True)
+        cr = db.serialized_cursor()
+        cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
         try:
             try:
                 cr.execute('DROP DATABASE "%s"' % db_name)
@@ -201,8 +201,8 @@ class db(netsvc.Service):
             raise Exception, "Database already exists"
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
-        cr.autocommit(True)
+        cr = db.serialized_cursor()
+        cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
         try:
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE 'template0'""" % db_name)
         finally:

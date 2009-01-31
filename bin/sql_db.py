@@ -21,7 +21,7 @@
 ##############################################################################
 
 import netsvc
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_SERIALIZABLE
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
 from psycopg2.pool import ThreadedConnectionPool
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 
@@ -76,8 +76,9 @@ class Cursor(object):
             return f(self, *args, **kwargs)
         return wrapper
 
-    def __init__(self, pool):
+    def __init__(self, pool, serialized=False):
         self._pool = pool
+        self._serialized = serialized
         self._cnx = pool.getconn()
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.autocommit(False)
@@ -168,7 +169,8 @@ class Cursor(object):
     
     @check
     def autocommit(self, on):
-        self._cnx.set_isolation_level([ISOLATION_LEVEL_SERIALIZABLE, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
+        offlevel = [ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE][bool(self._serialized)]
+        self._cnx.set_isolation_level([offlevel, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
     
     @check
     def commit(self):
@@ -189,6 +191,9 @@ class ConnectionPool(object):
 
     def cursor(self):
         return Cursor(self)
+
+    def serialized_cursor(self):
+        return Cursor(self, True)
 
     def __getattr__(self, name):
         return getattr(self._pool, name)
