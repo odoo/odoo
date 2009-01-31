@@ -274,11 +274,13 @@ def get_modules():
 
 
 def create_graph(module_list, force=None):
-    if not force:
-        force = []
     graph = Graph()
-    packages = []
+    return upgrade_graph(graph, module_list, force)
 
+def upgrade_graph(graph, module_list, force=None):
+    if force is None:
+        force = []
+    packages = []
     for module in module_list:
         try:
             mod_path = get_module_path(module)
@@ -556,7 +558,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
     migrations = MigrationManager(cr, graph)
 
-    check_rules = False
+    has_updates = False
     modobj = None
 
     for package in graph:
@@ -579,7 +581,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         idref = {}
         status['progress'] = (float(statusi)+0.4) / len(graph)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            check_rules = True
+            has_updates = True
             init_module_objects(cr, m, modules)
             for kind in ('init', 'update'):
                 for filename in package.data.get('%s_xml' % kind, []):
@@ -614,6 +616,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
             package_todo.append(package.name)
 
+            migrations.migrate_module(package, 'post')
+            
             if modobj:
                 ver = release.major_version + '.' + package.data.get('version', '1.0')
                 # Set new modules and dependencies
@@ -622,24 +626,24 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 # Update translations for all installed languages
                 modobj.update_translations(cr, 1, [mid], None)
                 cr.commit()
+            
+            package.state = 'installed'
+            for kind in ('init', 'demo', 'update'):
+                if hasattr(package, kind):
+                    delattr(package, kind)
 
-            migrations.migrate_module(package, 'post')
 
         statusi += 1
 
-    if perform_checks and check_rules:
-        cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
-        for (model, name) in cr.fetchall():
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
-
-
+    
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
 
     pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
-
+    
+    return has_updates
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:
@@ -652,9 +656,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     pool = pooler.get_pool(cr.dbname)
     try:
         report = tools.assertion_report()
+        STATES_TO_LOAD = ['installed', 'to upgrade']
+        graph = create_graph(['base'], force)
+        has_updates = False
         if update_module:
-            basegraph = create_graph(['base'], force)
-            load_module_graph(cr, basegraph, status, perform_checks=False, report=report)
+            has_updates = load_module_graph(cr, graph, status, perform_checks=False, report=report)
 
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
@@ -673,20 +679,31 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     modobj.button_upgrade(cr, 1, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-            cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
-        else:
-            cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade')")
-        module_list = [name for (name,) in cr.fetchall()]
-        graph = create_graph(module_list, force)
+            
+            STATES_TO_LOAD += ['to install']
+        
+        while True:
+            cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
 
-        # the 'base' module has already been updated
-        base = graph['base']
-        base.state = 'installed'
-        for kind in ('init', 'demo', 'update'):
-            if hasattr(base, kind):
-                delattr(base, kind)
+            module_list = [name for (name,) in cr.fetchall() if name not in graph]
+            if not module_list:
+                break
+    
+            upgrade_graph(graph, module_list, force)
+            r = load_module_graph(cr, graph, status, report=report)
+            has_updates = has_updates or r
 
-        load_module_graph(cr, graph, status, report=report)
+        if has_updates:
+            cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+            for (model, name) in cr.fetchall():
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+
+            cr.execute("SELECT model from ir_model")
+            for (model,) in cr.fetchall():
+                obj = pool.get(model)
+                if obj:
+                    obj._check_removed_columns(cr, log=True)
+                    
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
 
@@ -697,7 +714,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if update_module:
             cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
             for mod_id, mod_name in cr.fetchall():
-                pool = pooler.get_pool(cr.dbname)
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod, rid in cr.fetchall():
                     uid = 1
@@ -726,7 +742,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 else:
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'removed %d unused menus' % (cr.rowcount,))
 
-            cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
+            cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
             cr.commit()
     finally:
         cr.close()

@@ -478,7 +478,7 @@ def trans_generate(lang, modules, dbname=None):
                     push_translation(module, report_type, name, 0, t)
             except IOError, xml.dom.expatbuilder.expat.ExpatError:
                 if fname:
-                    logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
+                    logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
@@ -540,14 +540,13 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
+            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
     logger = netsvc.Logger()
     if verbose:
-        logger.notifyChannel("init", netsvc.LOG_INFO,
-                'loading translation file for language %s' % (lang))
+        logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -617,8 +616,9 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         langs = lang_obj.read(cr, uid, lang_ids)
         ls = map(lambda x: (x['code'],x['name']), langs)
 
-        fileobj.seek(0)
 
+        # now, the serious things: we read the language file
+        fileobj.seek(0)
         if fileformat == 'csv':
             reader = csv.reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
@@ -701,11 +701,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             cr.commit()
         cr.close()
         if verbose:
-            logger.notifyChannel("init", netsvc.LOG_INFO,
+            logger.notifyChannel("i18n", netsvc.LOG_INFO,
                     "translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+        logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 	cr.commit()
 	cr.close()
     except:

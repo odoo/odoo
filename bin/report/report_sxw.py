@@ -715,10 +715,8 @@ class report_sxw(report_rml):
 
             if want_header:
                 #Add corporate header/footer
-                if report_type=='odt':
-                    rml = tools.file_open('custom/corporate_odt_header.xml').read()
-                if report_type=='sxw':
-                    rml = tools.file_open('custom/corporate_sxw_header.xml').read()
+                if report_type in ('odt', 'sxw'):
+                    rml = tools.file_open(os.path.join('base', 'report', 'corporate_%s_header.xml' % report_type)).read()
                 rml_parser = self.parser(cr, uid, self.name2, context)
                 rml_parser.parents = sxw_parents
                 rml_parser.tag = sxw_tag

@@ -113,8 +113,8 @@ def init_logger():
                 os.makedirs(dirname)
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except Exception, ex:
-            sys.stderr.write("ERROR: couldn't create the logfile directory\n")
-            handler = logging.StreamHandler(sys.stdout)
+            sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
+            handler = logging.StreamHandler(sys.stdout) 
     else:
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)

@@ -180,9 +180,19 @@ class configmanager(object):
 
         (opt, args) = parser.parse_args()
 
-        assert not (bool(opt.syslog) and bool(opt.logfile)), "the syslog and logfile options are exclusive"
-        assert not (opt.translate_in and (not opt.language or not opt.db_name)), "the i18n-import option cannot be used without the language (-l) and the database (-d) options"
-        assert not (opt.translate_out and (not opt.db_name)), "the i18n-export option cannot be used without the database (-d) option"
+        def die(cond, msg):
+            if cond:
+                print msg
+                sys.exit(1)
+
+        die(bool(opt.syslog) and bool(opt.logfile),
+            "the syslog and logfile options are exclusive")
+
+        die(opt.translate_in and (not opt.language or not opt.db_name),
+            "the i18n-import option cannot be used without the language (-l) and the database (-d) options")
+
+        die(opt.translate_out and (not opt.db_name),
+            "the i18n-export option cannot be used without the database (-d) option")
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -246,9 +256,61 @@ class configmanager(object):
             self.options['pg_path'] = opt.pg_path
 
         if self.options.get('language', False):
-            assert len(self.options['language'])<=5, 'ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE'
+            if len(self.options['language']) <= 5:
+                raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
+
+        if not self.options['db_user']:
+            try:
+                import getpass
+                self.options['db_user'] = getpass.getuser()
+            except:
+                self.options['db_user'] = None
+
+        die(not self.options['db_user'], 'ERROR: No user specified for the connection to the database')
+
+        if self.options['db_password']:
+            if sys.platform == 'win32' and not self.options['db_host']:
+                self.options['db_host'] = 'localhost'
+            if self.options['db_host']:
+                self._generate_pgpassfile()
+
         if opt.save:
             self.save()
+
+    def _generate_pgpassfile(self):
+        """
+        Generate the pgpass file with the parameters from the command line (db_host, db_user,
+        db_password)
+
+        Used because pg_dump and pg_restore can not accept the password on the command line.
+        """
+        is_win32 = sys.platform == 'win32'
+        if is_win32:
+            filename = os.path.join(os.environ['APPDATA'], 'pgpass.conf')
+        else:
+            filename = os.path.join(os.environ['HOME'], '.pgpass')
+
+        text_to_add = "%(db_host)s:*:*:%(db_user)s:%(db_password)s" % self.options
+
+        if os.path.exists(filename):
+            content = [x.strip() for x in file(filename, 'r').readlines()]
+            if text_to_add in content:
+                return
+
+        fp = file(filename, 'a+')
+        fp.write(text_to_add + "\n")
+        fp.close()
+
+        if is_win32:
+            import _winreg
+            x=_winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
+            y = _winreg.OpenKey(x, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0,_winreg.KEY_ALL_ACCESS)
+            _winreg.SetValueEx(y,"PGPASSFILE", 0, _winreg.REG_EXPAND_SZ, filename )
+            _winreg.CloseKey(y)
+            _winreg.CloseKey(x)
+        else:
+            import stat
+            os.chmod(filename, stat.S_IRUSR + stat.S_IWUSR)
 
     def _check_addons_path(self, option, opt, value, parser):
         res = os.path.abspath(os.path.expanduser(value))
