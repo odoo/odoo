@@ -300,8 +300,11 @@ def upgrade_graph(graph, module_list, force=None):
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
 
+    if not packages:
+        return False
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
+    
     while packages and current > later:
         package, deps, data = packages[0]
 
@@ -561,6 +564,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     has_updates = False
     modobj = None
 
+    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
+    
     for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
@@ -682,16 +687,24 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             
             STATES_TO_LOAD += ['to install']
         
+	loop_count=1
         while True:
             cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:
                 break
-    
-            upgrade_graph(graph, module_list, force)
+            
+	    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
+            if not upgrade_graph(graph, module_list, force):
+                break
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r
+	    
+	    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Has updates %s' % (str(has_updates)))
+	    loop_count +=1
+	    if (loop_count >100):
+		raise ProgrammingError()
 
         if has_updates:
             cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
@@ -703,7 +716,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 obj = pool.get(model)
                 if obj:
                     obj._check_removed_columns(cr, log=True)
-                    
+
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
 
@@ -717,11 +730,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod, rid in cr.fetchall():
                     uid = 1
-		    rmod_module= pool.get(rmod)
-		    if rmod_module:
-		        rmod_module.unlink(cr, uid, [rid])
-		    else:
-		    	logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not locate %s to remove res=%d' % (rmod,rid))
+                    rmod_module= pool.get(rmod)
+                    if rmod_module:
+                        rmod_module.unlink(cr, uid, [rid])
+                    else:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not locate %s to remove res=%d' % (rmod,rid))
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
