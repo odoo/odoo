@@ -275,12 +275,14 @@ def get_modules():
 
 def create_graph(module_list, force=None):
     graph = Graph()
-    return upgrade_graph(graph, module_list, force)
+    upgrade_graph(graph, module_list, force)
+    return graph
 
 def upgrade_graph(graph, module_list, force=None):
     if force is None:
         force = []
     packages = []
+    len_graph = len(graph)
     for module in module_list:
         try:
             mod_path = get_module_path(module)
@@ -300,8 +302,6 @@ def upgrade_graph(graph, module_list, force=None):
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
 
-    if not packages:
-        return False
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
     
@@ -329,8 +329,11 @@ def upgrade_graph(graph, module_list, force=None):
     for package in later:
         unmet_deps = filter(lambda p: p not in graph, dependencies[package])
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
-
-    return graph
+    
+    result = len(graph) - len_graph
+    if result != len(module_list):
+        logger.notifyChannel('init', netsvc.LOG_WARNING, 'Not all modules have loaded.')
+    return result
 
 
 def init_module_objects(cr, module_name, obj_list):
@@ -687,25 +690,25 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             
             STATES_TO_LOAD += ['to install']
         
-	loop_count=1
+        loop_guardrail = 0
         while True:
+            loop_guardrail += 1
+            if loop_guardrail > 100:
+                raise ProgrammingError()
             cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:
                 break
-            
-	    #logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
-            if not upgrade_graph(graph, module_list, force):
-		logger.notifyChannel('init', netsvc.LOG_WARNING, 'These modules are in db, but cannot be loaded: ' + (', '.join(module_list)))
+
+            new_modules_in_graph = upgrade_graph(graph, module_list, force)
+            if new_modules_in_graph == 0:
+                # nothing to load
                 break
+            
+            logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r
-	    
-	    #logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Has updates %s' % (str(has_updates)))
-	    loop_count +=1
-	    if (loop_count >100):
-		raise ProgrammingError()
 
         if has_updates:
             cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
