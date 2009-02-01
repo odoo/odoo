@@ -60,15 +60,15 @@ def _invoice_membership(self, cr, uid, data, context):
 
     for partner_id in partner_ids:
         account_id = partner_obj.read(cr, uid, partner_id, ['property_account_receivable'])['property_account_receivable'][0]
-
+        read_fpos = partner_obj.read(cr, uid, partner_id, ['property_account_position'])
+        fpos_id = read_fpos['property_account_position'] and read_fpos['property_account_position'][0]
         line_value =  {
             'product_id' : product_id,
             }
 
         quantity = 1
 
-        line_dict = invoice_line_obj.product_id_change(cr, uid, {}, product_id, product['uom_id'][0], quantity, '', 'out_invoice', partner_id, context=context)
-
+        line_dict = invoice_line_obj.product_id_change(cr, uid, {}, product_id, product['uom_id'][0], quantity, '', 'out_invoice', partner_id, fpos_id, context=context)
         line_value.update(line_dict['value'])
         if line_value['invoice_line_tax_id']:
             tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -78,15 +78,14 @@ def _makeInvoices(self, cr, uid, data, context):
             inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
             continue
         partner_address_list = reg.partner_invoice_id and pool_obj.get('res.partner').address_get(cr, uid, [reg.partner_invoice_id.id], adr_pref=['invoice'])
-        partner_address_id = partner_address_list['invoice'] 
+        partner_address_id = partner_address_list['invoice']
         if not partner_address_id:
             inv_reject = inv_reject + 1
             inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
             continue
 
         inv_create = inv_create + 1
-        value=obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id,uom =False, partner_id=reg.partner_invoice_id.id)
-
+        value=obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id,uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
         data_product=pool_obj.get('product.product').browse(cr,uid,[reg.event_id.product_id.id])
         for tax in data_product[0].taxes_id:
             tax_ids.append(tax.id)

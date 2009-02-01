@@ -61,22 +61,28 @@ class report_rappel(report_sxw.rml_parse):
         movelines = moveline_obj.read(self.cr, self.uid, movelines)
         return movelines
 
-    def _get_text(self, partner):
+    def _get_text(self, partner, followup_id):
+        fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
+        fp_line = fp_obj.browse(self.cr, self.uid, followup_id).followup_line
+        li_delay = []
+        for line in fp_line:
+            li_delay.append(line.delay)
+        li_delay.sort(reverse=True)
         text = ""
         a = {}
         partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id)])
-        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line):
-            if  i.followup_line_id and str(i.followup_line_id.delay)=='45':
-                text = i.followup_line_id.description
-                a['45'] = text
-            elif i.followup_line_id and str(i.followup_line_id.delay)=='30':
-                text = i.followup_line_id.description
-                a['30'] = text
-            elif i.followup_line_id and str(i.followup_line_id.delay)=='15':
-                text = i.followup_line_id.description
-                a['15'] = text
-        text = (a.has_key('45') and a['45']) or (a.has_key('30') and a['30']) or (a.has_key('15') and a['15'])
-        text = text % {'partner_name':partner.name}
+        partner_delay = []
+        context={}
+        context.update({'lang': partner.lang})
+        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line, context):
+            for delay in li_delay:
+                if  i.followup_line_id and str(i.followup_line_id.delay)==str(delay):
+                    text = i.followup_line_id.description
+                    a[delay] = text
+                    partner_delay.append(delay)
+        text = partner_delay and a[max(partner_delay)] or ''
+        if text:
+            text = text % {'partner_name':partner.name}
         return text
 
 

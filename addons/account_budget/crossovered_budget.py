@@ -168,9 +168,10 @@ class crossovered_budget_lines(osv.osv):
                 date_from = context['wizard_date_from']
             if context.has_key('wizard_date_to'):
                 date_to = context['wizard_date_to']
+
             cr.execute("select sum(amount) from account_analytic_line where account_id=%%s and (date "
                        "between to_date(%%s,'yyyy-mm-dd') and to_date(%%s,'yyyy-mm-dd')) and "
-                       "general_account_id in (%s)" % ",".join(['%s']*len(acc_ids)), (line.analytic_account_id.id,date_from,date_to,acc_ids))
+                       "general_account_id in (%s)" % ",".join(map(str,acc_ids)), (line.analytic_account_id.id, date_from, date_to ))
             result = cr.fetchone()[0]
             if result is None:
                 result = 0.00

@@ -505,6 +505,9 @@ class crm_case(osv.osv):
             action_ids = newactions
             level -= 1
         return True
+    
+    def format_body(self, body):
+        return tools.ustr(body.encode('ascii', 'replace'))
 
     def format_mail(self, case, body):
         data = {
@@ -520,7 +523,7 @@ class crm_case(osv.osv):
             'partner': (case.partner_id and case.partner_id.name) or '/',
             'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
         }
-        return body % data
+        return self.format_body(body) % data
 
     def email_send(self, cr, uid, case, emails, body, context={}):
         body = self.format_mail(case, body)
@@ -614,7 +617,7 @@ class crm_case(osv.osv):
                     src, 
                     dest, 
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
-                    body, 
+                    self.format_body(body),
                     reply_to=case.section_id.reply_to, 
                     tinycrm=str(case.id),
                     attach=attach_to_send
@@ -659,7 +662,7 @@ class crm_case(osv.osv):
                 case.user_id.address_id.email, 
                 emails,
                 '['+str(case.id)+'] '+case.name, 
-                body,
+                self.format_body(body),
                 reply_to=case.section_id.reply_to, 
                 tinycrm=str(case.id)
             )
