@@ -43,7 +43,6 @@
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'hr_view.xml',
-        'hr_wizard.xml',
         'hr_department_view.xml',
         'process/hr_process.xml'
     ],
