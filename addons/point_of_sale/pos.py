@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -55,7 +55,7 @@ class pos_order(osv.osv):
     def onchange_partner_pricelist(self, cr, uid, ids, part, context={}):
         if not part:
             return {}
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id 
+        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
@@ -521,7 +521,7 @@ class pos_order(osv.osv):
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                     line.product_id.id,
                     line.product_id.uom_id.id,
-                    line.qty, partner_id = order.partner_id.id)['value'])
+                    line.qty, partner_id = order.partner_id.id, fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
 

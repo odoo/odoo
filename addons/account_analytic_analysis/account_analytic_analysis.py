@@ -451,6 +451,7 @@ class account_analytic_account_summary_user(osv.osv):
         'user' : fields.many2one('res.users', 'User'),
     }
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
                 'SELECT ' \
                     '(u.account_id * u.max_user) + u."user" AS id, ' \

@@ -61,7 +61,7 @@ class report_rappel(report_sxw.rml_parse):
         movelines = moveline_obj.read(self.cr, self.uid, movelines)
         return movelines
 
-    def _get_text(self, partner, followup_id):
+    def _get_text(self, partner, followup_id, context={}):
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id).followup_line
         li_delay = []
@@ -82,7 +82,12 @@ class report_rappel(report_sxw.rml_parse):
                     partner_delay.append(delay)
         text = partner_delay and a[max(partner_delay)] or ''
         if text:
-            text = text % {'partner_name':partner.name}
+            text = text % {
+                'partner_name': partner.name,
+                'date': time.strftime('%Y-%m-%d'),
+                'company_name': fp_obj.browse(self.cr, self.uid, followup_id).company_id.name,
+                'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature,
+            }
         return text
 
 

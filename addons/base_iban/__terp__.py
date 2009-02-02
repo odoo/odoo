@@ -30,7 +30,7 @@ This module install the base for IBAN bank accounts.
 
     """,
     'author': 'Tiny',
-    'depends': ['base'],
+    'depends': ['base', 'account'],
     'init_xml': ['base_iban_data.xml'],
     'update_xml': ['base_iban_view.xml'],
     'installable': True,

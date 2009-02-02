@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -72,21 +72,22 @@ class make_sale(wizard.interface):
                 ['invoice', 'delivery', 'contact'])
         default_pricelist = partner_obj.browse(cr, uid, data['form']['partner_id'],
                     context).property_product_pricelist.id
-
+        fpos_data = partner_obj.browse(cr, uid, data['form']['partner_id'],context).property_account_position
         new_ids = []
 
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.partner_id and case.partner_id.id:
                 partner_id = case.partner_id.id
+                fpos = case.partner_id.property_account_position and case.partner_id.property_account_position.id or False
                 partner_addr = partner_obj.address_get(cr, uid, [case.partner_id.id],
                         ['invoice', 'delivery', 'contact'])
                 pricelist = partner_obj.browse(cr, uid, case.partner_id.id,
                         context).property_product_pricelist.id
             else:
                 partner_id = data['form']['partner_id']
+                fpos = fpos_data and fpos_data.id or False
                 partner_addr = default_partner_addr
                 pricelist = default_pricelist
-
             vals = {
                 'origin': 'CRM:%s' % str(case.id),
                 'picking_policy': data['form']['picking_policy'],
@@ -102,10 +103,9 @@ class make_sale(wizard.interface):
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
             new_id = sale_obj.create(cr, uid, vals)
-
             for product_id in data['form']['products'][0][2]:
                 value = sale_line_obj.product_id_change(cr, uid, [], pricelist,
-                        product_id, qty=1, partner_id=partner_id)['value']
+                        product_id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value']
                 value['product_id'] = product_id
                 value['order_id'] = new_id
                 sale_line_obj.create(cr, uid, value)
