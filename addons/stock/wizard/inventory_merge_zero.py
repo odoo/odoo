@@ -28,9 +28,18 @@ import pooler
 _form = """<?xml version="1.0"?>
 <form string="Set Stock to Zero">
     <separator colspan="4" string="Set Stocks to Zero" />
-    <label string="Do you want to set stocks to zero ?"/>
+    <field name="location_id"/>
+    <newline/>
+    <label colspan="4" string="Do you want to set stocks to zero ?"/>
 </form>
 """
+_inventory_fields = {
+    'location_id' : {
+        'string':'Location',
+        'type':'many2one',
+        'relation':'stock.location',
+        }
+}
 
 
 def do_merge(self, cr, uid, data, context):
@@ -44,14 +53,18 @@ def do_merge(self, cr, uid, data, context):
 
     cr.execute('select distinct location_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     loc_ids = map(lambda x: x[0], cr.fetchall())
+    if data['form']['location_id']:
+        loc_ids.append(data['form']['location_id'])
     locs = ','.join(map(lambda x: str(x), loc_ids))
 
     cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     inv = cr.fetchall()
-
-    if not inv:
+    if not locs:
         raise wizard.except_wizard("Warning",
                                    "Please select at least one inventory location !")
+#    if not inv:
+#        raise wizard.except_wizard("Warning",
+#                                   "Please select at least one inventory location !")
     else:
         cr.execute('select distinct product_id from stock_move where (location_dest_id in ('+locs+')) or (location_id in ('+locs+'))')
         stock = cr.fetchall()
@@ -75,7 +88,7 @@ class merge_inventory(wizard.interface):
             'actions' : [],
             'result' : {'type' : 'form',
                     'arch' : _form,
-                    'fields' : {},
+                    'fields' : _inventory_fields,
                     'state' : [('end', 'Cancel'),
                                ('merge', 'Set to Zero') ]}
         },
