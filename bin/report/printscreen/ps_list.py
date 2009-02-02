@@ -156,8 +156,15 @@ class report_printscreen_list(report_int):
                 if fields[f]['type']=='many2one' and line[f]:
                     line[f]= line[f][1]
 
+                if fields[f]['type']=='selection' and line[f]:
+                    for key, value in fields[f]['selection']:
+                        if key == line[f]:
+                            line[f] = value
+                            break
+
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+tools.ustr(len(line[f])) + ' )'
+
                 if fields[f]['type'] == 'float':
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]='%.2f'%(line[f])
