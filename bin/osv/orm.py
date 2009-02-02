@@ -40,6 +40,7 @@
 #
 
 import time
+import calendar
 import types
 import string
 import netsvc
@@ -62,6 +63,12 @@ from tools.config import config
 
 regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?( asc)?,?)+$', re.I)
 
+def last_day_of_current_month():
+    import datetime
+    import calendar
+    today = datetime.date.today()
+    last_day = str(calendar.monthrange(today.year, today.month)[1])
+    return time.strftime('%Y-%m-' + last_day)
 
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
