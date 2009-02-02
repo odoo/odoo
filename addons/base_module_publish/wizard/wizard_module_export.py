@@ -40,7 +40,7 @@ init_fields = {
 finish_form = '''<?xml version="1.0"?>
 <form string="Finish">
     <separator string="Module successfully exported !" colspan="4"/>
-    <field name="module_file"/>
+    <field name="module_file" filename='module_filename'/>
     <newline/>
     <field name="module_filename"/>
 </form>'''
