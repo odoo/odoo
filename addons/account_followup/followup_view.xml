@@ -31,13 +31,9 @@
                     <separator string="Legend" colspan="4"/>
 
                     <label string="%%(partner_name)s: Partner name" colspan="2"/>
-                    <label string="%%(user_signature)s: User name" colspan="2"/>
-                    <label string="%%(followup_amount)s: Total Amount Due" colspan="2"/>
                     <label string="%%(date)s: Current Date" colspan="2"/>
+                    <label string="%%(user_signature)s: User name" colspan="2"/>
                     <label string="%%(company_name)s: User's Company name" colspan="2"/>
-                    <label string="%%(company_currency)s: User's Company Currency" colspan="2"/>
-                    <label string="%%(heading)s: Move line header" colspan="2"/>
-                    <label string="%%(line)s: Account Move lines" colspan="2"/>
                 </form>
             </field>
         </record>
@@ -134,11 +130,11 @@
         
         <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="All receivable entries" res_model="account.move.line" src_model="" view="account_move_line_partner_tree"/>
         
-        <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.account_followup_wizard_menu"/>
+        <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/>
         
         <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="All payable entries" res_model="account.move.line" src_model="" view="account_move_line_partner_tree"/>
         
-        <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.account_followup_wizard_menu"/>
+        <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/>
         
         
     </data>

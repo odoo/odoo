@@ -204,7 +204,7 @@ class followup_all_print(wizard.interface):
                 summary = msg_unsent + line + msg_sent
             return {'summary' : summary}
         else:
-            return {'summary' : '\n\n\nMain not sent to any partner if you want to sent it please tick send email confirmation on wizard'}
+            return {'summary' : '\n\n\nMail not sent to any partner if you want to sent it please tick send email confirmation on wizard'}
 
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
