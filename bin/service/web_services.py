@@ -204,7 +204,7 @@ class db(netsvc.Service):
         cr = db.serialized_cursor()
         cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
         try:
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE 'template0'""" % db_name)
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % db_name)
         finally:
             cr.close()
             sql_db.close_db('template1')
