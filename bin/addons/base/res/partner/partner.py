@@ -32,12 +32,12 @@ class res_partner_function(osv.osv):
     _description = 'Function of the contact'
     _columns = {
         'name': fields.char('Function Name', size=64, required=True),
-        'code': fields.char('Code', size=8),
-        'ref':fields.char('Notes', size=32, required=True),
+        'code': fields.char('Code', size=8, required=True),
+        'ref':fields.char('Notes', size=32,),
     }
     _order = 'name'
     _sql_constraints = [
-        ('ref_uniq', 'unique (ref)', 'The Notes of the Partner Function must be unique !')
+        ('code_uniq', 'unique (code)', 'The Code of the Partner Function must be unique !')
     ]
 res_partner_function()
 
