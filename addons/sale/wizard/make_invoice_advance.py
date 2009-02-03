@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -61,7 +61,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             raise osv.except_osv(
                 _('Error'),
                 _("You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."))
-        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id)
+        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id, fposition_id=sale.fiscal_position.id)
         line_id =obj_lines.create(cr, uid, {
             'name': val['value']['name'],
             'account_id':val['value']['account_id'],

@@ -427,6 +427,8 @@ class account_invoice(osv.osv):
         return ok
 
     def button_reset_taxes(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))

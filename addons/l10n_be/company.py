@@ -20,21 +20,24 @@
 #
 ##############################################################################
 
+from osv import osv
 
-{
-    'name': 'IBAN',
-    'version': '1.0',
-    'category': 'Generic Modules/Base',
-    'description': """
-This module install the base for IBAN bank accounts. 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _description = 'res.company'
 
-    """,
-    'author': 'Tiny',
-    'depends': ['base', 'account'],
-    'init_xml': ['base_iban_data.xml'],
-    'update_xml': ['base_iban_view.xml'],
-    'installable': True,
-    'active': False,
-    'certificate': '0016157146365533',
-}
+
+    def _get_default_ad(self, addresses):
+        city = post_code = address = ""
+        for ads in addresses:
+            if ads.type == 'default':
+                city = ads.city
+                post_code = ads.zip
+                if ads.street:
+                    address = ads.street
+                if ads.street2:
+                    address += " " + ads.street2
+        return city, post_code, address
+res_company()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,6 +25,8 @@ import datetime
 import pooler
 import base64
 
+from tools.translate import _
+
 form_fyear = """<?xml version="1.0"?>
 <form string="Select Period">
     <field name="period" />
@@ -48,6 +50,7 @@ fields = {
         'readonly': True,},
 }
 
+
 class wizard_vat_declaration(wizard.interface):
 
     def _create_xml(self, cr, uid, data, context):
@@ -58,7 +61,7 @@ class wizard_vat_declaration(wizard.interface):
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
-            raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
+            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         tax_ids = pool_obj.get('account.tax.code').search(cr,uid,[])
         ctx = context.copy()
@@ -69,30 +72,33 @@ class wizard_vat_declaration(wizard.interface):
         if not obj_company.partner_id.address:
                 address=post_code=city=''
 
-        for ads in obj_company.partner_id.address:
-                if ads.type=='default':
-                    if ads.zip_id:
-                        city=ads.zip_id.city
-                        post_code=ads.zip_id.name
-                    if ads.street:
-                        address=ads.street
-                    if ads.street2:
-                        address +=ads.street2
+        city, post_code, address = pooler.get_pool(cr.dbname).get('res.company')._get_default_ad(obj_company.partner_id.address)
 
         obj_fyear = pool_obj.get('account.fiscalyear')
         year_id = obj_fyear.find(cr, uid)
         current_year = obj_fyear.browse(cr,uid,year_id).name
-        month=time.strftime('%m')
 
         period_code = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).code
+
         send_ref = user_cmpny
         if period_code:
             send_ref = send_ref + period_code
 
         data_of_file='<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'
-        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+str(address)+'</ADDRESS>'
-        data_of_file +='\n\t\t<POSTCODE>'+str(post_code)+'</POSTCODE>\n\t\t<CITY>'+str(city)+'</CITY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
-        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t<MONTH>'+str(month)+'</MONTH>\n\t\t\t<YEAR>'+str(current_year[-4:])+'</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
+        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
+        data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
+        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
+
+        starting_month = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).date_start[5:7]
+        ending_month = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).date_stop[5:7]
+        if starting_month != ending_month:
+            #starting month and ending month of selected period are not the same 
+            #it means that the accounting isn't based on periods of 1 month but on quarters
+            quarter = str(((int(starting_month) - 1) / 3) + 1)
+            data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
+        else:
+            data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
+        data_of_file += '<YEAR>'+str(current_year[-4:])+'</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:

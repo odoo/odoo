@@ -23,7 +23,7 @@
 
 {
     'name': 'Reporting for accounting',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Generic Modules/Accounting',
     'description': """Financial and accounting reporting
     Fiscal statements

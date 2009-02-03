@@ -76,8 +76,7 @@ class wizard_vat(wizard.interface):
 #        obj_company=pooler.get_pool(cr.dbname).get('res.company').browse(cr,uid,1)
 #        vat_company=obj_company.partner_id.vat
 
-#TODO:  can be improved if we replace this test => add a new field on res_partner for cases when a partner has a number and is not subjected to the VAT... have to see if this situation could happen
-        p_id_list=pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat','!=',False)])
+        p_id_list=pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
 
         if not p_id_list:
              raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')

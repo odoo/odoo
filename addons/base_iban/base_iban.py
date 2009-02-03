@@ -38,13 +38,13 @@ class res_partner_bank(osv.osv):
 
     def create(self, cr, uid, vals, context={}):
         #overwrite to format the iban number correctly
-        if vals.has_key('iban'):
+        if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context={}):
         #overwrite to format the iban number correctly
-        if vals.has_key('iban'):
+        if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
 

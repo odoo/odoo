@@ -498,6 +498,7 @@
     <xsl:call-template name="make_alignment" />
     <xsl:call-template name="make_background" />
     <xsl:call-template name="make_space_beforeafter" />
+    <xsl:call-template name="make_fontcolor" />
   </paraStyle>
 </xsl:template>
 
@@ -668,6 +669,17 @@
   <xsl:text>Times-Roman</xsl:text>
 </xsl:otherwise>
 </xsl:choose>
+</xsl:template>
+
+<xsl:template name="make_fontcolor">
+  <xsl:variable name="textColor">
+    <xsl:value-of select="style:properties/@fo:color"/>
+  </xsl:variable>
+  <xsl:if test="not($textColor='') and boolean(style:properties/@fo:color)">
+  <xsl:attribute name="textColor">
+      <xsl:value-of select="$textColor" />
+   </xsl:attribute>
+  </xsl:if>
 </xsl:template>
 
 <!--
