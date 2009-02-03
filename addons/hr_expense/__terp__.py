@@ -51,7 +51,7 @@
         'hr_expense_report.xml',
         'process/hr_expense_process.xml'
     ],
-    'demo_xml': ['hr_expense_demo.xml', 'hr.expense.expense.csv'],
+    'demo_xml': ['hr.expense.expense.csv'],
     'installable': True,
     'active': False,
     'certificate': '62479841789',
