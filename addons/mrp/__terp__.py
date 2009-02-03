@@ -75,6 +75,6 @@
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
     'installable': True,
     'active': False,
-    'certificate': '32052481373',
+    'certificate': '0032052481373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

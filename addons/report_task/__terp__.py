@@ -32,6 +32,6 @@
     'update_xml': ['security/ir.model.access.csv', 'report_task_view.xml'],
     'installable': True,
     'active': False,
-    'certificate': '27671328157',
+    'certificate': '0027671328157',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -57,6 +57,6 @@ The validation can be configured in te company:
     'demo_xml': ['hr_timesheet_sheet_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '73297700829',
+    'certificate': '0073297700829',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,6 +38,6 @@
     'demo_xml': ['hr_attendance_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '63495605613',
+    'certificate': '0063495605613',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
