@@ -63,6 +63,6 @@
     'demo_xml': ['base_demo.xml', 'res/partner/partner_demo.xml', 'res/partner/crm_demo.xml'],
     'installable': True,
     'active': True,
-    'certificate': '76807797149',
+    'certificate': '0076807797149',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
