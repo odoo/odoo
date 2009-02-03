@@ -43,15 +43,17 @@
     'website': 'http://www.openerp.com',
     'depends': ['hr', 'account', 'account_tax_include'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'hr_expense_sequence.xml',
-    'hr_expense_workflow.xml',
-    'hr_expense_view.xml',
-    'hr_expense_report.xml',
-    'process/hr_expense_process.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'hr_expense_sequence.xml',
+        'hr_expense_workflow.xml',
+        'hr_expense_view.xml',
+        'hr_expense_report.xml',
+        'process/hr_expense_process.xml'
+    ],
     'demo_xml': ['hr_expense_demo.xml', 'hr.expense.expense.csv'],
     'installable': True,
     'active': False,
-    'certificate': '0028424408828349',
+    'certificate': '62479841789',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

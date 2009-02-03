@@ -40,12 +40,14 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'account_invoice_layout_view.xml',
-    'account_invoice_layout_report.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_invoice_layout_view.xml',
+        'account_invoice_layout_report.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0025731486677245',
+    'certificate': '57235078173',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

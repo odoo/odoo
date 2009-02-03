@@ -25,33 +25,35 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
-
 {
-    'name': 'France - Plan Comptable G\xc3\xa9n\xc3\xa9ral',
-    'version': '1.0',
-    'category': 'Localisation/Account Charts',
-    'description': """This is the module to manage the accounting chart for France in Open ERP.
+    "name" : "France - Plan Comptable Général",
+    "version" : "1.0",
+    "author" : "OpenERP",
+    "website": "http://www.openerp.com",
+    "category" : "Localisation/Account Charts",
+    "description": """This is the module to manage the accounting chart for France in Open ERP.
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
-    'author': 'OpenERP',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'account_chart', 'account_report', 'base_vat'],
-    'init_xml': [],
-    'update_xml': [   'report.xml',
-    'pcg.xml',
-    'l10n_fr_pcg_taxes.xml',
-    'tax.xml',
-    'fiscal_templates_fr.xml',
-    'l10n_fr_pcg_account_report.xml',
-    'l10n_fr_pcg_report.xml',
-    'l10n_fr_pcg_wizard.xml',
-    'l10n_fr_pcg_view.xml',
-    'security/ir.model.access.csv'],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0012865552406941',
+    "depends" : ['base', 'account', 'account_chart', 'account_report', 'base_vat'],
+    "init_xml" : [
+    ],
+    "update_xml" : [
+        "report.xml",
+        "pcg.xml",
+        "l10n_fr_pcg_taxes.xml",
+        "tax.xml",
+        "fiscal_templates_fr.xml",
+        "l10n_fr_pcg_account_report.xml",
+        "l10n_fr_pcg_report.xml",
+        "l10n_fr_pcg_wizard.xml",
+        "l10n_fr_pcg_view.xml",
+        "security/ir.model.access.csv",
+    ],
+    "demo_xml" : [],
+    "certificate" : "435321693876313629",
+    "active": False,
+    "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

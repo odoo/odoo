@@ -47,14 +47,16 @@ between mails and Open ERP.""",
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': ['crm_data.xml'],
-    'update_xml': [   'crm_view.xml',
-    'crm_report.xml',
-    'crm_wizard.xml',
-    'security/crm_security.xml',
-    'security/ir.model.access.csv'],
+    'update_xml': [
+        'crm_view.xml',
+        'crm_report.xml',
+        'crm_wizard.xml',
+        'security/crm_security.xml',
+        'security/ir.model.access.csv'
+    ],
     'demo_xml': ['crm_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0024235645566773',
+    'certificate': '79056041421',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

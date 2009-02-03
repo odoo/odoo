@@ -34,17 +34,19 @@ This module implements a dashboard for project member that includes:
     * Graph of my work analysis
     """,
     'author': 'Tiny',
-    'depends': [   'project',
-    'report_timesheet',
-    'board',
-    'report_analytic_planning',
-    'report_analytic_line',
-    'report_task',
-    'hr_timesheet_sheet'],
+    'depends': [
+        'project',
+        'report_timesheet',
+        'board',
+        'report_analytic_planning',
+        'report_analytic_line',
+        'report_task',
+        'hr_timesheet_sheet'
+    ],
     'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],
     'demo_xml': ['board_project_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0013464149376989',
+    'certificate': '39350482013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -40,6 +40,6 @@ created by sales orders.
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0025132707027485',
+    'certificate': '31976495453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

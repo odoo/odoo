@@ -30,12 +30,14 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
     'init_xml': ['report_intrastat_data.xml'],
-    'update_xml': [   'security/ir.model.access.csv',
-    'report_intrastat_view.xml',
-    'intrastat_report.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'report_intrastat_view.xml',
+        'intrastat_report.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0027227801344045',
+    'certificate': '56982189085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,21 +23,26 @@
 
 {
     'name': 'report_account_analytic',
-    'version': '1.1',
+    'version': '1.0',
     'category': 'Generic Modules/Accounting',
     'description': """Modify account analytic view to show
 important data for project manager of services companies.
 Add menu to show relevant information for each manager.""",
-    'author': 'Camptocamp',
-    'website': 'http://www.camptocamp.com/',
-    'depends': ['account', 'hr_timesheet', 'hr_timesheet_invoice', 'project'],
-    'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'account_analytic_analysis_view.xml',
-    'account_analytic_analysis_menu.xml'],
+    "version" : "1.1",
+    "author" : "Camptocamp",
+    "category" : "Generic Modules/Accounting",
+    "module": "",
+    "website": "http://www.camptocamp.com/",
+    "depends" : ["account","hr_timesheet","hr_timesheet_invoice","project"],
+    "init_xml" : [],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "account_analytic_analysis_view.xml",
+        "account_analytic_analysis_menu.xml",
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0018849810007757',
+    'certificate': '42927202589',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,13 +30,15 @@
     'author': 'Tiny',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'account_view.xml',
-    'account_report.xml',
-    'account_data.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_view.xml',
+        'account_report.xml',
+        'account_data.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0010472149969149',
+    'certificate': '72305016797',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

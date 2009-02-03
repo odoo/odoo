@@ -54,14 +54,16 @@
     'website': 'http://www.openerp.com',
     'depends': ['stock', 'hr', 'purchase', 'product', 'mrp'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'mrp_operations_workflow.xml',
-    'mrp_operations_view.xml',
-    'mrp_operations_report.xml',
-    'process/mrp_operation_process.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'mrp_operations_workflow.xml',
+        'mrp_operations_view.xml',
+        'mrp_operations_report.xml',
+        'process/mrp_operation_process.xml'
+    ],
     'demo_xml': ['mrp_operation_data.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0016755442036509',
+    'certificate': '56233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

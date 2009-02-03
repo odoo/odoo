@@ -35,6 +35,6 @@ This module install the base for IBAN bank accounts.
     'update_xml': ['base_iban_view.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0016157146365533',
+    'certificate': '50014379549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

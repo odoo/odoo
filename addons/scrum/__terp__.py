@@ -50,14 +50,16 @@
     'author': 'Tiny',
     'depends': ['project', 'process'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'scrum_view.xml',
-    'scrum_report.xml',
-    'scrum_wizard.xml',
-    'process/scrum_process.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'scrum_view.xml',
+        'scrum_report.xml',
+        'scrum_wizard.xml',
+        'process/scrum_process.xml'
+    ],
     'demo_xml': ['scrum_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0012566677771565',
+    'certificate': '84121063261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

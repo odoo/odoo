@@ -51,6 +51,6 @@ How to use it:
     'update_xml': ['security/ir.model.access.csv', 'base_module_record_wizard.xml'],
     'demo_xml': [],
     'installable': True,
-    'certificate': '0020046809368957',
+    'certificate': '83134865813',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

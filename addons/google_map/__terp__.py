@@ -36,6 +36,6 @@ url widget.""",
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '009275388447293',
+    'certificate': '29498930765',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -43,6 +43,6 @@ to call this button when you want to release a new version of your module.
     'update_xml': ['base_module_publish_wizard.xml'],
     'demo_xml': [],
     'installable': True,
-    'certificate': '008976182484749',
+    'certificate': '67939821245',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

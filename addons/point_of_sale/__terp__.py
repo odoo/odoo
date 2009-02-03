@@ -38,16 +38,18 @@ Main features :
     'author': 'Tiny',
     'depends': ['sale', 'purchase', 'account', 'account_tax_include'],
     'init_xml': [],
-    'update_xml': [   'security/point_of_sale_security.xml',
-    'security/ir.model.access.csv',
-    'pos_report.xml',
-    'pos_wizard.xml',
-    'pos_view.xml',
-    'pos_sequence.xml',
-    'pos_data.xml',
-    'pos_workflow.xml'],
+    'update_xml': [
+        'security/point_of_sale_security.xml',
+        'security/ir.model.access.csv',
+        'pos_report.xml',
+        'pos_wizard.xml',
+        'pos_view.xml',
+        'pos_sequence.xml',
+        'pos_data.xml',
+        'pos_workflow.xml'
+    ],
     'demo_xml': [],
     'installable': True,
-    'certificate': '0014361891603101',
+    'certificate': '48272150909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

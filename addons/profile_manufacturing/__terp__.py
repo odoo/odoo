@@ -27,16 +27,11 @@
     'category': 'Profile',
     'description': """Profile for manufacturing industries""",
     'author': 'Tiny',
-    'depends': [   'mrp',
-    'sale',
-    'delivery',
-    'board_manufacturing',
-    'product_margin',
-    'sale_delivery_report'],
+    'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin', 'sale_delivery_report'],
     'update_xml': ['security/ir.model.access.csv', 'profile_manufacturing.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0013464299079029',
+    'certificate': '27737506213',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

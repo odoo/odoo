@@ -42,6 +42,6 @@ period !"
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0010472116996909',
+    'certificate': '66174843389',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

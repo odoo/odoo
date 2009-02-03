@@ -38,6 +38,6 @@ This module implement the modification on the invoice form.
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0024534751356253',
+    'certificate': '70514190381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

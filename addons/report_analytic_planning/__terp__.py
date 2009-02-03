@@ -30,12 +30,14 @@
     'website': 'http://www.openerp.com',
     'depends': ['account', 'hr_timesheet_invoice', 'project', 'report_analytic_line'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'report_analytic_planning_view.xml',
-    'report_analytic_planning_report.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'report_analytic_planning_view.xml',
+        'report_analytic_planning_report.xml'
+    ],
     'demo_xml': ['report_account_analytic.planning.csv'],
     'installable': True,
     'active': False,
-    'certificate': '0019149225704477',
+    'certificate': '34901836973',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

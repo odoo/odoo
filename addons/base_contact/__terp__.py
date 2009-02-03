@@ -43,12 +43,14 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'base_contact_view.xml',
-    'process/base_contact_process.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'base_contact_view.xml',
+        'process/base_contact_process.xml'
+    ],
     'demo_xml': ['base_contact_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0027227757067813',
+    'certificate': '31287885469',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

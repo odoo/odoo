@@ -22,10 +22,13 @@
 
 
 {
-    'name': 'Payment Management',
-    'version': '1.1',
-    'category': 'Generic Modules/Payment',
-    'description': """
+    "name": "Payment Management",
+    "version": "1.1",
+    "author": "Tiny",
+    "category": "Generic Modules/Payment",
+    "depends": ["account"],
+    "init_xml": [],
+    "description": """
     This module provide :
     * a more efficient way to manage invoice payment.
     * a basic mechanism to easily plug various automated payment.
@@ -33,17 +36,19 @@
     'author': 'Tiny',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': [   'security/account_payment_security.xml',
-    'security/ir.model.access.csv',
-    'payment_wizard.xml',
-    'payment_view.xml',
-    'payment_workflow.xml',
-    'payment_sequence.xml',
-    'account_invoice_view.xml',
-    'payment_report.xml'],
+    'update_xml': [
+        'security/account_payment_security.xml',
+        'security/ir.model.access.csv',
+        'payment_wizard.xml',
+        'payment_view.xml',
+        'payment_workflow.xml',
+        'payment_sequence.xml',
+        'account_invoice_view.xml',
+        'payment_report.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0028723518223901',
+    'certificate': '61703998541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

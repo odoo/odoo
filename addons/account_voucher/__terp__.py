@@ -39,14 +39,16 @@ Basic Accounting, plus new things that are available:
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account'],
     'init_xml': [],
-    'update_xml': [   'security/ir.model.access.csv',
-    'account_voucher_sequence.xml',
-    'account_view.xml',
-    'account_report.xml',
-    'voucher_view.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'account_voucher_sequence.xml',
+        'account_view.xml',
+        'account_report.xml',
+        'voucher_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0013165089564733',
+    'certificate': '37580727101',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

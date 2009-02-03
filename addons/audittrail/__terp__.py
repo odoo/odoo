@@ -31,12 +31,14 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account', 'purchase', 'mrp'],
     'init_xml': [],
-    'update_xml': [   'audittrail_view.xml',
-    'security/ir.model.access.csv',
-    'security/audittrail_security.xml'],
+    'update_xml': [
+        'audittrail_view.xml',
+        'security/ir.model.access.csv',
+        'security/audittrail_security.xml'
+    ],
     'demo_xml': ['audittrail_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0010173008267165',
+    'certificate': '62572348749',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

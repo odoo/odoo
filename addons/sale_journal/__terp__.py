@@ -52,13 +52,15 @@
     'website': 'http://www.openerp.com',
     'depends': ['stock', 'sale'],
     'init_xml': ['sale_journal_data.xml'],
-    'update_xml': [   'security/ir.model.access.csv',
-    'sale_journal_view.xml',
-    'picking_journal_view.xml',
-    'picking_journal_view_report.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'sale_journal_view.xml',
+        'picking_journal_view.xml',
+        'picking_journal_view_report.xml'
+    ],
     'demo_xml': ['sale_journal_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '0021841915965053',
+    'certificate': '77661619085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
