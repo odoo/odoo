@@ -20,7 +20,24 @@
 #
 ##############################################################################
 
-import company
-import wizard
+from osv import osv
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _description = 'res.company'
+
+
+    def _get_default_ad(self, addresses):
+        city = post_code = address = ""
+        for ads in addresses:
+            if ads.type == 'default':
+                city = ads.city
+                post_code = ads.zip
+                if ads.street:
+                    address = ads.street
+                if ads.street2:
+                    address += " " + ads.street2
+        return city, post_code, address
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
