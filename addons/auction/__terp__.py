@@ -33,15 +33,13 @@
     'author': 'Tiny',
     'depends': ['base', 'account', 'hr_attendance'],
     'init_xml': ['auction_sequence.xml'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'auction_view.xml',
-        'auction_report.xml',
-        'auction_wizard.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'auction_view.xml',
+    'auction_report.xml',
+    'auction_wizard.xml'],
     'demo_xml': ['auction_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '39333102717',
+    'certificate': '008676977189565',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

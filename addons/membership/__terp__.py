@@ -40,15 +40,13 @@ invoice and send propositions for membership renewal.
     'author': 'Tiny',
     'depends': ['base', 'product', 'account', 'process'],
     'init_xml': ['membership_data.xml'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'membership_view.xml',
-        'membership_wizard.xml',
-        'process/membership_process.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'membership_view.xml',
+    'membership_wizard.xml',
+    'process/membership_process.xml'],
     'demo_xml': ['membership_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '42907796381',
+    'certificate': '0025731724123933',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

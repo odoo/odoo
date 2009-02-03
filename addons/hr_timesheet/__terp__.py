@@ -40,16 +40,14 @@ to set up a management by affair.
     'website': 'http://www.openerp.com',
     'depends': ['account', 'hr', 'base', 'hr_attendance', 'process'],
     'init_xml': ['hr_timesheet_data.xml'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'hr_timesheet_view.xml',
-        'hr_timesheet_report.xml',
-        'hr_timesheet_wizard.xml',
-        'process/hr_timesheet_process.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'hr_timesheet_view.xml',
+    'hr_timesheet_report.xml',
+    'hr_timesheet_wizard.xml',
+    'process/hr_timesheet_process.xml'],
     'demo_xml': ['hr_timesheet_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '71405533469',
+    'certificate': '0022739527534493',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

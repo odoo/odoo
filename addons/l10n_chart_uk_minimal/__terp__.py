@@ -20,44 +20,6 @@
 #
 ##############################################################################
 
-#
-# This module provides a minimal UK chart of accounts for building upon further
-# Open ERP's default currency and accounts are remapped to this chart
-#
-# This module works for Open ERP 4.1.0 (and, assumed, onwards).
-# This module does not work for Open ERP 4.0.2 and before.
-#
-# VAT is structured thus:
-#  - the user company is assumed to be non-VAT exempt (easy to modify, however)
-#  - categories OVATS (Standard), OVATR (Reduced), OVATZ (Zero) should be
-#    assigned to the customer taxes section of products (depending on the product)
-#  - categories IVATS (Standard), IVATR (Reduced), IVATZ (Zero) should be
-#    assigned to the supplier taxes section of products (depending on the product)
-#  - categories OVATX (eXempt), OVATO (Out of scope), or nothing at all should be
-#    assigned to default tax field of customers (depending on the customer)
-#  - customer categorization trumps product categorization (unchanged Tiny functionality)
-#  - on purchases, upon invoicing
-#    - the base amount (ex-VAT) appears in the appropriate input base category (S, R, Z)
-#    - the VAT amount appears in the appropriate input VAT category (S, R)
-#    - invoice lines can be traced in these VAT categories
-#    - refunds of invoices are deducted from the input category
-#  - on sales, upon invoicing
-#    - the base amount (ex-VAT) appears in the appropriate output base category (S, R, Z, X, O)
-#    - the VAT amount appears in the appropriate output VAT category (S, R)
-#    - invoice lines can be traced in these VAT categories
-#    - refunds of invoices are deducted from the output category
-#
-# This forms a basis for accrual tax accounting
-# Cash tax accounting can be accommodated with further processing in Open ERP
-#
-# Status beta 0.92 - tested on Open ERP 4.1.0
-# Status beta 0.93 - tested on Open ERP 4.1.0
-# - trivial change to depend only on 'account'
-#   (seemed to be important for importing with no demo data)
-# Status 1.0 - tested on Open ERP 4.1.0, 4.0.3
-# - COGS account type fixed
-#
-
 
 {
     'name': 'United Kingdom - minimal',
@@ -68,14 +30,12 @@
     'website': 'http://www.seathsolutions.com',
     'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     'init_xml': [],
-    'update_xml': [
-        'account_types.xml',
-        'account_chart.xml',
-        'account_tax.xml',
-        'l10n_uk_wizard.xml'
-    ],
+    'update_xml': [   'account_types.xml',
+    'account_chart.xml',
+    'account_tax.xml',
+    'l10n_uk_wizard.xml'],
     'demo_xml': [],
     'installable': True,
-    'certificate': '64392144797',
+    'certificate': '0025133078445917',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

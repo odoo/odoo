@@ -13,16 +13,14 @@
     'website': 'http://openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': [
-        'wiki_view.xml',
-        'data/wiki_quickstart.xml',
-        'data/wiki_main.xml',
-        'wizard/wizard_view.xml',
-        'security/ir.model.access.csv'
-    ],
+    'update_xml': [   'wiki_view.xml',
+    'data/wiki_quickstart.xml',
+    'data/wiki_main.xml',
+    'wizard/wizard_view.xml',
+    'security/ir.model.access.csv'],
     'demo_xml': ['data/wiki_faq.xml'],
     'installable': True,
     'active': False,
-    'certificate': '86363630317',
+    'certificate': '009574612852253',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

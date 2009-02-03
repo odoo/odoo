@@ -35,19 +35,17 @@
     * Graph of aged incomes
     """,
     'author': 'Tiny',
-    'depends': [
-        'account',
-        'hr_timesheet_invoice',
-        'board',
-        'report_account',
-        'report_analytic',
-        'report_analytic_line',
-        'account_report'
-    ],
+    'depends': [   'account',
+    'hr_timesheet_invoice',
+    'board',
+    'report_account',
+    'report_analytic',
+    'report_analytic_line',
+    'account_report'],
     'update_xml': ['board_account_view.xml'],
     'demo_xml': ['board_account_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '76016921229',
+    'certificate': '0014361759782429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -42,15 +42,13 @@
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'wizard/wizard_view.xml',
-        'followup_view.xml',
-        'followup_report_view.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'wizard/wizard_view.xml',
+    'followup_view.xml',
+    'followup_report_view.xml'],
     'demo_xml': ['followup_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '72481076453',
+    'certificate': '0015558742212861',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

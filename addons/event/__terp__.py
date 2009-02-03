@@ -41,16 +41,14 @@
     'author': 'Tiny',
     'depends': ['crm', 'base_contact', 'account'],
     'init_xml': ['event_data.xml'],
-    'update_xml': [
-        'event_wizard.xml',
-        'event_view.xml',
-        'event_sequence.xml',
-        'security/event_security.xml',
-        'security/ir.model.access.csv'
-    ],
+    'update_xml': [   'event_wizard.xml',
+    'event_view.xml',
+    'event_sequence.xml',
+    'security/event_security.xml',
+    'security/ir.model.access.csv'],
     'demo_xml': ['event_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '83059161581',
+    'certificate': '0011369839138589',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

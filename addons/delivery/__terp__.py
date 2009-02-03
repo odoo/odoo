@@ -29,15 +29,13 @@
     'author': 'Tiny',
     'depends': ['sale', 'purchase', 'stock'],
     'init_xml': ['delivery_data.xml'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'delivery_view.xml',
-        'delivery_wizard.xml',
-        'partner_view.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'delivery_view.xml',
+    'delivery_wizard.xml',
+    'partner_view.xml'],
     'demo_xml': ['delivery_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '33981912253',
+    'certificate': '0023337859283261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

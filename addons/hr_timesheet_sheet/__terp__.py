@@ -48,15 +48,13 @@ The validation can be configured in te company:
     'website': 'http://www.openerp.com',
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'hr_timesheet_sheet_view.xml',
-        'hr_timesheet_workflow.xml',
-        'process/hr_timesheet_sheet_process.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'hr_timesheet_sheet_view.xml',
+    'hr_timesheet_workflow.xml',
+    'process/hr_timesheet_sheet_process.xml'],
     'demo_xml': ['hr_timesheet_sheet_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '73297700829',
+    'certificate': '0011669036322245',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

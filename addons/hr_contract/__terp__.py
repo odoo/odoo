@@ -37,14 +37,12 @@
     'website': 'http://www.openerp.com',
     'depends': ['hr'],
     'init_xml': ['hr_contract_data.xml'],
-    'update_xml': [
-        'security/hr_contract_security.xml',
-        'security/ir.model.access.csv',
-        'hr_contract_view.xml'
-    ],
+    'update_xml': [   'security/hr_contract_security.xml',
+    'security/ir.model.access.csv',
+    'hr_contract_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '46298028637',
+    'certificate': '0011369849872221',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

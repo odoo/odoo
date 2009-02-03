@@ -36,17 +36,15 @@
 """,
     'author': 'Tiny',
     'depends': ['base', 'sale', 'account'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'mrp_repair_sequence.xml',
-        'mrp_repair_wizard.xml',
-        'mrp_repair_view.xml',
-        'mrp_repair_workflow.xml',
-        'mrp_repair_report.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'mrp_repair_sequence.xml',
+    'mrp_repair_wizard.xml',
+    'mrp_repair_view.xml',
+    'mrp_repair_workflow.xml',
+    'mrp_repair_report.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '60814381277',
+    'certificate': '0019747418778941',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

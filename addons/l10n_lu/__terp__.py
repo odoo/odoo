@@ -35,15 +35,13 @@ This module installs:
     'website': 'http://openerp.com',
     'depends': ['account', 'account_report', 'base_vat', 'base_iban'],
     'init_xml': [],
-    'update_xml': [
-        'account.tax.code.template.csv',
-        'l10n_lu_data.xml',
-        'account.tax.template.csv',
-        'l10n_lu_wizard.xml',
-        'l10n_lu_report.xml'
-    ],
+    'update_xml': [   'account.tax.code.template.csv',
+    'l10n_lu_data.xml',
+    'account.tax.template.csv',
+    'l10n_lu_wizard.xml',
+    'l10n_lu_report.xml'],
     'demo_xml': ['account.report.report.csv'],
     'installable': True,
-    'certificate': '78164766621',
+    'certificate': '0011967958241629',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

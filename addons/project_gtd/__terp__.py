@@ -41,14 +41,12 @@ performing those tasks.
     'author': 'Tiny',
     'depends': ['project'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'project_gtd_view.xml',
-        'project_gtd_wizard.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'project_gtd_view.xml',
+    'project_gtd_wizard.xml'],
     'demo_xml': ['project_gtd_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '43525236301',
+    'certificate': '0022739115882013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

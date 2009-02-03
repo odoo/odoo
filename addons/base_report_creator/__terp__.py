@@ -36,14 +36,12 @@ the "Dashboard" menu.
     'website': '',
     'depends': ['base', 'board'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'base_report_creator_wizard.xml',
-        'base_report_creator_view.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'base_report_creator_wizard.xml',
+    'base_report_creator_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '31285794149',
+    'certificate': '0027826168589381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

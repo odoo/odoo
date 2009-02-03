@@ -40,24 +40,14 @@
 
     """,
     'author': 'Tiny',
-    'depends': [ 
-                    'account', 
-                    'account_report', 
-                    'base_vat', 
-                    'base_iban', 
-                    'account_chart'
-                ],
+    'depends': ['account', 'account_report', 'base_vat', 'base_iban', 'account_chart'],
     'init_xml': [],
-    'update_xml': [
-                    'account_pcmn_belgium.xml', 
-                    'l10n_be_wizard.xml',
-                    'l10n_be_sequence.xml', 
-                    'fiscal_templates.xml',
-                   ],
-    'demo_xml': [
-                    'account.report.report.csv'
-                ],
+    'update_xml': [   'account_pcmn_belgium.xml',
+    'l10n_be_wizard.xml',
+    'l10n_be_sequence.xml',
+    'fiscal_templates.xml'],
+    'demo_xml': ['account.report.report.csv'],
     'installable': True,
-    'certificate': '31977724637',
+    'certificate': '0019747560288749',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -40,14 +40,12 @@
     'website': 'http://www.openerp.com',
     'depends': ['sale'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'report_sale_view.xml',
-        'report_sale_graph.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'report_sale_view.xml',
+    'report_sale_graph.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '59949739573',
+    'certificate': '0027527007452477',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

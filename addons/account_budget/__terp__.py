@@ -48,16 +48,14 @@ Three reports are available:
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'account_budget_wizard.xml',
-        'crossovered_budget_view.xml',
-        'crossovered_budget_report.xml',
-        'crossovered_budget_workflow.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'account_budget_wizard.xml',
+    'crossovered_budget_view.xml',
+    'crossovered_budget_report.xml',
+    'crossovered_budget_workflow.xml'],
     'demo_xml': ['crossovered_budget_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '43819694157',
+    'certificate': '0020645028723437',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

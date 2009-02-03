@@ -36,6 +36,6 @@ This module allows you to manage your process for the end-users.
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '55447636669',
+    'certificate': '0021841841982765',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

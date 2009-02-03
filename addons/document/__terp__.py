@@ -34,15 +34,13 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process'],
     'init_xml': ['document_data.xml', 'document_demo.xml'],
-    'update_xml': [
-        'document_view.xml',
-        'document_data.xml',
-        'security/document_security.xml',
-        'security/ir.model.access.csv'
-    ],
+    'update_xml': [   'document_view.xml',
+    'document_data.xml',
+    'security/document_security.xml',
+    'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '70515416461',
+    'certificate': '0025133162533277',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

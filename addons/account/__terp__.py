@@ -22,11 +22,9 @@
 
 
 {
-    "name" : "Accounting and financial management",
-    "version" : "1.1",
-    "depends" : ["product", "base", "process"],
-    "author" : "Tiny",
-    "description": """Financial and accounting module that covers:
+    'name': 'Accounting and financial management',
+    'version': '1.1',
+    'description': """Financial and accounting module that covers:
     General accounting
     Cost / Analytic accounting
     Third party accounting
@@ -39,37 +37,33 @@
     'website': 'http://www.openerp.com',
     'depends': ['product', 'base', 'process'],
     'init_xml': [],
-    'update_xml': [
-        'security/account_security.xml',
-        'security/ir.model.access.csv',
-        'account_menuitem.xml',
-        'account_wizard.xml',
-        'account_view.xml',
-        'account_end_fy.xml',
-        'account_invoice_view.xml',
-        'account_report.xml',
-        'partner_view.xml',
-        'data/account_invoice.xml',
-        'data/account_data2.xml',
-        'account_invoice_workflow.xml',
-        'project/project_view.xml',
-        'project/project_report.xml',
-        'product_view.xml',
-        'account_assert_test.xml',
-        'process/statement_process.xml',
-        'process/customer_invoice_process.xml',
-        'process/supplier_invoice_process.xml',
-        'sequence_view.xml'
-    ],
-    'demo_xml': [
-        'account_demo.xml',
-        'project/project_demo.xml',
-        'project/analytic_account_demo.xml',
-        'demo/account_minimal.xml',
-        'account_unit_test.xml'
-    ],
+    'update_xml': [   'security/account_security.xml',
+    'security/ir.model.access.csv',
+    'account_menuitem.xml',
+    'account_wizard.xml',
+    'account_view.xml',
+    'account_end_fy.xml',
+    'account_invoice_view.xml',
+    'account_report.xml',
+    'partner_view.xml',
+    'data/account_invoice.xml',
+    'data/account_data2.xml',
+    'account_invoice_workflow.xml',
+    'project/project_view.xml',
+    'project/project_report.xml',
+    'product_view.xml',
+    'account_assert_test.xml',
+    'process/statement_process.xml',
+    'process/customer_invoice_process.xml',
+    'process/supplier_invoice_process.xml',
+    'sequence_view.xml'],
+    'demo_xml': [   'account_demo.xml',
+    'project/project_demo.xml',
+    'project/analytic_account_demo.xml',
+    'demo/account_minimal.xml',
+    'account_unit_test.xml'],
     'installable': True,
     'active': False,
-    'certificate': '80331923549',
+    'certificate': '0021841915058685',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

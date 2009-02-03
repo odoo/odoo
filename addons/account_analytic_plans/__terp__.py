@@ -57,15 +57,13 @@ for one account entry.
     'website': 'http://www.openerp.com',
     'depends': ['account', 'account_analytic_default'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'model_wizard.xml',
-        'account_analytic_plans_view.xml',
-        'account_analytic_plans_report.xml'
-    ],
+    'update_xml': [   'security/ir.model.access.csv',
+    'model_wizard.xml',
+    'account_analytic_plans_view.xml',
+    'account_analytic_plans_report.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '36417675373',
+    'certificate': '0018550331377437',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

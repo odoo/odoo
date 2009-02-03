@@ -28,16 +28,14 @@
     'description': """This module aims to manage employee's attendances.""",
     'author': 'Tiny',
     'depends': ['base', 'hr'],
-    'update_xml': [
-        'security/hr_security.xml',
-        'hr_attendance_view.xml',
-        'hr_attendance_wizard.xml',
-        'hr_attendance_report.xml',
-        'security/ir.model.access.csv'
-    ],
+    'update_xml': [   'security/hr_security.xml',
+    'hr_attendance_view.xml',
+    'hr_attendance_wizard.xml',
+    'hr_attendance_report.xml',
+    'security/ir.model.access.csv'],
     'demo_xml': ['hr_attendance_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '63495605613',
+    'certificate': '0021542640344093',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

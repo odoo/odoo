@@ -29,12 +29,10 @@
     'author': 'Tiny',
     'depends': ['sale', 'delivery'],
     'init_xml': [],
-    'update_xml': [
-        'delivery_report.xml'
-    ],
+    'update_xml': ['delivery_report.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '803459507494914221',
+    'certificate': '0026629095848845',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

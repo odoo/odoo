@@ -41,6 +41,6 @@
     'update_xml': ['base_module_merge_wizard.xml'],
     'demo_xml': [],
     'installable': True,
-    'certificate': '35756279709',
+    'certificate': '009275389048693',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
