@@ -724,50 +724,55 @@ class orm_template(object):
         model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
-        for f in self._columns.keys():
-            if fields and f not in fields:
-                continue
-            res[f] = {'type': self._columns[f]._type}
-            for arg in ('string', 'readonly', 'states', 'size', 'required',
-                    'change_default', 'translate', 'help', 'select'):
-                if getattr(self._columns[f], arg):
-                    res[f][arg] = getattr(self._columns[f], arg)
-            if not read_access:
-                res[f]['readonly'] = True
-                res[f]['states'] = {}
-            for arg in ('digits', 'invisible','filters'):
-                if hasattr(self._columns[f], arg) \
-                        and getattr(self._columns[f], arg):
-                    res[f][arg] = getattr(self._columns[f], arg)
-
-            res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-            if res_trans:
-                res[f]['string'] = res_trans
-            help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-            if help_trans:
-                res[f]['help'] = help_trans
-
-            if hasattr(self._columns[f], 'selection'):
-                if isinstance(self._columns[f].selection, (tuple, list)):
-                    sel = self._columns[f].selection
-                    # translate each selection option
-                    sel2 = []
-                    for (key, val) in sel:
-                        val2 = None
-                        if val:
-                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                        sel2.append((key, val2 or val))
-                    sel = sel2
-                    res[f]['selection'] = sel
-                else:
-                    # call the 'dynamic selection' function
-                    res[f]['selection'] = self._columns[f].selection(self, cr,
-                            user, context)
-            if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                res[f]['relation'] = self._columns[f]._obj
-                res[f]['domain'] = self._columns[f]._domain
-                res[f]['context'] = self._columns[f]._context
-
+        
+        if self._columns.keys():
+            for f in self._columns.keys():
+                if fields and f not in fields:
+                    continue
+                res[f] = {'type': self._columns[f]._type}
+                for arg in ('string', 'readonly', 'states', 'size', 'required',
+                        'change_default', 'translate', 'help', 'select'):
+                    if getattr(self._columns[f], arg):
+                        res[f][arg] = getattr(self._columns[f], arg)
+                if not read_access:
+                    res[f]['readonly'] = True
+                    res[f]['states'] = {}
+                for arg in ('digits', 'invisible','filters'):
+                    if hasattr(self._columns[f], arg) \
+                            and getattr(self._columns[f], arg):
+                        res[f][arg] = getattr(self._columns[f], arg)
+    
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                if res_trans:
+                    res[f]['string'] = res_trans
+                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                if help_trans:
+                    res[f]['help'] = help_trans
+    
+                if hasattr(self._columns[f], 'selection'):
+                    if isinstance(self._columns[f].selection, (tuple, list)):
+                        sel = self._columns[f].selection
+                        # translate each selection option
+                        sel2 = []
+                        for (key, val) in sel:
+                            val2 = None
+                            if val:
+                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
+                            sel2.append((key, val2 or val))
+                        sel = sel2
+                        res[f]['selection'] = sel
+                    else:
+                        # call the 'dynamic selection' function
+                        res[f]['selection'] = self._columns[f].selection(self, cr,
+                                user, context)
+                if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+                    res[f]['relation'] = self._columns[f]._obj
+                    res[f]['domain'] = self._columns[f]._domain
+                    res[f]['context'] = self._columns[f]._context
+        else:
+            #TODO : read the fields from the database 
+            pass
+        
         if fields:
             # filter out fields which aren't in the fields list
             for r in res.keys():
