@@ -84,7 +84,7 @@ class product_uom(osv.osv):
         'factor': fields.float('Rate', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
                     '1 (base unit) = coeff (this unit). Rate = 1 / Factor.'),
-        'factor_inv': fields.function(_factor, fnct_inv=_factor_inv, digits=(12, 6),
+        'factor_inv': fields.function(_factor, digits=(12, 6),
             method=True, string='Factor',
             help='The coefficient for the formula:\n' \
                     'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),

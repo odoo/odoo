@@ -163,7 +163,7 @@ class stock_picking(osv.osv):
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)
 
-                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, picking.sale_id.partner_id, account_id)
+                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, picking.sale_id.partner_id.property_account_position, account_id)
                     invoice = invoices[result[picking.id]]
                     invoice_line_id = invoice_line_obj.create(cursor, user, {
                         'name': name,
