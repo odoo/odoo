@@ -216,7 +216,7 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            if context.get('bin_size', False):
+            if context.get('bin_size', False) and val:
                 res[i] = tools.human_size(long(val))
             else:
                 res[i] = val
