@@ -564,9 +564,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             try: 
                 lang_obj.create(cr, uid, lang_info)
             finally:
-                # locale.resetlocale is bugged with some locales. 
-                # we need to normalize the result of locale.getdefaultlocale()
-                locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
+                resetlocale()
 
 
         # now, the serious things: we read the language file
@@ -658,6 +656,12 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     except IOError:
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
         logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+
+
+def resetlocale():
+    # locale.resetlocale is bugged with some locales. 
+    # we need to normalize the result of locale.getdefaultlocale()
+    locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

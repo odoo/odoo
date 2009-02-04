@@ -87,12 +87,30 @@ LOG_CRITICAL = 'critical'
 # add new log level below DEBUG
 logging.DEBUG_RPC = logging.DEBUG - 1
 
+class UnicodeFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None):
+        logging.Formatter.__init__(self, fmt, datefmt)
+        self._fmt = tools.ustr(self._fmt)
+        if self.datefmt is not None:
+            self.datefmt = tools.ustr(self.datefmt)
+
+    def formatTime(self, *args, **kwargs):
+        return tools.ustr(logging.Formatter.formatTime(self, *args, **kwargs))
+
+    def formatException(self, *args, **kwargs):
+        return tools.ustr(logging.Formatter.formatException(self, *args, **kwargs))
+
+    def format(self, *args, **kwargs):
+        return tools.ustr(logging.Formatter.format(self, *args, **kwargs))
+
 def init_logger():
     import os
+    from tools.translate import resetlocale
+    resetlocale()
 
     logger = logging.getLogger()
     # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
+    formatter = UnicodeFormatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
     
     logging_to_stdout = False
     if tools.config['syslog']:
@@ -103,7 +121,7 @@ def init_logger():
                                                           release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
+        formatter = UnicodeFormatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
 
     elif tools.config['logfile']:
         # LogFile Handler
