@@ -5,6 +5,9 @@
  		<wizard id="si_so" model="hr.employee" name="hr.si_so" string="Sign in / Sign out"/>
 		<wizard id="wizard_attendance_error" keyword="client_print_multi" model="hr.employee" name="hr.timesheet.attendance.report" string="Print Attendance Error Report"/>
 
+		<wizard id="print_week" keyword="client_print_multi" model="hr.employee" name="hr.print_week" string="Print Timesheet by week"/>
+		<wizard id="print_month" keyword="client_print_multi" model="hr.employee" name="hr.print_month" string="Print Timesheet by month"/>
+
         <menuitem action="si_so" id="menu_si_so" parent="menu_hr_attendance" type="wizard"
             groups="group_hr_attendance"/>
         
