@@ -35,6 +35,6 @@
     'demo_xml': ['board_auction_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '49187078189',
+    'certificate': '0049187078189',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

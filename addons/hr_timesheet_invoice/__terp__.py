@@ -42,6 +42,6 @@ reports, eso.""",
     'demo_xml': ['hr_timesheet_invoice_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '56091842381',
+    'certificate': '0056091842381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

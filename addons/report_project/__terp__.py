@@ -35,6 +35,6 @@
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '86804423149',
+    'certificate': '0086804423149',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

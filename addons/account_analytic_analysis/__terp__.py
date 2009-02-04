@@ -43,6 +43,6 @@ Add menu to show relevant information for each manager.""",
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '42927202589',
+    'certificate': '0042927202589',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -36,6 +36,6 @@ the report has several options to help you get the data you need.
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '64392591773',
+    'certificate': '0064392591773',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
