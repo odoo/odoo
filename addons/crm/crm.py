@@ -655,7 +655,7 @@ class crm_case(osv.osv):
                 })
             emails = [case.email_from] + (case.email_cc or '').split(',')
             emails = filter(None, emails)
-            body = case.description
+            body = case.description or ''
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
             tools.email_send(
