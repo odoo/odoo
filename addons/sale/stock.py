@@ -72,7 +72,7 @@ class stock_picking(osv.osv):
                 picking)
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
-        if move_line.sale_line_id:
+        if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
             return move_line.sale_line_id.price_unit
         return super(stock_picking, self)._get_price_unit_invoice(cursor,
                 user, move_line, type)
@@ -84,7 +84,7 @@ class stock_picking(osv.osv):
                 move_line)
 
     def _get_taxes_invoice(self, cursor, user, move_line, type):
-        if move_line.sale_line_id:
+        if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
             return [x.id for x in move_line.sale_line_id.tax_id]
         return super(stock_picking, self)._get_taxes_invoice(cursor, user,
                 move_line, type)
