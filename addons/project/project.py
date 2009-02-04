@@ -248,10 +248,10 @@ class task(osv.osv):
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
     
-    def copy(self, cr, uid, id, default={},context={}):
+    def copy_data(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
-        return super(task, self).copy(cr, uid, id, default, context)
+        return super(task, self).copy_data(cr, uid, id, default, context)
 
     _columns = {
         'active': fields.boolean('Active'),

@@ -318,14 +318,14 @@ class process_node(osv.osv):
         'flow_start': lambda *args: False,
     }
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy_data(self, cr, uid, id, default=None, context={}):
         if not default:
             default = {}
         default.update({
             'transition_in': [],
             'transition_out': []
         })
-        return super(process_node, self).copy(cr, uid, id, default, context)
+        return super(process_node, self).copy_data(cr, uid, id, default, context)
 
 process_node()
 
@@ -375,7 +375,7 @@ class process_transition_action(osv.osv):
         'state': lambda *args: 'dummy',
     }
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy_data(self, cr, uid, id, default=None, context={}):
         if not default:
             default = {}
 
@@ -383,7 +383,7 @@ class process_transition_action(osv.osv):
         if state:
             default['state'] = state
 
-        return super(process_transition_action, self).copy(cr, uid, id, default, context)
+        return super(process_transition_action, self).copy_data(cr, uid, id, default, context)
 
 process_transition_action()
 

@@ -672,11 +672,6 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
-    def copy(self, cr, uid, id, default=None, context={}):
-        if not default: default = {}
-        default.update( {'invoice_lines':[]})
-        return super(sale_order_line, self).copy(cr, uid, id, default, context)
-
     def _amount_line_net(self, cr, uid, ids, field_name, arg, context):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -842,11 +837,11 @@ class sale_order_line(osv.osv):
             pass
         return {'value' : value}
 
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
         default.update({'state':'draft', 'move_ids':[], 'invoiced':False, 'invoice_lines':[]})
-        return super(sale_order_line, self).copy(cr, uid, id, default, context)
+        return super(sale_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
