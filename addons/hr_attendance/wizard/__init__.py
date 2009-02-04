@@ -21,5 +21,7 @@
 ##############################################################################
 import sign_in_out
 import print_attendance_error
+from print_byweek import wiz_byweek
+from print_bymonth import wiz_bymonth
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

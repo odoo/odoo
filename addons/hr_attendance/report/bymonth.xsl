@@ -85,15 +85,7 @@
 		<tr>
 			<td>
 				<para style="name"><xsl:value-of select="name" /></para>
-				<para style="normal"><xsl:text>By week: </xsl:text><xsl:value-of select="format-number(regime, '#.#')" /><xsl:text> h</xsl:text></para>
-				<para style="normal"><xsl:text>Holidays: </xsl:text><xsl:value-of select="holiday" /></para>
 			</td>
-		</tr>
-		<tr>
-			<td>Theoretical</td>
-			<xsl:for-each select="day">
-				<td><xsl:value-of select="th" /></td>
-			</xsl:for-each>
 		</tr>
 		<tr>
 			<td>Worked</td>
