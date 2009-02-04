@@ -31,6 +31,6 @@
     'update_xml': ['base_vat_data.xml'],
     'installable': True,
     'active': False,
-    'certificate': '84849360989',
+    'certificate': '0084849360989',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

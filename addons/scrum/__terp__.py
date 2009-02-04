@@ -60,6 +60,6 @@
     'demo_xml': ['scrum_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '84121063261',
+    'certificate': '0084121063261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

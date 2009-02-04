@@ -34,7 +34,7 @@
                             <field name="sequence"/>
                             <field name="active" select="2"/>
                             <field name="user_id" select="2"/>
-                            <field name="parent_id" select="2"/>
+                            <field name="parent_id" select="2" domain="[('id', '!=', active_id)]"/>
                             <field name="reply_to" select="2"/>
                             <label colspan="2" string="Complete this if you use the mail gateway."/>
                         </page>

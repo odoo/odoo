@@ -182,7 +182,7 @@ class base_module_record(osv.osv):
                     val = str(val)
 
                 val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
-                field.setAttribute(u"eval",  val)
+                field.setAttribute(u"eval",  val.decode('utf-8'))
                 record.appendChild(field)
         return record_list, noupdate
 
@@ -324,8 +324,8 @@ class base_module_record(osv.osv):
                         data.appendChild(res)
                 elif rec[0]=='assert':
                         pass
-            res = doc.toprettyxml(indent="\t")
-            return  doc.toprettyxml(indent="\t").encode('utf8')
+
+            return doc.toprettyxml(indent="\t").encode('utf-8')
 base_module_record()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

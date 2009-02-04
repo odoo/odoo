@@ -66,6 +66,6 @@ for one account entry.
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '36417675373',
+    'certificate': '0036417675373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
