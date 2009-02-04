@@ -45,7 +45,7 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'wizard/wizard_view.xml',
-        'followup_report_view.xml'
+        'followup_report_view.xml',
         'followup_view.xml',
     ],
     'demo_xml': ['followup_demo.xml'],
