@@ -51,7 +51,6 @@ class GanttCanvas(object):
                 self._min = x[0]
             if x[1]>self._max or not self._max:
                 self._max = x[1]
-            print name, self._conv[1](x[1])
             self._datas[user].append( (name, x))
             self._names.setdefault(name, x[0])
 
