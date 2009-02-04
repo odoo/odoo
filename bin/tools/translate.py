@@ -566,7 +566,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             finally:
                 # locale.resetlocale is bugged with some locales. 
                 # we need to normalize the result of locale.getdefaultlocale()
-                locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
+                try:
+                    locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
+                except:
+                    locale.setlocale(locale.LC_ALL, lc)
 
 
         # now, the serious things: we read the language file

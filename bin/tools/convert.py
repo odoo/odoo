@@ -677,7 +677,12 @@ form: module.record_id""" % (xml_id,)
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:
-                id = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, rec_model, self.module, rec_id)
+                if '.' in rec_id:
+                    module,rec_id2 = rec_id.split('.')
+                else:
+                    module = self.module
+                    rec_id2 = rec_id
+                id = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, rec_model, module, rec_id2)
                 # check if the resource already existed at the last update
                 if id:
                     # if it existed, we don't update the data, but we need to
