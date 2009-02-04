@@ -1025,22 +1025,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="priority" select="1"/>
-                    <newline/>
-                    <field name="interval_number"/>
-                    <field name="interval_type"/>
-                    <newline/>
-                    <field name="nextcall"/>
-                    <field name="numbercall"/>
-                    <field name="doall"/>
-                    <separator colspan="4" string="Action to trigger"/>
-                    <newline/>
-                    <field name="model" readonly="1"/>
-                    <field name="function" readonly="1"/>
-                    <field colspan="4" name="args" readonly="1"/>
+                    <notebook colspan="4">
+                    <page string="Information">
+                        <field name="name" select="1"/>
+                        <field name="active" select="1"/>
+                        <field name="user_id" select="1"/>
+                        <field name="priority" select="1"/>
+                        <newline/>
+                        <field name="interval_number"/>
+                        <field name="interval_type"/>
+                        <newline/>
+                        <field name="nextcall"/>
+                        <field name="numbercall"/>
+                        <field name="doall"/>
+                    </page>
+                    <page string="Technical Data" groups="base.group_extended">
+                        <separator string="Action to Trigger" colspan="4"/>
+                        <field name="model" groups="base.group_extended"/>
+                        <field name="function" readonly="base.group_extended"/>
+                        <field colspan="4" name="args" readonly="base.group_extended"/>
+                    </page>
+                    </notebook>
                 </form>
             </field>
         </record>

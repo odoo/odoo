@@ -2630,7 +2630,7 @@ class orm(orm_template):
         res = self.name_get(cr, user, ids, context)
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not context:
             context = {}
         if not default:
@@ -2640,6 +2640,7 @@ class orm(orm_template):
                 default['state'] = self._defaults['state'](self, cr, uid, context)
         data = self.read(cr, uid, [id], context=context)[0]
         fields = self.fields_get(cr, uid)
+        trans_data=[]
         for f in fields:
             ftype = fields[f]['type']
 
@@ -2662,14 +2663,15 @@ class orm(orm_template):
                     # the lines are first duplicated using the wrong (old)
                     # parent but then are reassigned to the correct one thanks
                     # to the (4, ...)
-                    res.append((4, rel.copy(cr, uid, rel_id, context=context)))
+                    d,t = rel.copy_data(cr, uid, rel_id, context=context)
+                    res.append((0, 0, d))
+                    trans_data += t
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
         trans_name=''
-        trans_data=[]
         for f in fields:
             trans_flag=True
             if f in self._columns and self._columns[f].translate:
@@ -2691,14 +2693,15 @@ class orm(orm_template):
 
         for v in self._inherits:
             del data[self._inherits[v]]
+        return data, trans_data
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        data, trans_data = self.copy_data(cr, uid, id, default, context)
         new_id=self.create(cr, uid, data)
-
         for record in trans_data:
             del record['id']
             record['res_id']=new_id
             trans_obj.create(cr,uid,record)
-
         return new_id
 
     def check_recursion(self, cr, uid, ids, parent=None):
