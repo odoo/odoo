@@ -116,8 +116,9 @@ class Cursor(object):
         
         try:
             res = self._obj.execute(query, params)
-        except:
-            log("bad query: %s" % self._obj.query, netsvc.LOG_ERROR)
+        except Exception, e:
+            log("bad query: %s" % self._obj.query)
+            log(e)
             raise
 
         if self.sql_log:
