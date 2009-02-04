@@ -166,11 +166,16 @@ class _format(object):
 
 
 class _float_format(float, _format):
+    
+    def __init__(self,value):
+        super(_float_format, self).__init__()
+        self.val = value and str(value) or str(0.00)
     def __str__(self):
         digits = 2
-        if self._field and hasattr(self._field, 'digits') and self._field.digits:
+        if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
             digits = self._field.digits[1]
-        return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
+            return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
+        return self.val
         
 #        if not self.object._context:
 #            return locale.format('%f', self.name, True)
@@ -181,17 +186,27 @@ class _float_format(float, _format):
 
 
 class _int_format(int, _format):
+    def __init__(self,value):
+        super(_int_format, self).__init__()
+        self.val = value and str(value) or str(0)
+        
     def __str__(self):
-        return self.lang_obj.format('%.d', self.name, True)
+        if hasattr(self,'lang_obj'):
+            return self.lang_obj.format('%.d', self.name, True)
+        return self.val
 #        return locale.format('%d', self.name, True)
 
 
 class _date_format(str, _format):
+    def __init__(self,value):
+        super(_date_format, self).__init__()
+        self.val = str(value)
+        
     def __str__(self):
-        if self.name:
+        if hasattr(self,'name') and self.name:
             date = mx.DateTime.strptime(self.name,DT_FORMAT)
             return date.strftime(self.lang_obj.date_format)
-        return ''    
+        return self.val    
 #        if not self.object._context:
 #            return self.name
 #
@@ -205,11 +220,15 @@ class _date_format(str, _format):
 #        return ''
 
 class _dttime_format(str, _format):
+    def __init__(self,value):
+        super(_dttime_format, self).__init__()
+        self.val = str(value)
+        
     def __str__(self):
-        if self.name:
+        if hasattr(self,'name') and self.name:
             datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
             return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
-        return '' 
+        return self.val 
 
 
 _fields_process = {
