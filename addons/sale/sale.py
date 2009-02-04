@@ -911,7 +911,7 @@ class sale_order_line(osv.osv):
 
         result['name'] = product_obj.partner_ref
         domain = {}
-        if not uom and not uos:
+        if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
@@ -926,21 +926,21 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
+
+        elif uos: # only happens if uom is False
+            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
+            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
+            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
         elif uom: # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = q * product_obj.uos_coeff
+                result['product_uos_qty'] = qty * product_obj.uos_coeff
             else:
                 result['product_uos'] = False
-                result['product_uos_qty'] = q
-            result['th_weight'] = q * product_obj.weight
-        elif uos: # only happens if uom is False
-            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
-            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
-            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
-        # Round the quantity up
+                result['product_uos_qty'] = qty
+            result['th_weight'] = q * product_obj.weight        # Round the quantity up
 
         # get unit price
 
