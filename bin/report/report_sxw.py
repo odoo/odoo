@@ -170,6 +170,7 @@ class _float_format(float, _format):
     def __init__(self,value):
         super(_float_format, self).__init__()
         self.val = value and str(value) or str(0.00)
+        
     def __str__(self):
         digits = 2
         if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
@@ -200,12 +201,13 @@ class _int_format(int, _format):
 class _date_format(str, _format):
     def __init__(self,value):
         super(_date_format, self).__init__()
-        self.val = str(value)
-        
+        self.val = value and str(value) or ''
+    
     def __str__(self):
-        if hasattr(self,'name') and self.name:
-            date = mx.DateTime.strptime(self.name,DT_FORMAT)
-            return date.strftime(self.lang_obj.date_format)
+        if self.val:
+            if hasattr(self,'name') and (self.name):
+                date = mx.DateTime.strptime(self.name,DT_FORMAT)
+                return date.strftime(self.lang_obj.date_format)
         return self.val    
 #        if not self.object._context:
 #            return self.name
@@ -222,12 +224,13 @@ class _date_format(str, _format):
 class _dttime_format(str, _format):
     def __init__(self,value):
         super(_dttime_format, self).__init__()
-        self.val = str(value)
+        self.val = value and str(value) or ''
         
     def __str__(self):
-        if hasattr(self,'name') and self.name:
-            datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
-            return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
+        if self.val:
+            if hasattr(self,'name') and self.name:
+                datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
+                return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
         return self.val 
 
 
@@ -381,6 +384,8 @@ class rml_parse(object):
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
         if date or date_time:
+            if not str(value):
+                return ''
             date_format = lang_obj.date_format
             if date_time:
                 date_format = lang_obj.date_format + " " + lang_obj.time_format
