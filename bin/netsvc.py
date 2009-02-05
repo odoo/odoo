@@ -88,29 +88,31 @@ LOG_CRITICAL = 'critical'
 logging.DEBUG_RPC = logging.DEBUG - 1
 
 class UnicodeFormatter(logging.Formatter):
-    def __init__(self, fmt=None, datefmt=None):
+    def __init__(self, enc, fmt=None, datefmt=None):
+        self._enc = enc
         logging.Formatter.__init__(self, fmt, datefmt)
         self._fmt = tools.ustr(self._fmt)
         if self.datefmt is not None:
             self.datefmt = tools.ustr(self.datefmt)
 
     def formatTime(self, *args, **kwargs):
-        return tools.ustr(logging.Formatter.formatTime(self, *args, **kwargs))
+        return tools.ustr(logging.Formatter.formatTime(self, *args, **kwargs), self._enc)
 
     def formatException(self, *args, **kwargs):
-        return tools.ustr(logging.Formatter.formatException(self, *args, **kwargs))
+        return tools.ustr(logging.Formatter.formatException(self, *args, **kwargs), self._enc)
 
     def format(self, *args, **kwargs):
-        return tools.ustr(logging.Formatter.format(self, *args, **kwargs))
+        return tools.ustr(logging.Formatter.format(self, *args, **kwargs), self._enc)
 
 def init_logger():
     import os
     from tools.translate import resetlocale
-    resetlocale()
+    l = resetlocale() or ''
+    enc = '.' in l and l.split('.')[1] or 'utf-8'
 
     logger = logging.getLogger()
     # create a format for log messages and dates
-    formatter = UnicodeFormatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
+    formatter = UnicodeFormatter(enc, '[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %Y %H:%M:%S')
     
     logging_to_stdout = False
     if tools.config['syslog']:
@@ -121,7 +123,7 @@ def init_logger():
                                                           release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        formatter = UnicodeFormatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
+        formatter = UnicodeFormatter(enc, "%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
 
     elif tools.config['logfile']:
         # LogFile Handler
