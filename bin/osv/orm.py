@@ -2284,49 +2284,61 @@ class orm(orm_template):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                if vals[self._parent_name]:
-                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
-                else:
-                    cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
-                res = cr.fetchone()
-                if res:
-                    pleft,pright = res
-                else:
-                    cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
-                    pleft,pright = cr.fetchone()
-                cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%s',ids))+')', ids)
-                dest = pleft + 1
-                for cleft,cright,cid in cr.fetchall():
-                    if cleft > pleft:
-                        treeshift  = pleft - cleft + 1
-                        leftbound  = pleft+1
-                        rightbound = cleft-1
-                        cwidth     = cright-cleft+1
-                        leftrange = cright
-                        rightrange  = pleft
+                for id in ids:
+                    if vals[self._parent_name]:
+                        cr.execute('select parent_left,parent_right,id from '+self._table+' where parent_id=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
+                        pleft_old = pright_old = None
+                        result_p = cr.fetchall()
+                        for (pleft,pright,pid) in result_p:
+                            if pid == id:
+                                break
+                            pleft_old = pleft
+                            pright_old = pright
+                        if not pleft_old:
+                            cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                            pleft_old,pright_old = cr.fetchone()
+                        res = (pleft_old, pright_old)
                     else:
-                        treeshift  = pleft - cright
-                        leftbound  = cright + 1
-                        rightbound = pleft
-                        cwidth     = cleft-cright-1
-                        leftrange  = pleft+1
-                        rightrange = cleft
-                    cr.execute('UPDATE '+self._table+'''
-                        SET
-                            parent_left = CASE
-                                WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                ELSE parent_left
-                            END,
-                            parent_right = CASE
-                                WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                ELSE parent_right
-                            END
-                        WHERE
-                            parent_left<%s OR parent_right>%s;
-                    ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
-                        cwidth,cleft,cright,treeshift,leftrange,rightrange))
+                        cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
+                        res = cr.fetchone()
+                    if res:
+                        pleft,pright = res
+                    else:
+                        cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
+                        pleft,pright = cr.fetchone()
+                    cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%s',ids))+')', ids)
+                    dest = pleft + 1
+                    for cleft,cright,cid in cr.fetchall():
+                        if cleft > pleft:
+                            treeshift  = pleft - cleft + 1
+                            leftbound  = pleft+1
+                            rightbound = cleft-1
+                            cwidth     = cright-cleft+1
+                            leftrange = cright
+                            rightrange  = pleft
+                        else:
+                            treeshift  = pleft - cright
+                            leftbound  = cright + 1
+                            rightbound = pleft
+                            cwidth     = cleft-cright-1
+                            leftrange  = pleft+1
+                            rightrange = cleft
+                        cr.execute('UPDATE '+self._table+'''
+                            SET
+                                parent_left = CASE
+                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
+                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
+                                    ELSE parent_left
+                                END,
+                                parent_right = CASE
+                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
+                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
+                                    ELSE parent_right
+                                END
+                            WHERE
+                                parent_left<%s OR parent_right>%s;
+                        ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
+                            cwidth,cleft,cright,treeshift,leftrange,rightrange))
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
@@ -2444,8 +2456,17 @@ class orm(orm_template):
             else:
                 parent = vals.get(self._parent_name, False)
                 if parent:
-                    cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
-                    pleft = cr.fetchone()[0]
+                    cr.execute('select parent_right from '+self._table+' where parent_id=%s order by '+(self._parent_order or self._order), (parent,))
+                    pleft_old = None
+                    result_p = cr.fetchall()
+                    for (pleft,) in result_p:
+                        if not pleft:
+                            break
+                        pleft_old = pleft
+                    if not pleft_old:
+                        cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
+                        pleft_old = cr.fetchone()[0]
+                    pleft = pleft_old
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
