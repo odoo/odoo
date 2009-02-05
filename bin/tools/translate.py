@@ -524,15 +524,16 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         
         if not ids:
             # lets create the language with locale information
-            lc, encoding = locale.getdefaultlocale()
-            try:
-                if os.name == 'nt':
-                    from report.report_sxw import _LOCALE2WIN32
-                    code = _LOCALE2WIN32.get(lang, lang)
-                else:
-                    code = lang
-                locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename((code, encoding))))
-            except Exception:
+            fail = True
+            for ln in get_locales(lang):
+                try:
+                    locale.setlocale(locale.LC_ALL, ln)
+                    fail = False
+                    break
+                except locale.Error:
+                    continue
+            if fail:
+                lc = locale.getdefaultlocale()[0]
                 msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
                 logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc)) 
                 
@@ -645,19 +646,47 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
         logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
+def get_locales(lang=None):
+    if lang is None:
+        lang = locale.getdefaultlocale()[0]
+    
+    if os.name == 'nt':
+        from report.report_sxw import _LOCALE2WIN32
+        lang = _LOCALE2WIN32.get(lang, lang)
+    
+    def process(enc):
+        ln = locale._build_localename((lang, enc))
+        yield ln
+        nln = locale.normalize(ln)
+        if nln != ln:
+            yield nln
+
+    for x in process('utf8'): yield x
+
+    prefenc = locale.getpreferredencoding()
+    if prefenc:
+        for x in process(prefenc): yield x
+        
+        prefenc = {
+            'latin1': 'latin9', 
+            'iso-8859-1': 'iso8859-15',
+            'cp1252': '1252',
+        }.get(prefenc.lower())
+        if prefenc:
+            for x in process(prefenc): yield x
+
+    yield lang
+
+
+
 def resetlocale():
     # locale.resetlocale is bugged with some locales. 
-    loc = locale.getdefaultlocale()[0]
-    try:
-        ln = locale._build_localename((loc, 'utf8'))
-        locale.setlocale(locale.LC_ALL, ln)
-    except locale.Error:
-        enc = locale.getpreferredencoding()
-        ln = locale._build_localename((loc, enc))
+    for ln in get_locales():
         try:
             locale.setlocale(locale.LC_ALL, ln)
+            break
         except locale.Error:
-            locale.setlocale(locale.LC_ALL, loc)
+            continue
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
