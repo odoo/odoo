@@ -658,7 +658,7 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-def ustr(value, fromenc='utf-8'):
+def ustr(value):
     """This method is similar to the builtin `str` method, except
     it will return Unicode string.
 
@@ -677,7 +677,7 @@ def ustr(value, fromenc='utf-8'):
     if not isinstance(value, str):
         value = str(value)
 
-    return unicode(value, fromenc)
+    return unicode(value, 'utf-8')
 
 def exception_to_unicode(e):
     if hasattr(e, 'message'):
