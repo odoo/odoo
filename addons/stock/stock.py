@@ -432,7 +432,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
-        #'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
+        'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
         'active': lambda *a: 1,
         'state': lambda *a: 'draft',
         'move_type': lambda *a: 'direct',
@@ -454,8 +454,7 @@ class stock_picking(osv.osv):
         return moves
 
     def action_confirm(self, cr, uid, ids, context={}):
-        val = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
-        self.write(cr, uid, ids, {'name': val, 'state': 'confirmed'})
+        self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in self.browse(cr, uid, ids):
             for r in picking.move_lines:
