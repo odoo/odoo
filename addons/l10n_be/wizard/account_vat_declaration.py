@@ -76,9 +76,10 @@ class wizard_vat_declaration(wizard.interface):
 
         obj_fyear = pool_obj.get('account.fiscalyear')
         year_id = obj_fyear.find(cr, uid)
-        current_year = obj_fyear.browse(cr,uid,year_id).name
-
-        period_code = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).code
+        
+        account_period=pool_obj.get('account.period').browse(cr, uid, data['form']['period'])
+        current_year = account_period.fiscalyear_id.name
+        period_code = account_period.code
 
         send_ref = user_cmpny
         if period_code:
@@ -89,8 +90,8 @@ class wizard_vat_declaration(wizard.interface):
         data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
         data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
 
-        starting_month = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).date_start[5:7]
-        ending_month = pool_obj.get('account.period').browse(cr, uid, data['form']['period']).date_stop[5:7]
+        starting_month = account_period.date_start[5:7]
+        ending_month = account_period.date_stop[5:7]
         if starting_month != ending_month:
             #starting month and ending month of selected period are not the same 
             #it means that the accounting isn't based on periods of 1 month but on quarters
@@ -98,7 +99,7 @@ class wizard_vat_declaration(wizard.interface):
             data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
         else:
             data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
-        data_of_file += '<YEAR>'+str(current_year[-4:])+'</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
+        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:

@@ -510,24 +510,27 @@ class document_file(osv.osv):
         if not value:
             return True
         #if (not context) or context.get('store_method','fs')=='fs':
-        path = self._get_filestore(cr)
-        if not os.path.isdir(path):
-            os.makedirs(path)
-        flag = None
-        # This can be improved
-        for dirs in os.listdir(path):
-            if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
-                flag = dirs
-                break
-        flag = flag or create_directory(path)
-        filename = random_name()
-        fname = os.path.join(path, flag, filename)
-        fp = file(fname,'wb')
-        v = base64.decodestring(value)
-        fp.write(v)
-        filesize = os.stat(fname).st_size
-        cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))
-        return True
+        try:
+            path = self._get_filestore(cr)
+            if not os.path.isdir(path):
+                os.makedirs(path)
+            flag = None
+            # This can be improved
+            for dirs in os.listdir(path):
+                if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
+                    flag = dirs
+                    break
+            flag = flag or create_directory(path)
+            filename = random_name()
+            fname = os.path.join(path, flag, filename)
+            fp = file(fname,'wb')
+            v = base64.decodestring(value)
+            fp.write(v)
+            filesize = os.stat(fname).st_size
+            cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))
+            return True
+        except Exception,e :
+            raise except_orm('Error!', str(e))
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Owner', select=1),
@@ -609,7 +612,7 @@ class document_file(osv.osv):
 
     def create(self, cr, uid, vals, context={}):
         vals['title']=vals['name']
-        vals['parent_id'] = context.get('parent_id',False)
+        vals['parent_id'] = context.get('parent_id',False) or vals.get('parent_id',False)
         if not vals.get('res_id', False) and context.get('default_res_id',False):
             vals['res_id']=context.get('default_res_id',False)
         if not vals.get('res_model', False) and context.get('default_res_model',False):

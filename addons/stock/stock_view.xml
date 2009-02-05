@@ -740,7 +740,7 @@
         <menuitem action="action_picking_tree2_delivery" id="menu_picking_waiting_delivery" parent="menu_action_picking_tree_delivery"/>
 
         <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
-            <field name="name">Futur Delivery Orders</field>
+            <field name="name">Future Delivery Orders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1205,6 +1205,7 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree color="grey:state=='cancel'" string="Moves">
+                    <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="UOM"/>

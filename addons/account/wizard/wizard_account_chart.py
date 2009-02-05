@@ -27,7 +27,7 @@ class wizard_account_chart(wizard.interface):
     _account_chart_arch = '''<?xml version="1.0"?>
     <form string="Account charts">
         <field name="fiscalyear"/>
-        <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
+        <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
         <field name="target_move"/>
     </form>'''
 

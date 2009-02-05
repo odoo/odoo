@@ -31,10 +31,10 @@ class res_company(osv.osv):
         city = post_code = address = ""
         for ads in addresses:
             if ads.type == 'default':
-                city = ads.city
-                post_code = ads.zip
+                city = ads.city or ""
+                post_code = ads.zip or ""
                 if ads.street:
-                    address = ads.street
+                    address = ads.street or ""
                 if ads.street2:
                     address += " " + ads.street2
         return city, post_code, address
