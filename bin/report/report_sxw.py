@@ -656,19 +656,23 @@ class report_sxw(report_rml):
                         d = base64.decodestring(brow_rec.datas)
                         results.append((d,'pdf'))
                         continue
-
                 result = self.create_single(cr, uid, [obj.id], data, report_xml, context)
-                if aname:
-                    name = aname+'.'+result[1]
-                    pool.get('ir.attachment').create(cr, uid, {
-                        'name': aname,
-                        'datas': base64.encodestring(result[0]),
-                        'datas_fname': name,
-                        'res_model': self.table,
-                        'res_id': obj.id,
-                        }, context=context
-                    )
-                    cr.commit()
+                try:
+                    if aname:
+                        name = aname+'.'+result[1]
+                        pool.get('ir.attachment').create(cr, uid, {
+                            'name': aname,
+                            'datas': base64.encodestring(result[0]),
+                            'datas_fname': name,
+                            'res_model': self.table,
+                            'res_id': obj.id,
+                            }, context=context
+                        )
+                        cr.commit()
+                except Exception,e:
+                     import traceback, sys
+                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':
