@@ -2286,7 +2286,7 @@ class orm(orm_template):
             else:
                 for id in ids:
                     if vals[self._parent_name]:
-                        cr.execute('select parent_left,parent_right,id from '+self._table+' where parent_id=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
+                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
                         pleft_old = pright_old = None
                         result_p = cr.fetchall()
                         for (pleft,pright,pid) in result_p:
@@ -2456,7 +2456,7 @@ class orm(orm_template):
             else:
                 parent = vals.get(self._parent_name, False)
                 if parent:
-                    cr.execute('select parent_right from '+self._table+' where parent_id=%s order by '+(self._parent_order or self._order), (parent,))
+                    cr.execute('select parent_right from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (parent,))
                     pleft_old = None
                     result_p = cr.fetchall()
                     for (pleft,) in result_p:
