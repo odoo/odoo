@@ -37,7 +37,7 @@ dates_form = '''<?xml version="1.0"?>
     <notebook tabpos="up">
         <page string="Report Options">
             <separator string="Select Fiscal Year(s)(Maximum Three Years)" colspan="4"/>
-            <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
+            <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
             <field name="fiscalyear" colspan="5" nolabel="1"/>
             <field name="landscape" colspan="4"/>
             <field name="show_columns" colspan="4"/>
