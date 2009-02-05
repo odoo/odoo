@@ -609,7 +609,7 @@ class document_file(osv.osv):
 
     def create(self, cr, uid, vals, context={}):
         vals['title']=vals['name']
-        vals['parent_id'] = context.get('parent_id',False)
+        vals['parent_id'] = context.get('parent_id',False) or vals.get('parent_id',False)
         if not vals.get('res_id', False) and context.get('default_res_id',False):
             vals['res_id']=context.get('default_res_id',False)
         if not vals.get('res_model', False) and context.get('default_res_model',False):
