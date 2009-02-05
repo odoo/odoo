@@ -546,8 +546,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
-                'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
+                'decimal_point' : str(locale.localeconv()['decimal_point']),
+                'thousands_sep' : str(locale.localeconv()['thousands_sep']),
             }
             
             try: 
