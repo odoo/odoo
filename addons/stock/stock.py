@@ -445,7 +445,6 @@ class stock_picking(osv.osv):
     #    return super(stock_picking, self).copy(cr, uid, id, data, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
-        sid = self.pool.get('res.partner.address').browse(cr, uid, partner_id, context).partner_id.property_stock_supplier.id
         return { }
 
     def action_explode(self, cr, uid, moves, context={}):
@@ -1178,6 +1177,9 @@ class stock_move(osv.osv):
                         amount = move.product_qty * move.product_id.standard_price
 
                     date = time.strftime('%Y-%m-%d')
+                    partner_id = False
+                    if move.picking_id:
+                        partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
                     lines = [
                             (0, 0, {
                                 'name': move.name,
@@ -1185,14 +1187,16 @@ class stock_move(osv.osv):
                                 'credit': amount,
                                 'account_id': acc_src,
                                 'ref': ref,
-                                'date': date}),
+                                'date': date,
+                                'partner_id': partner_id}),
                             (0, 0, {
                                 'name': move.name,
                                 'quantity': move.product_qty,
                                 'debit': amount,
                                 'account_id': acc_dest,
                                 'ref': ref,
-                                'date': date})
+                                'date': date,
+                                'partner_id': partner_id})
                     ]
                     self.pool.get('account.move').create(cr, uid, {
                         'name': move.name,
