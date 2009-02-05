@@ -648,12 +648,16 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
 def resetlocale():
     # locale.resetlocale is bugged with some locales. 
     loc = locale.getdefaultlocale()[0]
-    enc = locale.getpreferredencoding()
-    ln = locale._build_localename((loc, enc))
     try:
+        ln = locale._build_localename((loc, 'utf8'))
         locale.setlocale(locale.LC_ALL, ln)
     except locale.Error:
-        locale.setlocale(locale.LC_ALL, loc)
+        enc = locale.getpreferredencoding()
+        ln = locale._build_localename((loc, enc))
+        try:
+            locale.setlocale(locale.LC_ALL, ln)
+        except locale.Error:
+            locale.setlocale(locale.LC_ALL, loc)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
