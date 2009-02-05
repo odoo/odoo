@@ -273,26 +273,23 @@ def get_modules():
     return list(set(listdir(ad) + listdir(_ad)))
 
 
-def create_graph(module_list, force=None):
+def create_graph(cr, module_list, force=None):
     graph = Graph()
-    upgrade_graph(graph, module_list, force)
+    upgrade_graph(graph, cr, module_list, force)
     return graph
 
-def upgrade_graph(graph, module_list, force=None):
+def upgrade_graph(graph, cr, module_list, force=None):
     if force is None:
         force = []
     packages = []
     len_graph = len(graph)
     for module in module_list:
-        try:
-            mod_path = get_module_path(module)
-            if not mod_path:
-                continue
-        except IOError:
-            continue
+        mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
-        if not terp_file:
+        if not mod_path or not terp_file:
+            cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
             continue
+
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
                 info = eval(tools.file_open(terp_file).read())
@@ -662,7 +659,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     try:
         report = tools.assertion_report()
         STATES_TO_LOAD = ['installed', 'to upgrade']
-        graph = create_graph(['base'], force)
+        graph = create_graph(cr, ['base'], force)
         has_updates = False
         if update_module:
             has_updates = load_module_graph(cr, graph, status, perform_checks=False, report=report)
@@ -698,7 +695,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if not module_list:
                 break
 
-            new_modules_in_graph = upgrade_graph(graph, module_list, force)
+            new_modules_in_graph = upgrade_graph(graph, cr, module_list, force)
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
