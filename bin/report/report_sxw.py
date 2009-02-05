@@ -166,18 +166,18 @@ class _format(object):
 
 
 class _float_format(float, _format):
-    
+
     def __init__(self,value):
         super(_float_format, self).__init__()
         self.val = value and str(value) or str(0.00)
-        
+
     def __str__(self):
         digits = 2
         if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
             digits = self._field.digits[1]
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
         return self.val
-        
+
 #        if not self.object._context:
 #            return locale.format('%f', self.name, True)
 #        digit = 2
@@ -190,7 +190,7 @@ class _int_format(int, _format):
     def __init__(self,value):
         super(_int_format, self).__init__()
         self.val = value and str(value) or str(0)
-        
+
     def __str__(self):
         if hasattr(self,'lang_obj'):
             return self.lang_obj.format('%.d', self.name, True)
@@ -202,13 +202,13 @@ class _date_format(str, _format):
     def __init__(self,value):
         super(_date_format, self).__init__()
         self.val = value and str(value) or ''
-    
+
     def __str__(self):
         if self.val:
             if hasattr(self,'name') and (self.name):
                 date = mx.DateTime.strptime(self.name,DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
-        return self.val    
+        return self.val
 #        if not self.object._context:
 #            return self.name
 #
@@ -225,13 +225,13 @@ class _dttime_format(str, _format):
     def __init__(self,value):
         super(_dttime_format, self).__init__()
         self.val = value and str(value) or ''
-        
+
     def __str__(self):
         if self.val:
             if hasattr(self,'name') and self.name:
                 datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
                 return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
-        return self.val 
+        return self.val
 
 
 _fields_process = {
@@ -335,7 +335,7 @@ class rml_parse(object):
             ns = node.nextSibling
             pp.removeChild(node)
             self._node = pp
-            
+
         lst = tools.ustr(text).split('\n')
         if not (text and lst):
             return None
@@ -390,13 +390,13 @@ class rml_parse(object):
             if date_time:
                 date_format = lang_obj.date_format + " " + lang_obj.time_format
             parse_format = date_format
-            
+
             # filtering time.strftime('%Y-%m-%d')
             if type(value) == type(''):
                 parse_format = DHM_FORMAT
-                if (not date_time): 
+                if (not date_time):
                     return value
-            
+
             if not isinstance(value, time.struct_time):
                 # assume string, parse it
 #                if len(str(value)) == 10:
@@ -650,35 +650,42 @@ class report_sxw(report_rml):
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
                     aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
                     if aids:
-                        d = base64.decodestring(pool.get('ir.attachment').browse(cr, uid, aids[0]).datas)
+                        brow_rec = pool.get('ir.attachment').browse(cr, uid, aids[0])
+                        if not brow_rec.datas:
+                            continue
+                        d = base64.decodestring(brow_rec.datas)
                         results.append((d,'pdf'))
                         continue
-
                 result = self.create_single(cr, uid, [obj.id], data, report_xml, context)
-                if aname:
-                    name = aname+'.'+result[1]
-                    pool.get('ir.attachment').create(cr, uid, {
-                        'name': aname,
-                        'datas': base64.encodestring(result[0]),
-                        'datas_fname': name,
-                        'res_model': self.table,
-                        'res_id': obj.id,
-                        }, context=context
-                    )
-                    cr.commit()
+                try:
+                    if aname:
+                        name = aname+'.'+result[1]
+                        pool.get('ir.attachment').create(cr, uid, {
+                            'name': aname,
+                            'datas': base64.encodestring(result[0]),
+                            'datas_fname': name,
+                            'res_model': self.table,
+                            'res_id': obj.id,
+                            }, context=context
+                        )
+                        cr.commit()
+                except Exception,e:
+                     import traceback, sys
+                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,str(e))
                 results.append(result)
-
-            if results[0][1]=='pdf':
-                from pyPdf import PdfFileWriter, PdfFileReader
-                import cStringIO
-                output = PdfFileWriter()
-                for r in results:
-                    reader = PdfFileReader(cStringIO.StringIO(r[0]))
-                    for page in range(reader.getNumPages()):
-                        output.addPage(reader.getPage(page))
-                s = cStringIO.StringIO()
-                output.write(s)
-                return s.getvalue(), results[0][1]
+            if results:
+                if results[0][1]=='pdf':
+                    from pyPdf import PdfFileWriter, PdfFileReader
+                    import cStringIO
+                    output = PdfFileWriter()
+                    for r in results:
+                        reader = PdfFileReader(cStringIO.StringIO(r[0]))
+                        for page in range(reader.getNumPages()):
+                            output.addPage(reader.getPage(page))
+                    s = cStringIO.StringIO()
+                    output.write(s)
+                    return s.getvalue(), results[0][1]
         return self.create_single(cr, uid, ids, data, report_xml, context)
 
     def create_single(self, cr, uid, ids, data, report_xml, context={}):
