@@ -46,13 +46,9 @@ class report_custom(report_rml):
 		service = netsvc.LocalService('object_proxy')
 
 		start_date = DateTime.strptime(datas['form']['init_date'], '%Y-%m-%d')
-		print "XXX start_date %s" % start_date
 		end_date = DateTime.strptime(datas['form']['end_date'], '%Y-%m-%d')
-		print "XXX end_date %s" % end_date
 		first_monday = start_date - DateTime.RelativeDateTime(days=start_date.day_of_week)
-		print "XXX first_monday %s" % first_monday		
 		last_monday = end_date + DateTime.RelativeDateTime(days=7 - end_date.day_of_week)
-		print "XXX last_monday %s" % last_monday		
 
 		if last_monday < first_monday:
 			first_monday, last_monday = last_monday, first_monday
@@ -60,7 +56,6 @@ class report_custom(report_rml):
 		user_xml = []
 
 		for employee_id in ids:
-			print "XXX employee_id %s" % employee_id
 			emp = service.execute(cr.dbname, uid, 'hr.employee', 'read', [employee_id], ['id', 'name'])[0]
 			monday, n_monday = first_monday, first_monday + one_week
 			stop, week_xml = False, []
@@ -80,10 +75,8 @@ class report_custom(report_rml):
 				order by att.name
 				'''
 				for idx in range(7):
-					print sql % (monday, monday + DateTime.RelativeDateTime(days=idx+1), employee_id)
 					cr.execute(sql, (monday, monday + DateTime.RelativeDateTime(days=idx+1), employee_id))
 					attendances = cr.dictfetchall()
-					print "attendances %s" %attendances
 					week_wh = {}
 	                # Fake sign ins/outs at week ends, to take attendances across week ends into account
 	                # XXX this is wrong for the first sign-in ever and the last sign out to this date 
@@ -109,7 +102,6 @@ class report_custom(report_rml):
 				week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
 				week_repr.append('</total>')
 				week_repr.append('</week>')
-				print "XXX week_repr %s" % week_repr
 				if len(week_repr) > 21: # 21 = minimal length of week_repr
 					week_xml.append('\n'.join(week_repr))
 				
@@ -121,7 +113,6 @@ class report_custom(report_rml):
 		%s
 		</report>
 		''' % '\n'.join(user_xml)
-		print "XXX xml %s" % xml
 		return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.hr.timesheet.allweeks', 'hr.employee', '', 'addons/hr_attendance/report/timesheet.xsl')
