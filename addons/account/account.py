@@ -131,7 +131,6 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
-    _parent_order = 'length(code),code'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
