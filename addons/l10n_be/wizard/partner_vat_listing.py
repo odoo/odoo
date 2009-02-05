@@ -62,26 +62,23 @@ class wizard_vat(wizard.interface):
 
     def _create_xml(self, cr, uid, data, context):
         datas=[]
-        # now wizard will use user->company instead of directly company from res.company
-
         seq_controlref = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid,'controlref')
         seq_declarantnum = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid,'declarantnum')
         obj_cmpny = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id
         company_vat = obj_cmpny.partner_id.vat
-        if not company_vat: #if not vat_company:
+        if not company_vat: 
             raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
 
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
-#        obj_company=pooler.get_pool(cr.dbname).get('res.company').browse(cr,uid,1)
-#        vat_company=obj_company.partner_id.vat
 
         p_id_list=pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
 
         if not p_id_list:
              raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')
         obj_year=pooler.get_pool(cr.dbname).get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
-        period="to_date('" + str(obj_year.date_start) + "','yyyy-mm-dd') and to_date('" + str(obj_year.date_stop) +"','yyyy-mm-dd')"
+        period_ids = pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
+        period = "("+','.join(map(lambda x: str(x), period_ids)) +")"
 
         street=zip_city=country=''
         addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
@@ -108,39 +105,57 @@ class wizard_vat(wizard.interface):
         data_file +='\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ str(street) +'</Street>\n\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
         data_file +='\n\t\t<Country>'+ str(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
         data_comp ='\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t<Street>'+ str(street) +'</Street>\n\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t<Country>'+ str(country) +'</Country>\n</CompanyInfo>'
-        data_period ='\n<Period>'+ str(obj_year.name[-4:]) +'</Period>'
+        data_period ='\n<Period>'+ str(obj_year.date_stop[:4]) +'</Period>'
         error_message=[]
+
         for p_id in p_id_list:
-            record=[] # this holds record per partner
-            obj_partner=pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
-            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%%s and l.date between %s group by b.code' % (period,), (p_id,))
+            record = {} # this holds record per partner
+            obj_partner = pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
+            
+            #This listing is only for customers located in belgium, that's the 
+            #reason why we skip all the partners that haven't their 
+            #(or one of their) default address(es) located in Belgium.
+            go_ahead = False
+            for ads in obj_partner.address:
+                if ads.type == 'default' and (ads.country_id and ads.country_id.code == 'BE'):
+                    go_ahead = True
+                    break
+            if not go_ahead:
+                continue
+            query = 'select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id='+str(p_id)+' and l.period_id in '+period+' group by b.code'
+            cr.execute(query)
             line_info=cr.fetchall()
             if not line_info:
                 continue
 
-            record.append(obj_partner.vat)
-            addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_partner.id], ['invoice'])
-            if addr.get('invoice',False):
-                ads=pooler.get_pool(cr.dbname).get('res.partner.address').browse(cr,uid,[addr['invoice']])[0] 
+            record['vat'] = obj_partner.vat
+
+            #it seems that this listing is only for belgian customers
+            record['country'] = 'BE'
+
+            #...deprecated...
+            #~addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_partner.id], ['invoice'])
             
-                if ads.country_id:
-                    record.append(ads.country_id.code)
-                else:
-                    error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no country associated with its Invoice address!')
+            #~ if addr.get('invoice',False):
+                #~ads=pooler.get_pool(cr.dbname).get('res.partner.address').browse(cr,uid,[addr['invoice']])[0] 
+            
+                #~ if ads.country_id:
+                    #~ record.append(ads.country_id.code)
+                #~ else:
+                    #~ error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no country associated with its Invoice address!')
                     
-            if len(record)<2:
-                record.append('')
-                error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no Invoice address!')
-            if len(line_info)==1:
-                if line_info[0][0]=='produit':
-                       record.append(0.00)
-                       record.append(line_info[0][1])
+            #~ if len(record)<2:
+                #~ record.append('')
+                #~ error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no Invoice address!')
+
+            record['amount'] = 0
+            record['turnover'] = 0
+
+            for item in line_info:
+                if item[0]=='produit':
+                    record['turnover'] += item[1]
                 else:
-                       record.append(line_info[0][1])
-                       record.append(0.00)
-            else:
-                for item in line_info:
-                    record.append(item[1])
+                    record['amount'] += item[1]
             datas.append(record)
 
         seq=0
@@ -151,12 +166,12 @@ class wizard_vat(wizard.interface):
             data['form']['msg']='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
             return data['form']
         for line in datas:
-            if line[3]< data['form']['limit_amount']:
+            if line['turnover'] < data['form']['limit_amount']:
                 continue
             seq +=1
-            sum_tax +=line[2]
-            sum_turnover +=line[3]
-            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line[0] +'</VATNum>\n\t\t<Country>'+line[1] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line[2] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line[3] * 100)) +'</TurnOver>\n</ClientList>'
+            sum_tax +=line['amount']
+            sum_turnover +=line['turnover']
+            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
 
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
         data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n</VatList>'

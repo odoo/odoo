@@ -99,7 +99,7 @@ class wizard_vat_declaration(wizard.interface):
             data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
         else:
             data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
-        data_of_file += '<YEAR>'+str(current_year[-4:])+'</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
+        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:

@@ -1,27 +1,35 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+    <menuitem 
+        id="menu_finance_belgian_statement" 
+        name="Belgium Statements"
+        parent="account.menu_finance_legal_statement"/>
+
     <wizard
-        string="Enlist Vat Details"
+        string="Annual Listing of VAT-Subjected Customers"
         model="res.partner"
         name="list.vat.detail"
         menu="False"
         id="partner_wizard_vat"/>
+
     <menuitem
-        name="Listing of VAT Customers"
-        parent="account.menu_finance_legal_statement"
+        name="Annual Listing of VAT-Subjected Customers"
+        parent="menu_finance_belgian_statement"
         action="partner_wizard_vat"
         type="wizard"
         id="partner_wizard_vat_menu"/>
 
     <wizard
-        string="Taxes Statement"
+        string="Periodical VAT Declaration"
         name="wizard.account.xml.vat.declaration"
         menu="False"
         id="wizard_xml_vat_declaration"/>
+
     <menuitem
-        name="Taxes Statement"
-        parent="account.menu_finance_legal_statement"
+        name="Periodical VAT Declaration"
+        parent="menu_finance_belgian_statement"
         action="wizard_xml_vat_declaration"
         type="wizard"
         id="account_wizard_vat_declaration"/>
