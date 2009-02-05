@@ -397,7 +397,7 @@ class stock_picking(osv.osv):
 
 
     _columns = {
-        'name': fields.char('Reference', size=64, required=True, select=True),
+        'name': fields.char('Reference', size=64, select=True),
         'origin': fields.char('Origin Reference', size=64),
         'backorder_id': fields.many2one('stock.picking', 'Back Order'),
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
@@ -432,7 +432,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
+        #'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
         'active': lambda *a: 1,
         'state': lambda *a: 'draft',
         'move_type': lambda *a: 'direct',
@@ -440,9 +440,12 @@ class stock_picking(osv.osv):
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-    #def copy(self, cr, uid, id, data=None, context={}):
-    #    data = data or {}
-    #    return super(stock_picking, self).copy(cr, uid, id, data, context)
+    def copy(self, cr, uid, id, default=None, context={}):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['name'] = False
+        return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         return { }
@@ -451,7 +454,8 @@ class stock_picking(osv.osv):
         return moves
 
     def action_confirm(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'confirmed'})
+        val = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
+        self.write(cr, uid, ids, {'name': val, 'state': 'confirmed'})
         todo = []
         for picking in self.browse(cr, uid, ids):
             for r in picking.move_lines:
