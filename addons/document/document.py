@@ -513,7 +513,11 @@ class document_file(osv.osv):
         try:
             path = self._get_filestore(cr)
             if not os.path.isdir(path):
-                os.makedirs(path)
+                try:
+                    os.makedirs(path)
+                except:
+                    raise except_orm('Permission Denied !', 'You do not permissions to write on the server side.')
+
             flag = None
             # This can be improved
             for dirs in os.listdir(path):
