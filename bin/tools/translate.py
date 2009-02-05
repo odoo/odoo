@@ -524,26 +524,14 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         
         if not ids:
             # lets create the language with locale information
-
             lc, encoding = locale.getdefaultlocale()
-            if not encoding:
-                encoding = 'UTF-8'
-            if encoding == 'utf':
-                encoding = 'UTF-8'
-            if encoding == 'cp1252':
-                encoding= '1252'
-            if encoding == 'iso-8859-1':
-                encoding= 'iso-8859-15'
-            if encoding == 'latin1':
-                encoding= 'latin9'
-
             try:
                 if os.name == 'nt':
                     from report.report_sxw import _LOCALE2WIN32
                     code = _LOCALE2WIN32.get(lang, lang)
                 else:
                     code = lang
-                locale.setlocale(locale.LC_ALL, locale.normalize(str(lang + '.' + encoding)))
+                locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename((code, encoding))))
             except Exception:
                 msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
                 logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc)) 
@@ -657,12 +645,15 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
         logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
-
 def resetlocale():
     # locale.resetlocale is bugged with some locales. 
-    # we need to normalize the result of locale.getdefaultlocale()
-    locale.setlocale(locale.LC_ALL, locale.normalize(locale._build_localename(locale.getdefaultlocale())))
-
+    loc = locale.getdefaultlocale()[0]
+    enc = locale.getpreferredencoding()
+    ln = locale._build_localename((loc, enc))
+    try:
+        locale.setlocale(locale.LC_ALL, ln)
+    except locale.Error:
+        locale.setlocale(locale.LC_ALL, loc)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
