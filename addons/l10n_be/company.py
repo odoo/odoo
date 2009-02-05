@@ -20,28 +20,24 @@
 #
 ##############################################################################
 
+from osv import osv
 
-{
-    'name': 'Reporting for accounting',
-    'version': '1.1',
-    'category': 'Generic Modules/Accounting',
-    'description': """Financial and accounting reporting
-    Fiscal statements
-    Indicators
-    """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['account'],
-    'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'account_view.xml',
-        'account_report.xml',
-        'account_wizard.xml'
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0050976406925',
-}
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _description = 'res.company'
+
+
+    def _get_default_ad(self, addresses):
+        city = post_code = address = ""
+        for ads in addresses:
+            if ads.type == 'default':
+                city = ads.city or ""
+                post_code = ads.zip or ""
+                if ads.street:
+                    address = ads.street or ""
+                if ads.street2:
+                    address += " " + ads.street2
+        return city, post_code, address
+res_company()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

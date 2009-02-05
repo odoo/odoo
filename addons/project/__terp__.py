@@ -45,6 +45,6 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
     'demo_xml': ['project_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '75116868317',
+    'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

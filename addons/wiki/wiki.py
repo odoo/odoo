@@ -102,8 +102,8 @@ class Wiki(osv.osv):
                 'section': section
             }
         }
-    def copy(self, cr, uid, id, default=None, context=None):
-        return super(Wiki, self).copy(cr, uid, id, {'wiki_id':False}, context)
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id':False}, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         result = super(Wiki,self).write(cr, uid, ids, vals, context)

@@ -46,8 +46,8 @@ class account_invoice_line(osv.osv):
         """
         res = {}
         tax_obj = self.pool.get('account.tax')
-        res_init = super(account_invoice_line, self)._amount_line(cr, uid, ids, name, args, context)
         for line in self.browse(cr, uid, ids):
+            res_init = super(account_invoice_line, self)._amount_line(cr, uid, [line.id], name, args, context)
             res[line.id] = {
                 'price_subtotal': 0.0,
                 'price_subtotal_incl': 0.0,

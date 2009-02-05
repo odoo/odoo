@@ -51,7 +51,7 @@ Credits: Sistheo Zeekom CrysaLEAD
         "security/ir.model.access.csv",
     ],
     "demo_xml" : [],
-    "certificate" : "435321693876313629",
+    "certificate" : "00435321693876313629",
     "active": False,
     "installable": True
 }

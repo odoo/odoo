@@ -23,6 +23,6 @@
     'demo_xml': ['data/wiki_faq.xml'],
     'installable': True,
     'active': False,
-    'certificate': '86363630317',
+    'certificate': '0086363630317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

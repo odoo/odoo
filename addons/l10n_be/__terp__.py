@@ -58,6 +58,6 @@
                     'account.report.report.csv'
                 ],
     'installable': True,
-    'certificate': '31977724637',
+    'certificate': '0031977724637',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

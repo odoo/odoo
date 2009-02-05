@@ -672,11 +672,6 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
-    def copy(self, cr, uid, id, default=None, context={}):
-        if not default: default = {}
-        default.update( {'invoice_lines':[]})
-        return super(sale_order_line, self).copy(cr, uid, id, default, context)
-
     def _amount_line_net(self, cr, uid, ids, field_name, arg, context):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -808,7 +803,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid action !'), _('You can not cancel a sale order line that has already been invoiced !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
         return self.write(cr, uid, ids, {'state':'cancel'})
 
     def button_confirm(self, cr, uid, ids, context={}):
@@ -842,17 +837,17 @@ class sale_order_line(osv.osv):
             pass
         return {'value' : value}
 
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
         default.update({'state':'draft', 'move_ids':[], 'invoiced':False, 'invoice_lines':[]})
-        return super(sale_order_line, self).copy(cr, uid, id, default, context)
+        return super(sale_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False):
         if not  partner_id:
-            raise osv.except_osv(_('No Partner !'), _('You have to select a partner in the sale form !\nPlease set one partner before choosing a product.'))
+            raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sale form !\nPlease set one customer before choosing a product.'))
         warning={}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
@@ -916,7 +911,7 @@ class sale_order_line(osv.osv):
 
         result['name'] = product_obj.partner_ref
         domain = {}
-        if not uom and not uos:
+        if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
@@ -931,21 +926,21 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
+
+        elif uos: # only happens if uom is False
+            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
+            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
+            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
         elif uom: # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = q * product_obj.uos_coeff
+                result['product_uos_qty'] = qty * product_obj.uos_coeff
             else:
                 result['product_uos'] = False
-                result['product_uos_qty'] = q
-            result['th_weight'] = q * product_obj.weight
-        elif uos: # only happens if uom is False
-            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
-            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
-            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
-        # Round the quantity up
+                result['product_uos_qty'] = qty
+            result['th_weight'] = q * product_obj.weight        # Round the quantity up
 
         # get unit price
 

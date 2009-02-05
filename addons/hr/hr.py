@@ -126,6 +126,7 @@ class hr_employee(osv.osv):
         'marital': fields.selection([('maried','Maried'),('unmaried','Unmaried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
 
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
+        'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'work_phone': fields.char('Work Phone', size=32),
         'work_email': fields.char('Work Email', size=128),
         'work_location': fields.char('Office Location', size=32),

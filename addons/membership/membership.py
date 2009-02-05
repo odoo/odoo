@@ -469,24 +469,6 @@ class Invoice(osv.osv):
 
     _inherit = 'account.invoice'
 
-    def create(self, cr, uid, vals, context={}):
-        result = super(Invoice, self).create(cr, uid, vals, context)
-        invoice = self.browse(cr, uid, result)
-        member_line_obj = self.pool.get('membership.membership_line')
-        for line in invoice.invoice_line:
-            if line.product_id and line.product_id.membership:
-                    date_from = line.product_id.membership_date_from
-                    date_to  = line.product_id.membership_date_to
-                    if invoice.date_invoice > date_from and invoice.date_invoice < date_to:
-                        date_from = invoice.date_invoice
-                    line_id = member_line_obj.create(cr, uid, {
-                        'partner': invoice.partner_id.id,
-                        'date_from': date_from,
-                        'date_to': date_to,
-                        'account_invoice_line': line.id,
-                        })
-        return result
-
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
         if context is None:
@@ -730,3 +712,58 @@ class ReportPartnerMemberYearNew(osv.osv):
 ReportPartnerMemberYearNew()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+
+class account_invoice_line(osv.osv):
+    _inherit='account.invoice.line'
+    def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context={}
+        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
+        member_line_obj = self.pool.get('membership.membership_line')
+        for line in self.browse(cr, uid, ids):
+            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
+            if line.product_id and line.product_id.membership and not ml_ids:
+                # Product line has changed to a membership product
+                date_from = line.product_id.membership_date_from
+                date_to = line.product_id.membership_date_to
+                if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
+                    date_from = line.invoice_id.date_invoice
+                line_id = member_line_obj.create(cr, uid, {
+                    'partner': line.invoice_id.partner_id.id,
+                    'date_from': date_from,
+                    'date_to': date_to,
+                    'account_invoice_line': line.id,
+                    })
+            if line.product_id and not line.product_id.membership and ml_ids:
+                # Product line has changed to a non membership product
+                member_line_obj.unlink(cr, uid, ml_ids, context=context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        if not context:
+            context={}
+        member_line_obj = self.pool.get('membership.membership_line')
+        for id in ids:
+            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',id)])
+            member_line_obj.unlink(cr, uid, ml_ids, context=context)
+        return super(account_invoice_line, self).unlink(cr, uid, ids, context=context)
+
+    def create(self, cr, uid, vals, context={}):
+        result = super(account_invoice_line, self).create(cr, uid, vals, context)
+        line = self.browse(cr, uid, result)
+        member_line_obj = self.pool.get('membership.membership_line')
+        ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
+        if line.product_id and line.product_id.membership and not ml_ids:
+            # Product line is a membership product
+            date_from = line.product_id.membership_date_from
+            date_to = line.product_id.membership_date_to
+            if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
+                date_from = line.invoice_id.date_invoice
+            line_id = member_line_obj.create(cr, uid, {
+                'partner': line.invoice_id.partner_id.id,
+                'date_from': date_from,
+                'date_to': date_to,
+                'account_invoice_line': line.id,
+                })
+        return result
+account_invoice_line()

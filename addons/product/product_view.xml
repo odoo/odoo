@@ -34,19 +34,25 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Product">
-                    <group colspan="2" col="4">
+                   <group colspan="4" col="6">
+                    <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
-                        <field name="name" select="1"/>
+                        <field name="name" select="1"  />
+                        <field groups="base.group_extended" name="variants" select="2" />
+                    </group>
+                    <group colspan="1" col="2">
+                        <separator string="Codes" colspan="2"/>
                         <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="variants" select="2"/>
                         <field groups="base.group_extended" name="ean13" select="2"/>
                     </group>
-                    <group colspan="2" col="2">
+                    <group colspan="1" col="2">
                         <separator string="Product Type" colspan="2"/>
                         <field name="sale_ok" select="2"/>
                         <field name="purchase_ok" select="2"/>
                         <field groups="base.group_extended" name="rental" select="2"/>
                     </group>
+                   </group>
+      
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
@@ -213,7 +219,7 @@
         
         
         <record id="product_normal_action_tree" model="ir.actions.act_window">
-            <field name="name" eval="False"/>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
@@ -240,8 +246,8 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor_inv" on_change="onchange_factor_inv(factor_inv)"/>
-                    <field name="factor" on_change="onchange_factor(factor)"/>
+                    <field name="factor"/>
+                    <field name="factor_inv"/>
                     <field name="rounding"/>
                 </tree>
             </field>
@@ -255,8 +261,8 @@
                 <form string="Units of Measure">
                     <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
-                    <field name="factor_inv" select="1"/>
                     <field name="factor" select="1"/>
+                    <field name="factor_inv" select="1"/>
                     <field name="rounding"/>
                     <field name="active"/>
                 </form>

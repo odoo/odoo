@@ -125,11 +125,11 @@ class account_invoice_line(osv.osv):
                 vals['name'] = ' '
         return super(account_invoice_line, self).write(cr, user, ids, vals, context)
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default['state'] = self.browse(cr, uid, id).state
-        return super(account_invoice_line, self).copy(cr, uid, id, default, context)
+        return super(account_invoice_line, self).copy_data(cr, uid, id, default, context)
 
     def _fnct(self, cr, uid, id, name, args, context):
         res = {}

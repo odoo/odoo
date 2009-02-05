@@ -59,7 +59,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
 
             # Compute the closing date of the task
             tasks[task.id] = []
-            res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.planned_hours)
+            res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.remaining_hours)
             for (d1,d2) in res:
                 tasks[task.id].append((d1, d2, task.name, task.user_id.login))
             date_close = tasks[task.id][-1][1]

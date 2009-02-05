@@ -442,11 +442,11 @@ class purchase_order_line(osv.osv):
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
     _description = 'Purchase Order lines'
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
         default.update({'state':'draft', 'move_id':False})
-        return super(purchase_order_line, self).copy(cr, uid, id, default, context)
+        return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False):

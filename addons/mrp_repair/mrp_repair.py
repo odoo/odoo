@@ -471,10 +471,10 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.line'
     _description = 'Repair Operations Lines'
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
         default.update( {'invoice_line_id':False,'move_id':False,'invoiced':False,'state':'draft'})
-        return super(mrp_repair_line, self).copy(cr, uid, id, default, context)
+        return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
@@ -539,10 +539,10 @@ mrp_repair_line()
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
     _description = 'Repair Fees line'
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
         default.update( {'invoice_line_id':False,'invoiced':False})
-        return super(mrp_repair_fee, self).copy(cr, uid, id, default, context)
+        return super(mrp_repair_fee, self).copy_data(cr, uid, id, default, context)
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
         cur_obj=self.pool.get('res.currency')

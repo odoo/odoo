@@ -113,7 +113,7 @@ class account_move_line(osv.osv):
                         account = journal_obj.default_debit_account_id
 
 
-                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data:
+                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data and (data['partner_id']):
                     part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
                     account = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, account.id)
                     account = self.pool.get('account.account').browse(cr, uid, account)
@@ -707,6 +707,7 @@ class account_move_line(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context={}, check=True):
+        print "CC"
         self._update_check(cr, uid, ids, context)
         result = False
         for line in self.browse(cr, uid, ids, context):

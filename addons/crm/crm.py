@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -181,7 +181,7 @@ class crm_case_section(osv.osv):
                     'object': True
                 })
         return True
-    
+
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
@@ -295,7 +295,7 @@ class crm_case_rule(osv.osv):
                 except (ValueError, KeyError, TypeError):
                     return False
         return True
-            
+
     _constraints = [
         (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
     ]
@@ -505,7 +505,7 @@ class crm_case(osv.osv):
             action_ids = newactions
             level -= 1
         return True
-    
+
     def format_body(self, body):
         return tools.ustr(body.encode('ascii', 'replace'))
 
@@ -614,11 +614,11 @@ class crm_case(osv.osv):
 
                 # Send an email
                 tools.email_send(
-                    src, 
-                    dest, 
+                    src,
+                    dest,
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
                     self.format_body(body),
-                    reply_to=case.section_id.reply_to, 
+                    reply_to=case.section_id.reply_to,
                     tinycrm=str(case.id),
                     attach=attach_to_send
                 )
@@ -646,6 +646,9 @@ class crm_case(osv.osv):
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),
                         _('You must put a Partner eMail to use this action!'))
+            if not case.description:
+                raise osv.except_osv(_('Error!'),
+                        _('Can not send mail with empty body,you should have description in the body'))
         self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
@@ -655,15 +658,15 @@ class crm_case(osv.osv):
                 })
             emails = [case.email_from] + (case.email_cc or '').split(',')
             emails = filter(None, emails)
-            body = case.description
+            body = case.description or ''
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
             tools.email_send(
-                case.user_id.address_id.email, 
+                case.user_id.address_id.email,
                 emails,
-                '['+str(case.id)+'] '+case.name, 
+                '['+str(case.id)+'] '+case.name,
                 self.format_body(body),
-                reply_to=case.section_id.reply_to, 
+                reply_to=case.section_id.reply_to,
                 tinycrm=str(case.id)
             )
         return True
