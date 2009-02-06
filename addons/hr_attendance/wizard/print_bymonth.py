@@ -31,15 +31,26 @@ _date_form = '''<?xml version="1.0"?>
 </form>'''
 
 _date_fields = {
-    'month' : {'string' : 'Month', 'type' : 'selection', 'selection' : [(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'required':True },
-    'year' : {'string' : 'Year', 'type' : 'integer', 'required':True, 'default' : lambda *a: time.gmtime()[0]},
+    'month' : {
+               'string' : 'Month',
+               'type' : 'selection',
+               'selection' : [(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
+               'required':True,
+               'default' : lambda * a: time.gmtime()[1]
+               },
+    'year' : {
+              'string' : 'Year',
+              'type' : 'integer',
+              'required':True,
+              'default' : lambda * a: time.gmtime()[0]
+              },
 }
 
 class wiz_bymonth(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Timesheet'),('end','Cancel')]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print', 'Print Timesheet'), ('end', 'Cancel')]}
         },
         'print': {
             'actions': [],

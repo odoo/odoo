@@ -167,8 +167,8 @@ your own chart of account.
             <field name="type">sale</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','receivable')]"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','receivable')]"/>
+            <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
         <record id="refund_sales_journal" model="account.journal">
@@ -178,8 +178,8 @@ your own chart of account.
             <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','receivable')]"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','receivable')]"/>
+            <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
+            <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
 
@@ -189,8 +189,8 @@ your own chart of account.
             <field name="type">purchase</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','payable')]"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','payable')]"/>
+            <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
         <record id="refund_expenses_journal" model="account.journal">
@@ -200,8 +200,8 @@ your own chart of account.
             <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','payable')]"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','payable')]"/>
+            <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
+            <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
 

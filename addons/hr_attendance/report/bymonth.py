@@ -65,7 +65,7 @@ class report_custom(report_rml):
                 where att.name between %s and %s and emp.id = %s
                 order by att.name
                 '''
-                cr.execute(sql, (today, tomor, employee_id))
+                cr.execute(sql, (today.strftime('%Y-%m-%d %H:%M:%S'), tomor.strftime('%Y-%m-%d %H:%M:%S'), employee_id))
                 attendences = cr.dictfetchall()
                 wh = 0
                 # Fake sign ins/outs at week ends, to take attendances across week ends into account
