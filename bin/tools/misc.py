@@ -744,6 +744,7 @@ def get_languages():
         'it_IT': u'Italian / Italiano',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'nl_NL': u'Dutch / Nederlands',
+        'nl_BE': u'Dutch (Belgium) / Nederlands (Belgïe)',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portugese (BR) / português (BR)',
         'pt_PT': u'Portugese / português',
