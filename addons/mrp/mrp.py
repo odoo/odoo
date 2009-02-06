@@ -249,6 +249,7 @@ class mrp_bom(osv.osv):
                     prop+=1
             if (prop>max_prop) or ((max_prop==0) and not result):
                 result = bom.id
+                max_prop = prop
         return result
 
     def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=0):
