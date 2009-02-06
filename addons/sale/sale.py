@@ -583,7 +583,8 @@ class sale_order(osv.osv):
                         'product_id': line.product_id.id,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
-                        'product_uos_qty': line.product_uos_qty,
+                        'product_uos_qty': (line.product_uos and line.product_uos_qty)\
+                                or line.product_uom_qty,
                         'product_uos': (line.product_uos and line.product_uos.id)\
                                 or line.product_uom.id,
                         'location_id': order.shop_id.warehouse_id.lot_stock_id.id,

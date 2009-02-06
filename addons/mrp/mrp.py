@@ -854,7 +854,8 @@ class mrp_procurement(osv.osv):
     #
     def _quantity_compute_get(self, cr, uid, proc, context={}):
         if proc.product_id.type=='product':
-            return proc.move_id.product_uos_qty
+            if proc.move_id.product_uos:
+                return proc.move_id.product_uos_qty
         return False
 
     def _uom_compute_get(self, cr, uid, proc, context={}):
