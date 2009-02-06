@@ -42,12 +42,6 @@ DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
 HM_FORMAT = '%H:%M:%S'
 
-if not hasattr(locale, 'nl_langinfo'):
-    locale.nl_langinfo = lambda *a: '%x'
-
-if not hasattr(locale, 'D_FMT'):
-    locale.D_FMT = None
-
 rml_parents = {
     'tr':1,
     'li':1,
@@ -144,26 +138,8 @@ class _format(object):
         self.object = object
         self._field = field
         self.name = name
-#        lc, encoding = locale.getdefaultlocale()
-#        if not encoding:
-#            encoding = 'UTF-8'
-#        if encoding == 'utf':
-#            encoding = 'UTF-8'
-#        if encoding == 'cp1252':
-#            encoding= '1252'
         lang = self.object._context.get('lang', 'en_US') or 'en_US'
         self.lang_obj = pool_lang.browse(cr, uid,pool_lang.search(cr, uid,[('code','=',lang)])[0])
-
-#        try:
-#            if os.name == 'nt':
-#                locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
-#            else:
-#                locale.setlocale(locale.LC_ALL,str( lang + '.' + encoding))
-#        except Exception:
-#            netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
-#                    'report %s: unable to set locale "%s"' % (self.name,
-#                        self.object._context.get('lang', 'en_US') or 'en_US'))
-
 
 class _float_format(float, _format):
 
@@ -178,14 +154,6 @@ class _float_format(float, _format):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
         return self.val
 
-#        if not self.object._context:
-#            return locale.format('%f', self.name, True)
-#        digit = 2
-#        if hasattr(self._field, 'digits') and self._field.digits:
-#            digit = self._field.digits[1]
-#        return locale.format('%.' + str(digit) + 'f', self.name, True)
-
-
 class _int_format(int, _format):
     def __init__(self,value):
         super(_int_format, self).__init__()
@@ -195,7 +163,6 @@ class _int_format(int, _format):
         if hasattr(self,'lang_obj'):
             return self.lang_obj.format('%.d', self.name, True)
         return self.val
-#        return locale.format('%d', self.name, True)
 
 
 class _date_format(str, _format):
@@ -209,17 +176,6 @@ class _date_format(str, _format):
                 date = mx.DateTime.strptime(self.name,DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
-#        if not self.object._context:
-#            return self.name
-#
-#        if self.name:
-#            try :
-#                datedata = time.strptime(self.name, DT_FORMAT)
-#                return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
-#                    datedata)
-#            except :
-#                pass
-#        return ''
 
 class _dttime_format(str, _format):
     def __init__(self,value):
