@@ -156,7 +156,7 @@ class char(_column):
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
         if isinstance(symb, str):
-            u_symb = unicode(symb.replace('\xa0', '\xc2\xa0'), 'utf8')
+            u_symb = unicode(symb, 'utf8')
         elif isinstance(symb, unicode):
             u_symb = symb
         else:
