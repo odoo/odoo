@@ -75,7 +75,7 @@ class report_custom(report_rml):
 				order by att.name
 				'''
 				for idx in range(7):
-					cr.execute(sql, (monday, monday + DateTime.RelativeDateTime(days=idx+1), employee_id))
+					cr.execute(sql, (monday.strftime('%Y-%m-%d %H:%M:%S'), (monday + DateTime.RelativeDateTime(days=idx+1)).strftime('%Y-%m-%d %H:%M:%S'), employee_id))
 					attendances = cr.dictfetchall()
 					week_wh = {}
 	                # Fake sign ins/outs at week ends, to take attendances across week ends into account
