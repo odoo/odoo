@@ -272,8 +272,8 @@ class configmanager(object):
         if self.options['db_password']:
             if sys.platform == 'win32' and not self.options['db_host']:
                 self.options['db_host'] = 'localhost'
-            if self.options['db_host']:
-                self._generate_pgpassfile()
+            #if self.options['db_host']:
+            #    self._generate_pgpassfile()
 
         if opt.save:
             self.save()
