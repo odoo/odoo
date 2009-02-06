@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:42:18+0000\n"
-"PO-Revision-Date: 2009-01-28 00:42:18+0000\n"
+"POT-Creation-Date: 2009-02-06 15:03:26+0000\n"
+"PO-Revision-Date: 2009-02-06 15:03:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -247,6 +247,7 @@ msgstr "基础价格表"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_main_product
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -847,9 +848,9 @@ msgid "Rate"
 msgstr ""
 
 #. module: product
-#: wizard_field:product.price_list,init,qty1:0
-msgid "Quantity-1"
-msgstr ""
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "产品价格表s项"
 
 #. module: product
 #: code:addons/product/report/product_pricelist.py:0
@@ -1249,9 +1250,9 @@ msgid "%d units"
 msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "产品价格表s项"
+#: view:product.product:0
+msgid "Codes"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -1571,6 +1572,11 @@ msgstr ""
 #. module: product
 #: help:product.template,produce_delay:0
 msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
+msgstr ""
+
+#. module: product
+#: wizard_field:product.price_list,init,qty1:0
+msgid "Quantity-1"
 msgstr ""
 
 #. module: product

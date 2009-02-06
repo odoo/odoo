@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,12 +80,6 @@ msgid "Friday"
 msgstr "Freitag"
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr "Das Sign-Out Datum muss in der Vergangenheit sein"
-
-#. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
 msgstr "Unternehmensbereich"
@@ -108,12 +102,6 @@ msgid "Employee Hierarchy"
 msgstr "Mitarbeiter Hierachie"
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "UserError"
-msgstr "BenutzerFehler"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -129,21 +117,9 @@ msgid "Female"
 msgstr "Weiblich"
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "Das Sign-In Datum muss in der Vergangenheit sein"
-
-#. module: hr
 #: view:hr.timesheet.group:0
 msgid "Working Time Category"
 msgstr "Arbeitszeiten Kategorie"
-
-#. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -164,7 +140,7 @@ msgstr "Telefon Firma"
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr ""
+msgstr "(Unter-) Kategorien"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -222,7 +198,7 @@ msgstr "Geschieden"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Oberkategorie"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
@@ -311,12 +287,6 @@ msgid "Categories structure"
 msgstr "Kategorien"
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr "Ein Sign - Out muss nach einem Sign - In Vorgang erfolgen !"
-
-#. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
 msgstr "Wochentag"
@@ -324,7 +294,7 @@ msgstr "Wochentag"
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Birthday"
-msgstr ""
+msgstr "Geburtstag"
 
 #. module: hr
 #: field:hr.employee,active:0
@@ -339,7 +309,7 @@ msgstr "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definier
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract Process"
-msgstr ""
+msgstr "Prozess Mitarbeiteranstellung"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -425,6 +395,11 @@ msgid "Employees Categories"
 msgstr "Mitarbeiter Kategorien"
 
 #. module: hr
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
+msgstr ""
+
+#. module: hr
 #: view:hr.department:0
 msgid "department"
 msgstr "Abteilung"
@@ -464,7 +439,7 @@ msgstr "Abteilung Bezeichnung"
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "untergeordnete Abteilungen"
 
 #. module: hr
 #: view:hr.employee:0

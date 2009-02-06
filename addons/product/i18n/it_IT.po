@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:47:34+0000\n"
-"PO-Revision-Date: 2009-01-28 00:47:34+0000\n"
+"POT-Creation-Date: 2009-02-06 15:08:37+0000\n"
+"PO-Revision-Date: 2009-02-06 15:08:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgstr "Larghezza"
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
 msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
-msgstr ""
+msgstr "Impostare un modello se questa regola si applica solo ad un modello di prodotto. Lasciare vuoto per tutti i prodotti"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -144,7 +144,7 @@ msgstr "Prezzo Cliente"
 #. module: product
 #: field:product.template,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Azienda"
 
 #. module: product
 #: field:product.template,rental:0
@@ -247,6 +247,7 @@ msgstr "In altro Listino"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_main_product
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -421,7 +422,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
-msgstr ""
+msgstr "Accessori"
 
 #. module: product
 #: field:product.supplierinfo,sequence:0
@@ -447,7 +448,7 @@ msgstr "Stampa"
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
 msgid "Supplier Info"
-msgstr ""
+msgstr "Informazioni fornitore"
 
 #. module: product
 #: field:product.ul,type:0
@@ -697,7 +698,7 @@ msgstr "Tipo Misura"
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
@@ -847,9 +848,9 @@ msgid "Rate"
 msgstr "Velocità"
 
 #. module: product
-#: wizard_field:product.price_list,init,qty1:0
-msgid "Quantity-1"
-msgstr ""
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "Oggetto Listino Prodotto"
 
 #. module: product
 #: code:addons/product/report/product_pricelist.py:0
@@ -1249,9 +1250,9 @@ msgid "%d units"
 msgstr "%d unità"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Oggetto Listino Prodotto"
+#: view:product.product:0
+msgid "Codes"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -1550,7 +1551,7 @@ msgstr "ATX Mid-size Tower"
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Delay"
-msgstr ""
+msgstr "Ritardo Consegna"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -1573,6 +1574,11 @@ msgstr "Prezzo di Vendita"
 #: help:product.template,produce_delay:0
 msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
 msgstr "Tempo medio di produzione per questo prodotto. Questo vale esclusivamente per l'ordine di produzione o, in caso di un prodotto multilivello o composto, per il livello di questo prodotto. Diverse tempistiche verranno sommate per tutti i livelli e gli ordini d'acquisto"
+
+#. module: product
+#: wizard_field:product.price_list,init,qty1:0
+msgid "Quantity-1"
+msgstr ""
 
 #. module: product
 #: field:product.packaging,length:0

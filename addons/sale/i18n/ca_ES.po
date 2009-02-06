@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:41:01+0000\n"
-"PO-Revision-Date: 2009-01-28 00:41:01+0000\n"
+"POT-Creation-Date: 2009-02-06 15:02:11+0000\n"
+"PO-Revision-Date: 2009-02-06 15:02:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -148,12 +148,6 @@ msgstr "Moviments d'inventari"
 #: view:sale.order.line:0
 msgid "Manual Designation"
 msgstr "Designació manual"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You have to select a partner in the sale form !\nPlease set one partner before choosing a product."
-msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -313,6 +307,12 @@ msgstr ""
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "Adreça d'enviament"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -586,7 +586,7 @@ msgstr "Línia de la comanda"
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Packing Default Policy"
-msgstr "Política d'empaquetat per defecte"
+msgstr "Política de enviament per defecte"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
@@ -643,7 +643,7 @@ msgstr "Facturat"
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Avança factura"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -657,6 +657,12 @@ msgid "Uninvoiced Lines"
 msgstr "Línies no facturades"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,order_policy:0
 msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 "  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
@@ -668,7 +674,7 @@ msgstr ""
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 msgid "Sales Process"
-msgstr ""
+msgstr "Procés de vendes"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -734,7 +740,7 @@ msgstr "Proveïment de venda"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr "Configureu la logística de les comandes de venda"
+msgstr "Configura logística comanda de venda"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -749,7 +755,7 @@ msgstr "Posició"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Packing Policy"
-msgstr "Política d'empaquetat"
+msgstr "Política d'enviament"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -793,9 +799,9 @@ msgid "Sale Order"
 msgstr "Comanda de venda"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Payment Terms"
-msgstr "Terminis de pagament"
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr "Tarifes de venda"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -921,7 +927,7 @@ msgstr "Preu un."
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posició fiscal"
 
 #. module: sale
 #: rml:sale.order:0
@@ -967,6 +973,12 @@ msgstr ""
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
 msgstr "Al confirmar l'albarà es converteix en una ordre d'enviament. Això es pot realitzar fent clic en el botó 'Valida'."
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1137,12 +1149,6 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You can not cancel a sale order line that has already been invoiced !"
-msgstr "No es pot cancel·lar una línia de la comanda de venda que ja està facturada!"
-
-#. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
 msgstr "Tarifes de compra"
@@ -1198,7 +1204,7 @@ msgstr "UdM del producte"
 #. module: sale
 #: help:sale.config.picking_policy,step:0
 msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
-msgstr "Per defecte, OpenERP pot gestionar rutes complexes i rutes de productes en el vostre magatzem i en les ubicacions d'empreses. Això configurarà els mètodes més comuns i senzills per enviar productes al client en una o dues operacions realitzades pel treballador."
+msgstr "Por defecte, OpenERP pot gestionar rutes complexes i rutes de productes en el vostre magatzem i en les ubicacions d'empreses. Això configurarà els mètodes més comuns i senzills per enviar productes al client en una o dues operacions realitzades pel treballador."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1211,10 +1217,9 @@ msgid "Order"
 msgstr "Comanda"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "No Partner !"
-msgstr ""
+#: rml:sale.order:0
+msgid "Payment Terms"
+msgstr "Terminis de pagament"
 
 #. module: sale
 #: view:sale.order:0
@@ -1230,11 +1235,6 @@ msgstr "Retard de lliurament"
 #: view:sale.order:0
 msgid "Related invoices"
 msgstr "Factures relacionades"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Tarifes de venda"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -1286,7 +1286,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "Factura des d'albarans"
+msgstr "Factura des de albarans"
 
 #. module: sale
 #: view:sale.order:0

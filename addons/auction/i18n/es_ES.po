@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:53:54+0000\n"
-"PO-Revision-Date: 2009-01-28 00:53:54+0000\n"
+"POT-Creation-Date: 2009-02-06 15:14:47+0000\n"
+"PO-Revision-Date: 2009-02-06 15:14:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -452,7 +452,7 @@ msgstr "Vendido"
 #. module: auction
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -660,7 +660,11 @@ msgid "This module provides functionality to \n"
 "     Manage bids, track of sold, paid and unpaid objects.\n"
 "     Delivery Management. \n"
 "    "
-msgstr ""
+msgstr "Este módulo proporciona funcionalidad para \n"
+"     gestionar artistas, artículos, vendedores, compradores y subastas.\n"
+"     Gestionar pujas, rastreo de ventas y objetos pagados y no pagados.\n"
+"     Gestión de la distribución. \n"
+"    "
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -738,7 +742,7 @@ msgstr "Precio retirado"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
 msgid "Seller Costs1"
-msgstr ""
+msgstr "Costes de vendedor1"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -784,7 +788,7 @@ msgstr "Cat."
 #. module: auction
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "¡Error! No se pueden crear cuentas recursivas."
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
@@ -1204,7 +1208,7 @@ msgstr "Fecha de creación"
 #: code:addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "¡La conexión a WWW.Auction-in-Europe.com ha fallado!"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
@@ -1433,7 +1437,7 @@ msgstr ", ID"
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
 msgid "Auction module"
-msgstr ""
+msgstr "Módulo de subastas"
 
 #. module: auction
 #: field:auction.bid_line,auction:0
@@ -1655,7 +1659,7 @@ msgstr "Total:"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax2
 msgid "TVA1"
-msgstr ""
+msgstr "IVA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1977,7 +1981,7 @@ msgstr "Primer número"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
 msgid "Droit d'auteur"
-msgstr ""
+msgstr "Derechos de autor"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_view2
@@ -2229,6 +2233,11 @@ msgid "Deposit Costs"
 msgstr "Costes de depósito"
 
 #. module: auction
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: auction
 #: selection:auction.dates,state:0
 #: selection:auction.lots,state:0
 #: selection:report.auction.adjudication,state:0
@@ -2334,7 +2343,7 @@ msgstr "Fecha subasta:"
 #: code:addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: auction
 #: field:auction.lots,ach_inv_id:0
@@ -2359,7 +2368,7 @@ msgstr "Artista / Autor"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
 msgid "TVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.total_result1

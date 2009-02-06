@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:41:01+0000\n"
-"PO-Revision-Date: 2009-01-28 00:41:01+0000\n"
+"POT-Creation-Date: 2009-02-06 15:02:11+0000\n"
+"PO-Revision-Date: 2009-02-06 15:02:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -277,7 +277,7 @@ msgstr "Prioritat màxima"
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
 #: wizard_field:crm.case.section.menu,design_menu,menu17_option:0
 msgid "New "
-msgstr ""
+msgstr "Nou "
 
 #. module: crm
 #: view:res.partner.events:0
@@ -365,7 +365,26 @@ msgid "The generic Open ERP Customer Relationship Management\n"
 "\n"
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
-msgstr ""
+msgstr "﻿El sistema genèric de Gestió de les Relacions amb el Client (CRM)\n"
+"d'OpenERP permet a un grup de gent gestionar de forma intel·ligent i\n"
+"eficaç iniciatives, oportunitats, tasques, qüestions, peticions, errors,\n"
+"campanyes comercials, reclamacions, etc. Gestiona tasques clau com\n"
+"comunicació, identificació, priorització, assignació, resolució i\n"
+"notificació.\n"
+"\n"
+"OpenERP assegura que tots els casos són seguits amb èxit pels usuaris,\n"
+"clients i proveïdors. Podeu enviar automàticament recordatoris i\n"
+"notificacions, intensificar la petició, disparar mètodes específics i\n"
+"moltes altres accions basades en les vostres regles pròpies d'empresa.\n"
+"\n"
+"﻿La cosa més important sobre aquest sistema és que els usuaris no\n"
+"necessiten fer res especial. Poden enviar només un correu electrònic al\n"
+"registre de peticions. OpenERP s'encarregarà d'agrair-li el seu missatge,\n"
+"dirigir-lo automàticament a les persones apropiades, i assegurar-se que\n"
+"tota la futura correspondència arriba al lloc apropiat.\n"
+"\n"
+"El mòdul de CRM disposa d'una porta d'enllaç amb el correu electrònic per\n"
+"a la sincronització entre correus electrònics i OpenERP."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu5:0
@@ -936,7 +955,7 @@ msgstr "Heu d'indicar un correu electrònic d'empresa per utilitzar aquesta acci
 #. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
 msgid "Customer & Supplier Relationship Management"
-msgstr ""
+msgstr "Gestió de relacions amb clients & proveïdors"
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
@@ -1013,6 +1032,12 @@ msgid "Exclusive"
 msgstr "Exclusiu"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Included Answers :"
 msgstr "Respostes incloses:"
@@ -1056,7 +1081,7 @@ msgstr "Nom menú base"
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Sections"
-msgstr ""
+msgstr "Seccions filles"
 
 #. module: crm
 #: field:crm.case,date:0
@@ -1196,7 +1221,7 @@ msgstr "Codi de secció"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuari responsable"
 
 #. module: crm
 #: constraint:ir.model:0
@@ -1321,7 +1346,7 @@ msgstr "Import de venda"
 #. module: crm
 #: help:crm.case.section,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
-msgstr ""
+msgstr "L'adreça de correu electrònic que es posarà a 'Respondre A' a tots els correus electrònics enviats per OpenERP per als casos d'aquesta secció."
 
 #. module: crm
 #: view:crm.case.rule:0

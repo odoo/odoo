@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -148,12 +148,6 @@ msgstr "Warenbewegung"
 #: view:sale.order.line:0
 msgid "Manual Designation"
 msgstr "Manuelle Rechnungshinweise"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You have to select a partner in the sale form !\nPlease set one partner before choosing a product."
-msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -313,6 +307,12 @@ msgstr ""
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "Lieferadresse"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -591,7 +591,7 @@ msgstr "Verpackung Standard"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Manages the delivery and invoicing progress"
-msgstr "Verwaltet den Liefer und Faktuerings Fortschritt"
+msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
@@ -643,7 +643,7 @@ msgstr "Abgerechnet"
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Anzahlungsrechnung"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -657,6 +657,12 @@ msgid "Uninvoiced Lines"
 msgstr "Abzurechnende Aufträge"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,order_policy:0
 msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 "  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
@@ -668,7 +674,7 @@ msgstr ""
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 msgid "Sales Process"
-msgstr ""
+msgstr "Verkaufs Prozess"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -793,9 +799,9 @@ msgid "Sale Order"
 msgstr "Verkaufsauftrag"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Payment Terms"
-msgstr "Zahlungsbedingungen"
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr "Preisliste Verkauf"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -921,7 +927,7 @@ msgstr "Preis/UoM"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Steuerliche Position"
 
 #. module: sale
 #: rml:sale.order:0
@@ -945,7 +951,7 @@ msgstr "Rechnung"
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
-msgstr "Aktion Auslassen"
+msgstr "Abbrechen"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -967,6 +973,12 @@ msgstr ""
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
 msgstr "Bestätigung des Packauftrags verschiebt diesen zu den Auslieferungsaufträgen. Dieses kann durch Klick auf  \"Bestätigen\" (Validate) vorgenommen werden."
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1137,12 +1149,6 @@ msgid "Customer"
 msgstr "Kunde"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You can not cancel a sale order line that has already been invoiced !"
-msgstr "Sie können keine Rechnung stornieren, die bereits abgerechnet wurde !"
-
-#. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
 msgstr "Preisliste Einkauf"
@@ -1211,10 +1217,9 @@ msgid "Order"
 msgstr "Auftrag"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "No Partner !"
-msgstr ""
+#: rml:sale.order:0
+msgid "Payment Terms"
+msgstr "Zahlungsbedingungen"
 
 #. module: sale
 #: view:sale.order:0
@@ -1230,11 +1235,6 @@ msgstr "Lieferzeit"
 #: view:sale.order:0
 msgid "Related invoices"
 msgstr "bezugnehmende Rechnungen"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Preisliste Verkauf"
 
 #. module: sale
 #: field:sale.shop,name:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
-"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
+"POT-Creation-Date: 2009-02-06 15:05:22+0000\n"
+"PO-Revision-Date: 2009-02-06 15:05:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -277,7 +277,7 @@ msgstr "Hoogste Prioriteit"
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
 #: wizard_field:crm.case.section.menu,design_menu,menu17_option:0
 msgid "New "
-msgstr ""
+msgstr "Nieuw "
 
 #. module: crm
 #: view:res.partner.events:0
@@ -365,7 +365,14 @@ msgid "The generic Open ERP Customer Relationship Management\n"
 "\n"
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
-msgstr ""
+msgstr "Het generieke OpenERP CRM systeem laat een groep mensen op intelligente wijze leads, kansen, taken, problemen, verzoeken, bugs, campagnes, claims e.d. beheren. \n"
+"Het regelt zaken als communicatie, identificatie, prioritisering, toewijzing, oplossen en signaleren.\n"
+"\n"
+"OpenERP zorgt ervor dat alle dossiers correct worden doorlopen door gebruikers, klanten en leveranciers. Het kan automatisch herinneringen sturen, verzoeken escaleren, specifiek procedures triggeren en een niet te nomen aantal andere acties gebaseerd op de geldende regels binnen uw onderneming.\n"
+"\n"
+"Het beste van dit systeem is dat gebruikers er niets speciaals hoeven te doen. Ze kunnen email verzenden via de verzoekenvolger. OpenERP zorgt ervoor dat ze bedankt worden voor hun bericht en dat het bericht automatisch daar de juiste medewerker/afdeling wordt doorgestuurd. OpenERP zorgt erook voor dat alle toekomstige correspondentie op de juiste plaats terecht komt.\n"
+"\n"
+"De CRM module heeft een e-mail gateway voor de synchronisatie van mails en OpenERP."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu5:0
@@ -936,7 +943,7 @@ msgstr "Er moet een emailadres van de relatie worden ingegeven om deze actie te 
 #. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
 msgid "Customer & Supplier Relationship Management"
-msgstr ""
+msgstr "Customer & Supplier Relationship Management"
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
@@ -1013,6 +1020,12 @@ msgid "Exclusive"
 msgstr "Exclusief"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Included Answers :"
 msgstr "Inclusief Antwoorden:"
@@ -1056,7 +1069,7 @@ msgstr "Naam basismenu"
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Sections"
-msgstr ""
+msgstr "Onderliggende secties"
 
 #. module: crm
 #: field:crm.case,date:0
@@ -1196,7 +1209,7 @@ msgstr "Sectiecode"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Verantwoordelijke gebruiker"
 
 #. module: crm
 #: constraint:ir.model:0
@@ -1321,7 +1334,7 @@ msgstr "Verkoophoeveelheid"
 #. module: crm
 #: help:crm.case.section,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
-msgstr ""
+msgstr "Het email adres voor in het 'Antwoorden-Aan' veld van alle emails die verzonden worden over dossiers in deze sectie."
 
 #. module: crm
 #: view:crm.case.rule:0

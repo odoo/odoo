@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:56:04+0000\n"
-"PO-Revision-Date: 2009-01-28 00:56:04+0000\n"
+"POT-Creation-Date: 2009-02-06 15:16:58+0000\n"
+"PO-Revision-Date: 2009-02-06 15:16:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -148,12 +148,6 @@ msgstr "Рух запасів"
 #: view:sale.order.line:0
 msgid "Manual Designation"
 msgstr "Ручне позначення"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You have to select a partner in the sale form !\nPlease set one partner before choosing a product."
-msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -313,6 +307,12 @@ msgstr ""
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "Адреса доставки"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -657,6 +657,12 @@ msgid "Uninvoiced Lines"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,order_policy:0
 msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 "  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
@@ -793,9 +799,9 @@ msgid "Sale Order"
 msgstr "Заявка на продаж"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Payment Terms"
-msgstr "Терміни Оплати"
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -969,6 +975,12 @@ msgid "Confirming the packing list moves them to delivery order. This can be don
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
+msgstr ""
+
+#. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
 msgstr ""
@@ -1137,12 +1149,6 @@ msgid "Customer"
 msgstr "Клієнт"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You can not cancel a sale order line that has already been invoiced !"
-msgstr ""
-
-#. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
 msgstr ""
@@ -1211,10 +1217,9 @@ msgid "Order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "No Partner !"
-msgstr ""
+#: rml:sale.order:0
+msgid "Payment Terms"
+msgstr "Терміни Оплати"
 
 #. module: sale
 #: view:sale.order:0
@@ -1230,11 +1235,6 @@ msgstr "Затримка доставки"
 #: view:sale.order:0
 msgid "Related invoices"
 msgstr "Пов'язані інвойси"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr ""
 
 #. module: sale
 #: field:sale.shop,name:0

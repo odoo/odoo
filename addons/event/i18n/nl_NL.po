@@ -6,14 +6,338 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
-"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
+"POT-Creation-Date: 2009-02-06 15:05:22+0000\n"
+"PO-Revision-Date: 2009-02-06 15:05:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: event
+#: field:event.event,date_end:0
+#: field:report.event.registration,date_end:0
+msgid "Ending date"
+msgstr "Einddatum"
+
+#. module: event
+#: field:event.event,register_min:0
+msgid "Minimum Registrations"
+msgstr "Minimum Registraties"
+
+#. module: event
+#: field:event.event,mail_registr:0
+msgid "Registration Email"
+msgstr ""
+
+#. module: event
+#: model:crm.case.section,name:event.event_0_crm_case_section
+msgid "Concert of Bon Jovi"
+msgstr ""
+
+#. module: event
+#: field:event.event,mail_confirm:0
+msgid "Confirmation Email"
+msgstr ""
+
+#. module: event
+#: model:ir.model,name:event.model_event_registration
+msgid "Event Registration"
+msgstr "Gebeurtenis Registratie"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.event_reg_invoice
+msgid "Make Invoice"
+msgstr "Maak factuur"
+
+#. module: event
+#: field:report.event.type.registration,draft_state:0
+msgid "Draft Registrations"
+msgstr "Concept Registraties"
+
+#. module: event
+#: view:report.event.registration:0
+msgid "Event on Registration"
+msgstr "Gebeurtenis voor Registratie"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,end:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: event
+#: field:event.event,mail_auto_confirm:0
+msgid "Mail Auto Confirm"
+msgstr "Email Automatische Bevestiging"
+
+#. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Operakaartje"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Confirm Event"
+msgstr "Gebeurtenis Bevestigen"
+
+#. module: event
+#: model:crm.case.section,name:event.event_1_crm_case_section
+msgid "Opera of Verdi"
+msgstr ""
+
+#. module: event
+#: field:report.event.registration,draft_state:0
+msgid "Draft Registration"
+msgstr "Concept Registratie"
+
+#. module: event
+#: wizard_view:event.reg_make_invoice,init:0
+msgid "Create Invoices"
+msgstr "Facturen aanmaken"
+
+#. module: event
+#: view:event.registration:0
+msgid "Extra Info"
+msgstr "Extra info"
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration"
+msgstr "Registratie"
+
+#. module: event
+#: field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
+msgid "Event type"
+msgstr "Soort Gebeurtenis"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.model,name:event.model_event_event
+#: model:ir.module.module,shortdesc:event.module_meta_information
+#: field:report.event.registration,name:0
+msgid "Event"
+msgstr "Gebeurtenis"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "Registration Confirmation"
+msgstr ""
+
+#. module: event
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Ongeldige XML voor overzicht"
+
+#. module: event
+#: field:event.event,register_current:0
+#: model:ir.actions.act_window,name:event.action_registration_confirm
+#: model:ir.ui.menu,name:event.menu_action_registration_confirm
+msgid "Confirmed Registrations"
+msgstr "Bevestigde Registraties"
+
+#. module: event
+#: field:event.event,mail_auto_registr:0
+msgid "Mail Auto Register"
+msgstr "Automatische mail Registratie"
+
+#. module: event
+#: view:event.registration:0
+msgid "Badge"
+msgstr "Badge"
+
+#. module: event
+#: field:event.event,section_id:0
+msgid "Case section"
+msgstr "Dossier Sectie"
+
+#. module: event
+#: field:event.registration,tobe_invoiced:0
+msgid "To be Invoiced"
+msgstr "Te factureren"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_event
+msgid "All Events"
+msgstr "Alle Gebeurtenissen"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_report_event
+msgid "Reporting"
+msgstr "Rapportering"
+
+#. module: event
+#: view:event.registration:0
+msgid "Cancel Registration"
+msgstr "Registratie Annuleren"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_event_categories
+msgid "Events by Categories"
+msgstr "Gebeurtenissen per Categorieën"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "The event limit is reached. What do you want to do?"
+msgstr ""
+
+#. module: event
+#: field:report.event.type.registration,confirm_state:0
+msgid "Confirm Registrations"
+msgstr "Bevestig Registraties"
+
+#. module: event
+#: view:event.registration:0
+msgid "References"
+msgstr "Referenties"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type_registration
+#: model:ir.ui.menu,name:event.menu_report_event_type_registration
+#: view:report.event.type.registration:0
+msgid "Registration By Event Types"
+msgstr "Registratie per Soort Gebeurtenis"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_config
+msgid "Configuration"
+msgstr "Instellingen"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Dates"
+msgstr "Data"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,confirm:0
+msgid "Confirm Anyway"
+msgstr ""
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Fout: UOS moet in een andere categorie staan dan de maateenheid"
+
+#. module: event
+#: view:event.event:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration Invoiced"
+msgstr "Regitratie Gefactureerd"
+
+#. module: event
+#: field:report.event.type.registration,nbevent:0
+msgid "Number Of Events"
+msgstr "Aantal Gebeurtenissen"
+
+#. module: event
+#: view:event.event:0
+msgid "Cancel Event"
+msgstr "Annuleer Gebeurtenis"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rej_reason:0
+msgid "Error Messages"
+msgstr "Foutmeldingen"
+
+#. module: event
+#: view:event.event:0
+msgid "Mailing"
+msgstr "Mailing"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Concertkaartje"
+
+#. module: event
+#: field:event.event,register_prospect:0
+#: model:ir.actions.act_window,name:event.action_registration_draft
+#: model:ir.ui.menu,name:event.menu_action_registration_draft
+msgid "Unconfirmed Registrations"
+msgstr "Onbevestigde Registraties"
+
+#. module: event
+#: field:event.registration,partner_invoice_id:0
+msgid "Partner Invoiced"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Communication history"
+msgstr "Communicatie Historie"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Canceled"
+msgstr "Geannuleerd"
+
+#. module: event
+#: view:event.event:0
+msgid "Event Done"
+msgstr "Gebeurtenis Afgerond"
+
+#. module: event
+#: field:event.registration,badge_name:0
+msgid "Badge Name"
+msgstr "Badge Naam"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_registration
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+msgid "Events On Registrations"
+msgstr "Gebeurtenissen bij Registraties"
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_created:0
+msgid "Invoice Created"
+msgstr "Factuur gemaakt"
+
+#. module: event
+#: view:event.event:0
+msgid "Statistics"
+msgstr "Statistieken"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Draft"
+msgstr "Concept"
+
+#. module: event
+#: view:event.event:0
+msgid "Event description"
+msgstr "Omschrijving Gebeurtenis"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_type_registration
+msgid "Event type on registration"
+msgstr "Soort Gebeurtenis bij Registratie"
 
 #. module: event
 #: model:ir.module.module,description:event.module_meta_information
@@ -30,5 +354,265 @@ msgid "Organization and management of events.\n"
 "    - You can access predefined reports about number of registration per event or per event category in :\n"
 "                Events \ Reporting\n"
 ""
+msgstr ""
+
+#. module: event
+#: field:event.registration,event_id:0
+msgid "Event Related"
+msgstr "Gerelateerde Gebeurtenis"
+
+#. module: event
+#: model:crm.case.section,name:event.case_section_event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_event_view
+msgid "Events"
+msgstr "Gebeurtenissen"
+
+#. module: event
+#: field:event.registration,nb_register:0
+msgid "Number of Registration"
+msgstr "Aantal Registraties"
+
+#. module: event
+#: view:event.event:0
+#: field:event.event,state:0
+#: view:event.registration:0
+msgid "Status"
+msgstr "Status"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_categories
+msgid "Events by section"
+msgstr "Gebeurtenissen per sectie"
+
+#. module: event
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_registration
+msgid "All Registrations"
+msgstr "Alle Registraties"
+
+#. module: event
+#: help:event.event,mail_auto_registr:0
+msgid "Check this box if you want to use the automatic mailing for new registration"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Set To Draft"
+msgstr "Zet in Concept"
+
+#. module: event
+#: view:event.registration:0
+#: model:ir.actions.wizard,name:event.event_confirm_registration
+#: field:report.event.registration,confirm_state:0
+msgid "Confirm Registration"
+msgstr "Registratie Bevestigen"
+
+#. module: event
+#: view:event.registration:0
+msgid "History"
+msgstr "Historie"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Types of Events"
+msgstr "Soorten Gebeurtenissen"
+
+#. module: event
+#: field:event.registration,contact_id:0
+msgid "Partner Contact"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Confirmation Email"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+#: view:event.registration:0
+msgid "General"
+msgstr "Algemeen"
+
+#. module: event
+#: view:event.registration:0
+msgid "Send Reminder"
+msgstr "Verzend Herinnering"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Done"
+msgstr "Voltooid"
+
+#. module: event
+#: field:event.event,date_begin:0
+#: field:report.event.registration,date_begin:0
+msgid "Beginning date"
+msgstr "Startdatum"
+
+#. module: event
+#: field:event.registration,invoice_id:0
+msgid "Invoice"
+msgstr "Factuur"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_registration
+msgid "Events on registrations"
+msgstr "Gebeurtenissen per registraties"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,end:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,open:0
+msgid "Open"
+msgstr "Openen"
+
+#. module: event
+#: field:event.registration,badge_title:0
+msgid "Badge Title"
+msgstr "Badge Titel"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_new_event_form
+#: model:ir.ui.menu,name:event.menu_event_new_event
+msgid "New event"
+msgstr "Nieuwe Gebeurtenis"
+
+#. module: event
+#: field:event.registration,unit_price:0
+msgid "Unit Price"
+msgstr "Prijseenheid"
+
+#. module: event
+#: model:crm.case.section,name:event.event_2_crm_case_section
+msgid "Conference on ERP Buisness"
+msgstr ""
+
+#. module: event
+#: field:event.registration,badge_partner:0
+msgid "Badge Partner"
+msgstr "Badge Relatie"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_confirm
+#: model:ir.ui.menu,name:event.menu_event_event_confirm
+msgid "Confirmed Events"
+msgstr "Bevestigde Relaties"
+
+#. module: event
+#: constraint:crm.case.section:0
+msgid "Error ! You can not create recursive sections."
+msgstr ""
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type"
+msgstr "Soort"
+
+#. module: event
+#: help:event.event,mail_registr:0
+msgid "This email will be sent when someone subscribes to the event."
+msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Conferentiekaartje"
+
+#. module: event
+#: field:event.registration,case_id:0
+msgid "Case"
+msgstr "Zaak"
+
+#. module: event
+#: view:event.event:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: event
+#: help:event.event,mail_auto_confirm:0
+msgid "Check this box if you want ot use the automatic confirmation emailing or the reminder"
+msgstr ""
+
+#. module: event
+#: help:event.event,mail_confirm:0
+msgid "This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."
+msgstr ""
+
+#. module: event
+#: field:event.event,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: event
+#: field:event.registration,invoice_label:0
+msgid "Label Invoice"
+msgstr "Markeer Factuur"
+
+#. module: event
+#: view:event.registration:0
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: event
+#: view:event.type:0
+#: field:report.event.type.registration,name:0
+msgid "Event Type"
+msgstr "Soort Gebeurtenis"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.actions.wizard,name:event.wizard_event_registration
+msgid "Registrations"
+msgstr "Registraties"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_draft
+#: model:ir.ui.menu,name:event.menu_event_event_draft
+msgid "Draft Events"
+msgstr "Concept Gebeurtenissen"
+
+#. module: event
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Maximum Registraties"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
+msgstr "Factuur Geweigerd"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_main
+msgid "Events Organisation"
+msgstr "Gebeurtenissen Organistatie"
+
+#. module: event
+#: view:event.registration:0
+msgid "Actions"
+msgstr "Acties"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.wizard_event_reg_partners
+msgid "List Register Partners"
+msgstr "Toon Geregistreerde Relaties"
+
+#. module: event
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Fout, ongeldige EAN-code"
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Registration Email"
 msgstr ""
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -104,7 +104,7 @@ msgstr "Packliste"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "You cannot delete any record!"
-msgstr ""
+msgstr "Sie können keine Datensätze löschen!"
 
 #. module: stock
 #: xsl:stock.location.overview:0
@@ -197,7 +197,7 @@ msgstr "Status"
 #. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
-msgstr ""
+msgstr "Wert tatsächlicher Bestand"
 
 #. module: stock
 #: view:stock.move:0
@@ -249,7 +249,7 @@ msgstr "terp-hr"
 #. module: stock
 #: field:stock.location,usage:0
 msgid "Location Type"
-msgstr ""
+msgstr "Lagerort Art"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -510,7 +510,7 @@ msgstr "Für dieses Produkt (Template) wird dieser Lagerort anstelle des Standar
 #. module: stock
 #: field:stock.move,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Geplantes Datum"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -615,7 +615,7 @@ msgstr "Fertigungort (virtuelles Lager)"
 #. module: stock
 #: field:stock.move,tracking_id:0
 msgid "Tracking Lot"
-msgstr ""
+msgstr "Los Verfolgung"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -680,7 +680,7 @@ msgstr "Lagerort beim Partner"
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Tracking lot is the code that will be put on the logistical unit/pallet"
-msgstr ""
+msgstr "Losnummer ist der Code, der die logistische Einheit / Palette identifiziert"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -737,11 +737,6 @@ msgstr "Von"
 
 #. module: stock
 #: rml:stock.picking.list:0
-msgid "weight"
-msgstr "Gewicht"
-
-#. module: stock
-#: rml:stock.picking.list:0
 msgid "Non Assigned Products:"
 msgstr "Keine zugewiesenen Produkte"
 
@@ -772,7 +767,7 @@ msgstr "Warteliste"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree7
 #: model:ir.ui.menu,name:stock.menu_picking_waiting
 msgid "Available Packing"
-msgstr ""
+msgstr "verfügbare Lieferungen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -798,7 +793,7 @@ msgstr "Generic IT Suppliers"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 msgid "Location Content (With children)"
-msgstr ""
+msgstr "Inhalt des Lagers - (mit untergeordneten)"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -825,7 +820,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr ""
+msgstr "Packliste"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -847,7 +842,7 @@ msgstr "STOCK_OK"
 #: model:ir.actions.act_window,name:stock.action_picking_tree9
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree9
 msgid "New Internal Packing"
-msgstr ""
+msgstr "Neuer interner Packauftrag"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -959,7 +954,7 @@ msgstr "STOCK_GO_BACK"
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Zu Verrechnen"
 
 #. module: stock
 #: view:product.product:0
@@ -1219,7 +1214,7 @@ msgstr "Wareneingang Packauftrag"
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Packing List"
-msgstr ""
+msgstr "Lieferungen Liste"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1287,7 +1282,7 @@ msgstr "Bestandsaufnahme"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Ref"
-msgstr ""
+msgstr "Interne Referenz"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1433,6 +1428,7 @@ msgid "Priority"
 msgstr "Priorität"
 
 #. module: stock
+#: wizard_field:inventory.merge.stock.zero,init,location_id:0
 #: model:ir.model,name:stock.model_stock_location
 #: rml:lot.location:0
 #: wizard_field:stock.fill_inventory,init,location_id:0
@@ -1467,7 +1463,7 @@ msgstr "Bestandsprognose"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fehler !"
 
 #. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
@@ -1482,7 +1478,17 @@ msgid "OpenERP Stock Management module can manage multi-warehouses, multi and st
 "* Rapid detection of mistakes through double entry system\n"
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
-msgstr ""
+msgstr "OpenERP Lagerverwaltung kann meherere Verkaufsorte und mehrere und strukturierte Lagerorte verwalten\n"
+"Die Lagerverwaltung ist dank der doppelten Buchhaltung mächtig und flexibel.\n"
+"* Buchung Archiv und Planung\n"
+"* Verschiedene Inventurmethoden (FIFO, LIFO..)\n"
+"* Verschiedene Bewertungsmethoden (Standard oder Durchschnittspreis)\n"
+"* Inventurdifferenzen\n"
+"* Automatische Nachbestellung (je Lager, just in time,..)\n"
+"* Strichcode\n"
+"* schnelle Fehlerauffindung ducht doppelte Buchhaltung\n"
+"* Verfolgbarkeit (rückwärts, vorwärts, Produktionslose, Serien Nummern,..)\n"
+"    "
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1567,6 +1573,12 @@ msgid "terp-mrp"
 msgstr "terp-mrp"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
+msgid "Future Delivery Orders"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GO_UP"
 msgstr "STOCK_GO_UP"
@@ -1622,7 +1634,7 @@ msgstr "Erzeuge Rechnungen"
 #. module: stock
 #: field:stock.production.lot.revision,date:0
 msgid "Revision Date"
-msgstr ""
+msgstr "Korrekturdatum"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -1643,7 +1655,7 @@ msgstr "Menge (UOS)"
 #: model:ir.actions.act_window,name:stock.action_picking_tree5
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree5
 msgid "Packing to Process"
-msgstr ""
+msgstr "Lieferungen zu Bearbeiten"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1731,7 +1743,7 @@ msgstr "An"
 #. module: stock
 #: field:stock.production.lot.revision,name:0
 msgid "Revision Name"
-msgstr ""
+msgstr "Revisions Name"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1937,12 +1949,6 @@ msgid "Accounting Entries"
 msgstr "Buchungen"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
-msgid "Futur Delivery Orders"
-msgstr "Auslieferungen (Warteliste)"
-
-#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PAUSE"
 msgstr "STOCK_MEDIA_PAUSE"
@@ -2059,7 +2065,7 @@ msgstr "Wareneingang"
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Location"
-msgstr ""
+msgstr "Lagerort"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2133,7 +2139,7 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves Tracked"
-msgstr ""
+msgstr "Buchungen verfolgt"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -2184,7 +2190,7 @@ msgstr "Automatische Bewegung"
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
 msgid "Virtual Stock Value"
-msgstr ""
+msgstr "Wert errechneter  Bestand"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -2239,7 +2245,7 @@ msgstr "STOCK_JUSTIFY_CENTER"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree8
 msgid "Confirmed Packing Waiting Availability"
-msgstr ""
+msgstr "bestätigte Lieferungen - nicht verfügbar"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2290,7 +2296,7 @@ msgstr "Aufteilen"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr ""
+msgstr "zukünftige Lagerbewegungen"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2449,7 +2455,7 @@ msgstr "Kunde"
 #: model:ir.actions.act_window,name:stock.action_location_tree_3
 #: model:ir.ui.menu,name:stock.menu_action_location_tree_3
 msgid "Locations' Values"
-msgstr ""
+msgstr "Werte Lagerorte"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output

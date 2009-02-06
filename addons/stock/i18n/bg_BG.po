@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:40:23+0000\n"
-"PO-Revision-Date: 2009-01-28 00:40:23+0000\n"
+"POT-Creation-Date: 2009-02-06 15:01:34+0000\n"
+"PO-Revision-Date: 2009-02-06 15:01:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -737,11 +737,6 @@ msgstr "От"
 
 #. module: stock
 #: rml:stock.picking.list:0
-msgid "weight"
-msgstr "тегло"
-
-#. module: stock
-#: rml:stock.picking.list:0
 msgid "Non Assigned Products:"
 msgstr "Неназначени продукти:"
 
@@ -1433,6 +1428,7 @@ msgid "Priority"
 msgstr "Важност"
 
 #. module: stock
+#: wizard_field:inventory.merge.stock.zero,init,location_id:0
 #: model:ir.model,name:stock.model_stock_location
 #: rml:lot.location:0
 #: wizard_field:stock.fill_inventory,init,location_id:0
@@ -1565,6 +1561,12 @@ msgstr "Преглед на склад с продукти"
 #: selection:stock.location,icon:0
 msgid "terp-mrp"
 msgstr "terp-mrp"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
+msgid "Future Delivery Orders"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1935,12 +1937,6 @@ msgstr "Местонахождение източник"
 #: view:product.template:0
 msgid "Accounting Entries"
 msgstr "Счетоводни записи"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
-msgid "Futur Delivery Orders"
-msgstr "Бъдещи заявки за доставка"
 
 #. module: stock
 #: selection:stock.location,icon:0

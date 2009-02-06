@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgstr "Beschaffungsmethode"
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
 msgid "Product Process"
-msgstr ""
+msgstr "Produkt Prozess"
 
 #. module: product
 #: help:product.price.type,field:0
@@ -247,6 +247,7 @@ msgstr "Basis Preisliste"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_main_product
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -468,7 +469,7 @@ msgstr "UoM"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
-msgstr ""
+msgstr "Stück"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -573,7 +574,7 @@ msgstr "Andere Preisliste"
 #. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
-msgstr ""
+msgstr "Bruttogewicht in KG"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -697,7 +698,7 @@ msgstr "Mengeneinheit Typ"
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr ""
+msgstr "Gewicht"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
@@ -779,7 +780,7 @@ msgstr "Aktueller Warenbestand der ausgewählten Lagerorte oder aller internen L
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
-msgstr "Basic PC"
+msgstr ""
 
 #. module: product
 #: field:product.template,loc_row:0
@@ -847,9 +848,9 @@ msgid "Rate"
 msgstr "1/Faktor"
 
 #. module: product
-#: wizard_field:product.price_list,init,qty1:0
-msgid "Quantity-1"
-msgstr "Menge1"
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "Elemente in Produktpreisliste"
 
 #. module: product
 #: code:addons/product/report/product_pricelist.py:0
@@ -965,7 +966,7 @@ msgstr "Variante Extra Preis"
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
 msgid "Regular case fan 80mm"
-msgstr "Standard Gehäuse Ventilator 80mm"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1144,7 +1145,7 @@ msgstr "Produktvorlage"
 #: field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 msgid "Sequence"
-msgstr "Sequenz"
+msgstr "Sequenzer"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1249,9 +1250,9 @@ msgid "%d units"
 msgstr "%d Einheiten"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Elemente in Produktpreisliste"
+#: view:product.product:0
+msgid "Codes"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -1540,7 +1541,7 @@ msgstr ""
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr ""
+msgstr "Nettogewicht in KG"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1573,6 +1574,11 @@ msgstr "Verkaufspreis"
 #: help:product.template,produce_delay:0
 msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
 msgstr "Durschnittszeit für die Fertigung des Produktes. Falls eine multidimensionale Stückliste vorliegt, bezieht sich der Wert nur auf diese Fertigungsstufe. Unterschiedliche Verzögerungen werden über alle Stufen und Beschaffungsaufträge summiert."
+
+#. module: product
+#: wizard_field:product.price_list,init,qty1:0
+msgid "Quantity-1"
+msgstr "Menge1"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -1625,7 +1631,7 @@ msgstr "Produktlabel"
 #. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
-msgstr ""
+msgstr "Volumen in m³"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
@@ -1635,7 +1641,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "KGM"
-msgstr ""
+msgstr "KGM"
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0

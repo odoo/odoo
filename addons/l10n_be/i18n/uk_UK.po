@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:56:04+0000\n"
-"PO-Revision-Date: 2009-01-28 00:56:04+0000\n"
+"POT-Creation-Date: 2009-02-06 15:16:58+0000\n"
+"PO-Revision-Date: 2009-02-06 15:16:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,13 +32,14 @@ msgid "Régime National"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_view:wizard.account.xml.vat.declaration,go:0
-msgid "XML Flie has been Created."
+#: model:account.account.type,name:l10n_be.user_type_tiers
+msgid "Tiers"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_tiers
-msgid "Tiers"
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
@@ -100,6 +101,12 @@ msgid "Select Fiscal Year"
 msgstr ""
 
 #. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
+#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
+msgid "Periodical VAT Declaration"
+msgstr ""
+
+#. module: l10n_be
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
@@ -141,13 +148,14 @@ msgid "This wizard will create an XML file for Vat details and total invoiced am
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
-msgid "Enlist Vat Details"
+#: wizard_field:list.vat.detail,init,limit_amount:0
+msgid "Limit Amount"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_field:list.vat.detail,init,limit_amount:0
-msgid "Limit Amount"
+#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
+#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
+msgid "Annual Listing of VAT-Subjected Customers"
 msgstr ""
 
 #. module: l10n_be
@@ -156,14 +164,19 @@ msgid "Fiscal Year"
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
-#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
-msgid "Taxes Statement"
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "XML Flie has been Created."
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
-msgid "Listing of VAT Customers"
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "Data Insufficient"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
+msgid "Belgium Statements"
 msgstr ""
 
 #. module: l10n_be

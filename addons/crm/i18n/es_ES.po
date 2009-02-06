@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:53:54+0000\n"
-"PO-Revision-Date: 2009-01-28 00:53:54+0000\n"
+"POT-Creation-Date: 2009-02-06 15:14:47+0000\n"
+"PO-Revision-Date: 2009-02-06 15:14:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -277,7 +277,7 @@ msgstr "Prioridad máxima"
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
 #: wizard_field:crm.case.section.menu,design_menu,menu17_option:0
 msgid "New "
-msgstr ""
+msgstr "Nuevo "
 
 #. module: crm
 #: view:res.partner.events:0
@@ -365,7 +365,27 @@ msgid "The generic Open ERP Customer Relationship Management\n"
 "\n"
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
-msgstr ""
+msgstr "﻿El sistema genérico de Gestión de las Relaciones con el Cliente (CRM) de\n"
+"OpenERP permite a un grupo de gente gestionar  de forma inteligente\n"
+"y eficaz iniciativas, oportunidades, tareas, cuestiones,\n"
+"peticiones, errores, campañas comerciales, reclamaciones, etc.\n"
+"Gestiona tareas clave como comunicación, identificación,\n"
+"priorización, asignación, resolución y notificación.\n"
+"\n"
+"OpenERP asegura que todos los casos son seguidos con éxito\n"
+"por usuarios, clientes y proveedores. Puede enviar automáticamente\n"
+"recordatorios y notificaciones, intensificar la petición, disparar\n"
+"métodos específicos y muchas otras acciones basadas en sus\n"
+"reglas propias de empresa.\n"
+"\n"
+"La cosa más importante sobre este sistema es que los usuarios no\n"
+"necesitan hacer nada especial. Pueden enviar sólo un correo electrónico\n"
+"al registro de peticiones. OpenERP se encargará de agradecerle su\n"
+"mensaje, dirigirlo automáticamente a las personas apropiadas, y asegurarse\n"
+"de que toda la futura correspondencia llega al lugar apropiado.\n"
+"\n"
+"El módulo de CRM dispone de una puerta de enlace con el correo electrónico\n"
+"para la sincronización entre correos electrónicos y OpenERP."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu5:0
@@ -936,7 +956,7 @@ msgstr "¡Debe indicar un Email de empresa para usar esta acción!"
 #. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
 msgid "Customer & Supplier Relationship Management"
-msgstr ""
+msgstr "Gestión de relaciones con clientes & proveedores"
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
@@ -1013,6 +1033,12 @@ msgid "Exclusive"
 msgstr "Exclusivo"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Included Answers :"
 msgstr "Respuestas incluidas:"
@@ -1056,7 +1082,7 @@ msgstr "Nombre menú base"
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Sections"
-msgstr ""
+msgstr "Secciones hijas"
 
 #. module: crm
 #: field:crm.case,date:0
@@ -1196,7 +1222,7 @@ msgstr "Código de sección"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuario responsable"
 
 #. module: crm
 #: constraint:ir.model:0
@@ -1321,7 +1347,7 @@ msgstr "Importe de venta"
 #. module: crm
 #: help:crm.case.section,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
-msgstr ""
+msgstr "La dirección de correo electrónico que se pondrá en 'Responder A' en todos los correos electrónicos enviados por OpenERP para los casos de esta sección."
 
 #. module: crm
 #: view:crm.case.rule:0

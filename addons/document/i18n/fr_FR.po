@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:45:34+0000\n"
-"PO-Revision-Date: 2009-01-28 00:45:34+0000\n"
+"POT-Creation-Date: 2009-02-06 15:06:40+0000\n"
+"PO-Revision-Date: 2009-02-06 15:06:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr ""
+msgstr "Le nom du répertoire ne doit pas contenir de caractères spéciaux!"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -49,7 +49,7 @@ msgstr "Erreur ! Vous ne pouvez pas créer de Répertoires récursivement."
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_configuration
 msgid "Document Configuration"
-msgstr ""
+msgstr "Configuration de la Gestion Documentaire"
 
 #. module: document
 #: view:ir.attachment:0
@@ -74,7 +74,7 @@ msgstr "Taille du Fichier"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid "Check this field if you want that the name of the file start by the record name."
-msgstr ""
+msgstr "Cochez cette case si vous souhaitez que le nom du fichier commence par le nom de l'enregistrement"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -84,12 +84,12 @@ msgstr ""
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Modèle parent"
 
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "Document Management System."
-msgstr ""
+msgstr "Gestion Électronique des Documents"
 
 #. module: document
 #: view:ir.attachment:0
@@ -125,7 +125,7 @@ msgstr "Type"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directorie's Structure"
-msgstr "Structure du Répertoire "
+msgstr "Structure du Répertoire"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -135,7 +135,7 @@ msgstr "Objet Parent"
 #. module: document
 #: view:ir.attachment:0
 msgid "File Information"
-msgstr ""
+msgstr "Informations sur le fichier"
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -182,7 +182,7 @@ msgstr "Contenu du Répertoire"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+msgstr "Si vous mettez un objet ici, ce répertoire modèle apparaîtra en dessous de tous ces objets. Ne pas mettre de répertoire parent si vous sélectionnez un modèle parent"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document
@@ -213,12 +213,12 @@ msgstr "Rapport"
 #. module: document
 #: help:document.configuration.wizard,host:0
 msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
-msgstr ""
+msgstr "Saisissez l'adresse du serveur ou son IP. (Laissez localhost si vous ne savez pas quoi écrire)"
 
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "This wizard will automatically configure the document management system according to modules installed on your system."
-msgstr ""
+msgstr "Cet assistant configurera automatiquement la gestion documentaire en fonction des modules installés sur votre système"
 
 #. module: document
 #: view:ir.attachment:0
@@ -306,7 +306,7 @@ msgstr "Propriétaire"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr ""
+msgstr "document.configuration.wizard"
 
 #. module: document
 #: view:ir.attachment:0
@@ -340,27 +340,27 @@ msgstr "Sécurité"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr ""
+msgstr "Parcourir les fichiers via FTP"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Directories Mapped to Objects"
-msgstr ""
+msgstr "Répertoires calqués sur les objets"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "History"
-msgstr ""
+msgstr "Historique"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
-msgstr ""
+msgstr "Sélectionnez un objet ici et open ERP créera un répertoire pour chaque occurrence de l'objet en fonction du domaine utilisé lorsque vous parcourrez les fichiers à travers le FTP"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Others Info"
-msgstr ""
+msgstr "Autres informations"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -381,12 +381,12 @@ msgstr "Suffixe"
 #. module: document
 #: field:document.configuration.wizard,host:0
 msgid "Server Address"
-msgstr ""
+msgstr "Adresse du serveur"
 
 #. module: document
 #: model:ir.actions.url,name:document.action_document_browse
 msgid "Browse Files"
-msgstr ""
+msgstr "Parcourir les fichiers"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -397,7 +397,7 @@ msgstr "Nom du Contenu"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Directory name must be unique!"
-msgstr ""
+msgstr "Le nom du répertoire doit être unique!"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -407,7 +407,7 @@ msgstr "Créateur"
 #. module: document
 #: view:document.directory:0
 msgid "Auto-Generated Files"
-msgstr ""
+msgstr "Fichiers générés automatiquement"
 
 #. module: document
 #: help:document.directory,domain:0
@@ -447,7 +447,7 @@ msgstr "Rapport PDF"
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
-msgstr ""
+msgstr "Type de document"
 
 #. module: document
 #: field:document.directory,child_ids:0

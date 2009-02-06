@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:40:23+0000\n"
-"PO-Revision-Date: 2009-01-28 00:40:23+0000\n"
+"POT-Creation-Date: 2009-02-06 15:01:34+0000\n"
+"PO-Revision-Date: 2009-02-06 15:01:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1201,9 +1201,10 @@ msgid "Fiscal Position Templates"
 msgstr ""
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-msgid "This account will be used instead of the default one to value incoming stock for the current product category"
-msgstr ""
+#: rml:account.invoice:0
+#: field:account.invoice.line,price_unit:0
+msgid "Unit Price"
+msgstr "Единична цена"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.action_move_journal_line_form_select
@@ -1454,6 +1455,12 @@ msgid "Account Types"
 msgstr "Видове сметки"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Cannot create invoice move on centralised journal"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.automatic.reconcile,init,journal_id:0
 #: field:account.bank.statement,journal_id:0
 #: wizard_field:account.central.journal.report,init,journal_id:0
@@ -1606,16 +1613,6 @@ msgstr "Родителски код"
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
 msgstr "Отваряне за обединяване"
-
-#. module: account
-#: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0
-#: field:account.invoice,check_total:0
-msgid "Total"
-msgstr "Общо"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -2087,12 +2084,6 @@ msgid "Journal-Period Name"
 msgstr "Име на период на дневник"
 
 #. module: account
-#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
-#, python-format
-msgid "There are no periods defined on New Fiscal Year."
-msgstr ""
-
-#. module: account
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
@@ -2379,6 +2370,11 @@ msgid "2"
 msgstr ""
 
 #. module: account
+#: wizard_view:account.chart,init:0
+msgid "(If you do not select Fiscal year it will take all open fiscal years)"
+msgstr ""
+
+#. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
 msgstr ""
@@ -2524,6 +2520,7 @@ msgstr "Крайна дата"
 #: view:account.bank.statement:0
 #: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
+#: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Редове на запис"
@@ -3019,6 +3016,11 @@ msgid "Accounting Statement"
 msgstr ""
 
 #. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used to value incoming stock for the current product category"
+msgstr ""
+
+#. module: account
 #: view:product.product:0
 #: view:product.template:0
 #: view:res.partner:0
@@ -3287,11 +3289,6 @@ msgstr "account.move.line.select"
 #: model:ir.model,name:account.model_account_account
 msgid "Account"
 msgstr "Сметка"
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-msgid "This account will be used instead of the default one to value outgoing stock for the current product category"
-msgstr ""
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -4231,12 +4228,6 @@ msgid "Credit Trans."
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0
-#: field:account.invoice.line,price_unit:0
-msgid "Unit Price"
-msgstr "Единична цена"
-
-#. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
 msgstr "Валута на дневника"
@@ -4528,11 +4519,6 @@ msgid "Tax Declaration"
 msgstr "Данъчна декларация"
 
 #. module: account
-#: wizard_view:account.chart,init:0
-msgid "(If you do not select Fiscal year it will take all open fiscal year)"
-msgstr ""
-
-#. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
 msgid "File statement"
 msgstr ""
@@ -4621,10 +4607,14 @@ msgid "Date Start"
 msgstr "Начална дата"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "Can not create invoice move on centralised journal"
-msgstr ""
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.analytic.account.inverted.balance:0
+#: rml:account.analytic.account.quantity_cost_ledger:0
+#: field:account.invoice,amount_total:0
+#: field:account.invoice,check_total:0
+msgid "Total"
+msgstr "Общо"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -6082,6 +6072,11 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used to value outgoing stock for the current product category"
 msgstr ""
 
 #. module: account

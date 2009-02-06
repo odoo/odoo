@@ -1,21 +1,19 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-23 14:23+0000\n"
-"PO-Revision-Date: 2008-10-31 01:21+0000\n"
-"Last-Translator: Martin Karlsson <Unknown>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-02-06 15:19:09+0000\n"
+"PO-Revision-Date: 2009-02-06 15:19:09+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-26 16:19+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -40,6 +38,7 @@ msgid "SIN No"
 msgstr ""
 
 #. module: hr
+#: model:ir.module.module,shortdesc:hr.module_meta_information
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
 msgstr "Human Resources"
@@ -78,22 +77,11 @@ msgstr "Företag"
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Friday"
-msgstr "fredag"
-
-#. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "Fredag"
 
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Childs Categories"
 msgstr ""
 
 #. module: hr
@@ -106,17 +94,11 @@ msgstr "Anteckningar"
 #. module: hr
 #: field:hr.timesheet,hour_from:0
 msgid "Work from"
-msgstr "Arbeta från"
+msgstr "Arbete från"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Employee Hierarchy"
-msgstr ""
-
-#. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "UserError"
 msgstr ""
 
 #. module: hr
@@ -125,15 +107,14 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Kvinna"
-
-#. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr ""
 
 #. module: hr
 #: view:hr.timesheet.group:0
@@ -155,6 +136,11 @@ msgstr ""
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
 msgstr "Arbetstelefon"
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -210,6 +196,11 @@ msgid "Divorced"
 msgstr "Skild"
 
 #. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
 #: model:ir.ui.menu,name:hr.menu_department_def
@@ -238,8 +229,8 @@ msgid "Male"
 msgstr "Man"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid "Create openerp user"
 msgstr ""
 
 #. module: hr
@@ -251,7 +242,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Tisdag"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -287,7 +278,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Monday"
-msgstr ""
+msgstr "Måndag"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -296,15 +287,9 @@ msgid "Categories structure"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/wizard/sign_in_out.py:0
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr ""
-
-#. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
-msgstr ""
+msgstr "Veckodag"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -314,7 +299,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -337,12 +322,6 @@ msgid "Employee Complete Form"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr ""
-
-#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Företag"
@@ -350,21 +329,17 @@ msgstr "Företag"
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
 msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
 msgid "Starting date"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent category"
 msgstr ""
 
 #. module: hr
@@ -389,9 +364,8 @@ msgstr ""
 
 #. module: hr
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: hr
 #: view:hr.timesheet:0
@@ -403,12 +377,12 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
 #. module: hr
 #: field:hr.timesheet,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Arbete till"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -421,8 +395,8 @@ msgid "Employees Categories"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Childs Departments"
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
 msgstr ""
 
 #. module: hr
@@ -443,7 +417,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,name:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -460,6 +434,11 @@ msgstr ""
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
 msgstr ""
 
 #. module: hr
@@ -487,10 +466,11 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Saturday"
-msgstr ""
+msgstr "Lördag"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_new
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_new
 msgid "New Employee"
 msgstr ""
+

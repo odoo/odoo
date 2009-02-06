@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:44:15+0000\n"
-"PO-Revision-Date: 2009-01-28 00:44:15+0000\n"
+"POT-Creation-Date: 2009-02-06 15:05:22+0000\n"
+"PO-Revision-Date: 2009-02-06 15:05:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Boekhouden"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr "Bevestig concept afschriften"
+msgstr "Bevestig afschrift vanuit concept"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -62,7 +62,7 @@ msgstr "Activa"
 #: code:addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
 msgid "Specified Journal does not have any account move entries in draft state for this period"
-msgstr "Dit dagboek heeft geen boekingen in concept voor deze periode"
+msgstr "Dit dagboek heeft geen mutaties in concept status voor deze periode"
 
 #. module: account
 #: wizard_view:account_use_models,init_form:0
@@ -73,7 +73,7 @@ msgstr "Selecteer bericht"
 #: field:account.invoice.tax,account_id:0
 #: field:account.move.line,tax_code_id:0
 msgid "Tax Account"
-msgstr "Belastingrekening"
+msgstr "BTW rekening"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -545,7 +545,7 @@ msgstr "Letter betaling af"
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
 msgid "Target Moves"
-msgstr ""
+msgstr "Doelrekening"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -593,7 +593,7 @@ msgstr "Waar"
 #. module: account
 #: help:account.payment.term.line,days:0
 msgid "Number of days to add before computation of the day of month.If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."
-msgstr ""
+msgstr "Aantal dagen bijtellen om de dag van de maand te berekenen. Wanneer datum=15/01, aantal dagen =22, dag van de maand =-1 dan is de vervaldatum 28/02"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -1201,9 +1201,10 @@ msgid "Fiscal Position Templates"
 msgstr "Fiscale situatie sjablonen"
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-msgid "This account will be used instead of the default one to value incoming stock for the current product category"
-msgstr ""
+#: rml:account.invoice:0
+#: field:account.invoice.line,price_unit:0
+msgid "Unit Price"
+msgstr "Eenheidsprijs"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.action_move_journal_line_form_select
@@ -1454,6 +1455,12 @@ msgid "Account Types"
 msgstr "Categoriën grootboekrekeningen"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Cannot create invoice move on centralised journal"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.automatic.reconcile,init,journal_id:0
 #: field:account.bank.statement,journal_id:0
 #: wizard_field:account.central.journal.report,init,journal_id:0
@@ -1606,16 +1613,6 @@ msgstr "Bovenliggende code"
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
 msgstr "Open voor aflettering"
-
-#. module: account
-#: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0
-#: field:account.invoice,check_total:0
-msgid "Total"
-msgstr "Totaal"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -1837,7 +1834,7 @@ msgstr "Duur periode (dagen)"
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
 msgid "Tax"
-msgstr "Belasting"
+msgstr "Belastingen"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2087,12 +2084,6 @@ msgid "Journal-Period Name"
 msgstr "Naam dagboekperiode"
 
 #. module: account
-#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
-#, python-format
-msgid "There are no periods defined on New Fiscal Year."
-msgstr "Er zijn geen periodes gedefineerd voor het nieuwe boekjaar."
-
-#. module: account
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
@@ -2152,7 +2143,7 @@ msgstr "Verkoopfactuur proces"
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
 msgid "Opening Entries Period"
-msgstr ""
+msgstr "Openingsbalans periode"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_validate_account_moves
@@ -2342,7 +2333,7 @@ msgstr "Maak een verdeelboeking"
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,journal_id:0
 msgid "Opening Entries Journal"
-msgstr ""
+msgstr "Openingsbalans"
 
 #. module: account
 #: view:account.config.wizard:0
@@ -2377,6 +2368,11 @@ msgstr "Verantwoordelijkheid"
 #: selection:account.automatic.reconcile,init,power:0
 msgid "2"
 msgstr "2"
+
+#. module: account
+#: wizard_view:account.chart,init:0
+msgid "(If you do not select Fiscal year it will take all open fiscal years)"
+msgstr ""
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -2524,6 +2520,7 @@ msgstr "Einddatum"
 #: view:account.bank.statement:0
 #: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
+#: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Mutatie regels"
@@ -3019,6 +3016,11 @@ msgid "Accounting Statement"
 msgstr "Boekings Afschrift"
 
 #. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used to value incoming stock for the current product category"
+msgstr ""
+
+#. module: account
 #: view:product.product:0
 #: view:product.template:0
 #: view:res.partner:0
@@ -3289,11 +3291,6 @@ msgid "Account"
 msgstr "Grootboekrekening"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-msgid "This account will be used instead of the default one to value outgoing stock for the current product category"
-msgstr ""
-
-#. module: account
 #: selection:account.account.balance.report,checktype,state:0
 #: selection:account.general.ledger.report,checktype,state:0
 #: selection:account.partner.balance.report,init,state:0
@@ -3346,7 +3343,7 @@ msgstr "Gemiddelde Ratio"
 #: model:process.node,note:account.process_node_bankstatement0
 #: model:process.node,note:account.process_node_supplierbankstatement0
 msgid "Statement encoding produces payment entries"
-msgstr "Codering van afschrift maakt betaalingsmutaties aan"
+msgstr "Afschrift verwerking maakt betaalingsmutaties aan"
 
 #. module: account
 #: field:account.account,code:0
@@ -4149,7 +4146,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,move_name:0
 msgid "Account Move"
-msgstr "Boeking"
+msgstr "Transactie"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4191,7 +4188,7 @@ msgstr "       Afgeletterde boekingen meenemen"
 #. module: account
 #: help:account.move.line,blocked:0
 msgid "You can check this box to mark the entry line as a litigation with the associated partner"
-msgstr ""
+msgstr "U kunt dit vakje aanvinken om de mutatie als betwiste mutatie te markeren bij de gekoppelde relatie"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -4229,12 +4226,6 @@ msgstr "Algemeen"
 #: rml:account.general.journal:0
 msgid "Credit Trans."
 msgstr "Credit mutaties"
-
-#. module: account
-#: rml:account.invoice:0
-#: field:account.invoice.line,price_unit:0
-msgid "Unit Price"
-msgstr "Eenheidsprijs"
 
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
@@ -4528,11 +4519,6 @@ msgid "Tax Declaration"
 msgstr "Belastingaangifte"
 
 #. module: account
-#: wizard_view:account.chart,init:0
-msgid "(If you do not select Fiscal year it will take all open fiscal year)"
-msgstr "(Als u geen boekjaar kiest worden alle open boekjaren genomen)"
-
-#. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
 msgid "File statement"
 msgstr "Afschrift opslaan"
@@ -4621,10 +4607,14 @@ msgid "Date Start"
 msgstr "Begindatum"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "Can not create invoice move on centralised journal"
-msgstr "Can geen factuurboeking doen in centraal dagboek"
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.analytic.account.inverted.balance:0
+#: rml:account.analytic.account.quantity_cost_ledger:0
+#: field:account.invoice,amount_total:0
+#: field:account.invoice,check_total:0
+msgid "Total"
+msgstr "Totaal"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -5159,7 +5149,7 @@ msgstr "/"
 #: model:process.node,note:account.process_node_invoiceinvoice0
 #: model:process.node,note:account.process_node_supplierinvoiceinvoice0
 msgid "Have a number and entries are generated"
-msgstr ""
+msgstr "Heeft een nummer en mutaties worden aangemaakt"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -5253,7 +5243,7 @@ msgstr "Nieuwe credit verkoopfactuur"
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
 msgid "Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."
-msgstr ""
+msgstr "Vink dit vakje aan indien u een andere volgorde voor elk aangemaakt dagboek wenst, anders zullen ze allen dezelfde volgorde krijgen."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
@@ -5270,7 +5260,7 @@ msgstr "Maak afletteren ongedaan"
 #. module: account
 #: model:ir.model,name:account.model_fiscalyear_seq
 msgid "Maintains Invoice sequences with Fiscal Year"
-msgstr ""
+msgstr "Behoudt de factuurvolgorden in het boekjaar"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,display_account:0
@@ -5510,7 +5500,7 @@ msgstr "Gemiddeld"
 #. module: account
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 msgid "Supplier Invoice Process"
-msgstr ""
+msgstr "Inkoopfactuur afhandelen"
 
 #. module: account
 #: rml:account.account.balance:0
@@ -5598,7 +5588,7 @@ msgstr "Verdeelboekingen"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "Closing of fiscal year cancelled, please check the box !"
-msgstr ""
+msgstr "Afsluiten van boekjaar geannuleerd. Vink het vakje aan a.u.b. !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree6
@@ -5732,7 +5722,7 @@ msgstr "Algemene Informatie"
 #. module: account
 #: help:populate_statement_from_inv,init,journal_id:0
 msgid "This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals."
-msgstr ""
+msgstr "Dit veld geeft u de mogelijkheid om dagboeken te kiezen waarmee i de facturen wil filteren. Indien dit veld leeg wordt gelaten zal het in alle verkoop, inkoop en kas dagboeken zoeken"
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -5770,7 +5760,7 @@ msgstr "Verkoopinstellingen"
 #: code:addons/account/wizard/wizard_fiscalyear_close_state.py:0
 #, python-format
 msgid "Closing of states cancelled, please check the box !"
-msgstr ""
+msgstr "Sluiten van de statussen geannuleerd, vink het vakje aan a.u.b. !"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
@@ -5928,7 +5918,7 @@ msgstr "Grootboekkaart omzet"
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr ""
+msgstr "Open / Afsluit periode"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -6085,6 +6075,11 @@ msgid "Accounts Mapping"
 msgstr "Rekeningen Indelen"
 
 #. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used to value outgoing stock for the current product category"
+msgstr ""
+
+#. module: account
 #: help:account.tax,base_sign:0
 #: help:account.tax,ref_base_sign:0
 #: help:account.tax,ref_tax_sign:0
@@ -6099,7 +6094,7 @@ msgstr "Meestal 1 of -1"
 #. module: account
 #: help:account.invoice,date_due:0
 msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "Indien u betalingstermijnen hanteert zal de vervaldatum automatisch worden berekend bij het aanmaken van de boekhoudmutaties. Wanneer u de betaaltermijn en de vervaldatum leeg laat zal deze als directe betaling worden geboekt"
 
 #. module: account
 #: view:res.partner:0
@@ -6146,7 +6141,7 @@ msgstr "Fiscale positie"
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement Process"
-msgstr ""
+msgstr "Afschrift afhandeling"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile

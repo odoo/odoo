@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:41:01+0000\n"
-"PO-Revision-Date: 2009-01-28 00:41:01+0000\n"
+"POT-Creation-Date: 2009-02-06 15:02:11+0000\n"
+"PO-Revision-Date: 2009-02-06 15:02:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -593,7 +593,7 @@ msgstr "Cert"
 #. module: account
 #: help:account.payment.term.line,days:0
 msgid "Number of days to add before computation of the day of month.If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."
-msgstr ""
+msgstr "Número de dies a afegir abans del càlcul del dia de mes. Si data=15/01, Número de dies=22, Dia de mes=-1, llavors la data de venciment és 28/02."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -604,7 +604,7 @@ msgstr "account.tax"
 #: code:addons/account/account.py:0
 #, python-format
 msgid "Bank Journal "
-msgstr ""
+msgstr "Diari bancari "
 
 #. module: account
 #: rml:account.central.journal:0
@@ -700,7 +700,7 @@ msgstr "Import desajustat"
 #. module: account
 #: help:account.fiscalyear,company_id:0
 msgid "Keep empty if the fiscal year belongs to several companies."
-msgstr ""
+msgstr "Deixeu-lo buit si l'exercici fiscal pertany a varie companyies"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -747,7 +747,7 @@ msgstr "Primer heu de seleccionar una empresa!"
 #. module: account
 #: field:account.invoice,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Informació addicional"
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -757,7 +757,7 @@ msgstr "Factura d'abonament de client"
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr ""
+msgstr "Seqüències de diaris separades"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -875,7 +875,7 @@ msgstr "Línies moviment"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The opening journal must not have any entry in the new fiscal year !"
-msgstr ""
+msgstr "El diari d'obertura no ha de tenir cap assentament en el nou exercici fiscal!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_config_wizard
@@ -1198,12 +1198,13 @@ msgstr "Nou compte analític"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr ""
+msgstr "Plantilles de posicions fiscals"
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-msgid "This account will be used instead of the default one to value incoming stock for the current product category"
-msgstr ""
+#: rml:account.invoice:0
+#: field:account.invoice.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preu un."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.action_move_journal_line_form_select
@@ -1224,7 +1225,7 @@ msgstr "Import impostos/base"
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "Plantilla de posició fiscal"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1244,7 +1245,7 @@ msgstr "Obre resum"
 #. module: account
 #: wizard_view:account.fiscalyear.close.state,init:0
 msgid "Are you sure you want to close the fiscal year ?"
-msgstr ""
+msgstr "Esteu segurs que voleu tancar l'exercici fiscal?"
 
 #. module: account
 #: selection:account.move,type:0
@@ -1454,6 +1455,12 @@ msgid "Account Types"
 msgstr "Tipus de comptes"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Cannot create invoice move on centralised journal"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.automatic.reconcile,init,journal_id:0
 #: field:account.bank.statement,journal_id:0
 #: wizard_field:account.central.journal.report,init,journal_id:0
@@ -1529,7 +1536,7 @@ msgstr "Total a pagar"
 #. module: account
 #: wizard_button:account.fiscalyear.close.state,init,close:0
 msgid "Close states"
-msgstr ""
+msgstr "Tanca estats"
 
 #. module: account
 #: wizard_view:account_use_models,create:0
@@ -1606,16 +1613,6 @@ msgstr "Codi pare"
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
 msgstr "Obre per la conciliació"
-
-#. module: account
-#: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0
-#: field:account.invoice,check_total:0
-msgid "Total"
-msgstr "Total"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -1737,7 +1734,7 @@ msgstr "Retorna factura"
 #: model:ir.actions.wizard,name:account.wizard_period_close
 #: model:ir.ui.menu,name:account.menu_action_account_period_close_tree
 msgid "Close a Period"
-msgstr ""
+msgstr "Tanca un període"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal
@@ -1747,7 +1744,7 @@ msgstr "Costos i ingressos"
 #. module: account
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Error! No es poden crear comptes recursius."
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -1777,7 +1774,7 @@ msgstr "Reobre"
 #. module: account
 #: wizard_view:account.fiscalyear.close,init:0
 msgid "Are you sure you want to create entries?"
-msgstr ""
+msgstr "Esteu segurs que voleu crear els assentaments?"
 
 #. module: account
 #: field:account.tax,include_base_amount:0
@@ -2087,12 +2084,6 @@ msgid "Journal-Period Name"
 msgstr "Nom diari-període"
 
 #. module: account
-#: code:addons/account/wizard/wizard_fiscalyear_close.py:0
-#, python-format
-msgid "There are no periods defined on New Fiscal Year."
-msgstr "No hi ha períodes definits en el nou exercici fiscal."
-
-#. module: account
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
@@ -2117,7 +2108,7 @@ msgstr "Empresa"
 #. module: account
 #: help:account.invoice,number:0
 msgid "Unique number of the invoice, computed automatically when the invoice is created."
-msgstr ""
+msgstr "Número únic de la factura, calculat automàticament quan es valida la factura."
 
 #. module: account
 #: rml:account.invoice:0
@@ -2147,12 +2138,12 @@ msgstr "La quantitat expressada en una altra moneda opcional."
 #. module: account
 #: model:process.process,name:account.process_process_invoiceprocess0
 msgid "Customer Invoice Process"
-msgstr ""
+msgstr "Procés de factura de client"
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
 msgid "Opening Entries Period"
-msgstr ""
+msgstr "Període assentaments d'obertura"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_validate_account_moves
@@ -2342,7 +2333,7 @@ msgstr "Crea assentaments periòdics"
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,journal_id:0
 msgid "Opening Entries Journal"
-msgstr ""
+msgstr "Diari assentaments d'obertura"
 
 #. module: account
 #: view:account.config.wizard:0
@@ -2377,6 +2368,11 @@ msgstr "Passiu"
 #: selection:account.automatic.reconcile,init,power:0
 msgid "2"
 msgstr "2"
+
+#. module: account
+#: wizard_view:account.chart,init:0
+msgid "(If you do not select Fiscal year it will take all open fiscal years)"
+msgstr ""
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -2524,6 +2520,7 @@ msgstr "Data final"
 #: view:account.bank.statement:0
 #: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
+#: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Línies de l'extracte"
@@ -2599,7 +2596,7 @@ msgstr "Informació addicional"
 #. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
-msgstr ""
+msgstr "El mètodo de càlcul de l'import de l'impost."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2893,7 +2890,7 @@ msgstr "Direcció anàlisi"
 #. module: account
 #: wizard_button:populate_statement_from_inv,init,go:0
 msgid "_Go"
-msgstr ""
+msgstr "_Vés"
 
 #. module: account
 #: field:res.partner,ref_companies:0
@@ -3017,6 +3014,11 @@ msgstr "Factures d'abonament de proveïdor esborrany"
 #: model:process.node,name:account.process_node_accountingstatemententries0
 msgid "Accounting Statement"
 msgstr "Extracte comptable"
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used to value incoming stock for the current product category"
+msgstr ""
 
 #. module: account
 #: view:product.product:0
@@ -3289,11 +3291,6 @@ msgid "Account"
 msgstr "Compte"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-msgid "This account will be used instead of the default one to value outgoing stock for the current product category"
-msgstr ""
-
-#. module: account
 #: selection:account.account.balance.report,checktype,state:0
 #: selection:account.general.ledger.report,checktype,state:0
 #: selection:account.partner.balance.report,init,state:0
@@ -3329,7 +3326,7 @@ msgstr "Impostos"
 #. module: account
 #: wizard_view:account.fiscalyear.close,init:0
 msgid "Close Fiscal Year with new entries"
-msgstr ""
+msgstr "Tanca exercici fiscal amb nous assentaments"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -3391,7 +3388,7 @@ msgstr "Cap"
 #: model:ir.actions.wizard,name:account.wizard_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Fiscal Year Opening Entries"
-msgstr ""
+msgstr "Genera assentaments obertura exercici fiscal"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -3423,7 +3420,7 @@ msgstr "Nom impost"
 #. module: account
 #: wizard_view:account.fiscalyear.close.state,init:0
 msgid " Close states of Fiscal year and periods"
-msgstr ""
+msgstr " Tanca estats d'exercici fiscal i períodes"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3450,7 +3447,7 @@ msgstr "La quantitat en la moneda del diari"
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr ""
+msgstr "No s'imprimeix en factura"
 
 #. module: account
 #: field:account.move.line,move_id:0
@@ -3739,7 +3736,7 @@ msgstr "Manual"
 #. module: account
 #: view:account.invoice:0
 msgid "Compute Taxes"
-msgstr ""
+msgstr "Calcula impostos"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,code_digits:0
@@ -3784,7 +3781,7 @@ msgstr "Seqüència"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Plantilla per posició fiscal"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3989,7 +3986,7 @@ msgstr "Moviment"
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr ""
+msgstr "Aquests períodes es poden superposar."
 
 #. module: account
 #: help:product.template,property_account_expense:0
@@ -4181,7 +4178,7 @@ msgstr "Compte general"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr ""
+msgstr "Assentament fi d'exercici fiscal"
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,reconcil:0
@@ -4229,12 +4226,6 @@ msgstr "General"
 #: rml:account.general.journal:0
 msgid "Credit Trans."
 msgstr "Trans. haver"
-
-#. module: account
-#: rml:account.invoice:0
-#: field:account.invoice.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preu un."
 
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
@@ -4411,7 +4402,7 @@ msgstr "Període comptable"
 #. module: account
 #: wizard_field:account.invoice.pay,init,journal_id:0
 msgid "Journal/Payment Mode"
-msgstr ""
+msgstr "Diari/Mode de pagament"
 
 #. module: account
 #: rml:account.invoice:0
@@ -4493,7 +4484,7 @@ msgstr ""
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_open_closed_fy
 msgid "Cancel Opening Entries"
-msgstr ""
+msgstr "Cancel·la assentaments d'obertura"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoicemanually0
@@ -4526,11 +4517,6 @@ msgstr ""
 #: view:account.tax.template:0
 msgid "Tax Declaration"
 msgstr "Declaració d'impostos"
-
-#. module: account
-#: wizard_view:account.chart,init:0
-msgid "(If you do not select Fiscal year it will take all open fiscal year)"
-msgstr "(si no seleccioneu un exercici fiscal es tindran en compte tots els exercicis fiscals oberts)"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -4585,7 +4571,7 @@ msgstr ""
 #. module: account
 #: rml:account.third_party_ledger:0
 msgid "JNRL"
-msgstr ""
+msgstr "JNRL"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -4621,10 +4607,14 @@ msgid "Date Start"
 msgstr "Data inicial"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "Can not create invoice move on centralised journal"
-msgstr ""
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.analytic.account.inverted.balance:0
+#: rml:account.analytic.account.quantity_cost_ledger:0
+#: field:account.invoice,amount_total:0
+#: field:account.invoice,check_total:0
+msgid "Total"
+msgstr "Total"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -4895,7 +4885,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancel·lat"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -5253,7 +5243,7 @@ msgstr "Nova factura d'abonament de client"
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
 msgid "Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."
-msgstr ""
+msgstr "Marqueu aquesta casella si voleu utilitzar una seqüència diferent per a cada diari creat. Altrament, tots utilitzaran la mateixa seqüència."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
@@ -5270,7 +5260,7 @@ msgstr "No conciliació"
 #. module: account
 #: model:ir.model,name:account.model_fiscalyear_seq
 msgid "Maintains Invoice sequences with Fiscal Year"
-msgstr ""
+msgstr "Manté seqüències de factura amb exercici fiscal"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,display_account:0
@@ -5426,7 +5416,7 @@ msgstr "Filtrat per data"
 #. module: account
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Choose Journal and Payment Date"
-msgstr ""
+msgstr "Selecciona diari i data de pagament"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -5510,7 +5500,7 @@ msgstr "Normal"
 #. module: account
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 msgid "Supplier Invoice Process"
-msgstr ""
+msgstr "Procés factura de proveïdor"
 
 #. module: account
 #: rml:account.account.balance:0
@@ -5598,7 +5588,7 @@ msgstr "Assentaments periòdics"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "Closing of fiscal year cancelled, please check the box !"
-msgstr ""
+msgstr "Tancament de l'exercici fiscal cancel·lat, si us plau heu de marcar la casella!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree6
@@ -5732,7 +5722,7 @@ msgstr "Informació general"
 #. module: account
 #: help:populate_statement_from_inv,init,journal_id:0
 msgid "This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals."
-msgstr ""
+msgstr "Aquest camp us permet seleccionar els diaris comptables que voleu per filtrar les factures. Si deixeu aquest camp buit, cercarà en tots els diaris de venda, compra i de caixa."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -5770,7 +5760,7 @@ msgstr "Propietats de venda"
 #: code:addons/account/wizard/wizard_fiscalyear_close_state.py:0
 #, python-format
 msgid "Closing of states cancelled, please check the box !"
-msgstr ""
+msgstr "Tancament d'estats cancel·lat, si us plau heu de marcar la casella!"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
@@ -5928,7 +5918,7 @@ msgstr "Compte d'ingressos"
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr ""
+msgstr "Període d'obertura/tancament"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -6085,6 +6075,11 @@ msgid "Accounts Mapping"
 msgstr "Mapa de relacions de comptes"
 
 #. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used to value outgoing stock for the current product category"
+msgstr ""
+
+#. module: account
 #: help:account.tax,base_sign:0
 #: help:account.tax,ref_base_sign:0
 #: help:account.tax,ref_tax_sign:0
@@ -6099,7 +6094,7 @@ msgstr "Normalment 1 o -1."
 #. module: account
 #: help:account.invoice,date_due:0
 msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "﻿Si utilitza terminis de pagament, la data de venciment es calcularà automàticament en la generació d'assentaments comptables. Si deixeu buits el termini de pagament i la data de venciment, significa pagament directe."
 
 #. module: account
 #: view:res.partner:0
@@ -6146,7 +6141,7 @@ msgstr "Posicions fiscals"
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement Process"
-msgstr ""
+msgstr "Procés d'extracte"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile
@@ -6158,7 +6153,7 @@ msgstr "Conciliació extracte"
 #: wizard_field:account.fiscalyear.close.state,init,sure:0
 #: wizard_field:account.period.close,init,sure:0
 msgid "Check this box"
-msgstr "Marqueu aquesta caixa"
+msgstr "Marqueu aquesta casella"
 
 #. module: account
 #: help:account.tax,price_include:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,48 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,category:0
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: base_module_publish
+#: wizard_view:base_module_publish.module_publish,publish:0
+msgid "Information"
+msgstr "Information"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,shortdesc:0
+msgid "Small description"
+msgstr "Kurzbeschreibung"
+
+#. module: base_module_publish
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
+msgstr "unterstütze nur .png Dateien"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
 msgid "Author"
 msgstr "Author"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_export,zip,module_file:0
-msgid "Module .zip file"
-msgstr "Modul .zip Datei"
+#: wizard_field:base_module_publish.module_publish,init,text:0
+#: wizard_field:base_module_publish.module_publish_all,init,text:0
+msgid "Introduction"
+msgstr "Einführung"
+
+#. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
+msgstr "Fehler"
+
+#. module: base_module_publish
+#: wizard_button:base_module_publish.module_publish,step2,publish:0
+#: wizard_button:base_module_publish.module_publish_all,login,publish:0
+msgid "Publish"
+msgstr "Veröffentlichen"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_export,zip,module_filename:0
@@ -33,128 +67,12 @@ msgstr "Dateiname"
 #. module: base_module_publish
 #: model:ir.module.module,shortdesc:base_module_publish.module_meta_information
 msgid "Module publisher"
-msgstr ""
+msgstr "Modul Herausgeber"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,operation:0
-msgid "Modification"
-msgstr "Veränderung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "/fixed assets"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Accounting & Finance"
-msgstr "Tafeln & Berichte/Buchhaltung und Finanzen"
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_export,zip:0
-msgid "Finish"
-msgstr "Fertigstellen"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Human ressources"
-msgstr "Tafel & Berichte / Personal"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Manufacturing industries"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Foods industries"
-msgstr "Vertikale Module/Nahrungsmittelindustrie"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Services companies/IT Companies"
-msgstr "Service Unternehmen/EDV Firmen"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "Login failed!"
-msgstr "Login fehlgeschlagen!"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Manufacturing"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_button:base_module_publish.module_export,init,zip:0
-#: wizard_button:base_module_publish.module_publish_all,init,login:0
-msgid "Ok"
-msgstr "OK"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "/Dashboards & Reporting"
-msgstr ""
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Can not export module that is not installed!"
-msgstr "Kann keine Module exportieren, die nicht installiert sind."
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Purchases & Procurement"
-msgstr "Tafeln und Berichte/Einkauf und Beschaffung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Services companies"
-msgstr "Vertikale Module/Service Unternehmen"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Profiles"
-msgstr ""
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "You could not publish a module that is not installed!"
-msgstr "Sie können kein Module veröffentlichen welches nicht installiert ist!"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Sales & Marketing"
-msgstr "Tafeln und Berichte/Verkauf und Marketing"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,operation:0
-msgid "Operation"
-msgstr "Vorgang"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "External interfaces/Reporting"
-msgstr "Externe Schnittstellen/Berichte"
-
-#. module: base_module_publish
-#: wizard_button:base_module_publish.module_publish,step1,init:0
-#: wizard_button:base_module_publish.module_publish,step2,step1:0
-msgid "Previous"
-msgstr "Vorherige"
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step1:0
-msgid "Verify your module information"
-msgstr "Verifiziere Module Informationen"
-
-#. module: base_module_publish
-#: wizard_button:base_module_publish.module_publish,step2,publish:0
-#: wizard_button:base_module_publish.module_publish_all,login,publish:0
-msgid "Publish"
-msgstr "Veröffentlichen"
+#: wizard_field:base_module_publish.module_publish,step1,demourl:0
+msgid "Demo URL"
+msgstr "Demo URL"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,version:0
@@ -169,12 +87,17 @@ msgstr "andere anwendereigen"
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_export,init,include_src:0
 msgid "Include sources"
-msgstr ""
+msgstr "Einschließlich der Quellen"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Localisations/Others"
-msgstr "Lokalisierung/andere"
+#: selection:base_module_publish.module_publish,step1,operation:0
+msgid "Modification"
+msgstr "Veränderung"
+
+#. module: base_module_publish
+#: help:base_module_publish.module_publish,step1,demourl:0
+msgid "empty to keep existing value"
+msgstr "Leer lassen, um bestehende Werte zu übernehmen"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,email:0
@@ -183,143 +106,9 @@ msgid "Email"
 msgstr "Email"
 
 #. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step2:0
-#: wizard_view:base_module_publish.module_publish_all,login:0
-msgid "If you don't have an access, you can create one http://www.openerp.com/"
-msgstr "Falls Sie keinen Zugriff haben, können Sie einen erzeugen unter http://www.openerp.com"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "Failed to upload the file"
-msgstr "Fehler bei Upload der Datei"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Localisations/Accounting & finance"
-msgstr "Lokalisierung/Buchhaltung und Finanzen"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,update:0
-msgid "Modules updated"
-msgstr "Module geupdated"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,docurl:0
-msgid "Documentation URL"
-msgstr "Dokumentation URL"
-
-#. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr "unterstütze nur .png Dateien"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Base"
-msgstr "Tafeln & Berichte/Basis"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Inventory control"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_export,init:0
-#: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_export
-msgid "Export module"
-msgstr "Exportiere Module"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Accounting & Finance"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Security"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "External interfaces/eCommerce"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/CRM & SRM"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Human ressources"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,publish:0
-msgid "Result"
-msgstr "Ergebnis"
-
-#. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,docurl:0
-msgid "Empty to keep existing value"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "External interfaces/EDI"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,category:0
-msgid "Category"
-msgstr "Kategorie"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,shortdesc:0
-msgid "Small description"
-msgstr "Kurzbeschreibung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Localisations/Payroll"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,init:0
-#: wizard_view:base_module_publish.module_publish_all,init:0
-msgid "Publication information"
-msgstr "Information für Publizierung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Vertical modules/Others"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,publish,result:0
-msgid "Result page"
-msgstr "Ergebnisseite"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,error:0
-msgid "Modules in error"
-msgstr "Module Fehlerhaft"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Others/Education"
-msgstr ""
-
-#. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,demourl:0
-msgid "empty to keep existing value"
-msgstr ""
-
-#. module: base_module_publish
 #: help:base_module_publish.module_publish,step1,url_download:0
 msgid "Keep empty for an auto upload of the module"
-msgstr ""
+msgstr "Leer lassen, um das Modul automatisch hinaufzuladen."
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,website:0
@@ -327,72 +116,32 @@ msgid "Website"
 msgstr "Website"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Sales & Marketing"
-msgstr ""
+#: wizard_field:base_module_publish.module_export,zip,module_file:0
+msgid "Module .zip file"
+msgstr "Modul .zip Datei"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Manufacturing/Manufacturing"
-msgstr ""
+#: wizard_view:base_module_publish.module_export,zip:0
+msgid "Finish"
+msgstr "Fertigstellen"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,publish,text_end:0
-msgid "Summary"
-msgstr "Zusammenfassung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Base"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,already:0
-msgid "Modules already updated"
-msgstr "Module wurden bereits upgedated"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
-msgstr "Fehler"
+#: wizard_view:base_module_publish.module_publish,step1:0
+#: wizard_field:base_module_publish.module_publish,step1,description:0
+msgid "Description"
+msgstr "Beschreibung"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
-msgid "User information"
-msgstr "Benutzer Informationen"
+msgid "If you don't have an access, you can create one http://www.openerp.com/"
+msgstr "Falls Sie keinen Zugriff haben, können Sie einen erzeugen unter http://www.openerp.com"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "External interfaces/Portal Management"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Sample modules"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,include_src:0
-msgid "Include source"
-msgstr "Inkludierte Quelldateien"
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step1:0
-msgid "General"
-msgstr "Generell"
-
-#. module: base_module_publish
-#: wizard_button:base_module_publish.module_export,init,end:0
-#: wizard_button:base_module_publish.module_publish,init,end:0
-#: wizard_button:base_module_publish.module_publish,step1,end:0
-#: wizard_button:base_module_publish.module_publish,step2,end:0
-#: wizard_button:base_module_publish.module_publish_all,init,end:0
-#: wizard_button:base_module_publish.module_publish_all,login,end:0
-msgid "Cancel"
-msgstr "Abbrechen"
+#: wizard_view:base_module_publish.module_publish,init:0
+#: wizard_view:base_module_publish.module_publish_all,init:0
+msgid "Publication information"
+msgstr "Information für Publizierung"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_export,zip,end:0
@@ -402,56 +151,10 @@ msgid "Close"
 msgstr "Schliessen"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Inventory control"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Dashboards & reporting/Others"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,publish:0
-msgid "Information"
-msgstr "Information"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,init,text:0
-#: wizard_field:base_module_publish.module_publish_all,init,text:0
-msgid "Introduction"
-msgstr "Einführung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "External interfaces/Others"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Purchases & Procurement"
-msgstr ""
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Manufacturing"
-msgstr ""
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,demourl:0
-msgid "Demo URL"
-msgstr "Demo URL"
-
-#. module: base_module_publish
-#: wizard_view:base_module_publish.module_publish,step1:0
-#: wizard_field:base_module_publish.module_publish,step1,description:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Administration tools"
-msgstr "Werkzeuge / Verwaltungswerkzeuge"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "Failed to upload the file"
+msgstr "Fehler bei Upload der Datei"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
@@ -470,15 +173,26 @@ msgid "Licence"
 msgstr "Lizenz"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish_all,publish,update:0
+msgid "Modules updated"
+msgstr "Module geupdated"
+
+#. module: base_module_publish
+#: wizard_view:base_module_publish.module_publish,step1:0
+msgid "Verify your module information"
+msgstr "Verifiziere Module Informationen"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,password:0
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Passwort"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Developpers tools"
-msgstr ""
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "Login failed!"
+msgstr "Login fehlgeschlagen!"
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -486,14 +200,36 @@ msgid "Publish all modules"
 msgstr "Publiziere alle Module"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,publish,result:0
+msgid "Result page"
+msgstr "Ergebnisseite"
+
+#. module: base_module_publish
+#: wizard_button:base_module_publish.module_export,init,zip:0
+#: wizard_button:base_module_publish.module_publish_all,init,login:0
+msgid "Ok"
+msgstr "OK"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,name:0
 msgid "Name"
 msgstr "Name"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/Others"
-msgstr ""
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Can not export module that is not installed!"
+msgstr "Kann keine Module exportieren, die nicht installiert sind."
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish_all,publish,error:0
+msgid "Modules in error"
+msgstr "Module Fehlerhaft"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,docurl:0
+msgid "Documentation URL"
+msgstr "Dokumentation URL"
 
 #. module: base_module_publish
 #: code:addons/base_module_publish/wizard/base_module_publish.py:0
@@ -502,9 +238,9 @@ msgid "This version of the module is already exist on the server"
 msgstr "Diese Version der Module existiert bereits auf dem Server"
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Generic modules/CRM & SRM"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish,publish,text_end:0
+msgid "Summary"
+msgstr "Zusammenfassung"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,init,step1:0
@@ -513,10 +249,21 @@ msgid "Continue"
 msgstr "Fortfahren"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish_all,publish,already:0
+msgid "Modules already updated"
+msgstr "Module wurden bereits upgedated"
+
+#. module: base_module_publish
+#: wizard_view:base_module_publish.module_export,init:0
+#: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_export
+msgid "Export module"
+msgstr "Exportiere Module"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "Please provide here your login on the Open ERP website."
-msgstr ""
+msgstr "Angabe Ihres Login für die OpenERP Web Seite"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step2,login:0
@@ -527,7 +274,13 @@ msgstr "Login"
 #. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,license:0
 msgid "GPL-2"
-msgstr ""
+msgstr "GPL-2"
+
+#. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "You could not publish a module that is not installed!"
+msgstr "Sie können kein Module veröffentlichen welches nicht installiert ist!"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
@@ -535,14 +288,30 @@ msgid "Upload information"
 msgstr "Upload Informationen"
 
 #. module: base_module_publish
+#: wizard_view:base_module_publish.module_export,zip:0
+msgid "Module successfully exported !"
+msgstr "Module erfolgreich exportiert!"
+
+#. module: base_module_publish
 #: selection:base_module_publish.module_publish,step1,operation:0
 msgid "Creation"
 msgstr ""
 
 #. module: base_module_publish
-#: selection:base_module_publish.module_publish,step1,category:0
-msgid "Tools/Others"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish,step1,include_src:0
+msgid "Include source"
+msgstr "Inkludierte Quelldateien"
+
+#. module: base_module_publish
+#: wizard_view:base_module_publish.module_publish,step1:0
+msgid "General"
+msgstr "Generell"
+
+#. module: base_module_publish
+#: wizard_view:base_module_publish.module_publish,step2:0
+#: wizard_view:base_module_publish.module_publish_all,login:0
+msgid "User information"
+msgstr "Benutzer Informationen"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,url:0
@@ -551,17 +320,43 @@ msgid "Download URL"
 msgstr "Download URL"
 
 #. module: base_module_publish
+#: wizard_view:base_module_publish.module_publish,publish:0
+msgid "Result"
+msgstr "Ergebnis"
+
+#. module: base_module_publish
+#: wizard_button:base_module_publish.module_export,init,end:0
+#: wizard_button:base_module_publish.module_publish,init,end:0
+#: wizard_button:base_module_publish.module_publish,step1,end:0
+#: wizard_button:base_module_publish.module_publish,step2,end:0
+#: wizard_button:base_module_publish.module_publish_all,init,end:0
+#: wizard_button:base_module_publish.module_publish_all,login,end:0
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,image:0
 msgid "Image file"
 msgstr "Bilddatei"
 
 #. module: base_module_publish
-#: wizard_view:base_module_publish.module_export,zip:0
-msgid "Module successfully exported !"
-msgstr "Module erfolgreich exportiert!"
+#: wizard_field:base_module_publish.module_publish,step1,operation:0
+msgid "Operation"
+msgstr "Vorgang"
+
+#. module: base_module_publish
+#: help:base_module_publish.module_publish,step1,docurl:0
+msgid "Empty to keep existing value"
+msgstr "Leer lassen, um bestehende Werte zu übernehmen"
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish
 msgid "Publish module"
 msgstr "Veröffentliche Module"
+
+#. module: base_module_publish
+#: wizard_button:base_module_publish.module_publish,step1,init:0
+#: wizard_button:base_module_publish.module_publish,step2,step1:0
+msgid "Previous"
+msgstr "Vorherige"
 

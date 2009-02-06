@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:53:54+0000\n"
-"PO-Revision-Date: 2009-01-28 00:53:54+0000\n"
+"POT-Creation-Date: 2009-02-06 15:14:47+0000\n"
+"PO-Revision-Date: 2009-02-06 15:14:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,12 +45,12 @@ msgstr "Descuento :"
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_nb:0
 msgid "Piece number"
-msgstr "Número pieza"
+msgstr "Número referencia"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
 msgid "Order Description"
-msgstr "Referencia venta"
+msgstr "Ref. venta"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
@@ -131,11 +131,6 @@ msgstr "Tienda"
 #: wizard_button:pos.refund_order,init,refund_n_quit:0
 msgid "Ok"
 msgstr "Aceptar"
-
-#. module: point_of_sale
-#: wizard_view:pos.scan_product,init:0
-msgid "Scan gencod"
-msgstr "Escanear código de barras"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -243,6 +238,11 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: point_of_sale
+#: wizard_view:pos.scan_product,init:0
+msgid "Scan Barcode"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
@@ -309,15 +309,7 @@ msgstr "Fecha de pago"
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 msgid "Payment name"
-msgstr "Nombre de pago"
-
-#. module: point_of_sale
-#: selection:pos.config.journal,init,default_journal:0
-#: selection:pos.config.journal,init,default_journal_gift:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.payment,ask_pay,journal:0
-msgid "x Bank Journal"
-msgstr "x Diario bancario"
+msgstr "Descripción pago"
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
@@ -521,11 +513,6 @@ msgid "Ma_ke Payment"
 msgstr "_Realizar pago"
 
 #. module: point_of_sale
-#: wizard_field:pos.scan_product,init,gencod:0
-msgid "Gencod"
-msgstr "Código de barras"
-
-#. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
 msgid "Add"
 msgstr "Añadir"
@@ -559,14 +546,6 @@ msgstr "Líneas de venta TPV"
 #: rml:pos.receipt:0
 msgid "E-mail :"
 msgstr "E-mail :"
-
-#. module: point_of_sale
-#: selection:pos.config.journal,init,default_journal:0
-#: selection:pos.config.journal,init,default_journal_gift:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.payment,ask_pay,journal:0
-msgid "x Checks Journal"
-msgstr "x Diario de cheques"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -873,6 +852,11 @@ msgstr "Facturación"
 #: field:report.transaction.pos,journal_id:0
 msgid "Journal"
 msgstr "Diario"
+
+#. module: point_of_sale
+#: wizard_field:pos.scan_product,init,gencod:0
+msgid "Barcode"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:46:14+0000\n"
-"PO-Revision-Date: 2009-01-28 00:46:14+0000\n"
+"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
+"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,10 +46,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
-#, python-format
-msgid "No price available !"
-msgstr "Kien Preis verfügbar!"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -134,7 +133,7 @@ msgstr "Grid"
 #. module: delivery
 #: view:res.partner:0
 msgid "Deliveries Properties"
-msgstr "Lieferungen Eigenschaften"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -242,7 +241,7 @@ msgstr "Max. Wert"
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,delivery:0
 msgid "Add Delivery Costs"
-msgstr "Lieferkosten Hinzufügen"
+msgstr ""
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
@@ -255,7 +254,7 @@ msgstr "Auslieferungsmethode"
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -315,6 +314,12 @@ msgstr "Keine Auftragsposition passend zu der Auswahl aus der Auslieferungstabel
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
 msgstr ""
 
 #. module: delivery

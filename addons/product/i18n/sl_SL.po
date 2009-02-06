@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:52:28+0000\n"
-"PO-Revision-Date: 2009-01-28 00:52:28+0000\n"
+"POT-Creation-Date: 2009-02-06 15:13:21+0000\n"
+"PO-Revision-Date: 2009-02-06 15:13:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -247,6 +247,7 @@ msgstr "Osnovni cenik"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_main_product
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -847,9 +848,9 @@ msgid "Rate"
 msgstr "Faktor"
 
 #. module: product
-#: wizard_field:product.price_list,init,qty1:0
-msgid "Quantity-1"
-msgstr ""
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "Postavke priporočenega cenika"
 
 #. module: product
 #: code:addons/product/report/product_pricelist.py:0
@@ -1252,9 +1253,9 @@ msgid "%d units"
 msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Postavke priporočenega cenika"
+#: view:product.product:0
+msgid "Codes"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -1578,6 +1579,11 @@ msgid "Average time to produce this product. This is only for the production ord
 msgstr "Povprečni čas za proizvodnjo tega izdelka. Velja samo za proizvodni nalog in,\n"
 "če je večnivojska kosovnica, samo za nivo tega izdelka. Posamezni časi se \n"
 "seštevajo za vse nivoje in nabavne naloge."
+
+#. module: product
+#: wizard_field:product.price_list,init,qty1:0
+msgid "Quantity-1"
+msgstr ""
 
 #. module: product
 #: field:product.packaging,length:0

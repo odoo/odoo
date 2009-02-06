@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:44:54+0000\n"
-"PO-Revision-Date: 2009-01-28 00:44:54+0000\n"
+"POT-Creation-Date: 2009-02-06 15:06:01+0000\n"
+"PO-Revision-Date: 2009-02-06 15:06:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,19 +32,20 @@ msgid "Régime National"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_view:wizard.account.xml.vat.declaration,go:0
-msgid "XML Flie has been Created."
-msgstr ""
-
-#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
 msgid "Tiers"
 msgstr ""
 
 #. module: l10n_be
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
+msgstr ""
+
+#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
 msgid "Charge"
-msgstr ""
+msgstr "Kulu"
 
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
@@ -60,13 +61,13 @@ msgstr "Loo XML"
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_capitaux
 msgid "Capital"
-msgstr ""
+msgstr "Varad"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,msg:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,msg:0
 msgid "File created"
-msgstr ""
+msgstr "Fail on loodud"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
@@ -76,7 +77,7 @@ msgstr ""
 #. module: l10n_be
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr ""
+msgstr "Viga ! Sa ei saa luua rekrusiivseid kontomalle."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -100,9 +101,15 @@ msgid "Select Fiscal Year"
 msgstr "Vali fiskaalaasta"
 
 #. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
+#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
+msgid "Periodical VAT Declaration"
+msgstr ""
+
+#. module: l10n_be
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Viga ! sa ei saa luua regrussivseid maksukoode."
+msgstr "Viga ! sa ei saa luua rekrusiivseid maksukoode."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_payable
@@ -112,7 +119,7 @@ msgstr ""
 #. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,init:0
 msgid "Select Period"
-msgstr ""
+msgstr "Vali periood"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
@@ -127,7 +134,7 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
 msgid "Vue"
-msgstr ""
+msgstr "Vaade"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,go,end:0
@@ -141,13 +148,14 @@ msgid "This wizard will create an XML file for Vat details and total invoiced am
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
-msgid "Enlist Vat Details"
+#: wizard_field:list.vat.detail,init,limit_amount:0
+msgid "Limit Amount"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_field:list.vat.detail,init,limit_amount:0
-msgid "Limit Amount"
+#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
+#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
+msgid "Annual Listing of VAT-Subjected Customers"
 msgstr ""
 
 #. module: l10n_be
@@ -156,20 +164,25 @@ msgid "Fiscal Year"
 msgstr "Rahandusaasta"
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
-#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
-msgid "Taxes Statement"
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "XML Flie has been Created."
+msgstr "XML Fail on loodud."
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "Data Insufficient"
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
-msgid "Listing of VAT Customers"
+#: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
+msgid "Belgium Statements"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,test_xml:0
 msgid "Test XML file"
-msgstr ""
+msgstr "Testi XML faili"
 
 #. module: l10n_be
 #: model:ir.actions.todo,note:l10n_be.config_call_account_template
@@ -190,7 +203,7 @@ msgstr "Maks"
 #. module: l10n_be
 #: wizard_field:wizard.account.xml.vat.declaration,init,period:0
 msgid "Period"
-msgstr ""
+msgstr "Periood"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,go:0
@@ -206,5 +219,5 @@ msgstr ""
 #: wizard_button:list.vat.detail,init,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
-msgstr "Tühista"
+msgstr "Loobu"
 

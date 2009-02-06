@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:40:23+0000\n"
-"PO-Revision-Date: 2009-01-28 00:40:23+0000\n"
+"POT-Creation-Date: 2009-02-06 15:01:34+0000\n"
+"PO-Revision-Date: 2009-02-06 15:01:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,9 @@ msgid "Partners"
 msgstr "Партньори"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Maturity"
-msgstr "Падеж"
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "Вид на условие"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -50,11 +50,6 @@ msgstr "Край на месеца"
 #: rml:account_followup.followup.print:0
 msgid "Due"
 msgstr "Краен срок"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Total amount due:"
-msgstr "Общо дължима сума:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -94,7 +89,6 @@ msgid "Ref"
 msgstr "Отпратка"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(followup_amount)s: Total Amount Due"
 msgstr "%(followup_amount)s: Обща дължима сума"
@@ -112,9 +106,10 @@ msgid "Name"
 msgstr "Име"
 
 #. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Общо кредит"
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "\n\nMail sent to following Partners successfully, !\n\n"
+msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
@@ -174,9 +169,9 @@ msgid "Paid"
 msgstr "Платено"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "."
-msgstr "."
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Общо кредит"
 
 #. module: account_followup
 #: model:ir.actions.wizard,name:account_followup.action_account_followup_all_wizard
@@ -190,7 +185,6 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(line)s: Account Move lines"
 msgstr "%(line)s: Редове на движение по сметка"
@@ -242,9 +236,22 @@ msgid "Li."
 msgstr "Ред"
 
 #. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Невалиден XML за преглед на архитектурата"
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+msgid "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+"			"
+msgstr ""
+
+#. module: account_followup
+#: wizard_button:account_followup.followup.print.all,summary,end:0
+msgid "Ok"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
@@ -280,9 +287,9 @@ msgid "Lines"
 msgstr "Редове"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Dear Sir/Madam,"
-msgstr "Уважаеми г-н/г-жо,"
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr "Последно следствие"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -290,15 +297,14 @@ msgid "Follow-up Level"
 msgstr "Ниво на следствие"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "All emails have been successfully sent."
-msgstr ""
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "Кредит"
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup statistics"
-msgstr "Статистки за следствие"
+#: rml:account_followup.followup.print:0
+msgid "Amount"
+msgstr ""
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,init,next:0
@@ -311,8 +317,9 @@ msgid "Accounting follow-ups management"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "According to our accounting, the following Invoices are unpaid. Could you please verify on your side, and take appropriate measures to pay the balance due in the next 8 days."
+#: wizard_view:account_followup.followup.print.all,summary:0
+#: wizard_field:account_followup.followup.print.all,summary,summary:0
+msgid "Summary"
 msgstr ""
 
 #. module: account_followup
@@ -321,12 +328,16 @@ msgid "Follow-Up Lines"
 msgstr ""
 
 #. module: account_followup
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Невалиден XML за преглед на архитектурата"
+
+#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
 msgstr "Редове със следвания"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(company_currency)s: User's Company Currency"
 msgstr ""
@@ -337,19 +348,37 @@ msgid "Balance"
 msgstr "Баланс"
 
 #. module: account_followup
+#: help:account_followup.followup.print.all,init,date:0
+msgid "This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+
+#. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Maturity date"
 msgstr "Дата на падеж"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Sub-Total:"
-msgstr "Междинна сума"
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
+msgid "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department at (+32).10.68.94.39. so that we can resolve the matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+"			"
+msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid "Best regards."
-msgstr "С уважение"
+msgid "Sub-Total:"
+msgstr "Междинна сума"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -377,9 +406,9 @@ msgid "Last move"
 msgstr "Последно движение"
 
 #. module: account_followup
-#: field:account_followup.stat,credit:0
-msgid "Credit"
-msgstr "Кредит"
+#: rml:account_followup.followup.print:0
+msgid "Maturity"
+msgstr "Падеж"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
@@ -387,24 +416,26 @@ msgid "Followup Report"
 msgstr "Справка за следствие"
 
 #. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
-msgstr "Вид на условие"
-
-#. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
-msgstr "Последно следствие"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "If the payment has been very recently made i.e. as this reminder was issued, consider this reminder as void. Do not hesitate to contact our accounting department for further queries."
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
+msgid "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days , then legal action for the recovery of the debt, will be taken without further notice.\n"
+"\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+"			"
 msgstr ""
 
 #. module: account_followup
-#: help:account_followup.followup.print.all,init,date:0
-msgid "This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Followup statistics"
+msgstr "Статистки за следствие"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -413,18 +444,11 @@ msgid "Legend"
 msgstr "Легенда"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "Email Sending Report"
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.followup.line,sequence:0
 msgid "Sequence"
 msgstr "Последователност"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Горен контитул на движение"
@@ -460,6 +484,12 @@ msgstr "Отказ"
 #: field:account_followup.followup.line,delay:0
 msgid "Days of delay"
 msgstr "Дни на закъснение"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "All emails have been successfully sent to Partners:.\n\n"
+msgstr ""
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,next,print:0

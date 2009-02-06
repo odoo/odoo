@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:56:48+0000\n"
-"PO-Revision-Date: 2009-01-28 00:56:48+0000\n"
+"POT-Creation-Date: 2009-02-06 15:18:25+0000\n"
+"PO-Revision-Date: 2009-02-06 15:18:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: wizard_view:list.vat.detail,go:0
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "Notification"
-msgstr ""
+msgstr "Mededeling"
 
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
@@ -32,13 +32,14 @@ msgid "Régime National"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_view:wizard.account.xml.vat.declaration,go:0
-msgid "XML Flie has been Created."
+#: model:account.account.type,name:l10n_be.user_type_tiers
+msgid "Tiers"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_tiers
-msgid "Tiers"
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
@@ -55,18 +56,18 @@ msgstr ""
 #: wizard_button:list.vat.detail,init,go:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,go:0
 msgid "Create XML"
-msgstr ""
+msgstr "XML Aanmaken"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_capitaux
 msgid "Capital"
-msgstr ""
+msgstr "Kapitaal"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,msg:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,msg:0
 msgid "File created"
-msgstr ""
+msgstr "Bestand aangemaakt"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
@@ -81,13 +82,13 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
 msgid "Immobilisation"
-msgstr ""
+msgstr "Onroerende goederen"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,file_save:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,file_save:0
 msgid "Save File"
-msgstr ""
+msgstr "Bestand opslaan"
 
 #. module: l10n_be
 #: model:ir.module.module,shortdesc:l10n_be.module_meta_information
@@ -97,6 +98,12 @@ msgstr ""
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "Select Fiscal Year"
+msgstr "Selecteer Fiscaaljaar"
+
+#. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
+#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
+msgid "Periodical VAT Declaration"
 msgstr ""
 
 #. module: l10n_be
@@ -112,12 +119,12 @@ msgstr ""
 #. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,init:0
 msgid "Select Period"
-msgstr ""
+msgstr "Kies periode"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
 msgid "Produit"
-msgstr ""
+msgstr "Product"
 
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
@@ -127,55 +134,62 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
 msgid "Vue"
-msgstr ""
+msgstr "Weergave"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,go,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,go,end:0
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "This wizard will create an XML file for Vat details and total invoiced amounts per partner."
-msgstr ""
-
-#. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
-msgid "Enlist Vat Details"
-msgstr ""
+msgstr "Deze assistent zal een XML bestand aanmaken voor de BTW gegevens en totaal gefactureerde bedragen per relatie."
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,limit_amount:0
 msgid "Limit Amount"
+msgstr "Bestedingslimiet"
+
+#. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
+#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
+msgid "Annual Listing of VAT-Subjected Customers"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
 msgid "Fiscal Year"
+msgstr "Boekjaar"
+
+#. module: l10n_be
+#: wizard_view:wizard.account.xml.vat.declaration,go:0
+msgid "XML Flie has been Created."
+msgstr "XML bestand is aangemaakt"
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#, python-format
+msgid "Data Insufficient"
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.actions.wizard,name:l10n_be.wizard_xml_vat_declaration
-#: model:ir.ui.menu,name:l10n_be.account_wizard_vat_declaration
-msgid "Taxes Statement"
-msgstr ""
-
-#. module: l10n_be
-#: model:ir.ui.menu,name:l10n_be.partner_wizard_vat_menu
-msgid "Listing of VAT Customers"
+#: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
+msgid "Belgium Statements"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,test_xml:0
 msgid "Test XML file"
-msgstr ""
+msgstr "Test XML bestand"
 
 #. module: l10n_be
 #: model:ir.actions.todo,note:l10n_be.config_call_account_template
 msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
 "This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
-msgstr ""
+msgstr "Genereer rekeningschema uit een schema sjabloon. U wordt gevraagd om de naam van de vennootschap, het schema sjabloon te gebruiken, het aantal cijfers voor het genereren van de code grootboekrekeningen, munteenheid voor de journalen. Dus wordt de zuivere kopie van het schema sjabloon aangemaakt.\n"
+"Dit is dezelfde wizard die wekt  vanuit Financieel Management / Configuratie / Financial Accounting / Financiële Rekeningen / Genereer Rekeningsschema  uit een schema sjabloon."
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,mand_id:0
@@ -185,17 +199,17 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax
 msgid "Tax"
-msgstr ""
+msgstr "Belasting"
 
 #. module: l10n_be
 #: wizard_field:wizard.account.xml.vat.declaration,init,period:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,go:0
 msgid "XML File has been Created."
-msgstr ""
+msgstr "XML bestand is aangemaakt"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -206,5 +220,5 @@ msgstr ""
 #: wizard_button:list.vat.detail,init,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleer"
 

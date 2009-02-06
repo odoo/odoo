@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:48:56+0000\n"
-"PO-Revision-Date: 2009-01-28 00:48:56+0000\n"
+"POT-Creation-Date: 2009-02-06 15:09:57+0000\n"
+"PO-Revision-Date: 2009-02-06 15:09:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -133,11 +133,6 @@ msgid "Ok"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_view:pos.scan_product,init:0
-msgid "Scan gencod"
-msgstr ""
-
-#. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,note:0
 msgid "Notes"
@@ -243,6 +238,11 @@ msgid "Fax :"
 msgstr ""
 
 #. module: point_of_sale
+#: wizard_view:pos.scan_product,init:0
+msgid "Scan Barcode"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,partner_id:0
 msgid "Partner"
 msgstr ""
@@ -309,14 +309,6 @@ msgstr ""
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 msgid "Payment name"
-msgstr ""
-
-#. module: point_of_sale
-#: selection:pos.config.journal,init,default_journal:0
-#: selection:pos.config.journal,init,default_journal_gift:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.payment,ask_pay,journal:0
-msgid "x Bank Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -521,11 +513,6 @@ msgid "Ma_ke Payment"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_field:pos.scan_product,init,gencod:0
-msgid "Gencod"
-msgstr ""
-
-#. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
 msgid "Add"
 msgstr ""
@@ -558,14 +545,6 @@ msgstr ""
 #. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "E-mail :"
-msgstr ""
-
-#. module: point_of_sale
-#: selection:pos.config.journal,init,default_journal:0
-#: selection:pos.config.journal,init,default_journal_gift:0
-#: selection:pos.config.journal,init,default_journal_rebate:0
-#: selection:pos.payment,ask_pay,journal:0
-msgid "x Checks Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -872,6 +851,11 @@ msgstr ""
 #: field:pos.payment,journal_id:0
 #: field:report.transaction.pos,journal_id:0
 msgid "Journal"
+msgstr ""
+
+#. module: point_of_sale
+#: wizard_field:pos.scan_product,init,gencod:0
+msgid "Barcode"
 msgstr ""
 
 #. module: point_of_sale
