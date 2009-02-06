@@ -936,6 +936,8 @@ class account_move_line(osv.osv):
             del vals['account_tax_id']
 
         if not is_new_move and 'date' in vals:
+            if context and ('__last_update' in context):
+                del context['__last_update']
             self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check:
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
