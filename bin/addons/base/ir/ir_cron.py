@@ -75,15 +75,18 @@ class ir_cron(osv.osv, netsvc.Agent):
             f(cr, uid, *args)
 
     def _poolJobs(self, db_name, check=False):
-        if self.pool._init:
-            self.setAlarm(self._poolJobs, int(time.time())+10*60, [db_name])
+        try:
+            db, pool = pooler.get_db_and_pool(db_name)
+            if pool._init:
+                # retry in a few minutes
+                self.setAlarm(self._poolJobs, int(time.time())+10*60, [db_name])
+            cr = db.cursor()
+        except:
+            return False
+        
         now = DateTime.now()
         #FIXME: multidb. Solution: a l'instanciation d'une nouvelle connection bd (ds pooler) fo que j'instancie
         # un nouveau pooljob avec comme parametre la bd
-        try:
-            cr = pooler.get_db(db_name).cursor()
-        except:
-            return False
 
         try:
             cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
