@@ -75,6 +75,8 @@ class ir_cron(osv.osv, netsvc.Agent):
             f(cr, uid, *args)
 
     def _poolJobs(self, db_name, check=False):
+        if self.pool._init:
+            self.setAlarm(self._poolJobs, int(time.time())+10*60, [db_name])
         now = DateTime.now()
         #FIXME: multidb. Solution: a l'instanciation d'une nouvelle connection bd (ds pooler) fo que j'instancie
         # un nouveau pooljob avec comme parametre la bd
