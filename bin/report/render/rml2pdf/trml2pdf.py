@@ -194,6 +194,26 @@ class _rml_doc(object):
                 addMapping(name, 1, 0, name)    #bold
                 addMapping(name, 1, 1, name)    #italic and bold
 
+    def setTTFontMapping(self,face, fontname,filename, mode='all'):
+        from reportlab.lib.fonts import addMapping
+        from reportlab.pdfbase import pdfmetrics
+        from reportlab.pdfbase.ttfonts import TTFont
+	
+	pdfmetrics.registerFont(TTFont(fontname, filename ))
+	if (mode == 'all'):
+		addMapping(face, 0, 0, fontname)    #normal
+		addMapping(face, 0, 1, fontname)    #italic
+		addMapping(face, 1, 0, fontname)    #bold
+		addMapping(face, 1, 1, fontname)    #italic and bold
+	elif (mode== 'normal') or (mode == 'regular'):
+		addMapping(face, 0, 0, fontname)    #normal
+	elif (mode == 'italic'):
+		addMapping(face, 0, 1, fontname)    #italic
+	elif (mode == 'bold'):
+		addMapping(face, 1, 0, fontname)    #bold
+	elif (mode == 'bolditalic'):
+		addMapping(face, 1, 1, fontname)    #italic and bold
+
     def _textual_image(self, node):
         import base64
         rc = ''
@@ -793,6 +813,14 @@ class _rml_template(object):
 
 def parseString(data, fout=None, images={}, path='.',title=None):
     r = _rml_doc(data, images, path, title=title)
+    
+    #try to override some font mappings
+    try:
+	from customfonts import SetCustomFonts
+	SetCustomFonts(r)
+    except:
+	pass
+    
     if fout:
         fp = file(fout,'wb')
         r.render(fp)
