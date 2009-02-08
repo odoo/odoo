@@ -56,7 +56,15 @@ class groups(osv.osv):
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        return super(groups, self).create(cr, uid, vals, context=context)
+        gid = super(groups, self).create(cr, uid, vals, context=context)
+
+        # assign this new group to user_root
+        user_obj = self.pool.get('res.users')
+        aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
+        if aid:
+            aid.write({'groups_id': [(4, gid)]})
+
+        return gid
 
 groups()
 
@@ -91,6 +99,7 @@ def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
 class users(osv.osv):
+    __admin_ids = {}
     _name = "res.users"
     #_log_access = False
     _columns = {
@@ -127,6 +136,14 @@ class users(osv.osv):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
     ]
+
+    def _get_admin_id(self, cr):
+        if self.__admin_ids.get(cr.dbname) is None:
+            ir_model_data_obj = self.pool.get('ir.model.data')
+            mdid = ir_model_data_obj._get_id(cr, 1, 'base', 'user_root')
+            self.__admin_ids[cr.dbname] = ir_model_data_obj.read(cr, 1, [mdid], ['res_id'])[0]['res_id']
+        return self.__admin_ids[cr.dbname]
+
     def _get_action(self,cr, uid, context={}):
         ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
         return ids and ids[0] or False

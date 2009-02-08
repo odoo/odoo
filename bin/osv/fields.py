@@ -34,6 +34,7 @@
 #
 import string
 import netsvc
+import sys
 
 from psycopg2 import Binary
 import warnings
@@ -216,8 +217,8 @@ class binary(_column):
                 if v['id'] == i:
                     val = v[name]
                     break
-            if context.get('bin_size', False):
-                res[i] = tools.human_size(val)
+            if context.get('bin_size', False) and val:
+                res[i] = tools.human_size(long(val))
             else:
                 res[i] = val
         return res

@@ -482,7 +482,7 @@ class module(osv.osv):
             if not mod.certificate:
                 logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: no quality certificate' % (mod.name,))
             else:
-                val = long(mod.certificate) % 97 == 29
+                val = long(mod.certificate[2:]) % 97 == 29
                 if not val:
                     logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))

@@ -26,10 +26,10 @@ class RemoteContractException(Exception): pass
 
 class remote_contract(object):
     def __init__(self, contract_id, contract_password, modules=None):
-        self.__server = 'http://192.168.0.127:8072/xmlrpc/'
-        self.__db = "maintenance"
-        self.__password = "admin"
-        self.__login = "admin"
+        self.__server = 'http://terp.tinyerp.com:8069/xmlrpc/'
+        self.__db = "tiny"
+        self.__password = "maintenance"
+        self.__login = "maintenance"
         
         rpc = xmlrpclib.ServerProxy(self.__server + 'common')
         try:

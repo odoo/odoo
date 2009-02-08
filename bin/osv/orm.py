@@ -40,6 +40,7 @@
 #
 
 import time
+import calendar
 import types
 import string
 import netsvc
@@ -62,6 +63,12 @@ from tools.config import config
 
 regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?( asc)?,?)+$', re.I)
 
+def last_day_of_current_month():
+    import datetime
+    import calendar
+    today = datetime.date.today()
+    last_day = str(calendar.monthrange(today.year, today.month)[1])
+    return time.strftime('%Y-%m-' + last_day)
 
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
@@ -728,50 +735,55 @@ class orm_template(object):
         model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
-        for f in self._columns.keys():
-            if fields and f not in fields:
-                continue
-            res[f] = {'type': self._columns[f]._type}
-            for arg in ('string', 'readonly', 'states', 'size', 'required',
-                    'change_default', 'translate', 'help', 'select'):
-                if getattr(self._columns[f], arg):
-                    res[f][arg] = getattr(self._columns[f], arg)
-            if not read_access:
-                res[f]['readonly'] = True
-                res[f]['states'] = {}
-            for arg in ('digits', 'invisible','filters'):
-                if hasattr(self._columns[f], arg) \
-                        and getattr(self._columns[f], arg):
-                    res[f][arg] = getattr(self._columns[f], arg)
-
-            res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-            if res_trans:
-                res[f]['string'] = res_trans
-            help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-            if help_trans:
-                res[f]['help'] = help_trans
-
-            if hasattr(self._columns[f], 'selection'):
-                if isinstance(self._columns[f].selection, (tuple, list)):
-                    sel = self._columns[f].selection
-                    # translate each selection option
-                    sel2 = []
-                    for (key, val) in sel:
-                        val2 = None
-                        if val:
-                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                        sel2.append((key, val2 or val))
-                    sel = sel2
-                    res[f]['selection'] = sel
-                else:
-                    # call the 'dynamic selection' function
-                    res[f]['selection'] = self._columns[f].selection(self, cr,
-                            user, context)
-            if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                res[f]['relation'] = self._columns[f]._obj
-                res[f]['domain'] = self._columns[f]._domain
-                res[f]['context'] = self._columns[f]._context
-
+        
+        if self._columns.keys():
+            for f in self._columns.keys():
+                if fields and f not in fields:
+                    continue
+                res[f] = {'type': self._columns[f]._type}
+                for arg in ('string', 'readonly', 'states', 'size', 'required',
+                        'change_default', 'translate', 'help', 'select'):
+                    if getattr(self._columns[f], arg):
+                        res[f][arg] = getattr(self._columns[f], arg)
+                if not read_access:
+                    res[f]['readonly'] = True
+                    res[f]['states'] = {}
+                for arg in ('digits', 'invisible','filters'):
+                    if hasattr(self._columns[f], arg) \
+                            and getattr(self._columns[f], arg):
+                        res[f][arg] = getattr(self._columns[f], arg)
+    
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                if res_trans:
+                    res[f]['string'] = res_trans
+                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                if help_trans:
+                    res[f]['help'] = help_trans
+    
+                if hasattr(self._columns[f], 'selection'):
+                    if isinstance(self._columns[f].selection, (tuple, list)):
+                        sel = self._columns[f].selection
+                        # translate each selection option
+                        sel2 = []
+                        for (key, val) in sel:
+                            val2 = None
+                            if val:
+                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
+                            sel2.append((key, val2 or val))
+                        sel = sel2
+                        res[f]['selection'] = sel
+                    else:
+                        # call the 'dynamic selection' function
+                        res[f]['selection'] = self._columns[f].selection(self, cr,
+                                user, context)
+                if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+                    res[f]['relation'] = self._columns[f]._obj
+                    res[f]['domain'] = self._columns[f]._domain
+                    res[f]['context'] = self._columns[f]._context
+        else:
+            #TODO : read the fields from the database 
+            pass
+        
         if fields:
             # filter out fields which aren't in the fields list
             for r in res.keys():
@@ -2135,7 +2147,10 @@ class orm(orm_template):
 
         for order, object, ids, fields in result_store:
             if object<>self._name:
-                self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
+                cr.execute('select id from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+                ids = map(lambda x: x[0], cr.fetchall())
+                if ids:
+                    self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
@@ -2286,49 +2301,61 @@ class orm(orm_template):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                if vals[self._parent_name]:
-                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
-                else:
-                    cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
-                res = cr.fetchone()
-                if res:
-                    pleft,pright = res
-                else:
-                    cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
-                    pleft,pright = cr.fetchone()
-                cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%s',ids))+')', ids)
-                dest = pleft + 1
-                for cleft,cright,cid in cr.fetchall():
-                    if cleft > pleft:
-                        treeshift  = pleft - cleft + 1
-                        leftbound  = pleft+1
-                        rightbound = cleft-1
-                        cwidth     = cright-cleft+1
-                        leftrange = cright
-                        rightrange  = pleft
+                for id in ids:
+                    if vals[self._parent_name]:
+                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
+                        pleft_old = pright_old = None
+                        result_p = cr.fetchall()
+                        for (pleft,pright,pid) in result_p:
+                            if pid == id:
+                                break
+                            pleft_old = pleft
+                            pright_old = pright
+                        if not pleft_old:
+                            cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
+                            pleft_old,pright_old = cr.fetchone()
+                        res = (pleft_old, pright_old)
                     else:
-                        treeshift  = pleft - cright
-                        leftbound  = cright + 1
-                        rightbound = pleft
-                        cwidth     = cleft-cright-1
-                        leftrange  = pleft+1
-                        rightrange = cleft
-                    cr.execute('UPDATE '+self._table+'''
-                        SET
-                            parent_left = CASE
-                                WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                ELSE parent_left
-                            END,
-                            parent_right = CASE
-                                WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                ELSE parent_right
-                            END
-                        WHERE
-                            parent_left<%s OR parent_right>%s;
-                    ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
-                        cwidth,cleft,cright,treeshift,leftrange,rightrange))
+                        cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
+                        res = cr.fetchone()
+                    if res:
+                        pleft,pright = res
+                    else:
+                        cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
+                        pleft,pright = cr.fetchone()
+                    cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%s',ids))+')', ids)
+                    dest = pleft + 1
+                    for cleft,cright,cid in cr.fetchall():
+                        if cleft > pleft:
+                            treeshift  = pleft - cleft + 1
+                            leftbound  = pleft+1
+                            rightbound = cleft-1
+                            cwidth     = cright-cleft+1
+                            leftrange = cright
+                            rightrange  = pleft
+                        else:
+                            treeshift  = pleft - cright
+                            leftbound  = cright + 1
+                            rightbound = pleft
+                            cwidth     = cleft-cright-1
+                            leftrange  = pleft+1
+                            rightrange = cleft
+                        cr.execute('UPDATE '+self._table+'''
+                            SET
+                                parent_left = CASE
+                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
+                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
+                                    ELSE parent_left
+                                END,
+                                parent_right = CASE
+                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
+                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
+                                    ELSE parent_right
+                                END
+                            WHERE
+                                parent_left<%s OR parent_right>%s;
+                        ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
+                            cwidth,cleft,cright,treeshift,leftrange,rightrange))
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
@@ -2446,8 +2473,17 @@ class orm(orm_template):
             else:
                 parent = vals.get(self._parent_name, False)
                 if parent:
-                    cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
-                    pleft = cr.fetchone()[0]
+                    cr.execute('select parent_right from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (parent,))
+                    pleft_old = None
+                    result_p = cr.fetchall()
+                    for (pleft,) in result_p:
+                        if not pleft:
+                            break
+                        pleft_old = pleft
+                    if not pleft_old:
+                        cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
+                        pleft_old = cr.fetchone()[0]
+                    pleft = pleft_old
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
@@ -2635,7 +2671,7 @@ class orm(orm_template):
         res = self.name_get(cr, user, ids, context)
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not context:
             context = {}
         if not default:
@@ -2645,6 +2681,7 @@ class orm(orm_template):
                 default['state'] = self._defaults['state'](self, cr, uid, context)
         data = self.read(cr, uid, [id], context=context)[0]
         fields = self.fields_get(cr, uid)
+        trans_data=[]
         for f in fields:
             ftype = fields[f]['type']
 
@@ -2667,14 +2704,15 @@ class orm(orm_template):
                     # the lines are first duplicated using the wrong (old)
                     # parent but then are reassigned to the correct one thanks
                     # to the (4, ...)
-                    res.append((4, rel.copy(cr, uid, rel_id, context=context)))
+                    d,t = rel.copy_data(cr, uid, rel_id, context=context)
+                    res.append((0, 0, d))
+                    trans_data += t
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
         trans_name=''
-        trans_data=[]
         for f in fields:
             trans_flag=True
             if f in self._columns and self._columns[f].translate:
@@ -2696,14 +2734,15 @@ class orm(orm_template):
 
         for v in self._inherits:
             del data[self._inherits[v]]
+        return data, trans_data
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        data, trans_data = self.copy_data(cr, uid, id, default, context)
         new_id=self.create(cr, uid, data)
-
         for record in trans_data:
             del record['id']
             record['res_id']=new_id
             trans_obj.create(cr,uid,record)
-
         return new_id
 
     def check_recursion(self, cr, uid, ids, parent=None):

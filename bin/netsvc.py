@@ -89,10 +89,12 @@ logging.DEBUG_RPC = logging.DEBUG - 1
 
 def init_logger():
     import os
+    from tools.translate import resetlocale
+    resetlocale()
 
     logger = logging.getLogger()
     # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%Y-%m-%d %H:%M:%S')
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s')
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -152,7 +154,7 @@ def init_logger():
 
 class Logger(object):
     def notifyChannel(self, name, level, msg):
-        log = logging.getLogger(name)
+        log = logging.getLogger(tools.ustr(name))
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
@@ -266,21 +268,6 @@ class SSLSocket(object):
 
     def __getattr__(self, name):
         return getattr(self.socket, name)
-    
-class doesitgohere():
-    def recv(self, bufsize):
-	""" Another bugfix: SSL's recv() may raise
-	recoverable exceptions, which simply need us to retry
-	the call
-	"""
-	while True:
-	    try:
-		return self.socket.recv(bufsize)
-	    except SSL.WantReadError:
-	        pass
-	    except SSL.WantWriteError:
-		pass
-
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = map(lambda s: '/xmlrpc/%s' % s, SERVICES.keys())

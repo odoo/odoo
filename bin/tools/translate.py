@@ -554,67 +554,40 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     try:
         uid = 1
         cr = pooler.get_db(db_name).cursor()
-        ids = lang_obj.search(cr, uid, [('code','=',lang)])
-        lc, encoding = locale.getdefaultlocale()
-        if not encoding:
-            encoding = 'UTF-8'
-        if encoding == 'utf' or encoding == 'UTF8':
-            encoding = 'UTF-8'
-        if encoding == 'cp1252':
-            encoding= '1252'
-        if encoding == 'iso-8859-1':
-            encoding= 'iso-8859-15'
-        if encoding == 'latin1':
-            encoding= 'latin9'
-
-	# this block temporarily sets the locale to the requested lang, so that
-	# some defaults are read from it.
-        try:
-            if os.name == 'nt':
-                locale.setlocale(locale.LC_ALL, str(_LOCALE2WIN32.get(lang, lang) + '.' + encoding))
-            else:
-                locale.setlocale(locale.LC_ALL, str(lang + '.' + encoding))
-        except Exception:
-            netsvc.Logger().notifyChannel(' ', netsvc.LOG_WARNING,
-                    'unable to set locale "%s"' % (str(lang + '.' + encoding)))
-	    # Now, the default locale is still active, so the values can be
-	    # read from that.
-	    try:
-		locale.setlocale(locale.LC_ALL, str(lc + '.' + encoding))
-	    except:
-		pass
-
+        ids = lang_obj.search(cr, uid, [('code','=', lang)])
+        
         if not ids:
+            # lets create the language with locale information
+            fail = True
+            for ln in get_locales(lang):
+                try:
+                    locale.setlocale(locale.LC_ALL, ln)
+                    fail = False
+                    break
+                except locale.Error:
+                    continue
+            if fail:
+                lc = locale.getdefaultlocale()[0]
+                msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
+                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc)) 
+                
             if not lang_name:
-                lang_name=lang
-                languages=tools.get_languages()
-                lang_name = languages.get(lang, lang)
-            ids = lang_obj.create(cr, uid, {
+                lang_name = tools.get_languages().get(lang, lang)
+            
+            lang_info = {
                 'code': lang,
                 'name': lang_name,
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'grouping' : [],
-                'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
-                'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
-                })
-        else:
-            lang_obj.write(cr, uid, ids, {'translatable':1,
-                                          'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-                                          'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                                          'grouping' : [],
-                                          'decimal_point' : str(locale.nl_langinfo(locale.RADIXCHAR)),
-                                          'thousands_sep' : str(locale.nl_langinfo(locale.THOUSEP))
-                                            })
-	# Here we try to reset the locale regardless.
-        try:
-            locale.resetlocale(locale.LC_ALL)
-        except:
-            pass
-        lang_ids = lang_obj.search(cr, uid, [])
-        langs = lang_obj.read(cr, uid, lang_ids)
-        ls = map(lambda x: (x['code'],x['name']), langs)
+                'decimal_point' : str(locale.localeconv()['decimal_point']).replace('\xa0', '\xc2\xa0'),
+                'thousands_sep' : str(locale.localeconv()['thousands_sep']).replace('\xa0', '\xc2\xa0'),
+            }
+            
+            try: 
+                lang_obj.create(cr, uid, lang_info)
+            finally:
+                resetlocale()
 
 
         # now, the serious things: we read the language file
@@ -706,13 +679,47 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     except IOError:
         filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
         logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
-	cr.commit()
-	cr.close()
-    except:
-	cr.commit()
-	cr.close()
-	raise
 
+def get_locales(lang=None):
+    if lang is None:
+        lang = locale.getdefaultlocale()[0]
+    
+    if os.name == 'nt':
+        from report.report_sxw import _LOCALE2WIN32
+        lang = _LOCALE2WIN32.get(lang, lang)
+    
+    def process(enc):
+        ln = locale._build_localename((lang, enc))
+        yield ln
+        nln = locale.normalize(ln)
+        if nln != ln:
+            yield nln
+
+    for x in process('utf8'): yield x
+
+    prefenc = locale.getpreferredencoding()
+    if prefenc:
+        for x in process(prefenc): yield x
+        
+        prefenc = {
+            'latin1': 'latin9', 
+            'iso-8859-1': 'iso8859-15',
+            'cp1252': '1252',
+        }.get(prefenc.lower())
+        if prefenc:
+            for x in process(prefenc): yield x
+
+    yield lang
+
+
+
+def resetlocale():
+    # locale.resetlocale is bugged with some locales. 
+    for ln in get_locales():
+        try:
+            return locale.setlocale(locale.LC_ALL, ln)
+        except locale.Error:
+            continue
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

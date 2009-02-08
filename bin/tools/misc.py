@@ -677,7 +677,11 @@ def ustr(value):
     if not isinstance(value, str):
         value = str(value)
 
-    return unicode(value, 'utf-8')
+    try:
+        return unicode(value, 'utf-8')
+    except:
+        from locale import getlocale
+        return unicode(value, getlocale()[1])
 
 def exception_to_unicode(e):
     if hasattr(e, 'message'):
@@ -740,6 +744,7 @@ def get_languages():
         'it_IT': u'Italian / Italiano',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'nl_NL': u'Dutch / Nederlands',
+        'nl_BE': u'Dutch (Belgium) / Nederlands (Belgïe)',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portugese (BR) / português (BR)',
         'pt_PT': u'Portugese / português',

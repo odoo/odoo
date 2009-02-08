@@ -74,7 +74,7 @@ def check_modules():
 
 def find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
-        if '__init__.py' in names:
+        if '__terp__.py' in names:
             modname = dp.replace(os.path.sep, '.').replace('bin', 'openerp-server', 1)
             yield modname
 
@@ -108,14 +108,17 @@ def data_files():
                                               opj('bin', 'server.cert')]))
 
         for addon in find_addons():
+            addonname = addon.split('.')[-1]
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.py', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
-                    pathfiles.extend(((opj(addon_path, root.replace('bin/addons/', '')), map(lambda file: opj(root, file), innerfiles)),))
+                    res = os.path.normpath(opj(addon_path, root.replace(opj('bin','addons', addonname), '.')))
+                    pathfiles.extend(((res, map(lambda file: opj(root, file), innerfiles)),))
             files.extend(pathfiles)
+
     return files
 
 check_modules()

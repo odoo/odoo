@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:49:38+0000\n"
-"PO-Revision-Date: 2009-01-28 00:49:38+0000\n"
+"POT-Creation-Date: 2009-02-06 15:10:37+0000\n"
+"PO-Revision-Date: 2009-02-06 15:10:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1162,9 +1162,9 @@ msgid "Auto"
 msgstr "Automático"
 
 #. module: base
-#: help:ir.actions.server,model_id:0
-msgid "Select the obect on which the action will work (read, write, create)."
-msgstr ""
+#: view:res.request:0
+msgid "End of Request"
+msgstr "Fim da requisição"
 
 #. module: base
 #: view:res.request:0
@@ -2200,6 +2200,11 @@ msgid "STOCK_QUIT"
 msgstr "STOCK_QUIT"
 
 #. module: base
+#: view:ir.cron:0
+msgid "Technical Data"
+msgstr ""
+
+#. module: base
 #: view:res.partner:0
 #: field:res.partner,category_id:0
 msgid "Categories"
@@ -2325,6 +2330,11 @@ msgstr "Novos módulos"
 #: field:ir.actions.report.xml,report_sxw_content_data:0
 msgid "SXW content"
 msgstr "Conteúdo SXW"
+
+#. module: base
+#: view:ir.cron:0
+msgid "Action to Trigger"
+msgstr ""
 
 #. module: base
 #: field:ir.report.custom.fields,fc0_operande:0
@@ -2648,6 +2658,12 @@ msgstr ""
 #: view:res.config.view:0
 msgid "Choose the simplified interface if you are testing OpenERP for the first time. Less used options or fields are automatically hidden. You will be able to change this, later, through the Administration menu."
 msgstr "Escolha a interface simplificada se voce esta testando o OpenERP pela primeira vez. Opções ou campos menos usados são automaticamente escondidos. Voce pode alterar isto mais tarde no menu Administração"
+
+#. module: base
+#: code:osv/orm.py:0
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -3275,7 +3291,6 @@ msgstr "Configuração de ação"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_address_form
 #: model:ir.model,name:base.model_res_partner_address
-#: model:ir.ui.menu,name:base.menu_partner_address_form
 #: view:res.partner.address:0
 msgid "Partner Addresses"
 msgstr "Endereços do parceiro"
@@ -3324,7 +3339,7 @@ msgstr "STOCK_DND_MULTIPLE"
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
 #: view:res.partner:0
 msgid "Partner Contacts"
-msgstr ""
+msgstr "Contatos do Parceiro"
 
 #. module: base
 #: wizard_field:module.module.update,update,add:0
@@ -3961,6 +3976,11 @@ msgid "acc_number"
 msgstr "acc_number"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_partner_address_form
+msgid "Addresses"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mm
 msgid "Myanmar"
 msgstr ""
@@ -4564,6 +4584,11 @@ msgid "Reunion (French)"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "sv_SV"
+msgstr ""
+
+#. module: base
 #: field:ir.rule.group,global:0
 msgid "Global"
 msgstr "Global"
@@ -4926,6 +4951,11 @@ msgid "Egypt"
 msgstr ""
 
 #. module: base
+#: help:ir.actions.server,model_id:0
+msgid "Select the object on which the action will work (read, write, create)."
+msgstr ""
+
+#. module: base
 #: view:ir.model:0
 msgid "Fields Description"
 msgstr "Descrição de campos"
@@ -4980,6 +5010,7 @@ msgstr ""
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: field:res.partner.function,ref:0
 msgid "Notes"
 msgstr "Notas"
 
@@ -5190,12 +5221,6 @@ msgid "Active Partner Events"
 msgstr "Ativar eventos dos parceiros"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "Error occured while validating the field(s) %s: %s"
-msgstr "Ocorreu um erro na validação do(s) campo(s) %s: %s"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_rule
 #: model:ir.ui.menu,name:base.menu_action_rule
 msgid "Record Rules"
@@ -5259,7 +5284,7 @@ msgstr "maintenance.contract.wizard"
 #. module: base
 #: field:ir.actions.server,child_ids:0
 msgid "Other Actions"
-msgstr ""
+msgstr "Outras Ações"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -5620,6 +5645,11 @@ msgstr "Para implementar novos termos na tradução oficial do OpenERP, voce pod
 #: wizard_button:module.lang.install,init,start:0
 msgid "Start installation"
 msgstr "Iniciar instalação"
+
+#. module: base
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -6727,6 +6757,7 @@ msgid "Resource ID"
 msgstr ""
 
 #. module: base
+#: view:ir.cron:0
 #: field:ir.model,info:0
 #: field:ir.model.grid,info:0
 #: view:maintenance.contract:0
@@ -6884,6 +6915,11 @@ msgid "Technical guide"
 msgstr "Guia técnico"
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "cs_CS"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CONVERT"
 msgstr "STOCK_CONVERT"
@@ -6892,11 +6928,6 @@ msgstr "STOCK_CONVERT"
 #: model:res.country,name:base.tz
 msgid "Tanzania"
 msgstr ""
-
-#. module: base
-#: view:res.request:0
-msgid "End of Request"
-msgstr "Fim da requisição"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -7568,11 +7599,6 @@ msgstr "a5"
 #. module: base
 #: model:res.country,name:base.sc
 msgid "Seychelles"
-msgstr ""
-
-#. module: base
-#: view:ir.cron:0
-msgid "Action to trigger"
 msgstr ""
 
 #. module: base

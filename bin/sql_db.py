@@ -122,6 +122,10 @@ class Cursor(object):
 	    logger= netsvc.Logger()
 	    logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
 	    raise
+        except Exception, e:
+            log("bad query: %s" % self._obj.query)
+            log(e)
+	    raise
 
         if self.sql_log:
             log("query: %s" % self._obj.query)
