@@ -113,7 +113,7 @@ def data_files():
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
-                innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.py', '.pyd', '.pyo'), innerfiles)
+                innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
                     res = os.path.normpath(opj(addon_path, root.replace(opj('bin','addons', addonname), '.')))
                     pathfiles.extend(((res, map(lambda file: opj(root, file), innerfiles)),))
