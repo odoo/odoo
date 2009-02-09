@@ -31,8 +31,6 @@ from tools.translate import _
 class wiz_timesheet_open(wizard.interface):
     
     def _open_wiki_page(self, cr, uid, data, context):
-        print "uid: %r" % (uid,)
-        print "data: %r" % (data,)
         pool = pooler.get_pool(cr.dbname)
         menu_id = data['id']
         group_ids = pool.get('wiki.groups.link').search(cr, uid, [('action_id','=',menu_id)])
