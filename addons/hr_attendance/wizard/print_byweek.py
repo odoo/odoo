@@ -44,10 +44,10 @@ class wiz_byweek(wizard.interface):
         },
         'print': {
             'actions': [],
-            'result': {'type': 'print', 'report': 'hr.timesheet.allweeks', 'state':'end'}
+            'result': {'type': 'print', 'report': 'hr.attendance.allweeks', 'state':'end'}
         }
     }
-wiz_byweek('hr.print_week')
+wiz_byweek('hr.attendance.print_week')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

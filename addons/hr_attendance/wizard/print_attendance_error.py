@@ -46,10 +46,10 @@ class wiz_attendance(wizard.interface):
         },
         'print': {
             'actions': [],
-            'result': {'type': 'print', 'report': 'hr.timesheet.attendance.error', 'state':'end'}
+            'result': {'type': 'print', 'report': 'hr.attendance.error', 'state':'end'}
         }
     }
-wiz_attendance('hr.timesheet.attendance.report')
+wiz_attendance('hr.attendance.report')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
