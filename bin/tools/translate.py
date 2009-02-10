@@ -59,7 +59,7 @@ class GettextAlias(object):
     def __call__(self, source):
         frame = inspect.stack()[1][0]
         cr = frame.f_locals.get('cr')
-        lang = frame.f_locals.get('context', {}).get('lang', False)
+        lang = (frame.f_locals.get('context') or {}).get('lang', False)
         if not (lang and cr):
             return source
 
