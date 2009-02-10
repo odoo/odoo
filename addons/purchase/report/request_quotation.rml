@@ -109,7 +109,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="387.0,83.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
+    <blockTable colWidths="371.0,98.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -124,13 +124,13 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[repeatIn(order.order_line,'order_line')]]</para>
-      <blockTable colWidths="388.0,83.0,39.0,20.0" style="Table_Product_Line">
+      <blockTable colWidths="371.0,100.0,39.0,20.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date = True) ]]</para>
+            <para style="terp_default_Centre_9">[[ formatLang(order_line.date_planned, date_time = True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(order_line.product_qty )]]</para>
