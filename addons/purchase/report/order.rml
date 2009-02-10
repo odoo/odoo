@@ -133,7 +133,7 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+    <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
@@ -237,7 +237,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="251.0,53.0,62.0,47.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="202.0,57.0,106.0,47.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -260,8 +260,8 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_8">[[ repeatIn(o.order_line,'line') ]]</para>
-      <blockTable colWidths="251.0,52.0,61.0,29.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
+      <para style="terp_default_8">[[repeatIn(o.order_line,'line')]]</para>
+      <blockTable colWidths="200.0,58.0,106.0,29.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -270,7 +270,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ formatLang( line.date_planned, date=True) ]]</para>
+            <para style="terp_default_Centre_9">[[ formatLang( line.date_planned, date_time=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.product_qty ) ]] </para>
