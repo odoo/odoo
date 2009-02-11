@@ -272,6 +272,17 @@ def get_modules():
 
     return list(set(listdir(ad) + listdir(_ad)))
 
+def get_modules_with_version():
+    modules = get_modules()
+    res = {}
+    for module in modules:
+        terp = get_module_resource(module, '__terp__.py')
+        try:
+            info = eval(tools.file_open(terp).read())
+            res[module] = "%s.%s" % (release.major_version, info['version'])
+        except Exception, e:
+            continue
+    return res
 
 def create_graph(cr, module_list, force=None):
     graph = Graph()
