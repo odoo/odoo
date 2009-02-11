@@ -336,11 +336,11 @@ def init_module_objects(cr, module_name, obj_list):
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
     todo = []
     for obj in obj_list:
-        if hasattr(obj, 'init'):
-            obj.init(cr)
         result = obj._auto_init(cr, {'module': module_name})
         if result:
             todo += result
+        if hasattr(obj, 'init'):
+            obj.init(cr)
         cr.commit()
     todo.sort()
     for t in todo:
