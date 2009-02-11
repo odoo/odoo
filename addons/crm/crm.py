@@ -80,7 +80,7 @@ class crm_case_section(osv.osv):
             level -= 1
         return True
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive sections.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
     ]
 
     # Mainly used by the wizard
