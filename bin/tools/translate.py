@@ -527,7 +527,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             fail = True
             for ln in get_locales(lang):
                 try:
-                    locale.setlocale(locale.LC_ALL, ln)
+                    locale.setlocale(locale.LC_ALL, str(ln))
                     fail = False
                     break
                 except locale.Error:
