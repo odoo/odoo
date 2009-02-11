@@ -364,10 +364,10 @@ class Partner(osv.osv):
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
-                    'Membership amount', digites=(16, 2), 
+                    'Membership amount', digites=(16, 2),
                     help='The price negociated by the partner'),
         'membership_state': fields.function(
-                    _membership_state, method = True, 
+                    _membership_state, method = True,
                     string = 'Current membership state', type = 'selection',
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
@@ -385,8 +385,8 @@ class Partner(osv.osv):
                         }
                     ),
         'membership_stop': fields.function(
-                    _membership_stop, method = True, 
-                    string = 'Stop membership date', type = 'date', 
+                    _membership_stop, method = True,
+                    string = 'Stop membership date', type = 'date',
                     store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
@@ -760,7 +760,7 @@ class account_invoice_line(osv.osv):
             if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                 date_from = line.invoice_id.date_invoice
             line_id = member_line_obj.create(cr, uid, {
-                'partner': line.invoice_id.partner_id.id,
+                'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
                 'date_from': date_from,
                 'date_to': date_to,
                 'account_invoice_line': line.id,

@@ -84,8 +84,8 @@ class stock_location(osv.osv):
             if 'stock_virtual' in field_names:
                 res[loc]['stock_virtual'] = prod.virtual_available
         return res
-    
-    
+
+
     def product_detail(self, cr, uid, id, field):
         res = {}
         res[id] = {}
@@ -100,7 +100,7 @@ class stock_location(osv.osv):
                 product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price','name'])
                 final_value += (product[field_to_read] * product['standard_price'])
         return final_value
-    
+
     def _product_value(self, cr, uid, ids, field_names, arg, context={}):
         result = {}
         for id in ids:
@@ -110,7 +110,7 @@ class stock_location(osv.osv):
                 ret_dict = self.product_detail(cr,uid,loc,field=field_name)
                 result[loc][field_name] = ret_dict
         return result
-    
+
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
@@ -681,6 +681,7 @@ class stock_picking(osv.osv):
                     'address_contact_id': address_contact_id,
                     'comment': comment,
                     'payment_term': payment_term_id,
+                    'fiscal_position': partner.property_account_position.id
                     }
                 cur_id = self.get_currency_id(cursor, user, picking)
                 if cur_id:

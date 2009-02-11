@@ -113,6 +113,7 @@ def _makeInvoices(self, cr, uid, data, context):
             'currency_id' :reg.partner_invoice_id.property_product_pricelist.currency_id.id,
             'comment': "",
             'payment_term':reg.partner_invoice_id.property_payment_term.id,
+            'fiscal_position': reg.partner_invoice_id.property_account_position.id
         }
 
         inv_obj = pool_obj.get('account.invoice')

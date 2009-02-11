@@ -78,7 +78,8 @@ def _invoice_membership(self, cr, uid, data, context):
             'partner_id' : partner_id,
             'address_invoice_id': partner_address_ids[partner_id]['id'],
             'account_id': account_id,
-            'invoice_line':[(6,0,[invoice_line_id])]
+            'invoice_line':[(6,0,[invoice_line_id])],
+            'fiscal_position': fpos_id or False
             }
         )
         invoice_list.append(invoice_id)

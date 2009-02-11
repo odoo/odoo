@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -152,6 +152,7 @@ class hr_expense_expense(osv.osv):
                 'price_type': 'tax_included',
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
+                'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id
             }
             if payment_term_id:
                 to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [],
