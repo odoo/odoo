@@ -414,7 +414,7 @@ GNU Public Licence.
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
-            zips = rc.retrieve_updates(rc.id)
+            zips = rc.retrieve_updates(rc.id, addons.get_modules_with_version())
             
             from shutil import rmtree, copytree, copy
 
