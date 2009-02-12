@@ -54,10 +54,10 @@ class wiz_bymonth(wizard.interface):
         },
         'print': {
             'actions': [],
-            'result': {'type': 'print', 'report': 'hr.timesheet.bymonth', 'state': 'end'}
+            'result': {'type': 'print', 'report': 'hr.attendance.bymonth', 'state': 'end'}
         }
     }
-wiz_bymonth('hr.print_month')
+wiz_bymonth('hr.attendance.print_month')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

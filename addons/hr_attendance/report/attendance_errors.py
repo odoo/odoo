@@ -73,7 +73,7 @@ class attendance_print(report_sxw.rml_parse):
 
         return (self._sign(total),total2 and self._sign(total2))
 
-report_sxw.report_sxw('report.hr.timesheet.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml',parser=attendance_print, header=2)
+report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml',parser=attendance_print, header=2)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

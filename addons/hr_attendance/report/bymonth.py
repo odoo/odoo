@@ -96,7 +96,7 @@ class report_custom(report_rml):
 
         return xml
 
-report_custom('report.hr.timesheet.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
+report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
