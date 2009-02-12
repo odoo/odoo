@@ -1922,7 +1922,7 @@ class orm(orm_template):
                         return "COALESCE(write_date, create_date, now())::timestamp AS %s" % (f,)
                     return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
-                    return "length(%s) as %s" % (f,f)
+                    return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
