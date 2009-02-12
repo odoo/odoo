@@ -1073,7 +1073,8 @@ class mrp_procurement(osv.osv):
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
-                'order_line': [(0,0,line)]
+                'order_line': [(0,0,line)],
+                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
         return purchase_id

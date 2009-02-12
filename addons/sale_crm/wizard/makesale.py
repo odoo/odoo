@@ -99,6 +99,7 @@ class make_sale(wizard.interface):
                 'partner_shipping_id': partner_addr['delivery'],
                 'order_policy': 'manual',
                 'date_order': now(),
+                'fiscal_position': fpos
             }
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
