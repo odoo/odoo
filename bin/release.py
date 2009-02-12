@@ -23,7 +23,7 @@
 
 name = 'openerp-server'
 version = '5.0.0'
-release = '2'
+release = '3'
 major_version = '5.0'
 description = 'OpenERP Server'
 long_desc = '''\
