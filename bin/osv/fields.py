@@ -155,12 +155,8 @@ class char(_column):
 
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
-        if isinstance(symb, str):
-            u_symb = unicode(symb, 'utf8')
-        elif isinstance(symb, unicode):
-            u_symb = symb
-        else:
-            u_symb = unicode(symb)
+        u_symb = tools.ustr(symb)
+
         return u_symb[:self.size].encode('utf8')
 
 

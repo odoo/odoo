@@ -272,6 +272,17 @@ def get_modules():
 
     return list(set(listdir(ad) + listdir(_ad)))
 
+def get_modules_with_version():
+    modules = get_modules()
+    res = {}
+    for module in modules:
+        terp = get_module_resource(module, '__terp__.py')
+        try:
+            info = eval(tools.file_open(terp).read())
+            res[module] = "%s.%s" % (release.major_version, info['version'])
+        except Exception, e:
+            continue
+    return res
 
 def create_graph(cr, module_list, force=None):
     graph = Graph()
@@ -337,11 +348,11 @@ def init_module_objects(cr, module_name, obj_list):
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
     todo = []
     for obj in obj_list:
-        if hasattr(obj, 'init'):
-            obj.init(cr)
         result = obj._auto_init(cr, {'module': module_name})
         if result:
             todo += result
+        if hasattr(obj, 'init'):
+            obj.init(cr)
         cr.commit()
     todo.sort()
     for t in todo:

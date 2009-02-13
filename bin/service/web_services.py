@@ -320,6 +320,7 @@ class common(netsvc.Service):
         self.exportMethod(self.login)
         self.exportMethod(self.logout)
         self.exportMethod(self.timezone_get)
+        self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
@@ -385,12 +386,26 @@ GNU Public Licence.
     def timezone_get(self, db, login, password):
         return time.tzname[0]
 
+    
+    def get_available_updates(self, password, contract_id, contract_password):
+        security.check_super(password)
+        import tools.maintenance as tm
+        try:
+            rc = tm.remote_contract(contract_id, contract_password)
+            if not rc.id:
+                raise tm.RemoteContractException('This contract does not exist or is not active') 
+            
+            return rc.get_available_updates(rc.id, addons.get_modules_with_version())
+
+        except tm.RemoteContractException, e:
+            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+        
 
     def get_migration_scripts(self, password, contract_id, contract_password):
         security.check_super(password)
         l = netsvc.Logger()
+        import tools.maintenance as tm
         try: 
-            import tools.maintenance as tm
             rc = tm.remote_contract(contract_id, contract_password)
             if not rc.id:
                 raise tm.RemoteContractException('This contract does not exist or is not active') 
@@ -399,7 +414,7 @@ GNU Public Licence.
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
-            zips = rc.retrieve_updates(rc.id)
+            zips = rc.retrieve_updates(rc.id, addons.get_modules_with_version())
             
             from shutil import rmtree, copytree, copy
 

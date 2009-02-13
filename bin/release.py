@@ -23,7 +23,7 @@
 
 name = 'openerp-server'
 version = '5.0.0'
-release = '2'
+release = '3'
 major_version = '5.0'
 description = 'OpenERP Server'
 long_desc = '''\
@@ -35,7 +35,7 @@ customizable reports, and XML-RPC interfaces.
 '''
 classifiers = """\
 Development Status :: 5 - Production/Stable
-License :: OSI Approved :: GNU General Public License Version 3 (GPL-3)
+License :: OSI Approved :: GNU General Public License (GPL)
 Programming Language :: Python
 """
 url = 'http://www.openerp.com'
