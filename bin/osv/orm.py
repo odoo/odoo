@@ -101,7 +101,7 @@ class browse_null(object):
 
     def __nonzero__(self):
         return False
-    
+
     def __unicode__(self):
         return u''
 
@@ -314,7 +314,7 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
-    
+
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def _field_create(self, cr, context={}):
@@ -724,7 +724,7 @@ class orm_template(object):
         model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
-        
+
         if self._columns.keys():
             for f in self._columns.keys():
                 if fields and f not in fields:
@@ -741,14 +741,14 @@ class orm_template(object):
                     if hasattr(self._columns[f], arg) \
                             and getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
-    
+
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
                 help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
                 if help_trans:
                     res[f]['help'] = help_trans
-    
+
                 if hasattr(self._columns[f], 'selection'):
                     if isinstance(self._columns[f].selection, (tuple, list)):
                         sel = self._columns[f].selection
@@ -770,9 +770,9 @@ class orm_template(object):
                     res[f]['domain'] = self._columns[f]._domain
                     res[f]['context'] = self._columns[f]._context
         else:
-            #TODO : read the fields from the database 
+            #TODO : read the fields from the database
             pass
-        
+
         if fields:
             # filter out fields which aren't in the fields list
             for r in res.keys():
@@ -942,11 +942,11 @@ class orm_template(object):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
         if not context:
             context = {}
-        
+
         def encode(s):
             if isinstance(s, unicode):
                 return s.encode('utf8')
-            return s 
+            return s
 
         def _inherit_apply(src, inherit):
             def _find(node, node2):
@@ -970,7 +970,7 @@ class orm_template(object):
                         if res:
                             return res
                 return None
-            
+
 
             doc_src = dom.minidom.parseString(encode(src))
             doc_dest = dom.minidom.parseString(encode(inherit))
@@ -1373,7 +1373,7 @@ class orm_memory(orm_template):
                 'id': id
             })
         return result
-    
+
     def _check_removed_columns(self, cr, log=False):
         # nothing to check in memory...
         pass
@@ -1441,7 +1441,7 @@ class orm(orm_template):
                    "   AND c.oid=a.attrelid"
                    "   AND a.attisdropped=%%s"
                    "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)), 
+                   "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)),
                        [self._table, False] + columns)
         for column in cr.dictfetchall():
             if log:
@@ -1494,7 +1494,7 @@ class orm(orm_template):
                     if not cr.rowcount:
                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
                         cr.commit()
-            
+
             self._check_removed_columns(cr, log=False)
 
             # iterate on the "object columns"
@@ -1648,20 +1648,20 @@ class orm(orm_template):
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
                                 if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, ' 
-                                                'pg_attribute as att1, pg_attribute as att2 ' 
-                                            'WHERE con.conrelid = cl1.oid ' 
-                                                'AND cl1.relname = %s ' 
-                                                'AND con.confrelid = cl2.oid ' 
-                                                'AND cl2.relname = %s ' 
-                                                'AND array_lower(con.conkey, 1) = 1 ' 
-                                                'AND con.conkey[1] = att1.attnum ' 
-                                                'AND att1.attrelid = cl1.oid ' 
-                                                'AND att1.attname = %s ' 
-                                                'AND array_lower(con.confkey, 1) = 1 ' 
-                                                'AND con.confkey[1] = att2.attnum ' 
-                                                'AND att2.attrelid = cl2.oid ' 
-                                                'AND att2.attname = %s ' 
+                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
+                                                'pg_attribute as att1, pg_attribute as att2 '
+                                            'WHERE con.conrelid = cl1.oid '
+                                                'AND cl1.relname = %s '
+                                                'AND con.confrelid = cl2.oid '
+                                                'AND cl2.relname = %s '
+                                                'AND array_lower(con.conkey, 1) = 1 '
+                                                'AND con.conkey[1] = att1.attnum '
+                                                'AND att1.attrelid = cl1.oid '
+                                                'AND att1.attname = %s '
+                                                'AND array_lower(con.confkey, 1) = 1 '
+                                                'AND con.confkey[1] = att2.attnum '
+                                                'AND att2.attrelid = cl2.oid '
+                                                'AND att2.attname = %s '
                                                 "AND con.contype = 'f'", (self._table, ref, k, 'id'))
                                     res = cr.dictfetchall()
                                     if res:
@@ -1708,7 +1708,7 @@ class orm(orm_template):
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
-        
+
         if not hasattr(self, '_log_access'):
             # if not access is not specify, it is the same value as _auto
             self._log_access = not hasattr(self, "_auto") or self._auto
@@ -1908,7 +1908,7 @@ class orm(orm_template):
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
-                           f == self.CONCURRENCY_CHECK_FIELD 
+                           f == self.CONCURRENCY_CHECK_FIELD
                         or (f in self._columns and getattr(self._columns[f], '_classic_write'))
                      ] + self._inherits.values()
 
@@ -2075,8 +2075,8 @@ class orm(orm_template):
                 return "%s,%s" % (self._name, oid)
             santa = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
             for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)]) 
-                                          for oid in ids[i:i+cr.IN_MAX] 
+                sub_ids = tools.flatten(((oid, context[self.CONCURRENCY_CHECK_FIELD][key(oid)])
+                                          for oid in ids[i:i+cr.IN_MAX]
                                           if key(oid) in context[self.CONCURRENCY_CHECK_FIELD]))
                 if sub_ids:
                     cr.execute("SELECT count(1) FROM %s WHERE %s" % (self._table, " OR ".join([santa]*(len(sub_ids)/2))), sub_ids)
@@ -2091,7 +2091,7 @@ class orm(orm_template):
             ids = [ids]
 
         result_store = self._store_get_values(cr, uid, ids, None, context)
-        
+
         self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
@@ -2401,12 +2401,12 @@ class orm(orm_template):
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
-        try:        
+        try:
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation.'))    
-        
+                        _('You cannot perform this operation.'))
+
         id_new = cr.fetchone()[0]
         for table in tocreate:
             id = self.pool.get(table).create(cr, user, tocreate[table])
@@ -2720,6 +2720,7 @@ class orm(orm_template):
         return data, trans_data
 
     def copy(self, cr, uid, id, default=None, context=None):
+        trans_obj = self.pool.get('ir.translation')
         data, trans_data = self.copy_data(cr, uid, id, default, context)
         new_id=self.create(cr, uid, data)
         for record in trans_data:
