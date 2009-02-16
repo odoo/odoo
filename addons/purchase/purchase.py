@@ -306,7 +306,7 @@ class purchase_order(osv.osv):
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 il.append(self.inv_line_create(a,ol))
 
-            a = o.partner_id.property_account_payable.id            
+            a = o.partner_id.property_account_payable.id
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
             inv = {
                 'name': o.partner_ref or o.name,
@@ -320,6 +320,7 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
+                'fiscal_position': o.partner_id.property_account_position.id
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)

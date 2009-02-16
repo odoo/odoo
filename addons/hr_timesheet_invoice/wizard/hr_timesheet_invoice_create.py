@@ -79,6 +79,7 @@ class invoice_create(wizard.interface):
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,
                 'date_due': date_due,
+                'fiscal_position': account.partner_id.property_account_position.id
             }
             last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
             invoices.append(last_invoice)
@@ -129,11 +130,11 @@ class invoice_create(wizard.interface):
                 # Compute for lines
                 #
                 cr.execute("SELECT * "  # TODO optimize this
-                           "  FROM account_analytic_line" 
+                           "  FROM account_analytic_line"
                            " WHERE account_id=%%s"
                            "   AND id IN (%s)"
                            "   AND product_id=%%s"
-                           "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])), 
+                           "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])),
                            (account.id, data['ids'], product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []

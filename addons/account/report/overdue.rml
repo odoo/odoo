@@ -205,13 +205,13 @@
           <para style="terp_default_Bold_9">Sub-Total : </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % (reduce(lambda x, y: x + (y['debit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % (reduce(lambda x ,y: x + (y['credit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0)) ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x ,y: x + (y['credit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % (reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0))) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -229,7 +229,7 @@
           <para style="terp_default_Bold_9">Balance : </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % (reduce(lambda x, y: x +((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0)) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x +((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -248,7 +248,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_9">Total amount due: [[ '%.2f' % (reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0)) ]] [[ company.currency_id.name ]].</para>
+    <para style="terp_default_9">Total amount due: [[ formatLang((reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]] [[ company.currency_id.name ]].</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>

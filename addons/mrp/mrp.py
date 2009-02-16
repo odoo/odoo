@@ -1063,9 +1063,9 @@ class mrp_procurement(osv.osv):
             }
 
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes_ids)
+            taxes = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes_ids)
             line.update({
-                'taxes_id':[(6,0,taxes_ids)]
+                'taxes_id':[(6,0,taxes)]
             })
             purchase_id = self.pool.get('purchase.order').create(cr, uid, {
                 'origin': procurement.origin,
@@ -1073,7 +1073,8 @@ class mrp_procurement(osv.osv):
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
-                'order_line': [(0,0,line)]
+                'order_line': [(0,0,line)],
+                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
         return purchase_id
