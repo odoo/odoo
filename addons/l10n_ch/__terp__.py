@@ -93,7 +93,8 @@ TODO :
 	"update_xml" : [
 		"dta_view.xml",
 		"dta_wizard.xml",
-		"account_vat.xml",
+		#this file as been move to the account chart 
+        # "account_vat.xml",
 		"bvr_report.xml",
 		"bvr_wizard.xml",
 		"bvr_view.xml",
