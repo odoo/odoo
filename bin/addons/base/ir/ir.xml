@@ -1234,8 +1234,8 @@
                         </page>
                         <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
                             <separator colspan="4" string="SMS Configuration"/>
-                            <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','email')]}"/>
-                            <field name="sms" colspan="4" attrs="{'required':[('state','=','email')]}"/>
+                            <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','sms')]}"/>
+                            <field name="sms" colspan="4" attrs="{'required':[('state','=','sms')]}"/>
                             <newline/>
                             <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
                         </page>
