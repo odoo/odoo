@@ -692,14 +692,14 @@ def ustr(value):
     return unicode(value, getlocale()[1])
 
 def exception_to_unicode(e):
-    if hasattr(e, 'message'):
+    if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
         return ustr(e.message)
     if hasattr(e, 'args'):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return ustr(e)
     except:
-        return u"Unknow message"
+        return u"Unknown message"
 
 
 # to be compatible with python 2.4
