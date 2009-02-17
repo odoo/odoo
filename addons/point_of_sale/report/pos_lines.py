@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -32,6 +32,8 @@ class pos_lines(report_sxw.rml_parse):
         self.localcontext.update({
                 'time': time,
                 'total_quantity': self.__total_quantity__,
+                'taxes':self.__taxes__,
+
         })
 
     def __total_quantity__(self, obj):
@@ -40,6 +42,16 @@ class pos_lines(report_sxw.rml_parse):
             tot += line.qty
         self.total = tot
         return self.total
+
+    def __taxes__(self,obj):
+        self.cr.execute ( " Select acct.name from pos_order as po " \
+                              " LEFT JOIN pos_order_line as pol ON po.id = pol.order_id " \
+                              " LEFT JOIN product_taxes_rel as ptr ON pol.product_id = ptr.prod_id " \
+                              " LEFT JOIN account_tax as acct ON acct.id = ptr.tax_id " \
+                              " WHERE pol.id = %d" %(obj.id))
+        res=self.cr.fetchone()[0]
+        return res
+
 
 report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines)
 
