@@ -593,6 +593,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
         idref = {}
         status['progress'] = (float(statusi)+0.4) / len(graph)
+        
+        mode = 'update'
+        if package.state == 'to install':
+            mode = 'init'
+            
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             has_updates = True
             init_module_objects(cr, m, modules)
