@@ -47,9 +47,6 @@
 
     Print product labels with barcode.
     """,
-    'author': 'Tiny',
-    'depends': ['base', 'process'],
-    'init_xml': [],
     'update_xml': [
         'security/product_security.xml',
         'security/ir.model.access.csv',
@@ -61,7 +58,6 @@
         'product_wizard.xml',
         'process/product_process.xml'
     ],
-    'demo_xml': ['product_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0068861431437',
