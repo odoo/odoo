@@ -1909,7 +1909,7 @@ class account_tax_template(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name', size=32),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase')], 'Tax Use In')
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,)
     }
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1940,6 +1940,7 @@ class account_tax_template(osv.osv):
         'tax_sign': lambda *a: 1,
         'base_sign': lambda *a: 1,
         'include_base_amount': lambda *a: False,
+        'type_tax_use': lambda *a: 'all',
     }
     _order = 'sequence'
 
