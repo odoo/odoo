@@ -234,7 +234,7 @@
 		<frameEnd />
 	</xsl:for-each>
 	<xsl:for-each select="//text:ordered-list">
-		<para><seqReset id="{//text:ordered-list/@text:style-name}"/></para>
+		<para><seqReset id="{./@text:style-name}"/></para>
 	</xsl:for-each>
   </story>
 </xsl:template>
