@@ -293,8 +293,8 @@ class Partner(osv.osv):
                 query="SELECT DISTINCT associate_member FROM res_partner"
                 cr.execute(query)
                 for p in cr.fetchall():
-                    if p != partner_data.id:
-                        associate_partners_list.append(p)
+                    if p[0] and p[0] != partner_data.id:
+                        associate_partners_list.append(p[0])
                 if associate_partners_list != []:
                     self._membership_state(cr, uid, associate_partners_list, name, args, context)
                 res[id] = partner_data.associate_member.membership_state
