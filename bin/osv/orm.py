@@ -2491,15 +2491,20 @@ class orm(orm_template):
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
-        result2 = []
+        dict = {}
         for object in result:
             k2 = {}
             for id,fnct in result[object].items():
                 k2.setdefault(tuple(fnct), [])
                 k2[tuple(fnct)].append(id)
             for fnct,id in k2.items():
-                result2.append((fncts[fnct[0]][4],object,id,map(lambda x: fncts[x][1], fnct)))
-        result2.sort()
+                dict.setdefault(fncts[fnct[0]][4],[])
+                dict[fncts[fnct[0]][4]].append((fncts[fnct[0]][4],object,id,map(lambda x: fncts[x][1], fnct)))
+        result2 = []
+        tmp = dict.keys()
+        tmp.sort()
+        for k in tmp:
+            result2+=dict[k]
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
