@@ -72,7 +72,7 @@ class expression(object):
         if not self.__exp:
             return self
 
-        def _rec_get(ids, table, parent, left='id', prefix=''):
+        def _rec_get(ids, table, parent=None, left='id', prefix=''):
             if table._parent_store and (not table.pool._init):
 # TODO: Improve where joins are implemented for many with '.', replace by:
 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
@@ -90,7 +90,7 @@ class expression(object):
                         return []
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                     return ids + rg(ids2, table, parent)
-                return [(left, 'in', rg(ids, table, parent))]
+                return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         self.__main_table = table
 
@@ -114,7 +114,7 @@ class expression(object):
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    dom = _rec_get(right, working_table, working_table._parent_name)
+                    dom = _rec_get(right, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
 
@@ -167,7 +167,7 @@ class expression(object):
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids)
 
-                    dom = _rec_get(ids2, field_obj, working_table._parent_name)
+                    dom = _rec_get(ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
@@ -185,9 +185,9 @@ class expression(object):
 
                     self.__operator = 'in'
                     if field._obj != working_table._name:
-                        dom = _rec_get(ids2, field_obj, working_table._parent_name, left=left, prefix=field._obj)
+                        dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
-                        dom = _rec_get(ids2, working_table, left)
+                        dom = _rec_get(ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring): # and not isinstance(field, fields.related):
