@@ -296,8 +296,8 @@ class Partner(osv.osv):
                     if p[0] and p[0] != partner_data.id:
                         associate_partners_list.append(p[0])
                 if associate_partners_list != []:
-                    self._membership_state(cr, uid, associate_partners_list, name, args, context)
-                res[id] = partner_data.associate_member.membership_state
+                    res_state = self._membership_state(cr, uid, associate_partners_list, name, args, context)
+                res[id] = res_state[partner_data.associate_member.id] #partner_data.associate_member.membership_state
         return res
 
     def _membership_start(self, cr, uid, ids, name, args, context=None):
@@ -372,7 +372,7 @@ class Partner(osv.osv):
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
-                        'res.partner':(_get_partners, ['free_member'], 10)
+                        'res.partner':(_get_partners, ['free_member','membership_state'], 10)
                         }
                     ),
         'membership_start': fields.function(

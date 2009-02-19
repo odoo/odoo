@@ -73,15 +73,18 @@ def _invoice_membership(self, cr, uid, data, context):
         if line_value['invoice_line_tax_id']:
             tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
             line_value['invoice_line_tax_id'] = tax_tab
-        invoice_line_id = invoice_line_obj.create(cr, uid, line_value)
+#        invoice_line_id = invoice_line_obj.create(cr, uid, line_value)
         invoice_id = invoice_obj.create(cr, uid, {
             'partner_id' : partner_id,
             'address_invoice_id': partner_address_ids[partner_id]['id'],
             'account_id': account_id,
-            'invoice_line':[(6,0,[invoice_line_id])],
+#            'invoice_line':[(6,0,[invoice_line_id])],
             'fiscal_position': fpos_id or False
             }
         )
+        line_value['invoice_id'] = invoice_id
+        invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context)
+        invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]})
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
             invoice_obj.write(cr, uid, [invoice_id], {'tax_line':tax_tab})
