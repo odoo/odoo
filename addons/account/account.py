@@ -371,19 +371,21 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}, done_list=[]):
+    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
         if not default:
             default = {}
         default = default.copy()
         default['parent_id'] = False
+        if not local:
+            done_list = []
         if account.id in done_list:
             return False
         done_list.append(account.id)
         if account:
             for child in account.child_id:
-                child_ids = self.copy(cr, uid, child.id, default, context=context, done_list=done_list)
+                child_ids = self.copy(cr, uid, child.id, default, context=context, done_list=done_list, local=True)
                 if child_ids:
                     new_child_ids.append(child_ids)
             default['child_parent_ids'] = [(6, 0, new_child_ids)]
