@@ -381,9 +381,10 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 # text must be latin-1 encoded
 def sms_send(user, password, api_id, text, to):
     import urllib
-    params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
-    #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
-    f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
+    url = "http://api.urlsms.com/SendSMS.aspx"
+    #url = "http://196.7.150.220/http/sendmsg"
+    params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
+    f = urllib.urlopen(url+"?"+params)
     # FIXME: Use the logger if there is an error
     return True
 
