@@ -289,14 +289,14 @@ class Partner(osv.osv):
             if partner_data.free_member and s!=0:
                 res[id] = 'free'
             if partner_data.associate_member:
-                associate_partners_list = []
-                query="SELECT DISTINCT associate_member FROM res_partner"
-                cr.execute(query)
-                for p in cr.fetchall():
-                    if p[0] and p[0] != partner_data.id:
-                        associate_partners_list.append(p[0])
-                if associate_partners_list != []:
-                    res_state = self._membership_state(cr, uid, associate_partners_list, name, args, context)
+#                associate_partners_list = []
+#                query = "SELECT DISTINCT associate_member FROM res_partner where id=%s"%(str(partner_data.id))
+#                cr.execute(query)
+#                for p in cr.fetchall():
+#                    if p[0] and p[0] != partner_data.id:
+#                        associate_partners_list.append(p[0])
+#                if associate_partners_list != []:
+                res_state = self._membership_state(cr, uid, [partner_data.associate_member.id], name, args, context)
                 res[id] = res_state[partner_data.associate_member.id] #partner_data.associate_member.membership_state
         return res
 
