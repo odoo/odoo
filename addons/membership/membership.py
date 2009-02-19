@@ -44,8 +44,6 @@ STATE_PRIOR = {
         'paid' : 7
         }
 
-
-
 #~ REQUETE = '''SELECT partner, state FROM (
 #~ SELECT members.partner AS partner,
 #~ CASE WHEN MAX(members.state) = 0 THEN 'none'
@@ -135,7 +133,6 @@ STATE_PRIOR = {
 #~ AS final
 #~ %s
 #~ '''
-
 
 class membership_line(osv.osv):
     '''Member line'''
@@ -289,15 +286,8 @@ class Partner(osv.osv):
             if partner_data.free_member and s!=0:
                 res[id] = 'free'
             if partner_data.associate_member:
-#                associate_partners_list = []
-#                query = "SELECT DISTINCT associate_member FROM res_partner where id=%s"%(str(partner_data.id))
-#                cr.execute(query)
-#                for p in cr.fetchall():
-#                    if p[0] and p[0] != partner_data.id:
-#                        associate_partners_list.append(p[0])
-#                if associate_partners_list != []:
                 res_state = self._membership_state(cr, uid, [partner_data.associate_member.id], name, args, context)
-                res[id] = res_state[partner_data.associate_member.id] #partner_data.associate_member.membership_state
+                res[id] = res_state[partner_data.associate_member.id]
         return res
 
     def _membership_start(self, cr, uid, ids, name, args, context=None):
@@ -710,8 +700,6 @@ class ReportPartnerMemberYearNew(osv.osv):
     """)
 
 ReportPartnerMemberYearNew()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
@@ -766,4 +754,7 @@ class account_invoice_line(osv.osv):
                 'account_invoice_line': line.id,
                 })
         return result
+
 account_invoice_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
