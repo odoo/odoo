@@ -11,7 +11,7 @@ create table ir_values
     id serial,
     name varchar(128) not null,
     key varchar(128) not null,
-    key2 varchar(128) not null,
+    key2 varchar(256) not null,
     model varchar(128) not null,
     value text,
     meta text default NULL,
@@ -64,7 +64,7 @@ CREATE TABLE ir_act_window (
     view_id integer,
     res_model varchar(64),
     view_type varchar(16),
-    "domain" varchar(127),
+    "domain" varchar(250),
     primary key(id)
 )
 INHERITS (ir_actions);
@@ -72,8 +72,8 @@ INHERITS (ir_actions);
 CREATE TABLE ir_act_report_xml (
     model varchar(64) NOT NULL,
     report_name varchar(64) NOT NULL,
-    report_xsl varchar(64),
-    report_xml varchar(64),
+    report_xsl varchar(256),
+    report_xml varchar(256),
     auto boolean default true,
     primary key(id)
 )
@@ -140,7 +140,7 @@ CREATE TABLE res_users (
     name varchar(64) not null,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
-    password varchar(32) default null,
+    password varchar(64) default null,
     context_tz varchar(64) default null,
     signature text,
 --  action_id int references ir_act_window on delete set null,
@@ -151,14 +151,14 @@ alter table res_users add constraint res_users_login_uniq unique (login);
 
 CREATE TABLE res_groups (
     id serial NOT NULL,
-    name varchar(32) NOT NULL,
+    name varchar(64) NOT NULL,
     primary key(id)
 );
 
 create table res_roles (
     id serial NOT NULL,
     parent_id int references res_roles on delete set null,
-    name varchar(32) NOT NULL,
+    name varchar(64) NOT NULL,
     primary key(id)
 );
 
