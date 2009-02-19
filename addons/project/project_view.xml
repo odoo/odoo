@@ -416,7 +416,7 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','open'))]</field>
+            <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
         </record>
         <menuitem action="action_view_task5_prog_prog" id="menu_tasks_yours_prog_prog" parent="menu_tasks_yours_prog"/>
 
@@ -425,7 +425,7 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','draft'))]</field>
+            <field name="domain">[('user_id', '=', uid),('state','=','draft')]</field>
         </record>
         <menuitem action="action_view_task5_prog_draft" id="menu_tasks_yours_prog_draft" parent="menu_tasks_yours_prog"/>
 
