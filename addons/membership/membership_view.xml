@@ -186,17 +186,31 @@
 
 
         <!-- MEMBERSHIP/MEMBERS/ASSOCIATED MEMBERS  -->
+        <record model="ir.ui.view" id="membership_members_associated_tree">
+            <field name="name">associate members</field>
+            <field name="model">res.partner</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Members">
+                    <field name="name"/>
+                    <field name="membership_start"/>
+                    <field name="membership_stop"/>
+                    <field name="membership_state"/>
+                    <field name="associate_member"/>
+                </tree>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_membership_members_associated">
             <field name="name">Associated members</field>
             <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'associated')]</field>
+            <field name="domain">[('associate_member', '!=', False), ('membership_state', '!=', 'none')]</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_associated_view_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
+            <field name="view_id" ref="membership_members_associated_tree"/>
             <field name="act_window_id" ref="action_membership_members_associated"/>
         </record>
 
