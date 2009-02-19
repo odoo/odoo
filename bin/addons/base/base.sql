@@ -55,7 +55,7 @@ CREATE TABLE ir_model_fields (
 CREATE TABLE ir_actions (
     id serial NOT NULL,
     name varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(64) DEFAULT 'window'::varchar NOT NULL,
+    "type" varchar(32) DEFAULT 'window'::varchar NOT NULL,
     usage varchar(32) DEFAULT null,
     primary key(id)
 );
