@@ -27,9 +27,7 @@ import time
 def _invoice_membership(self, cr, uid, data, context):
     partner_ids = data['ids']
     product_id = data['form']['product']
-
     pool = pooler.get_pool(cr.dbname)
-
     cr.execute('''
             SELECT partner_id, id, type
             FROM res_partner_address
@@ -44,11 +42,9 @@ def _invoice_membership(self, cr, uid, data, context):
         pid = fetchal[x][0]
         id = fetchal[x][1]
         type = fetchal[x][2]
-
         if partner_address_ids.has_key(pid) and partner_address_ids[pid]['type'] == 'invoice':
             continue
         partner_address_ids[pid] = {'id': id, 'type': type}
-
 
     invoice_list= []
     invoice_obj = pool.get('account.invoice')
@@ -67,27 +63,26 @@ def _invoice_membership(self, cr, uid, data, context):
             }
 
         quantity = 1
-
         line_dict = invoice_line_obj.product_id_change(cr, uid, {}, product_id, product['uom_id'][0], quantity, '', 'out_invoice', partner_id, fpos_id, context=context)
         line_value.update(line_dict['value'])
         if line_value['invoice_line_tax_id']:
             tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
             line_value['invoice_line_tax_id'] = tax_tab
-        invoice_line_id = invoice_line_obj.create(cr, uid, line_value)
         invoice_id = invoice_obj.create(cr, uid, {
             'partner_id' : partner_id,
             'address_invoice_id': partner_address_ids[partner_id]['id'],
             'account_id': account_id,
-            'invoice_line':[(6,0,[invoice_line_id])],
             'fiscal_position': fpos_id or False
             }
         )
+        line_value['invoice_id'] = invoice_id
+        invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context)
+        invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]})
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
             invoice_obj.write(cr, uid, [invoice_id], {'tax_line':tax_tab})
             tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()[0]
             invoice_tax_obj.create(cr, uid, tax_value)
-
 
     value = {
             'domain': [
@@ -99,7 +94,6 @@ def _invoice_membership(self, cr, uid, data, context):
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
         }
-
     return value
 
 wizard_arch= """<?xml version="1.0"?>
@@ -111,12 +105,9 @@ wizard_arch= """<?xml version="1.0"?>
         />
 </form>"""
 
-
-
 class wizard_invoice_membership(wizard.interface):
 
     states = {
-
         'init' : {
             'actions' : [],
             'result' : {
@@ -132,7 +123,6 @@ class wizard_invoice_membership(wizard.interface):
                 },
                 'state' : [('end', 'Cancel'),('ok', 'Confirm') ]}
         },
-
         'ok' : {
             'actions' : [],
             'result' : {'type' : 'action',
@@ -146,4 +136,3 @@ class wizard_invoice_membership(wizard.interface):
 wizard_invoice_membership("wizard_invoice_membership")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
