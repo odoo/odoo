@@ -190,7 +190,7 @@
         <record model="ir.actions.act_window" id="action_membership_members_associated">
             <field name="name">Associated members</field>
             <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'associated')]</field>
+            <field name="domain">[('associate_member', '!=', False), ('membership_state', '!=', 'none')]</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_associated_view_tree">
