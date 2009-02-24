@@ -67,9 +67,9 @@ def _get_type(obj, cr, uid, data, context):
     usage = 'customer'
     pick = picking_obj.browse(cr, uid, data['id'], context)  
     if pick.invoice_state=='invoiced':
-        raise wizard.except_wizard('UserError','Invoice is already created')
+        raise wizard.except_wizard('UserError','Invoice is already created.')
     if pick.invoice_state=='none':
-        raise wizard.except_wizard('UserError','Invoice can not create from Packing')
+        raise wizard.except_wizard('UserError','Invoice cannot be created from Packing.')
 
     if pick.move_lines:
         usage=pick.move_lines[0].location_id.usage
