@@ -665,15 +665,15 @@ class stock_picking(osv.osv):
                 invoice_id = invoices_group[partner.id]
                 invoice=invoice_obj.browse(cursor, user,invoice_id)
                 invoice_vals = {
-                    'name': invoice.name +', '+picking.name,
-                    'origin': invoice.origin+', '+picking.name+(picking.origin and (':' + picking.origin) or ''),
+                    'name': invoice.name +', '+str(picking.name or  ''),
+                    'origin': invoice.origin+', '+str(picking.name or  '')+(picking.origin and (':' + picking.origin) or ''),
                     'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                 }
                 invoice_obj.write(cursor, user, [invoice_id],invoice_vals,context=context)
             else:
                 invoice_vals = {
                     'name': picking.name,
-                    'origin': picking.name + (picking.origin and (':' + picking.origin) or ''),
+                    'origin': str(picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': type,
                     'account_id': account_id,
                     'partner_id': partner.id,
@@ -697,7 +697,7 @@ class stock_picking(osv.osv):
                 if move_line.picking_id.origin:
                     origin+=':' + move_line.picking_id.origin
                 if group:
-                    name = picking.name + '-' + move_line.name
+                    name = str(picking.name or '') + '-' + move_line.name
                 else:
                     name = move_line.name
 
@@ -911,7 +911,7 @@ class stock_move(osv.osv):
             ['prodlot_id'])]
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
-            return context['move_line'][0][2]['location_dest_id']
+            return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
         if context.get('address_out_id', False):
             return self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer.id
         return False
