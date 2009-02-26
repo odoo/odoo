@@ -673,7 +673,7 @@ class stock_picking(osv.osv):
             else:
                 invoice_vals = {
                     'name': picking.name,
-                    'origin': str(picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
+                    'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': type,
                     'account_id': account_id,
                     'partner_id': partner.id,
