@@ -304,6 +304,7 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain'):
     """Send an email."""
+    print 'sending', email_from, email_to, subject, body
     import smtplib
     from email.MIMEText import MIMEText
     from email.MIMEBase import MIMEBase

@@ -30,7 +30,7 @@ email_send_form = '''<?xml version="1.0"?>
     <newline/>
     <field name="subject"/>
     <newline/>
-    <field name="text"/>
+    <field name="text" widget="text_html"/>
 </form>'''
 
 email_send_fields = {
