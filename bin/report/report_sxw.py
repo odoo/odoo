@@ -520,7 +520,7 @@ class rml_parse(object):
             rml_head = rml_head.replace('<image','<!--image')
             rml_head = rml_head.replace('</image>','</image-->')
 
-        head_dom = xml.dom.minidom.parseString(rml_head)
+        head_dom = xml.dom.minidom.parseString(rml_head.encode('utf-8'))
         #for frame in head_dom.getElementsByTagName('frame'):
         #   frame.parentNode.removeChild(frame)
         node2 = head_dom.documentElement
