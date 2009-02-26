@@ -2862,7 +2862,19 @@
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
         </record>
-        
+ 
+        <record id="INR" model="res.currency">
+            <field name="name">INR</field>
+            <field name="code">Rs</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record id="rateINR" model="res.currency.rate">
+            <field name="rate">0.634</field>
+            <field name="currency_id" ref="INR"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+       
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
             <field name="name">Tiny sprl</field>
