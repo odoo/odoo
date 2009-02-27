@@ -346,6 +346,7 @@ class configmanager(object):
                 os.makedirs(os.path.dirname(self.rcfile))
             try:
                 p.write(file(self.rcfile, 'w'))
+                os.chmod(self.rcfile, 0600)
             except IOError:
                 sys.stderr.write("ERROR: couldn't write the config file\n")
 
