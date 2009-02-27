@@ -465,7 +465,7 @@ class orm_template(object):
             datas += self.__export_row(cr, uid, row, fields, context)
         return datas
 
-    def import_data(self, cr, uid, fields, datas, mode='init', current_module=None, noupdate=False, context=None, filename=None):
+    def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
