@@ -178,6 +178,7 @@ class account_invoice(osv.osv):
                 move[line.move_id.id] = True
             for line in r.line_id:
                 move[line.move_id.id] = True
+        
         invoice_ids = []
         if move:
             invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
