@@ -1172,6 +1172,13 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom':prod.uom_id.id}
             return {'value': v}
         return {}
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default:
+            default = {}
+        default.update({
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
+        })
+        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
 stock_warehouse_orderpoint()
 
 
