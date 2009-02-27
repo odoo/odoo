@@ -399,8 +399,8 @@ class mrp_production(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_uos_qty': fields.float('Product Qty'),
-        'product_uos': fields.many2one('product.uom', 'Product UOM'),
+        'product_uos_qty': fields.float('Product UoS Qty'),
+        'product_uos': fields.many2one('product.uom', 'Product UoS'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             help="Location where the system will look for products used in raw materials."),

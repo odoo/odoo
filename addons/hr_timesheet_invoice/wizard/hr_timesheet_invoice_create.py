@@ -135,7 +135,7 @@ class invoice_create(wizard.interface):
                            "   AND id IN (%s)"
                            "   AND product_id=%%s"
                            "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])),
-                           (account.id, data['ids'], product_id, factor_id))
+                           tuple([account.id]+ data['ids']+[ product_id, factor_id]))
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:

@@ -41,7 +41,7 @@ import tools
 
 def random_name():
     random.seed()
-    d = [random.choice(string.letters) for x in xrange(10) ]
+    d = [random.choice(string.ascii_letters) for x in xrange(10) ]
     name = "".join(d)
     return name
 

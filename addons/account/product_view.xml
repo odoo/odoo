@@ -11,8 +11,8 @@
                     <page string="Accounting">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchase Properties" colspan="2"/>
-                        <field name="property_account_income" attrs="{'readonly':[('sale_ok','=',0)]}" />
-                        <field name="property_account_expense" attrs="{'readonly':[('purchase_ok','=',0)]}" />
+                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />
+                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
 
                         <separator string="Sale Taxes" colspan="2"/>
                         <separator string="Purchase Taxes" colspan="2"/>
@@ -33,8 +33,8 @@
                     <page string="Accounting">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchase Properties" colspan="2"/>
-                        <field name="property_account_income"/>
-                        <field name="property_account_expense"/>
+                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="supplier_taxes_id"/>
                         <field name="taxes_id"/>
                     </page>
@@ -53,8 +53,8 @@
                 <form position="inside">
                     <group col="2" colspan="2">
                         <separator string="Accounting Properties" colspan="2"/>
-                        <field name="property_account_income_categ"/>
-                        <field name="property_account_expense_categ"/>
+                        <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     </group>
                 </form>
             </field>

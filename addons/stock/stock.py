@@ -395,6 +395,10 @@ class stock_picking(osv.osv):
             res[pick]['max_date'] = dt2
         return res
 
+    def create(self, cr, user, vals, context=None):
+        if 'name' not in vals:
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
+        return super(stock_picking, self).create(cr, user, vals, context)
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
@@ -432,7 +436,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
+        'name': lambda self,cr,uid,context: '/',
         'active': lambda *a: 1,
         'state': lambda *a: 'draft',
         'move_type': lambda *a: 'direct',
@@ -673,7 +677,7 @@ class stock_picking(osv.osv):
             else:
                 invoice_vals = {
                     'name': picking.name,
-                    'origin': str(picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
+                    'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': type,
                     'account_id': account_id,
                     'partner_id': partner.id,
