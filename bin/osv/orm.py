@@ -2130,10 +2130,11 @@ class orm(orm_template):
 
         for order, object, ids, fields in result_store:
             if object<>self._name:
-                cr.execute('select id from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+                obj =  self.pool.get(object)
+                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, ids))+')')
                 ids = map(lambda x: x[0], cr.fetchall())
                 if ids:
-                    self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
+                    obj._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
