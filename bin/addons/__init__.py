@@ -139,15 +139,15 @@ class Node(Singleton):
         return s
 
 
-def get_module_path(module):
+def get_module_path(module, downloaded=False):
     """Return the path of the given module."""
-
     if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
         return opj(ad, module)
 
     if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
         return opj(_ad, module)
-
+    if downloaded:
+        return opj(_ad, module)
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
 
