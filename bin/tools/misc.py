@@ -302,7 +302,8 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain'):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+               attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
     """Send an email."""
     print 'sending', email_from, email_to, subject, body
     import smtplib
@@ -316,6 +317,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     if not ssl:
         ssl = config.get('smtp_ssl', False)
+
+    if not email_from and not config['email_from']:
+        raise Exception("No Email sender by default, see config file")
 
     if not email_cc:
         email_cc = []
@@ -331,13 +335,24 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['From'] = email_from
     del msg['Reply-To']
     if reply_to:
-        msg['Reply-To'] = msg['From']+', '+reply_to
+        msg['Reply-To'] = reply_to
+    else:
+        msg['Reply-To'] = msg['From']
     msg['To'] = COMMASPACE.join(email_to)
     if email_cc:
         msg['Cc'] = COMMASPACE.join(email_cc)
     if email_bcc:
         msg['Bcc'] = COMMASPACE.join(email_bcc)
     msg['Date'] = formatdate(localtime=True)
+
+    # Add OpenERP Server information
+    msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
+    msg['X-OpenERP-Server-Host'] = socket.gethostname()
+    msg['X-OpenERP-Server-Version'] = release.version
+
+    # Add dynamic X Header
+    for key, value in x_headers.items():
+        msg['X-OpenERP-%s' % key] = str(value)
 
     if tinycrm:
         msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
