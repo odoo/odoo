@@ -243,11 +243,11 @@
             <field name="arch" type="xml">
                 <form string="Task edition">
                     <group colspan="6" col="6">
-                        <field name="name" select="1"/>
-                        <field name="project_id" required="1" select="1"/>
-                        <field name="total_hours" widget="float_time"/>
-                        <field name="user_id" select="1"/>
-                        <field name="date_deadline" select="2"/>
+                        <field name="name" select="1" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="project_id" required="1" select="1" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="total_hours" widget="float_time" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="user_id" select="1" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="date_deadline" select="2" attrs="{'readonly':[('state','=','done')]}" />
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -256,6 +256,7 @@
                             <field
                                 name="planned_hours" 
                                 widget="float_time"
+                                attrs="{'readonly':[('state','!=','draft')]}" 
                                 on_change="onchange_planned(planned_hours,effective_hours)"/>
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending"/>
@@ -265,8 +266,15 @@
                             <field name="effective_hours" widget="float_time"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1" select="2"/>
-                            <field colspan="4" name="work_ids" nolabel="1"/>
+                            <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" />
+                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
+                                <tree string="Task Work" editable="top">
+                                    <field name="date" />
+                                    <field name="user_id" />
+                                    <field name="hours" widget="float_time" />
+                                    <field name="name" />
+                                </tree>
+                            </field>
                             <newline/>
                             <group col="11" colspan="4">
                                 <field name="state" select="1"/>
@@ -282,7 +290,7 @@
                         </page>
                         <page groups="base.group_extended" string="Delegations">
                             <field colspan="4" name="history" nolabel="1"/>
-                            <field colspan="4" height="150" name="child_ids" nolabel="1">
+                            <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
@@ -294,7 +302,7 @@
                             </field>
                             <field colspan="4" name="parent_id"/>
                         </page>
-                        <page groups="base.group_extended" string="Extra Info">
+                        <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','in',['draft','done'])]}">
                             <separator string="Planning" colspan="2"/>
                             <separator string="Dates" colspan="2"/>
                             <field name="priority"/>
