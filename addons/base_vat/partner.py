@@ -47,7 +47,8 @@ class res_partner(osv.osv):
                 continue    #FIXME return False? empty vat numbre is invalid?
 
             vat_country, vat_number = partner.vat[:2].lower(), partner.vat[2:]
-            
+            if vat_number.find(' ') != -1:
+                return False 
             check = getattr(self, 'check_vat_' + vat_country, lambda vn: False)
             if not check(vat_number):
                 return False
