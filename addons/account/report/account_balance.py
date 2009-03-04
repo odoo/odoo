@@ -57,7 +57,7 @@ class account_balance(report_sxw.rml_parse):
 
         def get_periods(self, form):
             result=''
-            if form.has_key('periods'):
+            if form.has_key('periods') and form['periods'][0][2]:
                 period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
                 self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
                 res=self.cr.fetchall()

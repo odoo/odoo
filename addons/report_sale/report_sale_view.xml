@@ -149,9 +149,28 @@
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_81"/>
+		
+		<record id="view_so_pipeline_graph" model="ir.ui.view">
+             <field name="name">sale.order.dashboard.graph</field>
+             <field name="model">sale.order</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by State" type="bar">
+                     <field name="state"/>
+                     <field name="amount_total"/>
+                 </graph>
+             </field>
+        </record>
         
-        
-        
-        
+        <record id="action_so_pipeline" model="ir.actions.act_window">
+            <field name="name">Sales by State</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_so_pipeline_graph"/>
+            <field name="domain">[('state','&lt;&gt;','done')]</field>
+        </record>
+		
+		        
     </data>
 </openerp>
