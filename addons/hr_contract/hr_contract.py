@@ -39,11 +39,8 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
     _columns = {
         'manager' : fields.boolean('Manager'),
-        'soc_security' : fields.char('Social security number', size=50, select=True),
         'medic_exam' : fields.date('Medical examination date'),
         'audiens_num' : fields.char('AUDIENS Number', size=30),
-        'nationality' : fields.many2one('res.country', 'Nationality'),
-        'birth_date' : fields.date('Birth Date'),
         'place_of_birth' : fields.char('Place of Birth', size=30),
         'marital_status' : fields.many2one('hr.employee.marital.status', 'Marital Status'),
         'children' : fields.integer('Number of children'),
