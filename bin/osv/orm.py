@@ -872,7 +872,7 @@ class orm_template(object):
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = xpath.Evaluate("//button[@type != 'object']", node)
+        buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
         for button in buttons:
             ok = True
             if user != 1:   # admin user has all roles
