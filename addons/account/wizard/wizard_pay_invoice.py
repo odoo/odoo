@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -111,8 +111,8 @@ def _get_period(self, cr, uid, data, context={}):
     if len(ids):
         period_id = ids[0]
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
-    if invoice.state == 'draft':
-        raise wizard.except_wizard(_('Error !'), _('Can not pay draft invoice.'))
+    if invoice.state in ['draft', 'proforma2', 'cancel']:
+        raise wizard.except_wizard(_('Error !'), _('Can not pay draft/proforma/cancel invoice.'))
     return {
         'period_id': period_id,
         'amount': invoice.residual,
