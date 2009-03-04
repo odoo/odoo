@@ -1081,17 +1081,21 @@ class mrp_procurement(osv.osv):
 
     def action_cancel(self, cr, uid, ids):
         todo = []
+        todo2 = []
         for proc in self.browse(cr, uid, ids):
             if proc.move_id and proc.move_id.state=='waiting':
-                todo.append(proc.move_id.id)
+                if proc.close_move:
+                    todo2.append(proc.move_id.id)
+                else:
+                    todo.append(proc.move_id.id)
+        if len(todo2):
+            self.pool.get('stock.move').action_cancel(cr, uid, todo2)
         if len(todo):
             self.pool.get('stock.move').write(cr, uid, todo, {'state':'assigned'})
         self.write(cr, uid, ids, {'state':'cancel'})
-
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
-
         return True
 
     def action_check_finnished(self, cr, uid, ids):

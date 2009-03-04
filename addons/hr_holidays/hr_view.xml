@@ -228,14 +228,14 @@
         <menuitem name="My Draft Holidays Requests" parent="menu_action_my_holiday" id="menu_action_my_holiday_draft" action="action_my_holiday_draft" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_waiting">
-            <field name="name">My Holidays Request Waiting confirmation</field>
+            <field name="name">My Awaiting Confirmation Holidays Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid), ('state','=','confirm')]</field>
         </record>
-        <menuitem name="My Awaiting Confirmation Holidays Requests" parent="menu_action_my_holiday" id="menu_action_my_holiday_waiting" action="action_my_holiday_waiting" />
+        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_waiting" action="action_my_holiday_waiting" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_validate">
             <field name="name">My Holidays Request Validated</field>
