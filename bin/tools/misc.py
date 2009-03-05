@@ -331,7 +331,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     else:
         msg = MIMEMultipart()
 
-    msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
+    msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
     if reply_to:
