@@ -23,7 +23,6 @@
 import os, sys, imp
 from os.path import join as opj
 import itertools
-from sets import Set
 import zipimport
 
 import osv
@@ -69,20 +68,56 @@ class Graph(dict):
             father.addChild(name)
         else:
             Node(name, self)
+    
+    def update_from_db(self, cr):
+        # update the graph with values from the database (if exist)
+        ## First, we set the default values for each package in graph
+        additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
+        ## Then we get the values from the database
+        cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
+                   '  FROM ir_module_module'
+                   ' WHERE name in (%s)' % (','.join(['%s'] * len(self))),
+                    additional_data.keys()
+                   )
+
+        ## and we update the default values with values from the database
+        additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
+
+        for package in self.values():
+            for k, v in additional_data[package.name].items():
+                setattr(package, k, v)
+
+
 
     def __iter__(self):
-        level = 0
-        done = Set(self.keys())
-        while done:
-            level_modules = [(name, module) for name, module in self.items() if module.depth==level]
-            for name, module in level_modules:
-                done.remove(name)
-                yield module
-            level += 1
+        done = set()
 
+        # first pass: all modules that doesn't have a depend module (or 
+        # themself) in 'to install' state.
+        first_pass = []
+        for name, mod in self.items():
+            if all(m.state != 'to install' for m in mod.depends(True)):
+                first_pass.append(mod)
+
+        first_pass.sort(key=lambda m: m.depth)
+        for m in first_pass:
+            done.add(m.name)
+            yield m
+
+        # second pass: all modules in 'to install' state
+        second_pass = [m for m in self.values() if m.state == 'to install']
+        second_pass.sort(key=lambda m: m.depth)
+        for m in second_pass:
+            done.add(m.name)
+            yield m
+
+        # third pass: all other modules
+        third_pass = [m for m in self.values() if m.name not in done]
+        third_pass.sort(key=lambda m: m.depth)
+        for m in third_pass:
+            yield m
 
 class Singleton(object):
-
     def __new__(cls, name, graph):
         if name in graph:
             inst = graph[name]
@@ -97,44 +132,57 @@ class Node(Singleton):
 
     def __init__(self, name, graph):
         self.graph = graph
-        if not hasattr(self, 'childs'):
-            self.childs = []
+        if not hasattr(self, 'children'):
+            self.children = []
         if not hasattr(self, 'depth'):
             self.depth = 0
 
     def addChild(self, name):
         node = Node(name, self.graph)
         node.depth = self.depth + 1
-        if node not in self.childs:
-            self.childs.append(node)
+        if node not in self.children:
+            self.children.append(node)
         for attr in ('init', 'update', 'demo'):
             if hasattr(self, attr):
                 setattr(node, attr, True)
-        self.childs.sort(lambda x, y: cmp(x.name, y.name))
-
-    def hasChild(self, name):
-        return Node(name, self.graph) in self.childs or \
-                bool([c for c in self.childs if c.hasChild(name)])
+        self.children.sort(lambda x, y: cmp(x.name, y.name))
 
     def __setattr__(self, name, value):
         super(Singleton, self).__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
             tools.config[name][self.name] = 1
-            for child in self.childs:
+            for child in self.children:
                 setattr(child, name, value)
         if name == 'depth':
-            for child in self.childs:
+            for child in self.children:
                 setattr(child, name, value + 1)
 
     def __iter__(self):
-        return itertools.chain(iter(self.childs), *map(iter, self.childs))
+        return itertools.chain(iter(self.children), *map(iter, self.children))
+    
+    def _depends(self):
+        """direct depends"""
+        return list(self.data.get('depends', []))
+
+    def depends(self, include_self=False):
+        deps = self._depends()
+        res = set()
+        if include_self:
+            res.add(self)
+        while deps:
+            dep = Node(deps.pop(0), self.graph)
+            res.add(dep)
+            for d in dep._depends():
+                if d not in res:
+                    deps.append(d)
+        return res
 
     def __str__(self):
         return self._pprint()
 
     def _pprint(self, depth=0):
         s = '%s\n' % self.name
-        for c in self.childs:
+        for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
 
@@ -311,7 +359,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 packages.append((module, info.get('depends', []), info))
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
-    current, later = Set([p for p, dep, data in packages]), Set()
+    current, later = set([p for p, dep, data in packages]), set()
     while packages and current > later:
         package, deps, data = packages[0]
 
@@ -332,6 +380,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
             later.add(package)
             packages.append((package, deps, data))
         packages.pop(0)
+
+    graph.update_from_db(cr)
 
     for package in later:
         unmet_deps = filter(lambda p: p not in graph, dependencies[package])
@@ -551,24 +601,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
 
-
-    # update the graph with values from the database (if exist)
-    ## First, we set the default values for each package in graph
-    additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
-    ## Then we get the values from the database
-    cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
-               '  FROM ir_module_module'
-               ' WHERE name in (%s)' % (','.join(['%s'] * len(graph))),
-                additional_data.keys()
-               )
-
-    ## and we update the default values with values from the database
-    additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
-
-    for package in graph:
-        for k, v in additional_data[package.name].items():
-            setattr(package, k, v)
-
     migrations = MigrationManager(cr, graph)
 
     has_updates = False
@@ -603,9 +635,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             init_module_objects(cr, m, modules)
             for kind in ('init', 'update'):
                 for filename in package.data.get('%s_xml' % kind, []):
-#                    mode = 'update'
-#                    if hasattr(package, 'init') or package.state == 'to install':
-#                        mode = 'init'
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
                     name, ext = os.path.splitext(filename)
                     fp = tools.file_open(opj(m, filename))
@@ -650,9 +679,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-
         statusi += 1
-
     
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
@@ -748,7 +775,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
-            # TODO: remove menu without actions of childs
+            # TODO: remove menu without actions of children
             #
             while True:
                 cr.execute('''delete from
