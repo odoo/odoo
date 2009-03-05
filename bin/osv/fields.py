@@ -624,7 +624,7 @@ class function(_column):
 
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
-            res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
+            res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
         return res
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
