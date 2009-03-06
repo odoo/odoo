@@ -797,7 +797,8 @@ class mrp_procurement(osv.osv):
             ('cancel','Cancel'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'Status')
+            ('waiting','Waiting')], 'Status', required=True),
+        'note' : fields.text('Note'),
     }
     _defaults = {
         'state': lambda *a: 'draft',

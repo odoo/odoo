@@ -436,9 +436,9 @@ class crm_case(osv.osv):
                         else:
                             base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='deadline' and case.date_deadline:
-                        base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d')
+                        base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='date' and case.date:
-                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d')
+                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d %H:%M:%S')
                     if base:
                         fnct = {
                             'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
