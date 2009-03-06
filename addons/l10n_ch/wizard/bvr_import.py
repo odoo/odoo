@@ -35,6 +35,8 @@ import base64
 import time
 from tools import mod10r
 import re
+from tools.translate import _
+
 ASK_FORM = """<?xml version="1.0"?>
 <form string="BVR Import">
 	<field name="file"/>
@@ -103,12 +105,12 @@ def _import(obj, cursor, user, data, context):
 
 			if line[0:3] in ('999', '995'):
 				if find_total:
-					raise wizard.except_wizard('Error',
-							'Too much total record found!')
+					raise wizard.except_wizard(_('Error'),
+							_('Too much total record found!'))
 				find_total = True
 				if lines:
-					raise wizard.except_wizard('Error',
-							'Record found after total record!')
+					raise wizard.except_wizard(_('Error'),
+							_('Record found after total record!'))
 				amount = float(line[39:49]) + (float(line[49:51]) / 100)
 				cost = float(line[69:76]) + (float(line[76:78]) / 100)
 				if line[2] == '5':
@@ -117,11 +119,11 @@ def _import(obj, cursor, user, data, context):
 
 				if round(amount - total_amount, 2) >= 0.01 \
 						or round(cost - total_cost, 2) >= 0.01:
-					raise wizard.except_wizard('Error',
-							'Total record different from the computed!')
+					raise wizard.except_wizard(_('Error'),
+							_('Total record different from the computed!'))
 				if int(line[51:63]) != len(records):
-					raise wizard.except_wizard('Error',
-							'Number record different from the computed!')
+					raise wizard.except_wizard(_('Error'),
+							_('Number record different from the computed!'))
 			else:
 				record = {
 					'reference': line[12:39],
@@ -132,8 +134,8 @@ def _import(obj, cursor, user, data, context):
 				}
 
 				if record['reference'] != mod10r(record['reference'][:-1]):
-					raise wizard.except_wizard('Error',
-							'Recursive mod10 is invalid for reference: %s' % \
+					raise wizard.except_wizard(_('Error'),
+							_('Recursive mod10 is invalid for reference: %s') % \
 									record['reference'])
 
 				if line[2] == '5':
@@ -202,8 +204,8 @@ def _import(obj, cursor, user, data, context):
 			else:
 				account_id = account_payable
 		if not account_id :
-			raise wizard.except_wizard('Error',
-				'The properties account payable account receivable')
+			raise wizard.except_wizard(_('Error'),
+				_('The properties account payable account receivable'))
 		values['account_id'] = account_id
 		values['partner_id'] = partner_id
 
@@ -248,3 +250,4 @@ class BVRImport(wizard.interface):
 	}
 
 BVRImport('l10n_ch.bvr_import')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

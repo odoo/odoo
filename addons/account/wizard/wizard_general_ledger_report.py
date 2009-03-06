@@ -24,6 +24,7 @@ import wizard
 import pooler
 import locale
 import time
+from tools.translate import _
 
 account_form = '''<?xml version="1.0"?>
 <form string="Select Chart">
@@ -108,12 +109,12 @@ def _check_date(self, cr, uid, data, context):
     res = cr.dictfetchall()
     if res:
         if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  wizard.except_wizard('UserError','Date to must be set between ' + res[0]['date_start'] + " and " + res[0]['date_stop'])
+                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
         else:
             return 'checkreport'
 
     else:
-        raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
+        raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
     
 def _check_state(self, cr, uid, data, context):
 
@@ -173,3 +174,4 @@ class wizard_report(wizard.interface):
         }
     }
 wizard_report('account.general.ledger.report')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

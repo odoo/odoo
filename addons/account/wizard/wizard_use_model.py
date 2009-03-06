@@ -23,6 +23,7 @@ import wizard
 import time
 import datetime
 import pooler
+from tools.translate import _
 
 model_form = """<?xml version="1.0"?>
 <form string="Select Message">
@@ -52,7 +53,7 @@ def _create_entries(self, cr, uid, data, context):
 
             period_id = pool_obj.get('account.period').find(cr,uid, context=context)
             if not period_id:
-                raise wizard.except_wizard('No period found !', 'Unable to find a valid period !')
+                raise wizard.except_wizard(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
             move_id = pool_obj.get('account.move').create(cr, uid, {
                 'ref': model.ref,

@@ -26,6 +26,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 case_form = """<?xml version="1.0"?>
 <form string="Convert To Opportunity">
@@ -49,7 +50,7 @@ class make_opportunity(wizard.interface):
         case_obj = pool.get('crm.case')
         for case in case_obj.browse(cr, uid, data['ids']):
             if not case.partner_id:
-                raise wizard.except_wizard("Warning !",
+                raise wizard.except_wizard(_('Warning !'),
                     _('You must assign a partner to this lead before converting to opportunity.\n' \
                   'You can use the convert to partner button.'))
         return {'name': case.name, 'probability': case.probability or 20.0, 'planned_revenue':case.planned_revenue}
@@ -60,7 +61,7 @@ class make_opportunity(wizard.interface):
         data_obj = pool.get('ir.model.data')
         id = section_obj.search(cr, uid, [('code','=','oppor')], context=context)
         if not id:
-            raise wizard.except_wizard(_("Error !"),
+            raise wizard.except_wizard(_('Error !'),
                 _('You did not installed the opportunities tracking when you configured the crm_configuration module.' \
                   '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'.'
                   ))
@@ -106,3 +107,4 @@ class make_opportunity(wizard.interface):
 
 make_opportunity('crm.case.opportunity_set')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

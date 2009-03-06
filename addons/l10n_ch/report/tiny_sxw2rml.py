@@ -339,3 +339,4 @@ if __name__ == "__main__":
 	result = style.applyStylesheet(doc, None)
 	xml = style.saveResultToString(result)
 	print xml
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

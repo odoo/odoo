@@ -100,3 +100,4 @@ report_sxw.report_sxw(
 	parser=account_invoice_bvr,
 	header=False)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

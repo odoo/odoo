@@ -25,6 +25,7 @@ import time
 import netsvc
 import pooler
 import tools
+from tools.translate import _
 
 class crm_case_log(osv.osv):
     _inherit = 'crm.case.log'

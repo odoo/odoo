@@ -28,6 +28,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 
 from tools import config
+from tools.translate import _
 
 type2journal = {
     'rec_voucher':'cash', 
@@ -180,7 +181,7 @@ class account_voucher(osv.osv):
             if t['state'] in ('draft', 'cancel'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
     
@@ -604,3 +605,4 @@ class VoucherLine(osv.osv):
         }
 VoucherLine()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

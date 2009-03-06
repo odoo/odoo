@@ -24,7 +24,7 @@ import time
 from osv import fields
 from osv import osv
 from osv.orm import except_orm
-
+from tools.translate import _
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -124,7 +124,7 @@ class hr_analytic_timesheet(osv.osv):
                 raise except_orm(_('ValidateError'),
                      _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
             else:
-                raise
+                raise except_orm(_('UnknownError'), str(e))
 
     def on_change_user_id(self, cr, uid, ids, user_id):
         if not user_id:

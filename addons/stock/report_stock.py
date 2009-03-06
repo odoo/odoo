@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 #
 # Check if it works with UoM ???
@@ -80,3 +81,4 @@ class stock_report_prodlots(osv.osv):
         
 stock_report_prodlots()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

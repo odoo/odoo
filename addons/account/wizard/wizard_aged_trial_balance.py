@@ -26,6 +26,7 @@ import datetime
 import pooler
 
 from mx.DateTime import *
+from tools.translate import _
 
 _aged_trial_form = """<?xml version="1.0"?>
 <form string="Aged Trial Balance">
@@ -63,7 +64,7 @@ def _calc_dates(self, cr, uid, data, context):
     res = {}
     period_length = data['form']['period_length']
     if period_length<=0:
-        raise wizard.except_wizard('UserError', 'You must enter a period length that cannot be 0 or below !')
+        raise wizard.except_wizard(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
     start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date1'],"%Y-%m-%d")))
     start = DateTime(int(start.year),int(start.month),int(start.day))
     if data['form']['direction_selection'] == 'past':
@@ -110,3 +111,4 @@ class wizard_report(wizard.interface):
     }
 wizard_report('account.aged.trial.balance')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

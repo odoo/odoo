@@ -23,6 +23,7 @@
 
 import wizard
 import pooler
+from tools.translate import _
 
 
 _form = """<?xml version="1.0"?>
@@ -41,15 +42,15 @@ def do_merge(self, cr, uid, data, context):
     invent_lines = {}
 
     if len(data['ids']) < 2:
-        raise wizard.except_wizard("Warning",
-            _("Please select at least two inventories."))
+        raise wizard.except_wizard(_('Warning'),
+            _('Please select at least two inventories.'))
 
 
 
     for inventory in invent_obj.browse(cr, uid, data['ids'], context=context):
         if inventory.state == "done":
-            raise wizard.except_wizard("Warning",
-                _("Merging is only allowed on draft inventories."))
+            raise wizard.except_wizard(_('Warning'),
+                _('Merging is only allowed on draft inventories.'))
 
         for line in inventory.inventory_line_id:
             key = (line.location_id.id, line.product_id.id, line.product_uom.id)

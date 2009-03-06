@@ -23,6 +23,7 @@
 import wizard
 import pooler
 from osv import fields, osv
+from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Advance Payment">

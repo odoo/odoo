@@ -27,6 +27,7 @@ import pooler
 from osv.osv import except_osv
 from osv import fields,osv
 import netsvc
+from tools.translate import _
 
 
 form1 = '''<?xml version="1.0"?>
@@ -47,7 +48,7 @@ def _get_states(self, cr, uid, data, context):
     prod_obj = pooler.get_pool(cr.dbname).get('mrp.production')
     prod = prod_obj.browse(cr, uid,data['ids'])[0]
     if prod.state in  ('cancel', 'done'):
-        raise wizard.except_wizard('Warning !', 'The production is in "%s" state. You can not change the production quantity anymore' % (prod.state).upper() )
+        raise wizard.except_wizard(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
         return 'end'
     if prod.state in  ('draft'):
         #raise wizard.except_wizard('Warning !', 'The production is in "%s" state. You can change the production quantity directly...!!!' % (prod.state).upper() )
@@ -69,12 +70,12 @@ def _change_prod_qty(self, cr, uid, data, context):
         if not bom_point:
             bom_id = pool.get('mrp.bom')._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id)
             if not bom_id:
-                raise osv.except_osv('Error', "Couldn't find bill of material for product")
+                raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
             self.write(cr, uid, [prod.id], {'bom_id': bom_id})
             bom_point = pool.get('mrp.bom').browse(cr, uid, [bom_id])[0]
 
         if not bom_id:
-            raise osv.except_osv('Error', "Couldn't find bill of material for product")
+            raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
         factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
         res = pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
@@ -114,3 +115,4 @@ class change_production_qty(wizard.interface):
 
 change_production_qty('change_production_qty')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

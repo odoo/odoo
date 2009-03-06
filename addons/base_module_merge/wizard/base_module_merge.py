@@ -26,6 +26,7 @@ import pooler
 import tools
 import os
 from xml.dom import minidom
+from tools.translate import _
 
 info_start_form = '''<?xml version="1.0"?>
 <form string="Module Merging">

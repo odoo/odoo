@@ -21,3 +21,5 @@
 ##############################################################################
 import report_voucher
 import report_voucher_amount
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
