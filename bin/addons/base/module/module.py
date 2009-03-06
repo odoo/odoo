@@ -36,6 +36,7 @@ import pooler
 import netsvc
 
 from tools.parse_version import parse_version
+from tools.translate import _
 
 
 class module_repository(osv.osv):

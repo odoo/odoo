@@ -24,6 +24,7 @@ from osv import fields,osv
 from osv.orm import except_orm
 import tools
 import pytz
+from tools.translate import _
 
 class groups(osv.osv):
     _name = "res.groups"

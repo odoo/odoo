@@ -26,6 +26,7 @@ from osv import fields,osv
 import tools
 import ir
 import pooler
+from tools.translate import _
 
 class res_partner_function(osv.osv):
     _name = 'res.partner.function'

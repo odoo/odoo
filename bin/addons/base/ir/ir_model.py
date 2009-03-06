@@ -28,6 +28,7 @@ from osv.orm import except_orm, browse_record
 import time
 import tools
 from tools import config
+from tools.translate import _
 import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
