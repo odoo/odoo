@@ -1057,3 +1057,4 @@ class sale_config_picking_policy(osv.osv_memory):
 sale_config_picking_policy()
 
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

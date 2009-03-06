@@ -25,6 +25,7 @@ import time
 import wizard
 import osv
 import pooler
+from tools.translate import _
 
 section_form = '''<?xml version="1.0"?>
 <form string="Create Menu For Dashboard">
@@ -42,7 +43,7 @@ def check_views(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     board = pool.get('board.board').browse(cr, uid, data['id'])
     if not board.line_ids:
-        raise wizard.except_wizard('User Error!',"Please Insert Dashboard View(s) !")    
+        raise wizard.except_wizard(_('User Error!'),_('Please Insert Dashboard View(s) !'))    
     return data['form']
 
 def board_menu_create(self, cr, uid, data, context):

@@ -319,3 +319,4 @@ class Code128(MultiWidthBarcode):
             dval = dval + _patterns[c]
         self.decomposed = dval
         return self.decomposed
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

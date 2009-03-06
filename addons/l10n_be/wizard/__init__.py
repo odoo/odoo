@@ -21,3 +21,5 @@
 ##############################################################################
 import account_vat_declaration
 import partner_vat_listing
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

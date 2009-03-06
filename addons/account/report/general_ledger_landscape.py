@@ -406,3 +406,4 @@ class general_ledger_landscape(rml_parse.rml_parse):
 			return currency_total
 
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger_landscape, header=False)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

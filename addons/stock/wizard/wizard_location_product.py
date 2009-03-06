@@ -69,3 +69,4 @@ class product_by_location(wizard.interface):
         }
     }
 product_by_location('stock.location.products')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

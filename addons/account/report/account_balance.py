@@ -227,3 +227,4 @@ class account_balance(report_sxw.rml_parse):
             return self.sum_debit
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

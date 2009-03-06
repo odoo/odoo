@@ -68,3 +68,4 @@ class pos_scan_product(wizard.interface):
 
 pos_scan_product('pos.scan_product')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

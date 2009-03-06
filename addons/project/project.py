@@ -26,6 +26,7 @@ from mx.DateTime import now
 import time
 
 from osv import fields, osv
+from tools.translate import _
 
 class project(osv.osv):
     _name = "project.project"

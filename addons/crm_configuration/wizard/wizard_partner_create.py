@@ -26,6 +26,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 case_form = """<?xml version="1.0"?>
 <form string="Convert To Partner">
@@ -46,7 +47,7 @@ class make_partner(wizard.interface):
         case_obj = pool.get('crm.case')
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.partner_id:
-                raise wizard.except_wizard("Warning !",
+                raise wizard.except_wizard(_('Warning !'),
                     _('A partner is already defined on this lead.'))
         return {}
 
@@ -58,7 +59,7 @@ class make_partner(wizard.interface):
         for case in case_obj.browse(cr, uid, data['ids']):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
             if partner_id:
-                raise wizard.except_wizard("Warning !",_('A partner is already existing with the same name.'))
+                raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
             else:
                 partner_id = partner_obj.create(cr, uid, {
                     'name': case.partner_name or case.name,
