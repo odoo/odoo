@@ -1773,7 +1773,7 @@ class orm(orm_template):
                     import random
                     _rel1 = field['relation'].replace('.', '_')
                     _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, random.randint(0, 10000))
+                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, field['name'])
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
