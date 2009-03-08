@@ -327,7 +327,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64, required=True),
+        'name': fields.char('Description',size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active'),
         'description': fields.text('Your action'),

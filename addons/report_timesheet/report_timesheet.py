@@ -94,6 +94,7 @@ class report_timesheet_account_date(osv.osv):
         'quantity': fields.float('Quantity', readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
+    
     def init(self, cr):
         cr.execute("""
             create or replace view report_timesheet_account_date as (
@@ -151,6 +152,47 @@ class report_timesheet_invoice(osv.osv):
             )
         """)
 report_timesheet_invoice()
+
+class report_random_timsheet(osv.osv):
+    _name = "report.random.timesheet"
+    _description = "Random Timesheet Report"
+    _auto = False
+    
+    _columns = {
+        'name': fields.char('Description', size=64, readonly=True),
+        'date': fields.date('Date', readonly=True),
+        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'quantity' : fields.float('Quantity', readonly=True),
+        'product_id' : fields.many2one('product.product','Product', readonly=True),
+        'amount' : fields.float('Amount', readonly=True),
+        'uom_id' : fields.many2one('product.uom','UOM', readonly=True)
+      }
+    _order = "date desc"
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_random_timesheet as (
+
+            select line.id as id, line.name as name, line.date as date, 
+            act.id as analytic_account_id, line.unit_amount as quantity,
+            prod.id as product_id, line.amount as amount, uom_uom.id as uom_id
+            
+            from account_analytic_line line
+            
+            left join account_analytic_account act on (line.account_id = act.id)
+            left join hr_employee emp on (line.user_id = emp.id)
+            left join hr_department dept on (dept.manager_id = emp.parent_id)
+            left join hr_department_user_rel dept_user on (line.user_id = dept_user.user_id)
+            left join product_template prod on (line.product_id = prod.id)
+            left join product_uom uom_uom on (line.product_uom_id = uom_uom.id)
+            
+            where (line.date < CURRENT_DATE AND line.date >= (CURRENT_DATE-3))
+            
+            ORDER BY line.name LIMIT 10
+            )
+            """)
+
+report_random_timsheet()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
