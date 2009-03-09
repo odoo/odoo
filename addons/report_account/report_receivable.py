@@ -103,11 +103,11 @@ class report_aged_receivable(osv.osv):
         res = {}
         for period in self.read(cr,uid,ids,['name']):
            date1,date2 = period['name'].split(' to ')
-           se = "SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
+           query = "SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
                             AND (COALESCE(line.date,date) BETWEEN '%s' AND  '%s') \
                             AND (reconcile_id IS NULL) AND ac.active"%(str(date2),str(date1))
-           cr.execute(se)
+           cr.execute(query)
            amount = cr.fetchone()
            amount = amount[0] or 0.00
            res[period['id']] = amount
@@ -131,15 +131,16 @@ class report_aged_receivable(osv.osv):
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
             fy_start_date = mx.DateTime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
-            
-            while (last_month > fy_start_date):
-                LIST_RANGES.append(today + " to " + last_month.strftime('%Y-%m-%d'))
-                today = last_month.strftime('%Y-%m-%d')
-                last_month = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+            last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
+
+            while (last_month_date > fy_start_date):
+                LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
+                today = (last_month_date- 1).strftime('%Y-%m-%d')
+                last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
             
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
             cr.execute('delete from temp_range')
+            
             for range in LIST_RANGES:
                 pooler.get_pool(cr.dbname).get('temp.range').create(cr, uid, {'name':range})
                 
