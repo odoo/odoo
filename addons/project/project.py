@@ -34,7 +34,7 @@ class project(osv.osv):
     def _complete_name(self, cr, uid, ids, name, args, context):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = (res.parent_id and (res.parent_id.complete_name + '/') or '') + res.name
+            res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
         return res
 
 
@@ -244,7 +244,7 @@ class task(osv.osv):
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
-    def onchange_planned(self, cr, uid, ids, planned, effective):
+    def onchange_planned(self, cr, uid, ids, planned, effective=0.0):
         return {'value':{'remaining_hours': planned-effective}}
 
     def _default_project(self, cr, uid, context={}):

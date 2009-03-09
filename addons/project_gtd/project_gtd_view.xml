@@ -30,15 +30,9 @@
             <field name="name">Contexts</field>
             <field name="res_model">project.gtd.context</field>
         </record>
-        <record model="ir.actions.act_window" id="open_gtd_context_tree_my">
-            <field name="name">My Contexts</field>
-            <field name="res_model">project.gtd.context</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        
+
         <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions"/>
         <menuitem name="Contexts" id="menu_open_gtd_time_contexts" parent="menu_open_gtd_time" action="open_gtd_context_tree"/>        
-        <menuitem name="My Contexts" id="menu_open_gtd_time_my_contexts" parent="menu_open_gtd_time_contexts" action="open_gtd_context_tree_my"/>    
 
         <record model="ir.ui.view" id="view_gtd_timebox_tree">
             <field name="name">project.gtd.timebox.tree</field>
@@ -112,7 +106,10 @@
                     <field name="date_start"/>
                     <field name="priority"/>
                     <field name="date_deadline"/>
-                    <field name="planned_hours"  widget="float_time" sum="Est. Hours"/>
+                    <field name="planned_hours"  widget="float_time" sum="Planned"
+                                on_change="onchange_planned(planned_hours,effective_hours)"/>
+                    <field name="remaining_hours" invisible="1"/>
+                    <field name="effective_hours" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -145,12 +142,16 @@
             <field name="name">My Timeboxes</field>
             <field name="res_model">project.gtd.timebox</field>
             <field name="domain">[('user_id','=',uid)]</field>
-            <field name="view_type">form</field>
+            <field name="view_type">tree</field>
             <field name="view_id" ref="view_gtd_timebox_treelist"/>
             <field name="context">{'record_id':False}</field>
         </record>
         
-        <menuitem name="All My Timeboxes" id="menu_open_time_allinbox" parent="menu_open_time" action="open_gtd_timebox_all"/>
+        <menuitem
+            name="All My Timeboxes" 
+            id="menu_open_time_allinbox" 
+            parent="menu_open_time" 
+            action="open_gtd_timebox_all"/>
 
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>
