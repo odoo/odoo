@@ -63,7 +63,8 @@ def _data_save(self, cr, uid, data, context):
 
     period = pool.get('account.period').browse(cr, uid, data['form']['period_id'], context=context)
     new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'], context=context)
-
+    old_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy_id'], context=context)
+    
     new_journal = data['form']['journal_id']
     new_journal = pool.get('account.journal').browse(cr, uid, new_journal, context=context)
 
@@ -192,8 +193,12 @@ def _data_save(self, cr, uid, data, context):
                 offset += limit
 
     ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
-        ('period_id.fiscalyear_id','=',new_fyear.id)])
+        ('period_id.fiscalyear_id','=',old_fyear.id)])
     context['fy_closing'] = True
+    if not ids:
+        raise wizard.except_wizard(_('UserError'),
+                _('The old fiscal year does not have any entry to reconcile!'))
+
     pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
     new_period = data['form']['period_id']
     ids = pool.get('account.journal.period').search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])

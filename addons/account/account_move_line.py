@@ -531,6 +531,7 @@ class account_move_line(osv.osv):
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
         id_set = ','.join(map(str, ids))
+        
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
@@ -707,7 +708,6 @@ class account_move_line(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context={}, check=True):
-        print "CC"
         self._update_check(cr, uid, ids, context)
         result = False
         for line in self.browse(cr, uid, ids, context):
