@@ -313,7 +313,7 @@ class sale_order(osv.osv):
         val = {'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'payment_term' : payment_term, 'fiscal_position': fiscal_position}
         if pricelist:
             val['pricelist_id'] = pricelist
-        return {'value':}
+        return {'value':val}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context={}):
         if not policy:

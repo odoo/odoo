@@ -31,6 +31,13 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
 
+    def _complete_name(self, cr, uid, ids, name, args, context):
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = (res.parent_id and (res.parent_id.complete_name + '/') or '') + res.name
+        return res
+
+
     def check_recursion(self, cursor, user, ids, parent=None):
         return super(project, self).check_recursion(cursor, user, ids,
                 parent=parent)
@@ -81,6 +88,7 @@ class project(osv.osv):
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
+        'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=128),
         'active': fields.boolean('Active'),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
@@ -115,7 +123,7 @@ class project(osv.osv):
         'state': lambda *a: 'open'
     }
 
-    _order = "priority"
+    _order = "parent_id,priority,name"
     _constraints = [
         (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
     ]

@@ -73,6 +73,24 @@
                 </form>
             </field>
         </record>
+        <record id="view_project_list" model="ir.ui.view">
+            <field name="name">project.project.list</field>
+            <field name="model">project.project</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <tree string="Projects">
+                    <field name="complete_name"/>
+                    <field name="manager"/>
+                    <field name="partner_id"/>
+                    <field name="planned_hours" widget="float_time"/>
+                    <field name="total_hours" widget="float_time"/>
+                    <field name="effective_hours" widget="float_time"/>
+                    <field name="progress_rate" widget="progressbar"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
         <record id="view_project" model="ir.ui.view">
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
