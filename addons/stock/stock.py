@@ -761,9 +761,8 @@ class stock_production_lot(osv.osv):
         if context is None:
             context = {}
         res = super(stock_production_lot, self).search(cr, uid, args, offset, limit, order, context=context, count=count)
-        for k,v in self._get_stock(cr, uid, res, 'stock_available', None, context).items():
-            if v==0.0:
-                res.remove(k)
+        if res:
+            return [k for k,v in self._get_stock(cr, uid, res, 'stock_available', None, context).items() if v]
         return res
     
     def name_get(self, cr, uid, ids, context={}):
