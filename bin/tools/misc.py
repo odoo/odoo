@@ -305,7 +305,6 @@ def reverse_enumerate(l):
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
     """Send an email."""
-    print 'sending', email_from, email_to, subject, body
     import smtplib
     from email.MIMEText import MIMEText
     from email.MIMEBase import MIMEBase
@@ -314,6 +313,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
+
+    if x_headers is None:
+        x_headers = {}
 
     if not ssl:
         ssl = config.get('smtp_ssl', False)
