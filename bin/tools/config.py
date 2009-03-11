@@ -82,7 +82,7 @@ class configmanager(object):
 
         hasSSL = check_ssl()
 
-        loglevels = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
+        self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
                           for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
@@ -111,8 +111,8 @@ class configmanager(object):
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
                           help="stop the server after it initializes")
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=loglevels.keys(),
-                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (loglevels.keys(),))
+        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
+                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
             group.add_option("-S", "--secure", dest="secure", action="store_true",
@@ -130,8 +130,8 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--syslog", action="store_true", dest="syslog",
                          default=False, help="Send the log to the syslog server")
-        group.add_option('--log-level', dest='log_level', type='choice', choices=loglevels.keys(),
-                         help='specify the level of the logging. Accepted values: ' + str(loglevels.keys()))
+        group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
+                         help='specify the level of the logging. Accepted values: ' + str(self._LOGLEVELS.keys()))
         parser.add_option_group(group)
 
         # SMTP Group
@@ -236,10 +236,14 @@ class configmanager(object):
             self.options[arg] = getattr(opt, arg)
 
         if opt.assert_exit_level:
-            self.options['assert_exit_level'] = loglevels[opt.assert_exit_level]
+            self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]
+        else:
+            self.options['assert_exit_level'] = self._LOGLEVELS.get(self.options['assert_exit_level']) or int(self.options['assert_exit_level'])
 
         if opt.log_level:
-            self.options['log_level'] = loglevels[opt.log_level]
+            self.options['log_level'] = self._LOGLEVELS[opt.log_level]
+        else:
+            self.options['log_level'] = self._LOGLEVELS.get(self.options['log_level']) or int(self.options['log_level'])
 
         if not self.options['root_path'] or self.options['root_path']=='None':
             self.options['root_path'] = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -336,9 +340,15 @@ class configmanager(object):
 
     def save(self):
         p = ConfigParser.ConfigParser()
+        loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS.keys()))
         p.add_section('options')
-        for o in [opt for opt in self.options.keys() if opt not in ('version','language','translate_out','translate_in','init','update')]:
-            p.set('options', o, self.options[o])
+        for opt in self.options.keys():
+            if opt in ('version', 'language', 'translate_out', 'translate_in', 'init', 'update'):
+                continue
+            if opt in ('log_level', 'assert_exit_level'):
+                p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
+            else:
+                p.set('options', opt, self.options[opt])
 
         # try to create the directories and write the file
         try:
