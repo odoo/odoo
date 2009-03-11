@@ -437,14 +437,16 @@ class ir_model_data(osv.osv):
         if (not xml_id) and (not self.doinit):
             return False
         action_id = False
+        
         if xml_id:
             cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
             results = cr.fetchall()
             for action_id2,res_id2 in results:
-                cr.execute('select id from '+self.pool.get(model)._table+' where id=%s', (res_id2,))
+                cr.execute('select id from '+model_obj._table+' where id=%s', (res_id2,))
                 result3 = cr.fetchone()
                 if not result3:
                     cr.execute('delete from ir_model_data where id=%s', (action_id2,))
+                    res_id = False
                 else:
                     res_id,action_id = res_id2,action_id2
 
@@ -512,7 +514,7 @@ class ir_model_data(osv.osv):
         #self.pool.get(model).unlink(cr, uid, ids)
         for id in ids:
             self.unlink_mark[(model, id)]=False
-            cr.execute('delete from ir_model_data where res_id=%s and model=\'%s\'', (id,model))
+            cr.execute('delete from ir_model_data where res_id=%s and model=%s', (id, model))
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
@@ -563,18 +565,20 @@ class ir_model_data(osv.osv):
 
         cr.commit()
         if not config.get('import_partial', False):
-            for (model,id) in self.unlink_mark.keys():
+            logger = netsvc.Logger()
+            for (model, res_id) in self.unlink_mark.keys():
                 if self.pool.get(model):
-                    logger = netsvc.Logger()
-                    logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
+                    logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (res_id, model))
                     try:
-                        self.pool.get(model).unlink(cr, uid, [id])
-                        if self.unlink_mark[(model,id)]:
-                            self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
-                            cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
+                        self.pool.get(model).unlink(cr, uid, [res_id])
+                        id = self.unlink_mark[(model, res_id)]
+                        if id:
+                            self.unlink(cr, uid, [id])
+                            cr.execute('DELETE FROM ir_values WHERE value=%s', ('%s,%s' % (model, res_id),))
                         cr.commit()
                     except:
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
+                        cr.rollback()
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\nThere should be some relation that points to this resource\nYou should manually fix this and restart --update=module' % (res_id, model))
         return True
 ir_model_data()
 

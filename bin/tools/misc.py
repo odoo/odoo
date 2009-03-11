@@ -302,7 +302,8 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain'):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+               attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
     """Send an email."""
     import smtplib
     from email.MIMEText import MIMEText
@@ -313,8 +314,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
 
+    if x_headers is None:
+        x_headers = {}
+
     if not ssl:
         ssl = config.get('smtp_ssl', False)
+
+    if not email_from and not config['email_from']:
+        raise Exception("No Email sender by default, see config file")
 
     if not email_cc:
         email_cc = []
@@ -326,17 +333,28 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     else:
         msg = MIMEMultipart()
 
-    msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
+    msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
     if reply_to:
-        msg['Reply-To'] = msg['From']+', '+reply_to
+        msg['Reply-To'] = reply_to
+    else:
+        msg['Reply-To'] = msg['From']
     msg['To'] = COMMASPACE.join(email_to)
     if email_cc:
         msg['Cc'] = COMMASPACE.join(email_cc)
     if email_bcc:
         msg['Bcc'] = COMMASPACE.join(email_bcc)
     msg['Date'] = formatdate(localtime=True)
+
+    # Add OpenERP Server information
+    msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
+    msg['X-OpenERP-Server-Host'] = socket.gethostname()
+    msg['X-OpenERP-Server-Version'] = release.version
+
+    # Add dynamic X Header
+    for key, value in x_headers.items():
+        msg['X-OpenERP-%s' % key] = str(value)
 
     if tinycrm:
         msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
@@ -381,9 +399,10 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 # text must be latin-1 encoded
 def sms_send(user, password, api_id, text, to):
     import urllib
-    params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
-    #f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
-    f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
+    url = "http://api.urlsms.com/SendSMS.aspx"
+    #url = "http://196.7.150.220/http/sendmsg"
+    params = urllib.urlencode({'UserID': user, 'Password': password, 'SenderID': api_id, 'MsgText': text, 'RecipientMobileNo':to})
+    f = urllib.urlopen(url+"?"+params)
     # FIXME: Use the logger if there is an error
     return True
 

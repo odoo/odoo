@@ -398,12 +398,12 @@ class module(osv.osv):
             if not download:
                 continue
             zipfile = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(mod.name+'.zip')
+            fname = addons.get_module_path(str(mod.name)+'.zip', downloaded=True)
             try:
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
                 fp.close()
-            except IOError, e:
+            except Exception, e:
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, {

@@ -61,7 +61,7 @@ except ImportError:
 
 from tools.config import config
 
-regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?( asc)?,?)+$', re.I)
+regex_order = re.compile('^([a-z0-9_]+( *desc| *asc)?( *, *|))+$', re.I)
 
 def last_day_of_current_month():
     import datetime
@@ -465,7 +465,7 @@ class orm_template(object):
             datas += self.__export_row(cr, uid, row, fields, context)
         return datas
 
-    def import_data(self, cr, uid, fields, datas, mode='init', current_module=None, noupdate=False, context=None, filename=None):
+    def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
@@ -872,7 +872,7 @@ class orm_template(object):
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = xpath.Evaluate("//button[@type != 'object']", node)
+        buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
         for button in buttons:
             ok = True
             if user != 1:   # admin user has all roles
@@ -1773,7 +1773,7 @@ class orm(orm_template):
                     import random
                     _rel1 = field['relation'].replace('.', '_')
                     _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, random.randint(0, 10000))
+                    _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, field['name'])
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
@@ -2130,10 +2130,11 @@ class orm(orm_template):
 
         for order, object, ids, fields in result_store:
             if object<>self._name:
-                cr.execute('select id from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+                obj =  self.pool.get(object)
+                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, ids))+')')
                 ids = map(lambda x: x[0], cr.fetchall())
                 if ids:
-                    self.pool.get(object)._store_set_values(cr, uid, ids, fields, context)
+                    obj._store_set_values(cr, uid, ids, fields, context)
         return True
 
     #
@@ -2285,60 +2286,42 @@ class orm(orm_template):
                 self.pool._init_parent[self._name]=True
             else:
                 for id in ids:
+                    # Find Position of the element
                     if vals[self._parent_name]:
                         cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
-                        pleft_old = pright_old = None
-                        result_p = cr.fetchall()
-                        for (pleft,pright,pid) in result_p:
-                            if pid == id:
-                                break
-                            pleft_old = pleft
-                            pright_old = pright
-                        if not pleft_old:
-                            cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (vals[self._parent_name],))
-                            pleft_old,pright_old = cr.fetchone()
-                        res = (pleft_old, pright_old)
                     else:
-                        cr.execute('SELECT parent_left,parent_right FROM '+self._table+' WHERE id IS NULL')
-                        res = cr.fetchone()
-                    if res:
-                        pleft,pright = res
-                    else:
-                        cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
-                        pleft,pright = cr.fetchone()
-                    cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%s',ids))+')', ids)
-                    dest = pleft + 1
-                    for cleft,cright,cid in cr.fetchall():
-                        if cleft > pleft:
-                            treeshift  = pleft - cleft + 1
-                            leftbound  = pleft+1
-                            rightbound = cleft-1
-                            cwidth     = cright-cleft+1
-                            leftrange = cright
-                            rightrange  = pleft
+                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+' is null order by '+(self._parent_order or self._order))
+                    result_p = cr.fetchall()
+                    position = None
+                    for (pleft,pright,pid) in result_p:
+                        if pid == id:
+                            break
+                        position = pright+1
+
+                    # It's the first node of the parent: position = parent_left+1
+                    if not position:
+                        if not vals[self._parent_name]: 
+                            position = 1
                         else:
-                            treeshift  = pleft - cright
-                            leftbound  = cright + 1
-                            rightbound = pleft
-                            cwidth     = cleft-cright-1
-                            leftrange  = pleft+1
-                            rightrange = cleft
-                        cr.execute('UPDATE '+self._table+'''
-                            SET
-                                parent_left = CASE
-                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                    WHEN parent_left BETWEEN %s AND %s THEN parent_left + %s
-                                    ELSE parent_left
-                                END,
-                                parent_right = CASE
-                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                    WHEN parent_right BETWEEN %s AND %s THEN parent_right + %s
-                                    ELSE parent_right
-                                END
-                            WHERE
-                                parent_left<%s OR parent_right>%s;
-                        ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
-                            cwidth,cleft,cright,treeshift,leftrange,rightrange))
+                            cr.execute('select parent_left from '+self._table+' where id=%s', (vals[self._parent_name],))
+                            position = cr.fetchone()[0]+1
+
+                    # We have the new position !
+                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (id,))
+                    pleft,pright = cr.fetchone()
+                    distance = pright - pleft + 1
+
+                    if position>pleft and position<=pright:
+                        raise except_orm(_('UserError'), _('Recursivity Detected.'))
+
+                    if pleft<position:
+                        cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
+                        cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
+                        cr.execute('update '+self._table+' set parent_left=parent_left+%s, parent_right=parent_right+%s where parent_left>=%s and parent_left<%s', (position-pleft,position-pleft, pleft, pright))
+                    else:
+                        cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
+                        cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
+                        cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:

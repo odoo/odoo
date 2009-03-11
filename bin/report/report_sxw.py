@@ -519,7 +519,7 @@ class rml_parse(object):
         if not self.logo and rml_head.find('company.logo')>=0:
             rml_head = rml_head.replace('<image','<!--image')
             rml_head = rml_head.replace('</image>','</image-->')
-
+        
         head_dom = xml.dom.minidom.parseString(rml_head.encode('utf-8'))
         #for frame in head_dom.getElementsByTagName('frame'):
         #   frame.parentNode.removeChild(frame)

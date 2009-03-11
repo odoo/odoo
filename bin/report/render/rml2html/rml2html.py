@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -94,7 +94,6 @@ class _flowable(object):
         if node.hasAttribute('style'):
             node.setAttribute('class', node.getAttribute('style'))
         return node.toxml()
-
     def render(self, node):
         result = self.template.start()
         result += self.template.frame_start()
@@ -107,8 +106,7 @@ class _flowable(object):
                     #print 'tag', n.localName, 'not yet implemented!'
         result += self.template.frame_stop()
         result += self.template.end()
-        return result
-
+        return result.encode('utf-8').replace('"',"\'").replace('°','&deg;')
 class _rml_tmpl_tag(object):
     def __init__(self, *args):
         pass
@@ -126,7 +124,7 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
         self.width = width
         self.posx = posx
     def tag_start(self):
-        return '<table border="0" width="%d"><tr><td width="%d">&nbsp;</td><td>' % (self.width+self.posx,self.posx)
+        return "<table border=\'0\' width=\'%d\'><tr><td width=\'%d\'>&nbsp;</td><td>" % (self.width+self.posx,self.posx)
     def tag_end(self):
         return True
     def tag_stop(self):
@@ -152,19 +150,19 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
 
     def tag_start(self):
         self.pos.sort()
-        res = '<table border="0" cellpadding="0" cellspacing="0"><tr>'
+        res = "<table border='0' cellpadding='0' cellspacing='0'><tr>"
         posx = 0
         i = 0
         for (x,y,align,txt, style, fs) in self.pos:
             if align=="left":
                 pos2 = len(txt)*fs
-                res+='<td width="%d"></td><td style="%s" width="%d">%s</td>' % (x - posx, style, pos2, txt)
+                res+="<td width=\'%d\'></td><td style=\'%s\' width=\'%d\'>%s</td>" % (x - posx, style, pos2, txt)
                 posx = x+pos2
             if align=="right":
-                res+='<td width="%d" align="right" style="%s">%s</td>' % (x - posx, style, txt)
+                res+="<td width=\'%d\' align=\'right\' style=\'%s\'>%s</td>" % (x - posx, style, txt)
                 posx = x
             if align=="center":
-                res+='<td width="%d" align="center" style="%s">%s</td>' % ((x - posx)*2, style, txt)
+                res+="<td width=\'%d\' align=\'center\' style=\'%s\'>%s</td>" % ((x - posx)*2, style, txt)
                 posx = 2*x-posx
             i+=1
         res+='</tr></table>'
@@ -185,7 +183,7 @@ class _rml_tmpl_draw_lines(_rml_tmpl_tag):
 
     def tag_start(self):
         if self.ok:
-            return '<table border="0" cellpadding="0" cellspacing="0" width="%d"><tr><td width="%d"></td><td><hr width="100%%" style="margin:0px; %s"></td></tr></table>' % (self.posx+self.width,self.posx,self.style)
+            return "<table border=\'0\' cellpadding=\'0\' cellspacing=\'0\' width=\'%d\'><tr><td width=\'%d\'></td><td><hr width=\'100%%\' style=\'margin:0px; %s\'></td></tr></table>" % (self.posx+self.width,self.posx,self.style)
         else:
             return ''
 
@@ -207,9 +205,9 @@ class _rml_stylesheet(object):
             attrs = []
             for a in attr:
                 if a in self._tags:
-                    attrs.append("%s:%s" % self._tags[a](attr[a]))
+                    attrs.append('%s:%s' % self._tags[a](attr[a]))
             if len(attrs):
-                result += "p."+attr['name']+" {"+'; '.join(attrs)+"}\n"
+                result += 'p.'+attr['name']+' {'+'; '.join(attrs)+'}\n'
         self.result = result
 
     def render(self):
@@ -338,6 +336,7 @@ class _rml_doc(object):
         self.result += '''<!DOCTYPE HTML PUBLIC "-//w3c//DTD HTML 4.0 Frameset//EN">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css">
         p {margin:0px; font-size:12px;}
         td {font-size:14px;}
@@ -347,14 +346,50 @@ class _rml_doc(object):
         self.result += s.render()
         self.result+='''
     </style>
-</head>
-<body>'''
+'''
 
-        template = _rml_template(self.dom.documentElement.getElementsByTagName('template')[0])
-        f = _flowable(template, self.dom)
-        self.result += f.render(self.dom.documentElement.getElementsByTagName('story')[0])
+
+#        f = _flowable(template, self.dom)
+        list_story =[]
+        storys= self.dom.documentElement.getElementsByTagName('story')
+        for story in storys :
+            template = _rml_template(self.dom.documentElement.getElementsByTagName('template')[0])
+            f = _flowable(template, self.dom)
+            story_text = f.render(story)
+            list_story.append(story_text)
         del f
-        self.result += '</body></html>'
+        self.result +='''
+            <script type="text/javascript">
+
+            var indexer = 0;
+            var aryTest = %s ;            
+            function nextData()
+                {
+                if(indexer < aryTest.length -1)
+                    {
+                    indexer += 1;
+                    document.getElementById("tiny_data").innerHTML=aryTest[indexer];
+                    }
+                }
+            function prevData()
+                {
+                if (indexer > 0)
+                    {
+                    indexer -= 1;
+                    document.getElementById("tiny_data").innerHTML=aryTest[indexer];
+                    }
+                }            
+        </script>        
+        </head>
+        <body>
+            <div id="tiny_data">
+                %s
+            </div>    
+            <br>
+            <input type="button" value="next" onclick="nextData();">
+            <input type="button" value="prev" onclick="prevData();">
+                
+        </body></html>'''%(list_story,list_story[0])
         out.write( self.result)
 
 def parseString(data, fout=None):
@@ -384,4 +419,3 @@ if __name__=="__main__":
         print 'Try \'trml2pdf --help\' for more information.'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
