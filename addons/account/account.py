@@ -470,7 +470,7 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
     }
     def create(self, cr, uid, vals, context={}):
-        journal_id = super(osv.osv, self).create(cr, uid, vals, context)
+        journal_id = super(account_journal, self).create(cr, uid, vals, context)
 #       journal_name = self.browse(cr, uid, [journal_id])[0].code
 #       periods = self.pool.get('account.period')
 #       ids = periods.search(cr, uid, [('date_stop','>=',time.strftime('%Y-%m-%d'))])
@@ -481,6 +481,7 @@ class account_journal(osv.osv):
 #               'period_id': period.id
 #           })
         return journal_id
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args=[]

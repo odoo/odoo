@@ -28,7 +28,6 @@ def _invoice_membership(self, cr, uid, data, context):
     partner_ids = data['ids']
     product_id = data['form']['product']
     pool = pooler.get_pool(cr.dbname)
-
     cr.execute('''
             SELECT partner_id, id, type
             FROM res_partner_address
@@ -43,7 +42,6 @@ def _invoice_membership(self, cr, uid, data, context):
         pid = fetchal[x][0]
         id = fetchal[x][1]
         type = fetchal[x][2]
-
         if partner_address_ids.has_key(pid) and partner_address_ids[pid]['type'] == 'invoice':
             continue
         partner_address_ids[pid] = {'id': id, 'type': type}
@@ -95,7 +93,6 @@ def _invoice_membership(self, cr, uid, data, context):
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
         }
-
     return value
 
 wizard_arch= """<?xml version="1.0"?>
@@ -110,7 +107,6 @@ wizard_arch= """<?xml version="1.0"?>
 class wizard_invoice_membership(wizard.interface):
 
     states = {
-
         'init' : {
             'actions' : [],
             'result' : {
