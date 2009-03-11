@@ -90,32 +90,14 @@ class Graph(dict):
 
 
     def __iter__(self):
-        done = set()
-
-        # first pass: all modules that doesn't have a depend module (or 
-        # themself) in 'to install' state.
-        first_pass = []
-        for name, mod in self.items():
-            if all(m.state != 'to install' for m in mod.depends(True)):
-                first_pass.append(mod)
-
-        first_pass.sort(key=lambda m: m.depth)
-        for m in first_pass:
-            done.add(m.name)
-            yield m
-
-        # second pass: all modules in 'to install' state
-        second_pass = [m for m in self.values() if m.state == 'to install']
-        second_pass.sort(key=lambda m: m.depth)
-        for m in second_pass:
-            done.add(m.name)
-            yield m
-
-        # third pass: all other modules
-        third_pass = [m for m in self.values() if m.name not in done]
-        third_pass.sort(key=lambda m: m.depth)
-        for m in third_pass:
-            yield m
+        level = 0
+        done = set(self.keys())
+        while done:
+            level_modules = [(name, module) for name, module in self.items() if module.depth==level]
+            for name, module in level_modules:
+                done.remove(name)
+                yield module
+            level += 1
 
 class Singleton(object):
     def __new__(cls, name, graph):
@@ -160,23 +142,6 @@ class Node(Singleton):
     def __iter__(self):
         return itertools.chain(iter(self.children), *map(iter, self.children))
     
-    def _depends(self):
-        """direct depends"""
-        return list(self.data.get('depends', []))
-
-    def depends(self, include_self=False):
-        deps = self._depends()
-        res = set()
-        if include_self:
-            res.add(self)
-        while deps:
-            dep = Node(deps.pop(0), self.graph)
-            res.add(dep)
-            for d in dep._depends():
-                if d not in res:
-                    deps.append(d)
-        return res
-
     def __str__(self):
         return self._pprint()
 
