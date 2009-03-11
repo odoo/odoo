@@ -29,10 +29,11 @@
         <field name="arch" type="xml">
             <form string="Claims">
                 <group colspan="4" col="6">
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                    <field name="section_id"/>
                     <newline/>
+                    <field name="section_id"/>
                     <field name="date" string="Date of Claim"/>
                     <field name="categ_id" string="Type of claim" select="1" on_change="onchange_categ_id(categ_id)"/>
                         <label string="Stage: " align="1.0"/>

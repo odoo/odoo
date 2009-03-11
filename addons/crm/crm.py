@@ -58,6 +58,7 @@ class crm_case_section(osv.osv):
         'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active'),
+        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
@@ -66,6 +67,7 @@ class crm_case_section(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
+        'allow_unlink': lambda *a: 1,
     }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
@@ -327,7 +329,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64, required=True),
+        'name': fields.char('Description',size=64,required=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active'),
         'description': fields.text('Your action'),
@@ -394,7 +396,7 @@ class crm_case(osv.osv):
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
-            if case.state <> 'draft':
+            if (not case.section_id.allow_unlink) and (case.state <> 'draft'):
                 raise osv.except_osv(_('Warning !'),
                     _('You can not delete this case. You should better cancel it.'))
         return super(crm_case, self).unlink(cr, uid, ids, context)
@@ -437,9 +439,9 @@ class crm_case(osv.osv):
                         else:
                             base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='deadline' and case.date_deadline:
-                        base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d')
+                        base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='date' and case.date:
-                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d')
+                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d %H:%M:%S')
                     if base:
                         fnct = {
                             'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),

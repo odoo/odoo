@@ -310,7 +310,10 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
-        return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term, 'fiscal_position': fiscal_position}}
+        val = {'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'payment_term' : payment_term, 'fiscal_position': fiscal_position}
+        if pricelist:
+            val['pricelist_id'] = pricelist
+        return {'value':val}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context={}):
         if not policy:

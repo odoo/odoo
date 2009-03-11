@@ -399,8 +399,8 @@ class mrp_production(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_uos_qty': fields.float('Product Qty'),
-        'product_uos': fields.many2one('product.uom', 'Product UOM'),
+        'product_uos_qty': fields.float('Product UoS Qty'),
+        'product_uos': fields.many2one('product.uom', 'Product UoS'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             help="Location where the system will look for products used in raw materials."),
@@ -1082,17 +1082,21 @@ class mrp_procurement(osv.osv):
 
     def action_cancel(self, cr, uid, ids):
         todo = []
+        todo2 = []
         for proc in self.browse(cr, uid, ids):
             if proc.move_id and proc.move_id.state=='waiting':
-                todo.append(proc.move_id.id)
+                if proc.close_move:
+                    todo2.append(proc.move_id.id)
+                else:
+                    todo.append(proc.move_id.id)
+        if len(todo2):
+            self.pool.get('stock.move').action_cancel(cr, uid, todo2)
         if len(todo):
             self.pool.get('stock.move').write(cr, uid, todo, {'state':'assigned'})
         self.write(cr, uid, ids, {'state':'cancel'})
-
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
-
         return True
 
     def action_check_finnished(self, cr, uid, ids):
@@ -1173,6 +1177,13 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom':prod.uom_id.id}
             return {'value': v}
         return {}
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default:
+            default = {}
+        default.update({
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
+        })
+        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
 stock_warehouse_orderpoint()
 
 

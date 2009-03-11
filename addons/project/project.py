@@ -31,6 +31,13 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
 
+    def _complete_name(self, cr, uid, ids, name, args, context):
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
+        return res
+
+
     def check_recursion(self, cursor, user, ids, parent=None):
         return super(project, self).check_recursion(cursor, user, ids,
                 parent=parent)
@@ -81,6 +88,7 @@ class project(osv.osv):
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
+        'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=128),
         'active': fields.boolean('Active'),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
@@ -115,7 +123,7 @@ class project(osv.osv):
         'state': lambda *a: 'open'
     }
 
-    _order = "priority"
+    _order = "parent_id,priority,name"
     _constraints = [
         (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
     ]
@@ -236,7 +244,7 @@ class task(osv.osv):
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
-    def onchange_planned(self, cr, uid, ids, planned, effective):
+    def onchange_planned(self, cr, uid, ids, planned, effective=0.0):
         return {'value':{'remaining_hours': planned-effective}}
 
     def _default_project(self, cr, uid, context={}):
@@ -271,7 +279,7 @@ class task(osv.osv):
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
 
-        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
         'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True, help="Computed as: Time Spent + Remaining Time."),
@@ -280,7 +288,7 @@ class task(osv.osv):
 
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done', readonly=False, states={'draft':[('readonly',True)]}),
+        'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,

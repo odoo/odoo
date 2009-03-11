@@ -44,8 +44,6 @@ STATE_PRIOR = {
         'paid' : 7
         }
 
-
-
 #~ REQUETE = '''SELECT partner, state FROM (
 #~ SELECT members.partner AS partner,
 #~ CASE WHEN MAX(members.state) = 0 THEN 'none'
@@ -135,7 +133,6 @@ STATE_PRIOR = {
 #~ AS final
 #~ %s
 #~ '''
-
 
 class membership_line(osv.osv):
     '''Member line'''
@@ -757,5 +754,6 @@ class account_invoice_line(osv.osv):
                 'account_invoice_line': line.id,
                 })
         return result
+
 account_invoice_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -34,6 +34,24 @@ fields = {
   'period_id': {'string': 'Period', 'type': 'many2many', 'relation': 'account.period', 'required': True},
 }
 
+def _check_data(self, cr, uid, data, *args):
+    period_id = data['form']['period_id'][0][2]
+    journal_id=data['form']['journal_id'][0][2]
+
+    if type(period_id)==type([]):
+        
+        ids_final = []
+
+        for journal in journal_id:
+            for period in period_id:
+                ids_journal_period = pooler.get_pool(cr.dbname).get('account.journal.period').search(cr,uid, [('journal_id','=',journal),('period_id','=',period)])
+
+                if ids_journal_period:
+                    ids_final.append(ids_journal_period)
+
+            if not ids_final:
+                raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))
+    return data['form']
 
 class wizard_print_journal(wizard.interface):
     states = {
@@ -42,7 +60,7 @@ class wizard_print_journal(wizard.interface):
             'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('print', 'Print'))},
         },
         'print': {
-            'actions': [],
+            'actions': [_check_data],
             'result': {'type':'print', 'report':'account.general.journal.wiz', 'state':'end'},
         },
     }

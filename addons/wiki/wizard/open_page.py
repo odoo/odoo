@@ -39,7 +39,7 @@ class wiz_timesheet_open(wizard.interface):
         group = pool.get('wiki.groups.link').browse(cr, uid, group_ids[0])
         
         value = {
-            'context': "{'group_id':%d}" % (group.group_id.id),
+            'context': "{'group_id':%d, 'section':%s}" % (group.group_id.id, group.group_id.section),
             'domain': "[('group_id','child_of',[%s])]" % (group.group_id.id),
             'name': 'Wiki Page',
             'view_type': 'form',

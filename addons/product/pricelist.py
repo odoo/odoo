@@ -95,6 +95,8 @@ class product_pricelist(osv.osv):
     
     def name_get(self, cr, uid, ids, context={}):
         result= []
+        if not all(ids):
+            return result
         for pl in self.browse(cr, uid, ids, context):
             name = pl.name + ' ('+ pl.currency_id.name + ')'
             result.append((pl.id,name))

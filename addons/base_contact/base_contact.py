@@ -23,7 +23,6 @@
 import netsvc
 from osv import fields, osv
 
-
 class res_partner_contact(osv.osv):
     _name = "res.partner.contact"
     _description = "res.partner.contact"

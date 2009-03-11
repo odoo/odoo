@@ -476,7 +476,7 @@ class purchase_order_line(osv.osv):
                     'date': date_order,
                     })[pricelist]
 
-        qty = 1
+        qty = qty or 1.0
         seller_delay = 0
         for s in prod.seller_ids:
             seller_delay = s.delay

@@ -61,7 +61,6 @@ def _invoice_membership(self, cr, uid, data, context):
         line_value =  {
             'product_id' : product_id,
             }
-
         quantity = 1
         line_dict = invoice_line_obj.product_id_change(cr, uid, {}, product_id, product['uom_id'][0], quantity, '', 'out_invoice', partner_id, fpos_id, context=context)
         line_value.update(line_dict['value'])

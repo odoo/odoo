@@ -94,6 +94,7 @@ class report_timesheet_account_date(osv.osv):
         'quantity': fields.float('Quantity', readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
+    
     def init(self, cr):
         cr.execute("""
             create or replace view report_timesheet_account_date as (
@@ -151,6 +152,54 @@ class report_timesheet_invoice(osv.osv):
             )
         """)
 report_timesheet_invoice()
+
+class report_random_timsheet(osv.osv):
+    _name = "report.random.timesheet"
+    _description = "Random Timesheet Report"
+    _auto = False
+    
+    _columns = {
+        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'name': fields.char('Description', size=64, readonly=True),
+        'quantity' : fields.float('Quantity', readonly=True),
+        'date': fields.date('Date', readonly=True),
+        'user_id' : fields.many2one('res.users', 'User', readonly=True)
+    }
+    _order = "date desc"
+    
+    def __init__(self, pool, cr):
+        super(report_random_timsheet, self).__init__(pool, cr)
+        self.called = False
+    
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+        """ To call the init() method timely
+        """
+        if not self.called:
+            self.init(cr, user)
+        self.called = True # To make sure that init doesn't get called multiple times
+        
+        res = super(report_random_timsheet, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        return res
+    
+    def init(self, cr, uid=1):
+        
+        cr.execute("""create or replace view report_random_timesheet as (
+
+            select 
+                line.id as id, line.account_id as analytic_account_id, line.name as name,
+                line.unit_amount as quantity, line.date as date, line.user_id as user_id
+            from 
+                account_analytic_line line, hr_department dept,hr_department_user_rel dept_user
+            where
+                (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
+                AND (dept.manager_id = """ + str(uid) + """ ) 
+                AND (line.date < CURRENT_DATE AND line.date >= (CURRENT_DATE-3))
+            ORDER BY line.name LIMIT 10
+            )
+            """ )
+
+report_random_timsheet()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

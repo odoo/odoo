@@ -22,6 +22,7 @@
 
 import wizard
 import datetime
+import pooler
 
 form='''<?xml version="1.0"?>
 <form string="Choose">
@@ -34,8 +35,26 @@ form='''<?xml version="1.0"?>
 class wizard_report(wizard.interface):
     def _date_from(*a):
         return datetime.datetime.today().strftime('%Y-%m-1')
+    
     def _date_to(*a):
         return datetime.datetime.today().strftime('%Y-%m-%d')
+    
+    def _check(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        line_obj = pool.get('account.analytic.line')
+        product_obj = pool.get('product.product')
+        price_obj = pool.get('product.pricelist')
+        ids = line_obj.search(cr, uid, [
+                ('date', '>=', data['form']['date_from']),
+                ('date', '<=', data['form']['date_to']),
+                ('journal_id', 'in', data['form']['journal_ids'][0][2]),
+                ('user_id', 'in', data['form']['employee_ids'][0][2]),
+                ])
+        if not ids:
+            raise wizard.except_wizard(_('Data Insufficient!'), _('No Records Found for Report!'))
+        
+        return data['form']
+    
 
     fields={
         'date_from':{
@@ -70,7 +89,7 @@ class wizard_report(wizard.interface):
             'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
         },
         'report':{
-            'actions':[],
+            'actions':[_check],
             'result':{'type':'print', 'report':'account.analytic.profit', 'state':'end'}
         }
     }

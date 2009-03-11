@@ -372,7 +372,7 @@ class payment_line(osv.osv):
 
     _columns = {
         'name': fields.char('Your Reference', size=64, required=True),
-        'communication': fields.char('Communication', size=64, required=True,help="Used as the message between ordering customer and current company.Depicts 'What do you want to say to the receipent about this oder?'"),
+        'communication': fields.char('Communication', size=64, required=True,help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
         'communication2': fields.char('Communication 2', size=64,help='The successor message of Communication.'),
         'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')],help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16,2),
