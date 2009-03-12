@@ -110,5 +110,26 @@ class report_sale_order_category(osv.osv):
         """)
 report_sale_order_category()
 
+class report_turnover_per_month(osv.osv):
+    _name = "report.turnover.per.month"
+    _description = "Turnover Per Month"
+    _auto = False
+    _columns = {
+        'name': fields.date('Month', readonly=True),
+        'turnover': fields.float('Total Turnover', readonly=True),
+    }
+    
+    def init(self, cr):
+        cr.execute("""
+            create or replace view report_turnover_per_month as (
+                select min(am.id) as id, sum(credit) as turnover,to_char(am.date, 'YYYY-MM-01') as name from account_move_line am
+                    where am.account_id in (select distinct(account_id) from account_invoice_line) 
+                    and 
+                    am.move_id in(select distinct(aw.move_id) from account_invoice aw,account_invoice_line l where l.invoice_id=aw.id)
+                    group by to_char(am.date, 'YYYY-MM-01')
+            )
+        """)
+report_turnover_per_month()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
