@@ -182,29 +182,33 @@ import tools
 init_logger()
 
 class Agent(object):
-    _timers = []
+    _timers = {}
     _logger = Logger()
 
-    def setAlarm(self, fn, dt, args=None, kwargs=None):
-        if not args:
-            args = []
-        if not kwargs:
-            kwargs = {}
+    def setAlarm(self, fn, dt, db_name, *args, **kwargs):
         wait = dt - time.time()
         if wait > 0:
             self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %s seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
             timer = threading.Timer(wait, fn, args, kwargs)
             timer.start()
-            self._timers.append(timer)
-        for timer in self._timers[:]:
-            if not timer.isAlive():
-                self._timers.remove(timer)
+            self._timers.setdefault(db_name, []).append(timer)
 
+        for db in self._timers:
+            for timer in self._timers[db]:
+                if not timer.isAlive():
+                    self._timers[db].remove(timer)
+    
+    @classmethod
+    def cancel(cls, db_name):
+        """Cancel all timers for a given database. If None passed, all timers are cancelled"""
+        for db in cls._timers:
+            if db_name is None or db == db_name:
+                for timer in cls._timers[db]:
+                    timer.cancel()
+    
+    @classmethod
     def quit(cls):
-        for timer in cls._timers:
-            timer.cancel()
-    quit = classmethod(quit)
-
+        cls.cancel(None)
 
 import traceback
 

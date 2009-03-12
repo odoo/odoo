@@ -143,6 +143,14 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="delete">
+        <rng:element name="delete">
+            <rng:attribute name="model" />
+            <rng:optional><rng:attribute name="id" /> </rng:optional>
+            <rng:optional><rng:attribute name="search" /></rng:optional>
+            </rng:element>
+    </rng:define>
+
     <rng:define name="ir_set">
         <rng:element name="ir_set">
             <rng:oneOrMore>
@@ -196,6 +204,7 @@
                     <rng:text/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
+                    <rng:ref name="delete" />
                     <rng:ref name="wizard" />
                     <rng:ref name="act_window" />
                     <rng:ref name="assert" />

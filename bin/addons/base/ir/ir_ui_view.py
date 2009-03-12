@@ -57,6 +57,7 @@ class view(osv.osv):
         'type': fields.selection((
             ('tree','Tree'),
             ('form','Form'),
+            ('mdx','mdx'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
             ('gantt', 'Gantt')), 'View Type', required=True),

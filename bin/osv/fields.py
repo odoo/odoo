@@ -308,11 +308,9 @@ class many2one(_column):
             names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
         except except_orm:
             names = {}
-
             iids = filter(None, res.values())
-            cr.execute('select id,'+obj._rec_name+' from '+obj._table+' where id in ('+','.join(map(str, iids))+')')
-            for res22 in cr.fetchall():
-                names[res22[0]] = res22[1]
+            for iiid in iids:
+                names[iiid] = '// Access Denied //'
 
         for r in res.keys():
             if res[r] and res[r] in names:
@@ -626,7 +624,7 @@ class function(_column):
 
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
-            res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
+            res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
         return res
 
     def set(self, cr, obj, id, name, value, user=None, context=None):

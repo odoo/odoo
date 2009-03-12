@@ -77,47 +77,47 @@ class ir_cron(osv.osv, netsvc.Agent):
     def _poolJobs(self, db_name, check=False):
         try:
             db, pool = pooler.get_db_and_pool(db_name)
-            if pool._init:
-                # retry in a few minutes
-                self.setAlarm(self._poolJobs, int(time.time())+10*60, [db_name])
-            cr = db.cursor()
         except:
             return False
-        
-        now = DateTime.now()
-        #FIXME: multidb. Solution: a l'instanciation d'une nouvelle connection bd (ds pooler) fo que j'instancie
-        # un nouveau pooljob avec comme parametre la bd
 
-        try:
-            cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
-            for job in cr.dictfetchall():
-                nextcall = DateTime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
-                numbercall = job['numbercall']
+        if pool._init:
+            # retry in a few minutes
+            next_call = 600 
+        else:
+            next_call = next_wait
+            cr = db.cursor()
+            now = DateTime.now()
+            try:
+                cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
+                for job in cr.dictfetchall():
+                    nextcall = DateTime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
+                    numbercall = job['numbercall']
                 
-                ok = False
-                while nextcall<now and numbercall:
-                    if numbercall > 0:
-                        numbercall -= 1
-                    if not ok or job['doall']:
-                        self._callback(cr, job['user_id'], job['model'], job['function'], job['args'])
-                    if numbercall:
-                        nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
-                    ok = True
-                addsql=''
-                if not numbercall:
-                    addsql = ', active=False'
-                cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
-                cr.commit()
+                    ok = False
+                    while nextcall < now and numbercall:
+                        if numbercall > 0:
+                            numbercall -= 1
+                        if not ok or job['doall']:
+                            self._callback(cr, job['user_id'], job['model'], job['function'], job['args'])
+                        if numbercall:
+                            nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
+                        ok = True
+                    addsql=''
+                    if not numbercall:
+                        addsql = ', active=False'
+                    cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
+                    cr.commit()
 	except:
 		print "Exception!"
-        finally:
-            cr.close()
+            finally:
+                cr.close()
+
 	#
-        # Can be improved to do at the min(min(nextcalls), time()+next_wait)
+        # Can be improved to do at the min(min(nextcalls), time()+next_call)
         # But is this an improvement ?
         # 
         if not check:
-            self.setAlarm(self._poolJobs, int(time.time())+next_wait, [db_name])
+            self.setAlarm(self._poolJobs, int(time.time()) + next_call, db_name, db_name)
 	return None
 
 ir_cron()

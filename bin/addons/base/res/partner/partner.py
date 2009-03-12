@@ -163,10 +163,6 @@ class res_partner(osv.osv):
         'customer': lambda *a: 1,
         'category_id': _default_category,
     }
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the partner must be unique !')
-    ]
-
     def copy(self, cr, uid, id, default=None, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+' (copy)'})

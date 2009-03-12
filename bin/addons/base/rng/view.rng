@@ -191,15 +191,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-                    <rng:ref name="notebook" />
-                    <rng:ref name="graph" />
-                    <rng:ref name="calendar" />
-                    <rng:ref name="gantt" />
-                    <rng:ref name="form"/>
-                    <rng:ref name="tree"/>
-                    <rng:ref name="field"/>
-                    <rng:ref name="separator"/>
-                    <rng:ref name="page"/>
+                    <rng:ref name="any"/>
                     <rng:ref name="button"/>
                 </rng:choice>
             </rng:zeroOrMore>

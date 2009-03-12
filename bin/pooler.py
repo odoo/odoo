@@ -57,6 +57,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     if db_name in pool_dic:
+        pool_dic[db_name].get('ir.cron').cancel(db_name)
         del pool_dic[db_name]
     return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
 
