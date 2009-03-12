@@ -390,6 +390,7 @@ class crm_case(osv.osv):
         'email_from': _get_default_email,
         'state': lambda *a: 'open',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 

@@ -59,6 +59,44 @@ class  report_task_user_pipeline_open (osv.osv):
 report_task_user_pipeline_open()
 
 
+#class report_timesheet_task(osv.osv):
+#    _name = "report.timesheet.task"
+#    _description = "Report on Timesheets and Tasks per User Per Month"
+#    _auto = False
+#   
+#    def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
+#        result = {}
+#        
+#        for record in self.browse(cr, uid, ids, context):
+#            last_date = mx.DateTime.strptime(record.month, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
+#            obj=self.pool.get('hr_timesheet_sheet.sheet')
+#            sheet_ids = obj.search(cr,uid,[('user_id','=',record.user_id.id),('date_current','>=',record.month),('date_current','<=',last_date.strftime('%Y-%m-%d'))])
+#            data_days = obj.read(cr,uid,sheet_ids,['total_attendance_day','date_current','user_id'])
+#            total = 0.0
+#            for day_attendance in data_days:
+#                total += day_attendance['total_attendance_day']
+#            result[record.id] = total
+#        
+#        return result
+#        
+#    _columns = {
+#        'month': fields.date('Month', required=True,readonly=True),
+#        'user_id': fields.many2one('res.users', 'User' ,readonly=True, required=True),
+#        'timesheet_hrs': fields.function(get_hrs_timesheet,method=True, string="Timesheet Hrs" ),
+#        'task_hrs': fields.float('Task Hrs', readonly=True, required=True),
+#      }
+#    
+#    
+#    def init(self, cr): 
+#        cr.execute("""create or replace view report_timesheet_task as (
+#         select min(p.id) as id, to_char(p.date, 'YYYY-MM-01') as  month, min(r.id) as user_id, sum(p.hours) as task_hrs,0.0 as timesheet_hrs 
+#        from project_task_work p,res_users r 
+#        where (r.id=p.user_id) 
+#        group by  to_char(p.date, 'YYYY-MM-01'))""")
+#        
+#        
+#
+#report_timesheet_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
