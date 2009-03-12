@@ -141,7 +141,7 @@ def _state_check(self, cr, uid, data, context):
 class wiz_si_so(wizard.interface):
     states = {
             'init' : {
-                'actions' : [],
+                'actions' : [_get_empid],
                 'result' : {'type' : 'choice', 'next_state': _state_check}
             },
             'sign_out' : { # this means sign_in...
