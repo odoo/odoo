@@ -62,13 +62,54 @@ class hr_holidays_status(osv.osv):
     }
 hr_holidays_status()
 
+class hr_holidays_per_user(osv.osv):
+    _name = "hr.holidays.per.user"
+    _description = "Holidays Per User"
+
+    def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
+        obj_holiday = self.pool.get('hr.holidays')
+        days = 0.0
+        result = {}
+        for holiday_user in self.browse(cr, uid, ids):
+            ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
+            if ids_request:
+                holidays = obj_holiday.browse(cr, uid, ids_request)
+                for holiday in holidays:
+                    days += holiday.number_of_days
+            days = holiday_user.max_leaves - days
+            result[holiday_user.id] = days
+        return result
+
+    _columns = {
+        'employee_id' : fields.many2one('hr.employee', 'Employee',required=True),
+        'user_id' : fields.many2one('res.users','User'),
+        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
+        'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
+        'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
+        'active' : fields.boolean('Active'),
+        'notes' : fields.text('Notes'),
+        'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
+        'holiday_ids': fields.one2many('hr.holidays', 'holiday_user_id', 'Holidays')
+    }
+    _defaults = {
+        'active' : lambda *a: True,
+    }
+
+    def create(self, cr, uid, vals, *args, **kwargs):
+        if vals['employee_id']:
+            obj_emp=self.pool.get('hr.employee').browse(cr,uid,vals['employee_id'])
+            vals.update({'user_id': obj_emp.user_id.id})
+        return super(osv.osv,self).create(cr, uid, vals, *args, **kwargs)
+
+hr_holidays_per_user()
+
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Holidays"
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validated', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
         'date_from' : fields.datetime('Vacation start day', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_to' : fields.datetime('Vacation end day',required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True,readonly=True, states={'draft':[('readonly',False)]}),
@@ -76,8 +117,9 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'manager_id' : fields.many2one('hr.employee', 'Holiday manager', invisible=False, readonly=True),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
-        'number_of_days': fields.float('Number of Days in this Holiday Request',required=True),
-        'case_id':fields.many2one('crm.case', 'Case'),
+        'number_of_days': fields.float('Number of Days in this Holiday Request', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'case_id': fields.many2one('crm.case', 'Case'),
+        'holiday_user_id': fields.many2one('hr.holidays.per.user', 'Holiday per user')
     }
 
     _defaults = {
@@ -89,27 +131,19 @@ class hr_holidays(osv.osv):
 
     def create(self, cr, uid, vals, *args, **kwargs):
         id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
-        self._create_log(cr, uid, [id_holiday])
+        self._create_holiday(cr, uid, [id_holiday])
         return id_holiday
 
-    def _create_log(self, cr, uid, ids):
+    def _create_holiday(self, cr, uid, ids):
         holidays_user_obj = self.pool.get('hr.holidays.per.user')
-        list_request = []
         holidays_data = self.browse(cr, uid, ids[0])
-        datas = {
-         'employee_id' : holidays_data.employee_id.id,
-         'name' : holidays_data.state,
-         'holiday_status' : holidays_data.holiday_status.id,
-         'holiday_req_id' : holidays_data.id,
-         'nb_holidays' : holidays_data.number_of_days
-         }
-        ids_log = self.pool.get('hr.holidays.log').create(cr, uid, datas)
+        list_holiday = []
         ids_user_hdays = holidays_user_obj.search(cr, uid, [('employee_id', '=', holidays_data.employee_id.id),('holiday_status', '=', holidays_data.holiday_status.id)])
         for hdays in holidays_user_obj.browse(cr, uid, ids_user_hdays):
-            for req in hdays.history:
-                list_request.append(req.id)
-        list_request.append(ids_log)
-        holidays_user_obj.write(cr, uid, ids_user_hdays, {'history' : [(6,0,list_request)]})
+            for req in hdays.holiday_ids:
+                list_holiday.append(req.id)
+        list_holiday.append(ids[0])
+        holidays_user_obj.write(cr, uid, ids_user_hdays, {'holiday_ids': [(6, 0, list_holiday)]})
         return True
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
@@ -133,7 +167,7 @@ class hr_holidays(osv.osv):
             'state':'draft',
             'manager_id': False
         })
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
@@ -145,7 +179,7 @@ class hr_holidays(osv.osv):
         if ids2:
             vals['manager_id'] = ids2[0]
         self.write(cr, uid, ids, vals)
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -157,7 +191,7 @@ class hr_holidays(osv.osv):
             'state':'confirm',
             'user_id': user,
         })
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
@@ -166,7 +200,7 @@ class hr_holidays(osv.osv):
             'state':'refuse',
             'manager_id':ids2[0]
         })
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
@@ -185,14 +219,14 @@ class hr_holidays(osv.osv):
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft'
         })
-        self._create_log(cr, uid, ids)
+        self._create_holiday(cr, uid, ids)
         return True
 
     def check_holidays(self,cr,uid,ids):
@@ -238,65 +272,4 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
-
-class hr_holidays_per_user(osv.osv):
-    _name = "hr.holidays.per.user"
-    _description = "Holidays Per User"
-
-    def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
-        obj_holiday = self.pool.get('hr.holidays')
-        days = 0.0
-        result = {}
-        for holiday_user in self.browse(cr, uid, ids):
-            ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
-            if ids_request:
-                holidays = obj_holiday.browse(cr, uid, ids_request)
-                for holiday in holidays:
-                    days += holiday.number_of_days
-            days = holiday_user.max_leaves - days
-            result[holiday_user.id] = days
-        return result
-
-    _columns = {
-        'employee_id' : fields.many2one('hr.employee', 'Employee',required=True),
-        'user_id' : fields.many2one('res.users','User'),
-        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
-        'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
-        'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
-        'active' : fields.boolean('Active'),
-        'notes' : fields.text('Notes'),
-        'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
-        'history' : fields.one2many('hr.holidays.log', 'holiday_user_id', 'History')
-    }
-    _defaults = {
-        'active' : lambda *a: True,
-    }
-
-    def create(self, cr, uid, vals, *args, **kwargs):
-        if vals['employee_id']:
-            obj_emp=self.pool.get('hr.employee').browse(cr,uid,vals['employee_id'])
-            vals.update({'user_id': obj_emp.user_id.id})
-        return super(osv.osv,self).create(cr, uid, vals, *args, **kwargs)
-
-hr_holidays_per_user()
-
-class holiday_user_log(osv.osv):
-    _name = 'hr.holidays.log'
-    _description = 'hr.holidays.log'
-    _order = "holiday_req_id desc"
-    _columns = {
-        'name' : fields.char('Action', size=64, readonly=True),
-        'holiday_req_id' : fields.char('Holiday Request ID', size=64),
-        'nb_holidays' : fields.float('Number of Holidays Requested'),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', readonly=True),
-        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", readonly=True),
-        'holiday_user_id' : fields.many2one('hr.holidays.per.user', 'Holidays user'),
-        'date': fields.datetime('Date'),
-                }
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-    }
-holiday_user_log()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
