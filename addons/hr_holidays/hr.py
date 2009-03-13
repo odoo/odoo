@@ -81,7 +81,8 @@ class hr_holidays_per_user(osv.osv):
         return result
 
     _columns = {
-        'employee_id' : fields.many2one('hr.employee', 'Employee',required=True),
+        'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
+        'name': fields.char('Name', size=32),
         'user_id' : fields.many2one('res.users','User'),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
