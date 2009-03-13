@@ -31,11 +31,12 @@
 from osv import osv, fields
 import pooler
 import time
-import math
-from pprint import pprint as pp
+import netsvc
 
-from tools import config, debug
-from tools.maintenance import remote_contract
+from tools.misc import debug
+from tools.misc import ustr
+from tools.translate import _
+import tools.maintenance as tm
 
 class maintenance_contract_module(osv.osv):
     _name ="maintenance.contract.module"
@@ -73,23 +74,53 @@ class maintenance_contract(osv.osv):
         }
     
     def send(self, cr, uid, tb, explanations, remarks=None):
-        assert self.status(cr, uid) == 'full'
-        contract = self._get_valid_contracts(cr, uid)[0]
-        
-        content = "(%s) has reported the following bug:\n%s\nremarks: %s\nThe traceback is:\n%s" % (
-            contract.name, explanations, remarks or '', tb
-        )
+        status = self.status(cr, uid)
+        if status['status'] != 'full':
+            raise osv.except_osv(_('Error'), _("Your can't submit bug reports due to uncovered modules: %s") % (', '.join(status['uncovered_modules']),))
+
+        valid_contracts = self._get_valid_contracts(cr, uid)
+
+        crm_case_id = None
+        rc = None
         try:
-            import urllib
-            args = [('contract_id', contract.name),('data', content)]
-            args = urllib.urlencode(args)
-            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
-            submit_result = fp.read()
-            debug(submit_result)
-            fp.close()
+            for contract in valid_contracts: 
+                rc = tm.remote_contract(contract.name, contract.password)
+                if rc.id:
+                    break
+                rc = None
+        
+            if not rc:
+                raise osv.except_osv(_('Error'), _('Unable to find a valid contract'))
+            
+            origin = 'client'
+            crm_case_id = rc.submit(rc.id, tb, explanations, remarks or '', origin)
+
+        except tm.RemoteContractException, rce:
+            netsvc.Logger().notifyChannel('maintenance', netsvc.LOG_INFO, rce)
+        except osv.except_osv:
+            raise
         except:
-            # TODO schedule a retry
-            return False
+            pass
+        
+        cid = rc and rc.name or valid_contracts[0].name
+        try:
+            # as backup, put it also in another database...
+            import urllib
+            args = urllib.urlencode({
+                'contract_id': cid,
+                'crm_case_id': crm_case_id or 0,
+                'explanation': explanations,
+                'remark': remarks or '',
+                'tb': tb,
+            })
+            uo = urllib.urlopen('http://www.openerp.com/scripts/maintenance.php', args)
+            submit_result = uo.read()
+            debug(submit_result)
+            uo.close()
+        except:
+            if not crm_case_id:
+                # TODO schedule a retry (ir.cron)
+                return False
         return True
 
     def _valid_get(self, cr, uid, ids, field_name, arg, context=None):
@@ -139,8 +170,11 @@ class maintenance_contract_wizard(osv.osv_memory):
         modules = module_proxy.read(cr, uid, module_ids, ['name', 'installed_version'])
 
         contract = self.read(cr, uid, ids, ['name', 'password'])[0]
-
-        contract_info = remote_contract(contract['name'], contract['password'], modules)
+        
+        try:
+            contract_info = tm.remote_contract(contract['name'], contract['password'], modules)
+        except tm.RemoteContractException, rce:
+            raise osv.except_osv(_('Error'), ustr(rce))
 
         is_ok = contract_info['status'] in ('partial', 'full')
         if is_ok:
