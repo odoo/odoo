@@ -193,5 +193,66 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
         </record>
+        
+        <!-- Closed & Open CRM Case view for Random Acitivities dashboard  -->         
+        
+        <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">
+            <field name="name">report.crm.case.dashboard.tree</field>
+            <field name="model">report.crm.case.dashboard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="CRM Cases">
+                	<field name="create_date"/>
+                    <field name="date"/>
+                    <field name="date_deadline"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="priority"/>
+                    <field name="planned_revenue" sum="Planned revenue"/>
+                    <field name="planned_cost" sum="Planned costs"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="board_view_crm_case_done_dashboard_tree" model="ir.ui.view">
+            <field name="name">report.crm.case.dashboard.tree</field>
+            <field name="model">report.crm.case.dashboard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="CRM Cases">
+                	<field name="date_closed"/>
+                    <field name="date"/>
+                    <field name="date_deadline"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="priority"/>
+                    <field name="planned_revenue" sum="Planned revenue"/>
+                    <field name="planned_cost" sum="Planned costs"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>        
+        
+        <record id="action_view_closed_crm_case_dashboard" model="ir.actions.act_window">
+	    	<field name="name">Closed CRM Cases Wtihin Past 15 Days</field>
+	    	<field name="res_model">report.crm.case.service.dashboard</field>
+	    	<field name="view_type">form</field>
+	    	<field name="view_mode">tree,form</field>
+	    	<field name="view_id" ref="board_view_crm_case_done_dashboard_tree"/>
+	    	<field name="domain">[('state','=','done')]</field>
+    	</record>
+    	
+    	<record id="action_view_open_crm_case_dashboard" model="ir.actions.act_window">
+	    	<field name="name">Open CRM Cases Wtihin Past 15 Days</field>
+	    	<field name="res_model">report.crm.case.service.dashboard</field>
+	    	<field name="view_type">form</field>
+	    	<field name="view_mode">tree,form</field>
+	    	<field name="view_id" ref="board_view_crm_case_open_dashboard_tree"/>
+	    	<field name="domain">[('state','=','open')]</field>
+    	</record>
+    	
     </data>
 </openerp>

@@ -163,5 +163,52 @@ class report_crm_case_section(osv.osv):
             )""")
 report_crm_case_section()
 
+class report_crm_case_service_dashboard(osv.osv):
+    _name = "report.crm.case.service.dashboard"
+    _description = "Report of Closed and Open CRM Cases within past 15 days"
+    _auto = False
+    _columns = {
+        'date': fields.datetime('Date', readonly=True),
+        'date_deadline': fields.datetime('Deadline', readonly=True),
+        'name': fields.char('Description', size=64, readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
+        'priority': fields.char('Priority', size=64, readonly=True),
+        'planned_revenue': fields.float('Planned Revenue', readonly=True),
+        'planned_cost': fields.float('Planned Costs', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        'date_closed' : fields.datetime('Date Closed', readonly=True),
+        'create_date' : fields.datetime('Create Date', readonly=True)
+    }
+    _order = 'date_closed, create_date'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_crm_case_service_dashboard as (
+            select
+                cse.id as id, cse.date as date, cse.date_deadline as date_deadline,
+                cse.name as name, cse.partner_id as partner_id, cse.user_id as user_id,
+                cse.priority as priority, cse.planned_revenue as planned_revenue,
+                cse.planned_cost as planned_cost, cse.state as state,
+                cse.date_closed as date_closed, cse.create_date as create_date
+            from
+                crm_case cse
+            where
+                ((to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                    AND
+                (to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15)) 
+                    AND
+                    cse.state='done')
+                
+                OR
+                
+                ((to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                    AND
+                (to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15))
+                    AND
+                    cse.state='open')
+            )""")
+report_crm_case_service_dashboard()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
