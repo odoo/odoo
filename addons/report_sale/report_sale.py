@@ -131,5 +131,46 @@ class report_turnover_per_month(osv.osv):
         """)
 report_turnover_per_month()
 
+class report_sale_order_created(osv.osv):
+    _name = "report.sale.order.created"
+    _description = "Report of Creaed Sale Order"
+    _auto = False
+    _columns = {
+        'date_order':fields.date('Date Ordered', readonly=True),
+        'name': fields.char('Order Reference', size=64, readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Customer', readonly=True),
+        'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True),
+        'amount_untaxed': fields.float('Untaxed Amount', readonly=True),
+        'state': fields.selection([
+            ('draft','Quotation'),
+            ('waiting_date','Waiting Schedule'),
+            ('manual','Manual In Progress'),
+            ('progress','In Progress'),
+            ('shipping_except','Shipping Exception'),
+            ('invoice_except','Invoice Exception'),
+            ('done','Done'),
+            ('cancel','Cancel')
+            ], 'Order State', readonly=True),
+        'create_date' : fields.datetime('Create Date', readolnly=True)
+    }
+    _order = 'create_date'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_sale_order_created as (
+            select
+                sale.id as id, sale.date_order as date_order, sale.name as name,
+                sale.partner_id as partner_id, 
+                sale.partner_shipping_id as partner_shipping_id,
+                sale.amount_untaxed as amount_untaxed, sale.state as state,
+                sale.create_date as create_date
+            from
+                sale_order sale
+            where
+                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                AND
+                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15))
+            )""")
+report_sale_order_created()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -58,6 +58,42 @@ class  report_task_user_pipeline_open (osv.osv):
         ''')
 report_task_user_pipeline_open()
 
+class  report_closed_task(osv.osv):
+    _name = "report.closed.task"
+    _description = "Closed Task Report"
+    _auto = False
+    _columns = {
+        'sequence': fields.integer('Sequence', readonly=True),
+        'name': fields.char('Task summary', size=128, readonly=True),
+        'project_id': fields.many2one('project.project', 'Project', readonly=True),
+        'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
+        'date_deadline': fields.datetime('Deadline', readonly=True),
+        'planned_hours': fields.float('Planned Hours', readonly=True),
+        'delay_hours': fields.float('Delay Hours', readonly=True),
+        'progress': fields.float('Progress (%)', readonly=True),
+        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True),
+        'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'date_close' : fields.datetime('Date Closed', readonly=True)
+    }
+
+    def init(self, cr):
+        cr.execute('''
+            create or replace view report_closed_task as (
+                select
+                   tsk.id as id, tsk.sequence as sequence, tsk.name as name,
+                   tsk.project_id as project_id, tsk.user_id as user_id,
+                   tsk.date_deadline as date_deadline, tsk.planned_hours as planned_hours,
+                   tsk.delay_hours as delay_hours, tsk.progress as progress,
+                   tsk.priority as priority, tsk.state as state,
+                   tsk.remaining_hours as remaining_hours, tsk.date_close as date_close
+                from
+                    project_task tsk
+                where
+                    (tsk.date_close < CURRENT_DATE AND tsk.date_close >= (CURRENT_DATE-15))
+            )
+        ''')
+report_closed_task()
 
 #class report_timesheet_task(osv.osv):
 #    _name = "report.timesheet.task"
