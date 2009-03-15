@@ -669,8 +669,8 @@ class stock_picking(osv.osv):
                 invoice_id = invoices_group[partner.id]
                 invoice=invoice_obj.browse(cursor, user,invoice_id)
                 invoice_vals = {
-                    'name': invoice.name +', '+str(picking.name or  ''),
-                    'origin': invoice.origin+', '+str(picking.name or  '')+(picking.origin and (':' + picking.origin) or ''),
+                    'name': (invoice.name or '') +', '+(picking.name or  ''),
+                    'origin': (invoice.origin or '')+', '+(picking.name or  '')+(picking.origin and (':' + picking.origin) or ''),
                     'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                 }
                 invoice_obj.write(cursor, user, [invoice_id],invoice_vals,context=context)
@@ -701,7 +701,7 @@ class stock_picking(osv.osv):
                 if move_line.picking_id.origin:
                     origin+=':' + move_line.picking_id.origin
                 if group:
-                    name = str(picking.name or '') + '-' + move_line.name
+                    name = (picking.name or '') + '-' + move_line.name
                 else:
                     name = move_line.name
 
@@ -1015,7 +1015,7 @@ class stock_move(osv.osv):
             ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             pickid = self.pool.get('stock.picking').create(cr, uid, {
                 'name': picking.name,
-                'origin': str(picking.origin or ''),
+                'origin': (picking.origin or ''),
                 'type': ptype,
                 'note': picking.note,
                 'move_type': picking.move_type,
