@@ -1047,7 +1047,6 @@ class account_invoice_line(osv.osv):
                     line.quantity, inv.address_invoice_id.id, line.product_id,
                     inv.partner_id):
 
-                print tax
                 if inv.type in ('out_invoice', 'in_invoice'):
                     tax_code_id = tax['base_code_id']
                     tax_amount = line.price_subtotal * tax['base_sign']
