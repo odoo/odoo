@@ -197,7 +197,7 @@ class crossovered_budget_lines(osv.osv):
                 date_to = context['wizard_date_to']
 
             if line.paid_date:
-                if strToDate(date_to)<=strToDate(line.paid_date):
+                if strToDate(line.date_to)<=strToDate(line.paid_date):
                     theo_amt=0.00
                 else:
                     theo_amt=line.planned_amount
