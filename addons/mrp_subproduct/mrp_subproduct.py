@@ -27,17 +27,21 @@ class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
     _description = 'Mrp Sub Product'
     _columns={
-              'product_id': fields.many2one('product.product', 'Product', required=True),
-              'product_qty': fields.float('Product Qty', required=True),
-              'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-              'bom_id': fields.many2one('mrp.bom', 'BoM'),
-              }
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_qty': fields.float('Product Qty', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True),
+        'bom_id': fields.many2one('mrp.bom', 'BoM'),
+    }
+    _defaults={
+        'subproduct_type': lambda *args: 'fixed'
+    }
     def onchange_product_id(self, cr, uid, ids, product_id,context={}):
-         if product_id:
+        if product_id:
             prod=self.pool.get('product.product').browse(cr,uid,product_id)
             v = {'product_uom':prod.uom_id.id}
             return {'value': v}
-         return {}
+        return {}
 
 mrp_subproduct()
 
@@ -46,10 +50,8 @@ class mrp_bom(osv.osv):
     _description = 'Bill of Material'
     _inherit='mrp.bom'
     _columns={
-              'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
-              }
-
-
+        'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
+    }
 mrp_bom()
 
 class mrp_production(osv.osv):
@@ -61,15 +63,21 @@ class mrp_production(osv.osv):
          picking_id=super(mrp_production,self).action_confirm(cr, uid, ids)
          for production in self.browse(cr, uid, ids):
              source = production.product_id.product_tmpl_id.property_stock_production.id
-             for sub_product in production.bom_id.sub_products:               
-
+             for sub_product in production.bom_id.sub_products:
+                 qty1 = sub_product.product_qty
+                 qty2 = production.product_uos and production.product_uos_qty or False
+                 if sub_product.subproduct_type=='variable':
+                    if production.product_qty:
+                        qty1 *= production.product_qty / (sub_product.product_qty or 1.0)
+                    if production.product_uos_qty:
+                        qty2 *= production.product_uos_qty / (sub_product.product_qty or 1.0)
                  data = {
                     'name':'PROD:'+production.name,
                     'date_planned': production.date_planned,
                     'product_id': sub_product.product_id.id,
-                    'product_qty': sub_product.product_qty,
+                    'product_qty': qty1,
                     'product_uom': sub_product.product_uom.id,
-                    'product_uos_qty': production.product_uos and production.product_uos_qty or False,
+                    'product_uos_qty': qty2,
                     'product_uos': production.product_uos and production.product_uos.id or False,
                     'location_id': source,
                     'location_dest_id': production.location_dest_id.id,

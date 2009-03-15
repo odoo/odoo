@@ -397,10 +397,10 @@ class mrp_production(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
-        'product_qty': fields.float('Product Qty', required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_uos_qty': fields.float('Product UoS Qty'),
-        'product_uos': fields.many2one('product.uom', 'Product UoS'),
+        'product_qty': fields.float('Product Qty', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             help="Location where the system will look for products used in raw materials."),
@@ -836,11 +836,13 @@ class mrp_procurement(osv.osv):
 
     def check_move_cancel(self, cr, uid, ids, context={}):
         res = True
+        ok = False
         for procurement in self.browse(cr, uid, ids, context):
             if procurement.move_id:
+                ok = True
                 if not procurement.move_id.state=='cancel':
                     res = False
-        return res
+        return res and ok
 
     def check_move_done(self, cr, uid, ids, context={}):
         res = True
