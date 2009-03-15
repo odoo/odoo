@@ -45,15 +45,16 @@
             <field name="arch" type="xml">
                 <form string="Analytic account">
                     <group colspan="4" col="6">
-                        <field name="name" select="1"/>
+                        <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)"/>
                         <field name="company_id" select="2"/>
                         <field name="type" select="2"/>
-                        <field name="partner_id" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
+                            <field name="partner_id" select="1"/>
+                            <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
                             <field name="active" select="2"/>

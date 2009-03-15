@@ -117,11 +117,10 @@
             <field name="arch" type="xml">
                 <form string="Account">
                     <group col="6" colspan="4">
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" colspan="4"/>
                     <field name="code" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="company_id" select="2"/>
                     <field name="parent_id"/>
+                    <field name="company_id" select="2"/>
                     <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -132,7 +131,7 @@
                             <field name="reconcile"/>
                             <field name="active" select="2"/>
                             <field name="check_history"/>
-                            <newline/>
+                            <field name="type" select="1"/>
                             <newline/>
                             <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
                             <field name="child_consol_ids" colspan="4" attrs="{'readonly':[('type','!=','consolidation')]}"/>
