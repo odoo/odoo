@@ -149,6 +149,7 @@ if tools.config["stop_after_init"]:
 if tools.config['xmlrpc']:
     port = int(tools.config['port'])
     interface = tools.config["interface"]
+    print tools.config['secure']
     secure = tools.config["secure"]
 
     httpd = netsvc.HttpDaemon(interface, port, secure)
