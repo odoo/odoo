@@ -66,6 +66,8 @@ class report_crm_case_user(osv.osv):
                     crm_case c
                 group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.user_id, c.section_id
             )""")
+        cr.commit()
+        cr.execute('select * from report_crm_case_user')
 report_crm_case_user()
 
 class report_crm_case_categ(osv.osv):
@@ -104,6 +106,7 @@ class report_crm_case_categ(osv.osv):
                     crm_case c
                 group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.categ_id, c.section_id
             )""")
+        cr.commit()
 report_crm_case_categ()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
