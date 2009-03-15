@@ -139,7 +139,11 @@ class _format(object):
         self._field = field
         self.name = name
         lang = self.object._context.get('lang', 'en_US') or 'en_US'
-        self.lang_obj = pool_lang.browse(cr, uid,pool_lang.search(cr, uid,[('code','=',lang)])[0])
+        lids = pool_lang.search(cr, uid,[('code','=',lang)])
+        if lids:
+            self.lang_obj = pool_lang.browse(cr, uid,lids[0])
+        else:
+            self.lang_obj = False
 
 class _float_format(float, _format):
 
@@ -151,7 +155,10 @@ class _float_format(float, _format):
         digits = 2
         if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
             digits = self._field.digits[1]
-            return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
+            if self.lang_obj:
+                return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
+            else:
+                return str(self.name)
         return self.val
 
 class _int_format(int, _format):
@@ -161,7 +168,10 @@ class _int_format(int, _format):
 
     def __str__(self):
         if hasattr(self,'lang_obj'):
-            return self.lang_obj.format('%.d', self.name, True)
+            if self.lang_obj:
+                return self.lang_obj.format('%.d', self.name, True)
+            else:
+                return str(self.name)
         return self.val
 
 
@@ -174,7 +184,10 @@ class _date_format(str, _format):
         if self.val:
             if hasattr(self,'name') and (self.name):
                 date = mx.DateTime.strptime(self.name,DT_FORMAT)
-                return date.strftime(self.lang_obj.date_format)
+                if self.lang_obj:
+                    return date.strftime(self.lang_obj.date_format)
+                else:
+                    return date.strftime('%m/%d/%Y')
         return self.val
 
 class _dttime_format(str, _format):
@@ -186,7 +199,10 @@ class _dttime_format(str, _format):
         if self.val:
             if hasattr(self,'name') and self.name:
                 datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
-                return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
+                if self.lang_obj:
+                    return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
+                else:
+                    return datetime.strftime('%m/%d/%Y %H:%M:%S')
         return self.val
 
 
@@ -338,7 +354,9 @@ class rml_parse(object):
             return ''
         pool_lang = self.pool.get('res.lang')
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        lang_obj = pool_lang.browse(self.cr,self.uid,pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0])
+        lids = pool_lang.search(self.cr,self.uid,[('code','=',lang)])
+        if not lids: return str(value)
+        lang_obj = pool_lang.browse(self.cr,self.uid,lids[0])
         if date or date_time:
             if not str(value):
                 return ''
