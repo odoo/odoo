@@ -572,15 +572,19 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     modobj = None
 
     for package in graph:
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
+        migrations.migrate_module(package, 'pre')
+        register_class(package.name)
+        modules = pool.instanciate(package.name, cr)
+        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            init_module_objects(cr, package.name, modules)
+        cr.commit()
+
+    for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
 
-        migrations.migrate_module(package, 'pre')
-
-        register_class(m)
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % m)
-        modules = pool.instanciate(m, cr)
 
         if modobj is None:
             modobj = pool.get('ir.module.module')
@@ -594,10 +598,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
-            
+
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             has_updates = True
-            init_module_objects(cr, m, modules)
             for kind in ('init', 'update'):
                 for filename in package.data.get('%s_xml' % kind, []):
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))

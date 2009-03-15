@@ -780,7 +780,7 @@ def get_languages():
         'sl_SL': u'Slovenian / slovenščina',
         'sv_SE': u'Swedish / svenska',
         'tr_TR': u'Turkish / Türkçe',
-        'uk_UK': u'Ukrainian / украї́нська мо́ва',
+        'uk_UA': u'Ukrainian / украї́нська мо́ва',
         'zh_CN': u'Chinese (CN) / 简体中文' ,
         'zh_TW': u'Chinese (TW) / 正體字',
     }
