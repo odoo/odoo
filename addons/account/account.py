@@ -330,6 +330,9 @@ class account_account(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
+    ]
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []

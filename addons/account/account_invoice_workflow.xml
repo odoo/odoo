@@ -34,7 +34,8 @@ write({'state':'proforma'})</field>
         <record id="act_open" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">open</field>
-            <field name="action">action_move_create()
+            <field name="action">action_date_assign()
+action_move_create()
 action_number()
 write({'state':'open'})</field>
             <field name="kind">function</field>

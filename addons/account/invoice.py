@@ -357,14 +357,6 @@ class account_invoice(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             result['value']['partner_bank'] = bank_id
 
-        if payment_term != partner_payment_term:
-            if partner_payment_term:
-                to_update = self.onchange_payment_term_date_invoice(
-                    cr,uid,ids,partner_payment_term,date_invoice)
-                result['value'].update(to_update['value'])
-            else:
-                result['value']['date_due'] = False
-
         if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
@@ -378,17 +370,13 @@ class account_invoice(osv.osv):
             return {}
         res={}
         pt_obj= self.pool.get('account.payment.term')
-
         if not date_invoice :
             date_invoice = time.strftime('%Y-%m-%d')
-
         pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
-
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
             res= {'value':{'date_due': pterm_list[-1]}}
-
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
@@ -497,6 +485,13 @@ class account_invoice(osv.osv):
                     'ref': ref,
                 })]
         return iml
+
+    def action_date_assign(self, cr, uid, ids, *args):
+        for inv in self.browse(cr, uid, ids):
+            res = self.onchange_payment_term_date_invoice(cr, uid, inv.id, inv.payment_term.id, inv.date_invoice)
+            if res and res['value']:
+                self.write(cr, uid, [inv.id], res['value'])
+        return True
 
     def action_move_create(self, cr, uid, ids, *args):
         ait_obj = self.pool.get('account.invoice.tax')

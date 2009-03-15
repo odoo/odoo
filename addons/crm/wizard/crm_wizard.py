@@ -32,6 +32,8 @@ section_form = '''<?xml version="1.0"?>
     <field name="menu_name"/>
     <field name="menu_parent_id"/>
     <field name="section_id"/>
+    <label string="this wizard will create all sub-menus, within the selected menu." align="0.0" colspan="4"/>
+    <label string="You may want to create a new parent menu to put all the created menus in." align="0.0" colspan="4"/>
     <separator string="Select Views (empty for default)" colspan="4"/>
     <field name="view_form"/>
     <field name="view_tree"/>
