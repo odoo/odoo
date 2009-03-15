@@ -704,7 +704,7 @@
                     </page>
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
-                        <field name="bom_id" select="2"/>
+                        <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                         <field name="move_id" groups="base.group_extended"/>
                         <field name="date_close" select="2"/>
                         <field name="close_move" groups="base.group_extended"/>
