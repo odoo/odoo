@@ -172,6 +172,10 @@ CREATE TABLE res_groups_users_rel (
     gid integer NOT NULL references res_groups on delete cascade
 );
 
+create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
+create index res_groups_users_rel_gid_idx on res_groups_users_rel (gid);
+
+
 ---------------------------------
 -- Workflows
 ---------------------------------
