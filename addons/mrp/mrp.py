@@ -455,6 +455,7 @@ class mrp_production(osv.osv):
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
             'move_lines' : [],
+            'move_created_ids': []
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 

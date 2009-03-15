@@ -253,7 +253,10 @@ class product_pricelist_version(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True),
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active',
+            help="When a version is duplicated it is set to non active, so that the " \
+            "dates do not overlaps with original version. You should change the dates " \
+            "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True),
         'date_start': fields.date('Start Date', help="Starting date for this pricelist version to be valid."),
@@ -263,41 +266,27 @@ class product_pricelist_version(osv.osv):
         'active': lambda *a: 1,
     }
 
-    #
-    # TODO: improve this function ?
-    #
+    # We desactivate duplicated pricelists, so that dates do not overlap
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default: default= {}
+        default['active'] = False
+        return super(product_pricelist_version, self).copy(cr, uid, id, default, context)
+
     def _check_date(self, cursor, user, ids):
         for pricelist_version in self.browse(cursor, user, ids):
             if not pricelist_version.active:
                 continue
+            where = []
+            if pricelist_version.date_start:
+                where.append("((date_end>='%s') or (date_end is null))" % (pricelist_version.date_start,))
+            if pricelist_version.date_end:
+                where.append("((date_start<='%s') or (date_start is null))" % (pricelist_version.date_end,))
             cursor.execute('SELECT id ' \
                     'FROM product_pricelist_version ' \
-                    'WHERE ((date_start <= %s AND %s <= date_end ' \
-                            'AND date_end IS NOT NULL) ' \
-                        'OR (date_end IS NULL AND date_start IS NOT NULL ' \
-                            'AND date_start <= %s) ' \
-                        'OR (date_start IS NULL AND date_end IS NOT NULL ' \
-                            'AND %s <= date_end) ' \
-                        'OR (date_start IS NULL AND date_end IS NULL) ' \
-                        'OR (%s = \'0000-01-01\' AND date_start IS NULL) ' \
-                        'OR (%s = \'0000-01-01\' AND date_end IS NULL) ' \
-                        'OR (%s = \'0000-01-01\' AND %s = \'0000-01-01\') ' \
-                        'OR (%s = \'0000-01-01\' AND date_start <= %s) ' \
-                        'OR (%s = \'0000-01-01\' AND %s <= date_end)) ' \
-                        'AND pricelist_id = %s ' \
+                    'WHERE '+' and '.join(where) + (where and ' and ' or '')+
+                        'pricelist_id = %s ' \
                         'AND active ' \
-                        'AND id <> %s', (pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
-                            pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
-                            pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
-                            pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
-                            pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_end or '0000-01-01',
-                            pricelist_version.date_start or '0000-01-01',
+                        'AND id <> %s', (
                             pricelist_version.pricelist_id.id,
                             pricelist_version.id))
             if cursor.fetchall():
