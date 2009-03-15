@@ -203,6 +203,32 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_turnover_month_tree"/>
         </record>
-		        
+		
+		<!-- Created Sale orders for random activities dashboard -->
+		
+		<record id="board_view_created_sale_order" model="ir.ui.view">
+            <field name="name">report.sale.order.created.tree</field>
+            <field name="model">report.sale.order.created</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Created Sales orders">
+                	<field name="create_date"/>
+                    <field name="date_order"/>
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="partner_shipping_id"/>
+                    <field name="amount_untaxed"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>  
+        
+        <record id="action_view_created_sale_order_dashboard" model="ir.actions.act_window">
+            <field name="name">Created Sale Orders</field>
+            <field name="res_model">report.sale.order.created</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="board_view_created_sale_order"/>
+        </record>                
     </data>
 </openerp>
