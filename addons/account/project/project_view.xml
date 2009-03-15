@@ -17,7 +17,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_account_analytic_account_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
             <field name="model">account.analytic.account</field>
@@ -31,11 +31,11 @@
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
-						<field name="partner_id" select="1"/>			       	
+						<field name="partner_id" select="1"/>
             		</group>
             	</search>
             </field>
-        </record> 
+        </record>
 
         <record id="view_account_analytic_account_tree" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
@@ -346,6 +346,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Entries Stats">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="account_id"/>
                     <field name="journal_id"/>
                     <field name="quantity"/>
@@ -369,7 +370,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="report_hr_timesheet_invoice_journal_search" model="ir.ui.view">
             <field name="name">report.hr.timesheet.invoice.journal.search</field>
             <field name="model">report.hr.timesheet.invoice.journal</field>
