@@ -65,6 +65,7 @@ hr_holidays_status()
 class hr_holidays_per_user(osv.osv):
     _name = "hr.holidays.per.user"
     _description = "Holidays Per User"
+    _rec_name = "user_id"
 
     def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
         obj_holiday = self.pool.get('hr.holidays')
@@ -82,7 +83,6 @@ class hr_holidays_per_user(osv.osv):
 
     _columns = {
         'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
-        'name': fields.char('Name', size=32),
         'user_id' : fields.many2one('res.users','User'),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
