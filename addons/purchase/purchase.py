@@ -482,7 +482,8 @@ class purchase_order_line(osv.osv):
             seller_delay = s.delay
             if s.name.id == partner_id:
                 seller_delay = s.delay
-                qty = s.qty
+                if qty<s.qty:
+                    qty = s.qty
         dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = prod.partner_ref
 
