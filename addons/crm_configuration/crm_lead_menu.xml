@@ -260,7 +260,7 @@
         <field name="view_mode">graph,tree</field>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
     </record>
-    <menuitem parent="menu_action_report_crm_case_lead" name="Cases by Leads and Category2" action="action_report_crm_case_lead_categ" id="menu_action_report_crm_case_lead_categ"/>
+    <menuitem parent="menu_action_report_crm_case_lead" name="Cases by Leads and Type" action="action_report_crm_case_lead_categ" id="menu_action_report_crm_case_lead_categ"/>
 
     <record model="ir.actions.act_window" id="action_report_crm_case_lead_stage">
         <field name="res_model">report.crm.case.section.stage</field>
@@ -284,7 +284,7 @@
         <field name="view_mode">tree</field>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support2)+')]'"/>
     </record>
-    <menuitem name="Cases by Section, Category and Category2" parent="menu_action_report_crm_case_lead" action="action_report_crm_case_lead_categ_categ2" id="menu_action_report_crm_case_lead_categ_categ2"/>
+    <menuitem name="Cases by Section, Category and Type" parent="menu_action_report_crm_case_lead" action="action_report_crm_case_lead_categ_categ2" id="menu_action_report_crm_case_lead_categ_categ2"/>
 
     
 </data>

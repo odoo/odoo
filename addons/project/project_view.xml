@@ -33,7 +33,7 @@
                             <separator colspan="4" string="Project's members"/>
                             <field colspan="4" name="members" nolabel="1"/>
                             <group col="9" colspan="8">
-                                <field name="state"/>
+                                <field name="state" select="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
                                 <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,done" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
@@ -310,10 +310,11 @@
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
-                                    <field name="date_deadline"/>
-                                    <field name="planned_hours" widget="float_time"/>
-                                    <field name="effective_hours" widget="float_time"/>
                                     <field name="state"/>
+                                    <field name="effective_hours" widget="float_time"/>
+                                    <field name="progress" widget="progressbar"/>
+                                    <field name="remaining_hours" widget="float_time"/>
+                                    <field name="date_deadline"/>
                                 </tree>
                             </field>
                             <field colspan="4" name="parent_id"/>

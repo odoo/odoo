@@ -255,7 +255,7 @@
           <field name="view_mode">graph,tree</field>
           <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
      </record>
-     <menuitem name="Cases by Opportunities and Category2"  parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ" id="menu_action_report_crm_case_oppor_categ"/>
+     <menuitem name="Cases by Opportunities and Type"  parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ" id="menu_action_report_crm_case_oppor_categ"/>
 
      <record model="ir.actions.act_window" id="action_report_crm_case_oppor_stage">
           <field name="res_model">report.crm.case.section.stage</field>
@@ -271,7 +271,7 @@
           <field name="view_mode">tree</field>
           <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
      </record>
-     <menuitem name="Cases by Section, Category and Stage" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_stage" id="menu_action_report_crm_case_oppor_categ_stage"/>
+     <menuitem name="Cases by Opportunities, Category and Stage" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_stage" id="menu_action_report_crm_case_oppor_categ_stage"/>
 
      <record model="ir.actions.act_window" id="action_report_crm_case_oppor_categ_categ2">
           <field name="res_model">report.crm.case.section.categ.categ2</field>
@@ -279,7 +279,7 @@
           <field name="view_mode">tree</field>
           <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
      </record>
-     <menuitem name="Cases by Section, Category and Category2" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_categ2" id="menu_action_report_crm_case_oppor_categ_categ2"/>
+     <menuitem name="Cases by Opportunities, Category and Type" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_categ2" id="menu_action_report_crm_case_oppor_categ_categ2"/>
 
 
 </data>

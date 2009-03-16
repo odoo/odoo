@@ -23,6 +23,7 @@
 import wizard
 from tools import email_send as email
 import pooler
+from tools.translate import _
 
 ask_form = """<?xml version="1.0" ?>
 <form string="Delegate this task to a user">
@@ -51,7 +52,6 @@ class wizard_delegate(wizard.interface):
     def _do_assign(self, cr, uid, data, context):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         task = task_obj.browse(cr, uid, data['id'], context)
-        newname = task.name
         newname = data['form']['prefix'] or ''
         task_obj.copy(cr, uid, data['id'], {
             'name': data['form']['name'],
@@ -77,12 +77,16 @@ class wizard_delegate(wizard.interface):
     def _ask_auto_complete(self, cr, uid, data, context):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         task = task_obj.browse(cr, uid, data['id'], context)
+        if task.name.startswith(_('CHECK: ')):
+            newname = task.name.strip(_('CHECK: '))
+        else:
+            newname = task.name or ''
         return {
-            'name':task.name,
+            'name': newname,
             'user_id': False,
             'planned_hours': task.remaining_hours,
             'planned_hours_me': 1.0,
-            'prefix': 'CHECK: '+ (task.name or ''),
+            'prefix': _('CHECK: ')+ newname,
             'include_info': 1,
             'state': 'pending'
         }

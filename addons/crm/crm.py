@@ -58,6 +58,7 @@ class crm_case_section(osv.osv):
         'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active'),
+        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
@@ -66,6 +67,7 @@ class crm_case_section(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
+        'allow_unlink': lambda *a: 1,
     }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
@@ -388,12 +390,13 @@ class crm_case(osv.osv):
         'email_from': _get_default_email,
         'state': lambda *a: 'open',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
-            if case.state <> 'draft':
+            if (not case.section_id.allow_unlink) and (case.state <> 'draft'):
                 raise osv.except_osv(_('Warning !'),
                     _('You can not delete this case. You should better cancel it.'))
         return super(crm_case, self).unlink(cr, uid, ids, context)

@@ -171,6 +171,64 @@
             <field name="domain">[('state','&lt;&gt;','done')]</field>
         </record>
 		
-		        
+		<record model="ir.ui.view" id="view_turnover_month_tree">
+            <field name="name">report.turnover.per.month.tree</field>
+            <field name="model">report.turnover.per.month</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Turnover Per Month">
+                	<field name="name" select="1"/>
+                	<field name="turnover" select="2"/>
+                </tree>
+            </field>
+    	</record>
+    	
+    	<record id="view_turnover_month_graph" model="ir.ui.view">
+             <field name="name">report.turnover.per.month.graph</field>
+             <field name="model">report.turnover.per.month</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Turnover Per Month" type="bar">
+                    <field name="name" />
+                	<field name="turnover" />
+                 </graph>
+             </field>
+        </record>
+	
+		<record model="ir.actions.act_window" id="action_turnover_month_tree">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Turnover Per Month</field>
+            <field name="res_model">report.turnover.per.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="view_id" ref="view_turnover_month_tree"/>
+        </record>
+		
+		<!-- Created Sale orders for random activities dashboard -->
+		
+		<record id="board_view_created_sale_order" model="ir.ui.view">
+            <field name="name">report.sale.order.created.tree</field>
+            <field name="model">report.sale.order.created</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Created Sales orders">
+                	<field name="create_date"/>
+                    <field name="date_order"/>
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="partner_shipping_id"/>
+                    <field name="amount_untaxed"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>  
+        
+        <record id="action_view_created_sale_order_dashboard" model="ir.actions.act_window">
+            <field name="name">Created Sale Orders</field>
+            <field name="res_model">report.sale.order.created</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="board_view_created_sale_order"/>
+        </record>                
     </data>
 </openerp>

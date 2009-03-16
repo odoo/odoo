@@ -511,7 +511,6 @@ class account_invoice(osv.osv):
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
-            ils = self.pool.get('account.invoice.line').read(cr, uid, line_ids)
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
