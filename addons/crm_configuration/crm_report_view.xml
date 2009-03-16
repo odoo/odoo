@@ -6,11 +6,11 @@
     #
 
     <record model="ir.ui.view" id="view_crm_case_section_categ_tree">
-        <field name="name">CRM Report - Sections and Category2(Tree)</field>
+        <field name="name">CRM Report - Sections and Type(Tree)</field>
         <field name="model">report.crm.case.section.categ2</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Cases by Section and Category2">
+            <tree string="Cases by Section and Type">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="section_id"/>
@@ -24,7 +24,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="view_crm_case_section_categ_form">
-        <field name="name">CRM Report - Sections and Category2(Form)</field>
+        <field name="name">CRM Report - Sections and Type(Form)</field>
         <field name="model">report.crm.case.section.categ2</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -42,11 +42,11 @@
         </field>
     </record>
     <record model="ir.ui.view" id="view_crm_case_section_categ_graph">
-        <field name="name">CRM Report - Sections and Category2(Graph)</field>
+        <field name="name">CRM Report - Sections and Type(Graph)</field>
         <field name="model">report.crm.case.section.categ2</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
-            <graph string="Cases by Section and Category2" type="bar" orientation="horizontal">
+            <graph string="Cases by Section and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
                 <field name="amount_revenue" operator="+"/>
                 <field name="section_id" group="True"/>
@@ -60,14 +60,14 @@
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
     </record>
-    <menuitem parent="report_crm.next_id_65" name="Cases by Section and Category2" action="action_report_crm_case_section_categ_tree_month" id="menu_crm_case_section_categ_tree_month"/>
+    <menuitem parent="report_crm.next_id_65" name="Cases by Section and Type" action="action_report_crm_case_section_categ_tree_month" id="menu_crm_case_section_categ_tree_month"/>
 
     <record model="ir.actions.act_window" id="action_report_crm_case_section_categ_tree">
         <field name="res_model">report.crm.case.section.categ2</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
     </record>
-    <menuitem parent="report_crm.next_id_66" name="Cases by Section and Category2" action="action_report_crm_case_section_categ_tree" id="menu_crm_case_section_categ_tree"/>
+    <menuitem parent="report_crm.next_id_66" name="Cases by Section and Type" action="action_report_crm_case_section_categ_tree" id="menu_crm_case_section_categ_tree"/>
 
     #
     # Cases by section and stage
@@ -192,11 +192,11 @@
     #
 
     <record model="ir.ui.view" id="view_crm_case_section_categ_categ2_tree">
-        <field name="name">CRM Report - Section, Category and Category2(Tree)</field>
+        <field name="name">CRM Report - Section, Category and Type(Tree)</field>
         <field name="model">report.crm.case.section.categ.categ2</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Cases by Section, Category and Category2">
+            <tree string="Cases by Section, Category and Type">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="section_id"/>
@@ -210,11 +210,11 @@
         </field>
     </record>
     <record model="ir.ui.view" id="view_crm_case_section_categ_categ2_form">
-        <field name="name">CRM Report - Section, Category and Category2(Form)</field>
+        <field name="name">CRM Report - Section, Category and Type(Form)</field>
         <field name="model">report.crm.case.section.categ.categ2</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Cases by Section, Category and Category2">
+            <form string="Cases by Section, Category and Type">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="section_id" select="1"/>
@@ -234,12 +234,12 @@
         <field name="view_mode">tree</field>
         <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
     </record>
-    <menuitem  parent="report_crm.next_id_65" name="Cases by Section, Category and Category2" action="action_report_crm_case_section_categ_categ2_tree_month" id="menu_crm_case_section_categ_categ2_tree_month"/>
+    <menuitem  parent="report_crm.next_id_65" name="Cases by Section, Category and Type" action="action_report_crm_case_section_categ_categ2_tree_month" id="menu_crm_case_section_categ_categ2_tree_month"/>
     <record model="ir.actions.act_window" id="action_report_crm_case_section_categ_categ2_tree">
         <field name="res_model">report.crm.case.section.categ.categ2</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
     </record>
-    <menuitem parent="report_crm.next_id_66" name="Cases by Section, Category and Category2" action="action_report_crm_case_section_categ_categ2_tree" id="menu_crm_case_section_categ_categ2_tree"/>
+    <menuitem parent="report_crm.next_id_66" name="Cases by Section, Category and Type" action="action_report_crm_case_section_categ_categ2_tree" id="menu_crm_case_section_categ_categ2_tree"/>
 </data>
 </openerp>
