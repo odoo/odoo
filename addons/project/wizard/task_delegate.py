@@ -80,13 +80,13 @@ class wizard_delegate(wizard.interface):
         if task.name.startswith(_('CHECK: ')):
             newname = task.name.strip(_('CHECK: '))
         else:
-            newname = task.name
+            newname = task.name or ''
         return {
             'name': newname,
             'user_id': False,
             'planned_hours': task.remaining_hours,
             'planned_hours_me': 1.0,
-            'prefix': _('CHECK: ')+ (task.name or ''),
+            'prefix': _('CHECK: ')+ newname,
             'include_info': 1,
             'state': 'pending'
         }
