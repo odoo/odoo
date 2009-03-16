@@ -140,26 +140,16 @@ class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
     _sequence = 'ir_actions_id_seq'
-
-#    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
-#            context=None, count=False):
-#        if context is None:
-#            context = {}
-#        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
-#                context=context)
-#        if uid==1:
-#            return ids
-#        user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
-#        result = []
-#        for act in self.browse(cr, uid, ids):
-#            if not len(act.groups_id):
-#                result.append(act.id)
-#                continue
-#            for g in act.groups_id:
-#                if g.id in user_groups:
-#                    result.append(act.id)
-#                    break
-#        return result
+    def _check_model(self, cr, uid, ids, context={}):
+        for action in self.browse(cr, uid, ids, context):
+            if not self.pool.get(action.res_model):
+                return False
+            if action.src_model and not self.pool.get(action.src_model):
+                return False
+        return True
+    _constraints = [
+        (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
+    ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
