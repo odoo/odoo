@@ -68,7 +68,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validated', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
         'date_from' : fields.datetime('Vacation start day', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_to' : fields.datetime('Vacation end day',required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True,readonly=True, states={'draft':[('readonly',False)]}),
@@ -86,6 +86,16 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _order = 'date_from desc'
+
+    def _check_date(self, cr, uid, ids):
+        if ids:
+            cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
+            res =  cr.fetchall()
+            if res and res[0][0] < 0:
+                return False
+        return True
+
+    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
 
     def create(self, cr, uid, vals, *args, **kwargs):
         id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
@@ -246,9 +256,9 @@ class hr_holidays_per_user(osv.osv):
 
     def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
         obj_holiday = self.pool.get('hr.holidays')
-        days = 0.0
         result = {}
         for holiday_user in self.browse(cr, uid, ids):
+            days = 0.0
             ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
             if ids_request:
                 holidays = obj_holiday.browse(cr, uid, ids_request)
