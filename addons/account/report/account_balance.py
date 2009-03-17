@@ -60,17 +60,31 @@ class account_balance(report_sxw.rml_parse):
             if form.has_key('periods') and form['periods'][0][2]:
                 period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
                 self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
-                res=self.cr.fetchall()
+                res = self.cr.fetchall()
+                len_res = len(res) 
                 for r in res:
-                    if (r == res[res.__len__()-1]):
+                    if (r == res[len_res-1]):
                         result+=r[0]+". "
                     else:
                         result+=r[0]+", "
+            else:
+                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear'])
+                res = fy_obj.period_ids
+                len_res = len(res)
+                for r in res:
+                    if r == res[len_res-1]:
+                        result+=r.name+". "
+                    else:
+                        result+=r.name+", "
+                
             return str(result and result[:-1]) or ''
 
         def transform_both_into_date_array(self,data):
-            if not data['periods'][0][2] :
-                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+            
+            if not data['periods'][0][2]:
+                if not form['fiscalyear']:
+                    return True
+                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',form['fiscalyear'])])
             else:
                 periods_id = data['periods'][0][2]
             date_array = []
@@ -127,10 +141,14 @@ class account_balance(report_sxw.rml_parse):
                 ctx['fiscalyear'] = form['fiscalyear']
                 ctx['periods'] = form['periods'][0][2]
             elif form['state']== 'bydate':
+                ctx['fiscalyear'] = form['fiscalyear']
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to'] 
                 self.transform_date_into_date_array(form)
             elif form['state'] == 'all' :
+                ctx['fiscalyear'] = form['fiscalyear']
+                ctx['date_from'] = form['date_from']
+                ctx['date_to'] =  form['date_to']
                 self.transform_both_into_date_array(form)
             elif form['state'] == 'none' :
                 self.transform_none_into_date_array(form)
