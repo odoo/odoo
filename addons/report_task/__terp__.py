@@ -27,7 +27,7 @@
     'category': 'Generic Modules/Projects & Services',
     'description': """Gives statistics on tasks by user on projects to check the pipeline of users.""",
     'author': 'Tiny',
-    'depends': ['base', 'project'],
+    'depends': ['base', 'project','hr_timesheet_sheet'],
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv', 'report_task_view.xml'],
     'installable': True,
