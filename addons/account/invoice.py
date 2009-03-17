@@ -382,13 +382,14 @@ class account_invoice(osv.osv):
         if not date_invoice :
             date_invoice = time.strftime('%Y-%m-%d')
 
-        pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
+        pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
 
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
             res= {'value':{'date_due': pterm_list[-1]}}
-
+        else:
+             raise osv.except_osv(_('Data Insufficient !'), _('The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !'))
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
