@@ -800,13 +800,30 @@ class stock_production_lot(osv.osv):
         ''')
         res.update(dict(cr.fetchall()))
         return res
-
+    
+    def _stock_search(self, cr, uid, obj, name, args):
+        locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')])
+        cr.execute('''select
+                prodlot_id,
+                sum(name)
+            from
+                stock_report_prodlots
+            where
+                location_id in ('''+','.join(map(str, locations)) +''')
+            group by
+                prodlot_id
+            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2]) 
+        )
+        res = cr.fetchall()
+        ids = [('id','in',map(lambda x:x[0], res))]
+        return ids
+    
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
         'ref': fields.char('Internal Ref', size=64),
         'product_id': fields.many2one('product.product','Product',required=True),
         'date': fields.datetime('Created Date', required=True),
-        'stock_available': fields.function(_get_stock, method=True, type="float", string="Available", select="2"),
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision','lot_id','Revisions'),
     }
     _defaults = {
