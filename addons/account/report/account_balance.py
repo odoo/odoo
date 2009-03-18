@@ -79,12 +79,12 @@ class account_balance(report_sxw.rml_parse):
                 
             return str(result and result[:-1]) or ''
 
-        def transform_both_into_date_array(self,data):
+        def transform_both_into_date_array(self, data):
             
             if not data['periods'][0][2]:
-                if not form['fiscalyear']:
+                if not data['fiscalyear']:
                     return True
-                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',form['fiscalyear'])])
+                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['fiscalyear'])])
             else:
                 periods_id = data['periods'][0][2]
             date_array = []
