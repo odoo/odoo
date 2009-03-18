@@ -93,17 +93,17 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
+            ctx['fiscalyear'] = form['fiscalyear']
             if form['state']=='byperiod' :
-                ctx['fiscalyear'] = form['fiscalyear']
                 ctx['periods'] = form['periods'][0][2]
             elif form['state']== 'bydate':
-                ctx['fiscalyear'] = form['fiscalyear']
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to'] 
             elif form['state'] == 'all' :
-                ctx['fiscalyear'] = form['fiscalyear']
+                ctx['periods'] = form['periods'][0][2]
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
+            
         
             accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
             def cmp_code(x, y):
