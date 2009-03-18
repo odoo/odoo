@@ -1028,36 +1028,43 @@ class stock_move(osv.osv):
 #        ids = map(lambda m: m.id, moves)
         moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'confirmed'})
-        for picking, todo in self._chain_compute(cr, uid, moves, context).items():
-            ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-            pickid = self.pool.get('stock.picking').create(cr, uid, {
-                'name': picking.name,
-                'origin': str(picking.origin or ''),
-                'type': ptype,
-                'note': picking.note,
-                'move_type': picking.move_type,
-                'auto_picking': todo[0][1][1]=='auto',
-                'address_id': picking.address_id.id,
-                'invoice_state': 'none'
-            })
-            for move,(loc,auto,delay) in todo:
-                # Is it smart to copy ? May be it's better to recreate ?
-                new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': loc.id,
-                    'date_moved': time.strftime('%Y-%m-%d'),
-                    'picking_id': pickid,
-                    'state':'waiting',
-                    'move_history_ids':[],
-                    'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
-                    'move_history_ids2':[]}
-                )
-                self.pool.get('stock.move').write(cr, uid, [move.id], {
-                    'move_dest_id': new_id,
-                    'move_history_ids': [(4, new_id)]
+        i=0
+        def create_chained_picking(self,cr,uid,moves,context):
+            new_moves=[]
+            for picking, todo in self._chain_compute(cr, uid, moves, context).items():
+                ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                pickid = self.pool.get('stock.picking').create(cr, uid, {
+                    'name': picking.name,
+                    'origin': str(picking.origin or ''),
+                    'type': ptype,
+                    'note': picking.note,
+                    'move_type': picking.move_type,
+                    'auto_picking': todo[0][1][1]=='auto',
+                    'address_id': picking.address_id.id,
+                    'invoice_state': 'none'
                 })
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+                for move,(loc,auto,delay) in todo:
+                    # Is it smart to copy ? May be it's better to recreate ?
+                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                        'location_id': move.location_dest_id.id,
+                        'location_dest_id': loc.id,
+                        'date_moved': time.strftime('%Y-%m-%d'),
+                        'picking_id': pickid,
+                        'state':'waiting',
+                        'move_history_ids':[],
+                        'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'move_history_ids2':[]}
+                    )
+                    self.pool.get('stock.move').write(cr, uid, [move.id], {
+                        'move_dest_id': new_id,
+                        'move_history_ids': [(4, new_id)]
+                    })
+                    new_moves.append(self.browse(cr, uid, [new_id])[0])
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+            if new_moves:
+                create_chained_picking(self, cr, uid, new_moves, context)
+        create_chained_picking(self, cr, uid, moves, context)
         return []
 
     def action_assign(self, cr, uid, ids, *args):
