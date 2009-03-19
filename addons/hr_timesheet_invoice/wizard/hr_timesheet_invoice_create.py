@@ -51,12 +51,12 @@ class invoice_create(wizard.interface):
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
-                raise wizard.except_wizard(_('Analytic account incomplete'),
-                        _('Please fill in the partner and pricelist field in the analytic account:\n%s') % (account.name,))
+                raise wizard.except_wizard(_('Analytic Account incomplete'),
+                        _('Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
             if not partner.address:
                 raise wizard.except_wizard(_('Partner incomplete'),
-                        _('Please fill in the address field in the partner: %s.') % (partner.name,))
+                        _('Please fill in the Address field in the Partner: %s.') % (partner.name,))
 
             date_due = False
             if partner.property_payment_term:

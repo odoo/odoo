@@ -178,7 +178,8 @@ def _data_save(self, cr, uid, data, context):
                         'WHERE account_id = %s ' \
                             'AND ' + query_line + ' ' \
                         'ORDER BY id ' \
-                        'LIMIT %s OFFSET %s', (account.id,fy_id, limit, offset))
+                        'LIMIT %s OFFSET %s', (account.id, limit, offset))
+                
                 result = cr.dictfetchall()
                 if not result:
                     break

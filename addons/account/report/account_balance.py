@@ -127,6 +127,8 @@ class account_balance(report_sxw.rml_parse):
                 ctx['fiscalyear'] = form['fiscalyear']
                 ctx['periods'] = form['periods'][0][2]
             elif form['state']== 'bydate':
+                ctx['date_from'] = form['date_from']
+                ctx['date_to'] =  form['date_to'] 
                 self.transform_date_into_date_array(form)
             elif form['state'] == 'all' :
                 self.transform_both_into_date_array(form)

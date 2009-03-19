@@ -40,16 +40,22 @@ class account_move_line(osv.osv):
         else:
             fiscalyear_clause = '%s' % context['fiscalyear']
         state=context.get('state',False)
-        where_move_state=''
+        where_move_state = ''
+        where_move_lines_by_date = ''
+
+        if context.get('date_from', False) and context.get('date_to', False):
+            where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+            
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
-
+        
+                
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s" % (fiscalyear_clause, ids,where_move_state)
+            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
         else:
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s)" % (fiscalyear_clause,where_move_state)
+            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
     def default_get(self, cr, uid, fields, context={}):
         data = self._default_get(cr, uid, fields, context)

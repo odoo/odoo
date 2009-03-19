@@ -270,6 +270,8 @@ class product_pricelist_version(osv.osv):
         for pricelist_version in self.browse(cursor, user, ids):
             if not pricelist_version.active:
                 continue
+            if not pricelist_version.active:
+                continue
             cursor.execute('SELECT id ' \
                     'FROM product_pricelist_version ' \
                     'WHERE ((date_start <= %s AND %s <= date_end ' \
