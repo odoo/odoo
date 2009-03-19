@@ -2275,7 +2275,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 for tax in position.tax_ids:
                     vals_tax = {
                                 'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax_template_ref[tax.tax_dest_id.id],
+                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
                                 'position_id' : new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)

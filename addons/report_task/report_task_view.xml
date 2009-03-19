@@ -90,5 +90,29 @@
             <field name="view_id" ref="view_task_closed_board_tree"/>
         </record>
         
+        <!-- Report for Users' Timesheet and Task Hours per Month -->
+		
+		<record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
+            <field name="name">report.timesheet.task.user.tree</field>
+            <field name="model">report.timesheet.task.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet/Task hours Report Per Month" >
+                    <field name="name" select="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="timesheet_hrs" widget="float_time" />
+                    <field name="task_hrs"  widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+         
+        <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
+            <field name="name">Timesheet / Task Hours Per Month</field>
+            <field name="res_model">report.timesheet.task.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>    
+        
     </data>
 </openerp>
