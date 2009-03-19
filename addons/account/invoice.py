@@ -1112,9 +1112,23 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
     }
-    def base_change(self, cr, uid, ids, base):
+    def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):
+        cur_obj = self.pool.get('res.currency')
+        company_obj = self.pool.get('res.company')
+        company_currency=False
+        if company_id:            
+            company_currency=company_obj.browse(cr,uid,company_id).id
+        if currency_id and company_currency:
+            base=cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'base_amount':base}}
-    def amount_change(self, cr, uid, ids, amount):
+    def amount_change(self, cr, uid, ids, amount,currency_id=False,company_id=False,date_invoice=False):
+        cur_obj = self.pool.get('res.currency')
+        company_obj = self.pool.get('res.company')
+        company_currency=False
+        if company_id:
+            company_currency=company_obj.browse(cr,uid,company_id).id
+        if currency_id and company_currency:
+            amount=cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount':amount}}
     _order = 'sequence'
     _defaults = {

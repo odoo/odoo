@@ -170,8 +170,8 @@
                                 <field name="tax_line" nolabel="1">
                                     <tree editable="bottom" string="Taxes">
                                         <field name="name"/>
-                                        <field name="base" on_change="base_change(base)" readonly="1"/>
-                                        <field name="amount" on_change="amount_change(amount)"/>
+                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
+                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
 
                                         <field invisible="True" name="base_amount"/>
                                         <field invisible="True" name="tax_amount"/>
@@ -257,8 +257,8 @@
                                 <field name="tax_line" nolabel="1">
                                     <tree editable="bottom" string="Taxes">
                                         <field name="name"/>
-                                        <field name="base" on_change="base_change(base)" readonly="1"/>
-                                        <field name="amount" on_change="amount_change(amount)"/>
+                                         <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
+                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
                                         <field invisible="True" name="base_amount"/>
                                         <field invisible="True" name="tax_amount"/>
                                     </tree>
