@@ -30,6 +30,7 @@ import tools
 import zipfile
 from StringIO import StringIO
 import base64
+from tools.translate import _
 
 finish_form ='''<?xml version="1.0"?>
 <form string="Module import">

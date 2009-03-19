@@ -24,6 +24,7 @@ from osv import fields,osv
 import tools
 import time
 from tools.config import config
+from tools.translate import _
 import netsvc
 import re
 
