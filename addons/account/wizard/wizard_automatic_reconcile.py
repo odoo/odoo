@@ -24,6 +24,7 @@ import wizard
 import netsvc
 import pooler
 import time
+from tools.translate import _
 
 #TODO:
 

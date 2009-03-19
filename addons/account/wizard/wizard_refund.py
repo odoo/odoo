@@ -24,6 +24,7 @@ import pooler
 import osv
 import netsvc
 import time
+from tools.translate import _
 
 sur_form = '''<?xml version="1.0"?>
 <form string="Credit Note">

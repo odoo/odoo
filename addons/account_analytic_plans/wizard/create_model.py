@@ -23,6 +23,7 @@ import wizard
 import time
 import netsvc
 import pooler
+from tools.translate import _
 
 info = '''<?xml version="1.0"?>
 <form string="Distribution Model Saved">
@@ -35,10 +36,10 @@ def activate(self, cr, uid, data, context):
     if data['id']:
         plan = plan_obj.browse(cr, uid, data['id'], context)
         if (not plan.name) or (not plan.code):
-            raise wizard.except_wizard('Error', 'Please put a name and a code before saving the model !')
+            raise wizard.except_wizard(_('Error'), _('Please put a name and a code before saving the model !'))
         pids  =  pooler.get_pool(cr.dbname).get('account.analytic.plan').search(cr, uid, [], context=context)
         if (not pids):
-            raise wizard.except_wizard('Error', 'No analytic plan defined !')
+            raise wizard.except_wizard(_('Error'), _('No analytic plan defined !'))
         plan_obj.write(cr,uid,[data['id']],{'plan_id':pids[0]})
         return 'info'
     else:

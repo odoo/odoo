@@ -30,6 +30,7 @@ import base64
 import mimetypes
 import httplib
 import threading
+from tools.translate import _
 
 login_form = '''<?xml version="1.0"?>
 <form title="Login">

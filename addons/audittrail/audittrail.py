@@ -27,6 +27,7 @@ import netsvc
 import pooler
 import string
 import time,copy
+from tools.translate import _
 
 class audittrail_rule(osv.osv):
     _name = 'audittrail.rule'
@@ -59,8 +60,8 @@ class audittrail_rule(osv.osv):
             obj = self.pool.get(thisrule.object_id.model)
             if not obj:
                 raise osv.except_osv(
-                        'WARNING:audittrail is not part of the pool',
-                        'Change audittrail depends -- Setting rule as DRAFT')
+                        _('WARNING:audittrail is not part of the pool'),
+                        _('Change audittrail depends -- Setting rule as DRAFT'))
                 self.write(cr, uid, [thisrule.id], {"state": "draft"})
         val={
              "name":'View Log',

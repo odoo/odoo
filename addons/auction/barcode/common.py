@@ -703,3 +703,4 @@ class Code11(Barcode):
             dval = dval + self.patterns[c] + 'i'
         self.decomposed = dval[:-1]            
         return self.decomposed
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

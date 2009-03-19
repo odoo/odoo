@@ -41,3 +41,4 @@ class payment_order(osv.osv):
 			return 'l10n_ch','wizard_account_dta_create'
 		return super(payment_order,self).get_wizard(mode)
 payment_order()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

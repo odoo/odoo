@@ -24,6 +24,7 @@ import time
 import wizard
 import datetime
 import pooler
+from tools.translate import _
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
@@ -41,7 +42,7 @@ class wizard_report(wizard.interface):
         pool_obj = pooler.get_pool(cr.dbname)
         data_model = pool_obj.get(data['model']).browse(cr,uid,data['id'])
         if not data_model.dotation_ids:
-            raise wizard.except_wizard('Insufficient Data!',"No Dotations or Master Budget Expenses Found on Budget '"+ data_model.name +"'!")
+            raise wizard.except_wizard(_('Insufficient Data!'),_('No Dotations or Master Budget Expenses Found on Budget %s!') % data_model.name)
         return data['form']
 
     states = {

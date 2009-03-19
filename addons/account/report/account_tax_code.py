@@ -38,3 +38,4 @@ class account_tax_code_report(rml_parse.rml_parse):
 report_sxw.report_sxw('report.account.tax.code.entries', 'account.tax.code',
     'addons/account/report/account_tax_code.rml', parser=account_tax_code_report, header=False)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

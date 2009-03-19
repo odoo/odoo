@@ -63,3 +63,4 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
                 'target':'new',
             }
 profile_association_config_install_modules_wizard()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,6 +30,7 @@ from osv import fields, osv,orm
 import ir
 
 import tools
+from tools.translate import _
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -176,7 +177,7 @@ class account_analytic_plan_instance(osv.osv):
 
             pids = self.pool.get('account.analytic.plan.instance').search(cr, uid, [('name','=',vals['name']),('code','=',vals['code']),('plan_id','<>',False)])
             if pids:
-                raise osv.except_osv('Error', 'A model having this name and code already exists !')
+                raise osv.except_osv(_('Error'), _('A model having this name and code already exists !'))
 
             res = self.pool.get('account.analytic.plan.line').search(cr,uid,[('plan_id','=',journal.plan_id.id)])
             for i in res:
@@ -189,7 +190,7 @@ class account_analytic_plan_instance(osv.osv):
                             if self.pool.get('account.analytic.account').search(cr,uid,[('parent_id','child_of',[item.root_analytic_id.id]),('id','=',tempo[2]['analytic_account_id'])]):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                    raise osv.except_osv("Value Error" ,"The Total Should be Between " + str(item.min_required) + " and " + str(item.max_required))
+                    raise osv.except_osv(_('Value Error') ,_('The Total Should be Between %s and %s" % (str(item.min_required), str(item.max_required))))
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context)
 
@@ -374,3 +375,4 @@ class analytic_default(osv.osv):
     }
 analytic_default()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

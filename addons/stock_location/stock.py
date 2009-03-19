@@ -68,3 +68,4 @@ class stock_location(osv.osv):
                     return path.location_dest_id, path.auto, path.delay
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

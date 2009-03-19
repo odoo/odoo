@@ -27,6 +27,7 @@ import datetime
 import netsvc
 import time
 from mx import DateTime
+from tools.translate import _
 
 #----------------------------------------------------------
 # Workcenters
@@ -69,7 +70,7 @@ class mrp_production_workcenter_line(osv.osv):
                elif prod_obj.state =='in_production':
                    return
                else:
-                   raise osv.except_osv(_('Error!'),_('Production Order Cannot start in [%s] state')%(prod_obj.state,))
+                   raise osv.except_osv(_('Error!'),_('Production Order Cannot start in [%s] state') % (prod_obj.state,))
         else:
             oper_ids=self.search(cr,uid,[('production_id','=',prod_obj.id)])
             obj=self.browse(cr,uid,oper_ids)

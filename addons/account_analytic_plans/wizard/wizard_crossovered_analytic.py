@@ -23,6 +23,7 @@ import wizard
 import time
 import datetime
 import pooler
+from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Select Information">
@@ -59,7 +60,7 @@ class wizard_crossovered_analytic(wizard.interface):
                 break
 
         if flag:
-            raise wizard.except_wizard('User Error',"There are no Analytic lines related to Account '" + name +"'" )
+            raise wizard.except_wizard(_('User Error'),_("There are no Analytic lines related to Account '%s'" % name))
         return {}
 
     states = {

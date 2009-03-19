@@ -23,6 +23,7 @@
 
 import wizard
 import pooler
+from tools.translate import _
 
 
 _form = """<?xml version="1.0"?>
@@ -49,8 +50,8 @@ def do_merge(self, cr, uid, data, context):
     prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
 
     if len(data['ids']) <> 1:
-        raise wizard.except_wizard("Warning",
-                                   "Please select one and only one inventory !")
+        raise wizard.except_wizard(_('Warning'),
+                                   _('Please select one and only one inventory !'))
 
     loc = str(data['form']['location_id'])
 

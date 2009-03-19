@@ -38,7 +38,7 @@ def _change_inv_state(self, cr, uid, data, context):
     pool_obj = pooler.get_pool(cr.dbname)
     data_inv = pool_obj.get('account.invoice').browse(cr, uid, data['ids'][0])
     if data_inv.reconciled:
-        raise wizard.except_wizard('Warning', 'Invoice is already reconciled')
+        raise wizard.except_wizard(_('Warning'), _('Invoice is already reconciled'))
     wf_service = netsvc.LocalService("workflow")
     res = wf_service.trg_validate(uid, 'account.invoice', data['ids'][0], 'open_test', cr)
     return {}

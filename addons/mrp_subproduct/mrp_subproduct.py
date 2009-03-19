@@ -89,3 +89,4 @@ class mrp_production(osv.osv):
          return picking_id
 
 mrp_production()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

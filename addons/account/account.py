@@ -1500,7 +1500,7 @@ class account_model(osv.osv):
         for model in self.browse(cr, uid, ids, context):
             period_id = self.pool.get('account.period').find(cr,uid, context=context)
             if not period_id:
-                raise osv.except_osv('No period found !', 'Unable to find a valid period !')
+                raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
             move_id = self.pool.get('account.move').create(cr, uid, {
                 'ref': model.ref,

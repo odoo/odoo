@@ -125,3 +125,4 @@ class wizard_default_journal(wizard.interface):
 
 wizard_default_journal('pos.config.journal')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

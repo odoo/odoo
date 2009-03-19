@@ -26,6 +26,7 @@ import netsvc
 import time
 import pooler
 from osv import osv
+from tools.translate import _
 
 class wiz_timebox_open(wizard.interface):
     def _open_timebox(self, cr, uid, data, context):
@@ -33,7 +34,7 @@ class wiz_timebox_open(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         ids = pool.get('project.gtd.timebox').search(cr, uid, [('user_id','=',uid),('type','=',tbtype)])
         if not len(ids):
-            raise wizard.except_wizard('Error !', 'No timebox of the type "%s" defined !' % (tbtype,))
+            raise wizard.except_wizard(_('Error !'), _('No timebox of the type "%s" defined !') % (tbtype,))
         view_type = 'form,tree'
         if len(ids) >= 1:
             domain = "[('id','in',["+','.join(map(str,ids))+"])]"

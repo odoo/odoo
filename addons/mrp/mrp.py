@@ -27,6 +27,7 @@ import ir
 import netsvc
 import time
 from mx import DateTime
+from tools.translate import _
 
 #----------------------------------------------------------
 # Workcenters
@@ -493,7 +494,7 @@ class mrp_production(osv.osv):
                     self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
 
             if not bom_id:
-                raise osv.except_osv('Error', "Couldn't find bill of material for product")
+                raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
             #if bom_point.routing_id and bom_point.routing_id.location_id:
             #   self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})

@@ -35,6 +35,7 @@ import base64
 import time
 import pooler
 import mx.DateTime
+from tools.translate import _
 
 
 FORM = """<?xml version="1.0"?>
@@ -99,7 +100,7 @@ class record:
 		Must instanciate a fields list, field = (name,size)
 		and update a local_values dict.
 		"""
-		raise "not implemented"
+		raise _('not implemented')
 
 	def generate(self):
 		res=''
@@ -362,18 +363,18 @@ def _create_dta(obj, cr, uid, data, context):
 	payment = payment_obj.browse(cr, uid, data['id'], context=context)
 
 	if not payment.mode or payment.mode.type.code != 'dta':
-		raise wizard.except_wizard('Error',
-				'No payment mode or payment type code invalid.')
+		raise wizard.except_wizard(_('Error'),
+				_('No payment mode or payment type code invalid.'))
 	bank = payment.mode.bank_id
 	if not bank:
-		raise wizard.except_wizard('Error', 'No bank account for the company.')
+		raise wizard.except_wizard(_('Error'), _('No bank account for the company.'))
 
 	v['comp_bank_name']= bank.bank and bank.bank.name or False
 	v['comp_bank_clearing'] = bank.bank.clearing
 
 	if not v['comp_bank_clearing']:
-		raise wizard.except_wizard('Error',
-				'You must provide a Clearing Number for your bank account.')
+		raise wizard.except_wizard(_('Error'),
+				_('You must provide a Clearing Number for your bank account.'))
 
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
@@ -393,8 +394,8 @@ def _create_dta(obj, cr, uid, data, context):
 	else:
 		v['comp_bank_iban'] = ''
 	if not v['comp_bank_iban']:
-		raise wizard.except_wizard('Error',
-				'No IBAN for the company bank account.')
+		raise wizard.except_wizard(_('Error'),
+				_('No IBAN for the company bank account.'))
 
 	dta_line_obj = pool.get('account.dta.line')
 	res_partner_bank_obj = pool.get('res.partner.bank')
@@ -405,13 +406,13 @@ def _create_dta(obj, cr, uid, data, context):
 
 	for pline in payment.line_ids:
 		if not pline.bank_id:
-			raise wizard.except_wizard('Error', 'No bank account defined\n' \
-					'on line: ' + pline.name)
+			raise wizard.except_wizard(_('Error'), _('No bank account defined\n' \
+					'on line: %s') % pline.name)
 		if not pline.bank_id.bank:
-			raise wizard.except_wizard('Error', 'No bank defined\n' \
-					'for the bank account: ' + pline.bank_id.state + '\n' \
-					'on the partner: ' + pline.partner_id.name + '\n' \
-					'on line: ' + pline.name)
+			raise wizard.except_wizard(_('Error'), _('No bank defined\n' \
+					'for the bank account: %s\n' \
+					'on the partner: %s\n' \
+					'on line: %s') + (pline.bank_id.state, pline.partner_id.name, pline.name))
 
 		v['sequence'] = str(seq).rjust(5).replace(' ', '0')
 		v['amount_to_pay']= str(pline.amount_currency).replace('.', ',')
@@ -421,10 +422,10 @@ def _create_dta(obj, cr, uid, data, context):
 		v['partner_bank_name'] =  pline.bank_id.bank.name or False
 		v['partner_bank_clearing'] =  pline.bank_id.bank.clearing or False
 		if not v['partner_bank_name'] :
-			raise wizard.except_wizard('Error', 'No bank name defined\n' \
-					'for the bank account: ' + pline.bank_id.state + '\n' \
-					'on the partner: ' + pline.partner_id.name + '\n' \
-					'on line: ' + pline.name)
+			raise wizard.except_wizard(_('Error'), _('No bank name defined\n' \
+					'for the bank account: %s\n' \
+					'on the partner: %s\n' \
+					'on line: %s') % (pline.bank_id.state, pline.partner_id.name, pline.name))
 
 		v['partner_bank_iban']=  pline.bank_id.iban or False
 		v['partner_bank_number']=  pline.bank_id.acc_number  \
@@ -470,9 +471,9 @@ def _create_dta(obj, cr, uid, data, context):
 			v['partner_city']= ''
 			v['partner_zip']= ''
 			v['partner_country']= ''
-			raise wizard.except_wizard('Error', 'No address defined \n' \
-					'for the partner: ' + pline.partner_id.name + '\n' \
-					'on line: ' + pline.name)
+			raise wizard.except_wizard(_('Error'), _('No address defined \n' \
+					'for the partner: %s\n' \
+					'on line: %s') % (pline.partner_id.name, pline.name))
 
 		if pline.order_id.date_planned :
 			date_value = mx.DateTime.strptime(pline.order_id.date_planned, '%Y-%m-%d')
@@ -491,11 +492,9 @@ def _create_dta(obj, cr, uid, data, context):
 			v['comp_country'] = co_addr.country_id and co_addr.country_id.code+'-' or ''
 			record_type = record_gt836
 			if not v['partner_bank_iban']:
-				raise wizard.except_wizard('Error', 'No IBAN defined \n' \
-						'for the bank account: ' + \
-						res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-							context)[0][1] + '\n' \
-						'on line: ' + pline.name)
+				raise wizard.except_wizard(_('Error'), _('No IBAN defined \n' \
+						'for the bank account: %s\n' + \
+						'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
 
 			if v['partner_bank_code'] : # bank code is swift (BIC address)
 				v['option_id_bank']= 'A'
@@ -509,11 +508,9 @@ def _create_dta(obj, cr, uid, data, context):
 						+ ' ' + v['partner_bank_city'] \
 						+ ' ' + v['partner_bank_country']
 			else:
-				raise wizard.except_wizard('Error', 'You must provide the bank city '
-						'or the bic code for the partner bank: \n' + \
-						res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-							context)[0][1] + '\n' \
-									'on line: ' + pline.name)
+				raise wizard.except_wizard(_('Error'), _('You must provide the bank city '
+						'or the bic code for the partner bank: \n %d\n' + \
+						'on line: %s') %(res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1], pline.name))
 
 		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
 			from tools import mod10r
@@ -522,15 +519,13 @@ def _create_dta(obj, cr, uid, data, context):
 						'').rjust(27).replace(' ', '0')
 			if not v['reference'] \
 					or mod10r(v['reference'][:-1]) != v['reference']:
-				raise wizard.except_wizard('Error', 'You must provide ' \
-						'a valid BVR reference number \n' +
-						'for the line: ' + pline.name)
+				raise wizard.except_wizard(_('Error'), _('You must provide ' \
+						'a valid BVR reference number \n' \
+						'for the line: %s') % pline.name)
 			if not v['partner_bvr']:
-				raise wizard.except_wizard('Error', 'You must provide a BVR number\n'
-					'for the bank account: ' + \
-						res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-							context)[0][1] + '\n' \
-					'on line: ' + pline.name)
+				raise wizard.except_wizard(_('Error'), _('You must provide a BVR number\n'
+					'for the bank account: %s' \
+					'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],context)[0][1] ,pline.name))
 			record_type = record_gt826
 
 		elif elec_pay == 'bvbank':
@@ -538,38 +533,29 @@ def _create_dta(obj, cr, uid, data, context):
 				if v['partner_bank_iban'] :
 					v['partner_bank_number']= v['partner_bank_iban'] 
 				else:
-					raise wizard.except_wizard('Error', 'You must provide ' \
+					raise wizard.except_wizard(_('Error'), _('You must provide ' \
 							'a bank number \n' \
-							'for the partner bank: ' + \
-							res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-								context)[0][1] + '\n' \
-							'on line: ' + pline.name)
+							'for the partner bank: %s\n' \
+							'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
 			if not  v['partner_bank_clearing']:
-				raise wizard.except_wizard('Error', 'You must provide ' \
+				raise wizard.except_wizard(_('Error'), _('You must provide ' \
 						'a Clearing Number\n' \
-						'for the partner bank: ' + \
-						res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-							context)[0][1] + '\n' \
-						'on line '+ pline.name)
+						'for the partner bank: %s\n' \
+						'on line %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
 			v['partner_bank_number'] = '/C/'+v['partner_bank_number']
 			record_type = record_gt827
 		elif elec_pay == 'bvpost':
 			if not v['partner_post_number']:
-				raise wizard.except_wizard('Error', 'You must provide ' \
+				raise wizard.except_wizard(_('Error'), _('You must provide ' \
 						'a post number \n' \
-						'for the partner bank: ' + \
-						res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-							context)[0][1] + '\n' \
-						'on line: ' + pline.name)
+						'for the partner bank: %s\n' \
+						'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] ,pline.name))
 			v['partner_bank_clearing']= ''
 			v['partner_bank_number'] = '/C/'+v['partner_post_number']
 			record_type = record_gt827
 		else:
-			raise wizard.except_wizard('Error', 'The Bank type ' + elec_pay + \
-					'of the bank account: ' + \
-					res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],
-						context)[0][1] + ' '\
-					'is not supported')
+			raise wizard.except_wizard(_('Error'), _('The Bank type %s of the bank account: %s ' \
+					'is not supported') % (elec_pay, res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1],)
 
 		dta_line = record_type(v).generate()
 
@@ -609,3 +595,4 @@ class wizard_dta_create(wizard.interface):
 	}
 
 wizard_dta_create('account.dta_create')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
