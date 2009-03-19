@@ -23,3 +23,4 @@
 import meeting_planify
 import wizard_partner_create
 import wizard_opportunity_set
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

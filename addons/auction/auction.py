@@ -25,6 +25,7 @@ import netsvc
 from osv import fields, osv, orm
 import ir
 from mx import DateTime
+from tools.translate import _
 
 #----------------------------------------------------------
 # Auction Artists
@@ -627,7 +628,7 @@ class auction_lots(osv.osv):
                 continue
             partner_r=self.pool.get('res.partner')
             if not lot.ach_uid.id:
-                raise orm.except_orm('Missed buyer !', 'The object "%s" has no buyer assigned.' % (lot.name,))
+                raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             else:
                 partner_ref =lot.ach_uid.id
                 lot_name = lot.obj_num
@@ -635,7 +636,7 @@ class auction_lots(osv.osv):
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
                 if not invoice_addr_id:
-                    raise orm.except_orm('No Invoice Address', 'The Buyer "%s" has no Invoice Address.' % (contact_addr_id,))
+                    raise orm.except_orm(_('No Invoice Address'), _('The Buyer "%s" has no Invoice Address.') % (contact_addr_id,))
                 inv = {
                     'name': 'Auction proforma:' +lot.name,
                     'journal_id': lot.auction_id.journal_id.id,
@@ -754,13 +755,13 @@ class auction_lots(osv.osv):
                 continue
             partner_r=self.pool.get('res.partner')
             if not lot.ach_uid.id:
-                raise orm.except_orm('Missed buyer !', 'The object "%s" has no buyer assigned.' % (lot.name,))
+                raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             if (lot.auction_id.id,lot.ach_uid.id) in invoices:
                 inv_id = invoices[(lot.auction_id.id,lot.ach_uid.id)]
             else:
                 add = partner_r.read(cr, uid, [lot.ach_uid.id], ['address'])[0]['address']
                 if not len(add):
-                    raise orm.except_orm('Missed Address !', 'The Buyer has no Invoice Address.')
+                    raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Invoice Address.'))
                 price = lot.obj_price or 0.0
                 lot_name =lot.obj_num
                 inv={

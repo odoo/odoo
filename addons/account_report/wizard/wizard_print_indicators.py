@@ -22,6 +22,7 @@
 
 import wizard
 import pooler
+from tools.translate import _
 
 form = '''<?xml version="1.0"?>
 <form string="Print Indicators">
@@ -55,7 +56,7 @@ def _load_base(self, cr, uid, data, context):
 
 def _check_len(self, cr, uid, data, context):
     if len(data['form']['base_selection'][0][2])>8:
-        raise wizard.except_wizard('User Error!',"Please select maximum 8 records to fit the page-width.")
+        raise wizard.except_wizard(_('User Error!'),_("Please select maximum 8 records to fit the page-width."))
     return data['form']
 
 class wizard_print_indicators(wizard.interface):

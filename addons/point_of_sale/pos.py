@@ -219,7 +219,7 @@ class pos_order(osv.osv):
 
     def test_order_lines(self, cr, uid, order, context={}):
         if not order.lines:
-            raise osv.except_osv("Error", "No order lines defined for this sale.")
+            raise osv.except_osv(_('Error'), _('No order lines defined for this sale.'))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'pos.order', order.id, 'paid', cr)
@@ -415,7 +415,7 @@ class pos_order(osv.osv):
 
         order = self.browse(cr, uid, order_id, context)
         if order.invoice_wanted and not order.partner_id:
-            raise osv.except_osv("Error", "Cannot create invoice without a partner.")
+            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
 
         args = {
             'order_id': order_id,
@@ -495,7 +495,7 @@ class pos_order(osv.osv):
                 continue
 
             if not order.partner_id:
-                raise osv.except_osv('Error', 'Please provide a partner for the sale.')
+                raise osv.except_osv(_('Error'), _('Please provide a partner for the sale.'))
 
             inv = {
                 'name': 'Invoice from POS: '+order.name,
@@ -587,8 +587,8 @@ class pos_order(osv.osv):
                     income_account = line.product_id.categ_id.\
                                     property_account_income_categ.id
                 else:
-                    raise osv.except_osv('Error !', 'There is no income '\
-                        'account defined for this product: "%s" (id:%d)'\
+                    raise osv.except_osv(_('Error !'), _('There is no income '\
+                        'account defined for this product: "%s" (id:%d)') \
                         % (line.product_id.name, line.product_id.id, ))
 
 
@@ -684,9 +684,9 @@ class pos_order(osv.osv):
             # search the account receivable for the payments:
             account_receivable = order.sale_journal.default_credit_account_id.id
             if not account_receivable:
-                raise  osv.except_osv('Error !',
-                    'There is no receivable account defined for this journal:'\
-                    ' "%s" (id:%d)' % (order.sale_journal.name, order.sale_journal.id, ))
+                raise  osv.except_osv(_('Error !'),
+                    _('There is no receivable account defined for this journal:'\
+                    ' "%s" (id:%d)') % (order.sale_journal.name, order.sale_journal.id, ))
 
             for payment in order.payments:
 
@@ -768,17 +768,17 @@ class pos_order_line(osv.osv):
         if not product_id:
             return 0.0
         if not pricelist:
-            raise osv.except_osv('No Pricelist !',
-                'You have to select a pricelist in the sale form !\n'
-                'Please set one before choosing a product.')
+            raise osv.except_osv(_('No Pricelist !'),
+                _('You have to select a pricelist in the sale form !\n' \
+                'Please set one before choosing a product.'))
 
         price = self.pool.get('product.pricelist').price_get(cr, uid,
             [pricelist], product_id, qty or 1.0, partner_id)[pricelist]
         if price is False:
-            raise osv.except_osv('No valid pricelist line found !',
-                "Couldn't find a pricelist line matching this product"
-                " and quantity.\nYou have to change either the product,"
-                " the quantity or the pricelist.")
+            raise osv.except_osv(_('No valid pricelist line found !'),
+                _("Couldn't find a pricelist line matching this product" \
+                " and quantity.\nYou have to change either the product," \
+                " the quantity or the pricelist."))
         return price
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):

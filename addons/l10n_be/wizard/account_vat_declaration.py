@@ -127,3 +127,4 @@ class wizard_vat_declaration(wizard.interface):
     }
 
 wizard_vat_declaration('wizard.account.xml.vat.declaration')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

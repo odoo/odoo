@@ -21,6 +21,7 @@
 ##############################################################################
 from osv import fields,osv
 from osv import orm
+from tools.translate import _
 
 class analytic_user_funct_grid(osv.osv):
 
@@ -94,9 +95,9 @@ class hr_analytic_timesheet(osv.osv):
             if not a:
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv('Error !',
-                        'There is no expense account define ' \
-                                'for this product: "%s" (id:%d)' % \
+                raise osv.except_osv(_('Error !'),
+                        _('There is no expense account define ' \
+                                'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
             amount = unit_amount *  self.pool.get('product.uom')._compute_price(cr, uid,
                     r.product_id.uom_id.id, r.product_id.standard_price, False)
@@ -127,9 +128,9 @@ class hr_analytic_timesheet(osv.osv):
                 if not a:
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:
-                    raise osv.except_osv('Error !',
-                            'There is no expense account define ' \
-                                    'for this product: "%s" (id:%d)' % \
+                    raise osv.except_osv(_('Error !'),
+                            _('There is no expense account define ' \
+                                    'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
                 amount = unit_amount * r.product_id.uom_id._compute_price(cr, uid,
                         r.product_id.uom_id.id, r.product_id.standard_price, False)

@@ -141,3 +141,4 @@ class make_sale(wizard.interface):
 
 make_sale('crm.case.make_order')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -78,3 +78,4 @@ class confirm_registration(wizard.interface):
     }
 
 confirm_registration('event.confirm_registration')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

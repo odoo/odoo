@@ -90,3 +90,4 @@ class wizard_report(wizard.interface):
     }
 wizard_report('l10n_lu.tax.report.wizard')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

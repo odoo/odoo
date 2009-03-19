@@ -27,6 +27,7 @@ import time
 from tools.translate import _
 
 from osv import fields, osv
+from tools.translate import _
 
 class project(osv.osv):
     _name = "project.project"

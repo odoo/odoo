@@ -21,6 +21,7 @@
 ##############################################################################
 import pooler
 import addons
+from tools.translate import _
 
 def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
     pool = pooler.get_pool(cr.dbname)
