@@ -556,7 +556,7 @@ def _create_dta(obj, cr, uid, data, context):
 		else:
 			raise wizard.except_wizard(_('Error'), _('The Bank type ' + elec_pay + \
 					'of the bank account: %s ' \
-					'is not supported') % res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1]
+					'is not supported') % res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1])
 
 		dta_line = record_type(v).generate()
 
