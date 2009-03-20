@@ -91,7 +91,7 @@ class  report_closed_task(osv.osv):
                 from
                     project_task tsk
                 where
-                    (tsk.date_close < CURRENT_DATE AND tsk.date_close >= (CURRENT_DATE-15))
+                    (tsk.date_close <= CURRENT_DATE AND tsk.date_close > (CURRENT_DATE-15))
             )
         ''')
 report_closed_task()
@@ -151,7 +151,6 @@ class report_timesheet_task_user(osv.osv):
                 select to_char(h.name,'YYYY-MM-01') as name,
                 to_char(h.name,'MM') as m_id
                 from hr_timesheet_sheet_sheet_day h) as months) """)
-     
 
 report_timesheet_task_user()
 

@@ -197,9 +197,9 @@ class report_invoice_created(osv.osv):
             from
                 account_invoice inv
             where
-                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                 AND
-                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15))
+                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
 report_invoice_created()
 

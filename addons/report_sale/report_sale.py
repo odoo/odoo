@@ -166,9 +166,9 @@ class report_sale_order_created(osv.osv):
             from
                 sale_order sale
             where
-                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                 AND
-                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15))
+                (to_date(to_char(sale.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
 report_sale_order_created()
 
