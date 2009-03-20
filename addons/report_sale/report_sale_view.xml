@@ -212,13 +212,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Created Sales orders">
-                	<field name="create_date"/>
+                	<field name="create_date" select="1"/>
                     <field name="date_order"/>
-                    <field name="name" string="Reference"/>
-                    <field name="partner_id"/>
+                    <field name="name" string="Reference" select="1"/>
+                    <field name="partner_id" select="2"/>
                     <field name="partner_shipping_id"/>
                     <field name="amount_untaxed"/>
-                    <field name="state"/>
+                    <field name="state" select="1"/>
                 </tree>
             </field>
         </record>  
