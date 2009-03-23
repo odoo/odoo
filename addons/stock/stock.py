@@ -460,13 +460,17 @@ class stock_picking(osv.osv):
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
+        todo2 = []
         for picking in self.browse(cr, uid, ids):
             for r in picking.move_lines:
                 if r.state=='draft':
                     todo.append(r.id)
+                else:
+                    todo2.append(r.id)
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context)
+        self.pool.get('stock.move').action_chain(cr, uid, todo+todo2, context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
@@ -1009,8 +1013,12 @@ class stock_move(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
 #        ids = map(lambda m: m.id, moves)
-        moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'confirmed'})
+        return []
+
+    def action_chain(self, cr, uid, ids, context={}):
+        moves = self.browse(cr, uid, ids)
+
         for picking, todo in self._chain_compute(cr, uid, moves, context).items():
             ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
             pickid = self.pool.get('stock.picking').create(cr, uid, {
