@@ -93,12 +93,9 @@ class project_work(osv.osv):
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        timesheet_id = self.pool.get('project.task.work').browse(cr, uid, ids)[0].hr_analytic_timesheet_id
-         delete entry from timesheet too while deleting entry to task.
-        list_avail_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [])
-        if timesheet_id in list_avail_ids:
-            obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id], *args, **kwargs)
-
+        for timesheet_id in self.pool.get('project.task.work').browse(cr, uid, ids):
+            if timesheet_id.hr_analytic_timesheet_id:
+                obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id.hr_analytic_timesheet_id.id], *args, **kwargs)
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns={
