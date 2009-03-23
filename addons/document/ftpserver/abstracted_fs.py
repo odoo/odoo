@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 import os
 import time
 from tarfile import filemode
@@ -788,3 +790,4 @@ class abstracted_fs:
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, basename)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

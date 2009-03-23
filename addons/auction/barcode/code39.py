@@ -253,3 +253,4 @@ class Extended39(_Code39Base):
                 raise ValueError
         self.encoded = _encode39(self.encoded, self.checksum)
         return self.encoded
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

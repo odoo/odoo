@@ -25,6 +25,7 @@ import pooler
 import module_zip
 from base_module_publish import post_multipart
 from urllib import urlopen
+from tools.translate import _
 
 intro_form = '''<?xml version="1.0"?>
 <form string="Module publication">
@@ -102,7 +103,7 @@ def _upload(self, cr, uid, datas, context):
                     res['module_file'])
                 ])
         if result[0] == "1":
-            raise wizard.except_wizard('Error', 'Login failed!')
+            raise wizard.except_wizard(_('Error'), _('Login failed!'))
         elif result[0] == "0":
             log[0].append(mod.name)
         elif result[0] == "2":

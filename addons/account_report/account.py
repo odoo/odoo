@@ -24,6 +24,7 @@ import netsvc
 from osv import fields, osv
 import pooler
 from tools.misc import currency
+from tools.translate import _
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime

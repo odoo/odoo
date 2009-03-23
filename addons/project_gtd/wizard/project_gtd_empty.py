@@ -26,13 +26,14 @@ import netsvc
 import time
 import pooler
 from osv import osv
+from tools.translate import _
 
 class wiz_timebox_empty(wizard.interface):
     def _empty(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         ids = pool.get('project.gtd.timebox').search(cr, uid, [('parent_id','=',data['id'])])
         if not len(ids):
-            raise wizard.except_wizard('Error !', 'No timebox child of this one !')
+            raise wizard.except_wizard(_('Error !'), _('No timebox child of this one !'))
         tids = pool.get('project.task').search(cr, uid, [('timebox_id','=',data['id'])])
         close = []
         up = []

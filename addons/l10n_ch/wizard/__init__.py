@@ -34,3 +34,4 @@ import dta_wizard
 import wizard_bvr
 import bvr_import
 import journal_config
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

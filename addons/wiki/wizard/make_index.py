@@ -100,3 +100,4 @@ class make_index(wizard.interface):
     }
 make_index('wiki.make.index')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,6 +23,7 @@
 import time
 import wizard
 import pooler
+from tools.translate import _
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
@@ -106,12 +107,12 @@ class wizard_report(wizard.interface):
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):
-                raise  wizard.except_wizard('UserError','Date to must be set between ' + res[0]['date_start'] + " and " + res[0]['date_stop'])
+                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
             else:
                 return 'report'
             
         else:
-            raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
+            raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
 
     states = {
         'init': {
@@ -125,3 +126,4 @@ class wizard_report(wizard.interface):
         }
     }
 wizard_report('account.partner.balance.report')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

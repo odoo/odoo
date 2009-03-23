@@ -22,6 +22,7 @@
 
 import pooler
 import wizard
+from tools.translate import _
 
 picking_form = """<?xml version="1.0"?>
 <form string="Select an Open Sale Order">
@@ -39,7 +40,7 @@ def _sale_complete(self, cr, uid, data, context):
     order = pool.get('pos.order').browse(cr, uid, data['id'], context)
 
     if order.state in ('paid', 'invoiced'):
-        raise wizard.except_wizard('UserError', "You can't modify this order. It has already been paid")
+        raise wizard.except_wizard(_('UserError'), _("You can't modify this order. It has already been paid"))
 
     pick = pool.get('stock.picking').browse(cr, uid, data['form']['picking_id'], context)
 

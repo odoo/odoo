@@ -77,3 +77,4 @@ class account_analytic_line(wizard.interface):
         }
     }
 account_analytic_line('account.analytic.line')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

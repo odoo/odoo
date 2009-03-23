@@ -73,3 +73,4 @@ class make_meeting(wizard.interface):
 
 make_meeting('crm.case.meeting')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -34,7 +34,7 @@ import pooler
 import netsvc
 import datetime
 from osv import fields, osv
-
+from tools.translate import _
 
 def _employee_get(obj,cr,uid,context={}):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
@@ -216,7 +216,7 @@ class hr_holidays(osv.osv):
                     leaves_rest=obj_holidays_per_user.max_leaves - obj_holidays_per_user.leaves_taken
                     if not obj_holidays_per_user.holiday_status.limit:
                         if leaves_rest < leave_asked:
-                            raise osv.except_osv('Attention!','You Cannot Validate leaves while available leaves are less than asked leaves.')
+                            raise osv.except_osv(_('Attention!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
                     self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + leave_asked})
                 if record.holiday_status.section_id:
                     vals={}

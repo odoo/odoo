@@ -29,6 +29,7 @@ import ir
 from mx import DateTime
 import pooler
 from tools import config
+from tools.translate import _
 
 class account_journal(osv.osv):
     _inherit='account.journal'
@@ -62,7 +63,7 @@ class account_move_line(osv.osv):
             if not journal.allow_date:
                 period=self.pool.get('account.period').browse(cr,uid,[period_id])[0]
                 if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') and time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                    raise osv.except_osv('Error','The date of your account move is not in the defined period !')
+                    raise osv.except_osv(_('Error'),_('The date of your account move is not in the defined period !'))
         else:
             return True
 

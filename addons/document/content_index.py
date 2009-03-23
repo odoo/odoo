@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution   
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -29,27 +29,29 @@ import tempfile
 # This should be the indexer
 #
 def content_index(content, filename=None, content_type=None):
-	fname,ext = os.path.splitext(filename)
-	result = ''
-	if ext in ('.doc'): #or content_type ?
-		(stdin,stdout) = os.popen2('antiword -', 'b')
-		stdin.write(content)
-		stdin.close()
-		result = stdout.read().decode('latin1','replace').encode('utf-8','replace')
-	elif ext == '.pdf':
-                file_descriptor, file_name = tempfile.mkstemp(suffix=ext)
-                os.write(file_descriptor, content)
-                os.close(file_descriptor)
-		fp = os.popen('pdftotext -enc UTF-8 -nopgbrk '+file_name+' -', 'r')
-		result = fp.read()
-		fp.close()
-	elif ext in ('.xls','.ods','.odt','.odp'):
-		s = StringIO.StringIO(content)
-		o = odt2txt.OpenDocumentTextFile(s)
-		result = o.toString().encode('ascii','replace')
-		s.close()
-	elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
-		result = content
-	else:
-		result = content
-	return result
+    fname,ext = os.path.splitext(filename)
+    result = ''
+    if ext in ('.doc'): #or content_type ?
+        (stdin,stdout) = os.popen2('antiword -', 'b')
+        stdin.write(content)
+        stdin.close()
+        result = stdout.read().decode('latin1','replace').encode('utf-8','replace')
+    elif ext == '.pdf':
+        file_descriptor, file_name = tempfile.mkstemp(suffix=ext)
+        os.write(file_descriptor, content)
+        os.close(file_descriptor)
+        fp = os.popen('pdftotext -enc UTF-8 -nopgbrk '+file_name+' -', 'r')
+        result = fp.read()
+        fp.close()
+    elif ext in ('.xls','.ods','.odt','.odp'):
+        s = StringIO.StringIO(content)
+        o = odt2txt.OpenDocumentTextFile(s)
+        result = o.toString().encode('ascii','replace')
+        s.close()
+    elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
+        result = content
+    else:
+        result = content
+    return result
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

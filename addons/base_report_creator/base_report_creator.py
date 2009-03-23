@@ -24,6 +24,7 @@ import string
 import time
 import tools
 from osv import fields,osv,orm
+from tools.translate import _
 
 #class ir_model_fields(osv.osv):
 #   _inherit = 'ir.model.fields'
@@ -216,7 +217,7 @@ class report_creator(osv.osv):
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
-            raise osv.except_osv("No Related Models!!",'These is/are model(s) (%s) in selection which is/are not related to any other model'%','.join(model_list) )
+            raise osv.except_osv(_('No Related Models!!'),_('These is/are model(s) (%s) in selection which is/are not related to any other model') % ','.join(model_list))
         if filter_ids and where_list<>[]:
             where_list.append('and')
             where_list.append(' ')

@@ -141,3 +141,5 @@ class Tax_template(osv.osv):
         
 
 Tax_template()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
