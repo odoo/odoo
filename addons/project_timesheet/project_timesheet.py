@@ -73,22 +73,20 @@ class project_work(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         vals_line = {}
 
-        task = self.pool.get('project.task.work').browse(cr, uid, ids)[0]
-        line_id = task.hr_analytic_timesheet_id
-        # in case,if a record is deleted from timesheet,but we change it from tasks!
-        list_avail_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [])
-        if line_id in list_avail_ids:
-            obj = self.pool.get('hr.analytic.timesheet')
-            if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (task.name, vals['name'] or '/')
-            if 'user_id' in vals:
-                vals_line['user_id'] = vals['user_id']
-            if 'date' in vals:
-                vals_line['date'] = vals['date'][:10]
-            if 'hours' in vals:
-                vals_line['unit_amount'] = vals['hours']
-                vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, line_id).product_id.standard_price
-            obj.write(cr, uid, [line_id], vals_line, {})
+        for task in self.pool.get('project.task.work').browse(cr, uid, ids):
+            line_id = task.hr_analytic_timesheet_id
+            if line_id:
+                obj = self.pool.get('hr.analytic.timesheet')
+                if 'name' in vals:
+                    vals_line['name'] = '%s: %s' % (task.name, vals['name'] or '/')
+                if 'user_id' in vals:
+                    vals_line['user_id'] = vals['user_id']
+                if 'date' in vals:
+                    vals_line['date'] = vals['date'][:10]
+                if 'hours' in vals:
+                    vals_line['unit_amount'] = vals['hours']
+                    vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, line_id.id).product_id.standard_price
+                obj.write(cr, uid, [line_id.id], vals_line, {})
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
