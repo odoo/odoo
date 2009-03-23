@@ -42,12 +42,13 @@ class product_product(osv.osv):
             for pricelist in pricelist_browse:
                 for version in pricelist.version_id:
                     for items in version.items_id:
-                        qty=items.min_quantity
+                        qty = items.min_quantity
                         try:
-                            price=pricelist_obj.price_get(cr, uid,[pricelist.id],product.id,qty,partner=None, context=None)
+                            prices = pricelist_obj.price_get(cr, uid, [pricelist.id], product.id, qty, partner=None, context=None)
+                            price = prices.get(pricelist.id) or 0.0
                         except:
                             price = 0.0
-                        result[product.id]+= ("%s (%.2f) : %.2f" % (pricelist.name,qty or 0.0,price[pricelist.id] or 0.0)) + "\n"
+                        result[product.id] += "%s (%.2f) : %.2f\n" % (pricelist.name, qty or 0.0, price)
                         break
                     break
         return result
