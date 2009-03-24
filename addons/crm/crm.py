@@ -721,6 +721,7 @@ class crm_case(osv.osv):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
             self.write(cr, uid, ids, data)
+        cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
