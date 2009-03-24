@@ -70,7 +70,7 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         text = ""
         a = {}
-        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id)])
+        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id),('reconcile_id','=',False)])
         partner_delay = []
         context={}
         context.update({'lang': partner.lang})
