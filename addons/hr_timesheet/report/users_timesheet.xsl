@@ -86,7 +86,7 @@
 			<xsl:for-each select="report/employee">
 				<xsl:variable name="id" select="attribute::id"/>
 				<tr>
-					<td t="1"><xsl:value-of select="attribute::name"/></td>
+					<td><xsl:value-of select="attribute::name"/></td>
 					<xsl:for-each select="//report/days/day">
 						<xsl:variable name="today" select="attribute::number" />
 						<td>
