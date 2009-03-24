@@ -756,7 +756,6 @@ def get_languages():
         'de_DE': u'German / Deutsch',
         'el_EL': u'Greek / Ελληνικά',
         'en_CA': u'English (CA)',
-        'en_EN': u'English (default)',
         'en_GB': u'English (UK)',
         'en_US': u'English (US)',
         'es_AR': u'Spanish (AR) / Español (AR)',

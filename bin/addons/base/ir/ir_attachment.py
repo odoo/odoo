@@ -33,7 +33,8 @@ class ir_attachment(osv.osv):
             ids = [ids]
         cr.execute('select distinct res_model from ir_attachment where id in ('+','.join(map(str, ids))+')')
         for obj in cr.fetchall():
-            ima.check(cr, uid, obj[0], mode)
+            if obj[0]:
+                ima.check(cr, uid, obj[0], mode)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
