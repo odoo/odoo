@@ -649,6 +649,9 @@ class crm_case(osv.osv):
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),
                         _('You must put a Partner eMail to use this action!'))
+            if not case.user_id:
+                raise osv.except_osv(_('Error!'),
+                        _('You must define a responsible user for this case in order to use this action!'))
             if not case.description:
                 raise osv.except_osv(_('Error!'),
                         _('Can not send mail with empty body,you should have description in the body'))
