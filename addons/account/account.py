@@ -1545,7 +1545,7 @@ class account_model_line(osv.osv):
 
         'ref': fields.char('Ref.', size=16),
 
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency."),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),

@@ -124,7 +124,7 @@ class res_partner_job(osv.osv):
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'extension': fields.char('Extension', size=64, help='Internal/External extension phone number'),
-        'other': fields.char('Other', size=64, help='Additionnal phone field'),
+        'other': fields.char('Other', size=64, help='Additional phone field'),
         'date_start' : fields.date('Date Start'),
         'date_stop' : fields.date('Date Stop'),
         'state' : fields.selection([('past', 'Past'),('current', 'Current')], 'State', required=True),
