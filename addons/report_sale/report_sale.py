@@ -131,6 +131,27 @@ class report_turnover_per_month(osv.osv):
         """)
 report_turnover_per_month()
 
+class report_turnover_per_product(osv.osv):
+    _name = "report.turnover.per.product"
+    _description = "Turnover Per Product"
+    _auto = False
+    _rec_name = 'product_id'
+    
+    _columns = {
+        'product_id': fields.many2one('product.product','Product', readonly=True),
+        'turnover': fields.float('Total Turnover', readonly=True),
+    }
+    
+    def init(self, cr):
+        cr.execute("""
+            create or replace view report_turnover_per_product as (
+                select min(am.id) as id, sum(credit) as turnover,am.product_id as product_id 
+                from account_move_line am                    
+                group by am.product_id
+            )
+        """)
+report_turnover_per_product()
+
 class report_sale_order_created(osv.osv):
     _name = "report.sale.order.created"
     _description = "Report of Creaed Sale Order"

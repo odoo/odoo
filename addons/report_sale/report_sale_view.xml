@@ -171,6 +171,8 @@
             <field name="domain">[('state','&lt;&gt;','done')]</field>
         </record>
 		
+		<!-- Turnover Per Month -->
+		
 		<record model="ir.ui.view" id="view_turnover_month_tree">
             <field name="name">report.turnover.per.month.tree</field>
             <field name="model">report.turnover.per.month</field>
@@ -202,6 +204,41 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_turnover_month_tree"/>
+        </record>
+        
+        <!-- Turnover Per Product -->
+		
+		<record model="ir.ui.view" id="view_turnover_product_tree">
+            <field name="name">report.turnover.per.product.tree</field>
+            <field name="model">report.turnover.per.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Turnover Per Product">
+                	<field name="product_id" select="1"/>
+                	<field name="turnover" select="2"/>
+                </tree>
+            </field>
+    	</record>
+    	
+    	<record id="view_turnover_product_graph" model="ir.ui.view">
+             <field name="name">report.turnover.per.product.graph</field>
+             <field name="model">report.turnover.per.product</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Turnover Per Product" type="bar">
+                    <field name="product_id" />
+                	<field name="turnover" />
+                 </graph>
+             </field>
+        </record>
+	
+		<record model="ir.actions.act_window" id="action_turnover_product_tree">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Turnover Per Product</field>
+            <field name="res_model">report.turnover.per.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="view_id" ref="view_turnover_product_tree"/>
         </record>
 		
 		<!-- Created Sale orders for random activities dashboard -->
