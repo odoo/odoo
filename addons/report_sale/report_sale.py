@@ -154,7 +154,7 @@ report_turnover_per_product()
 
 class report_sale_order_created(osv.osv):
     _name = "report.sale.order.created"
-    _description = "Report of Creaed Sale Order"
+    _description = "Report of Created Sale Order"
     _auto = False
     _columns = {
         'date_order':fields.date('Date Ordered', readonly=True),

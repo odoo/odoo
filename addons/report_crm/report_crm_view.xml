@@ -240,7 +240,7 @@
 	    	<field name="name">Closed CRM Cases Wtihin Past 15 Days</field>
 	    	<field name="res_model">report.crm.case.service.dashboard</field>
 	    	<field name="view_type">form</field>
-	    	<field name="view_mode">tree</field>
+	    	<field name="view_mode">tree,form</field>
 	    	<field name="view_id" ref="board_view_crm_case_done_dashboard_tree"/>
 	    	<field name="domain">[('state','=','done')]</field>
     	</record>
@@ -249,7 +249,7 @@
 	    	<field name="name">Open CRM Cases Wtihin Past 15 Days</field>
 	    	<field name="res_model">report.crm.case.service.dashboard</field>
 	    	<field name="view_type">form</field>
-	    	<field name="view_mode">tree</field>
+	    	<field name="view_mode">tree,form</field>
 	    	<field name="view_id" ref="board_view_crm_case_open_dashboard_tree"/>
 	    	<field name="domain">[('state','=','open')]</field>
     	</record>
