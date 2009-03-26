@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution	
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2008-2009 B2CK, Cedric Krier, Bertrand Chenal (the methods "check_vat_[a-z]{2}" 
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,13 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-#
-# The methods "check_vat_[a-z]{2}" are copyrighted:
-#    - Cedric Krier.
-#    - Bertrand Chenal
-#    - B2CK
-# 
 
 from osv import osv
 from osv import fields
