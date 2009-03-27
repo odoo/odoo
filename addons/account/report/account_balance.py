@@ -103,42 +103,49 @@ class account_balance(report_sxw.rml_parse):
                 ctx['periods'] = form['periods'][0][2]
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
-            
-        
-            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
-            def cmp_code(x, y):
-                return cmp(x.code, y.code)
-            accounts.sort(cmp_code)
+#            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
+#            def cmp_code(x, y):
+#                return cmp(x.code, y.code)
+#            accounts.sort(cmp_code)
+            child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
+            if child_ids:
+                ids = child_ids
+            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids,['type','code','name','debit','credit','balance','parent_id'], ctx)
             for account in accounts:
-                if account.id in done:
+                if account['id'] in done:
                     continue
-                done[account.id] = 1
+                done[account['id']] = 1
                 res = {
-                        'id' : account.id,
-                        'type' : account.type,
-                        'code': account.code,
-                        'name': account.name,
+                        'id' : account['id'],
+                        'type' : account['type'],
+                        'code': account['code'],
+                        'name': account['name'],
                         'level': level,
-                        'debit': account.debit,
-                        'credit': account.credit,
-                        'balance': account.balance,
-                        'leef': not bool(account.child_id),
+                        'debit': account['debit'],
+                        'credit': account['credit'],
+                        'balance': account['balance'],
+                       # 'leef': not bool(account['child_id']),
+                        'parent_id':account['parent_id'],
                         'bal_type':'',
                     }
-                self.sum_debit += account.debit
-                self.sum_credit += account.credit
-                if account.child_id:
-                    def _check_rec(account):
-                        if not account.child_id:
-                            return bool(account.credit or account.debit)
-                        for c in account.child_id:
-                            if not _check_rec(c) or _check_rec(c):
-                                return True
-                        return False
-                    if not _check_rec(account) :
-                        continue
-
-
+                self.sum_debit += account['debit']
+                self.sum_credit += account['credit']
+#                if account.child_id:
+#                    def _check_rec(account):
+#                        if not account.child_id:
+#                            return bool(account.credit or account.debit)
+#                        for c in account.child_id:
+#                            if not _check_rec(c) or _check_rec(c):
+#                                return True
+#                        return False
+#                    if not _check_rec(account) :
+#                        continue
+                if account['parent_id']:
+#                    acc = self.pool.get('account.account').read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
+                    for r in result_acc:
+                        if r['id'] == account['parent_id'][0]:
+                            res['level'] = r['level'] + 1
+                            break
                 if form['display_account'] == 'bal_mouvement':
                     if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
                         result_acc.append(res)
@@ -147,17 +154,16 @@ class account_balance(report_sxw.rml_parse):
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
-                if account.child_id:
-                    acc_id = [acc.id for acc in account.child_id]
-                    lst_string = ''
-                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
-                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
-                    a_id = self.cr.fetchall()
-                    a_id.sort()
-                    ids2 = [x[1] for x in a_id]
-
-                    result_acc += self.lines(form, ids2, done, level+1)
-
+#                if account.child_id:
+#                    acc_id = [acc.id for acc in account.child_id]
+#                    lst_string = ''
+#                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
+#                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
+#                    a_id = self.cr.fetchall()
+#                    a_id.sort()
+#                    ids2 = [x[1] for x in a_id]
+#
+#                    result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
         
         def _sum_credit(self):
