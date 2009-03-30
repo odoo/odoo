@@ -95,7 +95,7 @@ class invoice_create(wizard.interface):
             for product_id,factor_id,qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
                 if not product:
-                    raise wizard.except_wizard(_('Error'), _('At least on line have no product !'))
+                    raise wizard.except_wizard(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
                 if factor.customer_name:
