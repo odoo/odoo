@@ -85,15 +85,15 @@ class project_work(osv.osv):
                     vals_line['date'] = vals['date'][:10]
                 if 'hours' in vals:
                     vals_line['unit_amount'] = vals['hours']
-                    vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, line_id.id).product_id.standard_price
-                obj.write(cr, uid, [line_id.id], vals_line, {})
+                    vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, line_id).product_id.standard_price
+                obj.write(cr, uid, [line_id], vals_line, {})
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for timesheet_id in self.pool.get('project.task.work').browse(cr, uid, ids):
             if timesheet_id.hr_analytic_timesheet_id:
-                obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id.hr_analytic_timesheet_id.id], *args, **kwargs)
+                obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id.hr_analytic_timesheet_id], *args, **kwargs)
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns={
