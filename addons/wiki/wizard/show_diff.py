@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import fields,osv
+from tools.translate import _
 
 class showdiff(osv.osv_memory):
     _name = 'wizard.wiki.history.show_diff'
@@ -41,7 +42,7 @@ class showdiff(osv.osv_memory):
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
-            raise osv.except_osv('Warning', "You need to select minimum 1 or maximum 2 history revision!")
+            raise osv.except_osv(_('Warning'), _('You need to select minimum 1 or maximum 2 history revision!'))
         return diff
 
     _columns = {
@@ -51,3 +52,4 @@ class showdiff(osv.osv_memory):
         'diff': _get_diff
     }
 showdiff()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

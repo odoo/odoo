@@ -34,3 +34,4 @@ class account_invoice_intrastat(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.invoice.intrastat', 'account.invoice', 'addons/report_intrastat/report/invoice.rml', parser=account_invoice_intrastat)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

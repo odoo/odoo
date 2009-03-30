@@ -23,6 +23,7 @@
 import wizard
 import pooler
 import time
+from tools.translate import _
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select period">
@@ -86,10 +87,10 @@ class wizard_report(wizard.interface):
            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
+#        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-        data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-        data['form']['fiscalyear'] = False
+#        data['form']['periods'] = periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+#        data['form']['fiscalyear'] = False
         data['form']['display_account']='bal_all'
         return data['form']
 
@@ -97,9 +98,9 @@ class wizard_report(wizard.interface):
 
         if data['form']['state'] == 'bydate':
            self._check_date(cr, uid, data, context)
-           data['form']['fiscalyear'] = 0
-        else :
-           data['form']['fiscalyear'] = 1
+#           data['form']['fiscalyear'] = 0
+#        else :
+#           data['form']['fiscalyear'] = 1
         return data['form']
     
     def _check_path(self, cr, uid, data, context):
@@ -115,11 +116,11 @@ class wizard_report(wizard.interface):
         res = cr.dictfetchall()
         if res:
             if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  wizard.except_wizard('UserError','Date to must be set between ' + res[0]['date_start'] + " and " + res[0]['date_stop'])
+                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
             else:
                 return 'report'
         else:
-            raise wizard.except_wizard('UserError','Date not in a defined fiscal year')
+            raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
 
     states = {
 
@@ -141,3 +142,4 @@ class wizard_report(wizard.interface):
         }
     }
 wizard_report('account.account.balance.report')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

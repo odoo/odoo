@@ -1497,7 +1497,7 @@ class account_model(osv.osv):
         for model in self.browse(cr, uid, ids, context):
             period_id = self.pool.get('account.period').find(cr,uid, context=context)
             if not period_id:
-                raise osv.except_osv('No period found !', 'Unable to find a valid period !')
+                raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
             move_id = self.pool.get('account.move').create(cr, uid, {
                 'ref': model.ref,
@@ -1545,7 +1545,7 @@ class account_model_line(osv.osv):
 
         'ref': fields.char('Ref.', size=16),
 
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency."),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
@@ -2275,7 +2275,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 for tax in position.tax_ids:
                     vals_tax = {
                                 'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax_template_ref[tax.tax_dest_id.id],
+                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
                                 'position_id' : new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)

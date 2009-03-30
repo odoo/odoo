@@ -113,7 +113,16 @@
 		                    <field name="notes" colspan="4" select="2"/>
 		              	</page>
 		              	<page string="Holidays" >
-		              		<field name="holiday_ids" nolabel="1"/>
+		              		<field name="holiday_ids" nolabel="1">
+                                <tree string="Employee Holidays">
+                                    <field name="name"/>
+                                    <field name="number_of_days" string="Number of Days"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="holiday_status"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
 		              	</page>
 	                </notebook>
                 </form>

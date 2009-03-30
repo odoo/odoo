@@ -27,6 +27,7 @@ import pooler
 import urllib
 import base64
 import tools
+from tools.translate import _
 
 intro_form = '''<?xml version="1.0"?>
 <form string="Report designer">

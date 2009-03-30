@@ -27,6 +27,7 @@ import math
 from _common import rounding
 
 from tools import config
+from tools.translate import _
 
 def is_pair(x):
     return not x%2

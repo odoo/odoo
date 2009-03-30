@@ -113,7 +113,7 @@ class project_gtd_timebox(osv.osv):
                 <field name="%s" colspan="4" nolabel="1">
                     <tree editable="bottom" colors="grey:state in ('done','pending');red:state=='cancelled'" string="Tasks">
                         <field name="name"/>
-                """ % (getattr(rec, 'context%d_id'%(i,)).name, 'task%d_ids'%(i,))
+                """ % (getattr(rec, 'context%d_id'%(i,)).name.encode('utf-8'), 'task%d_ids'%(i,))
                 if rec.col_project:
                     res['arch'] += '<field name="project_id" required="1"/>\n'
                 if rec.col_date_start:

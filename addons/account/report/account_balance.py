@@ -60,55 +60,26 @@ class account_balance(report_sxw.rml_parse):
             if form.has_key('periods') and form['periods'][0][2]:
                 period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
                 self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
-                res=self.cr.fetchall()
+                res = self.cr.fetchall()
+                len_res = len(res) 
                 for r in res:
-                    if (r == res[res.__len__()-1]):
+                    if (r == res[len_res-1]):
                         result+=r[0]+". "
                     else:
                         result+=r[0]+", "
+            else:
+                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear'])
+                res = fy_obj.period_ids
+                len_res = len(res)
+                for r in res:
+                    if r == res[len_res-1]:
+                        result+=r.name+". "
+                    else:
+                        result+=r.name+", "
+                
             return str(result and result[:-1]) or ''
 
-        def transform_both_into_date_array(self,data):
-            if not data['periods'][0][2] :
-                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-            else:
-                periods_id = data['periods'][0][2]
-            date_array = []
-            for period_id in periods_id:
-                period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-                date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
-
-            period_start_date = date_array[0]
-            date_start_date = data['date_from']
-            period_stop_date = date_array[-1]
-            date_stop_date = data['date_to']
-
-            if period_start_date<date_start_date:
-                start_date = period_start_date
-            else :
-                start_date = date_start_date
-
-            if date_stop_date<period_stop_date:
-                stop_date = period_stop_date
-            else :
-                stop_date = date_stop_date
-            final_date_array = []
-            final_date_array = final_date_array + self.date_range(start_date, stop_date)
-            self.date_lst = final_date_array
-            self.date_lst.sort()
-
-        def transform_none_into_date_array(self,data):
-            sql = "SELECT min(date) as start_date from account_move_line"
-            self.cr.execute(sql)
-            start_date = self.cr.fetchone()[0]
-            sql = "SELECT max(date) as start_date from account_move_line"
-            self.cr.execute(sql)
-            stop_date = self.cr.fetchone()[0]
-            array= []
-            array = array + self.date_range(start_date, stop_date)
-            self.date_lst = array
-            self.date_lst.sort()
-
+        
         def lines(self, form, ids={}, done=None, level=1):
             if not ids:
                 ids = self.ids
@@ -122,51 +93,59 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
+            ctx['fiscalyear'] = form['fiscalyear']
             if form['state']=='byperiod' :
-                self.transform_period_into_date_array(form)
-                ctx['fiscalyear'] = form['fiscalyear']
                 ctx['periods'] = form['periods'][0][2]
             elif form['state']== 'bydate':
-                self.transform_date_into_date_array(form)
+                ctx['date_from'] = form['date_from']
+                ctx['date_to'] =  form['date_to'] 
             elif form['state'] == 'all' :
-                self.transform_both_into_date_array(form)
-            elif form['state'] == 'none' :
-                self.transform_none_into_date_array(form)
-
-            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
-            def cmp_code(x, y):
-                return cmp(x.code, y.code)
-            accounts.sort(cmp_code)
+                ctx['periods'] = form['periods'][0][2]
+                ctx['date_from'] = form['date_from']
+                ctx['date_to'] =  form['date_to']
+#            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
+#            def cmp_code(x, y):
+#                return cmp(x.code, y.code)
+#            accounts.sort(cmp_code)
+            child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
+            if child_ids:
+                ids = child_ids
+            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids,['type','code','name','debit','credit','balance','parent_id'], ctx)
             for account in accounts:
-                if account.id in done:
+                if account['id'] in done:
                     continue
-                done[account.id] = 1
+                done[account['id']] = 1
                 res = {
-                        'id' : account.id,
-                        'type' : account.type,
-                        'code': account.code,
-                        'name': account.name,
+                        'id' : account['id'],
+                        'type' : account['type'],
+                        'code': account['code'],
+                        'name': account['name'],
                         'level': level,
-                        'debit': account.debit,
-                        'credit': account.credit,
-                        'balance': account.balance,
-                        'leef': not bool(account.child_id),
+                        'debit': account['debit'],
+                        'credit': account['credit'],
+                        'balance': account['balance'],
+                       # 'leef': not bool(account['child_id']),
+                        'parent_id':account['parent_id'],
                         'bal_type':'',
                     }
-                self.sum_debit += account.debit
-                self.sum_credit += account.credit
-                if account.child_id:
-                    def _check_rec(account):
-                        if not account.child_id:
-                            return bool(account.credit or account.debit)
-                        for c in account.child_id:
-                            if not _check_rec(c) or _check_rec(c):
-                                return True
-                        return False
-                    if not _check_rec(account) :
-                        continue
-
-
+                self.sum_debit += account['debit']
+                self.sum_credit += account['credit']
+#                if account.child_id:
+#                    def _check_rec(account):
+#                        if not account.child_id:
+#                            return bool(account.credit or account.debit)
+#                        for c in account.child_id:
+#                            if not _check_rec(c) or _check_rec(c):
+#                                return True
+#                        return False
+#                    if not _check_rec(account) :
+#                        continue
+                if account['parent_id']:
+#                    acc = self.pool.get('account.account').read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
+                    for r in result_acc:
+                        if r['id'] == account['parent_id'][0]:
+                            res['level'] = r['level'] + 1
+                            break
                 if form['display_account'] == 'bal_mouvement':
                     if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
                         result_acc.append(res)
@@ -175,51 +154,18 @@ class account_balance(report_sxw.rml_parse):
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
-                if account.child_id:
-                    acc_id = [acc.id for acc in account.child_id]
-                    lst_string = ''
-                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
-                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
-                    a_id = self.cr.fetchall()
-                    a_id.sort()
-                    ids2 = [x[1] for x in a_id]
-
-                    result_acc += self.lines(form, ids2, done, level+1)
-
+#                if account.child_id:
+#                    acc_id = [acc.id for acc in account.child_id]
+#                    lst_string = ''
+#                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
+#                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
+#                    a_id = self.cr.fetchall()
+#                    a_id.sort()
+#                    ids2 = [x[1] for x in a_id]
+#
+#                    result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
-
-        def date_range(self,start,end):
-            start = datetime.date.fromtimestamp(time.mktime(time.strptime(start,"%Y-%m-%d")))
-            end = datetime.date.fromtimestamp(time.mktime(time.strptime(end,"%Y-%m-%d")))
-            full_str_date = []
-        #
-            r = (end+datetime.timedelta(days=1)-start).days
-        #
-            date_array = [start+datetime.timedelta(days=i) for i in range(r)]
-            for date in date_array:
-                full_str_date.append(str(date))
-            return full_str_date
-
-        #
-        def transform_period_into_date_array(self,form):
-            ## Get All Period Date
-            if not form['periods'][0][2] :
-                periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',form['fiscalyear'])])
-            else:
-                periods_id = form['periods'][0][2]
-            date_array = []
-            for period_id in periods_id:
-                period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-                date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
-
-            self.date_lst = date_array
-            self.date_lst.sort()
-
-        def transform_date_into_date_array(self,form):
-            return_array = self.date_range(form['date_from'],form['date_to'])
-            self.date_lst = return_array
-            self.date_lst.sort()
-
+        
         def _sum_credit(self):
             return self.sum_credit
 
@@ -227,3 +173,4 @@ class account_balance(report_sxw.rml_parse):
             return self.sum_debit
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

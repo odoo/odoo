@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:20:38+0000\n"
-"PO-Revision-Date: 2009-02-06 15:20:38+0000\n"
+"POT-Creation-Date: 2009-02-19 22:54:38+0000\n"
+"PO-Revision-Date: 2009-02-19 22:54:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,18 +31,31 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
-#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
-#: model:process.node,name:base_contact.process_node_contacts0
-#: view:res.partner:0
-#: view:res.partner.address:0
-#: field:res.partner.address,job_ids:0
-msgid "Contacts"
+#: model:ir.module.module,description:base_contact.module_meta_information
+msgid "\n"
+"        This module allows you to manage entirely your contacts.\n"
+"\n"
+"    It lets you define\n"
+"        *contacts unrelated to a partner,\n"
+"        *contacts working at several addresses (possibly for different partners),\n"
+"        *contacts with possibly different functions for each of its job's addresses\n"
+"\n"
+"    It also add new menu items located in\n"
+"        Partners \ Contacts\n"
+"        Partners \ Functions\n"
+"\n"
+"    Pay attention that this module converts the existing addresses into \"addresses + contacts\". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.\n"
+"    "
 msgstr ""
 
 #. module: base_contact
 #: field:res.partner.job,sequence_partner:0
 msgid "Partner Seq."
+msgstr ""
+
+#. module: base_contact
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: base_contact
@@ -61,6 +74,11 @@ msgid "Contact Partner Function"
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.job,other:0
+msgid "Other"
+msgstr ""
+
+#. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
 msgstr ""
@@ -68,6 +86,11 @@ msgstr ""
 #. module: base_contact
 #: field:res.partner.job,function_id:0
 msgid "Partner Function"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,title:0
+msgid "Title"
 msgstr ""
 
 #. module: base_contact
@@ -86,8 +109,13 @@ msgid "Function"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.contact,function_id:0
-msgid "Main Job"
+#: field:res.partner.job,fax:0
+msgid "Fax"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
 msgstr ""
 
 #. module: base_contact
@@ -101,8 +129,13 @@ msgid "Defines contacts and functions."
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.contact,title:0
-msgid "Title"
+#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
+#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
+#: model:process.node,name:base_contact.process_node_contacts0
+#: view:res.partner:0
+#: view:res.partner.address:0
+#: field:res.partner.address,job_ids:0
+msgid "Contacts"
 msgstr ""
 
 #. module: base_contact
@@ -121,6 +154,7 @@ msgid "Order of importance of this job title in the list of job title of the lin
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.contact,email:0
 #: field:res.partner.job,email:0
 msgid "E-Mail"
 msgstr ""
@@ -153,6 +187,11 @@ msgid "Order of importance of this address in the list of addresses of the linke
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.contact,function_id:0
+msgid "Main Job"
+msgstr ""
+
+#. module: base_contact
 #: view:res.partner:0
 msgid "Categories"
 msgstr ""
@@ -163,8 +202,8 @@ msgid "Define partners and their addresses."
 msgstr ""
 
 #. module: base_contact
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: help:res.partner.job,other:0
+msgid "Additionnal phone field"
 msgstr ""
 
 #. module: base_contact
@@ -178,13 +217,18 @@ msgid "Seq."
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
+#: field:res.partner.job,extension:0
+msgid "Extension"
 msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
+msgstr ""
+
+#. module: base_contact
+#: help:res.partner.job,extension:0
+msgid "Internal/External extension phone number"
 msgstr ""
 
 #. module: base_contact

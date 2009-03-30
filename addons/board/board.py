@@ -81,8 +81,7 @@ class board_board(osv.osv):
             'type': 'form',
             'arch': self.create_view(cr, user, id, context),
         })
-        vals['view_id'] = view_id
-        super(board_board, self).write(cr, user, [id], vals, context)
+        super(board_board,self).write(cr, user, [id], {'view_id': view_id}, context)
         return id
     
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):

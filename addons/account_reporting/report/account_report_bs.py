@@ -58,9 +58,11 @@ class account_report_bs(report_sxw.rml_parse):
             _total +=self.line_total(report,ctx)
         return  _total
 
-    def lines(self, form, ids={}, done=None, level=1):
-        if not ids:
-            ids = self.ids
+    def lines(self, form, ids={}, done=None, level=1, object=False):
+        if object:
+            ids = [object.id]
+        elif not ids:
+            ids = self.ids    
         if not ids:
             return []
         if not done:
@@ -76,7 +78,7 @@ class account_report_bs(report_sxw.rml_parse):
         def cmp_code(x, y):
             return cmp(x.code, y.code)
         report_objs.sort(cmp_code)
-        
+
         for report_obj in report_objs:
             if report_obj.id in done:
                 continue
@@ -87,12 +89,12 @@ class account_report_bs(report_sxw.rml_parse):
                 color_font = report_obj.color_font.name
             if report_obj.color_back:
                 color_back = report_obj.color_back.name
-                
             res = {
                 'code': report_obj.code,
                 'name': report_obj.name,
                 'level': level,
                 'balance': self.line_total(report_obj.id,ctx),
+                'parent_id':False,
                 'color_font':color_font,
                 'color_back':color_back,
                 'font_style' : report_obj.font_style
@@ -101,35 +103,55 @@ class account_report_bs(report_sxw.rml_parse):
             report_type = report_obj.report_type
             if report_type != 'only_obj':
                 account_ids = self.pool.get('account.report.bs').read(self.cr,self.uid,[report_obj.id],['account_id'])[0]['account_id']
-                for account_id in account_ids:
-                    res1 = self.check_child_id(account_id,level,ctx,report_type)
-                    result += res1
-
+                if report_type == 'acc_with_child':
+                    acc_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account_ids )
+                    account_ids = acc_ids
+                account_objs = self.pool.get('account.account').browse(self.cr,self.uid,account_ids,ctx)
+                for acc_obj in account_objs:
+                    res1={}
+                    res1 = {
+                        'code': acc_obj.code,
+                        'name': acc_obj.name,
+                        'level': level+1,
+                        'balance': acc_obj.balance,
+                        'parent_id':acc_obj.parent_id,
+                        'color_font' : 'black',
+                        'color_back' :'white',
+                        'font_style' : 'Helvetica',
+                        }
+                    if acc_obj.parent_id:
+                        for r in result:
+                            if r['name']== acc_obj.parent_id.name:
+                                res1['level'] = r['level'] + 1
+                                break
+                    result.append(res1)
+                    #res1 = self.check_child_id(account_id,level,ctx,report_type)
+                    #result += res1
             if report_obj.child_id:
                 ids2 = [(x.code,x.id) for x in report_obj.child_id]
                 ids2.sort()
-                result += self.lines(form, [x[1] for x in ids2], done, level+1)
-
+                result += self.lines(form,[x[1] for x in ids2], done, level+1,object=False)
+                
         return result
 
-    def check_child_id(self,account_id,level,ctx,report_type):
-        account = self.pool.get('account.account').browse(self.cr,self.uid,[account_id],ctx)[0]
-        result = []
-        res = {
-            'code': account.code,
-            'name': account.name,
-            'level': level+1,
-            'balance': account.balance,
-            'color_font' : 'black',
-            'color_back' :'pink',
-            'font_style' : 'Helvetica-BoldOblique',
-            }
-        result.append(res)
-        if report_type != 'with_account':
-            acc_child_id  = self.pool.get('account.account').search(self.cr,self.uid,[('parent_id','=',[account_id]),('type','=','view')])
-            for child_id in acc_child_id :
-                result += self.check_child_id(child_id,level+1,ctx,report_type)
-        return result
+#    def check_child_id(self,account_id,level,ctx,report_type):
+#        account = self.pool.get('account.account').browse(self.cr,self.uid,[account_id],ctx)[0]
+#        result = []
+#        res = {
+#            'code': account.code,
+#            'name': account.name,
+#            'level': level+1,
+#            'balance': account.balance,
+#            'color_font' : 'black',
+#            'color_back' :'white',
+#            'font_style' : 'Helvetica',
+#            }
+#        result.append(res)
+#        if report_type != 'with_account':
+#            acc_child_id  = self.pool.get('account.account').search(self.cr,self.uid,[('parent_id','=',[account_id]),('type','=','view')])
+#            for child_id in acc_child_id :
+#                result += self.check_child_id(child_id,level+1,ctx,report_type)
+#        return result
 
 
 
@@ -138,6 +160,8 @@ class account_report_bs(report_sxw.rml_parse):
 #
 #   def _sum_debit(self):
 #       return self.sum_debit
+
 report_sxw.report_sxw('report.account.report.bs', 'account.report.bs', 'addons/account_reporting/report/account_report_bs.rml', parser=account_report_bs)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

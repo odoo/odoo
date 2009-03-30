@@ -24,6 +24,7 @@ import time
 import datetime
 import pooler
 import base64
+from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Select Fiscal Year">
@@ -67,7 +68,7 @@ class wizard_vat(wizard.interface):
         obj_cmpny = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id
         company_vat = obj_cmpny.partner_id.vat
         if not company_vat: 
-            raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
+            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
@@ -75,7 +76,7 @@ class wizard_vat(wizard.interface):
         p_id_list=pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
 
         if not p_id_list:
-             raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')
+             raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
         obj_year=pooler.get_pool(cr.dbname).get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
         period_ids = pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
         period = "("+','.join(map(lambda x: str(x), period_ids)) +")"
@@ -193,3 +194,4 @@ class wizard_vat(wizard.interface):
     }
 
 wizard_vat('list.vat.detail')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

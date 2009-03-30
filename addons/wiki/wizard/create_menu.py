@@ -77,3 +77,4 @@ class wizard_create_menu(wizard.interface):
     }
 wizard_create_menu('wiki.create.menu')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,6 +26,7 @@ import ir
 import pooler
 from osv.osv import except_osv
 import netsvc
+from tools.translate import _
 
 invoice_form = """<?xml version="1.0"?>
 <form string="Create invoices">
@@ -67,9 +68,9 @@ def _get_type(obj, cr, uid, data, context):
     usage = 'customer'
     pick = picking_obj.browse(cr, uid, data['id'], context)  
     if pick.invoice_state=='invoiced':
-        raise wizard.except_wizard('UserError','Invoice is already created.')
+        raise wizard.except_wizard(_('UserError'),_('Invoice is already created.'))
     if pick.invoice_state=='none':
-        raise wizard.except_wizard('UserError','Invoice cannot be created from Packing.')
+        raise wizard.except_wizard(_('UserError'),_('Invoice cannot be created from Packing.'))
 
     if pick.move_lines:
         usage=pick.move_lines[0].location_id.usage
@@ -103,7 +104,7 @@ def _create_invoice(obj, cr, uid, data, context):
 
     invoice_ids = res.values()    
     if not invoice_ids:
-        raise  wizard.except_wizard('Error','Invoice is not created')
+        raise  wizard.except_wizard(_('Error'),_('Invoice is not created'))
 
     if type == 'out_invoice':
         xml_id = 'action_invoice_tree5'

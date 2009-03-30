@@ -229,3 +229,4 @@ class POSTNET(Barcode):
                 h = self.fbarheight
             self.rect(left, 0.0, self.barwide, h)
             left = left + self.barwide + self.spacewide
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

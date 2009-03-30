@@ -26,6 +26,7 @@ from osv import fields,osv,orm
 import os
 import mx.DateTime
 import base64
+from tools.translate import _
 
 # here need to implement inheritance on osv_memory object. after that, it will work well.
 class crm_menu_config_wizard(osv.osv_memory):
@@ -40,7 +41,8 @@ class crm_menu_config_wizard(osv.osv_memory):
                     try:
                         tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_vertical',file_name )),  {}, 'init', *args)
                     except Exception, e:
-                        raise osv.except_osv('Error !', e)
+                        raise osv.except_osv(_('Error !'), str(e))
         return res
 
 crm_menu_config_wizard()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

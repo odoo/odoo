@@ -40,7 +40,7 @@ class crm_segmentation(osv.osv):
         'state': fields.selection([('not running','Not Running'),('running','Running')], 'Execution Status', readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', 'segmentation_id', 'Criteria', required=True),
-        'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionnality for recurring businesses."),
+        'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."),
         'som_interval_max': fields.integer('Max Interval', help="The computation is made on all events that occured during this interval, the past X periods."),
         'som_interval_decrease': fields.float('Decrease (0>1)', help="If the partner has not purchased (or buied) during a period, decrease the state of mind by this factor. It\'s a multiplication"),
         'som_interval_default': fields.float('Default (0=None)', help="Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."),
@@ -102,7 +102,7 @@ class crm_segmentation_line(osv.osv):
         'expr_name': fields.selection([('sale','Sale Amount'),('som','State of Mind'),('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
         'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
-        'operator': fields.selection([('and','Mandatory Expression'),('or','Optional Expression')],'Mandatory / Optionnal', required=True),
+        'operator': fields.selection([('and','Mandatory Expression'),('or','Optional Expression')],'Mandatory / Optional', required=True),
     }
     _defaults = {
         'expr_name': lambda *a: 'sale',

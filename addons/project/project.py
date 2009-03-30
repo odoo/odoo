@@ -24,8 +24,10 @@ from lxml import etree
 from mx import DateTime
 from mx.DateTime import now
 import time
+from tools.translate import _
 
 from osv import fields, osv
+from tools.translate import _
 
 class project(osv.osv):
     _name = "project.project"
@@ -335,7 +337,7 @@ class task(osv.osv):
             if project:
                 if project.warn_manager and project.manager and (project.manager.id != uid):
                     request.create(cr, uid, {
-                        'name': "Task '%s' closed" % task.name,
+                        'name': _("Task '%s' closed") % task.name,
                         'state': 'waiting',
                         'act_from': uid,
                         'act_to': project.manager.id,
@@ -345,7 +347,12 @@ class task(osv.osv):
                     })
             self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             if task.parent_id and task.parent_id.state in ('pending','draft'):
-                self.do_reopen(cr, uid, [task.parent_id.id])
+                reopen = True
+                for child in task.parent_id.child_ids:
+                    if child.id != task.id and child.state not in ('done','cancelled'):
+                        reopen = False
+                if reopen:
+                    self.do_reopen(cr, uid, [task.parent_id.id])
         return True
 
     def do_reopen(self, cr, uid, ids, *args):
@@ -355,7 +362,7 @@ class task(osv.osv):
             project = task.project_id
             if project and project.warn_manager and project.manager.id and (project.manager.id != uid):
                 request.create(cr, uid, {
-                    'name': "Task '%s' set in progress" % task.name,
+                    'name': _("Task '%s' set in progress") % task.name,
                     'state': 'waiting',
                     'act_from': uid,
                     'act_to': project.manager.id,
@@ -374,7 +381,7 @@ class task(osv.osv):
             project = task.project_id
             if project.warn_manager and project.manager and (project.manager.id != uid):
                 request.create(cr, uid, {
-                    'name': "Task '%s' cancelled" % task.name,
+                    'name': _("Task '%s' cancelled") % task.name,
                     'state': 'waiting',
                     'act_from': uid,
                     'act_to': project.manager.id,

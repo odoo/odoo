@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 Camptocamp SA All Rights Reserved. (JGG)
@@ -171,3 +172,4 @@ class PopulateStatementFromInv(wizard.interface):
     },
     }
 PopulateStatementFromInv('populate_statement_from_inv')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

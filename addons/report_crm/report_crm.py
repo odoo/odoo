@@ -193,17 +193,17 @@ class report_crm_case_service_dashboard(osv.osv):
             from
                 crm_case cse
             where
-                ((to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                ((to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                     AND
-                (to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15)) 
+                (to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15)) 
                     AND
                     cse.state='done')
                 
                 OR
                 
-                ((to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') < CURRENT_DATE)
+                ((to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                     AND
-                (to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') >= (CURRENT_DATE-15))
+                (to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
                     AND
                     cse.state='open')
             )""")

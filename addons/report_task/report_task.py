@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import fields,osv
+import mx.DateTime
 
 class  report_task_user_pipeline_open (osv.osv):
     _name = "report.task.user.pipeline.open"
@@ -90,49 +91,68 @@ class  report_closed_task(osv.osv):
                 from
                     project_task tsk
                 where
-                    (tsk.date_close < CURRENT_DATE AND tsk.date_close >= (CURRENT_DATE-15))
+                    (tsk.date_close <= CURRENT_DATE AND tsk.date_close > (CURRENT_DATE-15))
             )
         ''')
 report_closed_task()
 
-#class report_timesheet_task(osv.osv):
-#    _name = "report.timesheet.task"
-#    _description = "Report on Timesheets and Tasks per User Per Month"
-#    _auto = False
-#   
-#    def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
-#        result = {}
-#        
-#        for record in self.browse(cr, uid, ids, context):
-#            last_date = mx.DateTime.strptime(record.month, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
-#            obj=self.pool.get('hr_timesheet_sheet.sheet')
-#            sheet_ids = obj.search(cr,uid,[('user_id','=',record.user_id.id),('date_current','>=',record.month),('date_current','<=',last_date.strftime('%Y-%m-%d'))])
-#            data_days = obj.read(cr,uid,sheet_ids,['total_attendance_day','date_current','user_id'])
-#            total = 0.0
-#            for day_attendance in data_days:
-#                total += day_attendance['total_attendance_day']
-#            result[record.id] = total
-#        
-#        return result
-#        
-#    _columns = {
-#        'month': fields.date('Month', required=True,readonly=True),
-#        'user_id': fields.many2one('res.users', 'User' ,readonly=True, required=True),
-#        'timesheet_hrs': fields.function(get_hrs_timesheet,method=True, string="Timesheet Hrs" ),
-#        'task_hrs': fields.float('Task Hrs', readonly=True, required=True),
-#      }
-#    
-#    
-#    def init(self, cr): 
-#        cr.execute("""create or replace view report_timesheet_task as (
-#         select min(p.id) as id, to_char(p.date, 'YYYY-MM-01') as  month, min(r.id) as user_id, sum(p.hours) as task_hrs,0.0 as timesheet_hrs 
-#        from project_task_work p,res_users r 
-#        where (r.id=p.user_id) 
-#        group by  to_char(p.date, 'YYYY-MM-01'))""")
-#        
-#        
-#
-#report_timesheet_task()
+class report_timesheet_task_user(osv.osv):
+    _name = "report.timesheet.task.user"
+    _auto = False
+    _order = "name"
+    
+    def _get_task_hours(self, cr, uid, ids, name,args,context):
+        result = {}
+        for record in self.browse(cr, uid, ids,context):
+            last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
+            task_obj=self.pool.get('project.task.work')
+            task_ids = task_obj.search(cr,uid,[('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
+            tsk_hrs = task_obj.read(cr,uid,task_ids,['hours','date','user_id'])
+            total = 0.0
+            for hrs in tsk_hrs:
+                total += hrs['hours']
+            result[record.id] = total
+        return result
+    
+    def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
+        result = {}
+        sum = 0.0
+        for record in self.browse(cr, uid, ids, context):
+            last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
+            obj=self.pool.get('hr_timesheet_sheet.sheet.day')
+            sheet_ids = obj.search(cr,uid,[('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
+            data_days = obj.read(cr,uid,sheet_ids,['name','sheet_id.user_id','total_attendance'])
+            total = 0.0
+            for day_attendance in data_days:
+                total += day_attendance['total_attendance']
+            result[record.id] = total
+        return result
+        
+    _columns = {
+        'name': fields.date('Month',readonly=True),
+        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
+        'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
+      }
+    
+    
+    def init(self, cr):   
+       cr.execute(""" create or replace view report_timesheet_task_user as (
+        select  
+         ((r.id*12)+to_number(months.m_id,'99'))::integer as id,
+               months.name as name,
+               r.id as user_id
+        from res_users r,
+                (select to_char(p.date,'YYYY-MM-01') as name,
+            to_char(p.date,'MM') as m_id
+                from project_task_work p 
+    
+            union 
+                select to_char(h.name,'YYYY-MM-01') as name,
+                to_char(h.name,'MM') as m_id
+                from hr_timesheet_sheet_sheet_day h) as months) """)
+
+report_timesheet_task_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

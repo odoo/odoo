@@ -34,7 +34,7 @@ import pooler
 import netsvc
 import datetime
 from osv import fields, osv
-
+from tools.translate import _
 
 def _employee_get(obj,cr,uid,context={}):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
@@ -65,12 +65,13 @@ hr_holidays_status()
 class hr_holidays_per_user(osv.osv):
     _name = "hr.holidays.per.user"
     _description = "Holidays Per User"
+    _rec_name = "user_id"
 
     def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
         obj_holiday = self.pool.get('hr.holidays')
-        days = 0.0
         result = {}
         for holiday_user in self.browse(cr, uid, ids):
+            days = 0.0
             ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
             if ids_request:
                 holidays = obj_holiday.browse(cr, uid, ids_request)
@@ -82,7 +83,6 @@ class hr_holidays_per_user(osv.osv):
 
     _columns = {
         'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
-        'name': fields.char('Name', size=32),
         'user_id' : fields.many2one('res.users','User'),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
@@ -129,6 +129,16 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _order = 'date_from desc'
+
+    def _check_date(self, cr, uid, ids):
+        if ids:
+            cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
+            res =  cr.fetchall()
+            if res and res[0][0] < 0:
+                return False
+        return True
+
+    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
 
     def create(self, cr, uid, vals, *args, **kwargs):
         id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
@@ -241,7 +251,7 @@ class hr_holidays(osv.osv):
                     leaves_rest=obj_holidays_per_user.max_leaves - obj_holidays_per_user.leaves_taken
                     if not obj_holidays_per_user.holiday_status.limit:
                         if leaves_rest < leave_asked:
-                            raise osv.except_osv('Attention!','You Cannot Validate leaves while available leaves are less than asked leaves.')
+                            raise osv.except_osv(_('Attention!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
                     self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + leave_asked})
                 if record.holiday_status.section_id:
                     vals={}

@@ -192,8 +192,8 @@ class report_random_timsheet(osv.osv):
             where
                 (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
                 AND (dept.manager_id = """ + str(uid) + """ ) 
-                AND (line.date < CURRENT_DATE AND line.date >= (CURRENT_DATE-3))
-            ORDER BY line.name LIMIT 10
+                AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
+            LIMIT 10
             )
             """ )
 
@@ -230,7 +230,7 @@ class random_timesheet_lines(osv.osv):
             from 
                 account_analytic_line line
             where
-                (line.date < CURRENT_DATE AND line.date >= (CURRENT_DATE-15))
+                (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-15))
             )
             """ )
 

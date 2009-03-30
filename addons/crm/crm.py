@@ -240,6 +240,7 @@ class crm_case_rule(osv.osv):
 
         'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
         'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximim Priority'),
+        'trg_max_history': fields.integer('Maximum Communication History'),
 
         'act_method': fields.char('Call Object Method', size=64),
         'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
@@ -418,6 +419,7 @@ class crm_case(osv.osv):
                     ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==case.categ_id.id)
                     ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==case.user_id.id)
                     ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==case.partner_id.id)
+                    ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(case.history_line)+1))
                     ok = ok and (
                         not action.trg_partner_categ_id.id or
                         (
@@ -649,6 +651,9 @@ class crm_case(osv.osv):
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),
                         _('You must put a Partner eMail to use this action!'))
+            if not case.user_id:
+                raise osv.except_osv(_('Error!'),
+                        _('You must define a responsible user for this case in order to use this action!'))
             if not case.description:
                 raise osv.except_osv(_('Error!'),
                         _('Can not send mail with empty body,you should have description in the body'))
@@ -721,6 +726,7 @@ class crm_case(osv.osv):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
             self.write(cr, uid, ids, data)
+        cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
@@ -793,6 +799,14 @@ class crm_case_history(osv.osv):
     _description = "Case history"
     _order = "id desc"
     _inherits = {'crm.case.log':"log_id"}
+
+    def create(self, cr, user, vals, context=None):
+        if vals.has_key('case_id') and vals['case_id']:
+            case_obj = self.pool.get('crm.case')
+            cases = case_obj.browse(cr, user, [vals['case_id']])
+            case_obj._action(cr, user, cases, '')
+        return super(crm_case_history, self).create(cr, user, vals, context)
+
     def _note_get(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for hist in self.browse(cursor, user, ids, context or {}):

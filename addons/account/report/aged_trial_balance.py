@@ -61,7 +61,7 @@ class aged_trial_report(rml_parse.rml_parse):
 				context={'fiscalyear': form['fiscalyear']})
 		self.cr.execute("SELECT DISTINCT res_partner.id AS id, " \
 					"res_partner.name AS name " \
-				"FROM res_partner,account_move_line AS line, account_account,account_move_reconcile AS recon " \
+				"FROM res_partner,account_move_line AS line, account_account " \
 				"WHERE (line.account_id=account_account.id) " \
 					"AND ((reconcile_id IS NULL) " \
 					"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
@@ -178,3 +178,4 @@ report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
 		'addons/account/report/aged_trial_balance.rml',parser=aged_trial_report,header=False)
 
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

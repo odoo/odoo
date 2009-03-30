@@ -105,6 +105,20 @@ class Wiki(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id':False}, context)
 
+    def create(self, cr, uid, vals, context=None):
+	id = super(Wiki,self).create(cr, uid, vals, context)
+        history = self.pool.get('wiki.wiki.history')
+	if vals.get('text_area'):
+	    res = {
+                'minor_edit':vals.get('minor_edit', True),
+                'text_area':vals.get('text_area',''),
+                'write_uid':uid,
+                'wiki_id' : id,
+                'summary':vals.get('summary','')
+            }
+            history.create(cr, uid, res)
+	return id
+
     def write(self, cr, uid, ids, vals, context=None):
         result = super(Wiki,self).write(cr, uid, ids, vals, context)
         history = self.pool.get('wiki.wiki.history')
@@ -148,3 +162,4 @@ class History(osv.osv):
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 History()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

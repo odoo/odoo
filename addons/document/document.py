@@ -38,6 +38,7 @@ import string
 from psycopg2 import Binary
 from tools import config
 import tools
+from tools.translate import _
 
 def random_name():
     random.seed()
@@ -376,14 +377,14 @@ class document_directory(osv.osv):
         return True
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr,uid,vals,ids,op='write'):
-            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
+            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
         return super(document_directory,self).write(cr,uid,ids,vals,context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr,uid,vals):
-            raise osv.except_osv('ValidateError', _('Directory name must be unique!'))
+            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
-            raise osv.except_osv('ValidateError', _('Directory name contains special characters!'))
+            raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 document_directory()
@@ -516,7 +517,7 @@ class document_file(osv.osv):
                 try:
                     os.makedirs(path)
                 except:
-                    raise except_orm('Permission Denied !', 'You do not permissions to write on the server side.')
+                    raise except_orm(_('Permission Denied !'), _('You do not permissions to write on the server side.'))
 
             flag = None
             # This can be improved
@@ -534,7 +535,7 @@ class document_file(osv.osv):
             cr.execute('update ir_attachment set store_fname=%s,store_method=%s,file_size=%s where id=%s', (os.path.join(flag,filename),'fs',len(v),id))
             return True
         except Exception,e :
-            raise except_orm('Error!', str(e))
+            raise except_orm(_('Error!'), str(e))
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Owner', select=1),
@@ -598,7 +599,7 @@ class document_file(osv.osv):
         if not len(res):
             return False
         if not self._check_duplication(cr,uid,vals,ids,'write'):
-            raise except_orm('ValidateError', 'File name must be unique!')
+            raise except_orm(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file,self).write(cr,uid,ids,vals,context=context)
         cr.commit()
         try:
@@ -651,7 +652,7 @@ class document_file(osv.osv):
             datas=vals.get('datas',False)
         vals['file_size']= len(datas)
         if not self._check_duplication(cr,uid,vals):
-            raise except_orm('ValidateError', 'File name must be unique!')
+            raise except_orm(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file,self).create(cr, uid, vals, context)
         cr.commit()
         try:

@@ -44,3 +44,5 @@ report_sxw.report_sxw(
     'addons/account_voucher/report/report_voucher_amount.rml',
     parser=report_voucher_amount,header=False
 )
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

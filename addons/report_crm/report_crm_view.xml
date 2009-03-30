@@ -164,12 +164,12 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cases by Section">
-                    <field name="name"/>
-                    <field name="section_id"/>
-                    <field name="nbr_cases"/>
+                    <field name="name" select="1"/>
+                    <field name="section_id" select="1"/>
+                    <field name="nbr_cases" select="1"/>
                     <field name="avg_answers"/>
-                    <field name="perc_done"/>
-                    <field name="perc_cancel"/>
+                    <field name="perc_done" select="2"/>
+                    <field name="perc_cancel" select="2"/>
                     <field name="delay_close"/>
                 </tree>
             </field>
@@ -197,41 +197,41 @@
         <!-- Closed & Open CRM Case view for Random Acitivities dashboard  -->         
         
         <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">
-            <field name="name">report.crm.case.dashboard.tree</field>
-            <field name="model">report.crm.case.dashboard</field>
+            <field name="name">report.crm.case.service.dashboard.tree</field>
+            <field name="model">report.crm.case.service.dashboard</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="CRM Cases">
-                	<field name="create_date"/>
-                    <field name="date"/>
+                <tree string="CRM Cases">
+                	<field name="create_date" select="1"/>
+                    <field name="date" select="1"/>
                     <field name="date_deadline"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
+                    <field name="name" select="1"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="user_id" select="2"/>
                     <field name="priority"/>
                     <field name="planned_revenue" sum="Planned revenue"/>
                     <field name="planned_cost" sum="Planned costs"/>
-                    <field name="state"/>
+                    <field name="state" />
                 </tree>
             </field>
         </record>
         
         <record id="board_view_crm_case_done_dashboard_tree" model="ir.ui.view">
-            <field name="name">report.crm.case.dashboard.tree</field>
-            <field name="model">report.crm.case.dashboard</field>
+            <field name="name">report.crm.case.service.dashboard.tree</field>
+            <field name="model">report.crm.case.service.dashboard</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="CRM Cases">
-                	<field name="date_closed"/>
+                <tree string="CRM Cases">
+                	<field name="date_closed" select="1"/>
                     <field name="date"/>
                     <field name="date_deadline"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="user_id" select="2"/>
                     <field name="priority"/>
                     <field name="planned_revenue" sum="Planned revenue"/>
                     <field name="planned_cost" sum="Planned costs"/>
-                    <field name="state"/>
+                    <field name="state" />
                 </tree>
             </field>
         </record>        

@@ -69,8 +69,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Aged Receivable">
-                    <field name="name"/>
-                    <field name="balance"/>
+                    <field name="name" select="1"/>
+                    <field name="balance" select="2"/>
                 </tree>
             </field>
         </record>
@@ -90,8 +90,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='draft'" string="Invoices">
-                	<field name="create_date"/>
-                    <field name="name"/>
+                	<field name="create_date" select="1"/>
+                    <field name="name" select="1"/>
                     <field name="type"/>
                     <field name="number"/>
                     <field name="partner_id"/>
@@ -101,7 +101,7 @@
                     <field name="date_invoice"/>
                     <field name="date_due" select="1"/>
                     <field name="residual"/>
-                    <field name="state"/>
+                    <field name="state" select="2"/>
                     <field name="origin"/>
                 </tree>
             </field>

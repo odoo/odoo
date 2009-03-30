@@ -12,6 +12,7 @@
                 <field name="name"/>
                 <field name="first_name"/>
                 <field name="mobile"/>
+                <field name="email"/>
                 <field name="lang_id"/>
                 <field name="partner_id"/>
                 <field name="function_id"/>
@@ -34,6 +35,7 @@
                         <field name="mobile" select="2"/>
                         <field name="title" select="1" />
                         <field name="website"/>
+                        <field name="email"/>
                         <field name="lang_id"/>
                         <field name="active"/>
                         <field name="partner_id" invisible="1" select="2"/>
@@ -45,6 +47,9 @@
                                 <field name="name"/>
                                 <field name="sequence_contact"/>
                                 <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email" widget="email"/>
                                 <field name="date_start" />
                                 <field name="date_stop" />
@@ -56,6 +61,9 @@
                                 <field name="name"/>
                                 <field name="address_id"/>
                                 <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email"/>
                                 <field name="state" />
                             </tree>
@@ -113,6 +121,9 @@
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
@@ -121,6 +132,9 @@
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email" widget="email"/>
                             </form>
                         </field>
@@ -271,12 +285,16 @@
                         <field name="contact_id"/>
                         <field name="function_id"/>
                         <field name="phone"/>
+                        <field name="fax"/>
+                        <field name="extension"/>
                         <field name="email"/>
                     </tree>
                     <form string="Contacts">
                         <field name="contact_id"/>
                         <field name="function_id"/>
                         <field name="phone"/>
+                        <field name="fax"/>
+                        <field name="extension"/>
                         <field name="email" widget="email"/>
                     </form>
                 </field>
@@ -297,6 +315,8 @@
                 <field name="address_id"/>
                 <field name="email"/>
                 <field name="phone"/>
+                <field name="fax"/>
+                <field name="extension"/>
                 <field name="state" />
             </tree>
         </field>
@@ -316,6 +336,8 @@
                         <field name="function_id" select="1"/>
                         <field name="email" select="2" widget="email"/>
                         <field name="phone" select="2"/>
+                        <field name="fax"/>
+                        <field name="extension"/>
                         <field name="sequence_contact" select="2" groups="base.group_user"/>
                         <field name="sequence_partner" select="2" groups="base.group_user"/>
                         <field name="date_start" groups="base.group_user"/>

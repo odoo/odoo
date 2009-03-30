@@ -24,6 +24,7 @@ import time
 import datetime
 import pooler
 import tools
+from tools.translate import _
 
 
 class project_work(osv.osv):
@@ -93,7 +94,7 @@ class project_work(osv.osv):
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         timesheet_id = self.pool.get('project.task.work').browse(cr, uid, ids)[0].hr_analytic_timesheet_id
-        # delete entry from timesheet too while deleting entry to task.
+#         delete entry from timesheet too while deleting entry to task.
         list_avail_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [])
         if timesheet_id in list_avail_ids:
             obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id], *args, **kwargs)

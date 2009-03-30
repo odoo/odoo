@@ -97,7 +97,7 @@ def _track_lines(self, cr, uid, data, context):
             new_move.append(current_move)
         else:
             current_move = move.id
-        new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx})
+        new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
         update_val['prodlot_id'] = new_prodlot
         move_obj.write(cr, uid, [current_move], update_val)
 

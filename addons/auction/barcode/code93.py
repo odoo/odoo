@@ -230,3 +230,4 @@ class Extended93(_Code93Base):
                 raise ValueError
         self.encoded = _encode93(self.encoded)
         return self.encoded
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
