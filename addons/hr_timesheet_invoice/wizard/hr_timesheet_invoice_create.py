@@ -158,6 +158,7 @@ class invoice_create(wizard.interface):
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
                 strids = ','.join(map(str, data['ids']))
                 cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
+        pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
