@@ -528,7 +528,7 @@ class hr_attendance(osv.osv):
                 raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
-            if context['sheet_id'] != vals['sheet_id']:
+            if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
                 raise osv.except_osv(_('UserError'), _('You cannot enter an attendance ' \
                         'date outside the current timesheet dates!'))
         return res
