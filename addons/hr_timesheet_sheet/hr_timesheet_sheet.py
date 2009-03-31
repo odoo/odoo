@@ -437,23 +437,21 @@ class hr_attendance(osv.osv):
 
     def _sheet(self, cursor, user, ids, name, args, context):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-
-        cursor.execute('SELECT a.id, COALESCE(MAX(s.id), 0) \
+        cursor.execute("SELECT a.id, COALESCE(MAX(s.id), 0) \
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= a.name \
-                            AND s.date_from <= a.name \
+                        ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
+                            AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.user_id = e.user_id) \
-                WHERE a.id in (' + ','.join([str(x) for x in ids]) + ') \
-                GROUP BY a.id')
+                WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
+                GROUP BY a.id")
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
                 context=context):
             sheet_names[sheet_id] = name
-
         for line_id in {}.fromkeys(ids):
             sheet_id = res.get(line_id, False)
             if sheet_id:
@@ -527,11 +525,11 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'])
             if ts.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
-            if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
-                raise osv.except_osv(_('UserError'), _('You can not enter an attendance ' \
+            if context['sheet_id'] != vals['sheet_id']:
+                raise osv.except_osv(_('UserError'), _('You cannot enter an attendance ' \
                         'date outside the current timesheet dates!'))
         return res
 
@@ -545,14 +543,14 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             for attendance in self.browse(cr, uid, ids, context=context):
                 if context['sheet_id'] != attendance.sheet_id.id:
-                    raise osv.except_osv(_('UserError'), _('You can not enter an attendance ' \
+                    raise osv.except_osv(_('UserError'), _('You cannot enter an attendance ' \
                             'date outside the current timesheet dates!'))
         return res
 
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
             if att.sheet_id and att.sheet_id.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
         return True
 
 hr_attendance()
