@@ -1298,7 +1298,7 @@ class account_tax(osv.osv):
                 res.append(tax)
         return res
 
-    def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+    def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None, quantity=0):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
 
         res = []
@@ -1327,7 +1327,12 @@ class account_tax(osv.osv):
                 data['amount'] = amount
 
             elif tax.type=='fixed':
+                print "her", quantity
+                print "data", data
                 data['amount'] = tax.amount
+                data['tax_amount']=quantity
+                print "DATA 2", data
+               # data['amount'] = quantity
             elif tax.type=='code':
                 address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
                 localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
@@ -1343,7 +1348,7 @@ class account_tax(osv.osv):
                 if tax.child_depend:
                     latest = res.pop()
                 amount = amount2
-                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner)
+                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner, quantity)
                 res.extend(child_tax)
                 if tax.child_depend:
                     for r in res:
@@ -1361,6 +1366,7 @@ class account_tax(osv.osv):
                                 latest[name+'_code_id'] = False
             if tax.include_base_amount:
                 cur_price_unit+=amount2
+        print "rress final", res
         return res
 
     def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
@@ -1373,7 +1379,8 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their childs
         """
-        res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner)
+        res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner, quantity)
+        print "res",res
         total = 0.0
         for r in res:
             if r.get('balance',False):
