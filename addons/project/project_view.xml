@@ -216,6 +216,7 @@
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
             <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_id" ref="view_my_project"/>
         </record>
         <menuitem
             action="open_view_my_project_open"
