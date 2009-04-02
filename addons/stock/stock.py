@@ -756,15 +756,6 @@ stock_picking()
 
 
 class stock_production_lot(osv.osv):
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        res = super(stock_production_lot, self).search(cr, uid, args, offset, limit, order, context=context, count=count)
-        if res:
-            return [k for k,v in self._get_stock(cr, uid, res, 'stock_available', None, context).items() if v]
-        return res
-    
     def name_get(self, cr, uid, ids, context={}):
         if not ids:
             return []

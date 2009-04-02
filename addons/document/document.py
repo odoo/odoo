@@ -493,11 +493,11 @@ class document_file(osv.osv):
         result = {}
         cr.execute('select id,store_fname,link from ir_attachment where id in ('+','.join(map(str,ids))+')')
         for id,r,l in cr.fetchall():
-	    try:
-	        value = file(os.path.join(self._get_filestore(cr), r), 'rb').read()
-	        result[id] = base64.encodestring(value)
-	    except:
-	        result[id]=''
+            try:
+                value = file(os.path.join(self._get_filestore(cr), r), 'rb').read()
+                result[id] = base64.encodestring(value)
+            except:
+                result[id]=''
 
             if context.get('bin_size', False):
                 result[id] = tools.human_size(len(result[id]))
@@ -582,7 +582,7 @@ class document_file(osv.osv):
                     res_id=file.res_id and file.res_id or 0
                 res=self.search(cr,uid,[('id','<>',file.id),('name','=',name),('parent_id','=',parent_id),('res_model','=',res_model),('res_id','=',res_id)])
                 if len(res):
-	                return False
+                        return False
         if op=='create':
             res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('res_id','=',res_id),('res_model','=',res_model)])
             if len(res):
