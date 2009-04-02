@@ -289,6 +289,7 @@ class task(osv.osv):
         'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True, help="Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."),
 
         'user_id': fields.many2one('res.users', 'Assigned to'),
+        'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
     }

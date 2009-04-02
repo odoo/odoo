@@ -31,7 +31,7 @@ ask_form = """<?xml version="1.0" ?>
     <field name="user_id" colspan="4"/>
     <field name="planned_hours" colspan="4" widget="float_time"/>
     <field name="name" colspan="4"/>
-    <field name="include_info"/>
+    <field name="new_task_description"/>
     <separator string="Validation Task" colspan="4"/>
     <field name="planned_hours_me" colspan="4" widget="float_time"/>
     <field name="prefix" colspan="4"/>
@@ -42,7 +42,7 @@ ask_fields = {
     'name': {'string': 'Delegated Title', 'type': 'char', 'required': 'True', 'size':64, 'help':"New title of the task delegated to the user."},
     'prefix': {'string': 'Your Task Title', 'type': 'char', 'required': 'True', 'size':64, 'help':"New title of your own task to validate the work done."},
     'user_id': {'string':'Assign To', 'type':'many2one', 'relation': 'res.users', 'required':'True', 'help':"User you want to delegate this task to."},
-    'include_info': {'string':'Copy Description', 'type':'boolean', 'help':"Reinclude the description of the task in the task of the user."},
+    'new_task_description': {'string':'New Task Description', 'type':'text', 'help':"Reinclude the description of the task in the task of the user."},
     'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time', 'help':"Estimated time to close this task by the delegated user."},
     'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time', 'help':"Estimated time for you to validate the work done by the user to whom you delegate this task."},
     'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed.", 'required':True},
@@ -60,7 +60,7 @@ class wizard_delegate(wizard.interface):
             'remaining_hours': data['form']['planned_hours'],
             'parent_id': data['id'],
             'state': 'open',
-            'description': data['form']['include_info'] and task.description or '',
+            'description': data['form']['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []
         })
@@ -87,7 +87,7 @@ class wizard_delegate(wizard.interface):
             'planned_hours': task.remaining_hours,
             'planned_hours_me': 1.0,
             'prefix': _('CHECK: ')+ newname,
-            'include_info': 1,
+            'new_task_description': task.description,
             'state': 'pending'
         }
 

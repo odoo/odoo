@@ -359,6 +359,28 @@
             </field>
         </record>
 
+        <record id="my_pending_task" model="ir.ui.view">
+            <field name="name">my.pending.task.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="grey:state in ('cancel','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="delegated_user_id"/>
+                    <field name="date_deadline"/>
+                    <field name="planned_hours" sum="Planned" widget="float_time"/>
+                    <field name="delay_hours" sum="Delay" widget="float_time"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="remaining_hours" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
@@ -423,6 +445,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
+            <field name="view_id" ref="my_pending_task"/>
         </record>
         <menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" parent="menu_action_view_task4"/>
 
