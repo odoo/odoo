@@ -190,7 +190,7 @@ class account_analytic_plan_instance(osv.osv):
                             if self.pool.get('account.analytic.account').search(cr,uid,[('parent_id','child_of',[item.root_analytic_id.id]),('id','=',tempo[2]['analytic_account_id'])]):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                    raise osv.except_osv(_('Value Error') ,_('The Total Should be Between %s and %s" % (str(item.min_required), str(item.max_required))))
+                    raise osv.except_osv(_('Value Error') ,_('The Total Should be Between %s and %s') % (str(item.min_required), str(item.max_required)))
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context)
 
