@@ -172,6 +172,14 @@ class hr_expense_expense(osv.osv):
         return res
 hr_expense_expense()
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+    
+    _columns = {
+                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+    }
+product_product()
+
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -191,7 +199,7 @@ class hr_expense_line(osv.osv):
         'total_amount': fields.function(_amount, method=True, string='Total'),
         'unit_amount': fields.float('Unit Price'),
         'unit_quantity': fields.float('Quantities' ),
-        'product_id': fields.many2one('product.product', 'Product' ),
+        'product_id': fields.many2one('product.product', 'Product',  domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'UoM' ),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
@@ -214,7 +222,6 @@ class hr_expense_line(osv.osv):
         return {'value':v}
 
 hr_expense_line()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
