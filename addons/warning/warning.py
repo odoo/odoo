@@ -67,7 +67,7 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.sale_warn_msg)
             
             warning = {
-                    'title': "Warning",
+                    'title': "Warning for " + partner.name,
                     'message': partner.sale_warn_msg
             }
 
@@ -93,7 +93,7 @@ class purchase_order(osv.osv):
                 raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.purchase_warn_msg)
             
             warning = {
-                'title': "Warning",
+                'title': "Warning for " + partner.name,
                 'message': partner.purchase_warn_msg
                 }
         result =  super(purchase_order, self).onchange_partner_id(cr, uid, ids, part)['value']
@@ -121,7 +121,7 @@ class account_invoice(osv.osv):
             if partner.invoice_warn == 'block':
                 raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.invoice_warn_msg)
             warning = {
-                'title': "Warning",
+                'title': "Warning for " + partner.name,
                 'message': partner.invoice_warn_msg
                 }
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
@@ -142,7 +142,7 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.picking_warn_msg)
             warning = {
-                'title': "Warning",
+                'title': "Warning for " + partner.name,
                 'message': partner.picking_warn_msg
             }
         result =  super(stock_picking, self).onchange_partner_in(cr, uid, context, partner_id)
@@ -179,20 +179,25 @@ class sale_order_line(osv.osv):
                    'product_uos': []}}
         product_obj = self.pool.get('product.product') 
         product_info = product_obj.browse(cr, uid, product)
-        title=False
-        message=False
-        if product_info.sale_line_warn:
-            title= "Message",
-            message= product_info.sale_line_warn_msg
+        title = False
+        message = False
+        
+        if product_info.sale_line_warn != 'no-message':
+            if product_info.sale_line_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + product_info.name +' !'), product_info.sale_line_warn_msg)
+            title = "Warning for " + product_info.name
+            message = product_info.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax, date_order, packaging, fiscal_position)
-        if title and message:
-             warning['title']=title[0]
-             warning['message']=message
+
         if result.get('warning',False):
-            warning['title']= title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
-            warning['message']=message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+            warning['title'] = title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        
         return {'value': result['value'], 'warning':warning}
     
 sale_order_line()
@@ -206,20 +211,24 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         product_obj = self.pool.get('product.product') 
         product_info = product_obj.browse(cr, uid, product)
-        title=False
-        message=False
-        if product_info.purchase_line_warn:
-            title =  "Message"
-            message =  product_info.purchase_line_warn_msg
+        title = False
+        message = False
+        
+        if product_info.purchase_line_warn != 'no-message':
+            if product_info.purchase_line_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + product_info.name +' !'), product_info.purchase_line_warn_msg)
+            title = "Warning for " + product_info.name
+            message = product_info.purchase_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
             
         result =  super(purchase_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order, fiscal_position)
-        if title and message:
-             warning['title']=title[0]
-             warning['message']=message
+
         if result.get('warning',False):
-            warning['title']= title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
-            warning['message']=message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+            warning['title'] = title and title[0]+' & '+result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        
         return {'value': result['value'], 'warning':warning}
     
 purchase_order_line()
