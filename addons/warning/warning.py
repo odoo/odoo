@@ -23,18 +23,33 @@
 import time
 from osv import fields,osv
 
+WARNING_MESSAGE = [
+                   ('no-message','No Message'),
+                   ('warning','Warning'),
+                   ('block','Blocking Message')
+                   ]
+
+WARNING_HELP = 'Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.'
+
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-        'sale_warn' : fields.boolean('Sale Order'),
+        'sale_warn' : fields.selection(WARNING_MESSAGE, 'Sale Order', help=WARNING_HELP),
         'sale_warn_msg' : fields.text('Message for Sale Order'),
-        'purchase_warn' : fields.boolean('Purchase Order'),
+        'purchase_warn' : fields.selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP),
         'purchase_warn_msg' : fields.text('Message for Purchase Order'),
-        'picking_warn' : fields.boolean('Stock Picking'),
+        'picking_warn' : fields.selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP),
         'picking_warn_msg' : fields.text('Message for Stock Picking'),
-        'invoice_warn' : fields.boolean('Invoice'),
+        'invoice_warn' : fields.selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP),
         'invoice_warn_msg' : fields.text('Message for Invoice'),
     }
+    _defaults = {
+         'sale_warn' : lambda *a: 'no-message',
+         'purchase_warn' : lambda *a: 'no-message',
+         'picking_warn' : lambda *a: 'no-message',
+         'invoice_warn' : lambda *a: 'no-message',
+    }
+    
 res_partner()
 
 
@@ -44,19 +59,24 @@ class sale_order(osv.osv):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
         warning = {}
-        title=False
-        message=False
+        title = False
+        message = False
         partner = self.pool.get('res.partner').browse(cr, uid, part)
-        if partner.sale_warn:
-           warning={
-                'title': "Message",
-                'message': partner.sale_warn_msg
-                }
-             
+        if partner.sale_warn != 'no-message':
+            if partner.sale_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.sale_warn_msg)
+            
+            warning = {
+                    'title': "Warning",
+                    'message': partner.sale_warn_msg
+            }
+
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)['value']
+        
         if result.get('warning',False):
-            warning['title']=title and title+' & '+result['warning']['title'] or result['warning']['title']
-            warning['message']=message and message +' '+result['warning']['message'] or result['warning']['message']
+            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+            
         return {'value': result, 'warning':warning}
 sale_order()
 
@@ -68,11 +88,14 @@ class purchase_order(osv.osv):
             return {'value':{'partner_address_id': False}}
         warning = {}
         partner = self.pool.get('res.partner').browse(cr, uid, part)
-        if partner.purchase_warn:
-                warning={
-                    'title': "Message",
-                    'message': partner.purchase_warn_msg
-                    }
+        if partner.purchase_warn != 'no-message':
+            if partner.purchase_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.purchase_warn_msg)
+            
+            warning = {
+                'title': "Warning",
+                'message': partner.purchase_warn_msg
+                }
         result =  super(purchase_order, self).onchange_partner_id(cr, uid, ids, part)['value']
         return {'value': result, 'warning':warning}
     
@@ -83,6 +106,7 @@ class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
             date_invoice=False, payment_term=False, partner_bank_id=False):
+        
         if not partner_id:
             return {'value': {
             'address_contact_id': False ,
@@ -93,11 +117,13 @@ class account_invoice(osv.osv):
         }
         warning = {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        if partner.invoice_warn:
-                warning={
-                    'title': "Message",
-                    'message': partner.invoice_warn_msg
-                    }
+        if partner.invoice_warn != 'no-message':
+            if partner.invoice_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.invoice_warn_msg)
+            warning = {
+                'title': "Warning",
+                'message': partner.invoice_warn_msg
+                }
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
             date_invoice=False, payment_term=False, partner_bank_id=False)['value']
         return {'value': result, 'warning':warning}
@@ -112,9 +138,11 @@ class stock_picking(osv.osv):
             return {}
         partner = self.pool.get('res.partner.address').browse(cr, uid, [partner_id])[0].partner_id
         warning = {}
-        if partner.picking_warn:
-            warning={
-                'title': "Message",
+        if partner.picking_warn != 'no-message':
+            if partner.picking_warn == 'block':
+                raise osv.except_osv(_('Alert for ' + partner.name +' !'), partner.picking_warn_msg)
+            warning = {
+                'title': "Warning",
                 'message': partner.picking_warn_msg
             }
         result =  super(stock_picking, self).onchange_partner_in(cr, uid, context, partner_id)
@@ -125,11 +153,17 @@ stock_picking()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-         'sale_line_warn' : fields.boolean('Sale Order Line'),
+         'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sale Order Line', help=WARNING_HELP),
          'sale_line_warn_msg' : fields.text('Message for Sale Order Line'),
-         'purchase_line_warn' : fields.boolean('Purchase Order Line'),
+         'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', help=WARNING_HELP),
          'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
      }
+    
+    _defaults = {
+         'sale_line_warn' : lambda *a: 'no-message',
+         'purchase_line_warn' : lambda *a: 'no-message',
+    }
+    
 product_product()
 
 class sale_order_line(osv.osv):

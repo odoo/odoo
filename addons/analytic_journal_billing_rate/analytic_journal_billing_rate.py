@@ -48,7 +48,7 @@ class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
 
-    def on_change_account_id(self, cr, uid, ids,user_id, account_id, unit_amount=0, journal_id=0):
+    def on_change_account_id(self, cr, uid, ids, user_id, account_id, unit_amount=0, journal_id=0):
         res = {}
         if not (account_id):
             #avoid a useless call to super
