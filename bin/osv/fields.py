@@ -174,6 +174,10 @@ class float(_column):
     def __init__(self, string='unknown', digits=None, **args):
         _column.__init__(self, string=string, **args)
         self.digits = digits
+        if digits:
+            _symbol_c = '%%.%if' % digits[1]
+            _symbol_f = lambda x: __builtin__.float(x or 0.0)
+            self._symbol_set = (_symbol_c, _symbol_f)
 
 
 class date(_column):
