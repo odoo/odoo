@@ -128,12 +128,15 @@ def _do_split(self, cr, uid, data, context):
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
 
-            if qty > 0:
+            if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
                 new_price = uom_obj._compute_price(cr, uid, uom, new_price,
                         product.uom_id.id)
-                new_std_price = ((product.standard_price * product.qty_available)\
+                if product.qty_available<=0:
+                    new_std_price = new_price
+                else:
+                    new_std_price = ((product.standard_price * product.qty_available)\
                         + (new_price * qty))/(product.qty_available + qty)
 
                 product_obj.write(cr, uid, [product.id],
