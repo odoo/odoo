@@ -78,7 +78,7 @@ class project_work(osv.osv):
             if line_id:
                 obj = self.pool.get('hr.analytic.timesheet')
                 if 'name' in vals:
-                    vals_line['name'] = '%s: %s' % (task.name, vals['name'] or '/')
+                    vals_line['name'] = '%s: %s' % (tools.ustr(task.name), tools.ustr(vals['name']) or '/')
                 if 'user_id' in vals:
                     vals_line['user_id'] = vals['user_id']
                 if 'date' in vals:
