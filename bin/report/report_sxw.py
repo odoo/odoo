@@ -132,18 +132,12 @@ _LOCALE2WIN32 = {
 }
 
 class _format(object):
-    def set_value(self, cr, uid, name, object, field):
+    def set_value(self, cr, uid, name, object, field, lang_obj):
         #super(_date_format, self).__init__(self)
-        pool_lang = pooler.get_pool(cr.dbname).get('res.lang')
         self.object = object
         self._field = field
         self.name = name
-        lang = self.object._context.get('lang', 'en_US') or 'en_US'
-        lids = pool_lang.search(cr, uid,[('code','=',lang)])
-        if lids:
-            self.lang_obj = pool_lang.browse(cr, uid,lids[0])
-        else:
-            self.lang_obj = False
+        self.lang_obj = lang_obj
 
 class _float_format(float, _format):
 

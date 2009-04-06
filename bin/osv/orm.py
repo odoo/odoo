@@ -181,12 +181,14 @@ class browse_record(object):
             fffields = map(lambda x: x[0], ffields)
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
+                lang = self._context.get('lang', 'en_US') or 'en_US'
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
                             if d[n]:
-                                d[n].set_value(self._cr, self._uid, d[n], self, f)
+                                d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
             # create browse records for 'remote' objects
