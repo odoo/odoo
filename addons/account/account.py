@@ -651,7 +651,8 @@ class account_journal_period(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
         'active': fields.boolean('Active', required=True),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True)
+        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
+        'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
     }
 
     def _check(self, cr, uid, ids, context={}):
