@@ -363,12 +363,15 @@ class one2many(_column):
     def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+            context.update(self._context)
         if not values:
             values = {}
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj).read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
@@ -377,6 +380,9 @@ class one2many(_column):
     def set_memory(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             return
         obj = obj.pool.get(self._obj)
@@ -406,12 +412,15 @@ class one2many(_column):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             values = {}
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append(r['id'])
         return res
@@ -419,6 +428,9 @@ class one2many(_column):
     def set(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             return
         _table = obj.pool.get(self._obj)._table
