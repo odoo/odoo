@@ -181,6 +181,94 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="sale_journal_picking_order_del">
+        <field name="name">stock.picking.journal.view.form</field>
+        <field name="type">form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_delivery_form" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_journal_picking_order_tree_del">
+        <field name="name">stock.picking.journal.view.tree</field>
+        <field name="type">tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_delivery_tree" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="sale_journal_picking_order_in">
+        <field name="name">stock.picking.journal.view.form</field>
+        <field name="type">form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_in_form" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_journal_picking_order_tree_in">
+        <field name="name">stock.picking.journal.view.tree</field>
+        <field name="type">tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_in_tree" />
+        <field name="arch" type="xml">
+            <field name="invoice_state" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="sale_journal_picking_order_out">
+        <field name="name">stock.picking.journal.view.form</field>
+        <field name="type">form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_out_form" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_journal_picking_order_tree_out">
+        <field name="name">stock.picking.journal.view.tree</field>
+        <field name="type">tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_out_tree" />
+        <field name="arch" type="xml">
+            <field name="invoice_state" position="after">
+                <field name="journal_id" select="1"/>
+                <field name="invoice_type_id" select="1"/>
+                <field name="sale_journal_id" select="1"/>
+            </field>
+        </field>
+    </record>
+
+
+
     <record model="ir.ui.view" id="view_sale_journal_sale_stats_tree">
         <field name="name">sale_journal.sale.stats.tree</field>
         <field name="model">sale_journal.sale.stats</field>
