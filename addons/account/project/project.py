@@ -181,6 +181,7 @@ class account_analytic_account(osv.osv):
         if not default:
             default = {}
         default['code'] = False
+        default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
 
