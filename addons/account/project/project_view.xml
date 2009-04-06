@@ -96,7 +96,7 @@
             parent="account_analytic_def_account"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
 
-		<record id="analytic_account_form" model="ir.actions.act_window">
+        <record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
@@ -154,9 +154,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-		<wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries Encoding by Line"/>
+        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries Encoding by Line"/>
         <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>
-		<menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
+        <menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
 
 
         <record id="action_account_tree1" model="ir.actions.act_window">
@@ -164,7 +164,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('account_id','=', active_id)]</field>
+            <field name="domain">[('account_id','child_of', active_id)]</field>
             <field name="context">{'account_id':active_id}</field>
         </record>
         <record id="ir_open_account_analytic_account" model="ir.values">
@@ -360,7 +360,7 @@
             </field>
         </record>
 
-	 <record id="analytic_accounts_graph" model="ir.ui.view">
+     <record id="analytic_accounts_graph" model="ir.ui.view">
             <field name="name">analytic.accounts.graph</field>
             <field name="model">account.analytic.account</field>
             <field name="type">graph</field>
