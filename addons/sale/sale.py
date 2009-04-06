@@ -850,7 +850,7 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sale form !\nPlease set one customer before choosing a product.'))
         warning={}
@@ -913,8 +913,8 @@ class sale_order_line(osv.osv):
             result['delay'] = (product_obj.sale_delay or 0.0)
             partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
-
-        result['name'] = product_obj.partner_ref
+        if not flag:    
+            result['name'] = product_obj.partner_ref
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
