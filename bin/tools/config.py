@@ -115,8 +115,8 @@ class configmanager(object):
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure", action="store_true",
-                             help="launch server over https instead of http", default=False)
+            group.add_option("-S", "--secure", dest="secure",
+                             help="launch server over https instead of http")
             group.add_option("--cert-file", dest="secure_cert_file",
                               default="server.cert",
                               help="specify the certificate file for the SSL connection")
@@ -232,7 +232,8 @@ class configmanager(object):
                 'stop_after_init']
 
         for arg in keys:
-            self.options[arg] = getattr(opt, arg)
+            if getattr(opt, arg) is not None:
+                self.options[arg] = getattr(opt, arg)
 
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]

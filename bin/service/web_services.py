@@ -78,6 +78,7 @@ class db(netsvc.Service):
             sql_db.close_db('template1')
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
+                cr = None
                 try:
                     serv.actions[id]['progress'] = 0
                     clean = False

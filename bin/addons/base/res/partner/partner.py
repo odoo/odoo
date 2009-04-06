@@ -26,6 +26,7 @@ from osv import fields,osv
 import tools
 import ir
 import pooler
+from tools.translate import _
 
 class res_partner_function(osv.osv):
     _name = 'res.partner.function'
@@ -165,7 +166,7 @@ class res_partner(osv.osv):
     }
     def copy(self, cr, uid, id, default=None, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': name+' (copy)'})
+        default.update({'name': name+' (copy)', 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def _check_ean_key(self, cr, uid, ids):

@@ -27,7 +27,7 @@ import cStringIO
 import csv
 import pooler
 from osv import fields,osv
-
+from tools.translate import _
 
 class wizard_export_lang(osv.osv_memory):
 
@@ -60,8 +60,10 @@ class wizard_export_lang(osv.osv_memory):
         elif this.format == 'tgz':
             ext = this.lang and '.po' or '.pot'
             this.advice = _('Save this document to a .tgz file. This archive containt UTF-8 %s files and may be uploaded to launchpad.') % (ext,)
-       
-        this.name = "%s.%s" % (this.lang or _('new'), this.format)
+        filename = _('new')
+        if not this.lang and len(mods) == 1:
+            filename = mods[0]
+        this.name = "%s.%s" % (this.lang or filename, this.format)
         out=base64.encodestring(buf.getvalue())
         buf.close()
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice, 'name':this.name}, context=context)

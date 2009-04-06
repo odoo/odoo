@@ -626,12 +626,14 @@ class function(_column):
             # convert the data returned by the function with the size of that data...
             res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
         return res
+    get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:
             context = {}
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+    set_memory = set
 
 # ---------------------------------------------------------
 # Related fields

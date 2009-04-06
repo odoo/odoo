@@ -167,11 +167,17 @@ CREATE TABLE res_roles_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
     rid integer NOT NULL references res_roles on delete cascade
 );
+create index res_roles_users_rel_uid_idx on res_roles_users_rel (uid);
+create index res_roles_users_rel_rid_idx on res_roles_users_rel (rid);
 
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
     gid integer NOT NULL references res_groups on delete cascade
 );
+
+create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
+create index res_groups_users_rel_gid_idx on res_groups_users_rel (gid);
+
 
 ---------------------------------
 -- Workflows
@@ -244,6 +250,8 @@ create table wkf_witm_trans
     trans_id int not null references wkf_transition on delete cascade,
     inst_id int not null references wkf_instance on delete cascade
 );
+
+create index wkf_witm_trans_inst_idx on wkf_witm_trans (inst_id);
 
 create table wkf_logs
 (
