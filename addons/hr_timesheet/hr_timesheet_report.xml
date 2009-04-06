@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="40"/>
         <report auto="False" id="report_user_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee timesheet" xsl="hr_timesheet/report/user_timesheet.xsl"/>
         
         <wizard id="wizard_hr_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee Timesheet"/>
-        <menuitem id="next_id_48" name="Timesheet" parent="hr.menu_hr_reporting"/><menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="next_id_48" type="wizard"/>
+        <menuitem id="next_id_48" name="Timesheet" parent="hr.menu_hr_reporting"/><menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="next_id_48" type="wizard"
+            groups="hr.group_hr_manager"
+            />
         
         <wizard id="wizard_hr_timesheet_my" menu="False" model="hr.employee" name="hr.analytical.timesheet.my" string="Print My Timesheet"/>
-        <menuitem action="wizard_hr_timesheet_my" id="menu_wizard_hr_timesheet_my" parent="hr_timesheet.next_id_48" type="wizard"/>
+        <menuitem
+            action="wizard_hr_timesheet_my" 
+            id="menu_wizard_hr_timesheet_my" 
+            parent="hr_timesheet.next_id_48"
+            type="wizard"
+            groups="hr.group_hr_user"
+            />
         
         <report auto="False" id="report_users_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees Timesheet" xsl="hr_timesheet/report/users_timesheet.xsl"/>
         
         <wizard id="wizard_hr_timesheet_users" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees Timesheet"/>
-        <menuitem action="wizard_hr_timesheet_users" id="menu_wizard_hr_timesheet_users" parent="hr_timesheet.next_id_48" type="wizard"/>
+        <menuitem 
+            action="wizard_hr_timesheet_users" 
+            id="menu_wizard_hr_timesheet_users" 
+            groups="hr.group_hr_manager"
+            parent="hr_timesheet.next_id_48" type="wizard"/>
         
     </data>
 </openerp>

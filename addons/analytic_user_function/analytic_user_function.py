@@ -66,7 +66,7 @@ class hr_analytic_timesheet(osv.osv):
                 return False
                 
                 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id, unit_amount=0):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
         #{'value': {'to_invoice': False, 'amount': (-162.0,), 'product_id': 7, 'general_account_id': (5,)}}
         res = {}
         if not (account_id):
@@ -139,6 +139,4 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
 hr_analytic_timesheet()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

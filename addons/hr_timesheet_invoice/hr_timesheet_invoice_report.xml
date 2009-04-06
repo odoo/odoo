@@ -23,7 +23,11 @@
             string="Timesheet Profit"
             groups="account.group_account_manager"/>
 
-        <menuitem action="account_analytic_profit" id="print_account_analytic_profit" parent="hr.menu_hr_reporting" type="wizard"/>
+       <menuitem action="account_analytic_profit" 
+        id="print_account_analytic_profit" 
+        parent="hr.menu_hr_reporting"
+        type="wizard"
+        groups="hr.group_hr_manager"/>
 
     </data>
 </openerp>

@@ -49,7 +49,7 @@
             <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='timesheet_ids']/tree/field[@name='account_id']" position="replace">
-                    <field name="account_id"  domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(user_id, account_id, unit_amount, journal_id)"/>
+                    <field name="account_id"  domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount, journal_id)"/>
                 </xpath>
             </field>
         </record>
@@ -62,7 +62,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/field[@name='account_id']" position="replace">
-                    <field name="account_id"  domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(user_id, account_id, unit_amount, journal_id)" select="1"/>
+                    <field name="account_id"  domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount, journal_id)" select="1"/>
                 </xpath>
             </field>
         </record>

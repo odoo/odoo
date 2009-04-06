@@ -54,14 +54,18 @@ class project_work(osv.osv):
         a =  emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
-        vals_line['general_account_id'] = a
-        vals_line['journal_id'] = emp.journal_id.id
 
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
         vals_line['user_id'] = vals['user_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
         vals_line['account_id'] = obj_task.project_id.category_id.id
+        res = obj.on_change_account_id(cr, uid, False, obj_task.project_id.category_id.id)
+        print 'Got', res
+        if res.get('value'):
+            vals_line.update(res['value'])
+        vals_line['general_account_id'] = a
+        vals_line['journal_id'] = emp.journal_id.id
         vals_line['amount'] = 00.0
         timeline_id = obj.create(cr, uid, vals_line, {})
 

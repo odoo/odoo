@@ -48,26 +48,26 @@ class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
 
-    def on_change_account_id(self, cr, uid, ids,user_id, account_id, unit_amount=0, journal_id=0):
+    def on_change_account_id(self, cr, uid, ids,account_id, user_id=False, unit_amount=0, journal_id=0):
         res = {}
         if not (account_id):
             #avoid a useless call to super
             return res 
 
         if not (journal_id):
-            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,user_id, account_id, unit_amount)
+            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,account_id, user_id, unit_amount)
 
         #get the browse record related to journal_id and account_id
         temp = self.pool.get('analytic_journal_rate_grid').search(cr, uid, [('journal_id', '=', journal_id),('account_id', '=', account_id) ])
 
         if not temp:
             #if there isn't any record for this journal_id and account_id
-            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,user_id, account_id, unit_amount)
+            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,account_id,user_id,  unit_amount)
         else:
             #get the old values from super and add the value from the new relation analytic_journal_rate_grid
             r = self.pool.get('analytic_journal_rate_grid').browse(cr, uid, temp)[0]
             res.setdefault('value',{})
-            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,user_id, account_id,unit_amount)['value']
+            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,account_id,user_id, unit_amount)['value']
             if r.rate_id.id:
                 res['value']['to_invoice'] = r.rate_id.id
     
