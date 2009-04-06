@@ -129,9 +129,21 @@
                                     <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
-<!--                                    <field name="journal_id"/>-->
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
+                                <form string="Timesheet">
+                                    <field name="date"/>
+                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
+                                    <field name="to_invoice"/>
+                                    <field invisible="1" name="journal_id"/>
+                                    <field invisible="1" name="product_id"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                    <field name="amount"/>
+                                    <field name="general_account_id"/>
+                                    <field name="user_id" required="1"/>
+                                </form>
                             </field>
                             <field name="total_difference_day" widget="float_time"/>
                             <field name="total_timesheet_day" widget="float_time"/>
