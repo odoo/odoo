@@ -912,11 +912,17 @@ account_invoice()
 
 class account_invoice_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
-        res = {}
-        for line in self.browse(cr, uid, ids):
-            res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),2)
-        return res
-
+         res = {}
+         cur_obj=self.pool.get('res.currency')
+         for line in self.browse(cr, uid, ids):
+             if line.invoice_id:
+                 res[line.id] = line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0)
+                 cur = line.invoice_id.currency_id
+                 res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+             else:
+                 res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),2)
+         return res
+    
     def _price_unit_default(self, cr, uid, context=None):
         if context is None:
             context = {}
