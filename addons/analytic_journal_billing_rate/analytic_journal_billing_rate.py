@@ -105,7 +105,7 @@ class account_invoice(osv.osv):
         iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id)
         inv = self.browse(cr, uid, [id])[0]
         for il in iml:
-            if il['account_analytic_id']:
+            if il['account_analytic_id'] and il.get('analytic_lines', False):
 
                 #get the browse record related to journal_id and account_id
                 journal_id = il['analytic_lines'][0][2]['journal_id']
