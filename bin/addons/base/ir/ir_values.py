@@ -47,7 +47,7 @@ class ir_values(osv.osv):
         if self.CONCURRENCY_CHECK_FIELD in ctx:
             del ctx[self.CONCURRENCY_CHECK_FIELD]
         if not self.browse(cursor, user, id, context=context).object:
-            value = pickle.dumps(eval(value))
+            value = pickle.dumps(value)
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
 
     def onchange_object_id(self, cr, uid, ids, object_id, context={}):
