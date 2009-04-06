@@ -323,7 +323,7 @@
                     <field name="period_id" select="2"/>
                     <group colspan="2" col="3">
                         <button name="%(wizard_populate_statement_from_inv)d"
-                            string="Import Invoice" type="action" />
+                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <newline/>
                     <field name="balance_start"/>
