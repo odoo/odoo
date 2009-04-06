@@ -143,7 +143,7 @@
 <para style="Standard">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau6">
+<blockTable colWidths="198.0,62.0,67.0,67.0,53.0,80.0" style="Tableau6">
 <tr>
 <td>
 <para style="P3">Description</para>
@@ -167,7 +167,7 @@
 </blockTable>
 <section>
 <para style="P20">[[ repeat_In(invoice_lines(o), 'a') ]]</para>
-<blockTable colWidths="0.0,216.0" style="Tableau7">
+<blockTable colWidths="0.0,198.0" style="Tableau7">
 <tr>
 <td>
 <para style="P8">[[ a['type']=='text' and removeParentNode('tr')]]</para>
@@ -177,7 +177,7 @@
 </td>
 </tr>
 </blockTable>
-<blockTable colWidths="453.0,74.0" style="Tableau8">
+<blockTable colWidths="447.0,80.0" style="Tableau8">
 <tr>
 <td>
 <para style="Table Contents">[[ a['type']=='text' and a['name'] or removeParentNode('table') ]]</para>
@@ -198,7 +198,7 @@
 </tr>
 </blockTable>
 <pageBreak>[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
-<blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau6">
+<blockTable colWidths="198.0,62.0,67.0,67.0,53.0,80.0" style="Tableau6">
 <tr>
 <td>
 <para style="P3">Description [[ a['type']!='break' and removeParentNode('tr')]]</para>

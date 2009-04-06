@@ -47,7 +47,7 @@ class account_invoice_1(report_sxw.rml_parse):
 
         value=['tax_types','quantity','uos','price_unit','discount','price_subtotal','currency']
         type=['string','string','string','string','string','string','string']
-        width=[62,42,20,62,51,50,24]
+        width=[62,38,29,67,53,53,27]
         td=7
 
         tableFlag=0
@@ -145,8 +145,8 @@ class account_invoice_1(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'])
-                    res['uos']=uos_name['name']
+                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
+                    res['uos'] = uos_name['name']
             else:
 
                 res['quantity']=''
