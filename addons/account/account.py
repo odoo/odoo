@@ -148,10 +148,10 @@ class account_account(osv.osv):
                     continue
                 jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2])
                 if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    del args[pos]
+                    args[pos] = ('type','not in',('consolidation','view'))
                     continue
-                ids3 = map(lambda x: x.code, jour.type_control_ids)
-                ids1 = super(account_account, self).search(cr, uid, [('type', 'in', ids3)])
+                ids3 = map(lambda x: x.id, jour.type_control_ids)
+                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id', 'in', ids1)
             pos += 1
