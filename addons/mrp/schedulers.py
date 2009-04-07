@@ -151,7 +151,7 @@ class mrp_procurement(osv.osv):
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid, {
-                    'name': 'PROC:Automatic OP for product:%s' % product.name,
+                    'name': 'Automatic OP: %s' % product.name,
                     'origin': 'SCHEDULER',
                     'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                     'product_id': product.id,

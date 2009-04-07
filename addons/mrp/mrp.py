@@ -1088,10 +1088,11 @@ class mrp_procurement(osv.osv):
         todo = []
         todo2 = []
         for proc in self.browse(cr, uid, ids):
-            if proc.move_id and proc.move_id.state=='waiting':
-                if proc.close_move:
+            if proc.close_move:
+                if proc.move_id.state not in ('done','cancel'):
                     todo2.append(proc.move_id.id)
-                else:
+            else:
+                if proc.move_id and proc.move_id.state=='waiting':
                     todo.append(proc.move_id.id)
         if len(todo2):
             self.pool.get('stock.move').action_cancel(cr, uid, todo2)
