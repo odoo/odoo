@@ -164,7 +164,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('account_id','child_of', active_id)]</field>
+            <field name="domain">[('account_id','child_of',[active_id])]</field>
             <field name="context">{'account_id':active_id}</field>
         </record>
         <record id="ir_open_account_analytic_account" model="ir.values">
