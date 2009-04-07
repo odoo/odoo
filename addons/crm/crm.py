@@ -510,7 +510,7 @@ class crm_case(osv.osv):
         return True
 
     def format_body(self, body):
-        return tools.ustr((body or '').encode('ascii', 'replace'))
+        return (body or u'').encode('utf8', 'replace')
 
     def format_mail(self, case, body):
         data = {
@@ -526,7 +526,7 @@ class crm_case(osv.osv):
             'partner': (case.partner_id and case.partner_id.name) or '/',
             'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
         }
-        return self.format_body(body) % data
+        return self.format_body(body % data)
 
     def email_send(self, cr, uid, case, emails, body, context={}):
         body = self.format_mail(case, body)
@@ -534,7 +534,10 @@ class crm_case(osv.osv):
             emailfrom = case.user_id.address_id.email
         else:
             emailfrom = case.section_id.reply_to
-        tools.email_send(emailfrom, emails, '['+str(case.id)+'] '+case.name, body, reply_to=case.section_id.reply_to, tinycrm=str(case.id))
+        name = '[%d] %s' % (case.id, case.name.encode('utf8'))
+        reply_to = case.section_id.reply_to or False
+        if reply_to: reply_to = reply_to.encode('utf8')
+        tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, tinycrm=str(case.id))
         return True
     def __log(self, cr, uid, cases, keyword, context={}):
         if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
