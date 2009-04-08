@@ -136,7 +136,7 @@ class node_class(object):
         res = pool.get('document.directory').browse(self.cr, self.uid, ids,self.context)
         return res
 
-    def _child_get(self, nodename=False):
+    def _child_get(self, nodename=False):        
         if self.type not in ('collection','database'):
             return []
         res = self.directory_list_for_child(nodename)
@@ -153,19 +153,8 @@ class node_class(object):
             result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, type='file', root=self.root), res)
         if self.type=='collection' and self.object.type=="ressource":
             where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
-            pool = pooler.get_pool(self.cr.dbname)
+            pool = pooler.get_pool(self.cr.dbname)            
             obj = pool.get(self.object.ressource_type_id.model)
-
-            if self.object.ressource_tree:
-                if obj._parent_name in obj.fields_get(self.cr,self.uid):
-                    where.append((obj._parent_name,'=',self.object2 and self.object2.id or False))
-                else :
-                    if self.object2:
-                        return result
-            else:
-                if self.object2:
-                    return result
-
             name_for = obj._name.split('.')[-1]
             if nodename  and nodename.find(name_for) == 0  :
                 id = int(nodename.replace(name_for,''))
@@ -177,6 +166,22 @@ class node_class(object):
                     if nodename.find(INVALID_CHARS[invalid]) :
                         nodename=nodename.replace(INVALID_CHARS[invalid],invalid)
                 where.append(('name','like',nodename))
+
+            if self.object.ressource_tree:
+                if obj._parent_name in obj.fields_get(self.cr,self.uid):                    
+                    where.append((obj._parent_name,'=',self.object2 and self.object2.id or False))
+                    ids = obj.search(self.cr, self.uid, where, self.context)
+                    res = obj.browse(self.cr, self.uid, ids,self.context)
+                    result+= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, root=x.id), res)
+                    return result
+                else :
+                    if self.object2:
+                        return result
+            else:
+                if self.object2:
+                    return result
+
+            
             ids = obj.search(self.cr, self.uid, where, self.context)
             res = obj.browse(self.cr, self.uid, ids,self.context)
             for r in res:
@@ -184,10 +189,10 @@ class node_class(object):
                     r.name = name_for+'%d'%r.id
                 for invalid in INVALID_CHARS:
                     if r.name.find(invalid) :
-                        r.name=r.name.replace(invalid,INVALID_CHARS[invalid])
-            result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, root=r.id), res)
+                        r.name=r.name.replace(invalid,INVALID_CHARS[invalid])            
+            result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, root=x.id), res)
             if result2:
-                result = result2
+                result = result2            
         return result
 
     def children(self):

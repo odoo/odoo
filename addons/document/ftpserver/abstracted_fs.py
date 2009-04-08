@@ -193,7 +193,7 @@ class abstracted_fs:
             cid=False
 
             where=[('name','=',objname)]
-            if object and (object.type in ('directory','ressource')) or object2:
+            if object and (object.type in ('directory')) or object2:
                 where.append(('parent_id','=',object.id))
             else:
                 where.append(('parent_id','=',False))
@@ -212,7 +212,7 @@ class abstracted_fs:
                     'file_size': 0L,
                     'file_type': ext,
                 }
-                if object and (object.type in ('directory','ressource')) or not object2:
+                if object and (object.type in ('directory')) or not object2:
                     val['parent_id']= object and object.id or False
                 partner = False
                 if object2:
@@ -317,7 +317,7 @@ class abstracted_fs:
                 raise OSError(1, 'Operation not permited.')
             val = {
                 'name': basename,
-                'ressource_parent_type_id': object and object.ressource_type_id.id or False,
+                'ressource_type_id': object and object.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False
             }
             if (object and (object.type in ('directory'))) or not object2:
@@ -447,11 +447,12 @@ class abstracted_fs:
                     ressource_type_id = pool.get('ir.model').search(cr,uid,[('model','=',dst_basedir.object2._name)])[0]
                     ressource_id = dst_basedir.object2.id
                     title = dst_basedir.object2.name
-                    ressource_model = dst_basedir.object2._name
+                    ressource_model = dst_basedir.object2._name                    
                     if dst_basedir.object2._name=='res.partner':
                         partner_id=dst_basedir.object2.id
                     else:
-                        partner_id= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name)                         
+                        partner_id= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 else:
                     ressource_type_id = False
                     ressource_id=False
@@ -461,7 +462,7 @@ class abstracted_fs:
 
                 pool.get('document.directory').write(cr, uid, result['directory'], {
                     'ressource_id': ressource_id,
-                    'ressource_parent_type_id': ressource_type_id
+                    'ressource_type_id': ressource_type_id
                 })
                 val = {
                     'res_id': ressource_id,
@@ -497,7 +498,8 @@ class abstracted_fs:
                     if dst_basedir.object2._name=='res.partner':
                         val['partner_id']=dst_basedir.object2.id
                     else:
-                        val['partner_id']= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name) 
+                        val['partner_id']= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 elif src.object.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
                     # change if one day we decide to improve osv/fields.py
