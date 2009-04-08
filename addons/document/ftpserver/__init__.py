@@ -14,7 +14,7 @@ class ftp_server(threading.Thread):
         logger.notifyChannel('FTP', level, message)
 
     def run(self):
-        autho = authorizer.authorizer()
+        autho = authorizer.authorizer()        
         ftpserver.FTPHandler.authorizer = autho
         ftpserver.max_cons = 300
         ftpserver.max_cons_per_ip = 50
@@ -27,7 +27,6 @@ class ftp_server(threading.Thread):
         address = (HOST, PORT)
         ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
         ftpd.serve_forever()
-
 ds = ftp_server()
 ds.start()
 

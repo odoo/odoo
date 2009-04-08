@@ -15,6 +15,22 @@ from service import security
 def log(message):
     logger = netsvc.Logger()
     logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
+
+
+def _get_month_name(month):
+    month=int(month)
+    if month==1:return 'Jan'
+    elif month==2:return 'Feb'
+    elif month==3:return 'Mar'
+    elif month==4:return 'Apr'
+    elif month==5:return 'May'
+    elif month==6:return 'Jun'
+    elif month==7:return 'Jul'
+    elif month==8:return 'Aug'
+    elif month==9:return 'Sep'
+    elif month==10:return 'Oct'
+    elif month==11:return 'Nov'
+    elif month==12:return 'Dec'
 			
 class file_wrapper(StringIO.StringIO):
     def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
@@ -647,7 +663,7 @@ class abstracted_fs:
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok
+    # Ok    
     def format_list(self, basedir, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
@@ -686,10 +702,11 @@ class abstracted_fs:
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mtime = time.strftime("%b %d %H:%M", time.localtime(st.st_mtime))
+                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
+                mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
             except ValueError:
-                mtime = time.strftime("%b %d %H:%M")
-
+                mname=_get_month_name(time.strftime("%m"))
+                mtime = mname+' '+time.strftime("%d %H:%M")            
             # formatting is matched with proftpd ls output
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
                                                      size, mtime, file.path.encode('ascii','replace').replace('?','_').split('/')[-1])
