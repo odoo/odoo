@@ -290,30 +290,15 @@ class account_invoice(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        for inv in self.browse(cr, uid, ids, context):
-            print inv.name, inv.amount_total
-            for line in inv.invoice_line:
-                print line.price_subtotal
-#        invoices = self.read(cr, uid, ids, ['state'])
-#        unlink_ids = []
-#        for t in invoices:
-#            if t['state'] in ('draft', 'cancel'):
-#                unlink_ids.append(t['id'])
-#            else:
-#                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
-#        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-#        return True
-
-    #def unlink(self, cr, uid, ids, context=None):
-    #    invoices = self.read(cr, uid, ids, ['state'])
-    #    unlink_ids = []
-    #    for t in invoices:
-    #        if t['state'] in ('draft', 'cancel'):
-    #            unlink_ids.append(t['id'])
-    #        else:
-    #            raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
-    #    osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-    #    return True
+        invoices = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for t in invoices:
+            if t['state'] in ('draft', 'cancel'):
+                unlink_ids.append(t['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
 
 #   def get_invoice_address(self, cr, uid, ids):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])

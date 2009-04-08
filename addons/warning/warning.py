@@ -137,7 +137,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False):
+            fiscal_position=False, flag=False):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
@@ -152,7 +152,7 @@ class sale_order_line(osv.osv):
             message= product_info.sale_line_warn_msg
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax, date_order, packaging, fiscal_position)
+            lang, update_tax, date_order, packaging, fiscal_position, flag)
         if title and message:
              warning['title']=title[0]
              warning['message']=message

@@ -48,6 +48,21 @@ class account_analytic_line(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = 'date'
+    
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None):
+        if context is None:
+            context = {}
+
+        if context.get('from_date',False):
+            args.append(['date', '>=',context['from_date']])
+            
+        if context.get('to_date',False):
+            args.append(['date','<=',context['to_date']])
+            
+        return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
+                order, context=context)
+        
     def _check_company(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
         for l in lines:

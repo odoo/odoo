@@ -36,8 +36,15 @@ class account_analytic_account(osv.osv):
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
         acc_set = ",".join(map(str, ids))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % acc_set)
-        r= dict(cr.fetchall())
+
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+            
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+        r = dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
         return r
@@ -45,18 +52,30 @@ class account_analytic_account(osv.osv):
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
 
         acc_set = ",".join(map(str, ids))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % acc_set)
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+            
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r= dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
         return r
 
-
-
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE a.id IN (%s) GROUP BY a.id" % acc_set)
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+            
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         res = {}
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
@@ -86,9 +105,16 @@ class account_analytic_account(osv.osv):
         #XXX must convert into one uom
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+            
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
-                    LEFT JOIN account_analytic_line l ON (a.id = l.account_id) \
+                    LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
                 WHERE a.id IN ('+acc_set+') GROUP BY a.id')
         res = {}
         for account_id, sum in cr.fetchall():
@@ -168,7 +194,7 @@ class account_analytic_account(osv.osv):
 
     _order = 'parent_id desc,code'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive account.', ['parent_id'])
+        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id'])
     ]
 
     def create(self, cr, uid, vals, context=None):
