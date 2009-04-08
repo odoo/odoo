@@ -94,8 +94,11 @@
             action="action_account_analytic_account_tree2"
             id="account_analytic_def_chart"
             parent="account_analytic_def_account"/>
-        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
-
+<!--        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>-->
+	
+		<wizard id="wizard_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.account.chart" string="Analytic Chart of Accounts"/>
+        <menuitem icon="STOCK_INDENT" action="wizard_analytic_account_chart" id="menu_action_analytic_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
+        
         <record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>

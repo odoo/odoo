@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -22,40 +22,19 @@
 
 import wizard
 import pooler
-import time
-from tools.translate import _
 
-def _action_open_window(self, cr, uid, data, context): 
-    domain = []
-    from_date = data['form']['from_date']
-    to_date = data['form']['to_date']
-    if from_date and to_date:
-        domain = [('date','>=',from_date),('date','<=',to_date)]
-    elif from_date:
-        domain = [('date','>=',from_date)]
-    elif to_date:
-        domain = [('date','<=',to_date)]
-    return {
-        'name': _('Analytic Entries'),
-        'view_type': 'form',
-        "view_mode": 'tree,form',
-        'res_model': 'account.analytic.line',
-        'type': 'ir.actions.act_window',
-        'domain': domain}
-
-
-class account_analytic_line(wizard.interface):
-    form1 = '''<?xml version="1.0"?>
-    <form string="View Account Analytic Lines">
-        <separator string="Account Analytic Lines Analysis" colspan="4"/>
+class wizard_analytic_account_chart(wizard.interface):
+    _account_chart_arch = '''<?xml version="1.0"?>
+    <form string="Analytic Account Charts">
+        <separator string="Select the Period for Analysis" colspan="4"/>
         <field name="from_date"/>
         <newline/>
         <field name="to_date"/>
         <newline/>
-        <label string=""/>
         <label string="(Keep empty to open the current situation)" align="0.0" colspan="3"/>
     </form>'''
-    form1_fields = {
+
+    _account_chart_fields = {
              'from_date': {
                 'string': 'From',
                 'type': 'date',
@@ -66,15 +45,35 @@ class account_analytic_line(wizard.interface):
         },
     }
 
+
+    def _analytic_account_chart_open_window(self, cr, uid, data, context):
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+
+        result = mod_obj._get_id(cr, uid, 'account', 'action_account_analytic_account_tree2')
+        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+
+        result_context = {}
+        if data['form']['from_date']:
+            result_context.update({'from_date' : data['form']['from_date']})
+        if data['form']['to_date']:
+            result_context.update({'to_date' : data['form']['to_date']})    
+            
+        result['context'] = str(result_context)
+        return result
+
     states = {
-      'init': {
+        'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Entries','gtk-ok')]}
+            'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel'), ('open', 'Open Charts')]}
         },
-    'open': {
+        'open': {
             'actions': [],
-            'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
+            'result': {'type': 'action', 'action':_analytic_account_chart_open_window, 'state':'end'}
         }
     }
-account_analytic_line('account.analytic.line')
+wizard_analytic_account_chart('account.analytic.account.chart')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

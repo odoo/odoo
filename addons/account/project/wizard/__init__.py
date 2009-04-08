@@ -27,6 +27,7 @@ import wizard_account_analytic_cost_ledger_report
 import wizard_account_analytic_cost_ledger_for_journal_report
 import wizard_account_analytic_analytic_check
 import wizard_account_analytic_line
+import wizard_analytic_account_chart
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
