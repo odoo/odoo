@@ -178,5 +178,17 @@
         </record>
         <menuitem action="expense_my_confirm" id="menu_expense_my_confirm" parent="hr_expense.menu_expense_my"/>
         
+        <record id="view_product_hr_expense_form" model="ir.ui.view">
+			<field name="name">product.product.expense.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field groups="base.group_extended" name="rental" position="after">
+					<field name="hr_expense_ok"/>
+				</field>
+			</field>
+		</record>
+		
     </data>
 </openerp>

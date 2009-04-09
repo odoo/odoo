@@ -47,6 +47,7 @@ class res_partner_contact(osv.osv):
         'active' : fields.boolean('Active'),
         'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
         'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Job'),
+        'email': fields.char('E-Mail', size=240),
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -121,6 +122,9 @@ class res_partner_job(osv.osv):
         'sequence_partner':fields.integer('Partner Seq.',help='Order of importance of this job title in the list of job title of the linked partner'),
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
+        'fax': fields.char('Fax', size=64),
+        'extension': fields.char('Extension', size=64, help='Internal/External extension phone number'),
+        'other': fields.char('Other', size=64, help='Additional phone field'),
         'date_start' : fields.date('Date Start'),
         'date_stop' : fields.date('Date Stop'),
         'state' : fields.selection([('past', 'Past'),('current', 'Current')], 'State', required=True),

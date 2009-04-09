@@ -113,7 +113,6 @@ class report_timesheet_account_date(osv.osv):
 report_timesheet_account_date()
 
 
-
 class report_timesheet_invoice(osv.osv):
     _name = "report_timesheet.invoice"
     _description = "Costs to invoice"
@@ -193,13 +192,49 @@ class report_random_timsheet(osv.osv):
             where
                 (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
                 AND (dept.manager_id = """ + str(uid) + """ ) 
-                AND (line.date < CURRENT_DATE AND line.date >= (CURRENT_DATE-3))
-            ORDER BY line.name LIMIT 10
+                AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
+            LIMIT 10
             )
             """ )
 
 report_random_timsheet()
 
+class random_timesheet_lines(osv.osv):
+    _name = "random.timesheet.lines"
+    _description = "Random Timesheet Lines"
+    _auto = False
+    
+    _columns = {
+        'date': fields.date('Date', readonly=True),     
+        'name': fields.char('Description', size=64, readonly=True),
+        'user_id' : fields.many2one('res.users', 'User', readonly=True),
+        'quantity' : fields.float('Quantity', readonly=True),
+        'product_id' : fields.many2one('product.product', 'Product', readonly=True), 
+        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'uom_id' : fields.many2one('product.uom', 'UoM', readonly=True),
+        'amount' : fields.float('Amount', readonly=True),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing', readonly=True),
+        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True)
+    }
+    
+    _order = "date desc"
+    
+    def init(self, cr):
+        
+        cr.execute("""create or replace view random_timesheet_lines as (
+            select 
+                line.id as id, line.date as date, line.name as name, line.unit_amount as quantity,
+                line.product_id as product_id, line.account_id as analytic_account_id,
+                line.product_uom_id as uom_id, line.amount as amount, line.to_invoice as to_invoice,
+                line.general_account_id as general_account_id, line.user_id as user_id 
+            from 
+                account_analytic_line line
+            where
+                (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-15))
+            )
+            """ )
+
+random_timesheet_lines()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

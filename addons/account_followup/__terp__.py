@@ -37,7 +37,13 @@
 
     It will generate a PDF with all the letters according the the
     different levels of recall defined. You can define different policies
-    for different companies.""",
+    for different companies.
+
+
+    Note that if you want to change the followup level for a given partner/account entry, you can do it in the menu:
+        Financial_Management/Reporting/Follow-Ups/All Receivable Entries
+
+""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['account'],

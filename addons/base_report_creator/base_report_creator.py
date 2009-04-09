@@ -306,7 +306,7 @@ from
         return True
     
     def _aggregation_error(self, cr, uid, ids):
-        aggregate_columns = ('int','float')
+        aggregate_columns = ('integer','float')
         apply_functions = ('sum','min','max','avg','count')
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:

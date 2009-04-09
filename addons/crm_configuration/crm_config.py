@@ -49,9 +49,14 @@ class crm_case_stage(osv.osv):
     _name = "crm.case.stage"
     _description = "Stage of case"
     _rec_name = 'name'
+    _order = "sequence"
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence'),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
     }
 crm_case_stage()
 

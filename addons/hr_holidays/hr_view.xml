@@ -51,36 +51,6 @@
             </field>
         </record>
 
-		<!-- holidays log -->
-        <record model="ir.ui.view" id="holiday_log_form">
-            <field name="name">hr.holidays.log.form</field>
-            <field name="model">hr.holidays.log</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Log Holidays">
-                    <field name="name" select="1"/>
-                    <field name="employee_id" select="2"/>
-                    <field name="holiday_status"  select="1" />
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="holiday_log_tree">
-            <field name="name">>hr.holidays.log.tree</field>
-            <field name="model">hr.holidays.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Log Holidays">
-	                <field name="holiday_req_id" />
-                	<field name="date" />
-                	<field name="employee_id" />
-                    <field name="name" />
-                    <field name="holiday_status" />
-                    <field name="nb_holidays" />
-                </tree>
-            </field>
-        </record>
-
-
         <!-- holidays status -->
         <record model="ir.ui.view" id="edit_holiday_status_form">
             <field name="name">hr.holidays.status.form</field>
@@ -129,21 +99,30 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Holidays Per Employee">
-	            	<notebook>
+            		<group>
+	                    <field name="employee_id" select="1" />
+	                    <field name="holiday_status" select="1" />
+						<field name="max_leaves" select="2" />
+						<field name="active" select="2"/>
+            		</group>
+	            	<notebook colspan="4">
 	            		<page string="General Information">
-		                    <field name="employee_id" select="1" />
-		                    <field name="holiday_status" select="1" />
-		                    <newline/>
-		                    <field name="max_leaves" select="2" />
 		                    <field name="leaves_taken" select="2" />
-		                    <newline/>
 		                    <field name="remaining_leaves" select="2" colspan="2" />
-		                    <field name="active" select="2"/>
 		                    <newline/>
 		                    <field name="notes" colspan="4" select="2"/>
 		              	</page>
-		              	<page string="History" >
-		              		<field name="history" nolabel="1"/>
+		              	<page string="Holidays" >
+		              		<field name="holiday_ids" nolabel="1">
+                                <tree string="Employee Holidays">
+                                    <field name="name"/>
+                                    <field name="number_of_days" string="Number of Days"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="holiday_status"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
 		              	</page>
 	                </notebook>
                 </form>

@@ -69,35 +69,31 @@ class wiz_refund(wizard.interface):
             if form['period'] :
                 period = form['period']
             else:
-                period = inv.period_id.id
+                period = inv.period_id and inv.period_id.id or False
 
             if form['date'] :
                 date = form['date']
                 if not form['period'] :
-                    try :
-                        #we try in multy company mode
+                    cr.execute("select name from ir_model_fields where model='account.period' and name='company_id'")
+                    result_query = cr.fetchone()
+                    if result_query:
+                        #in multi company mode
                         cr.execute("""SELECT id
                                       from account_period where date('%s')
                                       between date_start AND  date_stop and company_id = %s limit 1 """%(
                                       form['date'],
                                       pool.get('res.users').browse(cr,uid,uid).company_id.id
-                                      )
-
-                                   )
-                    except :
-                        #we try in mono company mode
+                                      ))
+                    else:
+                        #in mono company mode
                         cr.execute("""SELECT id
                                       from account_period where date('%s')
                                       between date_start AND  date_stop  limit 1 """%(
                                         form['date'],
-                                      )
-
-                                   )
+                                      ))
                     res = cr.fetchone()
                     if res:
                         period = res[0]
-
-
             else:
                 date = inv.date_invoice
 
@@ -105,6 +101,10 @@ class wiz_refund(wizard.interface):
                 description = form['description']
             else:
                 description = inv.name
+            
+            if not period:
+                raise wizard.except_wizard(_('Data Insufficient !'), _('No Period found on Invoice!'))
+                
             refund_id = pool.get('account.invoice').refund(cr, uid, [inv.id],date, period, description)
             refund = pool.get('account.invoice').browse(cr, uid, refund_id[0])
             # we compute due date

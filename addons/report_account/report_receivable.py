@@ -103,10 +103,10 @@ class report_aged_receivable(osv.osv):
         res = {}
         for period in self.read(cr,uid,ids,['name']):
            date1,date2 = period['name'].split(' to ')
-           query = "SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
+           query = "SELECT SUM(debit-credit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
                             AND (COALESCE(line.date,date) BETWEEN '%s' AND  '%s') \
-                            AND (reconcile_id IS NULL) AND ac.active"%(str(date2),str(date1))
+                            AND ((reconcile_id IS NULL) OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) AND ac.active"%(str(date2),str(date1),str(date1))
            cr.execute(query)
            amount = cr.fetchone()
            amount = amount[0] or 0.00
@@ -121,12 +121,14 @@ class report_aged_receivable(osv.osv):
     
     def init(self, cr, uid=1):
         """ This view will be used in dashboard
+        
+        The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
 #        ranges = _get_ranges(cr) # Gets the ranges for the x axis of the graph (name column values)
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        today = mx.DateTime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d') - mx.DateTime.RelativeDateTime(days=1)
-        today = today.strftime('%Y-%m-%d')
-        fy_id  = pool_obj_fy.find(cr,uid)
+#        today = mx.DateTime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d') - mx.DateTime.RelativeDateTime(days=1)
+        today = time.strftime('%Y-%m-%d')
+        fy_id = pool_obj_fy.find(cr,uid)
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
@@ -150,6 +152,58 @@ class report_aged_receivable(osv.osv):
             )""")
     
 report_aged_receivable()
+
+class report_invoice_created(osv.osv):
+    _name = "report.invoice.created"
+    _description = "Report of Invoices Created within Last 15 days"
+    _auto = False
+    _columns = {
+        'name': fields.char('Description', size=64, readonly=True),
+        'type': fields.selection([
+            ('out_invoice','Customer Invoice'),
+            ('in_invoice','Supplier Invoice'),
+            ('out_refund','Customer Refund'),
+            ('in_refund','Supplier Refund'),
+            ],'Type', readonly=True),
+        'number': fields.char('Invoice Number', size=32, readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'amount_untaxed': fields.float('Untaxed', readonly=True),
+        'amount_total': fields.float('Total', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_due': fields.date('Due Date', readonly=True),
+        'residual': fields.float('Residual', readonly=True),
+        'state': fields.selection([
+            ('draft','Draft'),
+            ('proforma','Pro-forma'),
+            ('proforma2','Pro-forma'),
+            ('open','Open'),
+            ('paid','Done'),
+            ('cancel','Cancelled')
+        ],'State', readonly=True),
+        'origin': fields.char('Origin', size=64, readonly=True),
+        'create_date' : fields.datetime('Create Date', readonly=True)
+    }
+    _order = 'create_date'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_invoice_created as (
+            select
+               inv.id as id, inv.name as name, inv.type as type,
+               inv.number as number, inv.partner_id as partner_id,
+               inv.amount_untaxed as amount_untaxed,
+               inv.amount_total as amount_total, inv.currency_id as currency_id,
+               inv.date_invoice as date_invoice, inv.date_due as date_due,
+               inv.residual as residual, inv.state as state,
+               inv.origin as origin, inv.create_date as create_date
+            from
+                account_invoice inv
+            where
+                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
+                AND
+                (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
+            )""")
+report_invoice_created()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

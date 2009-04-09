@@ -281,6 +281,7 @@ class product_pricelist_version(osv.osv):
                 where.append("((date_end>='%s') or (date_end is null))" % (pricelist_version.date_start,))
             if pricelist_version.date_end:
                 where.append("((date_start<='%s') or (date_start is null))" % (pricelist_version.date_end,))
+
             cursor.execute('SELECT id ' \
                     'FROM product_pricelist_version ' \
                     'WHERE '+' and '.join(where) + (where and ' and ' or '')+
@@ -294,7 +295,7 @@ class product_pricelist_version(osv.osv):
         return True
 
     _constraints = [
-        (_check_date, 'You can not have 2 pricelist version that overlaps!',
+        (_check_date, 'You cannot have 2 pricelist versions that overlap!',
             ['date_start', 'date_end'])
     ]
 

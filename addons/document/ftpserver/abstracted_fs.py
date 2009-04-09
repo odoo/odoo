@@ -17,6 +17,22 @@ from service import security
 def log(message):
     logger = netsvc.Logger()
     logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
+
+
+def _get_month_name(month):
+    month=int(month)
+    if month==1:return 'Jan'
+    elif month==2:return 'Feb'
+    elif month==3:return 'Mar'
+    elif month==4:return 'Apr'
+    elif month==5:return 'May'
+    elif month==6:return 'Jun'
+    elif month==7:return 'Jul'
+    elif month==8:return 'Aug'
+    elif month==9:return 'Sep'
+    elif month==10:return 'Oct'
+    elif month==11:return 'Nov'
+    elif month==12:return 'Dec'
 			
 class file_wrapper(StringIO.StringIO):
     def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
@@ -195,7 +211,7 @@ class abstracted_fs:
             cid=False
 
             where=[('name','=',objname)]
-            if object and (object.type in ('directory','ressource')) or object2:
+            if object and (object.type in ('directory')) or object2:
                 where.append(('parent_id','=',object.id))
             else:
                 where.append(('parent_id','=',False))
@@ -214,7 +230,7 @@ class abstracted_fs:
                     'file_size': 0L,
                     'file_type': ext,
                 }
-                if object and (object.type in ('directory','ressource')) or not object2:
+                if object and (object.type in ('directory')) or not object2:
                     val['parent_id']= object and object.id or False
                 partner = False
                 if object2:
@@ -322,7 +338,7 @@ class abstracted_fs:
                 'ressource_parent_type_id': object and object.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False
             }
-            if (object and (object.type in ('directory'))) or not object2:
+            if (object and (object.type in ('directory'))) or not object2:                
                 val['parent_id'] =  object and object.id or False
             # Check if it alreayd exists !
             pool.get('document.directory').create(cr, uid, val)
@@ -449,11 +465,12 @@ class abstracted_fs:
                     ressource_type_id = pool.get('ir.model').search(cr,uid,[('model','=',dst_basedir.object2._name)])[0]
                     ressource_id = dst_basedir.object2.id
                     title = dst_basedir.object2.name
-                    ressource_model = dst_basedir.object2._name
+                    ressource_model = dst_basedir.object2._name                    
                     if dst_basedir.object2._name=='res.partner':
                         partner_id=dst_basedir.object2.id
                     else:
-                        partner_id= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name)                         
+                        partner_id= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 else:
                     ressource_type_id = False
                     ressource_id=False
@@ -463,7 +480,7 @@ class abstracted_fs:
 
                 pool.get('document.directory').write(cr, uid, result['directory'], {
                     'ressource_id': ressource_id,
-                    'ressource_parent_type_id': ressource_type_id
+                    'ressource_type_id': ressource_type_id
                 })
                 val = {
                     'res_id': ressource_id,
@@ -499,7 +516,8 @@ class abstracted_fs:
                     if dst_basedir.object2._name=='res.partner':
                         val['partner_id']=dst_basedir.object2.id
                     else:
-                        val['partner_id']= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name) 
+                        val['partner_id']= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 elif src.object.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
                     # change if one day we decide to improve osv/fields.py
@@ -647,7 +665,7 @@ class abstracted_fs:
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok
+    # Ok    
     def format_list(self, basedir, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
@@ -686,10 +704,11 @@ class abstracted_fs:
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mtime = time.strftime("%b %d %H:%M", time.localtime(st.st_mtime))
+                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
+                mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
             except ValueError:
-                mtime = time.strftime("%b %d %H:%M")
-
+                mname=_get_month_name(time.strftime("%m"))
+                mtime = mname+' '+time.strftime("%d %H:%M")            
             # formatting is matched with proftpd ls output
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
                                                      size, mtime, file.path.encode('ascii','replace').replace('?','_').split('/')[-1])

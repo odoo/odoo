@@ -20,7 +20,7 @@
             </field>
         </record>
 
-        <!-- Case Sections --> 
+        <!-- Case Sections -->
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
@@ -100,7 +100,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="crm_case_categ-act" model="ir.actions.act_window">
             <field name="name">Categories</field>
             <field name="res_model">crm.case.categ</field>
@@ -108,7 +108,7 @@
             <field name="view_id" ref="crm_case_categ_tree-view"/>
         </record>
         <menuitem action="crm_case_categ-act" id="menu_crm_case_categ-act" parent="crm.next_id_51"/>
-        
+
         <!-- Case rules -->
         <record id="crm_case_rule-view" model="ir.ui.view">
             <field name="name">crm.case.rule.form</field>
@@ -123,7 +123,7 @@
                             <separator colspan="4" string="Conditions on States"/>
                             <field name="trg_state_from" select="2"/>
                             <field name="trg_state_to" select="2"/>
-                            
+
                             <separator colspan="4" string="Conditions on Case Fields"/>
                             <field name="trg_section_id" select="1"/>
                             <field name="trg_categ_id"/>
@@ -141,6 +141,8 @@
                                 <field name="trg_date_range" nolabel="1"/>
                                 <field name="trg_date_range_type" nolabel="1"/>
                             </group>
+                            <separator colspan="4" string="Condition on Communication History"/>
+                            <field name="trg_max_history"/>
                             <separator colspan="4" string="Note"/>
                             <label align="0.0" string="The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
                         </page>
@@ -200,8 +202,8 @@
             <field name="view_id" ref="crm_case_rule_tree-view"/>
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
-        
-        
+
+
         <!-- Cases -->
         <record id="crm_case_log_tree-view" model="ir.ui.view">
             <field name="name">crm.case.log.tree</field>
@@ -218,8 +220,8 @@
                 </tree>
             </field>
         </record>
-        
-        
+
+
         <record id="crm_case_history_tree-view" model="ir.ui.view">
             <field name="name">crm.case.history.tree</field>
             <field name="model">crm.case.history</field>
@@ -234,7 +236,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="crm_case_calendar-view" model="ir.ui.view">
             <field name="name">crm.case.calendar</field>
             <field name="model">crm.case</field>
@@ -247,8 +249,8 @@
                 </calendar>
             </field>
         </record>
-        
-        
+
+
         <record id="crm_case_tree-view" model="ir.ui.view">
             <field name="name">crm.case.tree</field>
             <field name="model">crm.case</field>
@@ -268,7 +270,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="crm_case-view" model="ir.ui.view">
             <field name="name">crm.case.form</field>
             <field name="model">crm.case</field>
@@ -292,7 +294,7 @@
                                 <field name="user_id" select="1"/>
                                 <button name="remind_user" states="open,pending" string="Send Reminder" type="object"/>
                             </group>
-                            
+
                             <separator colspan="4"/>
                             <field colspan="2" mode="tree,form" name="history_line" nolabel="1">
                                 <form string="Communication history">
@@ -315,7 +317,7 @@
                                 <button name="case_log_reply" states="open" string="Send Partner &amp; Historize" type="object"/>
                                 <button name="case_log" states="open" string="Historize" type="object"/>
                             </group>
-                            
+
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
@@ -362,7 +364,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="crm_case_categ0-act" model="ir.actions.act_window">
             <field name="name">All Cases</field>
             <field name="res_model">crm.case</field>
@@ -370,7 +372,7 @@
             <field name="view_id" ref="crm_case_tree-view"/>
         </record>
         <menuitem action="crm_case_categ0-act" id="menu_crm_case_categ0-act" parent="crm.next_id_52"/>
-        
+
         <record id="crm_case_categ0-act_open" model="ir.actions.act_window">
             <field name="name">Open Cases</field>
             <field name="res_model">crm.case</field>
@@ -378,8 +380,8 @@
             <field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
         </record>
         <menuitem action="crm_case_categ0-act_open" id="menu_crm_case_categ0-act_open" parent="crm.menu_crm_case_categ0-act"/>
-        
-        
+
+
         <record id="crm_case_categ0-act_my" model="ir.actions.act_window">
             <field name="name">My cases</field>
             <field name="res_model">crm.case</field>
@@ -396,10 +398,10 @@
             <field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
         </record>
         <menuitem action="crm_case_categ0-act_my_open" id="menu_crm_case_categ0-act_my_open" parent="crm.menu_crm_case_categ0-act_my"/>
-        
-        
-        
-        
+
+
+
+
         <record id="crm_case_section_open_act" model="ir.actions.act_window">
             <field name="name">crm.case.section.open</field>
             <field name="res_model">crm.case</field>
@@ -414,8 +416,8 @@
             <field eval="'ir.actions.act_window,%d'%crm_case_section_open_act" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
-        
+
+
         <record id="crm_case_history-view" model="ir.ui.view">
             <field name="name">crm.case.history.form</field>
             <field name="model">crm.case.history</field>
@@ -450,7 +452,7 @@
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
         <menuitem action="crm_case_history_my-act" id="menu_crm_case_history_my-act" parent="crm.menu_crm_case_history-act_main"/>
-        
+
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.tree</field>
             <field name="model">crm.segmentation.line</field>
@@ -465,7 +467,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="crm_segmentation_line-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.form</field>
             <field name="model">crm.segmentation.line</field>
@@ -483,7 +485,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="crm_segmentation-view" model="ir.ui.view">
             <field name="name">crm.segmentation.form</field>
             <field name="model">crm.segmentation</field>
@@ -532,14 +534,14 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="crm_segmentation-act" model="ir.actions.act_window">
             <field name="name">Segmentations</field>
             <field name="res_model">crm.segmentation</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_segmentation-view"/>
         </record>
-        
+
         <record id="crm_segmentation_tree-act" model="ir.actions.act_window">
             <field name="name">Segmentations</field>
             <field name="res_model">crm.segmentation</field>
@@ -547,17 +549,17 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem id="next_id_53" name="Segmentations" parent="crm.menu_crm_configuration"/><menuitem action="crm_segmentation_tree-act" id="menu_crm_segmentation-act" parent="next_id_53"/>
-        
+
         <act_window domain="[('section_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_crm_case_section_crm_case_opened" name="Open cases" res_model="crm.case" src_model="crm.case.section" view_mode="tree,form,calendar" view_type="form"/>
-        
+
         <act_window domain="[('categ_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_crm_case_categ_crm_case_opened" name="Open cases" res_model="crm.case" src_model="crm.case.categ" view_mode="tree,form,calendar" view_type="form"/>
-        
+
         <act_window domain="[('partner_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner" view_mode="tree,form,calendar" view_type="form"/>
-        
+
         <act_window domain="[('canal_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_canal_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner.canal" view_mode="tree,form,calendar" view_type="form"/>
-        
+
         <act_window domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_users_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.users" view_mode="tree,form,calendar" view_type="form"/>
-        
-        
+
+
     </data>
 </openerp>
