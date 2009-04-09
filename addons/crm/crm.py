@@ -537,6 +537,9 @@ class crm_case(osv.osv):
         name = '[%d] %s' % (case.id, case.name.encode('utf8'))
         reply_to = case.section_id.reply_to or False
         if reply_to: reply_to = reply_to.encode('utf8')
+        if not emailfrom:
+            raise osv.except_osv(_('Error!'),
+                    _("No E-Mail ID Found for the Responsible user !"))
         tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, tinycrm=str(case.id))
         return True
     def __log(self, cr, uid, cases, keyword, context={}):
@@ -603,6 +606,11 @@ class crm_case(osv.osv):
         for case in self.browse(cr, uid, ids):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
+                
+                if not src:
+                    raise osv.except_osv(_('Error!'),
+                        _("No E-Mail ID Found for the Responsible user !"))
+                    
                 dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:
@@ -617,7 +625,7 @@ class crm_case(osv.osv):
                     attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
-
+                
                 # Send an email
                 tools.email_send(
                     src,
@@ -667,8 +675,14 @@ class crm_case(osv.osv):
             body = case.description or ''
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
+            
+            emailfrom = case.user_id.address_id and case.user_id.address_id.email or False
+            if not emailfrom:
+                raise osv.except_osv(_('Error!'),
+                        _("No E-Mail ID Found for the Responsible user !"))
+                
             tools.email_send(
-                case.user_id.address_id.email,
+                emailfrom,
                 emails,
                 '['+str(case.id)+'] '+case.name,
                 self.format_body(body),
