@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:04:43+0000\n"
-"PO-Revision-Date: 2009-02-06 15:04:43+0000\n"
+"POT-Creation-Date: 2009-04-09 13:29:42+0000\n"
+"PO-Revision-Date: 2009-04-09 13:29:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,11 @@ msgstr ""
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
 msgid "End Date"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -97,13 +102,18 @@ msgid "Currency:"
 msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Percentage"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
+msgstr ""
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Percentage"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -117,8 +127,9 @@ msgid "Select Information"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -152,6 +163,12 @@ msgid "Analytic Plan Line"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
 msgstr ""
@@ -172,11 +189,24 @@ msgid "to"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -268,6 +298,18 @@ msgid "Account2 Id"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
 msgstr ""
@@ -325,6 +367,12 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
 msgstr ""
 
 #. module: account_analytic_plans

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:00:57+0000\n"
-"PO-Revision-Date: 2009-02-06 15:00:57+0000\n"
+"POT-Creation-Date: 2009-04-09 13:23:01+0000\n"
+"PO-Revision-Date: 2009-04-09 13:23:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,7 @@ msgstr ""
 
 #. module: wiki
 #: code:addons/wiki/wizard/open_page.py:0
+#: model:ir.actions.wizard,name:wiki.wizard_open_page
 #, python-format
 msgid "Open Page"
 msgstr ""
@@ -82,6 +83,11 @@ msgstr ""
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document_configuration
 msgid "Wiki Configuration"
+msgstr ""
+
+#. module: wiki
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: wiki
@@ -179,6 +185,12 @@ msgstr ""
 #: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
 msgstr ""
 
 #. module: wiki
@@ -324,6 +336,12 @@ msgstr ""
 #. module: wiki
 #: field:wiki.wiki,toc:0
 msgid "Table of Contents"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: wiki

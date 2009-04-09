@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:06:01+0000\n"
-"PO-Revision-Date: 2009-02-06 15:06:01+0000\n"
+"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
+"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgid "Analytic account"
 msgstr "Analüütiline konto"
 
 #. module: report_analytic_planning
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: report_analytic_planning
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
@@ -72,10 +77,9 @@ msgid "Planning account stat"
 msgstr "Planeerimise konto viivitamatult"
 
 #. module: report_analytic_planning
-#: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_line
-#: view:report_account_analytic.planning:0
-msgid "Planning Line"
-msgstr "Plaanimise Rida"
+#: field:report_account_analytic.planning.stat,sum_amount:0
+msgid "Planned hours"
+msgstr "Planeeritud tunnid"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0
@@ -116,9 +120,10 @@ msgid "Timesheet"
 msgstr "Ajagraafik"
 
 #. module: report_analytic_planning
-#: field:report_account_analytic.planning.stat,sum_amount:0
-msgid "Planned hours"
-msgstr "Planeeritud tunnid"
+#: model:ir.model,name:report_analytic_planning.model_report_account_analytic_planning_line
+#: view:report_account_analytic.planning:0
+msgid "Planning Line"
+msgstr "Plaanimise Rida"
 
 #. module: report_analytic_planning
 #: rml:report_account_analytic.planning.print:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:08:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:08:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:37:54+0000\n"
+"PO-Revision-Date: 2009-04-09 13:37:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,8 +81,8 @@ msgid "Employee's name"
 msgstr "Nome Dipendente"
 
 #. module: hr_attendance
-#: wizard_button:hr.print_month,init,print:0
-#: wizard_button:hr.print_week,init,print:0
+#: wizard_button:hr.attendance.print_month,init,print:0
+#: wizard_button:hr.attendance.print_week,init,print:0
 msgid "Print Timesheet"
 msgstr ""
 
@@ -90,6 +90,11 @@ msgstr ""
 #: model:ir.actions.wizard,name:hr_attendance.wizard_attendance_error
 msgid "Print Attendance Error Report"
 msgstr "Stampa Rapporto Errori Presenze"
+
+#. module: hr_attendance
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_week
@@ -102,10 +107,10 @@ msgid "Employee"
 msgstr "Dipendente"
 
 #. module: hr_attendance
-#: wizard_view:hr.print_week,init:0
-#: wizard_view:hr.timesheet.attendance.report,init:0
+#: wizard_view:hr.attendance.print_week,init:0
+#: wizard_view:hr.attendance.report,init:0
 msgid "Select a time span"
-msgstr "Seleziona un periodo di tempo"
+msgstr ""
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
@@ -136,17 +141,17 @@ msgid "Action reason"
 msgstr "Motivi Azione"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "March"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "August"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "May"
 msgstr ""
 
@@ -157,7 +162,7 @@ msgid "A sign-out must be right after a sign-in !"
 msgstr "Una uscita deve essere registrata appena dopo un'entrata"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "June"
 msgstr ""
 
@@ -204,7 +209,7 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "July"
 msgstr ""
 
@@ -219,10 +224,10 @@ msgid "Attendance reasons"
 msgstr "Motivo Presenza"
 
 #. module: hr_attendance
-#: wizard_field:hr.print_week,init,init_date:0
-#: wizard_field:hr.timesheet.attendance.report,init,init_date:0
+#: wizard_field:hr.attendance.print_week,init,init_date:0
+#: wizard_field:hr.attendance.report,init,init_date:0
 msgid "Starting Date"
-msgstr "Data di inizio"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -235,12 +240,12 @@ msgid "Absent"
 msgstr "Assente"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "February"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "October"
 msgstr ""
 
@@ -256,7 +261,7 @@ msgid "The Sign-in date must be in the past"
 msgstr "La data di ingresso deve essere nel passato"
 
 #. module: hr_attendance
-#: wizard_field:hr.print_month,init,year:0
+#: wizard_field:hr.attendance.print_month,init,year:0
 msgid "Year"
 msgstr ""
 
@@ -283,9 +288,9 @@ msgid "Sign in"
 msgstr "Entrata"
 
 #. module: hr_attendance
-#: wizard_view:hr.timesheet.attendance.report,init:0
+#: wizard_view:hr.attendance.report,init:0
 msgid "Analysis Information"
-msgstr "Informazioni Analisi"
+msgstr ""
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,init,state:0
@@ -293,12 +298,12 @@ msgid "Current state"
 msgstr "Stato Attuale"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "January"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "April"
 msgstr ""
 
@@ -321,9 +326,9 @@ msgid "Action"
 msgstr "Azione"
 
 #. module: hr_attendance
-#: wizard_button:hr.timesheet.attendance.report,init,print:0
+#: wizard_button:hr.attendance.report,init,print:0
 msgid "Print Attendance Report"
-msgstr "Stampa Report Presenze"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -332,14 +337,14 @@ msgid "Attendance Reasons"
 msgstr "Motivazioni Presenza"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "November"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.timesheet.attendance.report,init:0
+#: wizard_view:hr.attendance.report,init:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Al di sotto di questo ritardo, l'errore è considerato volontario"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -348,20 +353,20 @@ msgid "UserError"
 msgstr "Errore utente"
 
 #. module: hr_attendance
-#: wizard_field:hr.timesheet.attendance.report,init,max_delay:0
+#: wizard_field:hr.attendance.report,init,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr "Ritardo Massimo (min.)"
+msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.print_week,init:0
+#: wizard_view:hr.attendance.print_week,init:0
 msgid "Select a starting and a end date"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.print_week,init,end_date:0
-#: wizard_field:hr.timesheet.attendance.report,init,end_date:0
+#: wizard_field:hr.attendance.print_week,init,end_date:0
+#: wizard_field:hr.attendance.report,init,end_date:0
 msgid "Ending Date"
-msgstr "Data Fine"
+msgstr ""
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,so_ask_si:0
@@ -369,7 +374,7 @@ msgid "You did not signed in the last time. Please enter the date and time you s
 msgstr "L'ultima volta non hai registrato l'entrata. Insrisci data e ora dell'ultimo ingresso"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "September"
 msgstr ""
 
@@ -384,12 +389,12 @@ msgid "Employee attendance"
 msgstr "Presenza Dipendente"
 
 #. module: hr_attendance
-#: wizard_view:hr.print_month,init:0
+#: wizard_view:hr.attendance.print_month,init:0
 msgid "Select a month"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.print_month,init,month:0
+#: wizard_field:hr.attendance.print_month,init,month:0
 msgid "Month"
 msgstr ""
 
@@ -405,17 +410,17 @@ msgid "Warning"
 msgstr "Attenzione"
 
 #. module: hr_attendance
-#: selection:hr.print_month,init,month:0
+#: selection:hr.attendance.print_month,init,month:0
 msgid "December"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_button:hr.print_month,init,end:0
-#: wizard_button:hr.print_week,init,end:0
+#: wizard_button:hr.attendance.print_month,init,end:0
+#: wizard_button:hr.attendance.print_week,init,end:0
+#: wizard_button:hr.attendance.report,init,end:0
 #: wizard_button:hr.si_so,init,end:0
 #: wizard_button:hr.si_so,si_ask_so,end:0
 #: wizard_button:hr.si_so,so_ask_si,end:0
-#: wizard_button:hr.timesheet.attendance.report,init,end:0
 msgid "Cancel"
 msgstr "Annulla"
 

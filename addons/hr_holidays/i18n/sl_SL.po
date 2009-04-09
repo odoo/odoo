@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:13:21+0000\n"
-"PO-Revision-Date: 2009-02-06 15:13:21+0000\n"
+"POT-Creation-Date: 2009-04-09 13:46:06+0000\n"
+"PO-Revision-Date: 2009-04-09 13:46:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
 msgid "All Holidays Requests"
+msgstr ""
+
+#. module: hr_holidays
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: hr_holidays
@@ -215,7 +220,6 @@ msgid "Define holiday status"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary,init,holiday_type:0
 #: selection:hr.holidays.summary.employee,init,holiday_type:0
 msgid "Confirmed"
@@ -234,6 +238,7 @@ msgid "Confirm"
 msgstr "Potrdi"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
 msgid "My Awaiting Confirmation Holidays Requests"
 msgstr ""
@@ -254,6 +259,11 @@ msgstr ""
 #: field:hr.holidays.per.user,employee_id:0
 msgid "Employee"
 msgstr "Zaposleni"
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+msgid "Waiting Validation"
+msgstr ""
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
@@ -516,8 +526,9 @@ msgid "Section"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
-msgid "My Holidays Request Waiting confirmation"
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Attention!"
 msgstr ""
 
 #. module: hr_holidays
@@ -714,5 +725,11 @@ msgstr "Svetlo rožnata"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0
 msgid "His manager refuses the request"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:11:18+0000\n"
-"PO-Revision-Date: 2009-02-06 15:11:18+0000\n"
+"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
+"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,11 @@ msgstr ""
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
 msgstr "Membro pago"
+
+#. module: membership
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: membership
 #: field:report.partner_member.year,currency:0
@@ -85,6 +90,11 @@ msgstr ""
 #. module: membership
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: membership
@@ -152,6 +162,12 @@ msgstr "Estado"
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Data de inicio da sociedade"
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -277,6 +293,11 @@ msgstr "O preço negociado pelo terceiro"
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: membership
@@ -433,6 +454,12 @@ msgstr "Membro cancelado"
 #: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Preço do membro"
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
 
 #. module: membership
 #: field:res.partner,free_member:0

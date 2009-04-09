@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
-"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
+"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,30 +22,9 @@ msgid "Tasks finished by project (this month)"
 msgstr "Aufgaben nach Projekten (dieser Monat)"
 
 #. module: report_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: report_project
-#: view:report.project.task.user:0
-msgid "Tasks by Project and User"
-msgstr "Aufgaben nach Projekt und Benutzer"
-
-#. module: report_project
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
-
-#. module: report_project
-#: view:report.project.task.user:0
-msgid "Tasks by projects and users"
-msgstr "Aufgaben nach Projekten und Benutzern"
-
-#. module: report_project
-#: field:report.project.task,task_closed:0
-#: field:report.project.task.user,task_closed:0
-msgid "Task Closed"
-msgstr "Beendete Aufgaben"
 
 #. module: report_project
 #: model:ir.actions.act_window,name:report_project.action_project_task_user_tree
@@ -54,16 +33,67 @@ msgid "Tasks Closed by Project and User"
 msgstr "Fertige Aufgaben nach Projekt und Benutzer"
 
 #. module: report_project
-#: field:report.project.task,hours_delay:0
-#: field:report.project.task.user,hours_delay:0
-msgid "Avg. Plan.-Eff."
-msgstr "Durch. Plan. - Eff."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: report_project
-#: field:report.project.task,name:0
-#: field:report.project.task.user,name:0
-msgid "Month"
-msgstr "Monat"
+#: model:ir.actions.act_window,name:report_project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:report_project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr "Erl. Aufgaben nach Projekt und Benutzer (d. Monat)"
+
+#. module: report_project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Effektive Stunden"
+
+#. module: report_project
+#: model:ir.model,name:report_project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Aufgaben nach Benutzer und Projekt"
+
+#. module: report_project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr "Beendete Aufgaben"
+
+#. module: report_project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "Aufgaben nach Projekt"
+
+#. module: report_project
+#: model:ir.module.module,shortdesc:report_project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Verkaufsverwaltung - Berichte"
+
+#. module: report_project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr "Benutzer"
+
+#. module: report_project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "Aufgaben nach Projekt und Benutzer"
+
+#. module: report_project
+#: model:ir.ui.menu,name:report_project.next_id_63
+msgid "This Month"
+msgstr "Dieser Monat"
+
+#. module: report_project
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#. module: report_project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr "Aufgaben nach Projekten und Benutzern"
 
 #. module: report_project
 #: field:report.project.task,project_id:0
@@ -78,20 +108,22 @@ msgid "Avg Closing Delay"
 msgstr "Durch. Verzögerung"
 
 #. module: report_project
-#: model:ir.module.module,shortdesc:report_project.module_meta_information
-msgid "Sales Management - Reporting"
-msgstr "Verkaufsverwaltung - Berichte"
-
-#. module: report_project
-#: model:ir.model,name:report_project.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Aufgaben nach Benutzer und Projekt"
-
-#. module: report_project
 #: model:ir.model,name:report_project.model_report_project_task
 #: view:report.project.task:0
 msgid "Tasks by project"
 msgstr "Aufgaben nach Projekten"
+
+#. module: report_project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr "Durch. Plan. - Eff."
+
+#. module: report_project
+#: field:report.project.task,name:0
+#: field:report.project.task.user,name:0
+msgid "Month"
+msgstr "Monat"
 
 #. module: report_project
 #: model:ir.actions.act_window,name:report_project.action_project_task_tree
@@ -100,35 +132,8 @@ msgid "Tasks Closed by Project"
 msgstr "Erl. Aufgaben nach Projekt"
 
 #. module: report_project
-#: model:ir.actions.act_window,name:report_project.action_project_task_user_tree_month
-#: model:ir.ui.menu,name:report_project.menu_project_task_user_tree_month
-msgid "Tasks finished by project and user (this month)"
-msgstr "Erl. Aufgaben nach Projekt und Benutzer (d. Monat)"
-
-#. module: report_project
-#: view:report.project.task:0
-msgid "Tasks by Project"
-msgstr "Aufgaben nach Projekt"
-
-#. module: report_project
-#: model:ir.ui.menu,name:report_project.next_id_63
-msgid "This Month"
-msgstr "Dieser Monat"
-
-#. module: report_project
-#: field:report.project.task,hours_effective:0
-#: field:report.project.task.user,hours_effective:0
-msgid "Effective Hours"
-msgstr "Effektive Stunden"
-
-#. module: report_project
 #: field:report.project.task,hours_planned:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Plan Stunden"
-
-#. module: report_project
-#: field:report.project.task.user,user_id:0
-msgid "User"
-msgstr "Benutzer"
 

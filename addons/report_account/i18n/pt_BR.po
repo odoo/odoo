@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:10:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:10:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:41:23+0000\n"
+"PO-Revision-Date: 2009-04-09 13:41:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,19 +21,19 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Invalido XML para Arquitetura da View"
 
 #. module: report_account
-#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
-#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
-msgid "Balance by Type of Account"
+#: field:report.account.receivable,balance:0
+#: field:report.aged.receivable,balance:0
+msgid "Balance"
 msgstr ""
 
 #. module: report_account
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
 
 #. module: report_account
-#: model:ir.model,name:report_account.model_report_account_receivable
-msgid "Receivable accounts"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: report_account
@@ -42,18 +42,40 @@ msgid "Credit"
 msgstr ""
 
 #. module: report_account
-#: view:report.account.receivable:0
-msgid "Accounts by type"
-msgstr ""
-
-#. module: report_account
 #: field:report.account.receivable,name:0
 msgid "Week of Year"
 msgstr ""
 
 #. module: report_account
-#: field:report.account.receivable,type:0
-msgid "Account Type"
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
+
+#. module: report_account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr ""
+
+#. module: report_account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: report_account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr ""
+
+#. module: report_account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
+
+#. module: report_account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
 msgstr ""
 
 #. module: report_account
@@ -62,12 +84,22 @@ msgid "Debit"
 msgstr ""
 
 #. module: report_account
-#: field:report.account.receivable,balance:0
-msgid "Balance"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
+
+#. module: report_account
+#: field:report.account.receivable,type:0
+msgid "Account Type"
 msgstr ""
 
 #. module: report_account
 #: model:ir.module.module,shortdesc:report_account.module_meta_information
 msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: report_account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
 msgstr ""
 

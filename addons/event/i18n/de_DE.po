@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
-"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
+"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,11 @@ msgid "Minimum Registrations"
 msgstr "Minimum Anmeldungen"
 
 #. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: event
 #: field:event.event,mail_registr:0
 msgid "Registration Email"
 msgstr ""
@@ -39,6 +44,11 @@ msgstr ""
 #. module: event
 #: field:event.event,mail_confirm:0
 msgid "Confirmation Email"
+msgstr ""
+
+#. module: event
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive sections."
 msgstr ""
 
 #. module: event
@@ -137,9 +147,9 @@ msgid "Registration Confirmation"
 msgstr ""
 
 #. module: event
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: view:event.registration:0
+msgid "Dates"
+msgstr "Termine"
 
 #. module: event
 #: field:event.event,register_current:0
@@ -222,9 +232,9 @@ msgid "You must define a reply-to address in order to mail the participant. You 
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Dates"
-msgstr "Termine"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: event
 #: wizard_button:event.confirm_registration,split,confirm:0
@@ -507,9 +517,10 @@ msgid "Confirmed Events"
 msgstr "Bestätige Veranstaltungen"
 
 #. module: event
-#: constraint:crm.case.section:0
-msgid "Error ! You can not create recursive sections."
-msgstr "Fehler! Sie können keine rekursiven Werte eintragen."
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Max. Anmeldungen"
 
 #. module: event
 #: field:event.event,type:0
@@ -579,12 +590,6 @@ msgstr "Registrierungen"
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
 msgstr "Entfurf Veranstaltung"
-
-#. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Max. Anmeldungen"
 
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_rejected:0

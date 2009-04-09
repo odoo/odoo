@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:08:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:08:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:37:53+0000\n"
+"PO-Revision-Date: 2009-04-09 13:37:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgid "All Cases"
 msgstr "Tutti i Casi"
 
 #. module: crm
+#: wizard_view:crm.case.section.menu,init:0
+msgid "this wizard will create all sub-menus, within the selected menu."
+msgstr ""
+
+#. module: crm
 #: field:crm.case.rule,act_remind_partner:0
 msgid "Remind Partner"
 msgstr "Ricorda Partner"
@@ -63,6 +68,11 @@ msgstr "Informazioni Base"
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
 msgstr "Categoria Partner"
+
+#. module: crm
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
@@ -131,6 +141,11 @@ msgstr "Descrizione Segmentazione"
 #: view:crm.case.rule:0
 msgid "%(case_user)s = Responsible name"
 msgstr "%(case_user)s = Nome Responsabile"
+
+#. module: crm
+#: field:crm.case.section,allow_unlink:0
+msgid "Allow Delete"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.rule,act_email_cc:0
@@ -509,9 +524,9 @@ msgid "Fields to Change"
 msgstr "Campi da cambiare"
 
 #. module: crm
-#: selection:crm.case.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "Data di Creazione"
+#: model:ir.ui.menu,name:crm.menu_crm_case_history-act_main
+msgid "Cases Histories"
+msgstr "Riepilogo Casi"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_my
@@ -906,6 +921,11 @@ msgid "Pending"
 msgstr "In sospeso"
 
 #. module: crm
+#: wizard_view:crm.case.section.menu,init:0
+msgid "You may want to create a new parent menu to put all the created menus in."
+msgstr ""
+
+#. module: crm
 #: field:crm.case,state:0
 msgid "Status"
 msgstr "Stato"
@@ -1044,9 +1064,9 @@ msgid "%(case_id)s = Case ID"
 msgstr "%(case_id)s = ID Caso"
 
 #. module: crm
-#: selection:crm.case.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "Mesi"
+#: selection:crm.case.rule,trg_date_type:0
+msgid "Creation Date"
+msgstr "Data di Creazione"
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -1329,12 +1349,6 @@ msgid "Running"
 msgstr "In esecuzione"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
-#: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
-msgid "Cases by section"
-msgstr "Casi per Sezione"
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
 msgstr "Importo Vendita"
@@ -1363,6 +1377,11 @@ msgstr "="
 #, python-format
 msgid "Case"
 msgstr "Caso"
+
+#. module: crm
+#: selection:crm.case.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Mesi"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1431,6 +1450,11 @@ msgstr "Utente Responsabile"
 #: model:ir.ui.menu,name:crm.menu_crm_case_history-act
 msgid "All Histories"
 msgstr "Tutti i Riepiloghi"
+
+#. module: crm
+#: help:crm.case.section,allow_unlink:0
+msgid "Allows to delete non draft cases"
+msgstr ""
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu4:0
@@ -1518,9 +1542,10 @@ msgid "Control Variable"
 msgstr "Variabile di Controllo"
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.menu_crm_case_history-act_main
-msgid "Cases Histories"
-msgstr "Riepilogo Casi"
+#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
+#: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
+msgid "Cases by section"
+msgstr "Casi per Sezione"
 
 #. module: crm
 #: field:crm.case,date_action_last:0

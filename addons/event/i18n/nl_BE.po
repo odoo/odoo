@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:18:25+0000\n"
-"PO-Revision-Date: 2009-02-06 15:18:25+0000\n"
+"POT-Creation-Date: 2009-04-09 13:30:50+0000\n"
+"PO-Revision-Date: 2009-04-09 13:30:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,11 @@ msgid "Minimum Registrations"
 msgstr ""
 
 #. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: event
 #: field:event.event,mail_registr:0
 msgid "Registration Email"
 msgstr ""
@@ -39,6 +44,11 @@ msgstr ""
 #. module: event
 #: field:event.event,mail_confirm:0
 msgid "Confirmation Email"
+msgstr ""
+
+#. module: event
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive sections."
 msgstr ""
 
 #. module: event
@@ -137,8 +147,8 @@ msgid "Registration Confirmation"
 msgstr ""
 
 #. module: event
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:event.registration:0
+msgid "Dates"
 msgstr ""
 
 #. module: event
@@ -222,8 +232,8 @@ msgid "You must define a reply-to address in order to mail the participant. You 
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Dates"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: event
@@ -507,8 +517,9 @@ msgid "Confirmed Events"
 msgstr ""
 
 #. module: event
-#: constraint:crm.case.section:0
-msgid "Error ! You can not create recursive sections."
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
 msgstr ""
 
 #. module: event
@@ -578,12 +589,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_view_draft
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
-msgstr ""
-
-#. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
 msgstr ""
 
 #. module: event

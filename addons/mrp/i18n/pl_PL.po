@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:09:57+0000\n"
-"PO-Revision-Date: 2009-02-06 15:09:57+0000\n"
+"POT-Creation-Date: 2009-04-09 13:40:14+0000\n"
+"PO-Revision-Date: 2009-04-09 13:40:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,11 @@ msgid "Manufacturing Resource Planning"
 msgstr ""
 
 #. module: mrp
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
 msgstr ""
@@ -53,13 +58,13 @@ msgid "Exceptions Procurements"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Workcenters"
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
 msgstr ""
 
 #. module: mrp
-#: rml:bom.structure:0
-msgid "UoM"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Workcenters"
 msgstr ""
 
 #. module: mrp
@@ -81,6 +86,12 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: mrp
@@ -177,7 +188,6 @@ msgstr ""
 #: wizard_field:change_production_qty,confirm,product_qty:0
 #: field:mrp.bom,product_qty:0
 #: field:mrp.production,product_qty:0
-#: field:mrp.production,product_uos_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr ""
@@ -651,8 +661,10 @@ msgid "Per month"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Couldn't find bill of material for product"
 msgstr ""
 
 #. module: mrp
@@ -889,6 +901,12 @@ msgid "Description of the workcenter. Explain here what's a cycle according to t
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
+msgstr ""
+
+#. module: mrp
 #: rml:bom.structure:0
 msgid "-"
 msgstr ""
@@ -1051,6 +1069,11 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hour"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Notes"
 msgstr ""
 
 #. module: mrp
@@ -1230,6 +1253,7 @@ msgid "Procurement for raw materials."
 msgstr ""
 
 #. module: mrp
+#: view:mrp.procurement:0
 #: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
@@ -1408,7 +1432,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_uom:0
 #: field:mrp.production,product_uom:0
-#: field:mrp.production,product_uos:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
@@ -1438,6 +1461,7 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
 msgid "Product UoS"
 msgstr ""
 
@@ -1594,6 +1618,11 @@ msgstr ""
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production,product_uos_qty:0
+msgid "Product UoS Qty"
 msgstr ""
 
 #. module: mrp
@@ -1837,6 +1866,13 @@ msgstr ""
 #. module: mrp
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: mrp

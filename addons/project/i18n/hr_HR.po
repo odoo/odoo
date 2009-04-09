@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:04:04+0000\n"
-"PO-Revision-Date: 2009-02-06 15:04:04+0000\n"
+"POT-Creation-Date: 2009-04-09 13:28:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:28:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,8 +63,8 @@ msgid "Open Done Task"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Delegations"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: project
@@ -350,8 +350,8 @@ msgid "Reset as Project"
 msgstr ""
 
 #. module: project
-#: selection:project.project,state:0
-msgid "Template"
+#: view:project.task:0
+msgid "Delegations"
 msgstr ""
 
 #. module: project
@@ -447,6 +447,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr ""
@@ -489,6 +490,11 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,init,planned_hours:0
 msgid "Estimated time to close this task by the delegated user."
+msgstr ""
+
+#. module: project
+#: selection:project.project,state:0
+msgid "Template"
 msgstr ""
 
 #. module: project
@@ -698,6 +704,7 @@ msgid "Project Time Unit"
 msgstr ""
 
 #. module: project
+#: field:project.project,complete_name:0
 #: field:project.project,name:0
 msgid "Project Name"
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:16:13+0000\n"
-"PO-Revision-Date: 2009-02-06 15:16:13+0000\n"
+"POT-Creation-Date: 2009-04-09 13:50:50+0000\n"
+"PO-Revision-Date: 2009-04-09 13:50:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,14 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: analytic_user_function
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: analytic_user_function
@@ -47,8 +53,8 @@ msgid "User"
 msgstr ""
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
 msgstr ""
 
 #. module: analytic_user_function

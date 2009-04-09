@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgid "Monthly cumulated sales turnover over one year"
 msgstr ""
 
 #. module: report_sale
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: report_sale
 #: model:ir.ui.menu,name:report_sale.next_id_82
 msgid "All Months"
 msgstr ""
@@ -51,7 +56,7 @@ msgstr ""
 #. module: report_sale
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
@@ -227,5 +232,11 @@ msgstr ""
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Cancel"
+msgstr ""
+
+#. module: report_sale
+#: model:ir.actions.act_window,name:report_sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
 msgstr ""
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
-"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
+"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,20 @@ msgid "Timesheet by user"
 msgstr "Zeiterfassung nach Benutzer"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_account_all
+msgid "Timesheet by Account"
+msgstr "Zeiterfassung nach Konto"
+
+#. module: report_timesheet
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
+
+#. module: report_timesheet
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Zeiterfassung nach Konto"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_invoice
@@ -49,9 +60,9 @@ msgid "Timesheets"
 msgstr "Zeiterfassung"
 
 #. module: report_timesheet
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
-msgstr "Zeiterfassung nach Konto"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timehsheet_account
@@ -75,18 +86,23 @@ msgid "Timesheet per day"
 msgstr "Tägliche Zeiterfassung"
 
 #. module: report_timesheet
+#: field:report.random.timesheet,name:0
+msgid "Description"
+msgstr ""
+
+#. module: report_timesheet
 #: model:ir.model,name:report_timesheet.model_report_timesheet_account
 #: view:report_timesheet.account:0
 msgid "Timesheet per account"
 msgstr "Zeiterfassung nach Konto"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_account_all
-msgid "Timesheet by Account"
-msgstr "Zeiterfassung nach Konto"
+#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
+msgid "Timesheet - Reporting"
+msgstr "Arbeitszeitaufzeichnung - Berichte"
 
 #. module: report_timesheet
+#: field:report.random.timesheet,date:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Date"
@@ -109,6 +125,12 @@ msgid "My timesheets by account"
 msgstr "Meine Zeiterfassung nach Analysekonten"
 
 #. module: report_timesheet
+#: model:ir.model,name:report_timesheet.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr ""
+
+#. module: report_timesheet
+#: field:report.random.timesheet,user_id:0
 #: field:report_timesheet.account,user_id:0
 #: field:report_timesheet.account.date,user_id:0
 #: field:report_timesheet.invoice,user_id:0
@@ -122,9 +144,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: report_timesheet
-#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
-msgid "Timesheet - Reporting"
-msgstr "Arbeitszeitaufzeichnung - Berichte"
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
+msgstr ""
 
 #. module: report_timesheet
 #: view:report_timesheet.account.date:0
@@ -159,6 +181,12 @@ msgid "Timesheet by Invoice"
 msgstr "Zeiterfassung nach Rechnung"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr ""
+
+#. module: report_timesheet
+#: field:report.random.timesheet,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.invoice,quantity:0
@@ -191,6 +219,7 @@ msgid "Month"
 msgstr "Monat"
 
 #. module: report_timesheet
+#: field:report.random.timesheet,analytic_account_id:0
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"

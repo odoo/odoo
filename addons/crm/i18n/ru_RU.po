@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:12:39+0000\n"
-"PO-Revision-Date: 2009-02-06 15:12:39+0000\n"
+"POT-Creation-Date: 2009-04-09 13:44:55+0000\n"
+"PO-Revision-Date: 2009-04-09 13:44:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgid "All Cases"
 msgstr ""
 
 #. module: crm
+#: wizard_view:crm.case.section.menu,init:0
+msgid "this wizard will create all sub-menus, within the selected menu."
+msgstr ""
+
+#. module: crm
 #: field:crm.case.rule,act_remind_partner:0
 msgid "Remind Partner"
 msgstr ""
@@ -63,6 +68,11 @@ msgstr "Основная информация"
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
 msgstr "Категория партнера"
+
+#. module: crm
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
@@ -130,6 +140,11 @@ msgstr "Описание классификации"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user)s = Responsible name"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,allow_unlink:0
+msgid "Allow Delete"
 msgstr ""
 
 #. module: crm
@@ -494,9 +509,9 @@ msgid "Fields to Change"
 msgstr ""
 
 #. module: crm
-#: selection:crm.case.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "Дата создания"
+#: model:ir.ui.menu,name:crm.menu_crm_case_history-act_main
+msgid "Cases Histories"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_my
@@ -891,6 +906,11 @@ msgid "Pending"
 msgstr "В ожидании"
 
 #. module: crm
+#: wizard_view:crm.case.section.menu,init:0
+msgid "You may want to create a new parent menu to put all the created menus in."
+msgstr ""
+
+#. module: crm
 #: field:crm.case,state:0
 msgid "Status"
 msgstr "Статус"
@@ -1029,9 +1049,9 @@ msgid "%(case_id)s = Case ID"
 msgstr ""
 
 #. module: crm
-#: selection:crm.case.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "Месяцы"
+#: selection:crm.case.rule,trg_date_type:0
+msgid "Creation Date"
+msgstr "Дата создания"
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -1314,12 +1334,6 @@ msgid "Running"
 msgstr "Выполняется"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
-#: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
-msgid "Cases by section"
-msgstr ""
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
 msgstr ""
@@ -1348,6 +1362,11 @@ msgstr "="
 #, python-format
 msgid "Case"
 msgstr ""
+
+#. module: crm
+#: selection:crm.case.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Месяцы"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1416,6 +1435,11 @@ msgstr "Ответственный пользователь"
 #: model:ir.ui.menu,name:crm.menu_crm_case_history-act
 msgid "All Histories"
 msgstr "Все журналы"
+
+#. module: crm
+#: help:crm.case.section,allow_unlink:0
+msgid "Allows to delete non draft cases"
+msgstr ""
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu4:0
@@ -1503,8 +1527,9 @@ msgid "Control Variable"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.menu_crm_case_history-act_main
-msgid "Cases Histories"
+#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
+#: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
+msgid "Cases by section"
 msgstr ""
 
 #. module: crm

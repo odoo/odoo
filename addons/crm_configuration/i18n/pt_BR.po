@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:10:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:10:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:41:23+0000\n"
+"PO-Revision-Date: 2009-04-09 13:41:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,11 @@ msgstr "Casos por seção e categoria2"
 #: wizard_field:crm.case.partner_create,init,close:0
 msgid "Close Lead"
 msgstr "Encerrar ligação"
+
+#. module: crm_configuration
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_all3
@@ -67,6 +72,13 @@ msgstr "Quantia"
 #: model:crm.case.stage,name:crm_configuration.stage_claim2
 #: model:crm.case.stage,name:crm_configuration.stage_meet1
 msgid "Fixed"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: crm_configuration
@@ -437,11 +449,6 @@ msgid "Bugs With Patches Waiting Approval"
 msgstr ""
 
 #. module: crm_configuration
-#: constraint:crm.case.section:0
-msgid "Error ! You can not create recursive sections."
-msgstr "Erro ! Voce não pode criar seções recursivas."
-
-#. module: crm_configuration
 #: model:crm.case.stage,name:crm_configuration.stage_job5
 msgid "Contract Signed"
 msgstr ""
@@ -593,11 +600,6 @@ msgstr ""
 #: model:crm.case.section,name:crm_configuration.section_support1
 msgid "Meetings"
 msgstr "Reuniões"
-
-#. module: crm_configuration
-#: view:crm.case:0
-msgid "Reset to Unconfirmed"
-msgstr "Restaurar para não confirmado"
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_all4
@@ -1032,6 +1034,11 @@ msgid "Inbound"
 msgstr ""
 
 #. module: crm_configuration
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive sections."
+msgstr ""
+
+#. module: crm_configuration
 #: help:crm.menu.config_wizard,document_ics:0
 msgid " Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."
 msgstr " Permitirá que você sincronizar os calendários Open ERP com o telefone, o Outlook, Sunbird, ical, ..."
@@ -1310,10 +1317,9 @@ msgid "All Feature Request"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act11
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act11
-msgid "My Jobs Requests"
-msgstr ""
+#: view:crm.case:0
+msgid "Reset to Unconfirmed"
+msgstr "Restaurar para não confirmado"
 
 #. module: crm_configuration
 #: field:crm.case,note:0
@@ -1480,6 +1486,12 @@ msgid "Open"
 msgstr "Abrir"
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "A partner is already existing with the same name."
+msgstr ""
+
+#. module: crm_configuration
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
@@ -1579,6 +1591,12 @@ msgstr ""
 #. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.categ2_fund4
 msgid "Demand Draft"
+msgstr ""
+
+#. module: crm_configuration
+#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act11
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act11
+msgid "My Jobs Requests"
 msgstr ""
 
 #. module: crm_configuration

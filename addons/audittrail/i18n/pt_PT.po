@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:11:17+0000\n"
-"PO-Revision-Date: 2009-02-06 15:11:17+0000\n"
+"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
+"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,11 @@ msgstr "Rascunho"
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
 msgstr "Valor antigo"
+
+#. module: audittrail
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: audittrail
 #: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
@@ -153,6 +158,12 @@ msgid "Date"
 msgstr "Data"
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr "Utilizador"
@@ -168,9 +179,10 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Nome"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
@@ -296,4 +308,9 @@ msgstr "Cancelar"
 #: field:audittrail.rule,log_unlink:0
 msgid "Log deletes"
 msgstr "Apagar registos"
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
+msgstr "Nome"
 

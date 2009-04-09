@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:14:47+0000\n"
-"PO-Revision-Date: 2009-02-06 15:14:47+0000\n"
+"POT-Creation-Date: 2009-04-09 13:48:29+0000\n"
+"PO-Revision-Date: 2009-04-09 13:48:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,11 @@ msgstr "Hoja"
 #, python-format
 msgid "No employee defined for your user !"
 msgstr "¡No se ha definido un empleado para su usuario!"
+
+#. module: hr_timesheet_sheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -420,6 +425,12 @@ msgstr "Fecha hasta"
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
 msgstr "Estado actual"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0

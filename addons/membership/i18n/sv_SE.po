@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,11 @@ msgstr ""
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
+msgstr ""
+
+#. module: membership
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: membership
@@ -85,6 +90,11 @@ msgstr ""
 #. module: membership
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: membership
@@ -154,6 +164,12 @@ msgid "Start membership date"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
 msgstr ""
@@ -189,7 +205,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_conf
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -277,6 +293,11 @@ msgstr ""
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: membership
@@ -415,7 +436,7 @@ msgstr ""
 #. module: membership
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -432,6 +453,12 @@ msgstr ""
 #: model:product.price.type,name:membership.product_price_type_memberprice
 #: field:product.template,member_price:0
 msgid "Member Price"
+msgstr ""
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
 msgstr ""
 
 #. module: membership

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
-"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
+"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,9 +63,9 @@ msgid "Open Done Task"
 msgstr "Öffne Erledigte Aufgaben"
 
 #. module: project
-#: view:project.task:0
-msgid "Delegations"
-msgstr "Delegation"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -350,9 +350,9 @@ msgid "Reset as Project"
 msgstr "Zurücksetzen Projekt"
 
 #. module: project
-#: selection:project.project,state:0
-msgid "Template"
-msgstr "Vorlage"
+#: view:project.task:0
+msgid "Delegations"
+msgstr "Delegation"
 
 #. module: project
 #: wizard_button:project.task.close,mail_ask,mail_send:0
@@ -447,6 +447,7 @@ msgstr "Geplante Zeit"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Aufgabenliste Arbeit"
@@ -490,6 +491,11 @@ msgstr "Meine Projekte"
 #: help:project.task.delegate,init,planned_hours:0
 msgid "Estimated time to close this task by the delegated user."
 msgstr "Erwartetes Ende der Aufgabe durch Verantwortlichen"
+
+#. module: project
+#: selection:project.project,state:0
+msgid "Template"
+msgstr "Vorlage"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
@@ -698,6 +704,7 @@ msgid "Project Time Unit"
 msgstr "Projekt Zeiteinheit"
 
 #. module: project
+#: field:project.project,complete_name:0
 #: field:project.project,name:0
 msgid "Project Name"
 msgstr "Projekt Bezeichnung"

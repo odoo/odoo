@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,11 @@ msgstr ""
 #: field:product.template,procure_method:0
 msgid "Procure Method"
 msgstr "Inköpsmetod"
+
+#. module: product
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -255,6 +260,13 @@ msgid "Products"
 msgstr ""
 
 #. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr ""
@@ -306,7 +318,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -495,8 +507,11 @@ msgid "The mode for computing the price for this rule."
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
 msgstr ""
 
 #. module: product
@@ -644,6 +659,11 @@ msgid "HDD Seagate 7200.8 80GB"
 msgstr ""
 
 #. module: product
+#: help:product.pricelist.version,active:0
+msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
 msgid "HDD Seagate 7200.8 160GB"
 msgstr ""
@@ -723,6 +743,13 @@ msgstr ""
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
+msgstr ""
+
+#. module: product
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: product
@@ -974,9 +1001,13 @@ msgid "Information about a product supplier"
 msgstr ""
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr ""
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1054,13 +1085,9 @@ msgid "Gross weight"
 msgstr "Vikt"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Aktiv"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr ""
 
 #. module: product
 #: constraint:product.pricelist.version:0
@@ -1141,10 +1168,8 @@ msgid "Product Template"
 msgstr "Produktmall"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
 msgstr ""
 
 #. module: product
@@ -1257,7 +1282,7 @@ msgstr ""
 #. module: product
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty4:0
@@ -1515,13 +1540,6 @@ msgid "The weight of a full of products palet or box."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-
-#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr ""
@@ -1592,14 +1610,6 @@ msgstr ""
 #. module: product
 #: help:product.supplierinfo,delay:0
 msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
 msgstr ""
 
 #. module: product
