@@ -1327,11 +1327,8 @@ class account_tax(osv.osv):
                 data['amount'] = amount
 
             elif tax.type=='fixed':
-                print "her", quantity
-                print "data", data
                 data['amount'] = tax.amount
                 data['tax_amount']=quantity
-                print "DATA 2", data
                # data['amount'] = quantity
             elif tax.type=='code':
                 address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
