@@ -554,8 +554,8 @@ def _create_dta(obj, cr, uid, data, context):
 			v['partner_bank_number'] = '/C/'+v['partner_post_number']
 			record_type = record_gt827
 		else:
-			raise wizard.except_wizard(_('Error'), _('The Bank type %s of the bank account: %s ' \
-					'is not supported') % (elec_pay, res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1],)
+			raise wizard.except_wizard(_('Error'), _('The Bank type %s of the bank account: %s is not supported') \
+                    % (elec_pay, res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1],))
 
 		dta_line = record_type(v).generate()
 
