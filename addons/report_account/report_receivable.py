@@ -126,7 +126,7 @@ class report_aged_receivable(osv.osv):
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         today = mx.DateTime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d') - mx.DateTime.RelativeDateTime(days=1)
         today = today.strftime('%Y-%m-%d')
-        fy_id  = pool_obj_fy.find(cr,uid)
+        fy_id  = pool_obj_fy.find(cr,uid, exception=False)
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
