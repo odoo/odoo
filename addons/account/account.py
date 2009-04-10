@@ -1773,8 +1773,13 @@ class account_account_template(osv.osv):
             ('consolidation','Consolidation'),
             ('other','Others'),
             ('closed','Closed'),
-            ], 'Internal Type', required=True,),
-        'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
+            ], 'Internal Type', required=True,help="This type is used to differenciate types with "\
+            "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
+            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+            "partners accounts (for debit/credit computations), closed for deprecated accounts."),
+        'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
+            "These types are defined according to your country. The type contain more information "\
+            "about the account and it's specificities."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
