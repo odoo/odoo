@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:10:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:10:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:41:23+0000\n"
+"PO-Revision-Date: 2009-04-09 13:41:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgstr "Sub Produtos"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-account"
+msgstr ""
+
+#. module: stock
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: stock
@@ -227,6 +232,12 @@ msgid "STOCK_QUIT"
 msgstr "Saída de Estoque"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr ""
+
+#. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
 msgstr "Local de Saída"
@@ -252,6 +263,12 @@ msgid "Location Type"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice cannot be created from Packing."
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-purchase"
 msgstr ""
@@ -270,6 +287,11 @@ msgstr ""
 #: view:stock.picking:0
 msgid "Products Sent"
 msgstr "Produtos Enviados"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_GOTO_FIRST"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -325,8 +347,8 @@ msgid "Location Name"
 msgstr "Nome do Local"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNINDENT"
+#: view:stock.inventory:0
+msgid "Posted Inventory"
 msgstr ""
 
 #. module: stock
@@ -710,6 +732,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "UserError"
 msgstr ""
@@ -922,7 +945,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_INFO"
+msgid "STOCK_UNDO"
 msgstr ""
 
 #. module: stock
@@ -1001,6 +1024,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_APPLY"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is not created"
 msgstr ""
 
 #. module: stock
@@ -1260,8 +1289,15 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Error"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is already created."
 msgstr ""
 
 #. module: stock
@@ -1774,7 +1810,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_GOTO_FIRST"
+msgid "STOCK_REDO"
 msgstr ""
 
 #. module: stock
@@ -1905,7 +1941,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_UNDO"
+msgid "STOCK_DIALOG_INFO"
 msgstr ""
 
 #. module: stock
@@ -1983,6 +2019,12 @@ msgid "STOCK_FIND"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "Message !"
+msgstr ""
+
+#. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
 msgstr ""
@@ -2042,11 +2084,6 @@ msgid "Max. Planned Date"
 msgstr ""
 
 #. module: stock
-#: view:stock.inventory:0
-msgid "Posted Inventory"
-msgstr ""
-
-#. module: stock
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
 msgstr ""
@@ -2059,6 +2096,13 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_PLAY"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/inventory_merge.py:0
+#: code:addons/stock/wizard/inventory_merge_zero.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: stock
@@ -2152,6 +2196,12 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: stock
+#: code:addons/stock/wizard/inventory_merge_zero.py:0
+#, python-format
+msgid "Please select one and only one inventory !"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-project"
 msgstr ""
@@ -2179,6 +2229,11 @@ msgstr ""
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
 msgid "Virtual Stock Value"
+msgstr ""
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNINDENT"
 msgstr ""
 
 #. module: stock
@@ -2475,11 +2530,6 @@ msgstr ""
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Move State"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REDO"
 msgstr ""
 
 #. module: stock

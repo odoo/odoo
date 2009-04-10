@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:02:49+0000\n"
-"PO-Revision-Date: 2009-02-06 15:02:49+0000\n"
+"POT-Creation-Date: 2009-04-09 13:26:20+0000\n"
+"PO-Revision-Date: 2009-04-09 13:26:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgid "Select the Payment Mode to be applied."
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: account_payment
@@ -158,6 +158,11 @@ msgstr ""
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
 msgstr ""
 
 #. module: account_payment
@@ -417,8 +422,8 @@ msgid "Code"
 msgstr ""
 
 #. module: account_payment
-#: help:payment.line,communication:0
-msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order?'"
+#: field:payment.line,name:0
+msgid "Your Reference"
 msgstr ""
 
 #. module: account_payment
@@ -535,6 +540,11 @@ msgid "Entry line"
 msgstr ""
 
 #. module: account_payment
+#: help:payment.line,communication:0
+msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
@@ -603,11 +613,6 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
 msgstr ""
 
 #. module: account_payment

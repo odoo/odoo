@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:07:19+0000\n"
-"PO-Revision-Date: 2009-02-06 15:07:19+0000\n"
+"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
+"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,11 @@ msgid "Manufacturing Resource Planning"
 msgstr ""
 
 #. module: mrp
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
 msgstr "Revision"
@@ -53,14 +58,14 @@ msgid "Exceptions Procurements"
 msgstr "Fehlerliste Beschaffung"
 
 #. module: mrp
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
+msgstr "Menge (UOS)"
+
+#. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
 msgstr "Definition Arbeitsgänge"
-
-#. module: mrp
-#: rml:bom.structure:0
-msgid "UoM"
-msgstr "UoM"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -82,6 +87,12 @@ msgstr "Packliste"
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
 msgstr "Bestand Lagerprodukte"
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,origin:0
@@ -177,7 +188,6 @@ msgstr "Beschaffungsvorschlag"
 #: wizard_field:change_production_qty,confirm,product_qty:0
 #: field:mrp.bom,product_qty:0
 #: field:mrp.production,product_qty:0
-#: field:mrp.production,product_uos_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Produktmenge"
@@ -651,9 +661,11 @@ msgid "Per month"
 msgstr "Pro Monat"
 
 #. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
-msgstr "Menge (UOS)"
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Couldn't find bill of material for product"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -889,6 +901,12 @@ msgid "Description of the workcenter. Explain here what's a cycle according to t
 msgstr "Beschreibung des Arbeitsplatzes. Beschreibe hier den Vorgang dieses Arbeitsplatzes für den gesamten Auftragszyklus."
 
 #. module: mrp
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
+msgstr ""
+
+#. module: mrp
 #: rml:bom.structure:0
 msgid "-"
 msgstr ""
@@ -1052,6 +1070,11 @@ msgstr "Einkaufsauftrag"
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hour"
 msgstr "Anz. Stunden"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Notes"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1230,6 +1253,7 @@ msgid "Procurement for raw materials."
 msgstr "Beschaffung von Bauteilen / Rohstoffe"
 
 #. module: mrp
+#: view:mrp.procurement:0
 #: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
@@ -1408,7 +1432,6 @@ msgstr "Produktstruktur"
 #. module: mrp
 #: field:mrp.bom,product_uom:0
 #: field:mrp.production,product_uom:0
-#: field:mrp.production,product_uos:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
@@ -1439,6 +1462,7 @@ msgstr "Validierung der Stückliste oder Komponente. Lasse leer falls immer vali
 
 #. module: mrp
 #: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
 msgid "Product UoS"
 msgstr "Produkt UoS"
 
@@ -1596,6 +1620,11 @@ msgstr "Kategorien"
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
 msgstr "Auftragsbezogene Beschaffungsvorschläge"
+
+#. module: mrp
+#: field:mrp.production,product_uos_qty:0
+msgid "Product UoS Qty"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1839,6 +1868,13 @@ msgstr "Normale Arbeitszeit des Arbeitsplatzes."
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
 msgstr "Beschaffung bis Max. Menge"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Error"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom

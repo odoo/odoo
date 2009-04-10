@@ -1327,11 +1327,8 @@ class account_tax(osv.osv):
                 data['amount'] = amount
 
             elif tax.type=='fixed':
-                print "her", quantity
-                print "data", data
                 data['amount'] = tax.amount
                 data['tax_amount']=quantity
-                print "DATA 2", data
                # data['amount'] = quantity
             elif tax.type=='code':
                 address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
@@ -1366,7 +1363,6 @@ class account_tax(osv.osv):
                                 latest[name+'_code_id'] = False
             if tax.include_base_amount:
                 cur_price_unit+=amount2
-        print "rress final", res
         return res
 
     def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
@@ -1380,7 +1376,6 @@ class account_tax(osv.osv):
             one tax for each tax id in IDS and their childs
         """
         res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner, quantity)
-        print "res",res
         total = 0.0
         for r in res:
             if r.get('balance',False):

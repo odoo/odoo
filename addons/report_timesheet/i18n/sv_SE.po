@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,8 +27,19 @@ msgid "Timesheet by user"
 msgstr ""
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
+#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_account_all
+msgid "Timesheet by Account"
+msgstr ""
+
+#. module: report_timesheet
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#. module: report_timesheet
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
 msgstr ""
 
 #. module: report_timesheet
@@ -49,8 +60,8 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: report_timesheet
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: report_timesheet
@@ -75,18 +86,23 @@ msgid "Timesheet per day"
 msgstr ""
 
 #. module: report_timesheet
+#: field:report.random.timesheet,name:0
+msgid "Description"
+msgstr ""
+
+#. module: report_timesheet
 #: model:ir.model,name:report_timesheet.model_report_timesheet_account
 #: view:report_timesheet.account:0
 msgid "Timesheet per account"
 msgstr ""
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_stat_all
-#: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_account_all
-msgid "Timesheet by Account"
+#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
+msgid "Timesheet - Reporting"
 msgstr ""
 
 #. module: report_timesheet
+#: field:report.random.timesheet,date:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Date"
@@ -109,6 +125,12 @@ msgid "My timesheets by account"
 msgstr ""
 
 #. module: report_timesheet
+#: model:ir.model,name:report_timesheet.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr ""
+
+#. module: report_timesheet
+#: field:report.random.timesheet,user_id:0
 #: field:report_timesheet.account,user_id:0
 #: field:report_timesheet.account.date,user_id:0
 #: field:report_timesheet.invoice,user_id:0
@@ -122,8 +144,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: report_timesheet
-#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
-msgid "Timesheet - Reporting"
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
 msgstr ""
 
 #. module: report_timesheet
@@ -159,6 +181,12 @@ msgid "Timesheet by Invoice"
 msgstr ""
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr ""
+
+#. module: report_timesheet
+#: field:report.random.timesheet,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
 #: field:report_timesheet.invoice,quantity:0
@@ -190,6 +218,7 @@ msgid "Month"
 msgstr ""
 
 #. module: report_timesheet
+#: field:report.random.timesheet,analytic_account_id:0
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"

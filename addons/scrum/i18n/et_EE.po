@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:06:02+0000\n"
-"PO-Revision-Date: 2009-02-06 15:06:02+0000\n"
+"POT-Creation-Date: 2009-04-09 13:33:13+0000\n"
+"PO-Revision-Date: 2009-04-09 13:33:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,9 +48,9 @@ msgid "Create task from backlogs"
 msgstr ""
 
 #. module: scrum
-#: selection:scrum.project,state:0
-msgid "Template"
-msgstr "Mall"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: scrum
 #: model:ir.module.module,shortdesc:scrum.module_meta_information
@@ -98,9 +98,9 @@ msgid "Delegated Tasks"
 msgstr "Volitatud ülesanded"
 
 #. module: scrum
-#: field:scrum.task,progress:0
-msgid "Progress (%)"
-msgstr "Edenemine (%)"
+#: help:scrum.project,warn_header:0
+msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgstr ""
 
 #. module: scrum
 #: field:scrum.task,priority:0
@@ -235,6 +235,11 @@ msgstr "Partner"
 #: field:scrum.task,planned_hours:0
 msgid "Planned Hours"
 msgstr "Planeeritud tunnid"
+
+#. module: scrum
+#: selection:scrum.project,state:0
+msgid "Template"
+msgstr "Mall"
 
 #. module: scrum
 #: field:scrum.product.backlog,priority:0
@@ -373,9 +378,9 @@ msgid "Create Tasks"
 msgstr "Loo ülesandeid"
 
 #. module: scrum
-#: help:scrum.project,warn_header:0
-msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
-msgstr ""
+#: field:scrum.task,progress:0
+msgid "Progress (%)"
+msgstr "Edenemine (%)"
 
 #. module: scrum
 #: help:scrum.task,progress:0
@@ -497,6 +502,7 @@ msgid "Time Spent"
 msgstr "Kulutatud aeg"
 
 #. module: scrum
+#: field:scrum.project,complete_name:0
 #: field:scrum.project,name:0
 msgid "Project Name"
 msgstr "Projekti nimi"

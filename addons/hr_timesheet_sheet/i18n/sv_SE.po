@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
 #, python-format
 msgid "No employee defined for your user !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -301,7 +306,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -421,6 +426,12 @@ msgid "Current Status"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Invoice on timesheet"
 msgstr ""
@@ -501,7 +512,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0

@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-23 14:23+0000\n"
-"PO-Revision-Date: 2009-02-27 12:23+0000\n"
-"Last-Translator: Olivier (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2009-04-09 13:34:22+0000\n"
+"PO-Revision-Date: 2009-04-09 13:34:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-02-27 12:32+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: analytic_journal_billing_rate
 #: constraint:ir.ui.view:0
@@ -22,22 +21,24 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: analytic_journal_billing_rate
-#: field:analytic_journal_rate_grid,rate_id:0
-msgid "Invoicing Rate"
-msgstr "Taux de Facturation"
+#: field:analytic_journal_rate_grid,journal_id:0
+msgid "Analytic Journal"
+msgstr "Journal Analytique"
 
 #. module: analytic_journal_billing_rate
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
 msgid "Billing Rate per Journal for this Analytic Account"
 msgstr "Taux de Facturation par Journal pour ce Compte Analytique"
+
+#. module: analytic_journal_billing_rate
+#: field:analytic_journal_rate_grid,account_id:0
+msgid "Analytic Account"
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_analytic_journal_rate_grid
@@ -50,6 +51,12 @@ msgid "Invoicing Rate per Journal"
 msgstr "Taux de Facturation par Journal"
 
 #. module: analytic_journal_billing_rate
-#: field:analytic_journal_rate_grid,journal_id:0
-msgid "Analytic Journal"
-msgstr "Journal Analytique"
+#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
+msgid "Analytic Journal Billing Rate"
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: field:analytic_journal_rate_grid,rate_id:0
+msgid "Invoicing Rate"
+msgstr "Taux de Facturation"
+

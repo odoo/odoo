@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:05:22+0000\n"
-"PO-Revision-Date: 2009-02-06 15:05:22+0000\n"
+"POT-Creation-Date: 2009-04-09 13:32:02+0000\n"
+"PO-Revision-Date: 2009-04-09 13:32:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,10 @@ msgid "Tasks"
 msgstr "Taken"
 
 #. module: event_project
-#: wizard_button:event.project,init,done:0
-msgid "Ok"
-msgstr "Ok"
+#: code:addons/event_project/wizard/event_task.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: event_project
 #: model:ir.module.module,description:event_project.module_meta_information
@@ -61,9 +62,20 @@ msgid "Project tasks"
 msgstr "Projecttaken"
 
 #. module: event_project
+#: code:addons/event_project/wizard/event_task.py:0
+#, python-format
+msgid "No project defined for this event.\nYou can create one with the retro-planning button !"
+msgstr ""
+
+#. module: event_project
 #: wizard_button:event.project,init,end:0
 msgid "Cancel"
 msgstr "Annuleren"
+
+#. module: event_project
+#: wizard_button:event.project,init,done:0
+msgid "Ok"
+msgstr "Ok"
 
 #. module: event_project
 #: view:event.event:0

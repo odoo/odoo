@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:10:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:10:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:41:23+0000\n"
+"PO-Revision-Date: 2009-04-09 13:41:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_followup
+#: rml:account_followup.followup.print:0
+msgid "Date :"
+msgstr ""
+
+#. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_ids:0
 msgid "Partners"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
+#: rml:account_followup.followup.print:0
+msgid "Customer Ref :"
 msgstr ""
 
 #. module: account_followup
@@ -32,23 +37,28 @@ msgid "All payable entries"
 msgstr ""
 
 #. module: account_followup
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
 msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
-msgid "Date:"
-msgstr ""
-
-#. module: account_followup
-#: selection:account_followup.followup.line,start:0
-msgid "End of Month"
+msgid "Amount In Currency"
 msgstr ""
 
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Due"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
 msgstr ""
 
 #. module: account_followup
@@ -71,6 +81,12 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "Mail not sent to following Partners, Email not available !\n\n"
 msgstr ""
 
 #. module: account_followup
@@ -100,25 +116,20 @@ msgid "%(date)s: Current Date"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
-msgid "Name"
-msgstr ""
-
-#. module: account_followup
 #: code:addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
 msgid "\n\nMail sent to following Partners successfully, !\n\n"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Customer Ref:"
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Document"
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
 msgstr ""
 
 #. module: account_followup
@@ -144,18 +155,13 @@ msgid "VAT:"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Customer account statement"
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.followup,company_id:0
 msgid "Company"
 msgstr ""
 
 #. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
+#: rml:account_followup.followup.print:0
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_followup
@@ -167,22 +173,6 @@ msgstr ""
 #: rml:account_followup.followup.print:0
 msgid "Paid"
 msgstr ""
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Total de crédito"
-
-#. module: account_followup
-#: model:ir.actions.wizard,name:account_followup.action_account_followup_all_wizard
-#: model:ir.ui.menu,name:account_followup.account_followup_wizard_menu
-msgid "Send followups"
-msgstr ""
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -200,9 +190,8 @@ msgid "Partner entries"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.followup.line,followup_id:0
-#: field:account_followup.stat,followup_id:0
-msgid "Follow Ups"
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-Ups Criteria"
 msgstr ""
 
 #. module: account_followup
@@ -211,13 +200,13 @@ msgid "Partner Selection"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Date"
-msgstr ""
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Invalido XML para Arquitetura da View"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid ":"
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
 msgstr ""
 
 #. module: account_followup
@@ -249,13 +238,19 @@ msgid "\n"
 msgstr ""
 
 #. module: account_followup
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
+
+#. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0
 msgid "Ok"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-Ups Criteria"
+#: field:account_followup.followup,name:0
+#: field:account_followup.followup.line,name:0
+msgid "Name"
 msgstr ""
 
 #. module: account_followup
@@ -264,9 +259,8 @@ msgid "First move"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "Mail not sent to following Partners, Email not available !\n\n"
+#: selection:account_followup.followup.line,start:0
+msgid "End of Month"
 msgstr ""
 
 #. module: account_followup
@@ -287,8 +281,9 @@ msgid "Lines"
 msgstr ""
 
 #. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
+#: model:ir.actions.wizard,name:account_followup.action_account_followup_all_wizard
+#: model:ir.ui.menu,name:account_followup.account_followup_wizard_menu
+msgid "Send followups"
 msgstr ""
 
 #. module: account_followup
@@ -302,8 +297,8 @@ msgid "Credit"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Amount"
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Followup statistics"
 msgstr ""
 
 #. module: account_followup
@@ -328,9 +323,9 @@ msgid "Follow-Up Lines"
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: rml:account_followup.followup.print:0
+msgid "Document : Customer account statement"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -353,9 +348,9 @@ msgid "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Maturity date"
-msgstr ""
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Total de crédito"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -433,8 +428,8 @@ msgid "\n"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup statistics"
+#: rml:account_followup.followup.print:0
+msgid "Maturity Date"
 msgstr ""
 
 #. module: account_followup

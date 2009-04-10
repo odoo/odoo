@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:05:22+0000\n"
-"PO-Revision-Date: 2009-02-06 15:05:22+0000\n"
+"POT-Creation-Date: 2009-04-09 13:32:02+0000\n"
+"PO-Revision-Date: 2009-04-09 13:32:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,11 @@ msgstr ""
 #: field:report.seller.auction,seller:0
 #: field:report.seller.auction2,seller:0
 msgid "Seller"
+msgstr ""
+
+#. module: auction
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: auction
@@ -339,6 +344,12 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,sel_inv_id:0
 msgid "Seller Invoice"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr ""
 
 #. module: auction
@@ -865,6 +876,12 @@ msgid "comparaison estimate/adjudication "
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The object \"%s\" has no buyer assigned."
+msgstr ""
+
+#. module: auction
 #: rml:buyer.list:0
 msgid "Adj(EUR)"
 msgstr ""
@@ -951,6 +968,12 @@ msgstr ""
 #. module: auction
 #: wizard_view:auction.lots.make_invoice_buyer,init:0
 msgid "(Keep empty for automatic number)"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "No Invoice Address"
 msgstr ""
 
 #. module: auction
@@ -1228,6 +1251,12 @@ msgstr ""
 #: field:report.deposit.border,bord:0
 #: field:report.unclassified.objects,bord_vnd_id:0
 msgid "Depositer Inventory"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer has no Invoice Address."
 msgstr ""
 
 #. module: auction
@@ -1684,6 +1713,12 @@ msgid "Buyer, Price"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed buyer !"
+msgstr ""
+
+#. module: auction
 #: rml:auction.code_bar_lot:0
 msgid "Flagey"
 msgstr ""
@@ -2010,8 +2045,8 @@ msgid "TEL:"
 msgstr ""
 
 #. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
 msgstr ""
 
 #. module: auction
@@ -2299,6 +2334,12 @@ msgid "Unplanned Objects"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed Address !"
+msgstr ""
+
+#. module: auction
 #: field:report.buyer.auction2,gross_revenue:0
 msgid "Gross Revenue"
 msgstr ""
@@ -2445,8 +2486,8 @@ msgid "Adjudication price"
 msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
 msgstr ""
 
 #. module: auction

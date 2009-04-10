@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:02:11+0000\n"
-"PO-Revision-Date: 2009-02-06 15:02:11+0000\n"
+"POT-Creation-Date: 2009-04-09 13:25:15+0000\n"
+"PO-Revision-Date: 2009-04-09 13:25:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,11 @@ msgstr "Procés socis"
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
 msgstr "Soci pagat"
+
+#. module: membership
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: membership
 #: field:report.partner_member.year,currency:0
@@ -86,6 +91,11 @@ msgstr "Empresa beneficiaria."
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
 msgstr "Error! No es poden crear comptes recursius."
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -152,6 +162,12 @@ msgstr "Estat"
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Data inici afiliació"
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -278,6 +294,11 @@ msgstr "El preu negociat per l'empresa"
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
 msgstr "Soci beneficiari"
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -433,6 +454,12 @@ msgstr "Soci cancel·lat"
 #: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Preu soci"
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
 
 #. module: membership
 #: field:res.partner,free_member:0

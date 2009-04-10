@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:15:29+0000\n"
-"PO-Revision-Date: 2009-02-06 15:15:29+0000\n"
+"POT-Creation-Date: 2009-04-09 13:49:40+0000\n"
+"PO-Revision-Date: 2009-04-09 13:49:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: board
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -36,6 +36,12 @@ msgid "Dashboard main module"
 msgstr ""
 
 #. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,note:0
 msgid "Note"
@@ -44,6 +50,11 @@ msgstr ""
 #. module: board
 #: field:board.board.line,width:0
 msgid "Width"
+msgstr ""
+
+#. module: board
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: board
@@ -86,7 +97,7 @@ msgstr ""
 #. module: board
 #: model:ir.ui.menu,name:board.next_id_50
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 #. module: board
 #: field:board.note.type,name:0
@@ -111,6 +122,12 @@ msgstr ""
 #. module: board
 #: view:board.note:0
 msgid "Notes"
+msgstr ""
+
+#. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
 msgstr ""
 
 #. module: board

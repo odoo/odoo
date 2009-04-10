@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:14:47+0000\n"
-"PO-Revision-Date: 2009-02-06 15:14:47+0000\n"
+"POT-Creation-Date: 2009-04-09 13:48:28+0000\n"
+"PO-Revision-Date: 2009-04-09 13:48:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,9 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Seleccione el modo de pago a aplicar."
 
 #. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Líneas de pago"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -160,6 +160,11 @@ msgstr "Confirmada"
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Fecha vencimiento factura"
+
+#. module: account_payment
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Líneas de pago"
 
 #. module: account_payment
 #: help:payment.order,date_planned:0
@@ -418,9 +423,9 @@ msgid "Code"
 msgstr "Código"
 
 #. module: account_payment
-#: help:payment.line,communication:0
-msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order?'"
-msgstr "Utilizado como el mensaje entre cliente que ordena y la actual compañía. Describe '¿Qué quiere decirle al receptor sobre esta orden?'"
+#: field:payment.line,name:0
+msgid "Your Reference"
+msgstr "Su referencia"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -536,6 +541,11 @@ msgid "Entry line"
 msgstr "Línea del asiento"
 
 #. module: account_payment
+#: help:payment.line,communication:0
+msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
@@ -605,11 +615,6 @@ msgstr "Modo de pago"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Cuenta bancaria para el modo de pago"
-
-#. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
-msgstr "Su referencia"
 
 #. module: account_payment
 #: field:payment.mode,journal:0

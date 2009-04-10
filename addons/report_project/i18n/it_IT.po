@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:08:37+0000\n"
-"PO-Revision-Date: 2009-02-06 15:08:37+0000\n"
+"POT-Creation-Date: 2009-04-09 13:37:53+0000\n"
+"PO-Revision-Date: 2009-04-09 13:37:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,30 +22,9 @@ msgid "Tasks finished by project (this month)"
 msgstr ""
 
 #. module: report_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: report_project
-#: view:report.project.task.user:0
-msgid "Tasks by Project and User"
-msgstr "Attività per Progetto e Utente"
-
-#. module: report_project
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri speciali!"
-
-#. module: report_project
-#: view:report.project.task.user:0
-msgid "Tasks by projects and users"
-msgstr "Attività per Progetti e Utenti"
-
-#. module: report_project
-#: field:report.project.task,task_closed:0
-#: field:report.project.task.user,task_closed:0
-msgid "Task Closed"
-msgstr "Attività Chiusa"
 
 #. module: report_project
 #: model:ir.actions.act_window,name:report_project.action_project_task_user_tree
@@ -54,16 +33,67 @@ msgid "Tasks Closed by Project and User"
 msgstr "Attività Chiuse per Progetto e Utente"
 
 #. module: report_project
-#: field:report.project.task,hours_delay:0
-#: field:report.project.task.user,hours_delay:0
-msgid "Avg. Plan.-Eff."
-msgstr "Efficienza Media"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: report_project
-#: field:report.project.task,name:0
-#: field:report.project.task.user,name:0
-msgid "Month"
-msgstr "Mese"
+#: model:ir.actions.act_window,name:report_project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:report_project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr ""
+
+#. module: report_project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Ore Effettive"
+
+#. module: report_project
+#: model:ir.model,name:report_project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Attività per Utente e Progetto"
+
+#. module: report_project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr "Attività Chiusa"
+
+#. module: report_project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "Attività per Progetto"
+
+#. module: report_project
+#: model:ir.module.module,shortdesc:report_project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: report_project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr "Utente"
+
+#. module: report_project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "Attività per Progetto e Utente"
+
+#. module: report_project
+#: model:ir.ui.menu,name:report_project.next_id_63
+msgid "This Month"
+msgstr "Questo Mese"
+
+#. module: report_project
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valido per Visualizzazione Architettura!"
+
+#. module: report_project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr "Attività per Progetti e Utenti"
 
 #. module: report_project
 #: field:report.project.task,project_id:0
@@ -78,20 +108,22 @@ msgid "Avg Closing Delay"
 msgstr "Ritardo Medio di Chiusura"
 
 #. module: report_project
-#: model:ir.module.module,shortdesc:report_project.module_meta_information
-msgid "Sales Management - Reporting"
-msgstr ""
-
-#. module: report_project
-#: model:ir.model,name:report_project.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Attività per Utente e Progetto"
-
-#. module: report_project
 #: model:ir.model,name:report_project.model_report_project_task
 #: view:report.project.task:0
 msgid "Tasks by project"
 msgstr "Attività per Progetto"
+
+#. module: report_project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr "Efficienza Media"
+
+#. module: report_project
+#: field:report.project.task,name:0
+#: field:report.project.task.user,name:0
+msgid "Month"
+msgstr "Mese"
 
 #. module: report_project
 #: model:ir.actions.act_window,name:report_project.action_project_task_tree
@@ -100,35 +132,8 @@ msgid "Tasks Closed by Project"
 msgstr "Attività Chiuse per Progetto"
 
 #. module: report_project
-#: model:ir.actions.act_window,name:report_project.action_project_task_user_tree_month
-#: model:ir.ui.menu,name:report_project.menu_project_task_user_tree_month
-msgid "Tasks finished by project and user (this month)"
-msgstr ""
-
-#. module: report_project
-#: view:report.project.task:0
-msgid "Tasks by Project"
-msgstr "Attività per Progetto"
-
-#. module: report_project
-#: model:ir.ui.menu,name:report_project.next_id_63
-msgid "This Month"
-msgstr "Questo Mese"
-
-#. module: report_project
-#: field:report.project.task,hours_effective:0
-#: field:report.project.task.user,hours_effective:0
-msgid "Effective Hours"
-msgstr "Ore Effettive"
-
-#. module: report_project
 #: field:report.project.task,hours_planned:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Ore Pianificate"
-
-#. module: report_project
-#: field:report.project.task.user,user_id:0
-msgid "User"
-msgstr "Utente"
 
