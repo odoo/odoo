@@ -214,7 +214,7 @@ class account_bank_statement(osv.osv):
                         company_currency_id, move.amount, context=context,
                         account=acc_cur)
 
-                if move.account_id and move.account_id.currency_id:
+                if move.account_id and move.account_id.currency_id and move.account_id.currency_id.id <> company_currency_id:
                     val['currency_id'] = move.account_id.currency_id.id
                     if company_currency_id==move.account_id.currency_id.id:
                         amount_cur = move.amount
@@ -249,7 +249,6 @@ class account_bank_statement(osv.osv):
                 if st.currency.id <> company_currency_id:
                     amount_currency = move.amount
                     currency_id = st.currency.id
-
                 account_move_line_obj.create(cr, uid, {
                     'name': move.name,
                     'date': move.date,
@@ -278,7 +277,7 @@ class account_bank_statement(osv.osv):
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', context)
+                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
