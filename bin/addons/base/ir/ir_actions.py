@@ -518,7 +518,7 @@ class actions_server(osv.osv):
                 result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
                 return result
 
-            if action.state=='python':
+            if action.state=='code':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
                     'context': context,
