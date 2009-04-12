@@ -2690,13 +2690,14 @@ class orm(orm_template):
             elif ftype in ('one2many', 'one2one'):
                 res = []
                 rel = self.pool.get(fields[f]['relation'])
-                for rel_id in data[f]:
-                    # the lines are first duplicated using the wrong (old)
-                    # parent but then are reassigned to the correct one thanks
-                    # to the (4, ...)
-                    d,t = rel.copy_data(cr, uid, rel_id, context=context)
-                    res.append((0, 0, d))
-                    trans_data += t
+                if data[f] != False:
+                    for rel_id in data[f]:
+                        # the lines are first duplicated using the wrong (old)
+                        # parent but then are reassigned to the correct one thanks
+                        # to the (4, ...)
+                        d,t = rel.copy_data(cr, uid, rel_id, context=context)
+                        res.append((0, 0, d))
+                        trans_data += t
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
