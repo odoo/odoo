@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 import os
 import time
 from tarfile import filemode
@@ -17,6 +16,47 @@ from service import security
 def log(message):
     logger = netsvc.Logger()
     logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
+
+
+def _get_month_name(month):
+    month=int(month)
+    if month==1:return 'Jan'
+    elif month==2:return 'Feb'
+    elif month==3:return 'Mar'
+    elif month==4:return 'Apr'
+    elif month==5:return 'May'
+    elif month==6:return 'Jun'
+    elif month==7:return 'Jul'
+    elif month==8:return 'Aug'
+    elif month==9:return 'Sep'
+    elif month==10:return 'Oct'
+    elif month==11:return 'Nov'
+    elif month==12:return 'Dec'
+
+def _to_unicode(s):
+    try:
+        return s.encode('ascii')
+    except UnicodeError:
+        try:
+            return s.decode('utf-8')
+        except UnicodeError:
+            try:
+                return s.decode('latin')
+            except UnicodeError:
+                return s
+
+def _to_decode(s):
+    try:
+        return s.encode('utf-8')
+    except UnicodeError:
+        try:
+            return s.encode('latin')
+        except UnicodeError:
+            try:
+                return s.decode('ascii')
+            except UnicodeError:
+                return s  
+    
 			
 class file_wrapper(StringIO.StringIO):
     def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
@@ -145,6 +185,7 @@ class abstracted_fs:
         path = self.ftpnorm(path_orig)
         if path and path=='/':
             return None
+        path=_to_unicode(path)        
         path2 = filter(None,path.split('/'))[1:]
         (cr, uid, pool) = data
         res = pool.get('document.directory').get_object(cr, uid, path2[:])
@@ -153,8 +194,8 @@ class abstracted_fs:
         return res
 
     # Ok
-    def fs2ftp(self, node):
-        res = node and ('/' + node.cr.dbname + '/' + node.path.encode('ascii','replace').replace('?','_')) or '/'
+    def fs2ftp(self, node):        
+        res = node and ('/' + node.cr.dbname + '/' + _to_decode(node.path)) or '/'
         return res
 
     # Ok
@@ -174,6 +215,7 @@ class abstracted_fs:
 
     # Ok
     def create(self, node, objname, mode):
+        objname=_to_unicode(objname)
         cr = node.cr
         uid = node.uid
         pool = pooler.get_pool(cr.dbname)
@@ -195,7 +237,7 @@ class abstracted_fs:
             cid=False
 
             where=[('name','=',objname)]
-            if object and (object.type in ('directory','ressource')) or object2:
+            if object and (object.type in ('directory')) or object2:
                 where.append(('parent_id','=',object.id))
             else:
                 where.append(('parent_id','=',False))
@@ -214,7 +256,7 @@ class abstracted_fs:
                     'file_size': 0L,
                     'file_type': ext,
                 }
-                if object and (object.type in ('directory','ressource')) or not object2:
+                if object and (object.type in ('directory')) or not object2:
                     val['parent_id']= object and object.id or False
                 partner = False
                 if object2:
@@ -310,6 +352,7 @@ class abstracted_fs:
         if not node:
             raise OSError(1, 'Operation not permited.')
         try:
+            basename=_to_unicode(basename)
             object2=node and node.object2 or False
             object=node and node.object or False
             cr = node.cr
@@ -322,7 +365,7 @@ class abstracted_fs:
                 'ressource_parent_type_id': object and object.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False
             }
-            if (object and (object.type in ('directory'))) or not object2:
+            if (object and (object.type in ('directory'))) or not object2:                
                 val['parent_id'] =  object and object.id or False
             # Check if it alreayd exists !
             pool.get('document.directory').create(cr, uid, val)
@@ -410,6 +453,7 @@ class abstracted_fs:
             * A directory: change the parent and reassign childs to ressource
         """
         try:
+            dst_basename=_to_unicode(dst_basename)
             if src.type=='collection':
                 if src.object._table_name <> 'document.directory':
                     raise OSError(1, 'Operation not permited.')
@@ -449,11 +493,12 @@ class abstracted_fs:
                     ressource_type_id = pool.get('ir.model').search(cr,uid,[('model','=',dst_basedir.object2._name)])[0]
                     ressource_id = dst_basedir.object2.id
                     title = dst_basedir.object2.name
-                    ressource_model = dst_basedir.object2._name
+                    ressource_model = dst_basedir.object2._name                    
                     if dst_basedir.object2._name=='res.partner':
                         partner_id=dst_basedir.object2.id
                     else:
-                        partner_id= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name)                         
+                        partner_id= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 else:
                     ressource_type_id = False
                     ressource_id=False
@@ -463,7 +508,7 @@ class abstracted_fs:
 
                 pool.get('document.directory').write(cr, uid, result['directory'], {
                     'ressource_id': ressource_id,
-                    'ressource_parent_type_id': ressource_type_id
+                    'ressource_type_id': ressource_type_id
                 })
                 val = {
                     'res_id': ressource_id,
@@ -499,7 +544,8 @@ class abstracted_fs:
                     if dst_basedir.object2._name=='res.partner':
                         val['partner_id']=dst_basedir.object2.id
                     else:
-                        val['partner_id']= dst_basedir.object2.partner_id and dst_basedir.object2.partner_id.id or False
+                        obj2=pool.get(dst_basedir.object2._name) 
+                        val['partner_id']= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 elif src.object.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
                     # change if one day we decide to improve osv/fields.py
@@ -612,7 +658,7 @@ class abstracted_fs:
     def get_list_dir(self, path):
         """"Return an iterator object that yields a directory listing
         in a form suitable for LIST command.
-        """
+        """        
         if self.isdir(path):
             listing = self.listdir(path)
             #listing.sort()
@@ -647,7 +693,7 @@ class abstracted_fs:
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok
+    # Ok    
     def format_list(self, basedir, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
@@ -686,13 +732,15 @@ class abstracted_fs:
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mtime = time.strftime("%b %d %H:%M", time.localtime(st.st_mtime))
+                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
+                mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
             except ValueError:
-                mtime = time.strftime("%b %d %H:%M")
-
+                mname=_get_month_name(time.strftime("%m"))
+                mtime = mname+' '+time.strftime("%d %H:%M")            
             # formatting is matched with proftpd ls output
+            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')            
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, file.path.encode('ascii','replace').replace('?','_').split('/')[-1])
+                                                     size, mtime, path.split('/')[-1])
 
     # Ok
     def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):
@@ -786,8 +834,9 @@ class abstracted_fs:
             # on Windows NTFS filesystems MTF records could be used).
             if 'unique' in facts:
                 unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
-
+            basename=_to_decode(basename)
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, basename)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

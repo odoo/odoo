@@ -27,7 +27,7 @@ import abstracted_fs
 import netsvc
 
 from tools import config
-PORT = config.get('ftp_server_port', 8021)
+PORT = int(config.get('ftp_server_port', 8021))
 HOST = ''
 
 class ftp_server(threading.Thread):
@@ -49,7 +49,6 @@ class ftp_server(threading.Thread):
         address = (HOST, PORT)
         ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
         ftpd.serve_forever()
-
 ds = ftp_server()
 ds.start()
 
