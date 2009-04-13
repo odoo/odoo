@@ -32,7 +32,6 @@ def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
             current=som+datetime.timedelta(diff)
 
             for item in ids_date:
-    #            print current,"from",item['date_from'],"to",item['date_to']
                 if current >= strToDate(item['date_from']) and current <= strToDate(item['date_to']):
                     if item['state'] in holiday_type:
                         display[index]=item['holiday_status'][0]
@@ -150,7 +149,6 @@ class report_custom(report_rml):
                     width_dict[j]=x
 
                 day_diff1=day_diff1-x
-#                print "now day_diff1 is..frst.",day_diff1
             else:
                 years=year+1
                 year=years
@@ -175,7 +173,6 @@ class report_custom(report_rml):
                     width_dict[j]=x
 
                 day_diff1=day_diff1-x
-#                print "now day_diff1 is..scnd.",day_diff1
 
         date_xml.append('</days>')
         date_xml.append('<cols>3.5cm%s,0.4cm</cols>\n' % (',0.4cm' * (60)))

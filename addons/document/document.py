@@ -588,6 +588,7 @@ class document_file(osv.osv):
                 res=self.search(cr,uid,[('id','<>',file.id),('name','=',name),('parent_id','=',parent_id),('res_model','=',res_model),('res_id','=',res_id)])
                 if len(res):
                     return False
+                
         if op=='create':
             res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('res_id','=',res_id),('res_model','=',res_model)])
             if len(res):

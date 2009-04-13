@@ -141,7 +141,9 @@ class email_parser(object):
         message['attachment'] = {};
         attachment = message['attachment'];
         counter = 1;
-
+        def replace(match):
+            return ''
+            
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
@@ -149,7 +151,10 @@ class email_parser(object):
             if part.get_content_maintype()=='text' and part.get_content_subtype() == 'plain':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    message['body'] += buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = re.sub("<(\w)>", replace, txt)
+                    txt = re.sub("<\/(\w)>", replace, txt)
+                    message['body'] += txt
             elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
                 filename = part.get_filename();
                 if filename :

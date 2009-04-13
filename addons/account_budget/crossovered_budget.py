@@ -163,6 +163,7 @@ class crossovered_budget_lines(osv.osv):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv(_('Error!'),_("The General Budget '%s' has no Accounts!") % str(line.general_budget_id.name))
+
             date_to = line.date_to
             date_from = line.date_from
             if context.has_key('wizard_date_from'):

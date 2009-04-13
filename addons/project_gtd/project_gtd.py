@@ -125,14 +125,13 @@ class project_gtd_timebox(osv.osv):
                 if rec.col_planned_hours:
                     res['arch'] += '<field name="planned_hours"  widget="float_time" sum="Est. Hours"/>\n'
                 if rec.col_effective_hours:
-                    res['arch'] += '<field name="effective_hours"  widget="float_time" sum="Eff. Hours"/>\n'
+                    res['arch'] += '<field name="effective_hours"  widget="float_time" sum="%s"/>\n' % (_('Eff. Hours'),)
                 res['arch'] += """
                         <field name="state" readonly="1"/>
                     </tree>
                 </field>
             </page>
                 """
-
             res['arch']+="""
         </notebook>
     </form>

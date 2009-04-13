@@ -10,18 +10,26 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Warnings">
-                        <separator string="Warning on the sale order" colspan="4"/>
-                        <field name="sale_warn"/>
-                        <field name="sale_warn_msg" colspan="4" nolabel="1"/>
-                        <separator string="Warning on the purchase order" colspan="4"/>
-                        <field name="purchase_warn"/>
-                        <field name="purchase_warn_msg" colspan="4" nolabel="1"/>
-                        <separator string="Warning on the picking" colspan="4"/>
-                        <field name="picking_warn"/>
-                        <field name="picking_warn_msg" colspan="4" nolabel="1"/>
-                        <separator string="Warning on the invoice" colspan="4"/>
-                        <field name="invoice_warn"/>
-                        <field name="invoice_warn_msg" colspan="4" nolabel="1"/>
+                        <separator string="Warning on the Sale Order" colspan="4"/>
+                        <group colspan="1" col="1">
+                        	<field name="sale_warn" />
+						</group>
+                        <field name="sale_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('sale_warn','!=','no-message')]}"/>
+                        <separator string="Warning on the Purchase Order" colspan="4"/>
+                        <group colspan="1" col="1">
+                        	<field name="purchase_warn" />
+						</group>
+                        <field name="purchase_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('purchase_warn','!=','no-message')]}"/>
+                        <separator string="Warning on the Picking" colspan="4"/>
+                        <group colspan="1" col="1">
+                        	<field name="picking_warn" />
+						</group>
+                        <field name="picking_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('picking_warn','!=','no-message')]}"/>
+                        <separator string="Warning on the Invoice" colspan="4"/>
+                        <group colspan="1" col="1">
+                        	<field name="invoice_warn" />
+						</group>
+                        <field name="invoice_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('invoice_warn','!=','no-message')]}"/>
                     </page>
                 </notebook>
             </field>
@@ -35,12 +43,16 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Warnings">
-                        <separator string="Warning when selling this product" colspan="4"/>
-                        <field name="sale_line_warn"/>
-                        <field name="sale_line_warn_msg" colspan="4" nolabel="1"/>
-                        <separator string="Warning when purchasing this product" colspan="4"/>
-                        <field name="purchase_line_warn"/>
-                        <field name="purchase_line_warn_msg" colspan="4" nolabel="1"/>
+                        <separator string="Warning when Selling this Product" colspan="4"/>
+                        <group colspan="1" col="1">
+                        	<field name="sale_line_warn"/>
+						</group>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('sale_line_warn','!=','no-message')]}"/>
+                        <separator string="Warning when Purchasing this Product" colspan="4" />
+                        <group colspan="1" col="1">
+                        	<field name="purchase_line_warn"/>
+						</group>
+                        <field name="purchase_line_warn_msg" colspan="3" nolabel="1" attrs="{'required':[('purchase_line_warn','!=','no-message')]}"/>
                     </page>
                 </notebook>
             </field>

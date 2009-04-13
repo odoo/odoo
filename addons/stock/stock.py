@@ -460,17 +460,13 @@ class stock_picking(osv.osv):
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
-        todo2 = []
         for picking in self.browse(cr, uid, ids):
             for r in picking.move_lines:
                 if r.state=='draft':
                     todo.append(r.id)
-                else:
-                    todo2.append(r.id)
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context)
-        self.pool.get('stock.move').action_chain(cr, uid, todo+todo2, context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
@@ -760,15 +756,6 @@ stock_picking()
 
 
 class stock_production_lot(osv.osv):
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        res = super(stock_production_lot, self).search(cr, uid, args, offset, limit, order, context=context, count=count)
-        if res:
-            return [k for k,v in self._get_stock(cr, uid, res, 'stock_available', None, context).items() if v]
-        return res
-    
     def name_get(self, cr, uid, ids, context={}):
         if not ids:
             return []
@@ -804,13 +791,30 @@ class stock_production_lot(osv.osv):
         ''')
         res.update(dict(cr.fetchall()))
         return res
-
+    
+    def _stock_search(self, cr, uid, obj, name, args):
+        locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')])
+        cr.execute('''select
+                prodlot_id,
+                sum(name)
+            from
+                stock_report_prodlots
+            where
+                location_id in ('''+','.join(map(str, locations)) +''')
+            group by
+                prodlot_id
+            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2]) 
+        )
+        res = cr.fetchall()
+        ids = [('id','in',map(lambda x:x[0], res))]
+        return ids
+    
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
         'ref': fields.char('Internal Ref', size=64),
         'product_id': fields.many2one('product.product','Product',required=True),
         'date': fields.datetime('Created Date', required=True),
-        'stock_available': fields.function(_get_stock, method=True, type="float", string="Available", select="2"),
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision','lot_id','Revisions'),
     }
     _defaults = {
@@ -1013,42 +1017,45 @@ class stock_move(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
 #        ids = map(lambda m: m.id, moves)
-        self.write(cr, uid, ids, {'state':'confirmed'})
-        return []
-
-    def action_chain(self, cr, uid, ids, context={}):
         moves = self.browse(cr, uid, ids)
-
-        for picking, todo in self._chain_compute(cr, uid, moves, context).items():
-            ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-            pickid = self.pool.get('stock.picking').create(cr, uid, {
-                'name': picking.name,
-                'origin': (picking.origin or ''),
-                'type': ptype,
-                'note': picking.note,
-                'move_type': picking.move_type,
-                'auto_picking': todo[0][1][1]=='auto',
-                'address_id': picking.address_id.id,
-                'invoice_state': 'none'
-            })
-            for move,(loc,auto,delay) in todo:
-                # Is it smart to copy ? May be it's better to recreate ?
-                new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': loc.id,
-                    'date_moved': time.strftime('%Y-%m-%d'),
-                    'picking_id': pickid,
-                    'state':'waiting',
-                    'move_history_ids':[],
-                    'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
-                    'move_history_ids2':[]}
-                )
-                self.pool.get('stock.move').write(cr, uid, [move.id], {
-                    'move_dest_id': new_id,
-                    'move_history_ids': [(4, new_id)]
+        self.write(cr, uid, ids, {'state':'confirmed'})
+        i=0
+        def create_chained_picking(self,cr,uid,moves,context):
+            new_moves=[]
+            for picking, todo in self._chain_compute(cr, uid, moves, context).items():
+                ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                pickid = self.pool.get('stock.picking').create(cr, uid, {
+                    'name': picking.name,
+                    'origin': str(picking.origin or ''),
+                    'type': ptype,
+                    'note': picking.note,
+                    'move_type': picking.move_type,
+                    'auto_picking': todo[0][1][1]=='auto',
+                    'address_id': picking.address_id.id,
+                    'invoice_state': 'none'
                 })
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+                for move,(loc,auto,delay) in todo:
+                    # Is it smart to copy ? May be it's better to recreate ?
+                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                        'location_id': move.location_dest_id.id,
+                        'location_dest_id': loc.id,
+                        'date_moved': time.strftime('%Y-%m-%d'),
+                        'picking_id': pickid,
+                        'state':'waiting',
+                        'move_history_ids':[],
+                        'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'move_history_ids2':[]}
+                    )
+                    self.pool.get('stock.move').write(cr, uid, [move.id], {
+                        'move_dest_id': new_id,
+                        'move_history_ids': [(4, new_id)]
+                    })
+                    new_moves.append(self.browse(cr, uid, [new_id])[0])
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+            if new_moves:
+                create_chained_picking(self, cr, uid, new_moves, context)
+        create_chained_picking(self, cr, uid, moves, context)
         return []
 
     def action_assign(self, cr, uid, ids, *args):

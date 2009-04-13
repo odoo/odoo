@@ -60,7 +60,7 @@ class wizard_crossovered_analytic(wizard.interface):
                 break
 
         if flag:
-            raise wizard.except_wizard(_('User Error'),_("There are no Analytic lines related to Account '%s'" % name))
+            raise wizard.except_wizard(_('User Error'),_('There are no Analytic lines related to Account %s' % name))
         return {}
 
     states = {
