@@ -1773,7 +1773,7 @@ class account_account_template(osv.osv):
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for deprecated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            "These types are defined according to your country. The type contain more information "\
+            help="These types are defined according to your country. The type contain more information "\
             "about the account and it's specificities."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
