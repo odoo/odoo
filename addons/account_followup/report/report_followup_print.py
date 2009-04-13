@@ -50,7 +50,7 @@ class report_rappel(report_sxw.rml_parse):
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         adr = res_partner.address_get(self.cr, self.uid, [partner.id], [type])[type]
-        return res_partner_address.read(self.cr, self.uid, [adr])
+        return adr and res_partner_address.read(self.cr, self.uid, [adr]) or False
 
     def _lines_get(self, partner):
         moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -70,7 +70,7 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         text = ""
         a = {}
-        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id)])
+        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id),('reconcile_id','=',False)])
         partner_delay = []
         context={}
         context.update({'lang': partner.lang})

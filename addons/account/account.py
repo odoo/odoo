@@ -654,7 +654,8 @@ class account_journal_period(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
         'active': fields.boolean('Active', required=True),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True)
+        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
+        'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -1550,7 +1551,7 @@ class account_model_line(osv.osv):
 
         'ref': fields.char('Ref.', size=16),
 
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency."),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
@@ -2285,7 +2286,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 for tax in position.tax_ids:
                     vals_tax = {
                                 'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax_template_ref[tax.tax_dest_id.id],
+                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
                                 'position_id' : new_fp,
                                 }
                     obj_tax_fp.create(cr, uid, vals_tax)

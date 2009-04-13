@@ -357,11 +357,16 @@ class account_invoice(osv.osv):
         pt_obj= self.pool.get('account.payment.term')
         if not date_invoice :
             date_invoice = time.strftime('%Y-%m-%d')
-        pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
+
+        pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
+
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
             res= {'value':{'date_due': pterm_list[-1]}}
+        else:
+             raise osv.except_osv(_('Data Insufficient !'), _('The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !'))
+
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
@@ -491,7 +496,6 @@ class account_invoice(osv.osv):
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
-            ils = self.pool.get('account.invoice.line').read(cr, uid, line_ids)
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id)
             # check if taxes are all computed
@@ -897,17 +901,18 @@ account_invoice()
 
 class account_invoice_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
-         res = {}
-         cur_obj=self.pool.get('res.currency')
-         for line in self.browse(cr, uid, ids):
-             if line.invoice_id:
-                 res[line.id] = line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0)
-                 cur = line.invoice_id.currency_id
-                 res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
-             else:
-                 res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),2)
-         return res
-    
+        res = {}
+        cur_obj=self.pool.get('res.currency')
+        for line in self.browse(cr, uid, ids):
+            if line.invoice_id:
+                res[line.id] = line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0)
+                cur = line.invoice_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            else:
+                res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),2)
+        return res
+
+
     def _price_unit_default(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -1098,9 +1103,23 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
     }
-    def base_change(self, cr, uid, ids, base):
+    def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):
+        cur_obj = self.pool.get('res.currency')
+        company_obj = self.pool.get('res.company')
+        company_currency=False
+        if company_id:            
+            company_currency=company_obj.browse(cr,uid,company_id).id
+        if currency_id and company_currency:
+            base=cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'base_amount':base}}
-    def amount_change(self, cr, uid, ids, amount):
+    def amount_change(self, cr, uid, ids, amount,currency_id=False,company_id=False,date_invoice=False):
+        cur_obj = self.pool.get('res.currency')
+        company_obj = self.pool.get('res.company')
+        company_currency=False
+        if company_id:
+            company_currency=company_obj.browse(cr,uid,company_id).id
+        if currency_id and company_currency:
+            amount=cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount':amount}}
     _order = 'sequence'
     _defaults = {

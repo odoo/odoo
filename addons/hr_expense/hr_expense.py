@@ -62,7 +62,7 @@ class hr_expense_expense(osv.osv):
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Date Confirmed'),
-        'date_valid': fields.date('Date Valided'),
+        'date_valid': fields.date('Date Validated'),
         'user_valid': fields.many2one('res.users', 'Validation User'),
         'account_move_id': fields.many2one('account.move', 'Account Move'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
@@ -77,7 +77,7 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Accepted'),
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
-            ('canceled', 'Canceled')],
+            ('cancelled', 'Cancelled')],
             'State', readonly=True),
     }
     _defaults = {
@@ -104,7 +104,7 @@ class hr_expense_expense(osv.osv):
         return True
 
     def expense_canceled(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'canceled'})
+        self.write(cr, uid, ids, {'state':'cancelled'})
         return True
 
     def expense_paid(self, cr, uid, ids, *args):
@@ -172,6 +172,15 @@ class hr_expense_expense(osv.osv):
         return res
 hr_expense_expense()
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+    
+    _columns = {
+                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+    }
+    
+product_product()
+
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -191,7 +200,7 @@ class hr_expense_line(osv.osv):
         'total_amount': fields.function(_amount, method=True, string='Total'),
         'unit_amount': fields.float('Unit Price'),
         'unit_quantity': fields.float('Quantities' ),
-        'product_id': fields.many2one('product.product', 'Product' ),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'UoM' ),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
@@ -214,7 +223,6 @@ class hr_expense_line(osv.osv):
         return {'value':v}
 
 hr_expense_line()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

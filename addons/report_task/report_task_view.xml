@@ -58,5 +58,61 @@
         <menuitem id="next_id_57" name="Reporting" parent="project.menu_main" sequence="50"/>
         <menuitem id="next_id_58" name="All Months" parent="next_id_57"/><menuitem action="action_project_task" id="menu_project_task_user_tree" parent="next_id_58"/>
         
+        <!-- Closed Task in Random Acitivities dashboard -->
+        
+        <record id="view_task_closed_board_tree" model="ir.ui.view">
+            <field name="name">report.closed.task.tree</field>
+            <field name="model">report.closed.task</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Closed Tasks">
+                	<field name="date_close" />
+                    <field name="sequence"/>
+                    <field name="name" select="1"/>
+                    <field name="project_id" select="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="date_deadline"/>
+                    <field name="planned_hours" sum="Planned" widget="float_time"/>
+                    <field name="delay_hours" sum="Delay" widget="float_time"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="remaining_hours" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_closed_task_board" model="ir.actions.act_window">
+            <field name="name">Task Closed Within Past 15 Days</field>
+            <field name="res_model">report.closed.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_task_closed_board_tree"/>
+        </record>
+        
+        <!-- Report for Users' Timesheet and Task Hours per Month -->
+		
+		<record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
+            <field name="name">report.timesheet.task.user.tree</field>
+            <field name="model">report.timesheet.task.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet/Task hours Report Per Month" >
+                    <field name="name" select="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="timesheet_hrs" widget="float_time" />
+                    <field name="task_hrs"  widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+         
+        <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
+            <field name="name">Timesheet / Task Hours Per Month</field>
+            <field name="res_model">report.timesheet.task.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>    
+        
     </data>
 </openerp>

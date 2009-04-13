@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-    <menuitem 
-        id="menu_finance_belgian_statement" 
+    <menuitem
+        id="menu_finance_belgian_statement"
         name="Belgium Statements"
         parent="account.menu_finance_legal_statement"/>
 
@@ -33,6 +33,20 @@
         action="wizard_xml_vat_declaration"
         type="wizard"
         id="account_wizard_vat_declaration"/>
+
+   	<wizard
+        string="Partner VAT intra"
+        model="res.partner"
+        name="vat.intra.xml"
+        menu="False"
+        id="partner_vat_intra"/>
+
+    <menuitem
+        name="Partner VAT intra"
+        parent="menu_finance_belgian_statement"
+        action="partner_vat_intra"
+        type="wizard"
+        id="partner_intra_vat_menu"/>
 
     <record id="config_call_account_template" model="ir.actions.todo">
         <field name="name">Generate Chart of Accounts from a Chart Template</field>

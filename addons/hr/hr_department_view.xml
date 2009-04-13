@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!--
 	======================
 	department
@@ -48,14 +48,29 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="open_module_tree_department_tree" id="menu_department_tree" parent="base.menu_users"/>
-        
+
         <record id="open_module_tree_department" model="ir.actions.act_window">
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
         </record>
-        
+
         <menuitem action="open_module_tree_department" id="menu_department_def" parent="hr.menu_department_tree"/>
-        
+
+        <!-- res.users inherit -->
+        <record model="ir.ui.view" id="view_users_form_inherit">
+			<field name="name">res.users.form</field>
+			<field name="type">form</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Parents">
+						<field name="parent_id" nolabel="1"/>
+					</page>
+				</notebook>
+			</field>
+		</record>
+
     </data>
 </openerp>

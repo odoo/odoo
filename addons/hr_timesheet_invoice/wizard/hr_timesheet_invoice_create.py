@@ -51,12 +51,12 @@ class invoice_create(wizard.interface):
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
-                raise wizard.except_wizard(_('Analytic account incomplete'),
-                        _('Please fill in the partner and pricelist field in the analytic account:\n%s') % (account.name,))
+                raise wizard.except_wizard(_('Analytic Account incomplete'),
+                        _('Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
             if not partner.address:
                 raise wizard.except_wizard(_('Partner incomplete'),
-                        _('Please fill in the address field in the partner: %s.') % (partner.name,))
+                        _('Please fill in the Address field in the Partner: %s.') % (partner.name,))
 
             date_due = False
             if partner.property_payment_term:
@@ -95,7 +95,7 @@ class invoice_create(wizard.interface):
             for product_id,factor_id,qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
                 if not product:
-                    raise wizard.except_wizard(_('Error'), _('At least on line have no product !'))
+                    raise wizard.except_wizard(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
                 if factor.customer_name:
@@ -159,7 +159,7 @@ class invoice_create(wizard.interface):
                 strids = ','.join(map(str, data['ids']))
                 cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
-        
+
         return {
             'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
             'name': _('Invoices'),

@@ -69,8 +69,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Aged Receivable">
-                    <field name="name"/>
-                    <field name="balance"/>
+                    <field name="name" select="1"/>
+                    <field name="balance" select="2"/>
                 </tree>
             </field>
         </record>
@@ -81,5 +81,38 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
+        
+        <!-- Created Invoice for random activities of service dashboard -->
+        
+        <record id="board_view_created_invoice" model="ir.ui.view">
+            <field name="name">report.invoice.created.tree</field>
+            <field name="model">report.invoice.created</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state=='draft'" string="Invoices">
+                	<field name="create_date" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="type"/>
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="currency_id"/>
+                    <field name="date_invoice"/>
+                    <field name="date_due" select="1"/>
+                    <field name="residual"/>
+                    <field name="state" select="2"/>
+                    <field name="origin"/>
+                </tree>
+            </field>
+        </record>
+        
+	    <record id="action_view_created_invoice_dashboard" model="ir.actions.act_window">
+		    <field name="name">Invoices Created Within Past 15 Days</field>
+		    <field name="res_model">report.invoice.created</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		    <field name="view_id" ref="board_view_created_invoice"/>
+	    </record>
     </data>
 </openerp>

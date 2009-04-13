@@ -296,12 +296,43 @@
     	</record>
 	
 		<record model="ir.actions.act_window" id="action_random_timesheet_board">
-            <field name="type">ir.actions.act_window</field>
             <field name="name">Random Timesheet</field>
             <field name="res_model">report.random.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_random_timesheet_tree"/>
         </record>
+        
+        <!-- Random Timesheet Lines of random activities -->
+        
+        <record model="ir.ui.view" id="view_random_timesheet_lines_tree">
+            <field name="name">random.timesheet.lines.tree</field>
+            <field name="model">random.timesheet.lines</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Random Timesheets Lines">
+                	<field name="date" select="1"/>
+                	<field name="user_id" />
+                	<field name="name" select="1"/>
+                	<field name="quantity" />
+                	<field name="product_id" select="1"/>
+                	<field name="analytic_account_id" select="1"/>
+                	<field name="uom_id" />
+                	<field name="amount" />
+                	<field name="to_invoice" select="1"/>
+                	<field name="general_account_id" />
+                </tree>
+            </field>
+    	</record>
+	
+		<record model="ir.actions.act_window" id="action_random_timesheet_lines_board">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Random Timesheet Lines</field>
+            <field name="res_model">random.timesheet.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_random_timesheet_lines_tree"/>
+        </record>
+        
     </data>
 </openerp>
