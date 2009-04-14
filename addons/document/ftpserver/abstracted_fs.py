@@ -135,6 +135,11 @@ class abstracted_fs:
                 res = cr.fetchone()
                 if res and len(res):
                     self.db_name_list.append(db_name)
+                cr.commit()
+            except Exception,e:
+                log(e)
+                if cr:
+                    cr.rollback()
             finally:
                 if cr is not None:
                     cr.close()
@@ -274,7 +279,7 @@ class abstracted_fs:
 
             s = file_wrapper('', cid, cr.dbname, uid, )
             return s
-        except Exception,e:
+        except Exception,e:             
             log(e)
             raise OSError(1, 'Operation not permited.')
 
