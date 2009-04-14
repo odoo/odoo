@@ -201,7 +201,15 @@ class abstracted_fs:
 
     # Ok
     def fs2ftp(self, node):        
-        res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
+        res='/'
+        if node:
+            res=os.path.normpath(node.path)
+            res = res.replace("\\", "/")        
+            while res[:2] == '//':
+                res = res[1:]
+            res='/' + node.cr.dbname + '/' + _to_decode(res)            
+            
+        #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
 
     # Ok
