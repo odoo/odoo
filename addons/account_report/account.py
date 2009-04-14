@@ -59,9 +59,9 @@ class account_report(osv.osv):
 
         def _calc_context(key,obj):
             if key==0:
-                return obj.find(cr,uid)
+                return obj.find(cr,uid,exception=False)
             else:
-                obj_key=obj.browse(cr,uid,obj.find(cr,uid))
+                obj_key=obj.browse(cr,uid,obj.find(cr,uid,exception=False))
                 if isinstance(obj_key,list):
                     obj_key=obj_key[0]
                 key_ids=obj.search(cr,uid,[('date_stop','<',obj_key.date_start)])
