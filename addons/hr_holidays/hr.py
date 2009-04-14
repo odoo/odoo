@@ -345,7 +345,3 @@ class holiday_user_log(osv.osv):
     }
 holiday_user_log()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-=======
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE
