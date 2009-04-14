@@ -283,7 +283,6 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
-<<<<<<< TREE
 
 class hr_holidays_per_user(osv.osv):
     _name = "hr.holidays.per.user"
@@ -347,5 +346,3 @@ holiday_user_log()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-=======
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE
