@@ -98,22 +98,7 @@
     <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
 
 
-    <blockTableStyle id="TrLevel8">
-      <blockLeftPadding length="100" start="1,0" stop="1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="TrLevel7">
-      <blockLeftPadding length="80" start="1,0" stop="1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="TrLevel6">
-      <blockLeftPadding length="60" start="1,0" stop="1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="TrLevel5">
-      <blockLeftPadding length="40" start="1,0" stop="1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="TrLevel4">
-      <blockLeftPadding length="20" start="1,0" stop="1,0"/>
-    </blockTableStyle>
-    <blockTableStyle id="TrLevel3">
+    <blockTableStyle id="TrLevel">
       <blockLeftPadding length="0" start="1,0" stop="1,0"/>
     </blockTableStyle>
     <blockTableStyle id="TrLevel2">
@@ -131,34 +116,13 @@
 	  <blockFont name="Times-Bold" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
 
-
-    <paraStyle
-		name="Level8"
-		fontName="Helvetica"
-		fontSize="8.0" />
-    <paraStyle
-		name="Level7"
-		fontName="Helvetica"
-		fontSize="8.0" />
-    <paraStyle
-		name="Level6"
-		fontName="Helvetica"
-		fontSize="8.0" />
-    <paraStyle
-		name="Level5"
-		fontName="Helvetica"
-		fontSize="8.0" />
-    <paraStyle
-		name="Level4"
-		fontName="Helvetica"
-		fontSize="8.0" />
-    <paraStyle
-		name="Level3"
+   <paraStyle
+		name="Level"
 		fontName="Helvetica"
 		fontSize="8.0" />
     <paraStyle
 		name="Level2"
-		firstLineIndent="-0.03cm"
+	
 		fontName="Helvetica-Bold"
 		fontSize="8.0" />
     <paraStyle name="Level1"
@@ -210,8 +174,10 @@
 		<td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
         <td>
 
-	  <para style="P14">[[ setTag('tr','tr',{'style':'TrLevel'+str(a['level']), 'paraStyle':('Level'+str(a['level']))}) ]]<font></font>
-          [[ a['name'] ]]</para>
+	       <para style="P14">
+	       	<font>[[ (a['level']&lt;3 and setTag('tr','tr',{'style':'TrLevel'+str(a['level']), 'paraStyle':('Level'+str(a['level']))})) or removeParentNode('font') ]]</font>
+	       	<font>[[ (a['level']&gt;2 and setTag('tr','tr',{'style':'TrLevel', 'paraStyle':('Level')})) or removeParentNode('font') ]] </font>
+          	<font color="white">[[ '...'*(a['level']) ]]</font> [[ a['name'] ]]</para>
         </td>
         <td>
 		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font>

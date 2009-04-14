@@ -35,13 +35,13 @@ def _get_month_name(month):
 
 def _to_unicode(s):
     try:
-        return s.encode('ascii')
+        return s.decode('utf-8')
     except UnicodeError:
         try:
-            return s.decode('utf-8')
+            return s.decode('latin')
         except UnicodeError:
             try:
-                return s.decode('latin')
+                return s.encode('ascii')
             except UnicodeError:
                 return s
 
@@ -135,6 +135,11 @@ class abstracted_fs:
                 res = cr.fetchone()
                 if res and len(res):
                     self.db_name_list.append(db_name)
+                cr.commit()
+            except Exception,e:
+                log(e)
+                if cr:
+                    cr.rollback()
             finally:
                 if cr is not None:
                     cr.close()
@@ -184,10 +189,11 @@ class abstracted_fs:
     def ftp2fs(self, path_orig, data):
         path = self.ftpnorm(path_orig)
         if path and path=='/':
-            return None
-        path=_to_unicode(path)        
+            return None               
         path2 = filter(None,path.split('/'))[1:]
         (cr, uid, pool) = data
+        if len(path2):     
+            path2[-1]=_to_unicode(path2[-1])
         res = pool.get('document.directory').get_object(cr, uid, path2[:])
         if not res:
             raise OSError(2, 'Not such file or directory.')
@@ -195,7 +201,15 @@ class abstracted_fs:
 
     # Ok
     def fs2ftp(self, node):        
-        res = node and ('/' + node.cr.dbname + '/' + _to_decode(node.path)) or '/'
+        res='/'
+        if node:
+            res=os.path.normpath(node.path)
+            res = res.replace("\\", "/")        
+            while res[:2] == '//':
+                res = res[1:]
+            res='/' + node.cr.dbname + '/' + _to_decode(res)            
+            
+        #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
 
     # Ok
@@ -274,7 +288,7 @@ class abstracted_fs:
 
             s = file_wrapper('', cid, cr.dbname, uid, )
             return s
-        except Exception,e:
+        except Exception,e:             
             log(e)
             raise OSError(1, 'Operation not permited.')
 
@@ -337,7 +351,7 @@ class abstracted_fs:
 
 
     # Ok
-    def chdir(self, path):
+    def chdir(self, path):        
         if not path:
             self.cwd='/'
             return None
@@ -737,8 +751,8 @@ class abstracted_fs:
             except ValueError:
                 mname=_get_month_name(time.strftime("%m"))
                 mtime = mname+' '+time.strftime("%d %H:%M")            
-            # formatting is matched with proftpd ls output
-            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')            
+            # formatting is matched with proftpd ls output            
+            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')                    
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
                                                      size, mtime, path.split('/')[-1])
 

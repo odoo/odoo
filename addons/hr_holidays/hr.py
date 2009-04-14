@@ -283,7 +283,6 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
-<<<<<<< TREE
 
 class hr_holidays_per_user(osv.osv):
     _name = "hr.holidays.per.user"
@@ -344,4 +343,3 @@ class holiday_user_log(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 holiday_user_log()
-
