@@ -200,8 +200,8 @@ class abstracted_fs:
         return res
 
     # Ok
-    def fs2ftp(self, node):
-        res = node and ('/' + node.cr.dbname + '/' + _to_decode(node.path)) or '/'
+    def fs2ftp(self, node):        
+        res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
 
     # Ok
@@ -343,7 +343,7 @@ class abstracted_fs:
 
 
     # Ok
-    def chdir(self, path):
+    def chdir(self, path):        
         if not path:
             self.cwd='/'
             return None
