@@ -59,9 +59,9 @@ class project_work(osv.osv):
         vals_line['user_id'] = vals['user_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
-        vals_line['account_id'] = obj_task.project_id.category_id.id
-        res = obj.on_change_account_id(cr, uid, False, obj_task.project_id.category_id.id)
-        print 'Got', res
+        acc_id = obj_task.project_id.category_id.id
+        vals_line['account_id'] = acc_id
+        res = obj.on_change_account_id(cr, uid, False, acc_id)
         if res.get('value'):
             vals_line.update(res['value'])
         vals_line['general_account_id'] = a
@@ -108,7 +108,6 @@ class project_work(osv.osv):
     _columns={
         'hr_analytic_timesheet_id':fields.integer('Related Timeline Id')
     }
-
 
 project_work()
 
