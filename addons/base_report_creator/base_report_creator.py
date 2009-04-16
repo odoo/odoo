@@ -180,10 +180,11 @@ class report_creator(osv.osv):
 #           where_list.append(filter_id.expression)
 #       if where_list:
 #           ret_str+="\nwhere\n\t"+" and\n\t".join(where_list)
-        self.model_set_id=False
+        self.model_set_id = False
         model_dict = {}
         from_list = []
         where_list = []
+        filter_list = []
         for model in models:            
             model_dict[model.model] = self.pool.get(model.model)._table
         
@@ -218,21 +219,27 @@ class report_creator(osv.osv):
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
             raise osv.except_osv(_('No Related Models!!'),_('These is/are model(s) (%s) in selection which is/are not related to any other model') % ','.join(model_list))
+        
         if filter_ids and where_list<>[]:
-            where_list.append('and')
-            where_list.append(' ')
+            filter_list.append(' and ')
+            filter_list.append(' ')
+        
         for filter_id in filter_ids:
-            where_list.append(filter_id.expression)
-            where_list.append(' ')
-            where_list.append(filter_id.condition)
+            filter_list.append(filter_id.expression)
+            filter_list.append(' ')
+            filter_list.append(filter_id.condition)
+        
         ret_str = ",\n".join(from_list)
         if where_list:
-            ret_str+="\n where \n"+"\n".join(where_list)
+            ret_str+="\n where \n"+" and\n".join(where_list)
             ret_str = ret_str.strip()
+        if filter_list:
+            ret_str +="\n".join(filter_list)
             if ret_str.endswith('and'):
                 ret_str = ret_str[0:len(ret_str)-3]
             if ret_str.endswith('or'):
                 ret_str = ret_str[0:len(ret_str)-2]
+            ret_str = ret_str.strip()    
         return ret_str
 
     def _id_get(self, cr, uid, id, context):
@@ -365,7 +372,7 @@ class report_creator_filter(osv.osv):
     _description = "Report Filters"
     _columns = {
         'name': fields.char('Filter Name',size=64, required=True),
-        'expression': fields.text('Value', required=True),
+        'expression': fields.text('Value', required=True,help='Provide an expression for the field based on which you want to filter the records.\n e.g. res_partner.id=3'),
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
         'condition' : fields.selection([('and','AND'),('or','OR')], 'Condition')
     }
