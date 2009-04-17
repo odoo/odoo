@@ -88,6 +88,10 @@ class make_sale(wizard.interface):
                 fpos = fpos_data and fpos_data.id or False
                 partner_addr = default_partner_addr
                 pricelist = default_pricelist
+
+            if False in partner_addr.values():
+                raise wizard.except_wizard(_('Data Insufficient!'),_('Customer has no addresses defined!'))
+            
             vals = {
                 'origin': 'CRM:%s' % str(case.id),
                 'picking_policy': data['form']['picking_policy'],
@@ -109,6 +113,7 @@ class make_sale(wizard.interface):
                         product_id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value']
                 value['product_id'] = product_id
                 value['order_id'] = new_id
+                value['tax_id'] = [(6,0,value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 
             case_obj.write(cr, uid, case.id, {'ref': 'sale.order,%s' % new_id})
