@@ -91,7 +91,7 @@ class Cursor(object):
             self.__caller = tuple(stack()[2][1:3])
         
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self.__dict__, '_obj'):
             if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
                 # Oops. 'self' has not been closed explicitly.
                 # The cursor will be deleted by the garbage collector, 
