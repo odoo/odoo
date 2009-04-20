@@ -109,11 +109,11 @@ class res_company(osv.osv):
         <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
-        <setFont name="Helvetica" size="8"/>
+        <setFont name="DejaVu Sans" size="8"/>
         <drawString x="1.3cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
-        <setFont name="Helvetica-Bold" size="10"/>
+        <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="9.8cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
-        <setFont name="Helvetica" size="8"/>
+        <setFont name="DejaVu Sans" size="8"/>
         <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
         <drawString x="19.8cm" y="28.3cm"><pageCount/></drawString>
         <stroke color="#000000"/>
@@ -132,7 +132,7 @@ class res_company(osv.osv):
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
         <image x="1.3cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
-            <setFont name="Helvetica" size="8"/>
+            <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>
             <lines>1.3cm 27.7cm 20cm 27.7cm</lines>
