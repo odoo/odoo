@@ -73,7 +73,7 @@ class Cursor(object):
 
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            if not hasattr(self, '_obj'):
+            if not '_obj' in self.__dict__:
                 raise psycopg2.ProgrammingError('Unable to use the cursor after having closed it')
             return f(self, *args, **kwargs)
         return wrapper
@@ -91,7 +91,7 @@ class Cursor(object):
             self.__caller = tuple(stack()[2][1:3])
         
     def __del__(self):
-        if hasattr(self.__dict__, '_obj'):
+        if '_obj' in self.__dict__ :
             if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
                 # Oops. 'self' has not been closed explicitly.
                 # The cursor will be deleted by the garbage collector, 
