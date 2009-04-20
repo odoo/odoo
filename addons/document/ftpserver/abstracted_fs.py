@@ -12,6 +12,7 @@ import pooler
 import netsvc
 import os
 from service import security
+from osv import osv
 
 def log(message):
     logger = netsvc.Logger()
@@ -188,7 +189,7 @@ class abstracted_fs:
     # Ok
     def ftp2fs(self, path_orig, data):
         path = self.ftpnorm(path_orig)
-        if path and path=='/':
+        if not data or (path and path=='/'):
             return None               
         path2 = filter(None,path.split('/'))[1:]
         (cr, uid, pool) = data
@@ -400,6 +401,8 @@ class abstracted_fs:
         if path=='/':
             return None
         dbname = path.split('/')[1]
+        if dbname not in self.db_list():
+            return None
         try:
             db,pool = pooler.get_db_and_pool(dbname)
         except:
@@ -422,7 +425,12 @@ class abstracted_fs:
         if path is None:
             result = []
             for db in self.db_list():
-                result.append(false_node(db))
+                try:
+                    uid = security.login(db, self.username, self.password)
+                    if uid:
+                        result.append(false_node(db))                    
+                except osv.except_osv:                    
+                    pass
             return result
         return path.children()
 
