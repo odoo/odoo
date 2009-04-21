@@ -27,8 +27,12 @@ import abstracted_fs
 import netsvc
 
 from tools import config
-PORT = int(config.get('ftp_server_port', 8021))
 HOST = ''
+PORT = int(config.get('ftp_server_port', 8021))
+PASSIVE_PORTS = None
+pps = config.get('ftp_server_passive_ports', '').split(':')
+if len(pps) == 2:
+    PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
 class ftp_server(threading.Thread):
     def log(self, level, message):        
@@ -41,6 +45,8 @@ class ftp_server(threading.Thread):
         ftpserver.max_cons = 300
         ftpserver.max_cons_per_ip = 50
         ftpserver.FTPHandler.abstracted_fs = abstracted_fs.abstracted_fs
+        if PASSIVE_PORTS:
+            ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
         
         ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
         ftpserver.logline = lambda msg: None
