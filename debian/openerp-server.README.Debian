@@ -7,7 +7,11 @@ explanation how to achieve this (you need to execute all commands as root):
 
   0. Making sure, PostgreSQL is running
 
-     # /etc/init.d/postgresql* restart
+     # /etc/init.d/postgresql restart
+
+     Note that depending on the version of PostgreSQL installed on your system,
+     the above syvinit script could also be named postgresql-VERSION (whereas
+     'VERSION' needs to be replace with a version number).
 
   1. Creating the database
 
@@ -23,7 +27,7 @@ explanation how to achieve this (you need to execute all commands as root):
 
   4. Initializing the database
 
-     # /usr/bin/openerp-server --init=all
+     # su - postgres -c "/usr/sbin/openerp-server --init=all"
 
   5. Restarting openerp-server
 
