@@ -13,26 +13,17 @@ Package: openerp-server
 Section: net
 Architecture: all
 Depends: ${misc:Depends}, adduser, python, python-libxml2, python-libxslt1, python-psycopg, python-reportlab, python-tz
-Conflicts: tinyerp-server (<< 5.0.0~alpha-2)
+Conflicts: tinyerp-server
 Replaces: tinyerp-server
 Recommends: graphviz, ghostscript, postgresql, postgresql-client, python-imaging, python-matplotlib, python-pyopenssl, python-pyparsing
 Suggests: openerp-client
 Description: Enterprise Resource Management (server)
- OpenERP is a complete ERP and CRM. The main features are accounting (analytic
- and financial), stock management, sales and purchases management, tasks
- automation, marketing campaigns, help desk, POS, etc. Technical features
- include a distributed server, flexible workflows, an object database, a dynamic
- GUI, customizable reports, and NET-RPC and XML-RPC interfaces.
+ OpenERP, previously known as TinyERP, is a complete ERP and CRM. The main
+ features are accounting (analytic and financial), stock management, sales and
+ purchases management, tasks automation, marketing campaigns, help desk, POS,
+ etc. Technical features include a distributed server, flexible workflows, an
+ object database, a dynamic GUI, customizable reports, and NET-RPC and XML-RPC
+ interfaces.
  .
  This package contains the OpenERP server, install openerp-client package for
  the client.
-
-Package: tinyerp-server
-Architecture: all
-Depends: openerp-server
-Description: Enterprise Resource Management (server; transitional package)
- Package to ease upgrading from older tinyerp-server packages to the new
- openerp-server package.
- .
- This package can be purged at anytime once the openerp-server package has been
- installed.
