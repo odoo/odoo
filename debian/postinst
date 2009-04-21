@@ -17,10 +17,10 @@ case "${1}" in
 		chmod 0640 ${LOGFILE}
 
 		# Setting ownership
-		chown ${USER}:${USER} /usr/lib/openerp-server/addons -R
+		chown ${USER} /usr/lib/openerp-server/addons -R
 
 		chmod 0640 ${CONFFILE}
-		chown ${USER}:${USER} ${CONFFILE}
+		chown ${USER} ${CONFFILE}
 
 		echo
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
