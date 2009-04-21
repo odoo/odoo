@@ -27,7 +27,8 @@ explanation how to achieve this (you need to execute all commands as root):
 
   4. Initializing the database
 
-     # su - postgres -c "/usr/sbin/openerp-server --init=all"
+     # su - postgres -c "/usr/sbin/openerp-server --init=all \
+	--config=/etc/openerp-server.conf --stop-after-init"
 
   5. Restarting openerp-server
 
