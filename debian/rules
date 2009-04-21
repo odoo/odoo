@@ -23,21 +23,21 @@ install: build
 	dh_prep
 	dh_installdirs
 
-	python setup.py install --no-compile --prefix=$(CURDIR)/debian/tinyerp-server/usr
+	python setup.py install --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
 
 	# Adjusting program location
-	sed -i -e 's|python.*/site-packages/||' debian/tinyerp-server/usr/bin/openerp-server
-	mv debian/tinyerp-server/usr/lib/python*/site-packages/openerp-server debian/tinyerp-server/usr/lib
-	rm -rf debian/tinyerp-server/usr/lib/python*
+	sed -i -e 's|python.*/site-packages/||' debian/openerp-server/usr/bin/openerp-server
+	mv debian/openerp-server/usr/lib/python*/site-packages/openerp-server debian/openerp-server/usr/lib
+	rm -rf debian/openerp-server/usr/lib/python*
 
 	# Workaround for bug in setup.py
-	mv debian/tinyerp-server/usr/import_xml.rng debian/tinyerp-server/usr/lib/openerp-server
+	mv debian/openerp-server/usr/import_xml.rng debian/openerp-server/usr/lib/openerp-server
 
 	# Fixing permissions
-	find debian/tinyerp-server/usr/lib/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
+	find debian/openerp-server/usr/lib/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
 
 	# Removing double files
-	rm -rf debian/tinyerp-server/usr/share/doc/openerp-server-*
+	rm -rf debian/openerp-server/usr/share/doc/openerp-server-*
 
 binary: binary-indep
 
@@ -49,7 +49,7 @@ binary-indep: build install
 	dh_installchangelogs doc/Changelog
 	dh_installdocs
 	dh_install
-	dh_installinit --name=openerp-server --update-rcd-params='defaults 21'
+	dh_installinit --update-rcd-params='defaults 21'
 	dh_lintian
 	dh_link
 	dh_compress
