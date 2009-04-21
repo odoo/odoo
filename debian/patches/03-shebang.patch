@@ -1,9 +1,5 @@
-#!/bin/sh /usr/share/dpatch/dpatch-run
-## 04-shebang.dpatch by Daniel Baumann <daniel@debian.org>
-##
-## DP: Correcting shebang.
-
-@DPATCH@
+Author: Daniel Baumann <daniel@debian.org>
+Description: Correcting shebang.
 
 diff -Naurp openerp-server.orig/bin/addons/document/ftpserver/ftpserver.py openerp-server/bin/addons/document/ftpserver/ftpserver.py
 --- openerp-server.orig/bin/addons/document/ftpserver/ftpserver.py	2008-12-16 11:06:22.000000000 +0000
