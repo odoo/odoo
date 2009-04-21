@@ -1,0 +1,25 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 04-shebang.dpatch by Daniel Baumann <daniel@debian.org>
+##
+## DP: Correct shebank.
+
+@DPATCH@
+
+diff -Naurp openerp-server.orig/bin/addons/auction/barcode/test.py openerp-server/bin/addons/auction/barcode/test.py
+--- openerp-server.orig/bin/addons/auction/barcode/test.py	2008-11-09 13:50:48.000000000 +0000
++++ openerp-server/bin/addons/auction/barcode/test.py	2008-11-09 13:57:57.000000000 +0000
+@@ -1,4 +1,4 @@
+-#!/usr/pkg/bin/python
++#!/usr/bin/python
+ from common import *
+ from code39 import *
+ from code93 import *
+diff -Naurp openerp-server.orig/bin/addons/base/ir/workflow/pydot/dot_parser.py openerp-server/bin/addons/base/ir/workflow/pydot/dot_parser.py
+--- openerp-server.orig/bin/addons/base/ir/workflow/pydot/dot_parser.py	2008-11-09 13:50:48.000000000 +0000
++++ openerp-server/bin/addons/base/ir/workflow/pydot/dot_parser.py	2008-11-09 13:58:15.000000000 +0000
+@@ -1,4 +1,4 @@
+-#!/bin/env python
++#!/usr/bin/python
+ 
+ """
+ The dotparser parses graphviz files in dot and dot files and transforms them

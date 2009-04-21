@@ -1,0 +1,19 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## 01-autobuild.dpatch by Daniel Baumann <daniel@debian.org>
+##
+## DP: Disable modules check to make it buildable without X11.
+
+@DPATCH@
+
+diff -Naurp openerp-server.orig/setup.py openerp-server/setup.py
+--- openerp-server.orig/setup.py	2008-11-03 21:33:56.000000000 +0000
++++ openerp-server/setup.py	2008-11-09 09:00:02.000000000 +0000
+@@ -133,7 +133,7 @@ def data_files():
+     files.append(('.', [('bin/import_xml.rng')]))
+     return files
+ 
+-check_modules()
++#check_modules()
+ 
+ # create startup script
+ start_script = \
