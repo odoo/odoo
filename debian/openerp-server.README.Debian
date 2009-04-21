@@ -21,7 +21,11 @@ explanation how to achieve this (you need to execute all commands as root):
      to replace 'openerp' above with the user you want instead, and you need to
      adjust 'db_user = openerp' in /etc/openerp-server.conf too.
 
-  3. Restarting openerp-server
+  4. Initializing the database
+
+     # /usr/bin/openerp-server --init=all
+
+  5. Restarting openerp-server
 
      # /etc/init.d/openerp-server restart
 
