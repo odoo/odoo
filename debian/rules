@@ -30,9 +30,6 @@ install: build
 	mv debian/openerp-server/usr/lib/python*/site-packages/openerp-server debian/openerp-server/usr/lib
 	rm -rf debian/openerp-server/usr/lib/python*
 
-	# Workaround for bug in setup.py
-	mv debian/openerp-server/usr/import_xml.rng debian/openerp-server/usr/lib/openerp-server
-
 	# Fixing permissions
 	find debian/openerp-server/usr/lib/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
 
