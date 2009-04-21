@@ -46,6 +46,12 @@ class stock_picking(osv.osv):
     _defaults = {
         'purchase_id': lambda *a: False,
     }
+    
+    def get_currency_id(self, cursor, user, picking):
+        if picking.purchase_id:
+            return picking.purchase_id.pricelist_id.currency_id.id
+        else:
+            return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
     def _get_comment_invoice(self, cursor, user, picking):
         if picking.purchase_id and picking.purchase_id.notes:
