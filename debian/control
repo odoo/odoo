@@ -1,0 +1,27 @@
+Source: tinyerp-server
+Section: net
+Priority: optional
+Maintainer: Daniel Baumann <daniel@debian.org>
+Build-Depends: debhelper (>= 7), dpatch, python-dev
+Build-Depends-Indep: python-libxml2, python-libxslt1, python-psycopg
+Standards-Version: 3.8.0
+Homepage: http://www.openerp.com/
+Vcs-Browser: http://git.debian.net/?p=debian/openerp-server.git
+Vcs-Git: git://git.debian.net/git/debian/openerp-server.git
+
+Package: tinyerp-server
+Section: net
+Architecture: all
+Depends: ${misc:Depends}, adduser, python, python-libxml2, python-libxslt1, python-psycopg, python-reportlab, python-tz
+Recommends: graphviz, postgresql, postgresql-client, python-imaging, python-pyparsing
+Provides: openerp-server
+Suggests: tinyerp-client
+Description: Enterprise Resource Management (server)
+ OpenERP is a complete ERP and CRM. The main features are accounting (analytic
+ and financial), stock management, sales and purchases management, tasks
+ automation, marketing campaigns, help desk, POS, etc. Technical features
+ include a distributed server, flexible workflows, an object database, a dynamic
+ GUI, customizable reports, and NET-RPC and XML-RPC interfaces.
+ .
+ This package contains the OpenERP server, install tinyerp-client package for
+ the client.

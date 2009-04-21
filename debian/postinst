@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+USER="openerp"
+CONFFILE="/etc/openerp-server.conf"
+LOGFILE="/var/log/openerp.log"
+
+case "${1}" in
+	configure)
+		# Creating system user
+		adduser --no-create-home --quiet --system ${USER}
+
+		# Creating log file
+		touch ${LOGFILE}
+		chown ${USER}:adm ${LOGFILE}
+		chmod 0640 ${LOGFILE}
+
+		# Setting ownership
+		chown ${USER}:${USER} /usr/lib/openerp-server/addons -R
+
+		chmod 0640 ${CONFFILE}
+		chown ${USER}:${USER} ${CONFFILE}
+
+		echo
+		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+		echo "* OpenERP uses a PostgreSQL database to store its data. With the first *"
+		echo "* generation of packages, you have to setup this database manually.     *"
+		echo "* Please read /usr/share/doc/openerp-server/README.Debian how to do it. *"
+		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+		echo
+		;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+
+		;;
+
+	*)
+		echo "postinst called with unknown argument \`{$1}'" >&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0

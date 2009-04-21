@@ -1,0 +1,62 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpatch/dpatch.make
+
+clean: clean-patched unpatch
+clean-patched: patch-stamp
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	python setup.py clean
+
+	rm -rf build openerp-server
+	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
+
+	dh_clean
+
+build: patch-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	python setup.py install --no-compile --prefix=$(CURDIR)/debian/tinyerp-server/usr
+
+	# Adjusting program location
+	sed -i -e 's|python.*/site-packages/||' debian/tinyerp-server/usr/bin/openerp-server
+	mv debian/tinyerp-server/usr/lib/python*/site-packages/openerp-server debian/tinyerp-server/usr/lib
+	rm -rf debian/tinyerp-server/usr/lib/python*
+
+	# Workaround for bug in setup.py
+	mv debian/tinyerp-server/usr/import_xml.rng debian/tinyerp-server/usr/lib/openerp-server
+
+	# Fixing permissions
+	find debian/tinyerp-server/usr/lib/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
+
+	# Removing double files
+	rm -rf debian/tinyerp-server/usr/share/doc/openerp-server-*
+
+binary: binary-indep
+
+binary-arch:
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs doc/Changelog
+	dh_installdocs
+	dh_install
+	dh_installinit --name=openerp-server --update-rcd-params='defaults 21'
+	dh_lintian
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: clean build install binary binary-arch binary-indep
