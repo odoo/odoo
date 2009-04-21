@@ -1,9 +1,5 @@
-#!/bin/sh /usr/share/dpatch/dpatch-run
-## 03-migrate.dpatch by Brian DeRocher <brian@derocher.org>
-##
-## DP: Correct SQL syntax in migrate script (Closes: #467517).
-
-@DPATCH@
+Author: Brian DeRocher <brian@derocher.org>
+Description: Correct SQL syntax in migrate script (Closes: #467517).
 
 diff -Naurp openerp-server.orig/doc/migrate/3.4.0-4.0.0/pre.py openerp-server/doc/migrate/3.4.0-4.0.0/pre.py
 --- openerp-server.orig/doc/migrate/3.4.0-4.0.0/pre.py	2008-11-03 21:33:56.000000000 +0000

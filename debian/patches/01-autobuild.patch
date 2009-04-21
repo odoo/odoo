@@ -1,9 +1,5 @@
-#!/bin/sh /usr/share/dpatch/dpatch-run
-## 01-autobuild.dpatch by Daniel Baumann <daniel@debian.org>
-##
-## DP: Disable modules check to make it buildable without X11.
-
-@DPATCH@
+Author: Daniel Baumann <daniel@debian.org>
+Description: Disable modules check to make it buildable without X11.
 
 diff -Naurp openerp-server.orig/setup.py openerp-server/setup.py
 --- openerp-server.orig/setup.py	2008-11-03 21:33:56.000000000 +0000

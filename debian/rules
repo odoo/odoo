@@ -1,9 +1,9 @@
 #!/usr/bin/make -f
 
-include /usr/share/dpatch/dpatch.make
+include /usr/share/quilt/quilt.make
 
 clean: clean-patched unpatch
-clean-patched: patch-stamp
+clean-patched: patch
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
@@ -15,9 +15,9 @@ clean-patched: patch-stamp
 
 	dh_clean
 
-build: patch-stamp
+build:
 
-install: build
+install: patch
 	dh_testdir
 	dh_testroot
 	dh_prep
@@ -40,7 +40,7 @@ binary: binary-indep
 
 binary-arch:
 
-binary-indep: build install
+binary-indep: install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs doc/Changelog
