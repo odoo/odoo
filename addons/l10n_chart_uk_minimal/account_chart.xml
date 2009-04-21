@@ -15,6 +15,7 @@
         <!-- Balance Sheet -->
 
         <record id="bal" model="account.account.template">
+        	<field name="code">1</field>
             <field name="name">Balance Sheet</field>
             <field ref="chart0" name="parent_id"/>
             <field name="type">view</field>
@@ -22,6 +23,7 @@
         </record>
 
         <record id="fas" model="account.account.template">
+        	<field name="code">10</field>
             <field name="name">Fixed Assets</field>
             <field ref="bal" name="parent_id"/>
             <field name="type">view</field>
@@ -29,6 +31,7 @@
         </record>
 
         <record id="xfa" model="account.account.template">
+        	<field name="code">100</field>
             <field name="name">Fixed Asset Account</field>
             <field ref="fas" name="parent_id"/>
             <field name="type">other</field>
@@ -36,6 +39,7 @@
         </record>
 
         <record id="nca" model="account.account.template">
+        	<field name="code">11</field>
             <field name="name">Net Current Assets</field>
             <field ref="bal" name="parent_id"/>
             <field name="type">view</field>
@@ -43,6 +47,7 @@
         </record>
 
         <record id="cas" model="account.account.template">
+        	<field name="code">110</field>
             <field name="name">Current Assets</field>
 	        <field ref="nca" name="parent_id"/>
             <field name="type">view</field>
@@ -50,7 +55,7 @@
         </record>
 
         <record id="stk" model="account.account.template">
-            <field name="code"/>
+            <field name="code">1101</field>
             <field name="name">Purchased Stocks</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
@@ -58,7 +63,7 @@
         </record>
 
         <record id="a_recv" model="account.account.template">
-            <field name="code"/>
+            <field name="code">1102</field>
             <field name="name">Debtors</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">receivable</field>
@@ -71,6 +76,7 @@
         </record> -->
 
         <record id="ova" model="account.account.template">
+        	<field name="code">1103</field>
             <field name="name">Output VAT</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
@@ -78,6 +84,7 @@
         </record>
 
         <record id="bnk" model="account.account.template">
+        	<field name="code">1104</field>
             <field name="name">Bank Current Account</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
@@ -85,7 +92,7 @@
         </record>
 
         <record id="cash" model="account.account.template">
-            <field name="code"/>
+            <field name="code">1105</field>
             <field name="name">Cash</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
@@ -93,6 +100,7 @@
         </record>
 
         <record id="cli" model="account.account.template">
+        	<field name="code">111</field>
             <field name="name">Current Liabilities</field>
             <field ref="nca" name="parent_id"/>
             <field name="type">view</field>
@@ -100,7 +108,7 @@
         </record>
 
         <record id="a_pay" model="account.account.template">
-            <field name="code"/>
+            <field name="code">1111</field>
             <field name="name">Creditors</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">payable</field>
@@ -113,6 +121,7 @@
         </record>-->
 
         <record id="iva" model="account.account.template">
+        	<field name="code">1112</field>
             <field name="name">Input VAT</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
@@ -122,6 +131,7 @@
         <!-- Profit and Loss -->
 
         <record id="gpf" model="account.account.template">
+        	<field name="code">2</field>
             <field name="name">Profit and Loss</field>
             <field ref="chart0" name="parent_id"/>
             <field name="type">view</field>
@@ -129,6 +139,7 @@
         </record>
 
         <record id="rev" model="account.account.template">
+			<field name="code">20</field>        
             <field name="name">Revenue</field>
             <field ref="gpf" name="parent_id"/>
             <field name="type">view</field>
@@ -136,7 +147,7 @@
         </record>
 
         <record id="a_sale" model="account.account.template">
-            <field name="code"/>
+            <field name="code">200</field>
             <field name="name">Product Sales</field>
             <field ref="rev" name="parent_id"/>
             <field name="type">other</field>
@@ -148,6 +159,7 @@
         </record> -->
 
         <record id="cos" model="account.account.template">
+        	<field name="code">21</field>
             <field name="name">Cost of Sales</field>
             <field ref="gpf" name="parent_id"/>
             <field name="type">view</field>
@@ -155,7 +167,7 @@
         </record>
 
         <record id="cog" model="account.account.template">
-            <field name="code"/>
+            <field name="code">210</field>
             <field name="name">Cost of Goods Sold</field>
             <field ref="cos" name="parent_id"/>
             <field name="type">other</field>
@@ -163,6 +175,7 @@
         </record>
 
         <record id="ovr" model="account.account.template">
+        	<field name="code">22</field>
             <field name="name">Overheads</field>
             <field ref="gpf" name="parent_id"/>
             <field name="type">view</field>
@@ -170,7 +183,7 @@
         </record>
 
         <record id="a_expense" model="account.account.template">
-            <field name="code"/>
+            <field name="code">220</field>
             <field name="name">Expenses</field>
             <field ref="ovr" name="parent_id"/>
             <field name="type">other</field>
