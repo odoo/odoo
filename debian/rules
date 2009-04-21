@@ -26,7 +26,7 @@ install: build
 	python setup.py install --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
 
 	# Adjusting program location
-	sed -i -e 's|python.*/site-packages/||' debian/openerp-server/usr/bin/openerp-server
+	sed -i -e 's|cd .*python.*/site-packages|cd /usr/lib|' debian/openerp-server/usr/bin/openerp-server
 	mv debian/openerp-server/usr/lib/python*/site-packages/openerp-server debian/openerp-server/usr/lib
 	rm -rf debian/openerp-server/usr/lib/python*
 
