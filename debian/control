@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 7), dpatch, python-dev
-Build-Depends-Indep: python-libxml2, python-libxslt1, python-psycopg
+Build-Depends-Indep: python-lxml, python-xml, python-libxslt1, python-psycopg
 Standards-Version: 3.8.0
 Homepage: http://www.openerp.com/
 Vcs-Browser: http://git.debian.net/?p=debian/openerp-server.git
@@ -12,7 +12,7 @@ Vcs-Git: git://git.debian.net/git/debian/openerp-server.git
 Package: openerp-server
 Section: net
 Architecture: all
-Depends: ${misc:Depends}, adduser, python, python-libxml2, python-libxslt1, python-psycopg, python-reportlab, python-tz
+Depends: ${misc:Depends}, adduser, python, python-lxml, python-xml, python-libxslt1, python-psycopg, python-reportlab, python-tz
 Conflicts: tinyerp-server
 Replaces: tinyerp-server
 Recommends: graphviz, ghostscript, postgresql, postgresql-client, python-imaging, python-matplotlib, python-pyopenssl, python-pyparsing
