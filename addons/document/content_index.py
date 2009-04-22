@@ -28,6 +28,19 @@ import tempfile
 #
 # This should be the indexer
 #
+def _to_unicode(s):
+    try:
+        return s.decode('utf-8')
+    except UnicodeError:
+        try:
+            return s.decode('latin')
+        except UnicodeError:
+            try:
+                return s.encode('ascii')
+            except UnicodeError:
+                return s
+
+
 def content_index(content, filename=None, content_type=None):
     fname,ext = os.path.splitext(filename)
     result = ''
@@ -35,7 +48,7 @@ def content_index(content, filename=None, content_type=None):
         (stdin,stdout) = os.popen2('antiword -', 'b')
         stdin.write(content)
         stdin.close()
-        result = stdout.read().decode('latin1','replace').encode('utf-8','replace')
+        result = _to_unicode(stdout.read())
     elif ext == '.pdf':
         file_descriptor, file_name = tempfile.mkstemp(suffix=ext)
         os.write(file_descriptor, content)
@@ -46,7 +59,7 @@ def content_index(content, filename=None, content_type=None):
     elif ext in ('.xls','.ods','.odt','.odp'):
         s = StringIO.StringIO(content)
         o = odt2txt.OpenDocumentTextFile(s)
-        result = o.toString().encode('ascii','replace')
+        result = _to_unicode(o.toString())
         s.close()
     elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
         result = content
