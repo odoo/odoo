@@ -122,20 +122,25 @@ def _set_filter_value(self, cr, uid, data, context):
     model_pool = pooler.get_pool(cr.dbname).get(model_name)
     table_name = model_pool._table
     model_name = model_pool._description
+    
+    if field_type == 'boolean' and value_data == 1:
+        value_data = 'true'
+    else:
+        value_data = 'false'
+
     if field_type:
         if field_type == 'many2many' and value_data and len(value_data):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
         else:
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
-            
+        
         if fields_list and value_data:
             create_dict = {
-                           'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]),
+                           'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]) + " ",
                            'expression':' '.join(fields_list),
                            'report_id':data['id'],
                            'condition' : form_data['condition']
                            }
-            
             pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict)
         #end if field_type == 'many2many' and value_data and len(value_data):
 #       pooler.get_pool(cr.dbname).get('custom.report.filter').create(cr,uid,form_data)
