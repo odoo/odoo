@@ -44,7 +44,8 @@ class stock_picking(osv.osv):
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
             return picking.sale_id.pricelist_id.currency_id.id
-        return False
+        else:
+            return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
     def _get_payment_term(self, cursor, user, picking):
         res = {}

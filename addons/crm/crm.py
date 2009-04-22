@@ -273,8 +273,8 @@ class crm_case_rule(osv.osv):
 
     def _check(self, cr, uid, ids=False, context={}):
         '''
-        Function called by the sceduler to proccess cases for date actions
-        Only works on not done and canceled cases
+        Function called by the scheduler to process cases for date actions
+        Only works on not done and cancelled cases
         '''
         cr.execute('select * from crm_case \
                 where (date_action_last<%s or date_action_last is null) \
