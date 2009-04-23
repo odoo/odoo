@@ -113,6 +113,7 @@ class res_partner(osv.osv):
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0)
         for pid,type,val in cr.fetchall():
+            if val is None: val=0
             res[pid][maps[type]] = (type=='receivable') and val or -val
         return res
 
