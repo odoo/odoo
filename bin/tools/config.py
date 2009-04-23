@@ -113,6 +113,7 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
+        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
             group.add_option("-S", "--secure", dest="secure",
@@ -143,7 +144,6 @@ class configmanager(object):
             group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
-        group.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
