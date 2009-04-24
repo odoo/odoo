@@ -904,7 +904,10 @@ class orm_template(object):
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
-            if field in fields:
+            if field == 'id':
+                # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
+                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
+            elif field in fields:
                 fields[field].update(fields_def[field])
             else:
                 cr.execute('select name, model from ir_ui_view where (id=%s or inherit_id=%s) and arch like %s', (view_id, view_id, '%%%s%%' % field))

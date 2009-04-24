@@ -28,7 +28,7 @@ class lang(osv.osv):
     _description = "Languages"
      
     def _get_default_date_format(self,cursor,user,context={}):
-        return '%Y-%m-%d'
+        return '%m/%d/%Y'
     
     def _get_default_time_format(self,cursor,user,context={}):
         return '%H:%M:%S'
