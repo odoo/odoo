@@ -86,7 +86,7 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_default_8">[[ repeatIn(objects,'employee') ]]</para>
+    <para style="terp_default_8">[[ repeatIn(get_employees(data['form']['emp_ids']),'employee') ]]</para>
     <para style="terp_header_Centre">Attendance Errors</para>
     <para style="P1">[[ employee.name ]]</para>
     <para style="terp_default_8">
@@ -140,13 +140,13 @@
     <blockTable colWidths="357.0,99.0,63.0" style="Table_employee_total">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Total period:</para>
+          <para style="terp_default_Bold_9">Total period:<font face="Times">[[ repeatIn(total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay']),'total')]] </font></para>
         </td>
         <td>
-          <para style="terp_default_Centre_9_Bold">[[ total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[0]  ]]</para>
+          <para style="terp_default_Centre_9_Bold">[[ total['total'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_9_Bold">[[ total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[1]  ]]</para>
+          <para style="terp_default_Centre_9_Bold">[[ total['total2'] ]]</para>
         </td>
       </tr>
     </blockTable>

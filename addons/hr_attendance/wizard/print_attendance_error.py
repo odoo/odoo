@@ -48,6 +48,15 @@ def _check_data(self, cr, uid, data, *args):
     attendance_ids = [x[0] for x in cr.fetchall()]
     if not attendance_ids:
         raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))    
+    
+    attendance_records = pooler.get_pool(cr.dbname).get('hr.attendance').browse(cr,uid,attendance_ids)
+    emp_ids = []
+    for rec in attendance_records:
+        if rec.employee_id.id not in emp_ids:
+            emp_ids.append(rec.employee_id.id)
+    
+    data['form']['emp_ids'] = emp_ids
+    
     return data['form']
 
 
