@@ -380,7 +380,7 @@ class account_account(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['parent_id'] = False
+        default['code'] = (account['code'] or '') + '(copy)'
         if not local:
             done_list = []
         if account.id in done_list:
