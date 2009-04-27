@@ -25,6 +25,7 @@ import datetime
 import pooler
 import base64
 from tools.translate import _
+import tools
 
 form = """<?xml version="1.0"?>
 <form string="Select Fiscal Year">
@@ -32,7 +33,7 @@ form = """<?xml version="1.0"?>
     <newline/>
     <field name="fyear" />
     <newline/>
-    <field name="mand_id" help="Should be provided when subcription of INTERVAT service is done"/>
+    <field name="mand_id" help="Should be provided when subscription of INTERVAT service is done"/>
     <newline/>
     <field name="limit_amount" help="Limit under which the partners will not be included into the listing"/>
     <newline/>
@@ -73,7 +74,7 @@ class wizard_vat(wizard.interface):
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
 
-        p_id_list=pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
+        p_id_list = pooler.get_pool(cr.dbname).get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
 
         if not p_id_list:
              raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
@@ -81,7 +82,7 @@ class wizard_vat(wizard.interface):
         period_ids = pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
         period = "("+','.join(map(lambda x: str(x), period_ids)) +")"
 
-        street=zip_city=country=''
+        street = zip_city = country = ''
         addr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
             ads=pooler.get_pool(cr.dbname).get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]     
@@ -90,24 +91,24 @@ class wizard_vat(wizard.interface):
             if not zip_city:
                 zip_city = ''
             if ads.street:
-                street=ads.street
+                street = ads.street
             if ads.street2:
-                street +=ads.street2
+                street += ads.street2
             if ads.country_id:
-                country=ads.country_id.code
+                country = ads.country_id.code
 
-
-        sender_date=time.strftime('%Y-%m-%d')
-        data_file='<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
+        sender_date = time.strftime('%Y-%m-%d')
+        
+        data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
         data_file +=' ControlRef="'+ cref + '" MandataireId="'+ data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         if data['form']['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
-        data_file +='\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ str(street) +'</Street>\n\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t<Country>'+ str(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
-        data_comp ='\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+str(obj_cmpny.name)+'</Name>\n\t<Street>'+ str(street) +'</Street>\n\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t<Country>'+ str(country) +'</Country>\n</CompanyInfo>'
-        data_period ='\n<Period>'+ str(obj_year.date_stop[:4]) +'</Period>'
-        error_message=[]
+        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
+        data_file += '\n\t\t<Country>'+ tools.ustr(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
+        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t<Street>'+ tools.ustr(street) +'</Street>\n\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>\n\t<Country>'+ tools.ustr(country) +'</Country>\n</CompanyInfo>'
+        data_period = '\n<Period>'+ tools.ustr(obj_year.date_stop[:4]) +'</Period>'
+        error_message = []
 
         for p_id in p_id_list:
             record = {} # this holds record per partner
@@ -125,7 +126,7 @@ class wizard_vat(wizard.interface):
                 continue
             query = 'select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id='+str(p_id)+' and l.period_id in '+period+' group by b.code'
             cr.execute(query)
-            line_info=cr.fetchall()
+            line_info = cr.fetchall()
             if not line_info:
                 continue
 
@@ -172,13 +173,13 @@ class wizard_vat(wizard.interface):
             seq +=1
             sum_tax +=line['amount']
             sum_turnover +=line['turnover']
-            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
+            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
 
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
-        data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n</VatList>'
+        data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'
 
-        data['form']['msg']='Save the File with '".xml"' extension.'
-        data['form']['file_save']=base64.encodestring(data_file)
+        data['form']['msg'] = 'Save the File with '".xml"' extension.'
+        data['form']['file_save'] = base64.encodestring(data_file.encode('utf8'))
         return data['form']
 
     states = {
