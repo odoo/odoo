@@ -244,7 +244,7 @@ class module(osv.osv):
                     m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
             res = cr.fetchall()
             if res:
-                raise orm.except_orm(_('Error'), _('Some installed modules depends on the module you plan to desinstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
+                raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
         return True
 
