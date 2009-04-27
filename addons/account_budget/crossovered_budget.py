@@ -208,8 +208,11 @@ class crossovered_budget_lines(osv.osv):
                 elapsed = min(strToDate(line.date_to),strToDate(date_to)) - max(strToDate(line.date_from),strToDate(date_from))
                 if strToDate(date_to) < strToDate(line.date_from):
                     elapsed = strToDate(date_to) - strToDate(date_to)
-
-                theo_amt=float(elapsed.days/float(total.days))*line.planned_amount
+                
+                if total.days:
+                    theo_amt = float(elapsed.days/float(total.days))*line.planned_amount
+                else:
+                    theo_amt = line.planned_amount
 
             res[line.id]=theo_amt
         return res

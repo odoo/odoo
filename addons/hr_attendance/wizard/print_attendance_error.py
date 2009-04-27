@@ -22,6 +22,7 @@
 
 import wizard
 import time
+import pooler
 
 _date_form = '''<?xml version="1.0"?>
 <form string="Select a time span">
@@ -38,6 +39,27 @@ _date_fields = {
     'max_delay': {'string':'Max. Delay (Min)', 'type':'integer', 'default':lambda *a: 120, 'required':True},
 }
 
+def _check_data(self, cr, uid, data, *args):
+    date_from = data['form']['init_date']
+    date_to = data['form']['end_date']
+    emp_ids = (','.join([str(x) for x in data['ids']]))
+                  
+    cr.execute("select id from hr_attendance where employee_id in (%s) and to_char(name,'YYYY-mm-dd')<='%s' and to_char(name,'YYYY-mm-dd')>='%s' and action in ('%s','%s') order by name" %(emp_ids, date_to, date_from, 'sign_in', 'sign_out'))
+    attendance_ids = [x[0] for x in cr.fetchall()]
+    if not attendance_ids:
+        raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))    
+    
+    attendance_records = pooler.get_pool(cr.dbname).get('hr.attendance').browse(cr,uid,attendance_ids)
+    emp_ids = []
+    for rec in attendance_records:
+        if rec.employee_id.id not in emp_ids:
+            emp_ids.append(rec.employee_id.id)
+    
+    data['form']['emp_ids'] = emp_ids
+    
+    return data['form']
+
+
 class wiz_attendance(wizard.interface):
     states = {
         'init': {
@@ -45,7 +67,7 @@ class wiz_attendance(wizard.interface):
             'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Attendance Report'),('end','Cancel') ]}
         },
         'print': {
-            'actions': [],
+            'actions': [_check_data],
             'result': {'type': 'print', 'report': 'hr.attendance.error', 'state':'end'}
         }
     }

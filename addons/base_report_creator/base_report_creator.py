@@ -229,7 +229,13 @@ class report_creator(osv.osv):
             filter_list.append(' ')
             filter_list.append(filter_id.condition)
         
-        ret_str = ",\n".join(from_list)
+        if len(from_list) == 1 and filter_ids:
+            from_list.append(' ')
+            ret_str = "\n where \n".join(from_list)
+        else:
+            ret_str = ",\n".join(from_list)
+        
+            
         if where_list:
             ret_str+="\n where \n"+" and\n".join(where_list)
             ret_str = ret_str.strip()
@@ -261,23 +267,28 @@ class report_creator(osv.osv):
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
                 i+=1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
-            check=self._id_get(cr, uid, ids[0], context)
+            check = self._id_get(cr, uid, ids[0], context)
             if check<>False:
                 fields.insert(0,(check+' as id'))
-            result[obj.id] = """select
-%s
-from
-%s
-            """ % (',\n'.join(fields), models)
-            if groupby:
-                result[obj.id] += "group by\n\t"+', '.join(groupby)
-            if where_plus:
-                result[obj.id] += "\nhaving \n\t"+"\n\t and ".join(where_plus)
-            if limit:
-                result[obj.id] += " limit "+str(limit)
-            if offset:
-                result[obj.id] += " offset "+str(offset)
+            
+            if models:
+                result[obj.id] = """select
+    %s
+    from
+    %s
+                """ % (',\n'.join(fields), models)
+                if groupby:
+                    result[obj.id] += "group by\n\t"+', '.join(groupby)
+                if where_plus:
+                    result[obj.id] += "\nhaving \n\t"+"\n\t and ".join(where_plus)
+                if limit:
+                    result[obj.id] += " limit "+str(limit)
+                if offset:
+                    result[obj.id] += " offset "+str(offset)
+            else:
+                result[obj.id] = False
         return result
+    
     _columns = {
         'name': fields.char('Report Name',size=64, required=True),
         'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
