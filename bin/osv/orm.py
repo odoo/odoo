@@ -2431,10 +2431,6 @@ class orm(orm_template):
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
-        for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
-
-        self._validate(cr, user, [id_new], context)
 
         if self._parent_store:
             if self.pool._init:
@@ -2459,6 +2455,9 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
+        for field in upd_todo:
+            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+        self._validate(cr, user, [id_new], context)
 
         result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
         for order, object, ids, fields in result:
