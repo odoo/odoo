@@ -100,7 +100,7 @@ class wizard_vat(wizard.interface):
         sender_date = time.strftime('%Y-%m-%d')
         
         data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(data['form']['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
         if data['form']['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
