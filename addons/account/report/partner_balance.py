@@ -64,15 +64,10 @@ class partner_balance(report_sxw.rml_parse):
             full_str_date.append(str(date))
         return full_str_date
 
-    #
-
-
     def transform_period_into_date_array(self,data):
         ## Get All Period Date
         #
         # If we have no period we will take all perdio in the FiscalYear.
-
-
         if not data['form']['periods'][0][2] :
             periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         else:
