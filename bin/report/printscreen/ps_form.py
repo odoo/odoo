@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -25,7 +25,7 @@ import pooler
 import tools
 
 from report import render
-
+from lxml import etree
 from xml.dom import minidom
 import libxml2
 import libxslt
@@ -38,20 +38,25 @@ class report_printscreen_list(report_int):
 
     def _parse_node(self, root_node):
         result = []
-        for node in root_node.childNodes:
-            if node.localName == 'field':
-                attrsa = node.attributes
+        for node in root_node.getchildren():
+            if node.tag == 'field':
+                #attrsa = node.attributes
+                attrsa = node.attrib
+                print "typppppp",type(attrsa),dir(attrsa)
                 attrs = {}
                 if not attrsa is None:
-                    for i in range(attrsa.length):
-                        attrs[attrsa.item(i).localName] = attrsa.item(i).nodeValue
+                       for key,val in attrsa.items():
+                        attrs[key] = val
+                    #for i in range(attrsa.length):
+                     #   attrs[attrsa.item(i).localName] = attrsa.item(i).nodeValue
                 result.append(attrs['name'])
             else:
                 result.extend(self._parse_node(node))
         return result
 
     def _parse_string(self, view):
-        dom = minidom.parseString(view)
+        #dom = minidom.parseString(view)
+        dom = etree.XML(view)
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
