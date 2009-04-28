@@ -16,34 +16,14 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/lic    enses/>.
 #
 ##############################################################################
 
-# trml2pdf - An RML to PDF converter
-# Copyright (C) 2003, Fabien Pinckaers, UCL, FSA
-# Contributors
-#     Richard Waid <richard@iopen.net>
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
 from StringIO import StringIO
-import xml.dom.minidom
 import copy
-
 import reportlab
 import re
 from reportlab.pdfgen import canvas
@@ -52,22 +32,11 @@ import cStringIO
 import utils
 import color
 import os
+from lxml import etree
+import base64
+from reportlab.platypus.doctemplate import ActionFlowable
 
-#
-# Change this to UTF-8 if you plan tu use Reportlab's UTF-8 support
-#
-# reportlab use "code page 1252" encoding by default. cfr reportlab user guide p.46
 encoding = 'utf-8'
-
-def str2xml(s):
-    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-
-def _child_get(node, childs):
-    clds = []
-    for n in node.childNodes:
-        if (n.nodeType==n.ELEMENT_NODE) and (n.localName==childs):
-            clds.append(n)
-    return clds
 
 class PageCount(platypus.Flowable):
     def draw(self):
@@ -80,91 +49,91 @@ class PageReset(platypus.Flowable):
     def draw(self):
         self.canv._pageNumber = 0
 
-class _rml_styles(object):
-    def __init__(self, nodes):
+class _rml_styles(object,):
+    def __init__(self, nodes, localcontext):
+        self.localcontext = localcontext
         self.styles = {}
         self.names = {}
         self.table_styles = {}
         for node in nodes:
-            for style in node.getElementsByTagName('blockTableStyle'):
-                self.table_styles[style.getAttribute('id')] = self._table_style_get(style)
-            for style in node.getElementsByTagName('paraStyle'):
-                self.styles[style.getAttribute('name')] = self._para_style_update(style)
-            for variable in node.getElementsByTagName('initialize'):
-                for name in variable.getElementsByTagName('name'):
-                    self.names[ name.getAttribute('id')] = name.getAttribute('value')
+            for style in node.findall('blockTableStyle'):
+                self.table_styles[style.get('id')] = self._table_style_get(style)
+            for style in node.findall('paraStyle'):
+                self.styles[style.get('name')] = self._para_style_update(style)
+            for variable in node.findall('initialize'):
+                for name in variable.findall('name'):
+                    self.names[ name.get('id')] = name.get('value')
 
     def _para_style_update(self, node):
         data = {}
         for attr in ['textColor', 'backColor', 'bulletColor', 'borderColor']:
-            if node.hasAttribute(attr):
-                data[attr] = color.get(node.getAttribute(attr))
+            if node.get(attr):
+                data[attr] = color.get(node.get(attr))
         for attr in ['fontName', 'bulletFontName', 'bulletText']:
-            if node.hasAttribute(attr):
-                data[attr] = node.getAttribute(attr)
+            if node.get(attr):
+                data[attr] = node.get(attr)
         for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter',
             'firstLineIndent', 'bulletIndent', 'bulletFontSize', 'leading',
             'borderWidth','borderPadding','borderRadius']:
-            if node.hasAttribute(attr):
-                data[attr] = utils.unit_get(node.getAttribute(attr))
-        if node.hasAttribute('alignment'):
+            if node.get(attr):
+                data[attr] = utils.unit_get(node.get(attr))
+        if node.get('alignment'):
             align = {
                 'right':reportlab.lib.enums.TA_RIGHT,
                 'center':reportlab.lib.enums.TA_CENTER,
                 'justify':reportlab.lib.enums.TA_JUSTIFY
             }
-            data['alignment'] = align.get(node.getAttribute('alignment').lower(), reportlab.lib.enums.TA_LEFT)
+            data['alignment'] = align.get(node.get('alignment').lower(), reportlab.lib.enums.TA_LEFT)
         return data
 
     def _table_style_get(self, style_node):
         styles = []
-        for node in style_node.childNodes:
-            if node.nodeType==node.ELEMENT_NODE:
-                start = utils.tuple_int_get(node, 'start', (0,0) )
-                stop = utils.tuple_int_get(node, 'stop', (-1,-1) )
-                if node.localName=='blockValign':
-                    styles.append(('VALIGN', start, stop, str(node.getAttribute('value'))))
-                elif node.localName=='blockFont':
-                    styles.append(('FONT', start, stop, str(node.getAttribute('name'))))
-                elif node.localName=='blockTextColor':
-                    styles.append(('TEXTCOLOR', start, stop, color.get(str(node.getAttribute('colorName')))))
-                elif node.localName=='blockLeading':
-                    styles.append(('LEADING', start, stop, utils.unit_get(node.getAttribute('length'))))
-                elif node.localName=='blockAlignment':
-                    styles.append(('ALIGNMENT', start, stop, str(node.getAttribute('value'))))
-                elif node.localName=='blockSpan':
-                    styles.append(('SPAN', start, stop))
-                elif node.localName=='blockLeftPadding':
-                    styles.append(('LEFTPADDING', start, stop, utils.unit_get(node.getAttribute('length'))))
-                elif node.localName=='blockRightPadding':
-                    styles.append(('RIGHTPADDING', start, stop, utils.unit_get(node.getAttribute('length'))))
-                elif node.localName=='blockTopPadding':
-                    styles.append(('TOPPADDING', start, stop, utils.unit_get(node.getAttribute('length'))))
-                elif node.localName=='blockBottomPadding':
-                    styles.append(('BOTTOMPADDING', start, stop, utils.unit_get(node.getAttribute('length'))))
-                elif node.localName=='blockBackground':
-                    styles.append(('BACKGROUND', start, stop, color.get(node.getAttribute('colorName'))))
-                if node.hasAttribute('size'):
-                    styles.append(('FONTSIZE', start, stop, utils.unit_get(node.getAttribute('size'))))
-                elif node.localName=='lineStyle':
-                    kind = node.getAttribute('kind')
-                    kind_list = [ 'GRID', 'BOX', 'OUTLINE', 'INNERGRID', 'LINEBELOW', 'LINEABOVE','LINEBEFORE', 'LINEAFTER' ]
-                    assert kind in kind_list
-                    thick = 1
-                    if node.hasAttribute('thickness'):
-                        thick = float(node.getAttribute('thickness'))
-                    styles.append((kind, start, stop, thick, color.get(node.getAttribute('colorName'))))
+        for node in style_node.getchildren():
+            start = utils.tuple_int_get(node, 'start', (0,0) )
+            stop = utils.tuple_int_get(node, 'stop', (-1,-1) )
+            if node.tag=='blockValign':
+                styles.append(('VALIGN', start, stop, str(node.get('value'))))
+            elif node.tag=='blockFont':
+                styles.append(('FONT', start, stop, str(node.get('name'))))
+            elif node.tag=='blockTextColor':
+                styles.append(('TEXTCOLOR', start, stop, color.get(str(node.get('colorName')))))
+            elif node.tag=='blockLeading':
+                styles.append(('LEADING', start, stop, utils.unit_get(node.get('length'))))
+            elif node.tag=='blockAlignment':
+                styles.append(('ALIGNMENT', start, stop, str(node.get('value'))))
+            elif node.tag=='blockSpan':
+                styles.append(('SPAN', start, stop))
+            elif node.tag=='blockLeftPadding':
+                styles.append(('LEFTPADDING', start, stop, utils.unit_get(node.get('length'))))
+            elif node.tag=='blockRightPadding':
+                styles.append(('RIGHTPADDING', start, stop, utils.unit_get(node.get('length'))))
+            elif node.tag=='blockTopPadding':
+                styles.append(('TOPPADDING', start, stop, utils.unit_get(node.get('length'))))
+            elif node.tag=='blockBottomPadding':
+                styles.append(('BOTTOMPADDING', start, stop, utils.unit_get(node.get('length'))))
+            elif node.tag=='blockBackground':
+                styles.append(('BACKGROUND', start, stop, color.get(node.get('colorName'))))
+            if node.get('size'):
+                styles.append(('FONTSIZE', start, stop, utils.unit_get(node.get('size'))))
+            elif node.tag=='lineStyle':
+                kind = node.get('kind')
+                kind_list = [ 'GRID', 'BOX', 'OUTLINE', 'INNERGRID', 'LINEBELOW', 'LINEABOVE','LINEBEFORE', 'LINEAFTER' ]
+                assert kind in kind_list
+                thick = 1
+                if node.get('thickness'):
+                    thick = float(node.get('thickness'))
+                styles.append((kind, start, stop, thick, color.get(node.get('colorName'))))
         return platypus.tables.TableStyle(styles)
 
     def para_style_get(self, node):
         style = False
-        if node.hasAttribute('style'):
-            if node.getAttribute('style') in self.styles:
+        if node.get('style'):
+            if node.get('style') in self.styles:
                 styles = reportlab.lib.styles.getSampleStyleSheet()
-                sname = node.getAttribute('style')
+                sname = node.get('style')
                 style = reportlab.lib.styles.ParagraphStyle(sname, styles["Normal"], **self.styles[sname])
             else:
-                sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.getAttribute('style'),) )
+                sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
             styles = reportlab.lib.styles.getSampleStyleSheet()
             style = copy.deepcopy(styles['Normal'])
@@ -172,9 +141,10 @@ class _rml_styles(object):
         return style
 
 class _rml_doc(object):
-    def __init__(self, data, images={}, path='.', title=None):
-        self.dom = xml.dom.minidom.parseString(data)
-        self.filename = self.dom.documentElement.getAttribute('filename')
+    def __init__(self, node, localcontext, images={}, path='.', title=None):
+        self.localcontext = localcontext
+        self.etree = node
+        self.filename = self.etree.get('filename')
         self.images = images
         self.path = path
         self.title = title
@@ -185,9 +155,9 @@ class _rml_doc(object):
         from reportlab.pdfbase.ttfonts import TTFont
 
         for node in els:
-            for font in node.getElementsByTagName('registerFont'):
-                name = font.getAttribute('fontName').encode('ascii')
-                fname = font.getAttribute('fontFile').encode('ascii')
+            for font in node.findall('registerFont'):
+                name = font.get('fontName').encode('ascii')
+                fname = font.get('fontFile').encode('ascii')
                 pdfmetrics.registerFont(TTFont(name, fname ))
                 addMapping(name, 0, 0, name)    #normal
                 addMapping(name, 0, 1, name)    #italic
@@ -195,46 +165,46 @@ class _rml_doc(object):
                 addMapping(name, 1, 1, name)    #italic and bold
 
     def _textual_image(self, node):
-        import base64
         rc = ''
-        for n in node.childNodes:
-            if n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
-                rc += n.data
-        return base64.decodestring(rc)
+        for n in node.getchildren():
+            rc +=( etree.tostring(n) or '') + n.tail
+        return base64.decodestring(node.tostring())
 
     def _images(self, el):
         result = {}
-        for node in el.getElementsByTagName('image'):
-            result[node.getAttribute('name')] = self._textual_image(node)
+        for node in el.findall('image'):
+            rc =( node.text or '')
+            result[node.get('name')] = base64.decodestring(rc)
         return result
 
     def render(self, out):
-        el = self.dom.documentElement.getElementsByTagName('docinit')
+        el = self.etree.findall('docinit')
         if el:
             self.docinit(el)
 
-        el = self.dom.documentElement.getElementsByTagName('stylesheet')
-        self.styles = _rml_styles(el)
+        el = self.etree.findall('stylesheet')
+        self.styles = _rml_styles(el,self.localcontext)
 
-        el = self.dom.documentElement.getElementsByTagName('images')
+        el = self.etree.findall('images')
         if el:
             self.images.update( self._images(el[0]) )
-
-        el = self.dom.documentElement.getElementsByTagName('template')
+        el = self.etree.findall('template')
         if len(el):
-            pt_obj = _rml_template(out, el[0], self, images=self.images, path=self.path, title=self.title)
-            pt_obj.render(self.dom.documentElement.getElementsByTagName('story'))
+            pt_obj = _rml_template(self.localcontext, out, el[0], self, images=self.images, path=self.path, title=self.title)
+            el = utils._child_get(self.etree, self, 'story')
+            pt_obj.render(el)
         else:
             self.canvas = canvas.Canvas(out)
-            pd = self.dom.documentElement.getElementsByTagName('pageDrawing')[0]
-            pd_obj = _rml_canvas(self.canvas, None, self, self.images, path=self.path, title=self.title)
+            pd = self.etree.find('pageDrawing')[0]
+            pd_obj = _rml_canvas(self.canvas, self.localcontext, None, self, self.images, path=self.path, title=self.title)
             pd_obj.render(pd)
 
             self.canvas.showPage()
             self.canvas.save()
 
 class _rml_canvas(object):
-    def __init__(self, canvas, doc_tmpl=None, doc=None, images={}, path='.', title=None):
+    def __init__(self, canvas,localcontext, doc_tmpl=None, doc=None, images={}, path='.', title=None):
+        self.localcontext = localcontext
         self.canvas = canvas
         self.styles = doc.styles
         self.doc_tmpl = doc_tmpl
@@ -246,75 +216,80 @@ class _rml_canvas(object):
             self.canvas.setTitle(self.title)
 
     def _textual(self, node, x=0, y=0):
-        rc = ''
-        for n in node.childNodes:
-            if n.nodeType == n.ELEMENT_NODE:
-                if n.localName == 'seq':
-                    from reportlab.lib.sequencer import getSequencer
-                    seq = getSequencer()
-                    rc += str(seq.next(n.getAttribute('id')))
-                if n.localName == 'pageCount':
-                    if x or y:
-                        self.canvas.translate(x,y)
-                    self.canvas.doForm('pageCount')
-                    if x or y:
-                        self.canvas.translate(-x,-y)
-                if n.localName == 'pageNumber':
-                    rc += str(self.canvas.getPageNumber())
-            elif n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
-                # this doesn't need to be "entities" encoded like flowables need to
-                rc += n.data
-        return rc.encode(encoding, 'replace')
+        rc = utils._process_text(self, node.text or '')
+        for n in node:
+            if n.tag == 'seq':
+                from reportlab.lib.sequencer import getSequencer
+                seq = getSequencer()
+                rc += str(seq.next(n.get('id')))
+            if n.tag == 'pageCount':
+                if x or y:
+                    self.canvas.translate(x,y)
+                self.canvas.doForm('pageCount')
+                if x or y:
+                    self.canvas.translate(-x,-y)
+            if n.tag == 'pageNumber':
+                rc += str(self.canvas.getPageNumber())
+            rc += utils._process_text(self, n.tail)
+        return rc
 
     def _drawString(self, node):
         v = utils.attr_get(node, ['x','y'])
-        self.canvas.drawString(text=self._textual(node, **v), **v)
+        text=self._textual(node, **v)
+        self.canvas.drawString(text=text, **v)
+
     def _drawCenteredString(self, node):
         v = utils.attr_get(node, ['x','y'])
-        self.canvas.drawCentredString(text=self._textual(node, **v), **v)
+        text=self._textual(node, **v)
+        self.canvas.drawCentredString(text=text, **v)
+
     def _drawRightString(self, node):
         v = utils.attr_get(node, ['x','y'])
-        self.canvas.drawRightString(text=self._textual(node, **v), **v)
+        text=self._textual(node, **v)
+        self.canvas.drawRightString(text=text, **v)
+
     def _rect(self, node):
-        if node.hasAttribute('round'):
-            self.canvas.roundRect(radius=utils.unit_get(node.getAttribute('round')), **utils.attr_get(node, ['x','y','width','height'], {'fill':'bool','stroke':'bool'}))
+        if node.get('round'):
+            self.canvas.roundRect(radius=utils.unit_get(node.get('round')), **utils.attr_get(node, ['x','y','width','height'], {'fill':'bool','stroke':'bool'}))
         else:
             self.canvas.rect(**utils.attr_get(node, ['x','y','width','height'], {'fill':'bool','stroke':'bool'}))
 
     def _ellipse(self, node):
-        x1 = utils.unit_get(node.getAttribute('x'))
-        x2 = utils.unit_get(node.getAttribute('width'))
-        y1 = utils.unit_get(node.getAttribute('y'))
-        y2 = utils.unit_get(node.getAttribute('height'))
+        x1 = utils.unit_get(node.get('x'))
+        x2 = utils.unit_get(node.get('width'))
+        y1 = utils.unit_get(node.get('y'))
+        y2 = utils.unit_get(node.get('height'))
+
         self.canvas.ellipse(x1,y1,x2,y2, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
+
     def _curves(self, node):
-        line_str = utils.text_get(node).split()
+        line_str = node.text.split()
         lines = []
         while len(line_str)>7:
             self.canvas.bezier(*[utils.unit_get(l) for l in line_str[0:8]])
             line_str = line_str[8:]
+
     def _lines(self, node):
-        line_str = utils.text_get(node).split()
+        line_str = node.text.split()
         lines = []
         while len(line_str)>3:
             lines.append([utils.unit_get(l) for l in line_str[0:4]])
             line_str = line_str[4:]
         self.canvas.lines(lines)
+
     def _grid(self, node):
-        xlist = [utils.unit_get(s) for s in node.getAttribute('xs').split(',')]
-        ylist = [utils.unit_get(s) for s in node.getAttribute('ys').split(',')]
+        xlist = [utils.unit_get(s) for s in node.get('xs').split(',')]
+        ylist = [utils.unit_get(s) for s in node.get('ys').split(',')]
+
         self.canvas.grid(xlist, ylist)
+
     def _translate(self, node):
-        dx = 0
-        dy = 0
-        if node.hasAttribute('dx'):
-            dx = utils.unit_get(node.getAttribute('dx'))
-        if node.hasAttribute('dy'):
-            dy = utils.unit_get(node.getAttribute('dy'))
+        dx = utils.unit_get(node.get('dx')) or 0
+        dy = utils.unit_get(node.get('dy')) or 0
         self.canvas.translate(dx,dy)
 
     def _circle(self, node):
-        self.canvas.circle(x_cen=utils.unit_get(node.getAttribute('x')), y_cen=utils.unit_get(node.getAttribute('y')), r=utils.unit_get(node.getAttribute('radius')), **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
+        self.canvas.circle(x_cen=utils.unit_get(node.get('x')), y_cen=utils.unit_get(node.get('y')), r=utils.unit_get(node.get('radius')), **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def _place(self, node):
         flows = _rml_flowable(self.doc, images=self.images, path=self.path, title=self.title).render(node)
@@ -333,53 +308,55 @@ class _rml_canvas(object):
     def _line_mode(self, node):
         ljoin = {'round':1, 'mitered':0, 'bevelled':2}
         lcap = {'default':0, 'round':1, 'square':2}
-        if node.hasAttribute('width'):
-            self.canvas.setLineWidth(utils.unit_get(node.getAttribute('width')))
-        if node.hasAttribute('join'):
-            self.canvas.setLineJoin(ljoin[node.getAttribute('join')])
-        if node.hasAttribute('cap'):
-            self.canvas.setLineCap(lcap[node.getAttribute('cap')])
-        if node.hasAttribute('miterLimit'):
-            self.canvas.setDash(utils.unit_get(node.getAttribute('miterLimit')))
-        if node.hasAttribute('dash'):
-            dashes = node.getAttribute('dash').split(',')
+
+        if node.get('width'):
+            self.canvas.setLineWidth(utils.unit_get(node.get('width')))
+        if node.get('join'):
+            self.canvas.setLineJoin(ljoin[node.get('join')])
+        if node.get('cap'):
+            self.canvas.setLineCap(lcap[node.get('cap')])
+        if node.get('miterLimit'):
+            self.canvas.setDash(utils.unit_get(node.get('miterLimit')))
+        if node.get('dash'):
+            dashes = node.get('dash').split(',')
             for x in range(len(dashes)):
                 dashes[x]=utils.unit_get(dashes[x])
-            self.canvas.setDash(node.getAttribute('dash').split(','))
+            self.canvas.setDash(node.get('dash').split(','))
 
     def _image(self, node):
         import urllib
         from reportlab.lib.utils import ImageReader
-
-#        s = StringIO()
-        if not node.hasAttribute('file'):
-
-            if node.hasAttribute('name'):
-                image_data = self.images[node.getAttribute('name')]
+        if not node.get('file') :
+            if node.get('name'):
+                image_data = self.images[node.get('name')]
                 s = cStringIO.StringIO(image_data)
             else:
                 import base64
-                image_data = base64.decodestring(node.firstChild.nodeValue)
+                if self.localcontext:
+                   res = utils._regex.findall(node.text)
+                   for key in res:
+                       newtext = eval(key, {}, self.localcontext)
+                       node.text = newtext
+                image_data = base64.decodestring(node.text)
                 if not image_data: return False
-                s = cStringIO.StringIO(image_data)                
-#                s.write(image_data)
+                s = cStringIO.StringIO(image_data)
         else:
-            if node.getAttribute('file') in self.images:
-                s = cStringIO.StringIO(self.images[node.getAttribute('file')])                
-#                s.write(self.images[node.getAttribute('file')])
+            if node.get('file') in self.images:
+                s = cStringIO.StringIO(self.images[node.get('file')])
             else:
                 try:
-                    u = urllib.urlopen(str(node.getAttribute('file')))
+                    u = urllib.urlopen(str(node.get('file')))
+                    s = cStringIO.StringIO(u.read())
                 except:
-                    u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
-                s = cStringIO.StringIO(u.read())
+                    u = file(os.path.join(self.path,str(node.get('file'))), 'rb')
+                    s = cStringIO.StringIO(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 
         args = {}
         for tag in ('width','height','x','y'):
-            if node.hasAttribute(tag):
-                args[tag] = utils.unit_get(node.getAttribute(tag))
+            if node.get(tag):
+                args[tag] = utils.unit_get(node.get(tag))
         if ('width' in args) and (not 'height' in args):
             args['height'] = sy * args['width'] / sx
         elif ('height' in args) and (not 'width' in args):
@@ -394,25 +371,25 @@ class _rml_canvas(object):
     def _path(self, node):
         self.path = self.canvas.beginPath()
         self.path.moveTo(**utils.attr_get(node, ['x','y']))
-        for n in node.childNodes:
-            if n.nodeType == node.ELEMENT_NODE:
-                if n.localName=='moveto':
+        for n in utils._child_get(node, self):
+            if not n.text :
+                if n.tag=='moveto':
                     vals = utils.text_get(n).split()
                     self.path.moveTo(utils.unit_get(vals[0]), utils.unit_get(vals[1]))
-                elif n.localName=='curvesto':
+                elif n.tag=='curvesto':
                     vals = utils.text_get(n).split()
                     while len(vals)>5:
                         pos=[]
                         while len(pos)<6:
                             pos.append(utils.unit_get(vals.pop(0)))
                         self.path.curveTo(*pos)
-            elif (n.nodeType == node.TEXT_NODE):
-                data = n.data.split()               # Not sure if I must merge all TEXT_NODE ?
+            elif n.text:
+                data = n.text.split()               # Not sure if I must merge all TEXT_NODE ?
                 while len(data)>1:
                     x = utils.unit_get(data.pop(0))
                     y = utils.unit_get(data.pop(0))
                     self.path.lineTo(x,y)
-        if (not node.hasAttribute('close')) or utils.bool_get(node.getAttribute('close')):
+        if (not node.get('close')) or utils.bool_get(node.get('close')):
             self.path.close()
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
@@ -426,26 +403,24 @@ class _rml_canvas(object):
             'lines': self._lines,
             'grid': self._grid,
             'curves': self._curves,
-            'fill': lambda node: self.canvas.setFillColor(color.get(node.getAttribute('color'))),
-            'stroke': lambda node: self.canvas.setStrokeColor(color.get(node.getAttribute('color'))),
-            'setFont': lambda node: self.canvas.setFont(node.getAttribute('name'), utils.unit_get(node.getAttribute('size'))),
+            'fill': lambda node: self.canvas.setFillColor(color.get(node.get('color'))),
+            'stroke': lambda node: self.canvas.setStrokeColor(color.get(node.get('color'))),
+            'setFont': lambda node: self.canvas.setFont(node.get('name'), utils.unit_get(node.get('size'))),
             'place': self._place,
             'circle': self._circle,
             'lineMode': self._line_mode,
             'path': self._path,
-            'rotate': lambda node: self.canvas.rotate(float(node.getAttribute('degrees'))),
+            'rotate': lambda node: self.canvas.rotate(float(node.get('degrees'))),
             'translate': self._translate,
             'image': self._image
         }
-        for nd in node.childNodes:
-            if nd.nodeType==nd.ELEMENT_NODE:
-                for tag in tags:
-                    if nd.localName==tag:
-                        tags[tag](nd)
-                        break
+        for n in utils._child_get(node, self):
+            if n.tag in tags:
+                tags[n.tag](n)
 
 class _rml_draw(object):
-    def __init__(self, node, styles, images={}, path='.', title=None):
+    def __init__(self, localcontext ,node, styles, images={}, path='.', title=None):
+        self.localcontext = localcontext
         self.node = node
         self.styles = styles
         self.canvas = None
@@ -455,12 +430,13 @@ class _rml_draw(object):
 
     def render(self, canvas, doc):
         canvas.saveState()
-        cnv = _rml_canvas(canvas, doc, self.styles, images=self.images, path=self.path, title=self.canvas_title)
+        cnv = _rml_canvas(canvas,self.localcontext, doc, self.styles, images=self.images, path=self.path, title=self.canvas_title)
         cnv.render(self.node)
         canvas.restoreState()
 
 class _rml_flowable(object):
-    def __init__(self, doc, images={}, path='.', title=None):
+    def __init__(self,doc,localcontext, images={}, path='.', title=None):
+        self.localcontext = localcontext
         self.doc = doc
         self.styles = doc.styles
         self.images = images
@@ -468,66 +444,58 @@ class _rml_flowable(object):
         self.title = title
 
     def _textual(self, node):
-        rc = ''
-        for n in node.childNodes:
-            if n.nodeType == node.ELEMENT_NODE:
-                if n.localName == 'getName':
-                    newNode = self.doc.dom.createTextNode(self.styles.names.get(n.getAttribute('id'),'Unknown name'))
-                    node.insertBefore(newNode, n)
-                    node.removeChild(n)
-                    n = newNode
-                elif n.localName == 'pageNumber':
-                    rc += '<pageNumber/>'            # TODO: change this !
-                else:
-                    #CHECKME: I wonder if this is useful since we don't stock the result. Maybe for the getName tag?
-                    self._textual(n)
-                rc += n.toxml()
-            elif n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
-                rc += str2xml(n.data)
-        return rc.encode(encoding, 'replace')
+        rc1 = utils._process_text(self, node.text or '')
+        for n in utils._child_get(node,self):
+            rc1 += '<'+n.tag+'>'
+            rc1 += self._textual(n)
+            rc1 += '</'+n.tag+'>'
+        rc1 += utils._process_text(self, node.tail or '')
+        return rc1
 
     def _table(self, node):
+        childs = utils._child_get(node,self,'tr')
+        if not childs:
+            return None
         length = 0
         colwidths = None
         rowheights = None
         data = []
-        childs = _child_get(node,'tr')
-        if not childs:
-            return None
-        posy = 0
         styles = []
+        posy = 0
         for tr in childs:
             paraStyle = None
-            if tr.hasAttribute('style'):
-                st = copy.deepcopy(self.styles.table_styles[tr.getAttribute('style')])
+            if tr.get('style'):
+                st = copy.deepcopy(self.styles.table_styles[tr.get('style')])
                 for s in st._cmds:
                     s[1][1] = posy
                     s[2][1] = posy
                 styles.append(st)
-            if tr.hasAttribute('paraStyle'):
-                paraStyle = self.styles.styles[tr.getAttribute('paraStyle')]
-
+            if tr.get('paraStyle'):
+                paraStyle = self.styles.styles[tr.get('paraStyle')]
             data2 = []
             posx = 0
-            for td in _child_get(tr, 'td'):
-                if td.hasAttribute('style'):
-                    st = copy.deepcopy(self.styles.table_styles[td.getAttribute('style')])
+            for td in utils._child_get(tr, self,'td'):
+                if td.get('style'):
+                    st = copy.deepcopy(self.styles.table_styles[td.get('style')])
                     for s in st._cmds:
                         s[1][1] = posy
                         s[2][1] = posy
                         s[1][0] = posx
                         s[2][0] = posx
                     styles.append(st)
-                if td.hasAttribute('paraStyle'):
+                if td.get('paraStyle'):
                     # TODO: merge styles
-                    paraStyle = self.styles.styles[td.getAttribute('paraStyle')]
+                    paraStyle = self.styles.styles[td.get('paraStyle')]
                 posx += 1
 
                 flow = []
-                for n in td.childNodes:
-                    if n.nodeType==node.ELEMENT_NODE:
-                        fl = self._flowable(n, extra_style=paraStyle)
+                for n in utils._child_get(td, self):
+                    fl = self._flowable(n, extra_style=paraStyle)
+                    if isinstance(fl,list):
+                        flow  += fl
+                    else:
                         flow.append( fl )
+
                 if not len(flow):
                     flow = self._textual(td)
                 data2.append( flow )
@@ -540,51 +508,51 @@ class _rml_flowable(object):
                 data2.append('')
             data.append( data2 )
             posy += 1
-        if node.hasAttribute('colWidths'):
-            assert length == len(node.getAttribute('colWidths').split(','))
-            colwidths = [utils.unit_get(f.strip()) for f in node.getAttribute('colWidths').split(',')]
-        if node.hasAttribute('rowHeights'):
-            rowheights = [utils.unit_get(f.strip()) for f in node.getAttribute('rowHeights').split(',')]
+
+        if node.get('colWidths'):
+            assert length == len(node.get('colWidths').split(','))
+            colwidths = [utils.unit_get(f.strip()) for f in node.get('colWidths').split(',')]
+        if node.get('rowHeights'):
+            rowheights = [utils.unit_get(f.strip()) for f in node.get('rowHeights').split(',')]
             if len(rowheights) == 1:
                 rowheights = rowheights[0]
         table = platypus.LongTable(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
-        if node.hasAttribute('style'):
-            table.setStyle(self.styles.table_styles[node.getAttribute('style')])
+        if node.get('style'):
+            table.setStyle(self.styles.table_styles[node.get('style')])
         for s in styles:
             table.setStyle(s)
         return table
 
     def _illustration(self, node):
         class Illustration(platypus.flowables.Flowable):
-            def __init__(self, node, styles, self2):
+            def __init__(self, node, localcontext, styles, self2):
+                self.localcontext = localcontext
                 self.node = node
                 self.styles = styles
-                self.width = utils.unit_get(node.getAttribute('width'))
-                self.height = utils.unit_get(node.getAttribute('height'))
+                self.width = utils.unit_get(node.get('width'))
+                self.height = utils.unit_get(node.get('height'))
                 self.self2 = self2
             def wrap(self, *args):
                 return (self.width, self.height)
             def draw(self):
                 canvas = self.canv
-                drw = _rml_draw(self.node, self.styles, images=self.self2.images, path=self.self2.path, title=self.self2.title)
+                drw = _rml_draw(self.localcontext ,self.node,self.styles, images=self.self2.images, path=self.self2.path, title=self.self2.title)
                 drw.render(self.canv, None)
-        return Illustration(node, self.styles, self)
+        return Illustration(node, self.localcontext, self.styles, self)
 
     def _textual_image(self, node):
-        import base64
-        rc = ''
-        for n in node.childNodes:
-            if n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
-                rc += n.data
-        return base64.decodestring(rc)
+        return base64.decodestring(node.text)
 
     def _flowable(self, node, extra_style=None):
-        if node.localName=='para':
+        if node.tag=='para':
             style = self.styles.para_style_get(node)
             if extra_style:
                 style.__dict__.update(extra_style)
-            return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-        elif node.localName=='barCode':
+            result = []
+            for i in self._textual(node).split('\n'):
+                result.append(platypus.Paragraph(i, style, **(utils.attr_get(node, [], {'bulletText':'str'}))))
+            return result
+        elif node.tag=='barCode':
             try:
                 from reportlab.graphics.barcode import code128
                 from reportlab.graphics.barcode import code39
@@ -593,7 +561,6 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import fourstate
                 from reportlab.graphics.barcode import usps
             except Exception, e:
-                print 'Warning: Reportlab barcode extension not installed !'
                 return None
             args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'bool','quiet':'bool'})
             codes = {
@@ -610,54 +577,49 @@ class _rml_flowable(object):
                 'postnet': lambda x: usps.POSTNET(x, **args),
             }
             code = 'code128'
-            if node.hasAttribute('code'):
-                code = node.getAttribute('code').lower()
+            if node.get('code'):
+                code = node.get('code').lower()
             return codes[code](self._textual(node))
-        elif node.localName=='name':
-            self.styles.names[ node.getAttribute('id')] = node.getAttribute('value')
+        elif node.tag=='name':
+            self.styles.names[ node.get('id')] = node.get('value')
             return None
-        elif node.localName=='xpre':
+        elif node.tag=='xpre':
             style = self.styles.para_style_get(node)
             return platypus.XPreformatted(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str','dedent':'int','frags':'int'})))
-        elif node.localName=='pre':
+        elif node.tag=='pre':
             style = self.styles.para_style_get(node)
             return platypus.Preformatted(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str','dedent':'int'})))
-        elif node.localName=='illustration':
+        elif node.tag=='illustration':
             return  self._illustration(node)
-        elif node.localName=='blockTable':
+        elif node.tag=='blockTable':
             return  self._table(node)
-        elif node.localName=='title':
+        elif node.tag=='title':
             styles = reportlab.lib.styles.getSampleStyleSheet()
             style = styles['Title']
             return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-        elif re.match('^h([1-9]+[0-9]*)$', node.localName):
+        elif re.match('^h([1-9]+[0-9]*)$', (node.text or '')):
             styles = reportlab.lib.styles.getSampleStyleSheet()
-            style = styles['Heading'+str(node.localName[1:])]
+            style = styles['Heading'+str(node.get[1:])]
             return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-        elif node.localName=='image':
-            if not node.hasAttribute('file'):
-                if node.hasAttribute('name'):
-                    image_data = self.doc.images[node.getAttribute('name')].read()
+        elif node.tag=='image':
+            if not node.get('file'):
+                if node.get('name'):
+                    image_data = self.doc.images[node.get('name')].read()
                 else:
                     import base64
-                    image_data = base64.decodestring(node.firstChild.nodeValue)
-
-                image = StringIO()
-                image.write(image_data)
-                image.seek(0)
+                    image_data = base64.decodestring(node.text)
+                image = cStringIO.StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
-                return platypus.Image(node.getAttribute('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
-
+                return platypus.Image(node.get('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             from reportlab.lib.utils import ImageReader
-            name = str(node.getAttribute('file'))
+            name = str(node.get('file'))
             img = ImageReader(name)
             (sx,sy) = img.getSize()
-
             args = {}
             for tag in ('width','height'):
-                if node.hasAttribute(tag):
-                    args[tag] = utils.unit_get(node.getAttribute(tag))
+                if node.get(tag):
+                    args[tag] = utils.unit_get(node.get(tag))
             if ('width' in args) and (not 'height' in args):
                 args['height'] = sy * args['width'] / sx
             elif ('height' in args) and (not 'width' in args):
@@ -668,58 +630,56 @@ class _rml_flowable(object):
                 else:
                     args['height'] = sy * args['width'] / sx
             return platypus.Image(name, mask=(250,255,250,255,250,255), **args)
-        elif node.localName=='spacer':
-            if node.hasAttribute('width'):
-                width = utils.unit_get(node.getAttribute('width'))
+        elif node.tag=='spacer':
+            if node.get('width'):
+                width = utils.unit_get(node.get('width'))
             else:
                 width = utils.unit_get('1cm')
-            length = utils.unit_get(node.getAttribute('length'))
+            length = utils.unit_get(node.get('length'))
             return platypus.Spacer(width=width, height=length)
-        elif node.localName=='section':
+        elif node.tag=='section':
             return self.render(node)
-        elif node.localName == 'pageNumberReset':
+        elif node.tag == 'pageNumberReset':
             return PageReset()
-        elif node.localName in ('pageBreak', 'nextPage'):
+        elif node.tag in ('pageBreak', 'nextPage'):
             return platypus.PageBreak()
-        elif node.localName=='condPageBreak':
+        elif node.tag=='condPageBreak':
             return platypus.CondPageBreak(**(utils.attr_get(node, ['height'])))
-        elif node.localName=='setNextTemplate':
-            return platypus.NextPageTemplate(str(node.getAttribute('name')))
-        elif node.localName=='nextFrame':
+        elif node.tag=='setNextTemplate':
+            return platypus.NextPageTemplate(str(node.get('name')))
+        elif node.tag=='nextFrame':
             return platypus.CondPageBreak(1000)           # TODO: change the 1000 !
-        elif node.localName == 'setNextFrame':
+        elif node.tag == 'setNextFrame':
             from reportlab.platypus.doctemplate import NextFrameFlowable
-            return NextFrameFlowable(str(node.getAttribute('name')))
-        elif node.localName == 'currentFrame':
+            return NextFrameFlowable(str(node.get('name')))
+        elif node.tag == 'currentFrame':
             from reportlab.platypus.doctemplate import CurrentFrameFlowable
-            return CurrentFrameFlowable(str(node.getAttribute('name')))
-        elif node.localName == 'frameEnd':
+            return CurrentFrameFlowable(str(node.get('name')))
+        elif node.tag == 'frameEnd':
             return EndFrameFlowable()
-        elif node.localName == 'hr':
-            width_hr=node.hasAttribute('width') and node.getAttribute('width') or '100%'
-            color_hr=node.hasAttribute('color') and node.getAttribute('color') or 'black'
-            thickness_hr=node.hasAttribute('thickness') and node.getAttribute('thickness') or 1
-            lineCap_hr=node.hasAttribute('lineCap') and node.getAttribute('lineCap') or 'round'
+        elif node.tag == 'hr':
+            width_hr=node.get('width') or '100%'
+            color_hr=node.get('color')  or 'black'
+            thickness_hr=node.get('thickness') or 1
+            lineCap_hr=node.get('lineCap') or 'round'
             return platypus.flowables.HRFlowable(width=width_hr,color=color.get(color_hr),thickness=float(thickness_hr),lineCap=str(lineCap_hr))
         else:
-            sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.localName,))
+            sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.tag,))
             return None
 
     def render(self, node_story):
-        story = []
-        node = node_story.firstChild
-        while node:
-            if node.nodeType == node.ELEMENT_NODE:
+        def process_story(node_story):
+            sub_story = []
+            for node in utils._child_get(node_story, self):
                 flow = self._flowable(node)
                 if flow:
-                    if type(flow) == type([]):
-                        story = story + flow
+                    if isinstance(flow,list):
+                        sub_story = sub_story + flow
                     else:
-                        story.append(flow)
-            node = node.nextSibling
-        return story
+                        sub_story.append(flow)
+            return sub_story
+        return process_story(node_story)
 
-from reportlab.platypus.doctemplate import ActionFlowable
 
 class EndFrameFlowable(ActionFlowable):
     def __init__(self,resume=0):
@@ -733,7 +693,6 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.pageTemplate.onPage(self.canv,self)
         for f in self.pageTemplate.frames: f._reset()
         self.beforePage()
-        #keep a count of flowables added to this page.  zero indicates bad stuff
         self._curPageFlowableCount = 0
         if hasattr(self,'_nextFrameIndex'):
             del self._nextFrameIndex
@@ -747,59 +706,66 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
             self.canv._pageNumber = 0
 
 class _rml_template(object):
-    def __init__(self, out, node, doc, images={}, path='.', title=None):
+    def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
+        self.localcontext = localcontext
         self.images= images
         self.path = path
         self.title = title
-        if not node.hasAttribute('pageSize'):
+        if not node.get('pageSize'):
             pageSize = (utils.unit_get('21cm'), utils.unit_get('29.7cm'))
         else:
-            ps = map(lambda x:x.strip(), node.getAttribute('pageSize').replace(')', '').replace('(', '').split(','))
+            ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
-        cm = reportlab.lib.units.cm
+
         self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc
-        pts = node.getElementsByTagName('pageTemplate')
+        pts = node.findall('pageTemplate')
         for pt in pts:
             frames = []
-            for frame_el in pt.getElementsByTagName('frame'):
+            for frame_el in pt.findall('frame'):
                 frame = platypus.Frame( **(utils.attr_get(frame_el, ['x1','y1', 'width','height', 'leftPadding', 'rightPadding', 'bottomPadding', 'topPadding'], {'id':'str', 'showBoundary':'bool'})) )
                 if utils.attr_get(frame_el, ['last']):
                     frame.lastFrame = True
                 frames.append( frame )
-            gr = pt.getElementsByTagName('pageGraphics')
+            try :
+                gr = pt.findall('pageGraphics') or pt.getchildren()[1].findall('pageGraphics')
+            except :
+                gr=''
             if len(gr):
-                drw = _rml_draw(gr[0], self.doc, images=images, path=self.path, title=self.title)
+                drw = _rml_draw(self.localcontext,gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
             else:
-                drw = _rml_draw(node,self.doc,title=self.title)
+                drw = _rml_draw(self.localcontext,node,self.doc,title=self.title)
                 self.page_templates.append( platypus.PageTemplate(frames=frames,onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
         self.doc_tmpl.addPageTemplates(self.page_templates)
 
     def render(self, node_stories):
         fis = []
-        r = _rml_flowable(self.doc,images=self.images, path=self.path, title=self.title)
+        r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
         for node_story in node_stories:
             fis += r.render(node_story)
-            if node_story==node_stories[-1]:
-
-                fis.append(PageCount())
-
             fis.append(platypus.PageBreak())
-
         self.doc_tmpl.build(fis)
 
-def parseString(data, fout=None, images={}, path='.',title=None):
-    r = _rml_doc(data, images, path, title=title)
+def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+    node = etree.XML(rml)
+    r = _rml_doc(node, localcontext, images, path, title=title)
+    fp = cStringIO.StringIO()
+    r.render(fp)
+    return fp.getvalue()
+
+def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+    node = etree.XML(rml)
+    r = _rml_doc(node, localcontext, images, path, title=title)
     if fout:
         fp = file(fout,'wb')
         r.render(fp)
         fp.close()
         return fout
     else:
-        fp = StringIO()
+        fp = cStringIO.StringIO()
         r.render(fp)
         return fp.getvalue()
 
@@ -816,6 +782,4 @@ if __name__=="__main__":
     else:
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

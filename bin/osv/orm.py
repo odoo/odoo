@@ -181,12 +181,14 @@ class browse_record(object):
             fffields = map(lambda x: x[0], ffields)
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
+                lang = self._context.get('lang', 'en_US') or 'en_US'
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
                             if d[n]:
-                                d[n].set_value(self._cr, self._uid, d[n], self, f)
+                                d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
             # create browse records for 'remote' objects
@@ -798,13 +800,14 @@ class orm_template(object):
                 attrs = {}
                 try:
                     if node.getAttribute('name') in self._columns:
-                        relation = self._columns[node.getAttribute('name')]._obj
+                        column = self._columns[node.getAttribute('name')]
                     else:
-                        relation = self._inherit_fields[node.getAttribute('name')][2]._obj
+                        column = self._inherit_fields[node.getAttribute('name')][2]
                 except:
-                    relation = False
+                    column = False
 
-                if relation:
+                if column:
+                    relation = column._obj
                     childs = False
                     views = {}
                     for f in node.childNodes:
@@ -819,9 +822,12 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
-                        # We can not use the domain has it is defined according to the record !
-                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', context=context)
-                        if not attrs.get('required',False):
+                        # We can not use the 'string' domain has it is defined according to the record !
+                        dom = None
+                        if column._domain and not isinstance(column._domain, (str, unicode)):
+                            dom = column._domain
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
+                        if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
                 fields[node.getAttribute('name')] = attrs
 
@@ -2303,7 +2309,7 @@ class orm(orm_template):
 
                     # It's the first node of the parent: position = parent_left+1
                     if not position:
-                        if not vals[self._parent_name]: 
+                        if not vals[self._parent_name]:
                             position = 1
                         else:
                             cr.execute('select parent_left from '+self._table+' where id=%s', (vals[self._parent_name],))
