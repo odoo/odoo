@@ -62,7 +62,7 @@ def _mergeOrders(self, cr, uid, data, context):
             list_key.append((field, field_val))
         list_key.sort()
         return tuple(list_key)
-        
+
     # compute what the new orders should contain
     new_orders = {}
     for porder in [order for order in order_obj.browse(cr, uid, data['ids']) if order.state == 'draft']:
@@ -120,7 +120,6 @@ def _mergeOrders(self, cr, uid, data, context):
             del value['uom_factor']
             value.update(dict(key))
         order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
-        
         # create the new order
         neworder_id = order_obj.create(cr, uid, order_data)
         allorders.append(neworder_id)
