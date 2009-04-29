@@ -118,10 +118,10 @@ class wizard_base_setup(wizard.interface):
             return {}
         company = company_obj.browse(cr, uid, ids)[0]
         
-        res = {
-            'name': company.name,
-            'currency': company.currency_id.id,
-        }
+        res = {'currency': company.currency_id.id}
+
+        for field in 'name logo rml_header1 rml_footer1 rml_footer2'.split():
+            res[field] = company[field]
 
         if company.partner_id.address:
             address = company.partner_id.address[0]
