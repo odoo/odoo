@@ -62,7 +62,7 @@ period_fields = {
         'default': lambda *a:False,
         'help': 'Keep empty for all open fiscal year'
     },
-    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
+    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
     'result_selection':{
         'string':"Partner",
         'type':'selection',
