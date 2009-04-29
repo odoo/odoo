@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -25,14 +25,6 @@ from report import report_sxw
 from osv import osv
 import pooler
 
-from tools.translate import _
-
-parents = {
-    'tr':1,
-    'li':1,
-    'story': 0,
-    'section': 0
-}
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(product_pricelist, self).__init__(cr, uid, name, context)
@@ -44,44 +36,30 @@ class product_pricelist(report_sxw.rml_parse):
             'get_currency': self._get_currency,
             'get_categories': self._get_categories,
             'get_price': self._get_price,
-            'get_quantity':self._get_quantity,
-            'qty_header':self._qty_header,
         })
-    def _qty_header(self,form):
-        def _get_unit_text(obj, cr, uid, par_qty):
-            if form[q]==1:
-                return _('%d unit')%(par_qty)
-            else:
-                return _('%d units')%(par_qty)
 
-        qty=[]
-        self.pricelist=form['price_list']
+    def _set_quantity(self,form):
         for i in range(1,6):
             q = 'qty%d'%i
             if form[q]:
                 self.quantity.append(form[q])
-                qty.append(_get_unit_text(self, self.cr, self.uid, form[q]))
-        return qty
+        return True
 
-
-    def _get_quantity(self,form):
-        qty=[]
-        for i in range(1,6):
-            q = 'qty%d'%i
-            if form[q]:
-                qty.append(form[q])
-        return qty
     def _get_pricelist(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
         pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['name'])[0]
         return pricelist['name']
+
     def _get_currency(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
         pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['currency_id'])[0]
         return pricelist['currency_id'][1]
-    def _get_categories(self, products):
+
+    def _get_categories(self, products,form):
         cat_ids=[]
         res=[]
+        self.pricelist = form['price_list']
+        self._set_quantity(form)
         pool = pooler.get_pool(self.cr.dbname)
         pro_ids=[]
         for product in products:
@@ -98,10 +76,11 @@ class product_pricelist(report_sxw.rml_parse):
                          'name':product.name,
                          'code':product.code
                          }
+                i = 1
                 for qty in self.quantity:
-                    val[str(qty)]=self._get_price(self.pricelist,product.id,qty)
+                    val['qty'+str(i)]=self._get_price(self.pricelist,product.id,qty)
+                    i += 1
                 products.append(val)
-
             res.append({'name':cat.name,'products':products})
         return res
 
@@ -115,42 +94,6 @@ class product_pricelist(report_sxw.rml_parse):
             price =  self.formatLang(res[0]['list_price'])
         return price
 
-    def repeatIn(self, lst, name, nodes_parent=False,value=[],width=False,type=False):
-        self._node.data = ''
-        node = self._find_parent(self._node, nodes_parent or parents)
-        ns = node.nextSibling
-        if not lst:
-            lst.append(1)
-        for ns in node.childNodes :
-            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and len(value) :
-                width_str = ns._attrs['colWidths'].nodeValue
-                ns.removeAttribute('colWidths')
-                if not width or width=='':
-                    width=30
-                if type.lower() in ('title'):
-                    width=width*len(value)
-                    width_str= '%d'%(float(width_str)+width)
-                    ns.setAttribute('colWidths',width_str)
-                else:
-                    for v in value:
-                        width_str +=',%d'%width
-
-                    ns.setAttribute('colWidths',width_str)
-                    child_list =  ns.childNodes
-                    for child in child_list:
-                        if child.nodeName=='tr':
-                            lc = child.childNodes[1]
-                            t=0
-                            for v in value:
-                                newnode = lc.cloneNode(1)
-                                if type.lower() in ('string'):
-                                    newnode.childNodes[1].lastChild.data="[[ %s['%s'] ]]"%(name,v)
-                                elif type.lower() in ('label'):
-                                    newnode.childNodes[1].lastChild.data= "%s"%(v)
-                                child.appendChild(newnode)
-                                newnode=False
-        return super(product_pricelist,self).repeatIn(lst, name, nodes_parent=False)
-#end
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
