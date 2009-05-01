@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Timesheet Line">
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
-                    <field name="date"/>
+                    <field name="date" on_change="on_change_date(date)"/>
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
                     <field name="name"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
@@ -25,9 +25,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet Lines">
-                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="name" select="2"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" select="1"/>
-                    <field name="date" select="1"/>
+                    <field name="date" select="1" on_change="on_change_date(date)"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     <newline/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>

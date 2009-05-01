@@ -111,7 +111,15 @@ class hr_analytic_timesheet(osv.osv):
     }
     def on_change_account_id(self, cr, uid, ids, account_id):
         return {'value':{}}
-
+    
+    def on_change_date(self, cr, uid, ids, date):
+        if ids:
+            new_date = self.read(cr,uid,ids[0],['date'])['date']
+            if date != new_date:
+                warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
+                return {'value':{},'warning':warning}
+        return {'value':{}}
+    
     def create(self, cr, uid, vals, context={}):
         try:
             res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)
