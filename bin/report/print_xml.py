@@ -262,7 +262,8 @@ class document(object):
                                 if not isinstance(datas[atr['value']], (str, unicode)):
                                     txt = self.doc.createTextNode(str(datas[atr['value']]))
                                 else:
-                                    txt = self.doc.createTextNode(datas[atr['value']].decode('utf-8'))
+#                                    txt = self.doc.createTextNode(datas[atr['value']].decode('utf-8'))
+                                    txt = self.doc.createTextNode(datas[atr['value']])
                                 el.appendChild(txt)
                             else:
                                 el_cld = node.firstChild
