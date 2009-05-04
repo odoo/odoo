@@ -37,7 +37,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 	_name = 'report.account.general.ledger_landscape'
 
 
-	def preprocess(self, objects, data, ids):
+	def set_context(self, objects, data, ids, report_type = None):
 		##
 		self.borne_date = self.get_min_date(data['form'])
 		##
@@ -49,7 +49,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 			objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
 
-		super(general_ledger_landscape, self).preprocess(objects, data, new_ids)
+		super(general_ledger_landscape, self).set_context(objects, data, new_ids,report_type)
 
 	def __init__(self, cr, uid, name, context):
 		super(general_ledger_landscape, self).__init__(cr, uid, name, context)
@@ -179,7 +179,6 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 
 	def get_children_accounts(self, account, form):
-
 
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
