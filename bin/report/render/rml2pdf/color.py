@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -29,6 +29,8 @@ regex_t = re.compile('\(([0-9\.]*),([0-9\.]*),([0-9\.]*)\)')
 regex_h = re.compile('#([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])')
 
 def get(col_str):
+    if col_str == None:
+        col_str = ''
     global allcols
     if col_str in allcols.keys():
         return allcols[col_str]
