@@ -91,6 +91,8 @@ def _process_text(self, txt):
                     txt2 = eval(sps.pop(0),self.localcontext)
                 except:
                     txt2 = ''
+                if type(txt2) == type(0) or type(txt2) == type(0.0):
+                    txt2 = str(txt2)
                 if type(txt2)==type('') or type(txt2)==type(u''):
                     result += txt2
         return result
