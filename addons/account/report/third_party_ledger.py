@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -138,7 +138,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			string_map = date_string + ','
 		return string_map
 
-	def preprocess(self, objects, data, ids):
+	def set_context(self, objects, data, ids, report_type = None):
 		PARTNER_REQUEST = ''
 		if (data['model'] == 'res.partner'):
 			## Si on imprime depuis les partenaires
@@ -160,7 +160,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.transform_period_into_date_array(data)
 		elif data['form']['state'] == 'all':
 			self.transform_both_into_date_array(data)
-			
+
 		self.date_lst_string = ''
 		if self.date_lst:
 			self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
@@ -182,12 +182,12 @@ class third_party_ledger(rml_parse.rml_parse):
 				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
-		
+
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
 		if self.date_lst and data['form']['soldeinit'] :
-			
+
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
 				"FROM account_move_line AS line, account_account AS account " \
@@ -202,7 +202,7 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND account.active " ,
 				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],data['form']['company_id']))
 #		else:
-#			
+#
 #			self.cr.execute(
 #				"SELECT DISTINCT line.partner_id " \
 #				"FROM account_move_line AS line, account_account AS account " \
@@ -214,16 +214,16 @@ class third_party_ledger(rml_parse.rml_parse):
 #					"AND account.company_id = %s " \
 #					"AND account.active " ,
 #				(data['form']['company_id']))
-		
+
 		res = self.cr.dictfetchall()
-		
+
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
-		
+
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
-		super(third_party_ledger, self).preprocess(objects, data, new_ids)
+		super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
 	def lines(self, partner,data):
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -232,9 +232,9 @@ class third_party_ledger(rml_parse.rml_parse):
 			RECONCILE_TAG = " "
 		else:
 			RECONCILE_TAG = "AND l.reconcile_id IS NULL"
-		
+
 #		if data['form']['soldeinit'] :
-#			
+#
 #			self.cr.execute(
 #					"SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
 #					"FROM account_move_line l " \
@@ -271,8 +271,8 @@ class third_party_ledger(rml_parse.rml_parse):
 				sum = r['debit'] - r['credit']
 				r['progress'] = sum
 				full_account.append(r)
-				
-		return full_account		
+
+		return full_account
 
 	def _sum_debit_partner(self, partner,data):
 
@@ -306,7 +306,7 @@ class third_party_ledger(rml_parse.rml_parse):
 						" " + RECONCILE_TAG + " " \
 						"AND date IN (" + self.date_lst_string + ") " ,
 					(partner.id,))
-	
+
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -336,7 +336,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			else:
 				result_tmp = result_tmp + 0.0
 
-		if self.date_lst_string:		
+		if self.date_lst_string:
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
@@ -345,7 +345,7 @@ class third_party_ledger(rml_parse.rml_parse):
 						" " + RECONCILE_TAG + " " \
 						"AND date IN (" + self.date_lst_string + ") " ,
 					(partner.id,))
-	
+
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -386,7 +386,7 @@ class third_party_ledger(rml_parse.rml_parse):
 						" " + RECONCILE_TAG + " " \
 						"AND date IN (" + self.date_lst_string + ") "
 					)
-	
+
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -419,7 +419,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = contemp[0] or 0.0
 			else:
 				result_tmp = result_tmp + 0.0
-		
+
 		if self.date_lst_string:
 			self.cr.execute(
 					"SELECT sum(credit) " \

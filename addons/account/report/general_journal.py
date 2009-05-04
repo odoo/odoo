@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -40,8 +40,8 @@ class journal_print(report_sxw.rml_parse):
             'sum_credit': self._sum_credit
         })
 
-    def preprocess(self, objects, datas, ids):
-        super(journal_print, self).preprocess(objects, datas, ids)
+    def set_context(self, objects, data, ids, report_type = None):
+        super(journal_print, self).set_context(objects, data, ids, report_type)
         self.cr.execute('select period_id, journal_id from account_journal_period where id in (' + ','.join([str(id) for id in ids]) + ')')
         res = self.cr.fetchall()
         self.period_ids = ','.join([str(x[0]) for x in res])
