@@ -388,8 +388,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                   )
         s.quit()
     except Exception, e:
-        import logging
-        logging.getLogger().error(str(e))
+        import netsvc
+        netsvc.Logger().notifyChannel('email_send', netsvc.LOG_ERROR, e)
         return False
     return True
 

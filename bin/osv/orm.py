@@ -800,13 +800,14 @@ class orm_template(object):
                 attrs = {}
                 try:
                     if node.getAttribute('name') in self._columns:
-                        relation = self._columns[node.getAttribute('name')]._obj
+                        column = self._columns[node.getAttribute('name')]
                     else:
-                        relation = self._inherit_fields[node.getAttribute('name')][2]._obj
+                        column = self._inherit_fields[node.getAttribute('name')][2]
                 except:
-                    relation = False
+                    column = False
 
-                if relation:
+                if column:
+                    relation = column._obj
                     childs = False
                     views = {}
                     for f in node.childNodes:
@@ -821,9 +822,12 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
-                        # We can not use the domain has it is defined according to the record !
-                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', context=context)
-                        if not attrs.get('required',False):
+                        # We can not use the 'string' domain has it is defined according to the record !
+                        dom = None
+                        if column._domain and not isinstance(column._domain, (str, unicode)):
+                            dom = column._domain
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
+                        if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
                 fields[node.getAttribute('name')] = attrs
 
