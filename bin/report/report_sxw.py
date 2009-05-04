@@ -179,6 +179,7 @@ class rml_parse(object):
         self.lang_dict = {}
         self.default_lang = {}
         self.lang_dict_called = False
+        self._transl_regex = re.compile('(\[\[.+?\]\])')
 
     def setTag(self, oldtag, newtag, attrs=None):
         return newtag, attrs
@@ -264,10 +265,18 @@ class rml_parse(object):
         return ret_lst
 
     def _translate(self,text):
-        lang = self.localcontext.get('lang', False)
-        if lang and not text.isspace():
+        lang = self.localcontext['lang']
+        if lang and text and not text.isspace():
             transl_obj = self.pool.get('ir.translation')
-            return transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, text.replace('\n',' ').strip()) or text
+            piece_list = self._transl_regex.split(text)
+            for pn in range(len(piece_list)):
+                if not self._transl_regex.match(piece_list[pn]):
+                    source_string = piece_list[pn].replace('\n', ' ').strip()
+                    if len(source_string):
+                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, 'rml', lang, source_string)
+                        if translated_string:
+                            piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
+            text = ''.join(piece_list)
         return text
 
     def _add_header(self, rml_dom, header=1):
