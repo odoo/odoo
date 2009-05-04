@@ -111,43 +111,51 @@ class wizard_base_setup(wizard.interface):
         return res
 
     def _get_company(self, cr, uid, data, context):
-        pool=pooler.get_pool(cr.dbname)
-        company_obj=pool.get('res.company')
+        pool = pooler.get_pool(cr.dbname)
+        company_obj = pool.get('res.company')
         ids=company_obj.search(cr, uid, [])
         if not ids:
             return {}
-        company=company_obj.browse(cr, uid, ids)[0]
-        self.fields['name']['default']=company.name
-        self.fields['currency']['default']=company.currency_id.id
-        serv_pro_id = pooler.get_pool(cr.dbname).get('ir.module.module').search(cr, uid, [('name','=','profile_service')]) or False
+        company = company_obj.browse(cr, uid, ids)[0]
+        
+        res = {'currency': company.currency_id.id}
+
+        for field in 'name logo rml_header1 rml_footer1 rml_footer2'.split():
+            res[field] = company[field]
+
+        if company.partner_id.address:
+            address = company.partner_id.address[0]
+            for field in 'street street2 zip city email phone'.split():
+                res[field] = address[field]
+
+            for field in 'country_id state_id'.split():
+                if address[field]:
+                    res[field] = address[field].id
+
+        serv_pro_id = pool.get('ir.module.module').search(cr, uid, [('name','=','profile_service')]) or False
         if serv_pro_id:
-            return {'profile':serv_pro_id[0]}
-        return {}
+            res['profile'] = serv_pro_id[0]
+        
+        return res
+    
+    
+    def _get_all(self, cr, uid, context, model):
+        pool = pooler.get_pool(cr.dbname)
+        obj = pool.get(model)
+        ids = obj.search(cr, uid, [])
+        res = [(o.id, o.name) for o in obj.browse(cr, uid, ids, context=context)]
+        res.append((-1, ''))
+        res.sort(key=lambda x: x[1])
+        return res
 
     def _get_states(self, cr, uid, context):
-        pool=pooler.get_pool(cr.dbname)
-        state_obj=pool.get('res.country.state')
-        ids=state_obj.search(cr, uid, [])
-        res=[(state.id, state.name) for state in state_obj.browse(cr, uid, ids, context=context)]
-        res.append((-1, ''))
-        res.sort(lambda x,y: cmp(x[1],y[1]))
-        return res
+        return self._get_all(cr, uid, context, 'res.country.state')
 
     def _get_countries(self, cr, uid, context):
-        pool=pooler.get_pool(cr.dbname)
-        country_obj=pool.get('res.country')
-        ids=country_obj.search(cr, uid, [])
-        res=[(country.id, country.name) for country in country_obj.browse(cr, uid, ids, context=context)]
-        res.sort(lambda x,y: cmp(x[1],y[1]))
-        return res
+        return self._get_all(cr, uid, context, 'res.country')
 
     def _get_currency(self, cr, uid, context):
-        pool=pooler.get_pool(cr.dbname)
-        currency_obj=pool.get('res.currency')
-        ids=currency_obj.search(cr, uid, [])
-        res=[(currency.id, currency.name) for currency in currency_obj.browse(cr, uid, ids, context=context)]
-        res.sort(lambda x,y: cmp(x[1],y[1]))
-        return res
+        return self._get_all(cr, uid, context, 'res.currency')
 
     def _update(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
@@ -256,7 +264,6 @@ class wizard_base_setup(wizard.interface):
             'string':'Profile',
             'type':'selection',
             'selection':_get_profiles,
-#            'default': _get_service_profile,
             'required': True,
         },
 

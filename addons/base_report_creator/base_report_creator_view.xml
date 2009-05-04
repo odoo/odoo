@@ -38,7 +38,7 @@
                 <field name="active" select="2"/>
                 <notebook colspan="4">
                 <page string="General Configuration">
-                    <field name="model_ids" colspan="4"/>
+                    <field name="model_ids" colspan="4" context="{'model_ids':model_ids}"/>
                     <separator string="State"  colspan="4"/>
                     <field name="state"/>
                     <button string="Create Menu" name="%(wizard_menu_create)d" type="action" colspan="2"/>

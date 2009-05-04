@@ -72,7 +72,7 @@ def set_field_operator(self,field_name,field_type,search_operator,search_value):
                 field_search[1]='in'
                 field_search[2] = "("+','.join([str(x) for x in search_value])+")"
             elif field_type in char_type or field_type in date_type:
-                field_search[2] = "'"+field_search[2]+"'"
+                field_search[2] = field_search[2] and "'"+field_search[2]+"'" or False
         elif search_operator == '<>':
             if field_type=='many2one':
                 field_search[1]='not in'
@@ -123,18 +123,17 @@ def _set_filter_value(self, cr, uid, data, context):
     table_name = model_pool._table
     model_name = model_pool._description
     
-    if field_type == 'boolean' and value_data == 1:
-        value_data = 'true'
-    else:
-        value_data = 'false'
-
     if field_type:
+        if field_type == 'boolean':
+            if value_data == 1:
+                value_data = 'true'
+            else:
+                value_data = 'false'
         if field_type == 'many2many' and value_data and len(value_data):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
         else:
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
-        
-        if fields_list and value_data:
+        if fields_list:
             create_dict = {
                            'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]) + " ",
                            'expression':' '.join(fields_list),
