@@ -290,6 +290,17 @@ class rml_parse(object):
                     found.getparent().replace(found,tag)
         return True
 
+    def set_context(self, objects, data, ids, report_type = None):
+        self.localcontext['data'] = data
+        self.localcontext['objects'] = objects
+        self.datas = data
+        self.ids = ids
+        self.objects = objects
+        if report_type:
+            if report_type=='odt' :
+                self.localcontext.update({'name_space' :common.odt_namespace})
+            else:
+                self.localcontext.update({'name_space' :common.sxw_namespace})
 
 class report_sxw(report_rml, preprocess.report):
     def __init__(self, name, table, rml=False, parser=rml_parse, header=True, store=False):
@@ -298,19 +309,6 @@ class report_sxw(report_rml, preprocess.report):
         self.parser = parser
         self.header = header
         self.store = store
-
-    def set_context(self, objects, data, ids, rml_parser, report_xml = None):
-        rml_parser.localcontext['data'] = data
-        rml_parser.localcontext['objects'] = objects
-        rml_parser.datas = data
-        rml_parser.ids = ids
-        rml_parser.objects = objects
-        if report_xml:
-            if report_xml.report_type=='odt' :
-                rml_parser.localcontext.update({'name_space' :common.odt_namespace})
-            else:
-                rml_parser.localcontext.update({'name_space' :common.sxw_namespace})
-
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
@@ -402,7 +400,7 @@ class report_sxw(report_rml, preprocess.report):
         rml = report_xml.report_rml_content
         rml_parser = self.parser(cr, uid, self.name2, context)
         objs = self.getObjects(cr, uid, ids, context)
-        self.set_context(objs, data, ids, rml_parser,report_xml)
+        rml_parser.set_context(objs, data, ids, report_xml.report_type)
         processed_rml = self.preprocess_rml(etree.XML(rml),report_xml.report_type)
         if report_xml.header:
             rml_parser._add_header(processed_rml)
@@ -426,7 +424,7 @@ class report_sxw(report_rml, preprocess.report):
         rml_parser.parents = sxw_parents
         rml_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)
-        self.set_context(objs, data, ids,rml_parser,report_xml)
+        rml_parser.set_context(objs, data, ids,report_xml.report_type)
 
         rml_dom_meta = node = etree.XML(meta)
         elements = node.findall(rml_parser.localcontext['name_space']["meta"]+"user-defined")
@@ -456,7 +454,7 @@ class report_sxw(report_rml, preprocess.report):
             rml_parser.parents = sxw_parents
             rml_parser.tag = sxw_tag
             objs = self.getObjects(cr, uid, ids, context)
-            self.set_context(objs, data, ids, rml_parser,report_xml)
+            rml_parser.set_context(objs, data, ids, report_xml.report_type)
             rml_dom = self.preprocess_rml(etree.XML(rml),report_type)
             create_doc = self.generators[report_type]
             odt = create_doc(rml_dom,rml_parser.localcontext)
