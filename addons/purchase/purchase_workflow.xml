@@ -55,7 +55,7 @@
         <record id="act_invoice_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice_done</field>
-            <field name="action">write({'invoiced':1,'state':'approved'})</field>
+            <field name="action">write({'state':'approved'})</field>
             <field name="kind">function</field>
         </record>
         <record id="act_invoice_end" model="workflow.activity">
