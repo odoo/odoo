@@ -135,6 +135,15 @@ class purchase_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
+    def _invoiced(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for purchase in self.browse(cursor, user, ids, context=context):
+            if purchase.invoice_id.reconciled:
+                res[purchase.id] = purchase.invoice_id.reconciled
+            else:
+                res[purchase.id] = False
+        return res
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64,
@@ -163,7 +172,7 @@ class purchase_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True),
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
-        'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
+        'invoiced': fields.function(_invoiced, method=True, string='Invoiced & Paid', type='boolean'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \

@@ -47,6 +47,32 @@ from tools.translate import _
 #       return super(ir_model_fields, self).search(cr, uid, args, offset, limit, order, context)
 #ir_model_fields()
 
+class ir_model(osv.osv):
+    _inherit = 'ir.model'
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        res_model_ids = super(ir_model,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
+        try:
+            if 'model_ids' in context and context['model_ids'][0][2]:
+                model_ids = context['model_ids'][0][2]
+                result = []
+                name_list = []
+                if model_ids:
+                    obj = self.read(cr, uid, model_ids,['model'])
+                    for name in obj:
+                        name_list.append(name['model'])
+                    cr.execute("SELECT model_id, relation FROM ir_model_fields WHERE relation  in (%s)" % (','.join(map(lambda x: "'"+str(x)+"'",name_list))))
+
+                    for r in cr.fetchall():
+                        result.append(r[0])
+                    return result
+            return res_model_ids
+        
+        except Exception,e:
+            pass
+
+ir_model()
+
 class report_creator(osv.osv):
     _name = "base_report_creator.report"
     _description = "Report"
@@ -354,8 +380,8 @@ class report_creator(osv.osv):
     
     _constraints = [
         (_function_field, 'You can not display field which are not stored in Database.', ['field_ids']),
-        (_aggregation_error, 'You can apply agregate function to the non calculated field.', ['field_ids']),
-        (_calander_view_error, "You must have to give calander view's color,start date and delay.", ['field_ids']),
+        (_aggregation_error, 'You can apply aggregate function to the non calculated field.', ['field_ids']),
+        (_calander_view_error, "You must have to give calendar view's color,start date and delay.", ['field_ids']),
     ]
 report_creator()
 

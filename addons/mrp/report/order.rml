@@ -98,26 +98,6 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table7">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
-    </blockTableStyle>
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -168,7 +148,6 @@
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
-  <images/>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]] </para>
     <para style="terp_default_8">
@@ -219,6 +198,9 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="118.0,147.0,132.0,131.0" repeatRows="1" style="Table1">
       <tr>
         <td>
@@ -236,7 +218,7 @@
       </tr>
     </blockTable>
     <section>
-      <blockTable colWidths="118.0,147.0,132.0,132.0" style="Table2">
+      <blockTable colWidths="118.0,147.0,132.0,131.0" style="Table2">
         <tr>
           <td>
             <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d'),date = True) ]]</para>
@@ -275,8 +257,6 @@
           <para style="terp_tblheader_General_Centre">No. Of Hours</para>
         </td>
       </tr>
-    </blockTable>
-    <blockTable colWidths="81.0,155.0,125.0,84.0,83.0" style="Table7">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ repeatIn(o.workcenter_lines,'line2') ]]</para>
@@ -340,3 +320,4 @@
     </section>
   </story>
 </document>
+

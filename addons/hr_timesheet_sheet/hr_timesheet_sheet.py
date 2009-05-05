@@ -369,7 +369,7 @@ class hr_timesheet_line(osv.osv):
                 elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
                     qu1.append('(s.id IS NOT NULL)')
                 else:
-                    qu1.append('(s.id %s %s)' % (x[1], '%d'))
+                    qu1.append('(s.id %s %s)' % (x[1], '%s'))
                     qu2.append(x[2])
             elif x[1] == 'in':
                 if len(x[2]) > 0:
@@ -486,7 +486,7 @@ class hr_attendance(osv.osv):
                 elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
                     qu1.append('(s.id IS NOT NULL)')
                 else:
-                    qu1.append('(s.id %s %s)' % (x[1], '%d'))
+                    qu1.append('(s.id %s %s)' % (x[1], '%s'))
                     qu2.append(x[2])
             elif x[1] == 'in':
                 if len(x[2]) > 0:
