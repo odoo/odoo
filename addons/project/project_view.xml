@@ -512,7 +512,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
-            <field name="context">{'project_id':active_id}</field>
+            <field name="context">{'project_id':active_id, 'active_test':False}</field>
         </record>
         <record id="ir_project_task_open" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
