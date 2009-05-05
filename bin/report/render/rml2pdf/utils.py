@@ -112,10 +112,11 @@ units = [
 
 def unit_get(size):
     global units
-    for unit in units:
-        res = unit[0].search(size, 0)
-        if res:
-            return unit[1]*float(res.group(1))
+    if size:
+        for unit in units:
+            res = unit[0].search(size, 0)
+            if res:
+                return unit[1]*float(res.group(1))
     return False
 
 def tuple_int_get(node, attr_name, default=None):
