@@ -108,7 +108,7 @@ class Cursor(object):
         self.count+=1
         if '%d' in query or '%f' in query:
             log(query, netsvc.LOG_WARNING)
-            log("SQL queries mustn't containt %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
+            log("SQL queries mustn't contain %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
             if params:
                 query = query.replace('%d', '%s').replace('%f', '%s')
 
@@ -116,6 +116,7 @@ class Cursor(object):
             now = mdt.now()
         
         try:
+            params = params or None
             res = self._obj.execute(query, params)
         except Exception, e:
             log("bad query: %s" % self._obj.query)

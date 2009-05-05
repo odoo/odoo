@@ -44,12 +44,10 @@ from lxml import etree
 _regex = re.compile('\[\[(.+?)\]\]')
 
 def _child_get(node, self=None, tagname=None):
-    tr_flag = True
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
             oldctx = self.localcontext
             for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
-                tr_flag = False
                 self.localcontext.update(ctx)
                 if (tagname is None) or (n.tag==tagname):
                     if n.get('rml_except', False):
@@ -69,8 +67,6 @@ def _child_get(node, self=None, tagname=None):
                     else:
                         yield n
             self.localcontext = oldctx
-            if n.tag == 'tr' and tr_flag:
-                yield n
             continue
         if self and self.localcontext and n.get('rml_except', False):
             try:
