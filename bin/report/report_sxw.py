@@ -61,6 +61,11 @@ sxw_parents = {
     'section': 0,
 }
 
+html_parents = {
+    'tr' : 1,
+    'body' : 0,
+    'div' : 0
+    }
 sxw_tag = "p"
 
 rml2sxw = {
@@ -166,6 +171,7 @@ class rml_parse(object):
             'logo' : user.company_id.logo,
             'lang' : user.company_id.partner_id.lang,
             'translate' : self._translate,
+            'setHtmlImage' : self.set_html_image
         }
         self.localcontext.update(context)
         self.rml_header = user.company_id.rml_header
@@ -189,6 +195,17 @@ class rml_parse(object):
 
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
+
+    def set_html_image(self,attach_id):
+        try :
+            att_id = int(attach_id)
+            print att_id
+            attachment = self.pool.get('ir.attachment').browse(self.cr,self.uid,att_id)
+            print attachment
+            print attachment.datas
+            return attachment.datas
+        except :
+            return ''
 
     def setLang(self, lang):
         if not lang or self.default_lang.has_key(lang):
@@ -342,14 +359,19 @@ class report_sxw(report_rml, preprocess.report):
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
-        elif report_type in ['pdf','html','raw']:
+        elif report_type in ['pdf','raw','html']:
             fnct = self.create_source_pdf
+        elif report_type=='html2html':
+            fnct = self.create_source_html2html
         else:
             raise 'Unknown Report Type'
         return fnct(cr, uid, ids, data, report_xml, context)
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_odt(cr, uid, ids, data, report_xml, context or {})
+
+    def create_source_html2html(self, cr, uid, ids, data, report_xml, context=None):
+        return self.create_single_html2html(cr, uid, ids, data, report_xml, context or {})
 
     def create_source_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -476,5 +498,26 @@ class report_sxw(report_rml, preprocess.report):
         final_op = sxw_io.getvalue()
         sxw_io.close()
         return (final_op, report_type)
+        
+    def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
+        context = context.copy()
+        report_type = 'html'
+        context['parents'] = html_parents  
+
+        rml = report_xml.report_rml_content
+
+        rml_parser = self.parser(cr, uid, self.name2, context)
+        rml_parser.parents = html_parents
+        rml_parser.tag = sxw_tag 
+        objs = self.getObjects(cr, uid, ids, context)
+        rml_parser.set_context(objs, data, ids, report_type)
+
+        rml_dom =  etree.HTML(rml)
+        rml_dom = self.preprocess_rml(rml_dom,'html2html')
+        create_doc = self.generators['html2html']
+        html = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
+
+        return (html, report_type)
+        
 
 

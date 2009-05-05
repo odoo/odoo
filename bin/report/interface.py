@@ -82,6 +82,7 @@ class report_rml(report_int):
             'raw': self.create_raw,
             'sxw': self.create_sxw,
             'odt': self.create_odt,
+            'html2html' : self.create_html2html,
         }
 
     def create(self, cr, uid, ids, datas, context):
@@ -200,6 +201,11 @@ class report_rml(report_int):
 
     def create_html(self, rml, localcontext = None, logo=None, title=None):
         obj = render.rml2html(rml, localcontext, self.bin_datas)
+        obj.render()
+        return obj.get()
+
+    def create_html2html(self, rml, localcontext = None, logo=None, title=None):
+        obj = render.html2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
 

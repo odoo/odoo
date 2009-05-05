@@ -24,6 +24,7 @@ import render
 import rml2pdf
 import rml2html as htmlizer
 import odt2odt as odt
+import html2html as html
 
 
 class rml(render.render):
@@ -59,6 +60,16 @@ class odt2odt(render.render):
 
     def _render(self):
         return odt.parseNode(self.rml_dom,self.localcontext)
+
+class html2html(render.render):
+    def __init__(self, rml, localcontext = None, datas = {}):
+        render.render.__init__(self, datas)
+        self.rml_dom = rml
+        self.localcontext = localcontext
+        self.output_type = 'html'
+        
+    def _render(self):
+        return html.parseString(self.rml_dom,self.localcontext)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
