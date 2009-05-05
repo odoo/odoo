@@ -11,8 +11,8 @@
 <!--			<stroke color="(0.6,0.3,0.1)"/>-->
 <!--			<fill color="(0.6,0.3,0.1)"/>-->
 
-			<image x="7cm" y="25cm" file="/home/tiny/terp/4.2/server/bin/addons/auction/report/images/aeko_logo.jpg"/>
-						<image x="7cm" y="25cm" file="/home/pinky/code/terp/branches/extra_addons/trunk/auction/report/images/flagey_logo.jpg"/>
+			<image x="7cm" y="25cm" file="addons/auction/report/images/aeko_logo.jpg"/>
+						<image x="7cm" y="25cm" file="addons/auction/report/images/flagey_logo.jpg"/>
 			<lines>1cm 3.0cm 20cm 3.0cm</lines>
 			<setFont name="Helvetica" size="15"/>
 			<drawCentredString x="105mm" y="2.2cm">Hotel des ventes Flagey</drawCentredString>
@@ -30,7 +30,7 @@
 	<pageTemplate id="first">
 		<pageGraphics>
 <!--			<image x="1.0cm" y="27.3cm" file="/home/tiny/terp/4.2/server/bin/addons/auction/report/images/flagey_head.png"/>-->
--			<image x="1.0cm" y="27.3cm" file="/home/pinky/code/terp/branches/extra_addons/trunk/auction/report/images/flagey_logo.jpg"/>
+-			<image x="1.0cm" y="27.3cm" file="addons/auction/report/images/flagey_logo.jpg"/>
 			<drawRightString x="19.0cm" y="27.6cm"> Vente  antiquitée le  <xsl:value-of select="date:day-name(catalog/AuctionDate1)"/> &#160;<xsl:value-of select="date:day-in-month(catalog/AuctionDate1)"/>&#160;<xsl:value-of select="date:month-name(catalog/AuctionDate1)"/> &#160;<xsl:value-of select="date:year(catalog/AuctionDate1)"/></drawRightString>-->
 			<lineMode width="1mm"/>
 			<setFont name="Helvetica" size="26"/>

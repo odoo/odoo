@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -37,8 +37,29 @@ import wizard
 import photo_shadow
 from tools import config
 
-def escape(s):
-    return str(s or '').replace('<br/>','').decode('latin1','replace').encode('utf-8')
+def _to_unicode(s):
+    try:
+        return s.decode('utf-8')
+    except UnicodeError:
+        try:
+            return s.decode('latin')
+        except UnicodeError:
+            try:
+                return s.encode('ascii')
+            except UnicodeError:
+                return s
+
+def _to_decode(s):
+    try:
+        return s.encode('utf-8')
+    except UnicodeError:
+        try:
+            return s.encode('latin')
+        except UnicodeError:
+            try:
+                return s.decode('ascii')
+            except UnicodeError:
+                return s
 
 
 class auction_catalog(report_rml):
@@ -71,22 +92,22 @@ class auction_catalog(report_rml):
             # name emelment
             key = 'name'
             categ = doc.createElement(key)
-            categ.appendChild(doc.createTextNode(escape(res[0]["name"])))
+            categ.appendChild(doc.createTextNode(_to_decode(res[0]["name"])))
             catalog.appendChild(categ)
 
              #Auctuion Date element
             categ = doc.createElement("AuctionDate1")
-            categ.appendChild(doc.createTextNode(escape(res[0]['auction1'])))
+            categ.appendChild(doc.createTextNode(_to_decode(res[0]['auction1'])))
             catalog.appendChild(categ)
 
             # Action Date 2 element
             categ = doc.createElement("AuctionDate2")
-            categ.appendChild(doc.createTextNode(escape(res[0]['auction2'])))
+            categ.appendChild(doc.createTextNode(_to_decode(res[0]['auction2'])))
             catalog.appendChild(categ)
 
     #         promotion element
             promo = doc.createElement('promotion1')
-            
+
             fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
@@ -113,15 +134,15 @@ class auction_catalog(report_rml):
                 products.appendChild(product)
                 if cat['obj_desc']:
                     infos = doc.createElement('infos')
-                    lines = re.split('<br/>|\n', unicode(cat['obj_desc'],'utf-8').encode('latin1'))
+                    lines = re.split('<br/>|\n', _to_unicode(cat['obj_desc']))
                     for line in lines:
                         xline = doc.createElement('info')
-                        xline.appendChild(doc.createTextNode(escape(line.decode('latin-1','replace').encode('utf-8'))))
+                        xline.appendChild(doc.createTextNode(_to_decode(line)))
                         infos.appendChild(xline)
                     product.appendChild(infos)
                     if cat['lot_num']:
                         lnum = doc.createElement('lot_num')
-                        lnum.appendChild(doc.createTextNode(escape(cat['lot_num'])))
+                        lnum.appendChild(doc.createTextNode(_to_decode(str(cat['lot_num']))))
                         infos.appendChild(lnum)
 
                     if cat['image']:
@@ -146,7 +167,7 @@ class auction_catalog(report_rml):
 
                 for key in ('lot_est1','lot_est2'):
                     ref2 = doc.createElement(key)
-                    ref2.appendChild(doc.createTextNode( escape(cat[key] or 0.0)))
+                    ref2.appendChild(doc.createTextNode( _to_decode(str(cat[key] or 0.0))))
                     product.appendChild(ref2)
                 oldlength = length
                 length += 2.0
