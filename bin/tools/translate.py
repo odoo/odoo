@@ -713,6 +713,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
 
                     # if the resource id (res_id) is in that list, use it,
                     # otherwise use the whole list
+		    if not ids:
+			ids = []
                     ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
                     for id in ids:
                         dic['res_id'] = id
