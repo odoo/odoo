@@ -772,6 +772,12 @@ class _rml_template(object):
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     node = etree.XML(rml)
     r = _rml_doc(node, localcontext, images, path, title=title)
+    #try to override some font mappings
+    try:
+	from customfonts import SetCustomFonts
+	SetCustomFonts(r)
+    except:
+	pass
     fp = cStringIO.StringIO()
     r.render(fp)
     return fp.getvalue()
