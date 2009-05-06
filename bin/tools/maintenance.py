@@ -37,6 +37,9 @@ class remote_contract(object):
         except:
             raise RemoteContractException("Unable to contact the migration server")
 
+        if not self.__userid:
+            raise RemoteContractException("Unable to contact the migration server")
+
         self.__rpc = xmlrpclib.ServerProxy(self.__server + 'object')
         
 

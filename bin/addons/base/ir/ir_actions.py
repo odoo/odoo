@@ -120,6 +120,7 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ('odt', 'odt'),
+            ('html2html','Html from html'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -525,7 +526,8 @@ class actions_server(osv.osv):
                     'time': time,
                     'ids': ids,
                     'cr': cr,
-                    'uid': uid
+                    'uid': uid,
+                    'obj':obj
                 }
                 exec action.code in localdict
                 if 'action' in localdict:

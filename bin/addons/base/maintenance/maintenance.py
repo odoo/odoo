@@ -178,8 +178,8 @@ class maintenance_contract_wizard(osv.osv_memory):
 
         is_ok = contract_info['status'] in ('partial', 'full')
         if is_ok:
+            module_ids = []
             if contract_info['modules_with_contract']:
-                module_ids = []
                 for name, version in contract_info['modules_with_contract']:
                     contract_module = self.pool.get('maintenance.contract.module')
                     res = contract_module.search(cr, uid, [('name', '=', name),('version', '=', version)])
