@@ -46,7 +46,8 @@ class res_partner_contact(osv.osv):
         'birthdate':fields.date('Birth Date'),
         'active' : fields.boolean('Active'),
         'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
-        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Job'),
+        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Function'),
+        'job_id':fields.related('job_ids',type='many2one', relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
     }
     _defaults = {
@@ -87,6 +88,7 @@ class res_partner_address(osv.osv):
     _inherit='res.partner.address'
     _description ='Partner Address'
     _columns = {
+        'job_id':fields.related('job_ids','contact_id','job_id',type='many2one', relation='res.partner.job', string='Main Job'),
         'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
     }
 res_partner_address()
