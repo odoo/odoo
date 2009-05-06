@@ -322,6 +322,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
+                
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
@@ -672,7 +673,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     pool = pooler.get_pool(cr.dbname)
     try:
         report = tools.assertion_report()
-        STATES_TO_LOAD = ['installed', 'to upgrade']
+        # NOTE: Try to also load the modules that have been marked as uninstallable previously...
+        STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
         has_updates = False
         if update_module:

@@ -73,7 +73,7 @@ class Cursor(object):
 
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            if not '_obj' in self.__dict__:
+            if self.__closed:
                 raise psycopg2.ProgrammingError('Unable to use the cursor after having closed it')
             return f(self, *args, **kwargs)
         return wrapper
@@ -83,6 +83,7 @@ class Cursor(object):
         self._serialized = serialized
         self._cnx = pool.getconn()
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
+        self.__closed = False
         self.autocommit(False)
         self.dbname = pool.dbname
 
@@ -91,7 +92,7 @@ class Cursor(object):
             self.__caller = tuple(stack()[2][1:3])
         
     def __del__(self):
-        if '_obj' in self.__dict__ :
+        if not self.__closed:
             if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
                 # Oops. 'self' has not been closed explicitly.
                 # The cursor will be deleted by the garbage collector, 
@@ -117,6 +118,7 @@ class Cursor(object):
             now = mdt.now()
         
         try:
+            params = params or None
             res = self._obj.execute(query, params)
 	except psycopg2.ProgrammingError, pe:
 	    logger= netsvc.Logger()
@@ -173,6 +175,7 @@ class Cursor(object):
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
         del self._obj
+        self.__closed = True
         self._pool.putconn(self._cnx)
     
     @check

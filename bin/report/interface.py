@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,10 +23,9 @@
 import os
 import re
 
-#Ged> Why do we use libxml2 here instead of xml.dom like in other places of the code?
 import libxml2
 import libxslt
-
+from lxml import etree
 import netsvc
 import pooler
 
@@ -84,6 +83,7 @@ class report_rml(report_int):
             'sxw': self.create_sxw,
 	    'txt': self.create_txt,
             'odt': self.create_odt,
+            'html2html' : self.create_html2html,
         }
 
     def create(self, cr, uid, ids, datas, context):
@@ -190,18 +190,18 @@ class report_rml(report_int):
         result.freeDoc()
         return xml
 
-    def create_pdf(self, xml, logo=None, title=None):
+    def create_pdf(self, rml, localcontext = None, logo=None, title=None):
         if logo:
             self.bin_datas['logo'] = logo
         else:
             if 'logo' in self.bin_datas:
                 del self.bin_datas['logo']
-        obj = render.rml(xml, self.bin_datas, tools.config['root_path'],title)
+        obj = render.rml(rml, localcontext, self.bin_datas, tools.config['root_path'],title)
         obj.render()
         return obj.get()
 
-    def create_html(self, xml, logo=None, title=None):
-        obj = render.rml2html(xml, self.bin_datas)
+    def create_html(self, rml, localcontext = None, logo=None, title=None):
+        obj = render.rml2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
 
@@ -210,15 +210,26 @@ class report_rml(report_int):
         obj.render()
         return obj.get().encode('utf-8')
 
-    def create_raw(self, xml, logo=None, title=None):
-        return xml
+    def create_html2html(self, rml, localcontext = None, logo=None, title=None):
+        obj = render.html2html(rml, localcontext, self.bin_datas)
+        obj.render()
+        return obj.get()
 
-    def create_sxw(self, path, logo=None, title=None):
-        return path
-    
-    def create_odt(self, data, logo=None, title=None):
-        return data    
-    
+
+    def create_raw(self,rml, localcontext = None, logo=None, title=None):
+        obj = render.odt2odt(etree.XML(rml),localcontext)
+        obj.render()
+        return etree.tostring(obj.get())
+
+    def create_sxw(self,rml,localcontext = None):
+        obj = render.odt2odt(rml,localcontext)
+        obj.render()
+        return obj.get()
+
+    def create_odt(self,rml,localcontext = None):
+        obj = render.odt2odt(rml,localcontext)
+        obj.render()
+        return obj.get()
 
 from report_sxw import report_sxw
 

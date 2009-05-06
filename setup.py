@@ -179,6 +179,7 @@ setup(name             = name,
                           'openerp-server.report.render.rml2html',
 			  'openerp-server.report.render.rml2txt',
                           'openerp-server.wizard', 
+                          'openerp-server.report.render.odt2odt',
                           'openerp-server.workflow'] + \
                          list(find_addons()),
       package_dir      = {'openerp-server': 'bin'},

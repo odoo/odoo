@@ -145,6 +145,7 @@ CREATE TABLE res_users (
     context_tz varchar(64) default null,
     signature text,
 --  action_id int references ir_act_window on delete set null,
+    context_lang varchar(64) default '',
     action_id int,
     primary key(id)
 );

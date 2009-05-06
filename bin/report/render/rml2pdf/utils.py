@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -39,12 +39,68 @@
 
 import re
 import reportlab
+from lxml import etree
+
+_regex = re.compile('\[\[(.+?)\]\]')
+
+def _child_get(node, self=None, tagname=None):
+    for n in node:
+        if self and self.localcontext and n.get('rml_loop', False):
+            oldctx = self.localcontext
+            for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
+                self.localcontext.update(ctx)
+                if (tagname is None) or (n.tag==tagname):
+                    if n.get('rml_except', False):
+                        try:
+                            eval(n.get('rml_except'), {}, self.localcontext)
+                        except:
+                            continue
+                    if n.get('rml_tag'):
+                        try:
+                            (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
+                            n2 = copy.copy(n)
+                            n2.tag = tag
+                            n2.attrib.update(attr)
+                            yield n2
+                        except:
+                            yield n
+                    else:
+                        yield n
+            self.localcontext = oldctx
+            continue
+        if self and self.localcontext and n.get('rml_except', False):
+            try:
+                eval(n.get('rml_except'), {}, self.localcontext)
+            except:
+                continue
+        if (tagname is None) or (n.tag==tagname):
+            yield n
+
+def _process_text(self, txt):
+        if not self.localcontext:
+            return txt
+        if not txt:
+            return ''
+        result = ''
+        sps = _regex.split(txt)
+        while sps:
+            # This is a simple text to translate
+            result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
+            if sps:
+                try:
+                    txt2 = eval(sps.pop(0),self.localcontext)
+                except:
+                    txt2 = ''
+                if type(txt2) == type(0) or type(txt2) == type(0.0):
+                    txt2 = str(txt2)
+                if type(txt2)==type('') or type(txt2)==type(u''):
+                    result += txt2
+        return result
 
 def text_get(node):
     rc = ''
-    for node in node.childNodes:
-        if node.nodeType == node.TEXT_NODE:
-            rc = rc + node.data
+    for node in node.getchildren():
+            rc = rc + node.text
     return rc
 
 units = [
@@ -56,16 +112,17 @@ units = [
 
 def unit_get(size):
     global units
-    for unit in units:
-        res = unit[0].search(size, 0)
-        if res:
-            return unit[1]*float(res.group(1))
+    if size:
+        for unit in units:
+            res = unit[0].search(size, 0)
+            if res:
+                return unit[1]*float(res.group(1))
     return False
 
 def tuple_int_get(node, attr_name, default=None):
-    if not node.hasAttribute(attr_name):
+    if not node.get(attr_name):
         return default
-    res = [int(x) for x in node.getAttribute(attr_name).split(',')]
+    res = [int(x) for x in node.get(attr_name).split(',')]
     return res
 
 def bool_get(value):
@@ -74,19 +131,18 @@ def bool_get(value):
 def attr_get(node, attrs, dict={}):
     res = {}
     for name in attrs:
-        if node.hasAttribute(name):
-            res[name] =  unit_get(node.getAttribute(name))
+        if node.get(name):
+            res[name] = unit_get(node.get(name))
     for key in dict:
-        if node.hasAttribute(key):
+        if node.get(key):
             if dict[key]=='str':
-                res[key] = str(node.getAttribute(key))
+                res[key] = str(node.get(key))
             elif dict[key]=='bool':
-                res[key] = bool_get(node.getAttribute(key))
+                res[key] = bool_get(node.get(key))
             elif dict[key]=='int':
-                res[key] = int(node.getAttribute(key))
+                res[key] = int(node.get(key))
             elif dict[key]=='unit':
-                res[key] = unit_get(node.getAttribute(key))
+                res[key] = unit_get(node.get(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

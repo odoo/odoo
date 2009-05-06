@@ -811,13 +811,14 @@ class orm_template(object):
                 attrs = {}
                 try:
                     if node.getAttribute('name') in self._columns:
-                        relation = self._columns[node.getAttribute('name')]._obj
+                        column = self._columns[node.getAttribute('name')]
                     else:
-                        relation = self._inherit_fields[node.getAttribute('name')][2]._obj
+                        column = self._inherit_fields[node.getAttribute('name')][2]
                 except:
-                    relation = False
+                    column = False
 
-                if relation:
+                if column:
+                    relation = column._obj
                     childs = False
                     views = {}
                     for f in node.childNodes:
@@ -832,9 +833,12 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
-                        # We can not use the domain has it is defined according to the record !
-                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', context=context)
-                        if not attrs.get('required',False):
+                        # We can not use the 'string' domain has it is defined according to the record !
+                        dom = None
+                        if column._domain and not isinstance(column._domain, (str, unicode)):
+                            dom = column._domain
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
+                        if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
                 fields[node.getAttribute('name')] = attrs
 
@@ -2322,7 +2326,7 @@ class orm(orm_template):
 
                     # It's the first node of the parent: position = parent_left+1
                     if not position:
-                        if not vals[self._parent_name]: 
+                        if not vals[self._parent_name]:
                             position = 1
                         else:
                             cr.execute('select parent_left from '+self._table+' where id=%s', (vals[self._parent_name],))
@@ -2450,10 +2454,6 @@ class orm(orm_template):
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
-        for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
-
-        self._validate(cr, user, [id_new], context)
 
         if self._parent_store:
             if self.pool._init:
@@ -2478,6 +2478,9 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
+        for field in upd_todo:
+            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+        self._validate(cr, user, [id_new], context)
 
         result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
         for order, object, ids, fields in result:

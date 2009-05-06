@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -24,16 +24,9 @@ import re
 import reportlab
 import reportlab.lib.units
 
-def text_get(node):
-    rc = ''
-    for node in node.childNodes:
-        if node.nodeType == node.TEXT_NODE:
-            rc = rc + node.data
-    return rc
-
 units = [
     (re.compile('^(-?[0-9\.]+)\s*in$'), reportlab.lib.units.inch),
-    (re.compile('^(-?[0-9\.]+)\s*cm$'), reportlab.lib.units.cm),  
+    (re.compile('^(-?[0-9\.]+)\s*cm$'), reportlab.lib.units.cm),
     (re.compile('^(-?[0-9\.]+)\s*mm$'), reportlab.lib.units.mm),
     (re.compile('^(-?[0-9\.]+)\s*px$'), 0.7),
     (re.compile('^(-?[0-9\.]+)\s*$'), 1)
@@ -48,9 +41,9 @@ def unit_get(size):
     return False
 
 def tuple_int_get(node, attr_name, default=None):
-    if not node.hasAttribute(attr_name):
+    if not node.get(attr_name):
         return default
-    res = [int(x) for x in node.getAttribute(attr_name).split(',')]
+    res = [int(x) for x in node.get(attr_name).split(',')]
     return res
 
 def bool_get(value):
@@ -59,16 +52,16 @@ def bool_get(value):
 def attr_get(node, attrs, dict={}):
     res = {}
     for name in attrs:
-        if node.hasAttribute(name):
-            res[name] =  unit_get(node.getAttribute(name))
+        if node.get(name):
+            res[name] =  unit_get(node.get(name))
     for key in dict:
-        if node.hasAttribute(key):
+        if node.get(key):
             if dict[key]=='str':
-                res[key] = str(node.getAttribute(key))
+                res[key] = str(node.get(key))
             elif dict[key]=='bool':
-                res[key] = bool_get(node.getAttribute(key))
+                res[key] = bool_get(node.get(key))
             elif dict[key]=='int':
-                res[key] = int(node.getAttribute(key))
+                res[key] = int(node.get(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
