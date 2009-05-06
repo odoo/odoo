@@ -880,7 +880,7 @@ class sale_order_line(osv.osv):
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
-            if not (qty % q) == 0 :
+            if qty and (not (qty % q) == 0):
                 ean = pack.ean
                 qty_pack = pack.qty
                 type_ul = pack.ul

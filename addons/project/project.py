@@ -156,26 +156,20 @@ class project(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default={},context={}):
+        proj = self.browse(cr, uid, id, context=context)
         default = default or {}
-        default['child_id'] = []
-        return super(project, self).copy(cr, uid, id, default, context)
+        context['active_test'] = False
+        default['state'] = 'open'
+        default['name'] = proj.name+_(' (copy)')
+        res = super(project, self).copy(cr, uid, id, default, context)
+        ids = self.search(cr, uid, [('parent_id','child_of', [res])])
+        cr.execute('update project_task set active=True where project_id in ('+','.join(map(str,ids))+')')
+        return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
-        for proj in self.browse(cr, uid, ids):
-            parent_id=context.get('parent_id',False)
-            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
-            cr.execute('select id from project_task where project_id=%s', (proj.id,))
-            res = cr.fetchall()
-            for (tasks_id,) in res:
-                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
-            res = cr.fetchall()
-            project_ids = [x[0] for x in res]
-            for child in project_ids:
-                self.duplicate_template(cr, uid, [child],context={'parent_id':new_id}) 
-
-        # TODO : Improve this to open the new project (using a wizard)
-
+        default = {'parent_id': context.get('parent_id',False)}
+        for id in ids:
+            self.copy(cr, uid, id, default=default)
         cr.commit()
         raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
