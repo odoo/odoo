@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -28,7 +28,7 @@ from tools.translate import _
 
 period_form = '''<?xml version="1.0"?>
 <form string="Select Date-Period">
-    
+
     <field name="company_id"/>
     <field name="result_selection"/>
     <newline/>
@@ -53,7 +53,7 @@ period_form = '''<?xml version="1.0"?>
             <field name="periods" colspan="4" nolabel="1"/>
         </group>
     </group>
-   
+
 </form>'''
 
 period_fields = {
@@ -85,7 +85,7 @@ period_fields = {
 
 
 class wizard_report(wizard.interface):
-    
+
     def _get_defaults(self, cr, uid, data, context):
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
@@ -104,9 +104,9 @@ class wizard_report(wizard.interface):
         data['form']['reconcil'] = False
         data['form']['soldeinit'] = True
         return data['form']
-    
+
     def _check_date(self, cr, uid, data, context):
-        
+
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date1'])
         cr.execute(sql)
@@ -116,17 +116,18 @@ class wizard_report(wizard.interface):
                 raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']) , str(res[0]['date_stop'])))
             else:
                 return 'report'
-            
         else:
             raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
-    
-    
+
     def _check_state(self, cr, uid, data, context):
         if data['form']['state'] == 'bydate' or data['form']['state'] == 'all':
            data['form']['fiscalyear'] = False
         else :
            data['form']['fiscalyear'] = True
            self._check_date(cr, uid, data, context)
+        acc_id = pooler.get_pool(cr.dbname).get('account.invoice').search(cr, uid, [('state','=','open')])
+        if not acc_id:
+                raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))
         return data['form']
 
 
