@@ -455,7 +455,7 @@ if __name__=="__main__":
             rml2html_help()
         print parseString(file(sys.argv[1], 'r').read()),
     else:
-        print 'Usage: trml2pdf input.rml >output.pdf'
-        print 'Try \'trml2pdf --help\' for more information.'
+        print 'Usage: rml2html input.rml >output.html'
+        print 'Try \'rml2html --help\' for more information.'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

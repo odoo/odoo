@@ -52,13 +52,14 @@ class rml2html(render.render):
         return htmlizer.parseString(self.rml,self.localcontext)
 
 class rml2txt(render.render):
-    def __init__(self, xml, datas={}):
+    def __init__(self, rml, localcontext= None, datas={}):
         super(rml2txt, self).__init__(datas)
-        self.xml = xml
+        self.rml = rml
+	self.localcontext = localcontext
         self.output_type = 'txt'
 
     def _render(self):
-        return txtizer.parseString(self.xml)
+        return txtizer.parseString(self.rml, self.localcontext)
 
 class odt2odt(render.render):
     def __init__(self, rml, localcontext = None, datas = {}):

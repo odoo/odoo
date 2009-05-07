@@ -205,8 +205,8 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
-    def create_txt(self, xml, logo=None, title=None):
-        obj = render.rml2txt(xml, self.bin_datas)
+    def create_txt(self, rml,localcontext, logo=None, title=None):
+        obj = render.rml2txt(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get().encode('utf-8')
 

@@ -40,8 +40,9 @@
 
 import sys
 import StringIO
-import xml.dom.minidom
 import copy
+from lxml import etree
+import base64
 
 import utils
 
@@ -80,6 +81,8 @@ class textbox():
 	    """Append some text to the current line.
 	       Mimic the HTML behaviour, where all whitespace evaluates to
 	       a single space """
+	    if not txt:
+		return
 	    bs = es = False
 	    if txt[0].isspace():
 	        bs = True
@@ -135,7 +138,7 @@ class textbox():
 		
 
 class _flowable(object):
-    def __init__(self, template, doc):
+    def __init__(self, template, doc,localcontext):
         self._tags = {
             '1title': self._tag_title,
             '1spacer': self._tag_spacer,
@@ -149,6 +152,7 @@ class _flowable(object):
         }
         self.template = template
         self.doc = doc
+	self.localcontext = localcontext
 	self.nitags = []
 	self.tbox = None
 
@@ -174,7 +178,7 @@ class _flowable(object):
         return node.toxml()
 
     def _tag_spacer(self, node):
-        length = 1+int(utils.unit_get(node.getAttribute('length')))/35
+        length = 1+int(utils.unit_get(node.get('length')))/35
         return "\n"*length
 
     def _tag_table(self, node):
@@ -182,14 +186,14 @@ class _flowable(object):
 	saved_tb = self.tb
 	self.tb = None
 	sizes = None
-        if node.hasAttribute('colWidths'):
-            sizes = map(lambda x: utils.unit_get(x), node.getAttribute('colWidths').split(','))
+        if node.get('colWidths'):
+            sizes = map(lambda x: utils.unit_get(x), node.get('colWidths').split(','))
 	trs = []
-	for n in node.childNodes:
-	    if n.nodeType == node.ELEMENT_NODE and n.localName == 'tr':
+	for n in utils._child_get(node,self):
+	    if n.tag == 'tr':
 		tds = []
-		for m in n.childNodes:
-		    if m.nodeType == node.ELEMENT_NODE and m.localName == 'td':
+		for m in utils._child_get(n,self):
+		    if m.tag == 'td':
 		        self.tb = textbox()
 			self.rec_render_cnodes(m)
 			tds.append(self.tb)
@@ -228,21 +232,19 @@ class _flowable(object):
 	self.rec_render_cnodes(node)
 
     def rec_render_cnodes(self,node):
-	for n in node.childNodes:
-	    self.rec_render(n)
+        self.tb.appendtxt(utils._process_text(self, node.text or ''))
+        for n in utils._child_get(node,self):
+		self.rec_render(n)
+	self.tb.appendtxt(utils._process_text(self, node.tail or ''))
 
     def rec_render(self,node):
         """ Recursive render: fill outarr with text of current node
 	"""
-	if node.nodeType == node.TEXT_NODE:
-		self.tb.appendtxt(node.data)
-	elif node.nodeType==node.ELEMENT_NODE:
-		if node.localName in self._tags:
-		    self._tags[node.localName](node)
+	if node.tag != None:
+		if node.tag in self._tags:
+		    self._tags[node.tag](node)
 		else:
-		    self.warn_nitag(node.localName)
-	else:
-		verbose("Unknown nodeType: %d" % node.nodeType)
+		    self.warn_nitag(node.tag)
 
     def render(self, node):
 	self.tb= textbox()
@@ -288,8 +290,8 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
 
 class _rml_tmpl_draw_string(_rml_tmpl_tag):
     def __init__(self, node, style):
-        self.posx = utils.unit_get(node.getAttribute('x'))
-        self.posy =  utils.unit_get(node.getAttribute('y'))
+        self.posx = utils.unit_get(node.get('x'))
+        self.posy =  utils.unit_get(node.get('y'))
         aligns = {
             'drawString': 'left',
             'drawRightString': 'right',
@@ -348,12 +350,12 @@ class _rml_stylesheet(object):
             'alignment': lambda x: ('text-align',str(x))
         }
         result = ''
-        for ps in stylesheet.getElementsByTagName('paraStyle'):
+        for ps in stylesheet.findall('paraStyle'):
             attr = {}
             attrs = ps.attributes
             for i in range(attrs.length):
                  name = attrs.item(i).localName
-                 attr[name] = ps.getAttribute(name)
+                 attr[name] = ps.get(name)
             attrs = []
             for a in attr:
                 if a in self._tags:
@@ -369,9 +371,9 @@ class _rml_draw_style(object):
     def __init__(self):
         self.style = {}
         self._styles = {
-            'fill': lambda x: {'td': {'color':x.getAttribute('color')}},
-            'setFont': lambda x: {'td': {'font-size':x.getAttribute('size')+'px'}},
-            'stroke': lambda x: {'hr': {'color':x.getAttribute('color')}},
+            'fill': lambda x: {'td': {'color':x.get('color')}},
+            'setFont': lambda x: {'td': {'font-size':x.get('size')+'px'}},
+            'stroke': lambda x: {'hr': {'color':x.get('color')}},
         }
     def update(self, node):
         if node.localName in self._styles:
@@ -391,7 +393,8 @@ class _rml_draw_style(object):
         return ';'.join(['%s:%s' % (x[0],x[1]) for x in self.style[tag].items()])
 
 class _rml_template(object):
-    def __init__(self, template):
+    def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
+        self.localcontext = localcontext
         self.frame_pos = -1
         self.frames = []
         self.template_order = []
@@ -404,16 +407,16 @@ class _rml_template(object):
             'lines': _rml_tmpl_draw_lines
         }
         self.style = _rml_draw_style()
-        for pt in template.getElementsByTagName('pageTemplate'):
+        for pt in node.findall('pageTemplate'):
             frames = {}
-            id = pt.getAttribute('id')
+            id = pt.get('id')
             self.template_order.append(id)
-            for tmpl in pt.getElementsByTagName('frame'):
-                posy = int(utils.unit_get(tmpl.getAttribute('y1'))) #+utils.unit_get(tmpl.getAttribute('height')))
-                posx = int(utils.unit_get(tmpl.getAttribute('x1')))
-                frames[(posy,posx,tmpl.getAttribute('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.getAttribute('width')))
-            for tmpl in template.getElementsByTagName('pageGraphics'):
-                for n in tmpl.childNodes:
+            for tmpl in pt.findall('frame'):
+                posy = int(utils.unit_get(tmpl.get('y1'))) #+utils.unit_get(tmpl.get('height')))
+                posx = int(utils.unit_get(tmpl.get('x1')))
+                frames[(posy,posx,tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
+            for tmpl in node.findall('pageGraphics'):
+                for n in tmpl.getchildren():
                     if n.nodeType==n.ELEMENT_NODE:
                         if n.localName in self._tags:
                             t = self._tags[n.localName](n, self.style)
@@ -480,21 +483,46 @@ class _rml_template(object):
         return result
 
 class _rml_doc(object):
-    def __init__(self, data):
-        self.dom = xml.dom.minidom.parseString(data)
-        self.filename = self.dom.documentElement.getAttribute('filename')
+    def __init__(self, node, localcontext, images={}, path='.', title=None):
+        self.localcontext = localcontext
+        self.etree = node
+        self.filename = self.etree.get('filename')
         self.result = ''
 
     def render(self, out):
-        template = _rml_template(self.dom.documentElement.getElementsByTagName('template')[0])
-        f = _flowable(template, self.dom)
-        self.result += f.render(self.dom.documentElement.getElementsByTagName('story')[0])
-        del f
+        #el = self.etree.findall('docinit')
+        #if el:
+            #self.docinit(el)
+
+        #el = self.etree.findall('stylesheet')
+        #self.styles = _rml_styles(el,self.localcontext)
+
+        el = self.etree.findall('template')
+	self.result =""
+        if len(el):
+            pt_obj = _rml_template(self.localcontext, out, el[0], self)
+            stories = utils._child_get(self.etree, self, 'story')
+	    for story in stories:
+		if self.result:
+			self.result += '\f'
+		f = _flowable(pt_obj,story,self.localcontext)
+		self.result += f.render(story)
+		del f
+        else:
+            self.result = "<cannot render w/o template>"
         self.result += '\n'
         out.write( self.result)
 
-def parseString(data, fout=None):
-    r = _rml_doc(data)
+def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+    node = etree.XML(rml)
+    r = _rml_doc(node, localcontext, images, path, title=title)
+    fp = StringIO.StringIO()
+    r.render(fp)
+    return fp.getvalue()
+
+def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+    node = etree.XML(rml)
+    r = _rml_doc(node, localcontext, images, path, title=title)
     if fout:
         fp = file(fout,'wb')
         r.render(fp)

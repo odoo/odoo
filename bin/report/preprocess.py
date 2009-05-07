@@ -6,7 +6,7 @@ html_parents = ['tr','body','div']
 sxw_parents = ['{http://openoffice.org/2000/table}table-row','{http://openoffice.org/2000/office}body','{http://openoffice.org/2000/text}section']
 
 class report(object):
-    def preprocess_rml(self, root_node,type='pdf'):
+    def preprocess_rml(self, root_node,ntype='pdf'):
         _regex1 = re.compile("\[\[(.*?)(repeatIn\(.*?\s*,\s*[\'\"].*?[\'\"]\s*(?:,\s*(.*?)\s*)?\s*\))(.*?)\]\]")
         _regex11= re.compile("\[\[(.*?)(repeatIn\(.*?\s*\(.*?\s*[\'\"].*?[\'\"]\s*\),[\'\"].*?[\'\"](?:,\s*(.*?)\s*)?\s*\))(.*?)\]\]")
         _regex2 = re.compile("\[\[(.*?)(removeParentNode\(\s*(?:['\"](.*?)['\"])\s*\))(.*?)\]\]")
@@ -35,9 +35,9 @@ class report(object):
                     if len(txt.group(4)) > 1:
                         return " "
                     match = rml_parents
-                    if type in ['odt','sxw']:
+                    if ntype in ['odt','sxw']:
                         match = sxw_parents
-                    if type =='html2html':
+                    if ntype =='html2html':
                         match = html_parents
                     if txt.group(3):
                         match = [txt.group(3)]
@@ -51,7 +51,7 @@ class report(object):
                     t = _regex11.sub(_sub1, node.text)
                 t = _regex3.sub(_sub3, t)
                 node.text = _regex2.sub(_sub2, t)
-            self.preprocess_rml(node,type)
+            self.preprocess_rml(node,ntype)
         return root_node
 
 if __name__=='__main__':
