@@ -100,7 +100,7 @@ class res_partner_job(osv.osv):
             return []
         res = []
         for r in self.browse(cr, uid, ids):
-            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] +", "+ r.function_id.name))
+            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] +", %s"% r.function_id.name))
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
