@@ -450,6 +450,7 @@ class ir_model_data(osv.osv):
                 cr.execute('select id from '+model_obj._table+' where id=%s', (res_id2,))
                 result3 = cr.fetchone()
                 if not result3:
+                    self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (action_id2,))
                     res_id = False
                 else:
