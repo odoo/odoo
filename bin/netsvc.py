@@ -232,6 +232,7 @@ class OpenERPDispatcher:
             self.log('service', service_name)
             self.log('method', method)
             self.log('params', params)
+            print "Terp Calling",service_name,method,params
             result = LocalService(service_name)(method, *params)
             self.log('result', result)
             return result

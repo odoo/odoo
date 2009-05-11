@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
+#    OpenERP, Open Source Management Solution	
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,14 +20,7 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, odt2odt , html2html
-from render import render
-
-try:
-    import Image
-except:
-    print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
+from html2html import parseString
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

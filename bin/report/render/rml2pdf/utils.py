@@ -91,6 +91,8 @@ def _process_text(self, txt):
                     txt2 = eval(sps.pop(0),self.localcontext)
                 except:
                     txt2 = ''
+                if type(txt2) == type(0) or type(txt2) == type(0.0):
+                    txt2 = str(txt2)
                 if type(txt2)==type('') or type(txt2)==type(u''):
                     result += txt2
         return result
@@ -110,10 +112,11 @@ units = [
 
 def unit_get(size):
     global units
-    for unit in units:
-        res = unit[0].search(size, 0)
-        if res:
-            return unit[1]*float(res.group(1))
+    if size:
+        for unit in units:
+            res = unit[0].search(size, 0)
+            if res:
+                return unit[1]*float(res.group(1))
     return False
 
 def tuple_int_get(node, attr_name, default=None):
