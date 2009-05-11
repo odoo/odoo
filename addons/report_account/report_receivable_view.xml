@@ -49,5 +49,37 @@
         </record>
         <menuitem action="action_account_receivable_graph" id="menu_account_receivable_graph" parent="account.menu_finance_reporting"/>
         
+        <!-- Report for Aged Receivable -->
+        
+        <record id="view_aged_recv_graph" model="ir.ui.view">
+            <field name="name">report.aged.receivable.graph</field>
+            <field name="model">report.aged.receivable</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Aged Receivable" type="bar">
+                    <field name="name"/>
+                    <field name="balance" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record id="view_aged_recv_tree" model="ir.ui.view">
+            <field name="name">report.aged.receivable.tree</field>
+            <field name="model">report.aged.receivable</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Aged Receivable">
+                    <field name="name"/>
+                    <field name="balance"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_aged_receivable_graph" model="ir.actions.act_window">
+            <field name="name">Aged Receivable</field>
+            <field name="res_model">report.aged.receivable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+        </record>
     </data>
 </openerp>
