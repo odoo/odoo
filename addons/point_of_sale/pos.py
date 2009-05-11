@@ -434,7 +434,7 @@ class pos_order(osv.osv):
         payment_id = self.pool.get('pos.payment').create(cr, uid, args )
 
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'pos.order', order_id, 'payment', cr)
+        wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
         wf_service.trg_write(uid, 'pos.order', order_id, cr)
         return payment_id
 
