@@ -199,10 +199,7 @@ class rml_parse(object):
     def set_html_image(self,attach_id):
         try :
             att_id = int(attach_id)
-            print att_id
             attachment = self.pool.get('ir.attachment').browse(self.cr,self.uid,att_id)
-            print attachment
-            print attachment.datas
             return attachment.datas
         except :
             return ''
@@ -502,22 +499,22 @@ class report_sxw(report_rml, preprocess.report):
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
         context = context.copy()
         report_type = 'html'
-        context['parents'] = html_parents  
-
-        rml = report_xml.report_rml_content
-
-        rml_parser = self.parser(cr, uid, self.name2, context)
-        rml_parser.parents = html_parents
-        rml_parser.tag = sxw_tag 
+        context['parents'] = html_parents
+        
+        html = report_xml.report_rml_content
+        html_parser = self.parser(cr, uid, self.name2, context)
+        html_parser.parents = html_parents
+        html_parser.tag = sxw_tag 
         objs = self.getObjects(cr, uid, ids, context)
-        rml_parser.set_context(objs, data, ids, report_type)
+        html_parser.set_context(objs, data, ids, report_type)
 
-        rml_dom =  etree.HTML(rml)
-        rml_dom = self.preprocess_rml(rml_dom,'html2html')
+        html_dom =  etree.HTML(html)
+        html_dom = self.preprocess_rml(html_dom,'html2html')
+
         create_doc = self.generators['html2html']
-        html = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
+        html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
-        return (html, report_type)
+        return (html.replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
         
 
 
