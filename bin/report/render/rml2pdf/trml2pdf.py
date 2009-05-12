@@ -453,7 +453,7 @@ class _rml_flowable(object):
         return rc1
 
     def _table(self, node):
-        childs = list(utils._child_get(node,self,'tr'))
+        childs = utils._child_get(node,self,'tr')
         if not childs:
             return None
         length = 0
@@ -474,7 +474,7 @@ class _rml_flowable(object):
                 paraStyle = self.styles.styles[tr.get('paraStyle')]
             data2 = []
             posx = 0
-            for td in list(utils._child_get(tr, self,'td')):
+            for td in utils._child_get(tr, self,'td'):
                 if td.get('style'):
                     st = copy.deepcopy(self.styles.table_styles[td.get('style')])
                     for s in st._cmds:
@@ -489,7 +489,7 @@ class _rml_flowable(object):
                 posx += 1
 
                 flow = []
-                for n in list(utils._child_get(td, self)):
+                for n in utils._child_get(td, self):
                     fl = self._flowable(n, extra_style=paraStyle)
                     if isinstance(fl,list):
                         flow  += fl
