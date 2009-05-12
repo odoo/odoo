@@ -169,7 +169,7 @@
 	<blockTable colWidths="0.0,216.0,62,38,29,67,53,53" style="Tableau7">
 		<tr>
 			<td>
-			<para style="P8">[[ a['type']=='text' and removeParentNode('tr')]]</para>
+			<para style="P8">[[ a['type']=='text' and removeParentNode('blockTable')]]</para>
 			</td>
 			<td>
 			<para style="Table Contents">[[ (a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['name'] ]]</para>
@@ -178,10 +178,10 @@
 			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['tax_types'] ]]</para>
 			</td>
 			<td>
-			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['quantity'] ]]</para>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['quantity'] ]][[ a['uos'] ]]</para>
 			</td>
 			<td>
-			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['uos'] ]]</para>
+			<para><font color="white"></font></para>
 			</td>
 			<td>
 			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['price_unit'] ]]</para>
@@ -218,7 +218,7 @@
 	<blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau6">
 		<tr>
 			<td>
-				<para style="P3">Description [[ a['type']!='break' and removeParentNode('tr')]]</para>
+				<para style="P3">Description [[ a['type']!='break' and removeParentNode('blockTable')]]</para>
 			</td>
 			<td>
 				<para style="P4">Taxes</para>
