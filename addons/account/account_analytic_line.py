@@ -77,7 +77,8 @@ class account_analytic_line(osv.osv):
             unit=False, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        if unit_amount and prod_id:
+#        if unit_amount and prod_id:
+        if  prod_id:
             prod = product_obj.browse(cr, uid, prod_id)
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:

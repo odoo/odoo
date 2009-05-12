@@ -77,10 +77,12 @@
             <field name="arch" type="xml">
                 <tree string="Intrastat Data">
                     <field name="name"/>
-                    <field name="code"/>
+                    <field name="code"/>    
+                    <field name="ref"/>
                     <field name="intrastat_id"/>
                     <field name="weight"/>
                     <field name="value"/>
+                    <field name="supply_units"/>
                     <field name="currency_id"/>
                     <field name="type"/>
                 </tree>
@@ -93,7 +95,7 @@
             <field name="res_model">report.intrastat</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+            <field name="domain">[('name','=',time.strftime('%b.%Y'))]</field>
         </record>
         
 		<menuitem id="next_id_89" name="This Month" parent="stock.next_id_61"/>

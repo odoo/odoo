@@ -20,6 +20,31 @@
             </field>
         </field>
     </record>
-
+	
+	 <record model="ir.ui.view" id="view_case_inherit_form">
+        <field name="name">crm.case.code.form</field>
+        <field name="model">crm.case</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="crm.crm_case-view"/>
+        <field name="arch" type="xml">
+            <field name="priority" position="after">
+                <field name="code"/>
+            </field>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_case_inherit_form1">
+        <field name="name">crm.case.inherit.form1</field>
+        <field name="model">crm.case</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="crm.crm_case-view"/>
+        <field name="arch" type="xml">
+            <field name="date" position="replace">
+           		<field name="date" on_change="on_change_duration(date, duration)" required="1"/>
+                <field name="duration" string="Duration(In Hour)" on_change="on_change_duration(date, duration)" widget="float_time"/>
+            </field>
+        </field>
+    </record>
+    
 </data>
 </openerp>

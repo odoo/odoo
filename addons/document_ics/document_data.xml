@@ -6,6 +6,20 @@
         <field name="code">.ics</field>
         <field name="name">ICS Calendar</field>
     </record>
-
 </data>
+
+	
+  <data noupdate="1">      
+      <record id="seq_type_crm_case_code" model="ir.sequence.type">
+          <field name="name">CRM Case Code</field>
+          <field name="code">crm.case</field>
+      </record>
+      <record id="seq_sale_order" model="ir.sequence">
+          <field name="name">CRM Case</field>
+          <field name="code">crm.case</field>
+          <field name="prefix">CASE</field>
+          <field name="padding">3</field>
+      </record>
+  </data>
+    
 </openerp>

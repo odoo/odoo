@@ -26,6 +26,11 @@
         <field name="field_id" ref="crm.field_crm_case_date"/>
         <field name="content_id" ref="dir_content_calendar"/>
     </record>
+    <record model="document.directory.ics.fields" id="dir_field6">
+        <field name="name">dtend</field>
+        <field name="field_id" ref="crm.field_crm_case_date_deadline"/>
+        <field name="content_id" ref="dir_content_calendar"/>
+    </record>
     <record model="document.directory.ics.fields" id="dir_field2">
         <field name="name">summary</field>
         <field name="field_id" ref="crm.field_crm_case_name"/>
@@ -38,7 +43,7 @@
     </record>
     <record model="document.directory.ics.fields" id="dir_field4">
         <field name="name">description</field>
-        <field name="field_id" ref="crm_configuration.field_crm_case_note"/>
+        <field name="field_id" ref="crm.field_crm_case_description"/>
         <field name="content_id" ref="dir_content_calendar"/>
     </record>
     <record model="document.directory.ics.fields" id="dir_field5">
