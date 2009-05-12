@@ -118,13 +118,6 @@ def _partner_title_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
     return [(r['shortcut'], r['name']) for r in res]
 
-def _lang_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [], context=context)
-    res = obj.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res] + [('','')]
-
-
 class res_partner(osv.osv):
     _description='Partner'
     _name = "res.partner"
@@ -136,7 +129,7 @@ class res_partner(osv.osv):
         'parent_id': fields.many2one('res.partner','Main Company', select=2),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Code', size=64),
-        'lang': fields.selection(_lang_get, 'Language', size=5, help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+        'lang': fields.many2one('res.lang', 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
         'user_id': fields.many2one('res.users', 'Dedicated Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
