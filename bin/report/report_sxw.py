@@ -199,11 +199,7 @@ class rml_parse(object):
     def set_html_image(self,attach_id):
         try :
             att_id = int(attach_id)
-            print att_id
             attachment = self.pool.get('ir.attachment').browse(self.cr,self.uid,att_id)
-            print attachment
-            print attachment.datas
-            return attachment.datas
         except :
             return ''
 
@@ -498,17 +494,17 @@ class report_sxw(report_rml, preprocess.report):
         final_op = sxw_io.getvalue()
         sxw_io.close()
         return (final_op, report_type)
-        
+
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
         context = context.copy()
         report_type = 'html'
-        context['parents'] = html_parents  
+        context['parents'] = html_parents
 
         rml = report_xml.report_rml_content
 
         rml_parser = self.parser(cr, uid, self.name2, context)
         rml_parser.parents = html_parents
-        rml_parser.tag = sxw_tag 
+        rml_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_type)
 
@@ -518,6 +514,6 @@ class report_sxw(report_rml, preprocess.report):
         html = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
 
         return (html, report_type)
-        
+
 
 
