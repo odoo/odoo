@@ -254,12 +254,13 @@ class expression(object):
                 query = '(%s OR %s IS NULL)' % (query, left)
         else:
             params = []
-            if right == False and table._columns[leaf[0]]._type=="boolean"  and (operator == '='):
-                query = '%s.%s IS NULL or %s.%s = false ' % (table._table, left,table._table, left)
+            
+            if right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator == '='):
+                query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
                 query = '%s.%s IS NULL ' % (table._table, left)
-            elif right == False and table._columns[leaf[0]]._type=="boolean"  and (operator in ['<>', '!=']):
-                query = '%s.%s IS NOT NULL and %s.%s != false' % (table._table, left,table._table, left)
+            elif right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator in ['<>', '!=']):
+                query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
                 query = '%s.%s IS NOT NULL' % (table._table, left)
             else:
