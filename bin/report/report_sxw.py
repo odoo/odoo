@@ -495,16 +495,16 @@ class report_sxw(report_rml, preprocess.report):
         final_op = sxw_io.getvalue()
         sxw_io.close()
         return (final_op, report_type)
-        
+
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
         context = context.copy()
         report_type = 'html'
         context['parents'] = html_parents
-        
+
         html = report_xml.report_rml_content
         html_parser = self.parser(cr, uid, self.name2, context)
         html_parser.parents = html_parents
-        html_parser.tag = sxw_tag 
+        html_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)
         html_parser.set_context(objs, data, ids, report_type)
 
@@ -515,6 +515,5 @@ class report_sxw(report_rml, preprocess.report):
         html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
         return (html.replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
-        
 
 

@@ -40,6 +40,7 @@
 import re
 import reportlab
 from lxml import etree
+import copy
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -47,6 +48,7 @@ def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
             oldctx = self.localcontext
+
             for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
                 self.localcontext.update(ctx)
                 if (tagname is None) or (n.tag==tagname):
@@ -58,7 +60,7 @@ def _child_get(node, self=None, tagname=None):
                     if n.get('rml_tag'):
                         try:
                             (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
-                            n2 = copy.copy(n)
+                            n2 = copy.deepcopy(n)
                             n2.tag = tag
                             n2.attrib.update(attr)
                             yield n2
@@ -73,6 +75,16 @@ def _child_get(node, self=None, tagname=None):
                 eval(n.get('rml_except'), {}, self.localcontext)
             except:
                 continue
+        if self and self.localcontext and n.get('rml_tag', False):
+            try:
+                (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
+                n2 = copy.deepcopy(n)
+                n2.tag = tag
+                n2.attrib.update(attr)
+                yield n2
+                tagname = ''
+            except:
+                pass
         if (tagname is None) or (n.tag==tagname):
             yield n
 
