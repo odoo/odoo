@@ -130,8 +130,7 @@
 <font color="white"> </font>
 </para>
 <para style="P17">
-<font face="Times-Roman">Document</font>
-<font face="Times-Roman">:</font>
+<font face="Times-Roman">Document:</font>
 <font face="Times-Roman">[[o.name]]</font>
 </para>
 <para style="P17">
@@ -143,7 +142,7 @@
 <para style="Standard">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="198.0,62.0,67.0,67.0,53.0,80.0" style="Tableau6">
+<blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau6">
 <tr>
 <td>
 <para style="P3">Description</para>
@@ -166,64 +165,80 @@
 </tr>
 </blockTable>
 <section>
-<para style="P20">[[ repeat_In(invoice_lines(o), 'a') ]]</para>
-<blockTable colWidths="0.0,198.0" style="Tableau7">
-<tr>
-<td>
-<para style="P8">[[ a['type']=='text' and removeParentNode('tr')]]</para>
-</td>
-<td>
-<para style="Table Contents"><font>[[ a['type']=='title'  and ( setTag('font','font',{'size':'11.5'})) ]][[ (a['type']=='title' or a['type']=='subtotal')  and ( setTag('font','font',{'name':'Times-bold'})) ]][[ a['type']=='text' and removeParentNode('font') or a['name'] ]]</font></para>
-</td>
-</tr>
-</blockTable>
-<blockTable colWidths="447.0,80.0" style="Tableau8">
-<tr>
-<td>
-<para style="Table Contents">[[ a['type']=='text' and a['name'] or removeParentNode('table') ]]</para>
-</td>
-<td>
-<para style="P8">[[ a['type']=='text' and '' or removeParentNode('table') ]]</para>
-</td>
-</tr>
-</blockTable>
-<blockTable colWidths="28.0,499.0" style="Tableau8">
-<tr>
-<td>
-<para style="P21">[[ a['note']=='' and removeParentNode('table') ]][[ repeatIn(( a['note'] and a['note'].splitlines()) or [], 'note') ]]</para>
-</td>
-<td>
-<para style="P9">[[ note or removeParentNode('table') ]]</para>
-</td>
-</tr>
-</blockTable>
-<pageBreak>[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
-<blockTable colWidths="198.0,62.0,67.0,67.0,53.0,80.0" style="Tableau6">
-<tr>
-<td>
-<para style="P3">Description [[ a['type']!='break' and removeParentNode('tr')]]</para>
-</td>
-<td>
-<para style="P4">Taxes</para>
-</td>
-<td>
-<para style="P4">Quantity</para>
-</td>
-<td>
-<para style="P4">Unit Price</para>
-</td>
-<td>
-<para style="P4">Disc. (%)</para>
-</td>
-<td>
-<para style="P4">Price</para>
-</td>
-</tr>
-</blockTable>
+	<para style="P20">[[ repeatIn(invoice_lines(o), 'a') ]]</para>
+	<blockTable colWidths="0.0,216.0,62,38,29,67,53,53" style="Tableau7">
+		<tr>
+			<td>
+			<para style="P8">[[ a['type']=='text' and removeParentNode('blockTable')]]</para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ (a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['name'] ]]</para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['tax_types'] ]]</para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['quantity'] ]][[ a['uos'] ]]</para>
+			</td>
+			<td>
+			<para><font color="white"></font></para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['price_unit'] ]]</para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['discount'] ]]</para>
+			</td>
+			<td>
+			<para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]][[ a['price_subtotal'] ]][[ a['currency'] ]]</para>
+			</td>
+		</tr>
+	</blockTable>
+	<blockTable colWidths="453.0,74.0" style="Tableau8">
+		<tr>
+			<td>
+				<para style="Table Contents">[[ a['type']=='text' and a['name'] or removeParentNode('blockTable') ]]</para>
+			</td>
+			<td>
+				<para style="P8">[[ a['type']=='text' and '' or removeParentNode('blockTable') ]]</para>
+			</td>
+		</tr>
+	</blockTable>
+	<blockTable colWidths="28.0,499.0" style="Tableau8">
+		<tr>
+			<td>
+				<para style="P21"><font>[[ a['note']=='' and removeParentNode('blockTable') ]]</font><font>[[ repeatIn(( a['note'] and a['note'].splitlines()) or [], 'note') ]]</font></para>
+			</td>
+			<td>
+				<para style="P9">[[ note or removeParentNode('blockTable') ]]</para>
+			</td>
+		</tr>
+	</blockTable>
+	<pageBreak>[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
+	<blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau6">
+		<tr>
+			<td>
+				<para style="P3">Description [[ a['type']!='break' and removeParentNode('blockTable')]]</para>
+			</td>
+			<td>
+				<para style="P4">Taxes</para>
+			</td>
+			<td>
+				<para style="P4">Quantity</para>
+			</td>
+			<td>
+				<para style="P4">Unit Price</para>
+			</td>
+			<td>
+				<para style="P4">Disc. (%)</para>
+			</td>
+			<td>
+				<para style="P4">Price</para>
+			</td>
+		</tr>
+	</blockTable>
 </section>
-<para style="Standard">
-<font color="white"> </font>
-</para>
+
 <blockTable colWidths="215.0,313.0" style="Tableau3">
 <tr>
 <td>
@@ -281,16 +296,11 @@
 </td>
 </tr>
 </blockTable>
-<para style="Table Contents">
-<font color="white"> </font>
-</para>
+
 </td>
 </tr>
 </blockTable>
 <para style="P19">[[ format(o.comment) or '' ]]</para>
-<para style="P19">
-<font color="white"> </font>
-</para>
 <para style="P19">[[ format(o.payment_term and o.payment_term.note) or '' ]]</para>
 </story>
 </document>

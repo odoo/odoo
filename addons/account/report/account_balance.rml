@@ -57,9 +57,12 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
       <blockValign value="TOP"/>
-      <blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
+      <blockAlignment value="RIGHT"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,2" stop="-1,-1"/>
+
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
@@ -85,17 +88,18 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P10" fontName="Helvetica" fontSize="8.0" leading="14" spaceBefore="0.0" spaceAfter="6.0" alignment="RIGHT"/>
    <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="14.5" leftIndent="-5.0"/>
     <paraStyle name="P9a" fontName="Helvetica-Bold" fontSize="9" leftIndent="0.0" alignment="LEFT"/>
     <paraStyle name="P9b" fontName="Helvetica" fontSize="9" leftIndent="0.0" alignment="LEFT"/>
     <paraStyle name="P9b" fontName="Helvetica" fontSize="8" leftIndent="-5.0" alignment="LEFT"/>
-    <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P12a" fontName="Helvetica" fontSize="8.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12b" fontName="Helvetica" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
 
 
     <blockTableStyle id="TrLevel">
@@ -122,7 +126,6 @@
 		fontSize="8.0" />
     <paraStyle
 		name="Level2"
-	
 		fontName="Helvetica-Bold"
 		fontSize="8.0" />
     <paraStyle name="Level1"
@@ -158,7 +161,7 @@
           <para style="P12a">Code</para>
         </td>
         <td>
-          <para style="P12">Account</para>
+          <para style="P12b">Account</para>
         </td>
         <td>
           <para style="P10">Debit</para>
@@ -173,11 +176,11 @@
       <tr>
 		<td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
         <td>
-
 	       <para style="P14">
+	       	<font color="white">[[ ...*(a['level']) ]]</font> [[ a['name'] ]]
 	       	<font>[[ (a['level']&lt;3 and setTag('tr','tr',{'style':'TrLevel'+str(a['level']), 'paraStyle':('Level'+str(a['level']))})) or removeParentNode('font') ]]</font>
 	       	<font>[[ (a['level']&gt;2 and setTag('tr','tr',{'style':'TrLevel', 'paraStyle':('Level')})) or removeParentNode('font') ]] </font>
-          	<font color="white">[[ '...'*(a['level']) ]]</font> [[ a['name'] ]]</para>
+          	</para>
         </td>
         <td>
 		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font>
