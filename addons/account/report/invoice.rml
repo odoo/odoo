@@ -495,7 +495,7 @@
                 <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount) ]][[  t.tax_code_id.notprintable and removeParentNode('blockTable') or '' ]]</para>
+                <para style="terp_default_Right_8">[[  t.tax_code_id.notprintable and removeParentNode('blockTable') or '' ]][[ formatLang(t.amount) ]]</para>
               </td>
             </tr>
           </blockTable>
