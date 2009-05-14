@@ -96,20 +96,15 @@
   <story>
     <para style="P26">[[ repeatIn(objects,'voucher') ]]</para>
     <para style="P4">[[ company.name ]]</para>
-    <para style="P6">[[ company.partner_id.address and company.partner_id.address[0].street ]]</para>
+    <para style="P6">[[ company.partner_id.address and company.partner_id.address[0].street ]], [[ company.partner_id.address and company.partner_id.address[0].street2 ]]</para>
     <para style="P6">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</para>
     <para style="P6">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</para>
     <para style="P6">[[ company.partner_id.address and company.partner_id.address[0].email ]]</para>
-    <para style="P5">
-      <font color="white"> </font>
-    </para>
     <para style="P24">Cash Receipt Voucher [[ (voucher.type == 'rec_voucher' or removeParentNode('para')) and '' ]]</para>
     <para style="P2">Cash Payment Voucher [[ (voucher.type == 'pay_voucher' or removeParentNode('para')) and '' ]]</para>
     <para style="P24">Bank Receipt Voucher [[ (voucher.type == 'bank_rec_voucher' or removeParentNode('para')) and '' ]]</para>
     <para style="P2">Bank Payment Voucher [[ (voucher.type == 'bank_pay_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P23">
-      <font color="white"> </font>
-    </para>
+    
     <blockTable colWidths="49.0,143.0,116.0,69.0,106.0" style="Table1">
       <tr>
         <td>
@@ -182,7 +177,8 @@
               <td>
                 <para style="P11">[[ (move_ids.partner_id and move_ids.partner_id.name) or 'Account']] :</para>
                 <para style="P28">[[ move_ids.account_id.name ]] </para>
-                <para style="P31">[[ get_ref(voucher.id,move_ids) ]]</para>
+                <para style="P28"><i>[[ move_ids.name ]] - [[ get_ref(voucher.id,move_ids) ]]</i></para>
+                <!--para style="P31">[[ get_ref(voucher.id,move_ids) ]]</para-->
               </td>
               <td>
                 <para style="P21">[[ move_ids.debit ]]</para>
@@ -357,7 +353,7 @@
       </tr>
       <tr>
         <td>
-          <para style="P23">Receiver's Signature</para>
+          <para style="P23"><i>Receiver's Signature</i></para>
         </td>
         <td>
           <para style="P23">
@@ -370,7 +366,7 @@
           </para>
         </td>
         <td>
-          <para style="P23">Authorised Signatory</para>
+          <para style="P23"><i>Authorised Signatory</i></para>
         </td>
       </tr>
     </blockTable>
