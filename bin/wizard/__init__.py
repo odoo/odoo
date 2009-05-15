@@ -132,7 +132,7 @@ class interface(netsvc.Service):
 
                     # translate arch
                     if not isinstance(arch, UpdateableStr):
-                        doc = dom.minidom.parseString(arch)
+                        doc = dom.minidom.parseString(arch.encode('utf8'))
                         self.translate_view(cr, doc, state, lang)
                         arch = doc.toxml()
 

@@ -36,6 +36,7 @@ import pooler
 import netsvc
 
 from tools.parse_version import parse_version
+from tools.translate import _
 
 
 class module_repository(osv.osv):
@@ -243,7 +244,7 @@ class module(osv.osv):
                     m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
             res = cr.fetchall()
             if res:
-                raise orm.except_orm(_('Error'), _('Some installed modules depends on the module you plan to desinstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
+                raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
         return True
 
@@ -398,12 +399,12 @@ class module(osv.osv):
             if not download:
                 continue
             zipfile = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(mod.name+'.zip')
+            fname = addons.get_module_path(str(mod.name)+'.zip', downloaded=True)
             try:
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
                 fp.close()
-            except IOError, e:
+            except Exception, e:
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, {

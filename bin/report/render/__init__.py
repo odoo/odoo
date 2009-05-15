@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -21,8 +21,7 @@
 ##############################################################################
 
 from simple import simple
-from rml import rml, rml2html
-
+from rml import rml, rml2html, odt2odt , html2html
 from render import render
 
 try:

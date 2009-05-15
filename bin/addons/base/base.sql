@@ -11,7 +11,7 @@ create table ir_values
     id serial,
     name varchar(128) not null,
     key varchar(128) not null,
-    key2 varchar(128) not null,
+    key2 varchar(256) not null,
     model varchar(128) not null,
     value text,
     meta text default NULL,
@@ -55,7 +55,7 @@ CREATE TABLE ir_model_fields (
 CREATE TABLE ir_actions (
     id serial NOT NULL,
     name varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(64) DEFAULT 'window'::varchar NOT NULL,
+    "type" varchar(32) DEFAULT 'window'::varchar NOT NULL,
     usage varchar(32) DEFAULT null,
     primary key(id)
 );
@@ -64,7 +64,7 @@ CREATE TABLE ir_act_window (
     view_id integer,
     res_model varchar(64),
     view_type varchar(16),
-    "domain" varchar(127),
+    "domain" varchar(250),
     primary key(id)
 )
 INHERITS (ir_actions);
@@ -72,8 +72,8 @@ INHERITS (ir_actions);
 CREATE TABLE ir_act_report_xml (
     model varchar(64) NOT NULL,
     report_name varchar(64) NOT NULL,
-    report_xsl varchar(64),
-    report_xml varchar(64),
+    report_xsl varchar(256),
+    report_xml varchar(256),
     auto boolean default true,
     primary key(id)
 )
@@ -140,10 +140,11 @@ CREATE TABLE res_users (
     name varchar(64) not null,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
-    password varchar(32) default null,
+    password varchar(64) default null,
     context_tz varchar(64) default null,
     signature text,
 --  action_id int references ir_act_window on delete set null,
+    context_lang varchar(64) default '',
     action_id int,
     primary key(id)
 );
@@ -151,14 +152,14 @@ alter table res_users add constraint res_users_login_uniq unique (login);
 
 CREATE TABLE res_groups (
     id serial NOT NULL,
-    name varchar(32) NOT NULL,
+    name varchar(64) NOT NULL,
     primary key(id)
 );
 
 create table res_roles (
     id serial NOT NULL,
     parent_id int references res_roles on delete set null,
-    name varchar(32) NOT NULL,
+    name varchar(64) NOT NULL,
     primary key(id)
 );
 
@@ -166,11 +167,17 @@ CREATE TABLE res_roles_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
     rid integer NOT NULL references res_roles on delete cascade
 );
+create index res_roles_users_rel_uid_idx on res_roles_users_rel (uid);
+create index res_roles_users_rel_rid_idx on res_roles_users_rel (rid);
 
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
     gid integer NOT NULL references res_groups on delete cascade
 );
+
+create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
+create index res_groups_users_rel_gid_idx on res_groups_users_rel (gid);
+
 
 ---------------------------------
 -- Workflows
@@ -243,6 +250,8 @@ create table wkf_witm_trans
     trans_id int not null references wkf_transition on delete cascade,
     inst_id int not null references wkf_instance on delete cascade
 );
+
+create index wkf_witm_trans_inst_idx on wkf_witm_trans (inst_id);
 
 create table wkf_logs
 (

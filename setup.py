@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -89,7 +89,7 @@ def data_files():
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: opj(dp, x), names)))
         files.append(('.', [opj('bin', 'import_xml.rng'),
-                            opj('bin', 'server.pkey'), 
+                            opj('bin', 'server.pkey'),
                             opj('bin', 'server.cert')]))
     else:
         man_directory = opj('share', 'man')
@@ -141,10 +141,10 @@ class openerp_server_install(install):
 options = {
     "py2exe": {
         "compressed": 1,
-        "optimize": 2, 
-        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree", 
-                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath", 
-                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", 
+        "optimize": 2,
+        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
+                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing",
                      "pydot","asyncore","asynchat", "reportlab", "vobject",
                      "HTMLParser", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
@@ -161,15 +161,15 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
-      cmdclass         = { 
+      cmdclass         = {
             'install' : openerp_server_install,
       },
       scripts          = ['openerp-server'],
-      packages         = ['openerp-server', 
+      packages         = ['openerp-server',
                           'openerp-server.addons',
                           'openerp-server.ir',
                           'openerp-server.osv',
-                          'openerp-server.service', 
+                          'openerp-server.service',
                           'openerp-server.tools',
                           'openerp-server.report',
                           'openerp-server.report.printscreen',
@@ -177,7 +177,9 @@ setup(name             = name,
                           'openerp-server.report.render',
                           'openerp-server.report.render.rml2pdf',
                           'openerp-server.report.render.rml2html',
-                          'openerp-server.wizard', 
+                          'openerp-server.wizard',
+                          'openerp-server.report.render.odt2odt',
+                          'openerp-server.report.render.html2html',
                           'openerp-server.workflow'] + \
                          list(find_addons()),
       package_dir      = {'openerp-server': 'bin'},

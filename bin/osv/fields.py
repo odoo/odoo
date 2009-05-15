@@ -308,11 +308,9 @@ class many2one(_column):
             names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
         except except_orm:
             names = {}
-
             iids = filter(None, res.values())
-            cr.execute('select id,'+obj._rec_name+' from '+obj._table+' where id in ('+','.join(map(str, iids))+')')
-            for res22 in cr.fetchall():
-                names[res22[0]] = res22[1]
+            for iiid in iids:
+                names[iiid] = '// Access Denied //'
 
         for r in res.keys():
             if res[r] and res[r] in names:
@@ -365,12 +363,15 @@ class one2many(_column):
     def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+            context.update(self._context)
         if not values:
             values = {}
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj).read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
@@ -379,6 +380,9 @@ class one2many(_column):
     def set_memory(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             return
         obj = obj.pool.get(self._obj)
@@ -408,12 +412,15 @@ class one2many(_column):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             values = {}
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append(r['id'])
         return res
@@ -421,6 +428,9 @@ class one2many(_column):
     def set(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
             context = {}
+        if self._context:
+            context = context.copy()
+        context.update(self._context)
         if not values:
             return
         _table = obj.pool.get(self._obj)._table
@@ -440,13 +450,11 @@ class one2many(_column):
             elif act[0] == 5:
                 cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
-                if not act[2]:
-                    ids2 = [0]
-                else:
-                    ids2 = act[2]
-                cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
-                if act[2]:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=%s where id in ('+','.join(map(str, act[2]))+')', (id,))
+                obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
+                ids2 = act[2] or [0]
+                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
+                ids3 = map(lambda x:x[0], cr.fetchall())
+                obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
@@ -626,14 +634,16 @@ class function(_column):
 
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
-            res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
+            res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
         return res
+    get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:
             context = {}
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+    set_memory = set
 
 # ---------------------------------------------------------
 # Related fields

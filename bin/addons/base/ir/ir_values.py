@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import osv,fields
+from osv.orm import except_orm
 import pickle
 from tools.translate import _
 
@@ -46,7 +47,7 @@ class ir_values(osv.osv):
         if self.CONCURRENCY_CHECK_FIELD in ctx:
             del ctx[self.CONCURRENCY_CHECK_FIELD]
         if not self.browse(cursor, user, id, context=context).object:
-            value = pickle.dumps(eval(value))
+            value = pickle.dumps(value)
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
 
     def onchange_object_id(self, cr, uid, ids, object_id, context={}):
@@ -225,7 +226,10 @@ class ir_values(osv.osv):
                         del fields[pos]
                     else:
                         pos+=1
-                datas = self.pool.get(model).read(cr, uid, [id], fields, context)
+                try:
+                    datas = self.pool.get(model).read(cr, uid, [id], fields, context)
+                except except_orm:
+                    return False
                 datas= datas and datas[0] or None
                 if not datas:
                     #ir_del(cr, uid, x[0])

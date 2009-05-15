@@ -24,6 +24,7 @@ from osv import fields,osv
 import tools
 import time
 from tools.config import config
+from tools.translate import _
 import netsvc
 import re
 
@@ -119,6 +120,7 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ('odt', 'odt'),
+            ('html2html','Html from html'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -140,26 +142,16 @@ class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
     _sequence = 'ir_actions_id_seq'
-
-#    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
-#            context=None, count=False):
-#        if context is None:
-#            context = {}
-#        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
-#                context=context)
-#        if uid==1:
-#            return ids
-#        user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
-#        result = []
-#        for act in self.browse(cr, uid, ids):
-#            if not len(act.groups_id):
-#                result.append(act.id)
-#                continue
-#            for g in act.groups_id:
-#                if g.id in user_groups:
-#                    result.append(act.id)
-#                    break
-#        return result
+    def _check_model(self, cr, uid, ids, context={}):
+        for action in self.browse(cr, uid, ids, context):
+            if not self.pool.get(action.res_model):
+                return False
+            if action.src_model and not self.pool.get(action.src_model):
+                return False
+        return True
+    _constraints = [
+        (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
+    ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
@@ -527,14 +519,15 @@ class actions_server(osv.osv):
                 result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
                 return result
 
-            if action.state=='python':
+            if action.state=='code':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
                     'context': context,
                     'time': time,
                     'ids': ids,
                     'cr': cr,
-                    'uid': uid
+                    'uid': uid,
+                    'obj':obj
                 }
                 exec action.code in localdict
                 if 'action' in localdict:

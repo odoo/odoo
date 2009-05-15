@@ -78,6 +78,7 @@ class db(netsvc.Service):
             sql_db.close_db('template1')
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
+                cr = None
                 try:
                     serv.actions[id]['progress'] = 0
                     clean = False
@@ -170,7 +171,7 @@ class db(netsvc.Service):
         security.check_super(password)
         logger = netsvc.Logger()
 
-        cmd = ['pg_dump', '--format=c']
+        cmd = ['pg_dump', '--format=c', '--no-owner']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:
@@ -209,7 +210,7 @@ class db(netsvc.Service):
             cr.close()
             sql_db.close_db('template1')
 
-        cmd = ['pg_restore']
+        cmd = ['pg_restore', '--no-owner']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:

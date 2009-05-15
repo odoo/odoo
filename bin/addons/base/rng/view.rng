@@ -37,6 +37,8 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional><rng:attribute name="limit"/></rng:optional>
+            <rng:optional><rng:attribute name="min_rows"/></rng:optional>
             <rng:optional><rng:attribute name="on_write"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
@@ -191,19 +193,33 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-                    <rng:ref name="notebook" />
-                    <rng:ref name="graph" />
-                    <rng:ref name="calendar" />
-                    <rng:ref name="gantt" />
-                    <rng:ref name="form"/>
-                    <rng:ref name="tree"/>
-                    <rng:ref name="field"/>
-                    <rng:ref name="separator"/>
-                    <rng:ref name="page"/>
+                    <rng:ref name="any"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
+
+    <rng:define name="data">
+        <rng:element name="data">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="form"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="label"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="notebook"/>
+                    <rng:ref name="page"/>
+                    <rng:ref name="xpath"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="graph"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
 
     <rng:define name="field">
         <rng:element name="field">
@@ -371,6 +387,7 @@
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
             <rng:ref name="calendar" />
+            <rng:ref name="data" />
             <rng:ref name="gantt" />
             <rng:ref name="xpath" />
             <rng:ref name="page" />

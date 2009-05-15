@@ -23,7 +23,6 @@
 import os, sys, imp
 from os.path import join as opj
 import itertools
-from sets import Set
 import zipimport
 
 import osv
@@ -69,10 +68,30 @@ class Graph(dict):
             father.addChild(name)
         else:
             Node(name, self)
+    
+    def update_from_db(self, cr):
+        # update the graph with values from the database (if exist)
+        ## First, we set the default values for each package in graph
+        additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
+        ## Then we get the values from the database
+        cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
+                   '  FROM ir_module_module'
+                   ' WHERE name in (%s)' % (','.join(['%s'] * len(self))),
+                    additional_data.keys()
+                   )
+
+        ## and we update the default values with values from the database
+        additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
+
+        for package in self.values():
+            for k, v in additional_data[package.name].items():
+                setattr(package, k, v)
+
+
 
     def __iter__(self):
         level = 0
-        done = Set(self.keys())
+        done = set(self.keys())
         while done:
             level_modules = [(name, module) for name, module in self.items() if module.depth==level]
             for name, module in level_modules:
@@ -80,9 +99,7 @@ class Graph(dict):
                 yield module
             level += 1
 
-
 class Singleton(object):
-
     def __new__(cls, name, graph):
         if name in graph:
             inst = graph[name]
@@ -97,57 +114,53 @@ class Node(Singleton):
 
     def __init__(self, name, graph):
         self.graph = graph
-        if not hasattr(self, 'childs'):
-            self.childs = []
+        if not hasattr(self, 'children'):
+            self.children = []
         if not hasattr(self, 'depth'):
             self.depth = 0
 
     def addChild(self, name):
         node = Node(name, self.graph)
         node.depth = self.depth + 1
-        if node not in self.childs:
-            self.childs.append(node)
+        if node not in self.children:
+            self.children.append(node)
         for attr in ('init', 'update', 'demo'):
             if hasattr(self, attr):
                 setattr(node, attr, True)
-        self.childs.sort(lambda x, y: cmp(x.name, y.name))
-
-    def hasChild(self, name):
-        return Node(name, self.graph) in self.childs or \
-                bool([c for c in self.childs if c.hasChild(name)])
+        self.children.sort(lambda x, y: cmp(x.name, y.name))
 
     def __setattr__(self, name, value):
         super(Singleton, self).__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
             tools.config[name][self.name] = 1
-            for child in self.childs:
+            for child in self.children:
                 setattr(child, name, value)
         if name == 'depth':
-            for child in self.childs:
+            for child in self.children:
                 setattr(child, name, value + 1)
 
     def __iter__(self):
-        return itertools.chain(iter(self.childs), *map(iter, self.childs))
-
+        return itertools.chain(iter(self.children), *map(iter, self.children))
+    
     def __str__(self):
         return self._pprint()
 
     def _pprint(self, depth=0):
         s = '%s\n' % self.name
-        for c in self.childs:
+        for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
 
 
-def get_module_path(module):
+def get_module_path(module, downloaded=False):
     """Return the path of the given module."""
-
     if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
         return opj(ad, module)
 
     if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
         return opj(_ad, module)
-
+    if downloaded:
+        return opj(_ad, module)
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
 
@@ -309,9 +322,10 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
+                
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
-    current, later = Set([p for p, dep, data in packages]), Set()
+    current, later = set([p for p, dep, data in packages]), set()
     while packages and current > later:
         package, deps, data = packages[0]
 
@@ -332,6 +346,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
             later.add(package)
             packages.append((package, deps, data))
         packages.pop(0)
+
+    graph.update_from_db(cr)
 
     for package in later:
         unmet_deps = filter(lambda p: p not in graph, dependencies[package])
@@ -551,39 +567,25 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
 
-
-    # update the graph with values from the database (if exist)
-    ## First, we set the default values for each package in graph
-    additional_data = dict.fromkeys([p.name for p in graph], {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
-    ## Then we get the values from the database
-    cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
-               '  FROM ir_module_module'
-               ' WHERE name in (%s)' % (','.join(['%s'] * len(graph))),
-                additional_data.keys()
-               )
-
-    ## and we update the default values with values from the database
-    additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
-
-    for package in graph:
-        for k, v in additional_data[package.name].items():
-            setattr(package, k, v)
-
     migrations = MigrationManager(cr, graph)
 
     has_updates = False
     modobj = None
 
     for package in graph:
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
+        migrations.migrate_module(package, 'pre')
+        register_class(package.name)
+        modules = pool.instanciate(package.name, cr)
+        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            init_module_objects(cr, package.name, modules)
+        cr.commit()
+
+    for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
 
-        migrations.migrate_module(package, 'pre')
-
-        register_class(m)
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % m)
-        modules = pool.instanciate(m, cr)
 
         if modobj is None:
             modobj = pool.get('ir.module.module')
@@ -597,15 +599,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
-            
+
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             has_updates = True
-            init_module_objects(cr, m, modules)
             for kind in ('init', 'update'):
                 for filename in package.data.get('%s_xml' % kind, []):
-#                    mode = 'update'
-#                    if hasattr(package, 'init') or package.state == 'to install':
-#                        mode = 'init'
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
                     name, ext = os.path.splitext(filename)
                     fp = tools.file_open(opj(m, filename))
@@ -650,9 +648,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-
         statusi += 1
-
     
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
@@ -674,7 +670,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     pool = pooler.get_pool(cr.dbname)
     try:
         report = tools.assertion_report()
-        STATES_TO_LOAD = ['installed', 'to upgrade']
+        # NOTE: Try to also load the modules that have been marked as uninstallable previously...
+        STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
         has_updates = False
         if update_module:
@@ -682,7 +679,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
-            modobj.update_list(cr, 1)
+            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
+                modobj.update_list(cr, 1)
 
             mods = [k for k in tools.config['init'] if tools.config['init'][k]]
             if mods:
@@ -748,7 +746,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
-            # TODO: remove menu without actions of childs
+            # TODO: remove menu without actions of children
             #
             while True:
                 cr.execute('''delete from
@@ -772,4 +770,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

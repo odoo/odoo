@@ -200,7 +200,7 @@ class ir_ui_menu(osv.osv):
         if values_ids:
             values_obj.write(cursor, user, values_ids[0], {'value': value},
                     context=ctx)
-        else:
+        elif ctx:
             values_obj.create(cursor, user, {
                 'name': 'Menuitem',
                 'model': self._name,

@@ -26,8 +26,8 @@ class RemoteContractException(Exception): pass
 
 class remote_contract(object):
     def __init__(self, contract_id, contract_password, modules=None):
-        self.__server = 'http://terp.tinyerp.com:8069/xmlrpc/'
-        self.__db = "tiny"
+        self.__server = 'http://tiny.my.odoo.com:8069/xmlrpc/'
+        self.__db = "tiny_belgium"
         self.__password = "maintenance"
         self.__login = "maintenance"
         
@@ -35,6 +35,9 @@ class remote_contract(object):
         try:
             self.__userid = rpc.login(self.__db, self.__login, self.__password)
         except:
+            raise RemoteContractException("Unable to contact the migration server")
+
+        if not self.__userid:
             raise RemoteContractException("Unable to contact the migration server")
 
         self.__rpc = xmlrpclib.ServerProxy(self.__server + 'object')

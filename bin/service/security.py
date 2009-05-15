@@ -40,11 +40,10 @@ def check_super(passwd):
         return True
     else:
         raise Exception('AccessDenied')
-    
+
 def check(db, uid, passwd):
     if _uid_cache.get(db, {}).get(uid) == passwd:
         return True
-        
     cr = pooler.get_db(db).cursor()
     cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
     res = cr.fetchone()[0]
