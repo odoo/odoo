@@ -158,18 +158,29 @@ class invoice_create(wizard.interface):
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
                 strids = ','.join(map(str, data['ids']))
                 cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
+                
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
-
-        return {
-            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
-            'name': _('Invoices'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window'
-        }
+        
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        
+        mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
+        res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
+        act_win = act_obj.read(cr, uid, res_id, [])
+        act_win['domain'] = [('id','in',[(','.join(map(str,invoices)))]),('type','=','out_invoice')]
+        act_win['name'] = _('Invoices')
+        return act_win
+        
+#        return {
+#            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
+#            'name': _('Invoices'),
+#            'view_type': 'form',
+#            'view_mode': 'tree,form',
+#            'res_model': 'account.invoice',
+#            'view_id': False,
+#            'context': "{'type':'out_invoice'}",
+#            'type': 'ir.actions.act_window'
+#        }
 
 
     _create_form = """<?xml version="1.0"?>

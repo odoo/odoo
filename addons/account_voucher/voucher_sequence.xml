@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 
-<data>
+<data noupdate="1">
 	<record model="res.request.link" id="req_link_voucher">
 		<field name="name">Voucher</field>
 		<field name="object">account.voucher</field>
@@ -32,12 +32,12 @@
 		<field name="code">cont_voucher</field>
 	</record>
 	<record model="ir.sequence.type" id="seq_type_jou_sale_voucher">
-		<field name="name">Sales Journal Voucher</field>
-		<field name="code">journal_sale_voucher</field>
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">journal_sale_vou</field>
 	</record>
 	<record model="ir.sequence.type" id="seq_type_jou_pur_voucher">
-		<field name="name">Purchase Journal Voucher</field>
-		<field name="code">journal_pur_voucher</field>
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">journal_pur_vou</field>
 	</record>
 	
 	<!--
@@ -75,18 +75,36 @@
 		<field name="prefix">%(year)s/</field>
 	</record>
 	<record model="ir.sequence" id="seq_jou_sale_voucher">
-		<field name="name">Sales Journal Voucher</field>
-		<field name="code">journal_sale_voucher</field>
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">journal_sale_vou</field>
 		<field name="padding" eval="3"/>
 		<field name="prefix">%(year)s/</field>
 	</record>
 	<record model="ir.sequence" id="seq_jou_pur_voucher">
-		<field name="name">Purchase Journal Voucher</field>
-		<field name="code">journal_pur_voucher</field>
+		<field name="name">Account Journal Voucher</field>
+		<field name="code">journal_pur_vou</field>
 		<field name="padding" eval="3"/>
 		<field name="prefix">%(year)s/</field>
 	</record>
 
+	<!--
+	Sequences types for analytic account 
+
+	<record model="ir.sequence.type" id="seq_type_analytic_account">
+		<field name="name">Analytic account</field>
+		<field name="code">account.analytic.account</field>
+	</record>
+
+	
+	Sequence for analytic account 
+	
+	<record model="ir.sequence" id="seq_analytic_account">
+		<field name="name">Analytic account sequence</field>
+		<field name="code">account.analytic.account</field>
+		<field name="padding" eval="3" />
+		<field name="number_next" eval="2708" />
+	</record>
+		-->
 </data>
 </openerp>
 

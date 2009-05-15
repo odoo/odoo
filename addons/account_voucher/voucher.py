@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 import netsvc
 from osv import fields, osv
@@ -26,19 +27,15 @@ import ir
 import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime
-
 from tools import config
-from tools.translate import _
 
-type2journal = {
-    'rec_voucher':'cash', 
-    'bank_rec_voucher':'cash',
-    'pay_voucher': 'cash',
-    'bank_pay_voucher':'cash',
-    'cont_voucher':'cash',
-    'journal_sale_voucher':'sale',
-    'journal_pur_voucher':'purchase'
-}
+class ir_sequence_type(osv.osv):
+    _inherit = "ir.sequence.type"
+    _columns = {
+        'name': fields.char('Sequence Name',size=128, required=True),
+        'code': fields.char('Sequence Code',size=128, required=True),
+    }
+ir_sequence_type()
 
 class account_voucher(osv.osv):
     def _get_period(self, cr, uid, context):
@@ -56,10 +53,28 @@ class account_voucher(osv.osv):
         return [('none', 'Free Reference')]
     
     def _get_journal(self, cr, uid, context):
-        type_inv = context.get('type', 'rec_voucher')
+        type_inv = 'rec_voucher'
+        
+        if type(context) == type(''):
+            type_inv = context
+        elif type(context) == type({}):
+            type_inv = context.get('type', 'rec_voucher')
+
+        type2journal = {
+            'rec_voucher': 'cash', 
+            'bank_rec_voucher': 'cash',
+            'pay_voucher': 'cash',
+            'bank_pay_voucher': 'cash', 
+            'cont_voucher': 'cash',
+            'journal_sale_vou': 'sale',
+            'journal_pur_voucher': 'purchase',
+            'journal_voucher':'expanse'
+        }
+        
         journal_obj = self.pool.get('account.journal')
-        res = False
-        res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'cash'))], limit=1)
+        ttype = type2journal.get(type_inv, 'cash')
+        res = journal_obj.search(cr, uid, [('type', '=', ttype)], limit=1)
+        
         if res:
             return res[0]
         else:
@@ -83,15 +98,16 @@ class account_voucher(osv.osv):
             ('rec_voucher','Cash Receipt Voucher'),
             ('bank_rec_voucher','Bank Receipt Voucher'),
             ('cont_voucher','Contra Voucher'),
-            ('journal_sale_voucher','Journal Sale Voucher'),
+            ('journal_sale_vou','Journal Sale Voucher'),
             ('journal_pur_voucher','Journal Purchase Voucher'),
-            ],'Type', readonly=True, select=True),
+            ('journal_voucher','Journal Voucher'),
+            ],'Type', readonly=True, select=True , size=128),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
-        'narration':fields.text('Narration', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state':fields.selection(
@@ -100,14 +116,15 @@ class account_voucher(osv.osv):
                      ('posted','Posted'),
                      ('cancel','Cancel')
                     ], 'State', 
-                    readonly=True, size=32),
-        'amount':fields.float('Amount'),
+                    readonly=True),
+        'amount':fields.float('Amount', readonly=True),
         'number':fields.char('Number', size=32, readonly=True),
         'reference': fields.char('Voucher Reference', size=64),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry'),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]})
     }
     
     _defaults = {
@@ -123,7 +140,7 @@ class account_voucher(osv.osv):
         'currency_id': _get_currency,
     }
     
-    def _get_analytic_lines(self, cr, uid, id):
+    def _get_analityc_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
         
@@ -134,21 +151,20 @@ class account_voucher(osv.osv):
         balance=account.balance
         return {'value':{'amount':balance}}
 
-    
     def onchange_journal(self, cr, uid, ids, journal_id,type):
         if not journal_id:
             return {'value':{'account_id':False}}
         journal = self.pool.get('account.journal')
-        if journal_id and (type in ('rec_voucher','bank_rec_voucher','journal_pur_voucher')):
+        if journal_id and (type in ('rec_voucher','bank_rec_voucher','journal_pur_voucher','journal_voucher')):
             account_id = journal.browse(cr, uid, journal_id).default_debit_account_id
             return {'value':{'account_id':account_id.id}}
-        elif journal_id and (type in ('pay_voucher','bank_pay_voucher','journal_sale_voucher')) :
+        elif journal_id and (type in ('pay_voucher','bank_pay_voucher','journal_sale_vou')) :
                 account_id = journal.browse(cr, uid, journal_id).default_credit_account_id
                 return {'value':{'account_id':account_id.id}}
         else:
             account_id = journal.browse(cr, uid, journal_id).default_credit_account_id
             return {'value':{'account_id':account_id.id}}
-         
+        
     def open_voucher(self, cr, uid, ids, context={}):
         obj=self.pool.get('account.voucher').browse(cr,uid,ids)
         total=0
@@ -159,8 +175,8 @@ class account_voucher(osv.osv):
         return True
     
     def proforma_voucher(self, cr, uid, ids, context={}):
-        self.action_move_line_create(cr, uid, ids)
         self.action_number(cr, uid, ids)
+        self.action_move_line_create(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'posted'})
         return True
     
@@ -173,19 +189,17 @@ class account_voucher(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
-    
-    def unlink(self, cr, uid, ids, context=None):
+    def unlink(self, cr, uid, ids, context={}):
         vouchers = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for t in vouchers:
             if t['state'] in ('draft', 'cancel'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
-        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+                raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
+        osv.osv.unlink(self, cr, uid, unlink_ids)
         return True
-    
-
+         
     def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
@@ -217,7 +231,6 @@ class account_voucher(osv.osv):
         return iml
     
     def action_move_line_create(self, cr, uid, ids, *args):
-        
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
@@ -238,6 +251,7 @@ class account_voucher(osv.osv):
                 
             date = inv.date
             total_currency = 0
+            acc_id = None
             for i in iml:
                 partner_id=i['partner_id']
                 acc_id = i['account_id']    
@@ -282,14 +296,18 @@ class account_voucher(osv.osv):
             if journal.sequence_id:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
-            move = {'name': name, 'journal_id': journal_id}
-            
+            move = {
+                'name': name, 
+                'journal_id': journal_id, 
+                'voucher_type':inv.type,
+                'narration' : inv.narration
+            }
             if inv.period_id:
                 move['period_id'] = inv.period_id.id
                 for i in line:
                     i[2]['period_id'] = inv.period_id.id
             move_id = self.pool.get('account.move').create(cr, uid, move)
-            ref=move['name']
+            ref = move['name']
             amount=0.0
             
             #create the first line our self
@@ -360,8 +378,10 @@ class account_voucher(osv.osv):
                 cr.execute('insert into voucher_id (account_id,rel_account_move) values (%d, %d)',(int(ids[0]),int(line.id)))
                 
         return True
+
     
     def line_get_convert(self, cr, uid, x, date, context={}):
+       
         return {
             'date':date,
             'date_maturity': x.get('date_maturity', False),
@@ -387,36 +407,39 @@ class account_voucher(osv.osv):
                 'WHERE id IN ('+','.join(map(str,ids))+')')
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
-                number = self.pool.get('ir.sequence').get(cr, uid,
-                        invtype)
+                number = self.pool.get('ir.sequence').get(cr, uid, invtype)
 
-                if type in ('pay_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_voucher','journal_pur_voucher'):
+                if type in ('pay_voucher', 'journal_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_vou','journal_pur_voucher'):
                     ref = reference
                 else:
                     ref = self._convert_ref(cr, uid, number)
+                    
                 cr.execute('UPDATE account_voucher SET number=%s ' \
-                        'WHERE id=%s', (number, id))
+                        'WHERE id=%d', (number, id))
                 cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
+                        'WHERE move_id=%d AND (ref is null OR ref = \'\')',
                         (ref, move_id))
                 cr.execute('UPDATE account_analytic_line SET ref=%s ' \
                         'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %s ' \
+                        'WHERE account_move_line.move_id = %d ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
         return True
 
+
+    
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
         types = {
-            'pay_voucher': 'CPV: ',
-            'rec_voucher': 'CRV: ',
-            'cont_voucher': 'CV: ',
-            'bank_pay_voucher': 'BPV: ',
-            'bank_rec_voucher': 'BRV: ',
-            'journal_sale_voucher': 'JSV: ',
-            'journal_pur_voucher': 'JPV: ',
+                'pay_voucher': 'CPV: ',
+                'rec_voucher': 'CRV: ',
+                'cont_voucher': 'CV: ',
+                'bank_pay_voucher': 'BPV: ',
+                'bank_rec_voucher': 'BRV: ',
+                'journal_sale_vou': 'JSV: ',
+                'journal_pur_voucher': 'JPV: ',
+                'journal_voucher':'JV'
         }
         return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
@@ -436,7 +459,7 @@ class account_voucher(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_ids':False})
+        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_ids':False, 'payment_ids':False})
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
@@ -452,7 +475,6 @@ class account_voucher(osv.osv):
                 # will be automatically deleted too
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
-#        self._log_event(cr, uid, ids,-1.0, 'Cancel Invoice')
         return True
     
 account_voucher()
@@ -464,7 +486,7 @@ class VoucherLine(osv.osv):
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
         'name':fields.char('Description', size=256, required=True),
         'account_id':fields.many2one('account.account','Account', required=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', change_default=True,  required=True, ),
+        'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),
         'ref':fields.char('Ref.', size=32),
@@ -473,6 +495,7 @@ class VoucherLine(osv.osv):
     _defaults = {
         'type': lambda *a: 'cr'
     }
+    
     def move_line_get(self, cr, uid, voucher_id, context={}):
         res = []
 
@@ -485,115 +508,180 @@ class VoucherLine(osv.osv):
             res.append(self.move_line_get_item(cr, uid, line, context))
         return res
     
-    def onchange_partner(self, cr, uid, ids, partner_id, type, type1):
+    def onchange_partner(self, cr, uid, ids, partner_id, ttype,type1):
         if not partner_id:
             return {'value' : {'account_id' : False, 'type' : False ,'amount':False}}
         obj = self.pool.get('res.partner')
         account_id = False
-        if type1 in ('rec_voucher','bank_rec_voucher'):
+        
+        if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
             account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-            balance=obj.browse(cr,uid,partner_id).credit
-            type = 'cr'
+            balance = obj.browse(cr,uid,partner_id).credit
+            ttype = 'cr'
         elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
             account_id = obj.browse(cr, uid, partner_id).property_account_payable
-            balance=obj.browse(cr,uid,partner_id).debit
-            type = 'dr'
-        elif type1 in ('journal_sale_voucher') : 
+            balance = obj.browse(cr,uid,partner_id).debit
+            ttype = 'dr'
+        elif type1 in ('journal_sale_vou') : 
             account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-            balance=obj.browse(cr,uid,partner_id).credit
-            type = 'dr'
+            balance = obj.browse(cr,uid,partner_id).credit
+            ttype = 'dr'
         elif type1 in ('journal_pur_voucher') : 
             account_id = obj.browse(cr, uid, partner_id).property_account_payable
-            balance=obj.browse(cr,uid,partner_id).debit
-            type = 'cr'
-            
+            balance = obj.browse(cr,uid,partner_id).debit
+            ttype = 'cr'   
+        
         return {
-            'value' : {'account_id' : account_id.id, 'type' : type, 'amount':balance}
+            'value' : {'account_id' : account_id.id, 'type' : ttype, 'amount':balance}
         }
         
     def onchange_amount(self, cr, uid, ids,partner_id,amount, type,type1):
         if not amount:
-            return {'value' : {'type' : False}}
-        obj = self.pool.get('res.partner')
-        if type1 in ('rec_voucher','bank_rec_voucher'):
-            if amount < 0 :
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable 
-                type = 'dr'
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
-                type = 'cr'
-           
-        elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
-            if amount < 0 :
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
-                type = 'cr'
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                type = 'dr'
+            return {'value' : {}}
+        if partner_id:
+            
+            obj = self.pool.get('res.partner')
+            if type1 in ('rec_voucher', 'bank_rec_voucher', 'journal_voucher'):
+                if amount < 0 :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable 
+                    type = 'dr'
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
+                    type = 'cr'
+               
+            elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
+                if amount < 0 :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
+                    type = 'cr'
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    type = 'dr'
+                    
+            elif type1 in ('journal_sale_vou') : 
+                if amount < 0 :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    type = 'cr'
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable
+                    type = 'dr'
                 
-        elif type1 in ('journal_sale_voucher') : 
-            if amount < 0 :
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                type = 'cr'
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-                type = 'dr'
-            
-        elif type1 in ('journal_pur_voucher') : 
-            if amount< 0 :
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-                type = 'dr'
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                type = 'cr'
-            
+            elif type1 in ('journal_pur_voucher') : 
+                if amount< 0 :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable
+                    type = 'dr'
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    type = 'cr'
+        else:
+            if type1 in ('rec_voucher', 'bank_rec_voucher', 'journal_voucher'):
+                if amount < 0 :
+                     
+                    type = 'dr'
+                else:
+                   
+                    type = 'cr'
+               
+            elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
+                if amount < 0 :
+                    
+                    type = 'cr'
+                else:
+                   
+                    type = 'dr'
+                    
+            elif type1 in ('journal_sale_vou') : 
+                if amount < 0 :
+                   
+                    type = 'cr'
+                else:
+                   
+                    type = 'dr'
+                
+            elif type1 in ('journal_pur_voucher') : 
+                if amount< 0 :
+                    
+                    type = 'dr'
+                else:
+                   
+                    type = 'cr'
+                
         return {
             'value' : { 'type' : type , 'amount':amount}
         }
         
-        
     def onchange_type(self, cr, uid, ids,partner_id,amount,type,type1):
-        if not partner_id:
-            return {'value' : {'type' : False}}
-        obj = self.pool.get('res.partner')
-        
-        if type1 in ('rec_voucher','bank_rec_voucher'):
-            if type == 'dr' :
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable 
-                total=amount*(-1)
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
-                total=amount*1
+        if partner_id:
            
-        elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
-            if type == 'cr' :
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
-                amount*=-1
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                amount*=1
+            obj = self.pool.get('res.partner')
+        
+            if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
+                if type == 'dr' :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable 
+                    total=amount*(-1)
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
+                    total=amount*(-1)
+               
+            elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
+                if type == 'cr' :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable 
+                    total=amount*(-1)
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    total=amount*(-1)
+                    
+            elif type1 in ('journal_sale_vou') : 
+                if type == 'cr' :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    total=amount*(-1)
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable
+                    total=amount*(-1)
                 
-        elif type1 in ('journal_sale_voucher') : 
-            if type == 'cr' :
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                amount*=-1
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-                amount*=1
-            
-        elif type1 in ('journal_pur_voucher') : 
-            if type == 'dr' :
-                account_id = obj.browse(cr, uid, partner_id).property_account_receivable
-                amount*=-1
-            else:
-                account_id = obj.browse(cr, uid, partner_id).property_account_payable
-                amount*=1
-            
+            elif type1 in ('journal_pur_voucher') : 
+                if type == 'dr' :
+                    account_id = obj.browse(cr, uid, partner_id).property_account_receivable
+                    total=amount*(-1)
+                else:
+                    account_id = obj.browse(cr, uid, partner_id).property_account_payable
+                    total=amount*(-1)
+        else:
+            if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
+                if type == 'dr' :
+    
+                    total=amount*(-1)
+                else:
+    
+                    total=amount*(-1)
+               
+            elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') : 
+                if type == 'cr' :
+    
+                    total=amount*(-1)
+                else:
+    
+                    total=amount*(-1)
+                    
+            elif type1 in ('journal_sale_vou') : 
+                if type == 'cr' :
+    
+                    total=amount*(-1)
+                else:
+    
+                    total=amount*(-1)
+                
+            elif type1 in ('journal_pur_voucher') : 
+                if type == 'dr' :
+    
+                    total=amount*(-1)
+                else:
+    
+                    total=amount*(-1)
+                    
         return {
             'value' : {'type' : type , 'amount':total}
         }
         
-
     def move_line_get_item(self, cr, uid, line, context={}):
         return {
             'type':'src',
@@ -602,7 +690,13 @@ class VoucherLine(osv.osv):
             'account_id':line.account_id.id,
             'partner_id':line.partner_id.id or False ,
             'account_analytic_id':line.account_analytic_id.id or False,
+            'ref' : line.ref
         }
+        
 VoucherLine()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
+
+
+
