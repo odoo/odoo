@@ -184,6 +184,8 @@ class TinyPoFile(object):
                 line = self.lines.pop(0).strip()
 
             while line.startswith('#'):
+		if line.startswith('#~ '):
+			break
                 if line.startswith('#:'):
 		    if ' ' in line[2:].strip():
 			for lpart in line[2:].strip().split(' '):
@@ -196,6 +198,14 @@ class TinyPoFile(object):
             while not line:
                 # allow empty lines between comments and msgid
                 line = self.lines.pop(0).strip()
+	    if line.startswith('#~ '):
+		while line.startswith('#~ ') or not line.strip():
+		    if 0 == len(self.lines):
+                        raise StopIteration()
+		    line = self.lines.pop(0)
+		# This has been a deprecated entry, don't return anything
+		return self.next()
+
             if not line.startswith('msgid'):
                 raise Exception("malformed file: bad line: %s" % line)
             source = unquote(line[6:])
