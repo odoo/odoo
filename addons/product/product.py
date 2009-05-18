@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -274,7 +274,7 @@ class product_template(osv.osv):
         'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-    
+
     def _get_uom_id(self, cr, uid, *args):
         cr.execute('select id from product_uom order by id limit 1')
         res = cr.fetchone()
@@ -597,7 +597,7 @@ class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product supplier"
     _columns = {
-        'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', help="Supplier of this product"),
+        'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', help="Supplier of this product", domain=[('supplier','=','True')]),
         'product_name': fields.char('Partner Product Name', size=128, help="Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Partner Product Code', size=64, help="Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Priority'),
