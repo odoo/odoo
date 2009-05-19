@@ -21,6 +21,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import tools.sql
 
 class res_country(osv.osv):
     _name = 'res.country'
@@ -66,6 +67,7 @@ class report_intrastat(osv.osv):
         'currency_id': fields.many2one('res.currency', "Currency", readonly=True),
     }
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'report_intrastat')
         cr.execute("""
             create or replace view report_intrastat as (
 				select
