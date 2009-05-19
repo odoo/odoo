@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-19 14:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,14 +58,15 @@ msgid "Operation Not Permitted !"
 msgstr "Toiming pole lubatud!"
 
 #. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr "Ava valmis ülesanne"
+#: code:addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
+msgstr ""
 
 #. module: project
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -130,9 +131,9 @@ msgid "User you want to delegate this task to."
 msgstr "Kasutaja, kellele sa soovid seda ülesannet volitada."
 
 #. module: project
-#: help:project.project,members:0
-msgid "Project's member. Not used in any computation, just for information purpose."
-msgstr "Projekti liige. Ei kasutata ühegi arvutuse jaoks vaid puhtalt informatiivsel eesmärgil."
+#: model:ir.actions.wizard,name:project.wizard_attachment_task
+msgid "All Attachments"
+msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -181,7 +182,9 @@ msgstr "Kinnita"
 msgid "Project management module that track multi-level projects, tasks,\n"
 "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
 "    "
-msgstr ""
+msgstr "Projektihalduse moodul, mis jälgib mitmetasandlisis projekte, ülesandeid,\n"
+"ülesannetel tehtud töid, jne. See võimaldab kuvada planeerimist, korralduse ülesandeid, jne.\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
@@ -208,7 +211,7 @@ msgstr "Ülesanne"
 #. module: project
 #: help:project.task.delegate,init,planned_hours_me:0
 msgid "Estimated time for you to validate the work done by the user to whom you delegate this task."
-msgstr ""
+msgstr "Eeldatav aeg, mis kulub sul delegeeritud kasutaja poolt tehtud töö valideerimiseks."
 
 #. module: project
 #: view:project.project:0
@@ -293,12 +296,12 @@ msgstr "Arvutatud kasutades ülesandel tehtud töö summat."
 #. module: project
 #: help:project.project,warn_customer:0
 msgid "If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."
-msgstr "Kui sa märgistad selle siis kasutajal avaneb hüpikaken ülesande sulgemisel, mis pakub e-kirja saatmist kliendile."
+msgstr "Kui sa märgid selle siis avaneb kasutajal hüpikaken ülesande sulgemisel, mis pakub e-kirja saatmist kliendile."
 
 #. module: project
-#: help:project.task.delegate,init,include_info:0
+#: help:project.task.delegate,init,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user."
-msgstr "Sisesta ülesande kirjeldus kasutaja ülesandele."
+msgstr ""
 
 #. module: project
 #: field:project.project,category_id:0
@@ -355,9 +358,9 @@ msgid "Delegations"
 msgstr "Volitused"
 
 #. module: project
-#: wizard_button:project.task.close,mail_ask,mail_send:0
-msgid "Send Message"
-msgstr "Saada teade"
+#: help:project.project,members:0
+msgid "Project's member. Not used in any computation, just for information purpose."
+msgstr "Projekti liige. Ei kasutata ühegi arvutuse jaoks vaid puhtalt informatiivsel eesmärgil."
 
 #. module: project
 #: view:project.project:0
@@ -384,6 +387,11 @@ msgstr "Valitatud ülesanne"
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr "Suletud ülesannete protsent kõigi tegemist vajavate ülesannete hulgast."
+
+#. module: project
+#: wizard_field:project.task.delegate,init,new_task_description:0
+msgid "New Task Description"
+msgstr ""
 
 #. module: project
 #: help:project.project,notes:0
@@ -528,7 +536,7 @@ msgstr "Ülesande üksikasjad"
 #. module: project
 #: model:process.node,name:project.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "Käivita arve"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -597,6 +605,12 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Ajatabeli töötunnid, et kohandada gantt diagrammaruannet"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Project's members"
 msgstr "Projekti liikmed"
@@ -620,6 +634,12 @@ msgstr "Minu ülesanded"
 #. module: project
 #: view:project.project:0
 msgid "Status: %(state)s"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
 msgstr ""
 
 #. module: project
@@ -660,7 +680,7 @@ msgstr "E-kirjad"
 #. module: project
 #: model:process.node,note:project.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "Käivita arved müügikorralduse ridadest"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -710,14 +730,14 @@ msgid "Project Name"
 msgstr "Projekti nimi"
 
 #. module: project
+#: wizard_button:project.task.close,mail_ask,mail_send:0
+msgid "Send Message"
+msgstr "Saada teade"
+
+#. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
 msgstr "Aeg kokku"
-
-#. module: project
-#: wizard_field:project.task.delegate,init,include_info:0
-msgid "Copy Description"
-msgstr "Kopeeri kirjeldus"
 
 #. module: project
 #: field:project.project,active:0
@@ -774,7 +794,8 @@ msgstr "Kuupäev"
 #: help:res.company,project_time_mode:0
 msgid "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
-msgstr ""
+msgstr "See määrab projektides ja ülesannetes kasutatava mõõtühiku.\n"
+"Kui sa kasutad projektiga seotud tööajalehte (project_timesheet moodul), siis ära unusta seadistada õige mõõtühik oma töötajatele."
 
 #. module: project
 #: code:addons/project/wizard/close_task.py:0
@@ -809,6 +830,11 @@ msgid "Delegate this task to a user"
 msgstr "Volita see ülesanne kasutajale"
 
 #. module: project
+#: field:project.task,delegated_user_id:0
+msgid "Delegated To"
+msgstr ""
+
+#. module: project
 #: field:project.task,date_close:0
 msgid "Date Closed"
 msgstr "Sulgemise kuupäev"
@@ -831,7 +857,7 @@ msgstr "Kõigi selle projektiga seotud ülesannetele kulunud aeg."
 #. module: project
 #: help:project.task,project_id:0
 msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
-msgstr ""
+msgstr "Kui sul on [?] projekti nimes siis tähendab see, et selle projektiga pole seotud ühtegi analüütilist kontot."
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -872,7 +898,7 @@ msgstr ""
 #. module: project
 #: help:project.project,category_id:0
 msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
-msgstr ""
+msgstr "Seo see projekti analüütilise kontoga, kui sa vajad finantshaldust projektidel. See võimaldab sul ühendada projekte eelarvete, planeerimise, kulude ja tulude ananlüüsiga, tööajalehtedega jms."
 
 #. module: project
 #: view:project.project:0
@@ -996,7 +1022,7 @@ msgstr "Projektide struktuur"
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Validation Task"
-msgstr ""
+msgstr "Ülesande valideerimine"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1011,7 +1037,7 @@ msgstr "Töötab"
 #. module: project
 #: help:project.project,parent_id:0
 msgid "If you have [?] in the name, it means there are no analytic account linked to project."
-msgstr ""
+msgstr "Kui sul on [?] nimes siis tähendab see, et projektiga pole seotud ühtegi analüütilist kontot."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -1026,7 +1052,7 @@ msgstr "Projekti ülesanded"
 #. module: project
 #: help:project.project,warn_manager:0
 msgid "If you check this field, the project manager will receive a request each time a task is completed by his team."
-msgstr "Kui sa märgid selle kasti siis projektihaldur saab päringu iga kord, kui ülesanne on tea meeskonna poolt lõpetatud."
+msgstr "Kui sa märgid selle välja siis projektihaldur saab päringu iga kord, kui ülesanne on lõpetatud tema meeskonna poolt."
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_feature
@@ -1034,9 +1060,15 @@ msgid "New Feature"
 msgstr "Uus omadus"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
+msgstr ""
+
+#. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
-msgstr ""
+msgstr "Kodeeri oma töötunnid"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,prefix:0
@@ -1052,6 +1084,11 @@ msgstr "Projekti ülesanne"
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
 msgstr "Kulutatud tunnid"
+
+#. module: project
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr "Ava valmis ülesanne"
 
 #. module: project
 #: field:project.task,total_hours:0

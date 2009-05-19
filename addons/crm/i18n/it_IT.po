@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:37:53+0000\n"
-"PO-Revision-Date: 2009-04-09 13:37:53+0000\n"
+"POT-Creation-Date: 2009-05-19 14:24:37+0000\n"
+"PO-Revision-Date: 2009-05-19 14:24:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,11 +54,6 @@ msgid "Remind Partner"
 msgstr "Ricorda Partner"
 
 #. module: crm
-#: wizard_view:crm.case.section.menu,design_menu:0
-msgid "Update The Proposed Menus To Be Created"
-msgstr "Aggiorna i Menu proposti per la creazione"
-
-#. module: crm
 #: wizard_view:crm.case.section.menu,init:0
 msgid "Base Information"
 msgstr "Informazioni Base"
@@ -89,6 +84,11 @@ msgstr "Tutte Aperte "
 #: help:crm.segmentation,som_interval_default:0
 msgid "Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."
 msgstr "Impressione predefinita per il periodo precedente al calcolo di Massimo Intervallo. Questa è l'impressione iniziale predefinita nel caso in cui il Partner non fosse titolare di Eventi"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Running"
+msgstr "In esecuzione"
 
 #. module: crm
 #: field:crm.case.history,email:0
@@ -272,11 +272,6 @@ msgstr "Note"
 #: field:crm.segmentation.line,name:0
 msgid "Rule Name"
 msgstr "Nome Regola"
-
-#. module: crm
-#: help:crm.segmentation,som_interval:0
-msgid "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionnality for recurring businesses."
-msgstr "Un periodo è il numero medio di giorni tra due cicli di vendita o acquisto per questa segmentazione. Viene utilizzato soprattutto per verificare se il partner non ha acquistato per un lungo periodo. Così pensiamo che le sue impressioni nei nostri confronti siano peggiorate poichè probabilmente acquista beni da un altro fornitore. Utilizza questa funzionalità per ripristinare opportunità di affari"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_partner:0
@@ -703,6 +698,11 @@ msgstr "Numero massimo di ID Partner processati"
 
 #. module: crm
 #: view:crm.case.rule:0
+msgid "Condition on Communication History"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.rule:0
 msgid "%(email_from)s = Partner email"
 msgstr "%(email_from)s = Email Partner"
 
@@ -771,6 +771,18 @@ msgid "Calendar"
 msgstr "Calendario"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
+msgstr ""
+
+#. module: crm
 #: field:crm.case,ref:0
 msgid "Reference"
 msgstr "Riferimento"
@@ -781,9 +793,9 @@ msgid "Reference 2"
 msgstr "Riferimento 2"
 
 #. module: crm
-#: field:crm.segmentation.line,operator:0
-msgid "Mandatory / Optionnal"
-msgstr "Obbigatorio / Opzionale"
+#: view:crm.segmentation:0
+msgid "Sales Purchase"
+msgstr "Vendite Acquisti"
 
 #. module: crm
 #: field:crm.case,categ_id:0
@@ -931,9 +943,10 @@ msgid "Status"
 msgstr "Stato"
 
 #. module: crm
-#: field:crm.case.rule,act_remind_user:0
-msgid "Remind responsible"
-msgstr "Promemoria Responsabile"
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address!"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
@@ -944,6 +957,11 @@ msgstr "Imposta Sezione"
 #: field:crm.segmentation,state:0
 msgid "Execution Status"
 msgstr "Stato esecuzione"
+
+#. module: crm
+#: help:crm.segmentation,som_interval:0
+msgid "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."
+msgstr ""
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -1007,9 +1025,10 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: crm
-#: wizard_view:crm.case.section.menu,design_menu:0
-msgid "Created Menus"
-msgstr "Menu Creati"
+#: wizard_field:crm.case.section.menu,design_menu,menu9:0
+#: wizard_field:crm.case.section.menu,design_menu,menu9_option:0
+msgid "All Unassigned "
+msgstr "Non Assegnati - Tutti i "
 
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
@@ -1107,10 +1126,9 @@ msgid "Date"
 msgstr "Data"
 
 #. module: crm
-#: wizard_field:crm.case.section.menu,design_menu,menu9:0
-#: wizard_field:crm.case.section.menu,design_menu,menu9_option:0
-msgid "All Unassigned "
-msgstr "Non Assegnati - Tutti i "
+#: wizard_view:crm.case.section.menu,design_menu:0
+msgid "Created Menus"
+msgstr "Menu Creati"
 
 #. module: crm
 #: field:crm.case.log,name:0
@@ -1133,6 +1151,12 @@ msgid "Partner Segmentation Lines"
 msgstr "Righe Segmentazione Partner"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "You must define a responsible user for this case in order to use this action!"
+msgstr ""
+
+#. module: crm
 #: view:crm.case:0
 msgid "History"
 msgstr "Riepilogo"
@@ -1147,6 +1171,11 @@ msgstr "Contatto Partner"
 #: wizard_field:crm.case.section.menu,design_menu,menu12_option:0
 msgid "All Unclosed "
 msgstr "Non Chiusi - Tutti i "
+
+#. module: crm
+#: wizard_field:crm.case.section.menu,init,view_tree:0
+msgid "Tree View"
+msgstr "Vista Struttura"
 
 #. module: crm
 #: field:crm.case.rule,sequence:0
@@ -1220,9 +1249,9 @@ msgid "Open"
 msgstr "Apri"
 
 #. module: crm
-#: wizard_field:crm.case.section.menu,init,view_tree:0
-msgid "Tree View"
-msgstr "Vista Struttura"
+#: field:crm.case.rule,act_remind_user:0
+msgid "Remind responsible"
+msgstr "Promemoria Responsabile"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1309,6 +1338,11 @@ msgid "open"
 msgstr "Apri"
 
 #. module: crm
+#: field:crm.case.rule,trg_max_history:0
+msgid "Maximum Communication History"
+msgstr ""
+
+#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu11:0
 #: wizard_field:crm.case.section.menu,design_menu,menu11_option:0
 msgid "All Canceled "
@@ -1344,9 +1378,9 @@ msgid "Segmentations"
 msgstr "Segmentazioni"
 
 #. module: crm
-#: selection:crm.segmentation,state:0
-msgid "Running"
-msgstr "In esecuzione"
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr ""
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1363,6 +1397,11 @@ msgstr "L'indirizzo email inserito in 'Rispondi a ' di tutte le email spedite da
 #: model:ir.model,name:crm.model_crm_case_rule
 msgid "Case Rule"
 msgstr "Regola Caso"
+
+#. module: crm
+#: help:crm.case,date_deadline:0
+msgid "Deadline Date is automatically computed from Start Date + Duration"
+msgstr ""
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
@@ -1564,9 +1603,9 @@ msgid "Conditions on States"
 msgstr "Condizioni sugli stati"
 
 #. module: crm
-#: view:crm.segmentation:0
-msgid "Sales Purchase"
-msgstr "Vendite Acquisti"
+#: wizard_view:crm.case.section.menu,design_menu:0
+msgid "Update The Proposed Menus To Be Created"
+msgstr "Aggiorna i Menu proposti per la creazione"
 
 #. module: crm
 #: field:crm.case.rule,trg_date_type:0

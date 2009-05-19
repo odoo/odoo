@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
-"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
+"POT-Creation-Date: 2009-05-19 14:27:41+0000\n"
+"PO-Revision-Date: 2009-05-19 14:27:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: report_sale
+#: selection:report.sale.order.created,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: report_sale
 #: field:report.sale.order.category,price_average:0
@@ -23,9 +28,15 @@ msgstr "Preço Médio"
 
 #. module: report_sale
 #: field:report.sale.order.category,state:0
+#: field:report.sale.order.created,state:0
 #: field:report.sale.order.product,state:0
 msgid "Order State"
 msgstr "Estado da venda"
+
+#. module: report_sale
+#: model:ir.model,name:report_sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr ""
 
 #. module: report_sale
 #: view:report.sale.order.category:0
@@ -33,15 +44,27 @@ msgid "Sales Orders by category"
 msgstr "Ordens de venda por categoria"
 
 #. module: report_sale
+#: model:ir.report.custom,name:report_sale.ir_report_custom_6
+#: model:ir.report.custom,title:report_sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr "Volume de vendas mensais acumuladas ao longo de um ano"
+
+#. module: report_sale
 #: model:ir.model,name:report_sale.model_report_sale_order_product
 msgid "Sales Orders by Products"
 msgstr "Ordens de venda por produtos"
 
 #. module: report_sale
-#: model:ir.report.custom,name:report_sale.ir_report_custom_6
-#: model:ir.report.custom,title:report_sale.ir_report_custom_6
-msgid "Monthly cumulated sales turnover over one year"
-msgstr "Volume de vendas mensais acumuladas ao longo de um ano"
+#: model:ir.ui.menu,name:report_sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr "Volume de vendas mensais ao longo de um ano"
+
+#. module: report_sale
+#: model:ir.actions.act_window,name:report_sale.action_turnover_product_tree
+#: model:ir.model,name:report_sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr ""
 
 #. module: report_sale
 #: constraint:ir.actions.act_window:0
@@ -60,6 +83,7 @@ msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter e
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Waiting Schedule"
 msgstr "Aguarda data Agendada"
@@ -72,6 +96,7 @@ msgstr "Preço Total"
 
 #. module: report_sale
 #: field:report.sale.order.product,product_id:0
+#: field:report.turnover.per.product,product_id:0
 msgid "Product"
 msgstr "Produto"
 
@@ -93,6 +118,11 @@ msgid "Sales by Product (this month)"
 msgstr "Vendas por produto (mês actual)"
 
 #. module: report_sale
+#: field:report.sale.order.created,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr ""
+
+#. module: report_sale
 #: model:ir.report.custom,name:report_sale.ir_report_custom_4
 #: model:ir.report.custom,title:report_sale.ir_report_custom_4
 msgid "Monthly sales turnover over one year"
@@ -100,6 +130,7 @@ msgstr "Volume de vendas mensais ao longo de um ano"
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Invoice Exception"
 msgstr "Excepção da Factura"
@@ -117,10 +148,20 @@ msgid "Sales by Category of Products"
 msgstr "Vendas por categorias e produtos"
 
 #. module: report_sale
+#: model:ir.ui.menu,name:report_sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr "Volume de vendas mensais acumuladas ao longo de um ano"
+
+#. module: report_sale
 #: field:report.sale.order.category,quantity:0
 #: field:report.sale.order.product,quantity:0
 msgid "# of Products"
 msgstr "Nº de produtos"
+
+#. module: report_sale
+#: field:report.sale.order.created,name:0
+msgid "Order Reference"
+msgstr ""
 
 #. module: report_sale
 #: model:ir.actions.act_window,name:report_sale.action_order_product_tree_all
@@ -141,9 +182,15 @@ msgstr "Categorias"
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Quotation"
 msgstr "Cotação"
+
+#. module: report_sale
+#: field:report.sale.order.created,partner_id:0
+msgid "Customer"
+msgstr ""
 
 #. module: report_sale
 #: constraint:ir.ui.view:0
@@ -151,9 +198,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: report_sale
-#: model:ir.ui.menu,name:report_sale.ir_ui_menu1
-msgid "Monthly Sales Turnover Over One Year"
-msgstr "Volume de vendas mensais ao longo de um ano"
+#: model:ir.actions.act_window,name:report_sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr ""
 
 #. module: report_sale
 #: model:ir.ui.menu,name:report_sale.next_id_80
@@ -161,14 +208,21 @@ msgid "Reporting"
 msgstr "Relatório"
 
 #. module: report_sale
+#: model:ir.actions.act_window,name:report_sale.action_turnover_month_tree
+#: model:ir.model,name:report_sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr ""
+
+#. module: report_sale
 #: model:ir.ui.menu,name:report_sale.ir_ui_menu2
 msgid "Daily Sales Turnover Over One Year"
 msgstr "Volume de vendas diárias ao longo de um ano"
 
 #. module: report_sale
-#: model:ir.ui.menu,name:report_sale.ir_ui_menu3
-msgid "Monthly Cumulated Sales Turnover Over One Year"
-msgstr "Volume de vendas mensais acumuladas ao longo de um ano"
+#: field:report.sale.order.created,date_order:0
+msgid "Date Ordered"
+msgstr ""
 
 #. module: report_sale
 #: view:sale.order:0
@@ -188,15 +242,27 @@ msgstr "Manual em curso"
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Shipping Exception"
 msgstr "Excepção de Envio"
+
+#. module: report_sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr ""
 
 #. module: report_sale
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "In progress"
 msgstr "Em curso"
+
+#. module: report_sale
+#: view:report.sale.order.created:0
+msgid "Reference"
+msgstr ""
 
 #. module: report_sale
 #: model:ir.actions.act_window,name:report_sale.action_order_category_tree
@@ -211,8 +277,14 @@ msgid "Daily sales turnover over one year"
 msgstr "Volume de vendas diárias ao longo de um ano"
 
 #. module: report_sale
+#: selection:report.sale.order.created,state:0
+msgid "Manual In Progress"
+msgstr ""
+
+#. module: report_sale
 #: field:report.sale.order.category,name:0
 #: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
 msgid "Month"
 msgstr "Mês"
 
@@ -223,13 +295,25 @@ msgid "# of Lines"
 msgstr "# de Linhas"
 
 #. module: report_sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Done"
 msgstr "Concluído"
 
 #. module: report_sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr ""
+
+#. module: report_sale
 #: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.created,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -238,5 +322,10 @@ msgstr "Cancelar"
 #: model:ir.actions.act_window,name:report_sale.action_so_pipeline
 #: view:sale.order:0
 msgid "Sales by State"
+msgstr ""
+
+#. module: report_sale
+#: field:report.sale.order.created,amount_untaxed:0
+msgid "Untaxed Amount"
 msgstr ""
 
