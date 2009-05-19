@@ -656,7 +656,7 @@ class cache(object):
                 if self.multi:
                     kwargs2[self.multi] = notincache.keys()
                 
-                result2 = fn(self2, cr, *args[2:self.skiparg], **kwargs2)
+                result2 = fn(self2, cr, *args[:self.skiparg-2], **kwargs2)
                 if not self.multi:
                     key = notincache[None]
                     self.cache[key] = (result2, time.time())
