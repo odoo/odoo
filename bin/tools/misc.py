@@ -94,11 +94,11 @@ def init_db(cr):
             id = cr.fetchone()[0]
             cr.execute('insert into ir_module_module \
                     (id, author, website, name, shortdesc, description, \
-                        category_id, state) \
-                    values (%s, %s, %s, %s, %s, %s, %s, %s)', (
+                        category_id, state, certificate) \
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
                 info.get('website', ''), i, info.get('name', False),
-                info.get('description', ''), p_id, state))
+                info.get('description', ''), p_id, state, info.get('certificate')))
             cr.execute('insert into ir_model_data \
                 (name,model,module, res_id) values (%s,%s,%s,%s)', (
                     'module_meta_information', 'ir.module.module', i, id))
