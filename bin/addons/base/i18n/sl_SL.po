@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:46:06+0000\n"
-"PO-Revision-Date: 2009-04-09 13:46:06+0000\n"
+"POT-Creation-Date: 2009-05-19 14:30:05+0000\n"
+"PO-Revision-Date: 2009-05-19 14:30:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -838,10 +838,9 @@ msgid "Features"
 msgstr ""
 
 #. module: base
-#: rml:ir.module.reference:0
-#: field:maintenance.contract.module,version:0
-msgid "Version"
-msgstr ""
+#: field:ir.report.custom,frequency:0
+msgid "Frequency"
+msgstr "Pogostost"
 
 #. module: base
 #: field:ir.report.custom.fields,fc0_op:0
@@ -1058,12 +1057,6 @@ msgstr "Nespremenljiva širina"
 #: selection:ir.ui.menu,icon:0
 msgid "terp-calendar"
 msgstr "terp-calendar"
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid "Some installed modules depends on the module you plan to desinstall :\n %s"
-msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3295,6 +3288,12 @@ msgid "Cape Verde"
 msgstr ""
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
@@ -3517,8 +3516,9 @@ msgid "terp-sale"
 msgstr "terp-sale"
 
 #. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
+#: code:osv/orm.py:0
+#, python-format
+msgid "You cannot perform this operation."
 msgstr ""
 
 #. module: base
@@ -3808,15 +3808,10 @@ msgid "module,type,name,res_id,src,value"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_management
-msgid "Modules Management"
-msgstr "Upravljanje modulov"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_translation_untrans
-#: model:ir.ui.menu,name:base.menu_action_translation_untrans
-msgid "Untranslated terms"
-msgstr "Neprevedeni izrazi"
+#: rml:ir.module.reference:0
+#: field:maintenance.contract.module,version:0
+msgid "Version"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -4185,11 +4180,6 @@ msgid "Report Fields"
 msgstr "Polja poročila"
 
 #. module: base
-#: view:res.partner:0
-msgid "General"
-msgstr "Splošno"
-
-#. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr ""
@@ -4286,6 +4276,11 @@ msgstr "STOCK_UNDERLINE"
 #. module: base
 #: view:ir.values:0
 msgid "Values for Event Type"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.zr
+msgid "Zaire"
 msgstr ""
 
 #. module: base
@@ -4592,6 +4587,11 @@ msgid "Reunion (French)"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "sv_SV"
+msgstr ""
+
+#. module: base
 #: field:ir.rule.group,global:0
 msgid "Global"
 msgstr "Globalno"
@@ -4703,6 +4703,12 @@ msgid "User Interface"
 msgstr ""
 
 #. module: base
+#: field:res.partner,child_ids:0
+#: field:res.request,ref_partner_id:0
+msgid "Partner Ref."
+msgstr "Sklic partnerja"
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_INFO"
 msgstr "STOCK_DIALOG_INFO"
@@ -4750,9 +4756,8 @@ msgid "Belgium"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "You cannot perform this operation."
+#: view:res.lang:0
+msgid "%d - Day of the month as a decimal number [01,31]."
 msgstr ""
 
 #. module: base
@@ -5104,11 +5109,6 @@ msgstr "Napaka!"
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
 msgid "country_id"
 msgstr ""
-
-#. module: base
-#: field:ir.report.custom,frequency:0
-msgid "Frequency"
-msgstr "Pogostost"
 
 #. module: base
 #: field:ir.cron,interval_type:0
@@ -6418,15 +6418,17 @@ msgid "Graph"
 msgstr "Grafikon"
 
 #. module: base
-#: field:res.partner,child_ids:0
-#: field:res.request,ref_partner_id:0
-msgid "Partner Ref."
-msgstr "Sklic partnerja"
+#: selection:ir.report.custom.fields,fc0_op:0
+#: selection:ir.report.custom.fields,fc1_op:0
+#: selection:ir.report.custom.fields,fc2_op:0
+#: selection:ir.report.custom.fields,fc3_op:0
+msgid "<"
+msgstr "<"
 
 #. module: base
-#: field:ir.report.custom,print_format:0
-msgid "Print format"
-msgstr "Oblika izpisa"
+#: selection:ir.actions.report.xml,report_type:0
+msgid "Html from html"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_low_workflow
@@ -6761,9 +6763,9 @@ msgid "Condition"
 msgstr "Pogoj"
 
 #. module: base
-#: model:res.country,name:base.zr
-msgid "Zaire"
-msgstr ""
+#: model:ir.ui.menu,name:base.menu_management
+msgid "Modules Management"
+msgstr "Upravljanje modulov"
 
 #. module: base
 #: field:ir.model.data,res_id:0
@@ -6811,6 +6813,12 @@ msgstr "Odgovor"
 #: selection:module.lang.install,init,lang:0
 msgid "Turkish / Türkçe"
 msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_translation_untrans
+#: model:ir.ui.menu,name:base.menu_action_translation_untrans
+msgid "Untranslated terms"
+msgstr "Neprevedeni izrazi"
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -6925,6 +6933,11 @@ msgstr "Osveži"
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Tehnična navodila"
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "cs_CS"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7150,12 +7163,9 @@ msgid "STOCK_PRINT"
 msgstr "STOCK_PRINT"
 
 #. module: base
-#: selection:ir.report.custom.fields,fc0_op:0
-#: selection:ir.report.custom.fields,fc1_op:0
-#: selection:ir.report.custom.fields,fc2_op:0
-#: selection:ir.report.custom.fields,fc3_op:0
-msgid "<"
-msgstr "<"
+#: view:res.partner:0
+msgid "General"
+msgstr "Splošno"
 
 #. module: base
 #: model:res.country,name:base.uz
@@ -7219,6 +7229,16 @@ msgstr ""
 #: field:ir.model.fields,view_load:0
 msgid "View Auto-Load"
 msgstr ""
+
+#. module: base
+#: field:ir.module.module,installed_version:0
+msgid "Latest version"
+msgstr "Najnovejša različica"
+
+#. module: base
+#: field:ir.report.custom,print_format:0
+msgid "Print format"
+msgstr "Oblika izpisa"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7478,12 +7498,6 @@ msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit 
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
-#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
-msgid "New Partner"
-msgstr "Nov partner"
-
-#. module: base
 #: selection:ir.report.custom,print_orientation:0
 msgid "Portrait"
 msgstr "Pokočno"
@@ -7499,9 +7513,10 @@ msgid "STOCK_DIRECTORY"
 msgstr "STOCK_DIRECTORY"
 
 #. module: base
-#: field:ir.module.module,installed_version:0
-msgid "Latest version"
-msgstr "Najnovejša različica"
+#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
+#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
+msgid "New Partner"
+msgstr "Nov partner"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server

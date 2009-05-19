@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:53:08+0000\n"
-"PO-Revision-Date: 2009-04-09 13:53:08+0000\n"
+"POT-Creation-Date: 2009-05-19 14:36:37+0000\n"
+"PO-Revision-Date: 2009-05-19 14:36:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -837,9 +837,8 @@ msgid "Features"
 msgstr ""
 
 #. module: base
-#: rml:ir.module.reference:0
-#: field:maintenance.contract.module,version:0
-msgid "Version"
+#: field:ir.report.custom,frequency:0
+msgid "Frequency"
 msgstr ""
 
 #. module: base
@@ -1056,12 +1055,6 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-calendar"
-msgstr ""
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid "Some installed modules depends on the module you plan to desinstall :\n %s"
 msgstr ""
 
 #. module: base
@@ -3293,6 +3286,12 @@ msgid "Cape Verde"
 msgstr ""
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
@@ -3515,8 +3514,9 @@ msgid "terp-sale"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
+#: code:osv/orm.py:0
+#, python-format
+msgid "You cannot perform this operation."
 msgstr ""
 
 #. module: base
@@ -3806,14 +3806,9 @@ msgid "module,type,name,res_id,src,value"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_management
-msgid "Modules Management"
-msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_translation_untrans
-#: model:ir.ui.menu,name:base.menu_action_translation_untrans
-msgid "Untranslated terms"
+#: rml:ir.module.reference:0
+#: field:maintenance.contract.module,version:0
+msgid "Version"
 msgstr ""
 
 #. module: base
@@ -4183,11 +4178,6 @@ msgid "Report Fields"
 msgstr ""
 
 #. module: base
-#: view:res.partner:0
-msgid "General"
-msgstr ""
-
-#. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr ""
@@ -4284,6 +4274,11 @@ msgstr ""
 #. module: base
 #: view:ir.values:0
 msgid "Values for Event Type"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.zr
+msgid "Zaire"
 msgstr ""
 
 #. module: base
@@ -4590,6 +4585,11 @@ msgid "Reunion (French)"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "sv_SV"
+msgstr ""
+
+#. module: base
 #: field:ir.rule.group,global:0
 msgid "Global"
 msgstr ""
@@ -4701,6 +4701,12 @@ msgid "User Interface"
 msgstr ""
 
 #. module: base
+#: field:res.partner,child_ids:0
+#: field:res.request,ref_partner_id:0
+msgid "Partner Ref."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_INFO"
 msgstr ""
@@ -4748,9 +4754,8 @@ msgid "Belgium"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "You cannot perform this operation."
+#: view:res.lang:0
+msgid "%d - Day of the month as a decimal number [01,31]."
 msgstr ""
 
 #. module: base
@@ -5101,11 +5106,6 @@ msgstr ""
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
 msgid "country_id"
-msgstr ""
-
-#. module: base
-#: field:ir.report.custom,frequency:0
-msgid "Frequency"
 msgstr ""
 
 #. module: base
@@ -6415,14 +6415,16 @@ msgid "Graph"
 msgstr ""
 
 #. module: base
-#: field:res.partner,child_ids:0
-#: field:res.request,ref_partner_id:0
-msgid "Partner Ref."
+#: selection:ir.report.custom.fields,fc0_op:0
+#: selection:ir.report.custom.fields,fc1_op:0
+#: selection:ir.report.custom.fields,fc2_op:0
+#: selection:ir.report.custom.fields,fc3_op:0
+msgid "<"
 msgstr ""
 
 #. module: base
-#: field:ir.report.custom,print_format:0
-msgid "Print format"
+#: selection:ir.actions.report.xml,report_type:0
+msgid "Html from html"
 msgstr ""
 
 #. module: base
@@ -6758,8 +6760,8 @@ msgid "Condition"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.zr
-msgid "Zaire"
+#: model:ir.ui.menu,name:base.menu_management
+msgid "Modules Management"
 msgstr ""
 
 #. module: base
@@ -6807,6 +6809,12 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Turkish / Türkçe"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_translation_untrans
+#: model:ir.ui.menu,name:base.menu_action_translation_untrans
+msgid "Untranslated terms"
 msgstr ""
 
 #. module: base
@@ -6921,6 +6929,11 @@ msgstr ""
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
+msgstr ""
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "cs_CS"
 msgstr ""
 
 #. module: base
@@ -7147,11 +7160,8 @@ msgid "STOCK_PRINT"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom.fields,fc0_op:0
-#: selection:ir.report.custom.fields,fc1_op:0
-#: selection:ir.report.custom.fields,fc2_op:0
-#: selection:ir.report.custom.fields,fc3_op:0
-msgid "<"
+#: view:res.partner:0
+msgid "General"
 msgstr ""
 
 #. module: base
@@ -7215,6 +7225,16 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,view_load:0
 msgid "View Auto-Load"
+msgstr ""
+
+#. module: base
+#: field:ir.module.module,installed_version:0
+msgid "Latest version"
+msgstr ""
+
+#. module: base
+#: field:ir.report.custom,print_format:0
+msgid "Print format"
 msgstr ""
 
 #. module: base
@@ -7475,12 +7495,6 @@ msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit 
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
-#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
-msgid "New Partner"
-msgstr ""
-
-#. module: base
 #: selection:ir.report.custom,print_orientation:0
 msgid "Portrait"
 msgstr ""
@@ -7496,8 +7510,9 @@ msgid "STOCK_DIRECTORY"
 msgstr ""
 
 #. module: base
-#: field:ir.module.module,installed_version:0
-msgid "Latest version"
+#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
+#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
+msgid "New Partner"
 msgstr ""
 
 #. module: base
