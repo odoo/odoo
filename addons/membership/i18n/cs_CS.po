@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:17:42+0000\n"
-"PO-Revision-Date: 2009-02-06 15:17:42+0000\n"
+"POT-Creation-Date: 2009-05-19 14:34:10+0000\n"
+"PO-Revision-Date: 2009-05-19 14:34:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,11 @@ msgstr ""
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
+msgstr ""
+
+#. module: membership
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: membership
@@ -85,6 +90,11 @@ msgstr ""
 #. module: membership
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: membership
@@ -151,6 +161,12 @@ msgstr ""
 #. module: membership
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
+msgstr ""
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: membership
@@ -280,6 +296,11 @@ msgid "Associated member"
 msgstr ""
 
 #. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
+
+#. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel membership date"
 msgstr ""
@@ -338,6 +359,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:membership.action_membership_members_invoiced
 #: model:ir.ui.menu,name:membership.menu_members_invoiced
 msgid "Invoiced members"
+msgstr ""
+
+#. module: membership
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr ""
 
 #. module: membership
@@ -435,6 +461,12 @@ msgid "Member Price"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
+
+#. module: membership
 #: field:res.partner,free_member:0
 msgid "Free member"
 msgstr ""
@@ -481,11 +513,6 @@ msgstr ""
 #: model:process.node,name:membership.process_node_membershipproduct0
 #: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
-msgstr ""
-
-#. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
 msgstr ""
 
 #. module: membership

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:48:29+0000\n"
-"PO-Revision-Date: 2009-04-09 13:48:29+0000\n"
+"POT-Creation-Date: 2009-05-19 14:31:42+0000\n"
+"PO-Revision-Date: 2009-05-19 14:31:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,9 +58,10 @@ msgid "Operation Not Permitted !"
 msgstr "¡Operación no permitida!"
 
 #. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr "Abrir tarea realizada"
+#: code:addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
+msgstr ""
 
 #. module: project
 #: constraint:ir.actions.act_window:0
@@ -130,9 +131,9 @@ msgid "User you want to delegate this task to."
 msgstr "Usuario al que quiere delegar esta tarea."
 
 #. module: project
-#: help:project.project,members:0
-msgid "Project's member. Not used in any computation, just for information purpose."
-msgstr "Miembros del proyecto. No utilizado en ningún cálculo, sólo con el propósito de informar."
+#: model:ir.actions.wizard,name:project.wizard_attachment_task
+msgid "All Attachments"
+msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -296,9 +297,9 @@ msgid "If you check this, the user will have a popup when closing a task that pr
 msgstr "Si marca esto, al usuario le aparecerá una ventana emergente cuando cierre una tarea que propondrá un mensaje para ser enviado por correo electrónico al cliente."
 
 #. module: project
-#: help:project.task.delegate,init,include_info:0
+#: help:project.task.delegate,init,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user."
-msgstr "Incluir la descripción de la tarea en la tarea del usuario."
+msgstr ""
 
 #. module: project
 #: field:project.project,category_id:0
@@ -355,9 +356,9 @@ msgid "Delegations"
 msgstr "Delegaciones"
 
 #. module: project
-#: wizard_button:project.task.close,mail_ask,mail_send:0
-msgid "Send Message"
-msgstr "Enviar mensaje"
+#: help:project.project,members:0
+msgid "Project's member. Not used in any computation, just for information purpose."
+msgstr "Miembros del proyecto. No utilizado en ningún cálculo, sólo con el propósito de informar."
 
 #. module: project
 #: view:project.project:0
@@ -384,6 +385,11 @@ msgstr "Tarea delegada"
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr "Porcentaje de tareas cerradas según el total de tareas a realizar."
+
+#. module: project
+#: wizard_field:project.task.delegate,init,new_task_description:0
+msgid "New Task Description"
+msgstr ""
 
 #. module: project
 #: help:project.project,notes:0
@@ -597,6 +603,12 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Horas de trabajo del horario para ajustar el informe del diagrama de Gantt"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Project's members"
 msgstr "Miembros del proyecto"
@@ -621,6 +633,12 @@ msgstr "Mis tareas"
 #: view:project.project:0
 msgid "Status: %(state)s"
 msgstr "Estado: %(state)s"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -710,14 +728,14 @@ msgid "Project Name"
 msgstr "Nombre del proyecto"
 
 #. module: project
+#: wizard_button:project.task.close,mail_ask,mail_send:0
+msgid "Send Message"
+msgstr "Enviar mensaje"
+
+#. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
 msgstr "Tiempo total"
-
-#. module: project
-#: wizard_field:project.task.delegate,init,include_info:0
-msgid "Copy Description"
-msgstr "Copiar descripción"
 
 #. module: project
 #: field:project.project,active:0
@@ -808,6 +826,11 @@ msgstr "¡No se puede enviar el correo porqué su dirección de correo electrón
 #: wizard_view:project.task.delegate,init:0
 msgid "Delegate this task to a user"
 msgstr "Delegar esta tarea a un usuario"
+
+#. module: project
+#: field:project.task,delegated_user_id:0
+msgid "Delegated To"
+msgstr ""
 
 #. module: project
 #: field:project.task,date_close:0
@@ -1035,6 +1058,12 @@ msgid "New Feature"
 msgstr "Nueva característica"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
+msgstr ""
+
+#. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
 msgstr "Codificar sus horas de trabajo."
@@ -1053,6 +1082,11 @@ msgstr "Tarea del proyecto"
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
 msgstr "Horas dedicadas"
+
+#. module: project
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr "Abrir tarea realizada"
 
 #. module: project
 #: field:project.task,total_hours:0

@@ -75,7 +75,7 @@
                     <separator colspan="4" string="Price Computation"/>
                     
                     <field name="base"/>
-                    <field name="base_pricelist_id"/>
+                    <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
                     <group col="6" colspan="5">
                         <label string="New Price ="/>
                         <label string="Base Price"/>

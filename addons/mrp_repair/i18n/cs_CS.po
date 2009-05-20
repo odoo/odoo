@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:17:41+0000\n"
-"PO-Revision-Date: 2009-02-06 15:17:41+0000\n"
+"POT-Creation-Date: 2009-05-19 14:34:09+0000\n"
+"PO-Revision-Date: 2009-05-19 14:34:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,8 +32,8 @@ msgid "Inventory Move"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Recreate Invoice"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: mrp_repair
@@ -150,6 +150,11 @@ msgstr ""
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
 msgstr ""
 
 #. module: mrp_repair
@@ -322,6 +327,12 @@ msgstr ""
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner in the repair form !"
 msgstr ""
 
 #. module: mrp_repair
@@ -644,5 +655,11 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
 msgstr ""
 

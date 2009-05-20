@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
-"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
+"POT-Creation-Date: 2009-05-19 14:27:41+0000\n"
+"PO-Revision-Date: 2009-05-19 14:27:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,12 @@ msgid "My Timesheet of the Month"
 msgstr "Meu horário do mês"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.action_random_timesheet_lines_board
+#: model:ir.model,name:report_timesheet.model_random_timesheet_lines
+msgid "Random Timesheet Lines"
+msgstr ""
+
+#. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.act_account_analytic_account_2_report_timehsheet_account
 msgid "Timesheets"
 msgstr "Horários"
@@ -75,17 +81,23 @@ msgid "Timesheets to invoice"
 msgstr "Horário a facturar"
 
 #. module: report_timesheet
+#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Horários por dia"
+
+#. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_account_date_stat_all
 #: model:ir.ui.menu,name:report_timesheet.menu_report_timesheet_account_date_all
 msgid "Daily Timesheet by Account"
 msgstr "Horário diário por conta"
 
 #. module: report_timesheet
-#: model:ir.model,name:report_timesheet.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr "Horários por dia"
+#: field:random.timesheet.lines,product_id:0
+msgid "Product"
+msgstr ""
 
 #. module: report_timesheet
+#: field:random.timesheet.lines,name:0
 #: field:report.random.timesheet,name:0
 msgid "Description"
 msgstr ""
@@ -102,6 +114,7 @@ msgid "Timesheet - Reporting"
 msgstr ""
 
 #. module: report_timesheet
+#: field:random.timesheet.lines,date:0
 #: field:report.random.timesheet,date:0
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
@@ -112,6 +125,16 @@ msgstr "Data"
 #: view:report_timesheet.invoice:0
 msgid "Timesheet by invoice"
 msgstr "Horário por factura"
+
+#. module: report_timesheet
+#: field:random.timesheet.lines,quantity:0
+#: field:report.random.timesheet,quantity:0
+#: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
+#: field:report_timesheet.invoice,quantity:0
+#: field:report_timesheet.user,quantity:0
+msgid "Quantity"
+msgstr "Quantidade"
 
 #. module: report_timesheet
 #: model:ir.ui.menu,name:report_timesheet.next_id_69
@@ -130,6 +153,7 @@ msgid "Random Timesheet Report"
 msgstr ""
 
 #. module: report_timesheet
+#: field:random.timesheet.lines,user_id:0
 #: field:report.random.timesheet,user_id:0
 #: field:report_timesheet.account,user_id:0
 #: field:report_timesheet.account.date,user_id:0
@@ -154,14 +178,19 @@ msgid "Daily timesheet by account"
 msgstr "Horário diários por conta"
 
 #. module: report_timesheet
-#: model:ir.actions.act_window,name:report_timesheet.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
-msgstr "Horários por dia"
+#: view:random.timesheet.lines:0
+msgid "Random Timesheets Lines"
+msgstr ""
 
 #. module: report_timesheet
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr "Projecto"
+
+#. module: report_timesheet
+#: field:random.timesheet.lines,amount:0
+msgid "Amount"
+msgstr ""
 
 #. module: report_timesheet
 #: field:report_timesheet.invoice,amount_invoice:0
@@ -186,13 +215,19 @@ msgid "Random Timesheet"
 msgstr ""
 
 #. module: report_timesheet
-#: field:report.random.timesheet,quantity:0
-#: field:report_timesheet.account,quantity:0
-#: field:report_timesheet.account.date,quantity:0
-#: field:report_timesheet.invoice,quantity:0
-#: field:report_timesheet.user,quantity:0
-msgid "Quantity"
-msgstr "Quantidade"
+#: field:random.timesheet.lines,to_invoice:0
+msgid "Invoicing"
+msgstr ""
+
+#. module: report_timesheet
+#: field:random.timesheet.lines,general_account_id:0
+msgid "General Account"
+msgstr ""
+
+#. module: report_timesheet
+#: model:ir.model,name:report_timesheet.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Horários por dia"
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_invoice_stat_my
@@ -218,6 +253,7 @@ msgid "Month"
 msgstr "Mês"
 
 #. module: report_timesheet
+#: field:random.timesheet.lines,analytic_account_id:0
 #: field:report.random.timesheet,analytic_account_id:0
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
@@ -233,6 +269,11 @@ msgstr "Gestor"
 #: field:report_timesheet.user,cost:0
 msgid "Cost"
 msgstr "Custo"
+
+#. module: report_timesheet
+#: field:random.timesheet.lines,uom_id:0
+msgid "UoM"
+msgstr ""
 
 #. module: report_timesheet
 #: model:ir.actions.act_window,name:report_timesheet.action_timesheet_user_stat

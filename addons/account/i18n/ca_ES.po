@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:25:14+0000\n"
-"PO-Revision-Date: 2009-04-09 13:25:14+0000\n"
+"POT-Creation-Date: 2009-05-19 14:16:35+0000\n"
+"PO-Revision-Date: 2009-05-19 14:16:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,10 +80,9 @@ msgid "This account will be used to value incoming stock for the current product
 msgstr ""
 
 #. module: account
-#: field:account.invoice.tax,account_id:0
-#: field:account.move.line,tax_code_id:0
-msgid "Tax Account"
-msgstr "Compte impost"
+#: help:account.invoice,period_id:0
+msgid "Keep empty to use the period of the validation(invoice) date."
+msgstr ""
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -189,6 +188,12 @@ msgid "Move line select"
 msgstr "Selecciona línia moviment"
 
 #. module: account
+#: code:addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "No Period found on Invoice!"
+msgstr ""
+
+#. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
@@ -286,6 +291,7 @@ msgid "Gives the view used when writing or browsing entries in this journal. The
 msgstr "Indica la vista utilitzada per introduir o mostrar assentaments en aquest diari. La vista indica a OpenERP els camps que han de ser visibles, requerits o només lectura i en quin ordre. Podeu crear la vostra pròpia vista per codificar més ràpid en cada diari."
 
 #. module: account
+#: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
 msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."
 msgstr ""
@@ -742,6 +748,11 @@ msgid "Analytic Entries"
 msgstr "Entrades analítiques"
 
 #. module: account
+#: rml:account.tax.code.entries:0
+msgid "Voucher Nb"
+msgstr "Núm. de justificat"
+
+#. module: account
 #: field:account.analytic.line,user_id:0
 #: field:account.journal,user_id:0
 msgid "User"
@@ -908,6 +919,11 @@ msgid "Account cost and revenue by journal"
 msgstr "Cost i retorn del compte per diari"
 
 #. module: account
+#: help:account.account.template,user_type:0
+msgid "These types are defined according to your country. The type contain more information about the account and it's specificities."
+msgstr ""
+
+#. module: account
 #: selection:account.automatic.reconcile,init,power:0
 msgid "6"
 msgstr "6"
@@ -984,6 +1000,7 @@ msgstr "Import canvi"
 #: code:addons/account/wizard/wizard_central_journal.py:0
 #: code:addons/account/wizard/wizard_general_journal.py:0
 #: code:addons/account/wizard/wizard_print_journal.py:0
+#: code:addons/account/wizard/wizard_third_party_ledger.py:0
 #, python-format
 msgid "No Data Available"
 msgstr ""
@@ -1176,11 +1193,6 @@ msgid "Print Analytic Journals"
 msgstr "Imprimeix diaris analítics"
 
 #. module: account
-#: rml:account.tax.code.entries:0
-msgid "Voucher Nb"
-msgstr "Núm. de justificat"
-
-#. module: account
 #: help:account.payment.term.line,sequence:0
 msgid "The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"
 msgstr "El camp seqüència és utilitzat per ordenar les línies de terminis de pagament en ordre ascendent."
@@ -1251,6 +1263,11 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: model:account.journal,name:account.sales_journal
 msgid "Journal de vente"
+msgstr ""
+
+#. module: account
+#: help:account.model.line,amount_currency:0
+msgid "The amount expressed in an optional other currency."
 msgstr ""
 
 #. module: account
@@ -1451,9 +1468,9 @@ msgid "Analytic lines"
 msgstr "Línies analítiques"
 
 #. module: account
-#: help:account.move.line,amount_currency:0
-msgid "The amount expressed in an optionnal other currency if it is a multi-currency entry."
-msgstr "L'import expressat en una altra moneda opcional si és un assentament multi-moneda."
+#: help:account.tax,type:0
+msgid "The computation method for the tax amount."
+msgstr "El mètodo de càlcul de l'import de l'impost."
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -2195,11 +2212,6 @@ msgid "Options"
 msgstr "Opcions"
 
 #. module: account
-#: help:account.model.line,amount_currency:0
-msgid "The amount expressed in an optionnal other currency."
-msgstr "La quantitat expressada en una altra moneda opcional."
-
-#. module: account
 #: model:process.process,name:account.process_process_invoiceprocess0
 msgid "Customer Invoice Process"
 msgstr "Procés de factura de client"
@@ -2531,6 +2543,11 @@ msgid "Some entries are already reconciled !"
 msgstr "Alguns assentaments ja estan conciliats!"
 
 #. module: account
+#: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
+msgid "and Journals"
+msgstr "i diaris"
+
+#. module: account
 #: field:account.journal,refund_journal:0
 msgid "Refund Journal"
 msgstr "Diari reintegrament"
@@ -2555,11 +2572,6 @@ msgstr "Núm. compte"
 #: help:account.tax,child_depend:0
 msgid "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
 msgstr ""
-
-#. module: account
-#: help:account.invoice,period_id:0
-msgid "Keep empty to use the period of the validation date."
-msgstr "Deixar-ho buit per utilitzar el període de la data de validació."
 
 #. module: account
 #: rml:account.central.journal:0
@@ -2651,11 +2663,6 @@ msgstr "Extracte bancari"
 #: wizard_view:account.move.line.reconcile,addendum:0
 msgid "Information addendum"
 msgstr "Informació addicional"
-
-#. module: account
-#: help:account.tax,type:0
-msgid "The computation method for the tax amount."
-msgstr "El mètodo de càlcul de l'import de l'impost."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2837,9 +2844,20 @@ msgid "Unable to change tax !"
 msgstr ""
 
 #. module: account
+#: help:account.account.template,type:0
+msgid "This type is used to differenciate types with special effects in Open ERP: view can not have entries, consolidation are accounts that can have children accounts for multi-company consolidations, payable/receivable are for partners accounts (for debit/credit computations), closed for deprecated accounts."
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Estimat Sr./Sra.,"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_generic_report
@@ -2931,6 +2949,7 @@ msgstr "Referència factura"
 #: field:account.chart.template,name:0
 #: field:account.config.wizard,name:0
 #: field:account.model.line,name:0
+#: field:account.move,name:0
 #: field:account.move.line,name:0
 #: field:account.move.reconcile,name:0
 #: field:account.subscription,name:0
@@ -3033,6 +3052,7 @@ msgstr "Estat abert"
 #: code:addons/account/wizard/wizard_central_journal.py:0
 #: code:addons/account/wizard/wizard_general_journal.py:0
 #: code:addons/account/wizard/wizard_print_journal.py:0
+#: code:addons/account/wizard/wizard_third_party_ledger.py:0
 #, python-format
 msgid "No records found for your selection!"
 msgstr ""
@@ -3042,6 +3062,12 @@ msgstr ""
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "Les línies dels assentaments comptables no estan en estat vàlid."
+
+#. module: account
+#: field:account.invoice.tax,account_id:0
+#: field:account.move.line,tax_code_id:0
+msgid "Tax Account"
+msgstr "Compte impost"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_statemententries0
@@ -3664,6 +3690,11 @@ msgid "Date of the day"
 msgstr "Data del dia"
 
 #. module: account
+#: help:account.move.line,amount_currency:0
+msgid "The amount expressed in an optional other currency if it is a multi-currency entry."
+msgstr ""
+
+#. module: account
 #: field:account.tax,parent_id:0
 #: field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
@@ -4044,6 +4075,11 @@ msgid "Payment Entries"
 msgstr "Assentaments de pagament"
 
 #. module: account
+#: help:account.move.line,tax_code_id:0
+msgid "The Account can either be a base tax code or tax code account."
+msgstr ""
+
+#. module: account
 #: help:account.automatic.reconcile,init,account_ids:0
 msgid "If no account is specified, the reconciliation will be made using every accounts that can be reconcilied"
 msgstr "Si no s'especifica cap compte, la conciliació es farà utilitzant cada compte que pugui ser conciliat"
@@ -4107,9 +4143,9 @@ msgid "By Period"
 msgstr "Per període"
 
 #. module: account
-#: rml:account.overdue:0
-msgid "Paid"
-msgstr "Pagat"
+#: help:account.invoice,date_invoice:0
+msgid "Keep empty to use the current date"
+msgstr ""
 
 #. module: account
 #: rml:account.overdue:0
@@ -4281,6 +4317,13 @@ msgid "You can check this box to mark the entry line as a litigation with the as
 msgstr "Marqueu aquesta caixa per senyalar la línia de l'assentament com un desacord amb l'empresa associada"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#: code:addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "Data Insufficient !"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
@@ -4298,11 +4341,6 @@ msgstr "Límit a pagar"
 #: wizard_field:account.third_party_ledger.report,init,state:0
 msgid "Date/Period Filter"
 msgstr "Filtra data/període"
-
-#. module: account
-#: field:account.move,name:0
-msgid "Number"
-msgstr "Número"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -4536,11 +4574,6 @@ msgstr "Importa fitxer des de extracte bancari"
 #: field:account.account.template,type:0
 msgid "Internal Type"
 msgstr "Tipus intern"
-
-#. module: account
-#: field:account.account,balance:0
-msgid "Closing Balance"
-msgstr "Balanç en el tancament"
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -5066,11 +5099,6 @@ msgid "Analytic Check"
 msgstr "Comprovació analítica"
 
 #. module: account
-#: help:account.move.line,currency_id:0
-msgid "The optionnal other currency if it is a multi-currency entry."
-msgstr "L'altra moneda opcional si és un assentament multi-moneda."
-
-#. module: account
 #: code:addons/account/account_move_line.py:0
 #: code:addons/account/wizard/wizard_state_open.py:0
 #: code:addons/account/wizard/wizard_validate_account_move.py:0
@@ -5472,6 +5500,11 @@ msgid "This period is already closed !"
 msgstr "Aquest període ja està tancat!"
 
 #. module: account
+#: help:account.move.line,currency_id:0
+msgid "The optional other currency if it is a multi-currency entry."
+msgstr ""
+
+#. module: account
 #: view:account.invoice:0
 #: field:account.invoice,payment_ids:0
 #: selection:account.vat.declaration,init,based_on:0
@@ -5541,6 +5574,11 @@ msgstr ""
 #: selection:account.subscription,state:0
 msgid "Draft"
 msgstr "Esborrany"
+
+#. module: account
+#: rml:account.overdue:0
+msgid "Paid"
+msgstr "Pagat"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree11
@@ -5656,9 +5694,9 @@ msgid "At Date"
 msgstr "En data"
 
 #. module: account
-#: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
-msgid "and Journals"
-msgstr "i diaris"
+#: help:account.move.line,tax_amount:0
+msgid "If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,                    this field will contain the basic amount(without tax)."
+msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5739,6 +5777,7 @@ msgid "General Journal"
 msgstr "Diari general"
 
 #. module: account
+#: field:account.account,balance:0
 #: rml:account.account.balance:0
 #: selection:account.account.type,close_method:0
 #: field:account.analytic.account,balance:0
@@ -6106,6 +6145,7 @@ msgstr "Venciment"
 
 #. module: account
 #: field:account.fiscalyear,name:0
+#: field:account.journal.period,fiscalyear_id:0
 #: field:account.period,fiscalyear_id:0
 #: field:account.sequence.fiscalyear,fiscalyear_id:0
 #: field:fiscalyear.seq,fiscalyear_id:0
@@ -6184,11 +6224,6 @@ msgstr ""
 #: help:account.tax.template,tax_sign:0
 msgid "Usually 1 or -1."
 msgstr "Normalment 1 o -1."
-
-#. module: account
-#: help:account.invoice,date_due:0
-msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment."
-msgstr "﻿Si utilitza terminis de pagament, la data de venciment es calcularà automàticament en la generació d'assentaments comptables. Si deixeu buits el termini de pagament i la data de venciment, significa pagament directe."
 
 #. module: account
 #: view:res.partner:0

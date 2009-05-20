@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:28:34+0000\n"
-"PO-Revision-Date: 2009-04-09 13:28:34+0000\n"
+"POT-Creation-Date: 2009-05-19 14:18:42+0000\n"
+"PO-Revision-Date: 2009-05-19 14:18:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,34 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
+#: field:product.product,purchase_line_warn:0
+msgid "Purchase Order Line"
 msgstr ""
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
-msgid "Message for Stock Picking"
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sale Order Line"
 msgstr ""
 
 #. module: warning
-#: model:ir.module.module,shortdesc:warning.module_meta_information
-msgid "Module for Warnings form onchange Event"
+#: field:product.product,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: warning
+#: field:product.product,sale_line_warn:0
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: warning
+#: view:product.product:0
+msgid "Warning when Purchasing this Product"
+msgstr ""
+
+#. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for ' + product_info.name +' !"
 msgstr ""
 
 #. module: warning
@@ -37,53 +53,33 @@ msgid "Warnings"
 msgstr ""
 
 #. module: warning
-#: view:product.product:0
-msgid "Warning when purchasing this product"
-msgstr ""
-
-#. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr ""
-
-#. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr ""
-
-#. module: warning
-#: field:product.product,purchase_line_warn:0
-msgid "Purchase Order Line"
-msgstr ""
-
-#. module: warning
-#: field:product.product,purchase_line_warn_msg:0
-msgid "Message for Purchase Order Line"
-msgstr ""
-
-#. module: warning
-#: field:res.partner,purchase_warn:0
-msgid "Purchase Order"
-msgstr ""
-
-#. module: warning
-#: view:product.product:0
-msgid "Warning when selling this product"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Blocking Message"
 msgstr ""
 
 #. module: warning
 #: view:res.partner:0
-msgid "Warning on the sale order"
+msgid "Warning on the Invoice"
 msgstr ""
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the purchase order"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "No Message"
 msgstr ""
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: warning
@@ -92,18 +88,33 @@ msgid "Invoice"
 msgstr ""
 
 #. module: warning
+#: model:ir.module.module,shortdesc:warning.module_meta_information
+msgid "Module for Warnings form onchange Event"
+msgstr ""
+
+#. module: warning
+#: view:product.product:0
+msgid "Warning when Selling this Product"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,sale_warn:0
+msgid "Sale Order"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,purchase_warn:0
+msgid "Purchase Order"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,sale_warn_msg:0
 msgid "Message for Sale Order"
-msgstr ""
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the picking"
-msgstr ""
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the invoice"
 msgstr ""
 
 #. module: warning
@@ -112,12 +123,52 @@ msgid "Message for Purchase Order"
 msgstr ""
 
 #. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
+#: help:product.product,purchase_line_warn:0
+#: help:product.product,sale_line_warn:0
+#: help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0
+#: help:res.partner,purchase_warn:0
+#: help:res.partner,sale_warn:0
+msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: warning
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
 msgstr ""
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
 msgid "Module for Warnings form onchange Event."
+msgstr ""
+
+#. module: warning
+#: view:res.partner:0
+msgid "Warning on the Picking"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:0
+msgid "Warning on the Purchase Order"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:0
+msgid "Warning on the Sale Order"
+msgstr ""
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
 msgstr ""
 

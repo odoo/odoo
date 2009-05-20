@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:37:54+0000\n"
-"PO-Revision-Date: 2009-04-09 13:37:54+0000\n"
+"POT-Creation-Date: 2009-05-19 14:24:38+0000\n"
+"PO-Revision-Date: 2009-05-19 14:24:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -90,14 +90,19 @@ msgid "Notes"
 msgstr "Note"
 
 #. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Validation"
 msgstr "Convalida"
 
 #. module: hr_expense
-#: rml:hr.expense:0
-msgid "This document must be dated and signed for reimbursment"
-msgstr "Questo documento deve essere datato e firmato per ricevere il rimborso"
+#: help:product.product,hr_expense_ok:0
+msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -158,11 +163,6 @@ msgstr "Fattura Fornitore"
 #: field:hr.expense.expense,state:0
 msgid "State"
 msgstr "Stato"
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-msgid "Date Valided"
-msgstr "Data validata"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -335,6 +335,11 @@ msgid "HR Expenses"
 msgstr "Spese Risorse Umane"
 
 #. module: hr_expense
+#: field:hr.expense.expense,date_valid:0
+msgid "Date Validated"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Account Move"
 msgstr "Spostamento Contabile"
@@ -421,6 +426,11 @@ msgid "Accept"
 msgstr "Accetto"
 
 #. module: hr_expense
+#: rml:hr.expense:0
+msgid "This document must be dated and signed for reimbursement"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
 msgid "Expense is refused."
 msgstr "La spese è rifiutata"
@@ -448,11 +458,6 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Canceled"
-msgstr "Annullata"
-
-#. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,name:0
 msgid "Expense Sheet"
@@ -467,6 +472,11 @@ msgstr "Quantità"
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
 msgstr "Rifiutato"
+
+#. module: hr_expense
+#: field:product.product,hr_expense_ok:0
+msgid "Can be Expensed"
+msgstr ""
 
 #. module: hr_expense
 #: rml:hr.expense:0
