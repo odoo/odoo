@@ -196,12 +196,21 @@ class rml_parse(object):
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
 
-    def set_html_image(self,attach_id):
+    def set_html_image(self,id,model=None,field=None):
+        if not id :
+            return ''
+        if not model:
+            model = 'ir.attachment'
         try :
-            att_id = int(attach_id)
-            attachment = self.pool.get('ir.attachment').browse(self.cr,self.uid,att_id)
-            return attachment.datas
-        except :
+            id = int(id)
+            res = self.pool.get(model).read(self.cr,self.uid,id)
+            if field :
+                return res[field]
+            elif model =='ir.attachment' :
+                return res['datas']
+            else :
+                return ''
+        except Exception,e:
             return ''
 
     def setLang(self, lang):
