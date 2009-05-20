@@ -33,7 +33,9 @@ class res_country(osv.osv):
     _defaults = {
         'intrastat': lambda *a: False,
     }
+
 res_country()
+
 
 class report_intrastat_code(osv.osv):
     _name = "report.intrastat.code"
@@ -42,7 +44,9 @@ class report_intrastat_code(osv.osv):
         'name': fields.char('Intrastat Code', size=16),
         'description': fields.char('Description', size=64),
     }
+
 report_intrastat_code()
+
 
 class product_template(osv.osv):
     _name = "product.template"
@@ -50,6 +54,7 @@ class product_template(osv.osv):
     _columns = {
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
     }
+
 product_template()
 
 class report_intrastat(osv.osv):
@@ -57,9 +62,9 @@ class report_intrastat(osv.osv):
     _description = "Intrastat report"
     _auto = False
     _columns = {
-        'name': fields.many2one('account.period', 'Period', readonly=True,select=True),
-        'supply_units':fields.float('Supply Units', readonly=True),
-        'ref':fields.char('Origin',size=64, readonly=True),
+        'name': fields.many2one('account.period', 'Period', readonly=True, select=True),
+        'supply_units': fields.float('Supply Units', readonly=True),
+        'ref': fields.char('Origin', size=64, readonly=True),
         'code': fields.char('Country code', size="2", readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
@@ -128,8 +133,6 @@ class report_intrastat(osv.osv):
                     and inv_country.intrastat=true
                 group by inv.period_id,intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id
             )""")
+
 report_intrastat()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
