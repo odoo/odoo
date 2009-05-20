@@ -164,6 +164,7 @@ class db(netsvc.Service):
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'DROP DB: %s' % (db_name))
         finally:
+            cr.commit()
             cr.close()
             sql_db.close_db('template1')
         return True
@@ -261,6 +262,7 @@ class db(netsvc.Service):
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'RENAME DB: %s -> %s' % (old_name, new_name))
         finally:
+            cr.commit()
             cr.close()
             sql_db.close_db('template1')
         return True
@@ -639,6 +641,7 @@ class report_spool(netsvc.Service):
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
+            cr.commit()
             cr.close()
             return True
 
