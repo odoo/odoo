@@ -141,7 +141,7 @@
                         <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
                         <field name="type" readonly="1" select="2"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
-                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1"/>
+                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1" context="{'default_customer': 0}" />
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                     </group>

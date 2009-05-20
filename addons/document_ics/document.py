@@ -28,6 +28,7 @@ import base64
 import datetime
 import time
 import random
+import tools
 
 ICS_TAGS = {
     'summary':'normal',
@@ -35,7 +36,7 @@ ICS_TAGS = {
     'dtstart':'date' ,
     'dtend':'date' ,
     'created':'date' ,
-    'dt-stamp':'date' ,
+    'dtstamp':'date' ,
     'last-modified':'normal' ,
     'url':'normal' ,
     'attendee':'multiple',
@@ -50,7 +51,7 @@ class document_directory_ics_fields(osv.osv):
     _name = 'document.directory.ics.fields'
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'Open ERP Field', required=True),
-        'name': fields.selection(map(lambda x: (x,x), ICS_TAGS.keys()),'ICS Value', required=True),
+        'name': fields.selection(map(lambda x: (x, x), ICS_TAGS.keys()), 'ICS Value', required=True),
         'content_id': fields.many2one('document.directory.content', 'Content', required=True, ondelete='cascade')
     }
 document_directory_ics_fields()
@@ -105,6 +106,12 @@ class document_directory_content(osv.osv):
         return True
 
     def process_read_ics(self, cr, uid, node, context={}):
+        def ics_datetime(idate, short=False):
+            if short:
+                return datetime.date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+            else:
+                return datetime.datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+
         import vobject
         obj_class = self.pool.get(node.content.ics_object_id.model)
         # Can be improved to use context and active_id !
@@ -113,21 +120,31 @@ class document_directory_content(osv.osv):
         cal = vobject.iCalendar()
         for obj in obj_class.browse(cr, uid, ids, context):
             event = cal.add('vevent')
+            # Fix dtstamp et last-modified with create and write date on the object line
+            perm = obj_class.perm_read(cr, uid, [obj.id], context)
+            event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
+            event.add('dtstamp').value = ics_datetime(perm[0]['create_date'][:19])
+            if perm[0]['write_date']:
+                event.add('last-modified').value = ics_datetime(perm[0]['write_date'][:19])
             for field in node.content.ics_field_ids:
                 value = getattr(obj, field.field_id.name)
                 if (not value) and field.name=='uid':
-                    value = 'OpenERP-'+str(random.randint(1999999999, 9999999999))
+                    value = 'OpenERP-%s_%s@%s' % (node.content.ics_object_id.model, str(obj.id), cr.dbname,)
                     obj_class.write(cr, uid, [obj.id], {field.field_id.name: value})
                 if ICS_TAGS[field.name]=='normal':
                     if type(value)==type(obj):
                         value=value.name
                     value = value or ''
                     event.add(field.name).value = value or ''
-                elif ICS_TAGS[field.name]=='date':
-                    dt = value or time.strftime('%Y-%m-%d %H:%M:%S')
-                    if len(dt)==10:
-                        dt = dt+' 09:00:00'
-                    value = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
+                elif ICS_TAGS[field.name]=='date' and value:
+                    if field.name == 'dtstart':
+                        date_start = start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(value , "%Y-%m-%d %H:%M:%S")))
+                    if field.name == 'dtend' and isinstance(value, float):
+                        value = (start_date + datetime.timedelta(hours=value)).strftime('%Y-%m-%d %H:%M:%S')
+                    if len(value)==10:
+                        value = ics_datetime(value, True)
+                    else:
+                        value = ics_datetime(value)
                     event.add(field.name).value = value
         s= StringIO.StringIO(cal.serialize().encode('utf8'))
         s.name = node
@@ -138,8 +155,36 @@ document_directory_content()
 class crm_case(osv.osv):
     _inherit = 'crm.case'
     _columns = {
-        'code': fields.char('Calendar Code', size=64)
+        'code': fields.char('Calendar Code', size=64),
+        'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically computed from Start Date + Duration"),
     }
+
+    _defaults = {
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'crm.case'),
+    }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        code field must be unique in ICS file
+        """
+        if not default: default = {}
+        if not context: context = {}
+        default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.case'), 'id': False})
+        return super(crm_case, self).copy(cr, uid, id, default, context)
+
+    def on_change_duration(self, cr, uid, id, date, duration):
+        if not date:
+            return {}
+        start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M:%S")))
+        if duration >= 0 :
+            end = start_date + datetime.timedelta(hours=duration)
+        if duration < 0:
+            raise osv.except_osv(_('Warning !'),
+                    _('You can not set negative Duration.'))
+
+        res = {'value' : {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
+        return res
+
 crm_case()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

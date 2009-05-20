@@ -55,7 +55,9 @@ class report_intrastat(osv.osv):
     _description = "Intrastat report"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.many2one('account.period', 'Period', readonly=True,select=True),
+		'supply_units':fields.float('Supply Units', readonly=True),		
+		'ref':fields.char('Origin',size=64, readonly=True),
         'code': fields.char('Country code', size="2", readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
@@ -66,56 +68,63 @@ class report_intrastat(osv.osv):
     def init(self, cr):
         cr.execute("""
             create or replace view report_intrastat as (
-                select
-                    to_char(m.create_date, 'YYYY-MM-01') as name,
-                    min(m.id) as id,
-                    pt.intrastat_id as intrastat_id,
-                    case when l.usage in ('supplier', 'customer') then upper(pc.code) else upper(c.code) end as code,
-                    sum(case when pol.price_unit is not null
-                        then pol.price_unit * m.product_qty 
-                        else
-                            case when sol.price_unit is not null
-                            then sol.price_unit * m.product_qty 
-                            else 0 
-                            end
-                        end) as value,
-                    sum(pt.weight_net * m.product_qty) as weight,
-                    case when l.usage in ('supplier', 'customer') then 'import' else 'export' end as type,
-                    case when ppl.currency_id is not null
-                        then ppl.currency_id
-                        else spl.currency_id
-                        end as currency_id
-                from
-                    stock_move m
-                    left join (product_template pt
-                        left join product_product pp on (pp.product_tmpl_id = pt.id))
-                    on (m.product_id = pt.id)
-                    left join (res_partner_address a
-                        left join res_country c on (c.id = a.country_id))
-                    on (a.id = m.address_id)
-                    left join (stock_picking sp
-                        left join (res_partner_address pa
-                            left join res_country pc on (pc.id = pa.country_id))
-                        on (pa.id = sp.address_id))
-                    on (sp.id = m.picking_id)
-                    left join stock_location l on (l.id = m.location_id)
-                    left join stock_location dl on (dl.id = m.location_dest_id)
-                    left join (purchase_order_line pol
-                        left join (purchase_order po
-                            left join product_pricelist ppl on (ppl.id = po.pricelist_id))
-                        on (po.id = pol.order_id))
-                    on (pol.id = m.purchase_line_id)
-                    left join (sale_order_line sol
-                        left join (sale_order so
-                            left join product_pricelist spl on (spl.id = so.pricelist_id))
-                        on (so.id = sol.order_id))
-                    on (sol.id = m.sale_line_id)
-                where
-                    m.state != 'draft'
-                    and ((l.usage in ('supplier', 'customer') and dl.usage not in ('supplier', 'customer'))
-                        or (dl.usage in ('supplier', 'customer') and l.usage not in ('supplier', 'customer')))
-                    and (c.intrastat is not null or pc.intrastat is not null)
-                group by to_char(m.create_date, 'YYYY-MM-01'), pt.intrastat_id, c.code, pc.code, l.usage, dl.usage, ppl.currency_id, spl.currency_id
+				select
+					inv.period_id as name,
+					min(inv_line.id) as id,
+					intrastat.id as intrastat_id,					
+					upper(inv_country.code) as code,
+					sum(case when inv_line.price_unit is not null
+							then inv_line.price_unit * inv_line.quantity
+							else 0						
+						end) as value,
+					sum(
+						case when uom.category_id != puom.category_id then pt.weight_net * inv_line.quantity
+						else
+							case when uom.factor_inv_data > 0
+								then
+									pt.weight_net * inv_line.quantity * uom.factor_inv_data
+								else
+									pt.weight_net * inv_line.quantity / uom.factor
+							end
+						end
+					) as weight,
+					sum(
+						case when uom.category_id != puom.category_id then inv_line.quantity
+						else
+							case when uom.factor_inv_data > 0
+								then
+									inv_line.quantity * uom.factor_inv_data
+								else
+									inv_line.quantity / uom.factor
+							end
+						end
+					) as supply_units,
+
+					inv.currency_id as currency_id,
+					inv.number as ref,
+					case when inv.type in ('out_invoice','in_refund')
+						then 'export'
+						else 'import'
+						end as type
+				from
+					account_invoice inv
+					left join account_invoice_line inv_line on inv_line.invoice_id=inv.id
+					left join (product_template pt
+						left join product_product pp on (pp.product_tmpl_id = pt.id))
+					on (inv_line.product_id = pt.id)
+					left join product_uom uom on uom.id=inv_line.uos_id
+					left join product_uom puom on puom.id = pt.uom_id
+					left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
+					left join (res_partner_address inv_address
+						left join res_country inv_country on (inv_country.id = inv_address.country_id))
+					on (inv_address.id = inv.address_invoice_id)
+
+				where
+					inv.state in ('open','paid')
+					and inv_line.product_id is not null
+					and inv_country.intrastat=true				
+                    
+				group by inv.period_id,intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id
             )""")
 report_intrastat()
 

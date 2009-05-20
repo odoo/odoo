@@ -39,7 +39,7 @@ class general_ledger(rml_parse.rml_parse):
 
 
 
-	def preprocess(self, objects, data, ids):
+	def set_context(self, objects, data, ids, report_type = None):
 		##
 
 
@@ -55,7 +55,7 @@ class general_ledger(rml_parse.rml_parse):
 
 			objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
 
-		super(general_ledger, self).preprocess(objects, data, new_ids)
+		super(general_ledger, self).set_context(objects, data, ids, report_type)
 
 	def __init__(self, cr, uid, name, context):
 		super(general_ledger, self).__init__(cr, uid, name, context)

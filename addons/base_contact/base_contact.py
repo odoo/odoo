@@ -46,7 +46,8 @@ class res_partner_contact(osv.osv):
         'birthdate':fields.date('Birth Date'),
         'active' : fields.boolean('Active'),
         'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
-        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Job'),
+        'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Function'),
+        'job_id':fields.related('job_ids',type='many2one', relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
     }
     _defaults = {
@@ -87,6 +88,7 @@ class res_partner_address(osv.osv):
     _inherit='res.partner.address'
     _description ='Partner Address'
     _columns = {
+        'job_id':fields.related('job_ids','contact_id','job_id',type='many2one', relation='res.partner.job', string='Main Job'),
         'job_ids':fields.one2many('res.partner.job', 'address_id', 'Contacts'),
     }
 res_partner_address()
@@ -98,7 +100,8 @@ class res_partner_job(osv.osv):
             return []
         res = []
         for r in self.browse(cr, uid, ids):
-            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] +", "+ r.function_id.name))
+            funct = r.function_id and (", " + r.function_id.name) or ""
+            res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] + funct ))
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,

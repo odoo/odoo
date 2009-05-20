@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+	<record id="view_document_ics_config_directories" model="ir.ui.view">
+            <field name="name">Configure Calendars for Sections</field>
+            <field name="model">document.ics.crm.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure Calendars for CRM Sections">
+                    <separator colspan="4" string="Create Pre-Configured Calendars"/>
+                    <newline/>
+                    <field name="meeting"/>
+                    <field name="opportunity"/>
+                    <field name="phonecall"/>
+                    <field name="lead"/>
+                    <field name="claims"/>
+                    <field name="bugs"/>
+                    <field name="helpdesk"/>
+                    <field name="jobs"/>
+                    <field name="fund"/>
+                    <newline/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
+                        <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_document_ics_config_directories" model="ir.actions.act_window">
+            <field name="name">Configure Calendars for Sections </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.ics.crm.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <!-- register configuration wizard -->
+        <record id="config_wizard_step_case_section_menu" model="ir.actions.todo">
+            <field name="name">Create Calendars for CRM Case Section</field>
+            <field name="note">This Configuration step use to create Calendars in document for all Case Sections</field>
+            <field name="action_id" ref="action_view_document_ics_config_directories"/>
+        </record>
+        
+        
+     </data>  
+</openerp>
+  

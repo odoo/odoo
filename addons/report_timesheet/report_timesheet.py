@@ -135,7 +135,7 @@ class report_timesheet_invoice(osv.osv):
                     l.account_id as account_id,
                     a.user_id as manager_id,
                     sum(l.unit_amount) as quantity,
-                    sum(l.unit_amount * t.list_price) as revenue
+                    sum(l.unit_amount * t.list_price) as amount_invoice
                 from account_analytic_line l
                     left join hr_timesheet_invoice_factor f on (l.to_invoice=f.id)
                     left join account_analytic_account a on (l.account_id=a.id)

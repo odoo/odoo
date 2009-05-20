@@ -262,7 +262,7 @@
                     <group colspan="6" col="6">
                         <field name="name" select="1" attrs="{'readonly':[('state','=','done')]}" />
                         <field name="project_id" required="1" select="1" attrs="{'readonly':[('state','=','done')]}" />
-                        <field name="total_hours" widget="float_time" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="total_hours" widget="float_time"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','=','done')]}" />
                         <field name="date_deadline" select="2" attrs="{'readonly':[('state','=','done')]}" />
                         <field name="progress" widget="progressbar"/>

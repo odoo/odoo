@@ -147,7 +147,7 @@ class partner_balance(report_sxw.rml_parse):
         else:
             return self.comma_me(new)
 
-    def preprocess(self, objects, data, ids):
+    def set_context(self, objects, data, ids, report_type = None):
         # Transformation des date
         #
         #
@@ -168,7 +168,7 @@ class partner_balance(report_sxw.rml_parse):
         self.date_lst_string =''
         if self.date_lst:
             self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
-            
+
 
         ## Compute Code
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -189,7 +189,7 @@ class partner_balance(report_sxw.rml_parse):
                     "AND a.active", (data['form']['company_id'],))
         self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 
-        super(partner_balance, self).preprocess(objects, data, ids)
+        super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self,data):
 

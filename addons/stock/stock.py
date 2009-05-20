@@ -425,7 +425,7 @@ class stock_picking(osv.osv):
         'date_done':fields.datetime('Date Done'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
-        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
+        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',states={'done':[('readonly',True)],'cancel':[('readonly',True)]}),
 
         'auto_picking': fields.boolean('Auto-Packing'),
         'address_id': fields.many2one('res.partner.address', 'Partner'),
