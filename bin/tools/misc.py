@@ -782,6 +782,7 @@ def get_languages():
         'uk_UA': u'Ukrainian / украї́нська мо́ва',
         'zh_CN': u'Chinese (CN) / 简体中文' ,
         'zh_TW': u'Chinese (TW) / 正體字',
+        "th_TH": u"Thai / ภาษาไทย"
     }
     return languages
 
