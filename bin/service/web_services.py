@@ -50,6 +50,7 @@ class db(netsvc.Service):
         self.exportMethod(self.drop)
         self.exportMethod(self.dump)
         self.exportMethod(self.restore)
+        self.exportMethod(self.rename)
         self.exportMethod(self.list)
         self.exportMethod(self.list_lang)
         self.exportMethod(self.change_admin_password)
@@ -236,6 +237,32 @@ class db(netsvc.Service):
             raise Exception, "Couldn't restore database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 'RESTORE DB: %s' % (db_name))
+        return True
+
+    def rename(self, password, old_name, new_name):
+        security.check_super(password)
+        sql_db.close_db(old_name)
+        logger = netsvc.Logger()
+
+        db = sql_db.db_connect('template1')
+        cr = db.serialized_cursor()
+        try:
+            try:
+                cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
+            except Exception, e:
+                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
+                        'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
+                raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
+            else:
+                fs = os.path.join(tools.config['root_path'], 'filestore')
+                if os.path.exists(os.path.join(fs, old_name)):
+                    os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
+                    
+                logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                    'RENAME DB: %s -> %s' % (old_name, new_name))
+        finally:
+            cr.close()
+            sql_db.close_db('template1')
         return True
 
     def db_exist(self, db_name):
