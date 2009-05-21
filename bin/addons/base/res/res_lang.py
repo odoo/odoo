@@ -26,13 +26,13 @@ from locale import localeconv
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
-     
+
     def _get_default_date_format(self,cursor,user,context={}):
         return '%m/%d/%Y'
-    
+
     def _get_default_time_format(self,cursor,user,context={}):
         return '%H:%M:%S'
-    
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True),
@@ -59,7 +59,6 @@ class lang(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
     ]
-    
     def _group(self,cr,uid,ids,s, monetary=False):
         conv = localeconv()
 

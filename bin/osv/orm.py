@@ -2422,7 +2422,15 @@ class orm(orm_template):
             upd0 += ','+self._inherits[table]
             upd1 += ',%s'
             upd2.append(id)
-
+        
+        #Start : Set bool fields to be False if they are not touched(to make search more powerful) 
+        bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
+        
+        for bool_field in bool_fields:
+            if bool_field not in vals:
+                vals[bool_field] = False
+        #End
+        
         for field in vals:
             if self._columns[field]._classic_write:
                 upd0 = upd0 + ',"' + field + '"'

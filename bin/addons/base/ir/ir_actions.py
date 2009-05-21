@@ -722,14 +722,17 @@ class ir_actions_configuration_wizard(osv.osv_memory):
 
     def _get_action(self, cr, uid, context={}):
         next_action=self.next_configuration_action(cr,uid,context=context)
-        if next_action:           
+        if next_action:
             return next_action.id
         return False
 
     def _progress_get(self,cr,uid, context={}):
         total = self.pool.get('ir.actions.todo').search_count(cr, uid, [], context)
         todo = self.pool.get('ir.actions.todo').search_count(cr, uid, [('type','=','configure'),('active','=',True),('state','<>','open')], context)
-        return max(5.0,round(todo*100/total))
+        if total > 0.0:
+            return max(5.0,round(todo*100/total))
+        else:
+            return 100.0
 
     _columns = {
         'name': fields.text('Next Wizard',readonly=True),

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -361,7 +361,7 @@ msgstr "Bosnia / bosanski jezik"
 #. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid "If you check this, then the second time the user prints with same attachment name, it returns the previous report."
-msgstr ""
+msgstr "Selle kasti märgistamisel pöördutakse eelmise aruande juurde, kui kasutaja prindib olemasoleva manuse nimega"
 
 #. module: base
 #: code:osv/orm.py:0
@@ -449,7 +449,7 @@ msgstr "Kohandatud väljadel peab olema nimi mis algab 'x_'-ga !"
 #. module: base
 #: help:ir.actions.server,action_id:0
 msgid "Select the Action Window, Report, Wizard to be executed."
-msgstr ""
+msgstr "Vali toimingu aken, aruanne, nõustaja mis käivitada"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -842,10 +842,9 @@ msgid "Features"
 msgstr "Võimalused"
 
 #. module: base
-#: rml:ir.module.reference:0
-#: field:maintenance.contract.module,version:0
-msgid "Version"
-msgstr "Versioon"
+#: field:ir.report.custom,frequency:0
+msgid "Frequency"
+msgstr "Sagedus"
 
 #. module: base
 #: field:ir.report.custom.fields,fc0_op:0
@@ -888,7 +887,7 @@ msgstr "raw"
 #. module: base
 #: help:ir.actions.server,email:0
 msgid "Provides the fields that will be used to fetch the email address, e.g. when you select the invoice, then `object.invoice_address_id.email` is the field which gives the correct address"
-msgstr ""
+msgstr "Varustab väljadega, mida kasutatakse e-posti aadressi  tõmbamiseks. Nt kui sa valid arve, siis `object.invoice_address_id.email` on väli, mis annab õige aadressi"
 
 #. module: base
 #: field:res.roles,name:0
@@ -1064,12 +1063,6 @@ msgid "terp-calendar"
 msgstr "terp-calendar"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid "Some installed modules depends on the module you plan to desinstall :\n %s"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_YES"
 msgstr "STOCK_YES"
@@ -1124,7 +1117,7 @@ msgstr "ir.model.access"
 #: field:res.request,priority:0
 #: field:res.request.link,priority:0
 msgid "Priority"
-msgstr "Tähtsus"
+msgstr "Prioriteet"
 
 #. module: base
 #: field:workflow.transition,act_from:0
@@ -1335,7 +1328,7 @@ msgstr "See abiline leiab uued terminid rakenduses nii, et sa saad neid uuendada
 #. module: base
 #: help:ir.actions.server,expression:0
 msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
-msgstr ""
+msgstr "Sisesta väli/avaldis, mis tagastab nimekirja. Nt vali müügikorraldus objektis ja sul saab olla kordus müügikorralduse real. Avaldis = `object.order_line`."
 
 #. module: base
 #: field:ir.model,name:0
@@ -1461,7 +1454,7 @@ msgstr "Krediidilimiit"
 #. module: base
 #: help:ir.actions.server,write_id:0
 msgid "Provide the field name that the record id refers to for the write operation. If it is empty it will refer to the active id of the object."
-msgstr ""
+msgstr "Sisesta välja nimi, mille poole kirje id kirjutamiseks pöördub. Kui see on tühi, siis pöördutakse objekti aktiivse id poole."
 
 #. module: base
 #: model:res.country,name:base.zw
@@ -1865,7 +1858,7 @@ msgstr "Saksa keel / Deutsch"
 #. module: base
 #: help:ir.actions.server,trigger_name:0
 msgid "Select the Signal name that is to be used as the trigger."
-msgstr ""
+msgstr "Vali signaali nimi, mida kasutatakse päästikuna."
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1900,7 +1893,7 @@ msgstr "Malta"
 #. module: base
 #: field:ir.actions.server,fields_lines:0
 msgid "Field Mappings."
-msgstr ""
+msgstr "Välja seostamised"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -1971,7 +1964,7 @@ msgstr "Te saate importida ka .po faile."
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Unable to find a valid contract"
-msgstr ""
+msgstr "Võimatu leida kehtivat lepingut"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:0
@@ -2039,12 +2032,12 @@ msgstr "Tiitel"
 #: code:osv/orm.py:0
 #, python-format
 msgid "Recursivity Detected."
-msgstr ""
+msgstr "Rekursiivsus tuvastatud."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-account"
-msgstr "terp-account"
+msgstr "terp-konto"
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -2129,7 +2122,10 @@ msgid "Regexp to search module on the repository webpage:\n"
 "- The first parenthesis must match the name of the module.\n"
 "- The second parenthesis must match the whole version number.\n"
 "- The last parenthesis must match the extension of the module."
-msgstr ""
+msgstr "Regulaaravaldis, et otsida moodulit varamu veebilehel:\n"
+"- Esimesed sulud peavad sisaldama täpset mooduli nime.\n"
+"- Teised sulud peavad sisaldama tervet versiooni numbrit.\n"
+"- Viimased sulud peavad sisaldama mooduli laiendit."
 
 #. module: base
 #: view:res.lang:0
@@ -2155,7 +2151,7 @@ msgstr "GPL-2 või hilisem versioon"
 #. module: base
 #: selection:res.partner.event,type:0
 msgid "Prospect Contact"
-msgstr ""
+msgstr "Potentsiaalse kliendi kontakt"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_wizard
@@ -2200,7 +2196,7 @@ msgstr "STOCK_QUIT"
 #. module: base
 #: view:ir.cron:0
 msgid "Technical Data"
-msgstr ""
+msgstr "Tehnilised andmed"
 
 #. module: base
 #: view:res.partner:0
@@ -2332,7 +2328,7 @@ msgstr "SXW sisu"
 #. module: base
 #: view:ir.cron:0
 msgid "Action to Trigger"
-msgstr ""
+msgstr "Toiming mida käivitada"
 
 #. module: base
 #: field:ir.report.custom.fields,fc0_operande:0
@@ -2395,7 +2391,7 @@ msgstr "Püha Tool (Vatikani Linnriik)"
 #. module: base
 #: help:ir.actions.server,condition:0
 msgid "Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"
-msgstr ""
+msgstr "Tingimus, mida tuleb kontrollida enne toimingu käivitamist, nt object.list_price > object.cost_price"
 
 #. module: base
 #: wizard_field:base.module.import,init,module_file:0
@@ -2661,7 +2657,7 @@ msgstr "Vali lihtsustatud vaade, kui sa testid OpenERP-i esimest korda. Vähem k
 #: code:osv/orm.py:0
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
-msgstr ""
+msgstr "Esines viga välja(de) %s valideerimisel: %s"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -3132,12 +3128,12 @@ msgstr "suletud"
 #. module: base
 #: selection:wizard.module.lang.export,state:0
 msgid "get"
-msgstr ""
+msgstr "saa"
 
 #. module: base
 #: help:ir.model.fields,on_delete:0
 msgid "On delete property for many2one fields"
-msgstr ""
+msgstr "Omadus kustutamisel many2one väljadel"
 
 #. module: base
 #: field:ir.actions.server,write_id:0
@@ -3300,6 +3296,12 @@ msgid "Cape Verde"
 msgstr "Roheneemesaared (Cabo Verde)"
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
@@ -3327,7 +3329,7 @@ msgstr "STOCK_MEDIA_STOP"
 #: code:osv/orm.py:0
 #, python-format
 msgid "Wrong ID for the browse record, got %r, expected an integer."
-msgstr ""
+msgstr "Vale ID kirje sirvimiseks, sain %r, eeldasin täisarvu"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3522,9 +3524,10 @@ msgid "terp-sale"
 msgstr "terp-sale"
 
 #. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
-msgstr "%d - Kuupäev kümnendarvuna [01,31]."
+#: code:osv/orm.py:0
+#, python-format
+msgid "You cannot perform this operation."
+msgstr "Sa ei saa teostada seda operatsiooni."
 
 #. module: base
 #: view:res.lang:0
@@ -3575,7 +3578,7 @@ msgstr "Loo / kirjuta"
 #. module: base
 #: help:res.partner.category,active:0
 msgid "The active field allows you to hide the category without removing it."
-msgstr ""
+msgstr "Aktiivne väli võimaldab sul peita kategooriat seda eemaldamata."
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -3629,7 +3632,7 @@ msgstr "Leedu keel / Lietuvių kalba"
 #. module: base
 #: help:ir.actions.server,record_id:0
 msgid "Provide the field name where the record id is stored after the create operations. If it is empty, you can not track the new record."
-msgstr ""
+msgstr "Sisesta välja nimi, kus kirje id hoitakse pärast loomist. Kui see on tühi siis sa ei saa jälgita uut kirjet."
 
 #. module: base
 #: code:osv/orm.py:0
@@ -3678,7 +3681,7 @@ msgstr "Hooldusleping"
 #. module: base
 #: help:ir.actions.server,trigger_obj_id:0
 msgid "Select the object from the model on which the workflow will executed."
-msgstr ""
+msgstr "Vali objekt mudelist millel töövoog käivitatakse"
 
 #. module: base
 #: field:ir.model,state:0
@@ -3778,7 +3781,7 @@ msgstr "Teade"
 #. module: base
 #: field:ir.actions.act_window.view,multi:0
 msgid "On Multiple Doc."
-msgstr ""
+msgstr "Mitmel dokumendil"
 
 #. module: base
 #: field:res.partner,address:0
@@ -3813,15 +3816,10 @@ msgid "module,type,name,res_id,src,value"
 msgstr "module,type,name,res_id,src,value"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_management
-msgid "Modules Management"
-msgstr "Moodulite haldus"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_translation_untrans
-#: model:ir.ui.menu,name:base.menu_action_translation_untrans
-msgid "Untranslated terms"
-msgstr "Tõlkimata terminid"
+#: rml:ir.module.reference:0
+#: field:maintenance.contract.module,version:0
+msgid "Version"
+msgstr "Versioon"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -4048,7 +4046,7 @@ msgstr "Muuda Eelistusi"
 #. module: base
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,text:0
@@ -4166,7 +4164,7 @@ msgstr "Saatja e-kiri"
 #. module: base
 #: field:ir.default,field_name:0
 msgid "Object Field"
-msgstr ""
+msgstr "Objekti väli"
 
 #. module: base
 #: code:osv/orm.py:0
@@ -4188,11 +4186,6 @@ msgstr "Puudub"
 #: view:ir.report.custom.fields:0
 msgid "Report Fields"
 msgstr "Aruande väljad"
-
-#. module: base
-#: view:res.partner:0
-msgid "General"
-msgstr "Üldine"
 
 #. module: base
 #: field:workflow.transition,act_to:0
@@ -4271,7 +4264,7 @@ msgstr "Isend"
 #. module: base
 #: help:ir.actions.report.xml,attachment:0
 msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
-msgstr ""
+msgstr "See on printimistulemuse salvestamiseks kasutatava manuse nimi. Jäta tühjaks, kui sa ei soovi salvestada aruandeid. Sa saad kasutada pythoni avaldist objekti ja aja muutujatega."
 
 #. module: base
 #: model:res.country,name:base.ng
@@ -4291,7 +4284,12 @@ msgstr "STOCK_UNDERLINE"
 #. module: base
 #: view:ir.values:0
 msgid "Values for Event Type"
-msgstr ""
+msgstr "Väärtused sündmuse tüübile"
+
+#. module: base
+#: model:res.country,name:base.zr
+msgid "Zaire"
+msgstr "Zaire"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -4311,7 +4309,7 @@ msgstr "Hong Kong"
 #. module: base
 #: help:ir.actions.server,name:0
 msgid "Easy to Refer action by name e.g. One Sales Order -> Many Invoices"
-msgstr ""
+msgstr "Lihtsalt pöördutav toiming nime järgi nt Üks müügikorraldus -> Mitu arvet"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4465,7 +4463,7 @@ msgstr "Sloveenia / slovenščina"
 #. module: base
 #: field:ir.actions.report.xml,attachment_use:0
 msgid "Reload from Attachment"
-msgstr ""
+msgstr "Taaslae manusest"
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -4546,7 +4544,7 @@ msgstr "Objektid"
 #. module: base
 #: view:res.request.link:0
 msgid "Request Link"
-msgstr ""
+msgstr "Päringu viit"
 
 #. module: base
 #: field:ir.module.module,url:0
@@ -4597,6 +4595,11 @@ msgid "Reunion (French)"
 msgstr "Reunion (Prantsuse)"
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "sv_SV"
+msgstr ""
+
+#. module: base
 #: field:ir.rule.group,global:0
 msgid "Global"
 msgstr "Globaalne"
@@ -4631,7 +4634,7 @@ msgstr "Tõlked"
 #. module: base
 #: field:ir.sequence,padding:0
 msgid "Number padding"
-msgstr ""
+msgstr "Arvu täidistus"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -4708,6 +4711,12 @@ msgid "User Interface"
 msgstr "Kasutajaliides"
 
 #. module: base
+#: field:res.partner,child_ids:0
+#: field:res.request,ref_partner_id:0
+msgid "Partner Ref."
+msgstr "Partneri viide"
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_INFO"
 msgstr "STOCK_DIALOG_INFO"
@@ -4755,10 +4764,9 @@ msgid "Belgium"
 msgstr "Belgia"
 
 #. module: base
-#: code:osv/orm.py:0
-#, python-format
-msgid "You cannot perform this operation."
-msgstr "Sa ei saa teostada seda operatsiooni."
+#: view:res.lang:0
+msgid "%d - Day of the month as a decimal number [01,31]."
+msgstr "%d - Kuupäev kümnendarvuna [01,31]."
 
 #. module: base
 #: field:ir.translation,lang:0
@@ -4804,7 +4812,7 @@ msgstr "Ei saa luua mooduli faili: %s !"
 #. module: base
 #: model:ir.module.module,description:base.module_meta_information
 msgid "The kernel of OpenERP, needed for all installation."
-msgstr ""
+msgstr "OpenERP tuum, vajalik kõigil paigaldustel"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -4956,7 +4964,7 @@ msgstr "Egiptus"
 #. module: base
 #: help:ir.actions.server,model_id:0
 msgid "Select the object on which the action will work (read, write, create)."
-msgstr ""
+msgstr "Vali objekt millel toiming rakendub (loe, kirjuta, loo)."
 
 #. module: base
 #: view:ir.model:0
@@ -5000,7 +5008,7 @@ msgstr "Paigaldamise ootel"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_meta_information
 msgid "Base"
-msgstr ""
+msgstr "Baas"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -5077,7 +5085,7 @@ msgstr "Loo"
 #. module: base
 #: field:ir.exports,export_fields:0
 msgid "Export ID"
-msgstr ""
+msgstr "Ekspordi ID"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -5103,17 +5111,12 @@ msgstr "Afganistani Islamiosariik"
 #: code:addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
 msgid "Error !"
-msgstr "Viga !"
+msgstr "Viga!"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
 msgid "country_id"
 msgstr "country_id"
-
-#. module: base
-#: field:ir.report.custom,frequency:0
-msgid "Frequency"
-msgstr "Sagedus"
 
 #. module: base
 #: field:ir.cron,interval_type:0
@@ -5161,7 +5164,7 @@ msgstr "Joondiagramm"
 #. module: base
 #: help:ir.actions.server,loop_action:0
 msgid "Select the action that will be executed. Loop action will not be avaliable inside loop."
-msgstr ""
+msgstr "Vali toiming, mis käivitatakse. Kordustoiming pole saadaval korduse sees."
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -5270,7 +5273,7 @@ msgstr "Valik"
 #. module: base
 #: field:ir.rule,domain_force:0
 msgid "Force Domain"
-msgstr ""
+msgstr "Sunni domeen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -5350,7 +5353,7 @@ msgstr "Estonian / Eesti keel"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "uk_UK"
-msgstr ""
+msgstr "uk_UK"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -5417,7 +5420,7 @@ msgstr "Emaettevõte"
 #. module: base
 #: field:res.currency.rate,rate:0
 msgid "Rate"
-msgstr "Kurss"
+msgstr "Määr"
 
 #. module: base
 #: model:res.country,name:base.cg
@@ -5469,7 +5472,7 @@ msgstr "ir.sequence"
 #. module: base
 #: help:ir.actions.server,srcmodel_id:0
 msgid "Object in which you want to create / write the object. If it is empty then refer to the Object field."
-msgstr ""
+msgstr "Objekt milles sa tahad luua / kirjutada objekti. Kui see on tühi siis pöördu objekti väljale."
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -5535,19 +5538,19 @@ msgstr "Samoa"
 #. module: base
 #: field:ir.ui.menu,child_id:0
 msgid "Child IDs"
-msgstr ""
+msgstr "Alam ID-d"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
-msgstr ""
+msgstr "Probleem `Kirje ID` seadistusel!"
 
 #. module: base
 #: code:osv/orm.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Kinnitamise Viga"
 
 #. module: base
 #: wizard_button:base.module.import,init,import:0
@@ -5662,7 +5665,7 @@ msgstr "Alusta paigaldust"
 #. module: base
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Viga! Sa ei saa luua rekursiivseid seotud liikmeid."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -5827,7 +5830,7 @@ msgstr "Partneri suhe"
 #. module: base
 #: field:ir.actions.act_window,context:0
 msgid "Context Value"
-msgstr ""
+msgstr "Konteksti väärtus"
 
 #. module: base
 #: view:ir.sequence:0
@@ -5866,7 +5869,7 @@ msgstr "Tuneesia"
 #. module: base
 #: field:ir.actions.wizard,name:0
 msgid "Wizard Info"
-msgstr ""
+msgstr "Nõustaja info"
 
 #. module: base
 #: help:ir.cron,numbercall:0
@@ -6053,12 +6056,12 @@ msgstr "Olek"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other proprietary"
-msgstr ""
+msgstr "Teised omandid"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-administration"
-msgstr "terp-administration"
+msgstr "terp-administratsioon"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
@@ -6115,7 +6118,7 @@ msgstr "terp-hr"
 #. module: base
 #: help:ir.actions.wizard,multi:0
 msgid "If set to true, the wizard will not be displayed on the right toolbar of a form view."
-msgstr ""
+msgstr "Kui seatud tõeseks siis nõustajat ei kuvata vormivaate parempoolsel tööriistaribal."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6135,7 +6138,7 @@ msgstr "Vaate viit"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Dutch (Belgium) / Nederlands (Belgïe)"
-msgstr ""
+msgstr "Hollandi (Belgia) / Nederlands (Belgïe)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_repository_tree
@@ -6152,7 +6155,7 @@ msgstr "Aruande päis"
 #. module: base
 #: field:res.roles,child_id:0
 msgid "Children"
-msgstr ""
+msgstr "Alam"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -6195,7 +6198,7 @@ msgstr "Costa Rica"
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Your can't submit bug reports due to uncovered modules: %s"
-msgstr ""
+msgstr "Sa ei saa esitada veaaruannet katmata moodulite pärast: %s"
 
 #. module: base
 #: view:ir.model:0
@@ -6244,7 +6247,7 @@ msgstr "10. %S ==> 20"
 #: code:osv/fields.py:0
 #, python-format
 msgid "undefined get method !"
-msgstr ""
+msgstr "määratlemata saamise meetod!"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -6306,7 +6309,7 @@ msgstr "Jaapan"
 #. module: base
 #: field:ir.cron,numbercall:0
 msgid "Number of Calls"
-msgstr ""
+msgstr "Kõnede arv"
 
 #. module: base
 #: wizard_view:module.lang.install,start:0
@@ -6332,7 +6335,7 @@ msgstr "STOCK_GOTO_BOTTOM"
 #. module: base
 #: help:ir.actions.server,sequence:0
 msgid "Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."
-msgstr ""
+msgstr "Tähtis kui sa tegeled mitme toiminguga. Käivitamise järjekord otsustatakse selle alusel. Väiksem number tähendab suuremat tähtsust."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
@@ -6362,7 +6365,7 @@ msgstr "STOCK_GO_FORWARD"
 #. module: base
 #: help:ir.actions.server,code:0
 msgid "Python code to be executed"
-msgstr ""
+msgstr "Käivitatav pythoni kood"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -6372,7 +6375,7 @@ msgstr "Eemaldamatu"
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Partneri kategooria"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -6423,15 +6426,17 @@ msgid "Graph"
 msgstr "Graafik"
 
 #. module: base
-#: field:res.partner,child_ids:0
-#: field:res.request,ref_partner_id:0
-msgid "Partner Ref."
-msgstr "Partneri viide"
+#: selection:ir.report.custom.fields,fc0_op:0
+#: selection:ir.report.custom.fields,fc1_op:0
+#: selection:ir.report.custom.fields,fc2_op:0
+#: selection:ir.report.custom.fields,fc3_op:0
+msgid "<"
+msgstr "<"
 
 #. module: base
-#: field:ir.report.custom,print_format:0
-msgid "Print format"
-msgstr "Trükivorming"
+#: selection:ir.actions.report.xml,report_type:0
+msgid "Html from html"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_low_workflow
@@ -6477,7 +6482,7 @@ msgstr "Faili .rml rada või NULL, kui sisu asub report_rml_content-is"
 #. module: base
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
-msgstr ""
+msgstr "Konto number"
 
 #. module: base
 #: view:res.lang:0
@@ -6487,7 +6492,7 @@ msgstr "1. %c ==> Re Dets 5 18:25:20 2008"
 #. module: base
 #: help:ir.ui.menu,groups_id:0
 msgid "If you have groups, the visibility of this menu will be based on these groups. If this field is empty, Open ERP will compute visibility based on the related object's read access."
-msgstr ""
+msgstr "Kui sul on grupid siis selle menüü nähtavus põhineb nendel gruppidel. Kui see väli on tühi siis Open ERP arvutab nähtavuse seotud objekti lugemisõiguse põhjal."
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -6597,7 +6602,7 @@ msgstr "Prantsuse Lõunaalad"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Only one client action will be execute, last                                 clinent action will be consider in case of multiples clients actions"
-msgstr ""
+msgstr "Ainult üks kliendi toiming käivitatakse. Viimast kliendi toimingut arvestatakse mitme kliendi toimingute puhul"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6766,9 +6771,9 @@ msgid "Condition"
 msgstr "Tingimus"
 
 #. module: base
-#: model:res.country,name:base.zr
-msgid "Zaire"
-msgstr "Zaire"
+#: model:ir.ui.menu,name:base.menu_management
+msgid "Modules Management"
+msgstr "Moodulite haldus"
 
 #. module: base
 #: field:ir.model.data,res_id:0
@@ -6818,9 +6823,15 @@ msgid "Turkish / Türkçe"
 msgstr "Türgi / Türkçe"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_translation_untrans
+#: model:ir.ui.menu,name:base.menu_action_translation_untrans
+msgid "Untranslated terms"
+msgstr "Tõlkimata terminid"
+
+#. module: base
 #: wizard_view:module.lang.import,init:0
 msgid "Import New Language"
-msgstr ""
+msgstr "Impordi uus keel"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_activity_form
@@ -6872,7 +6883,7 @@ msgstr "Kõrge"
 #. module: base
 #: field:ir.exports.line,export_id:0
 msgid "Export"
-msgstr ""
+msgstr "Eksport"
 
 #. module: base
 #: help:res.bank,bic:0
@@ -6930,6 +6941,11 @@ msgstr "Värskenda"
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Tehniline juhis"
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "cs_CS"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7054,7 +7070,7 @@ msgstr "Sihtinstants"
 #. module: base
 #: field:ir.actions.wizard,multi:0
 msgid "Action on Multiple Doc."
-msgstr ""
+msgstr "Toiming mitmel dokumendil"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -7104,7 +7120,7 @@ msgstr "Madal"
 #. module: base
 #: view:ir.values:0
 msgid "tree_but_action, client_print_multi"
-msgstr ""
+msgstr "tree_but_action, client_print_multi"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -7120,7 +7136,7 @@ msgstr "Telefon"
 #. module: base
 #: field:res.groups,menu_access:0
 msgid "Access Menu"
-msgstr ""
+msgstr "Menüü ligipääs"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -7157,12 +7173,9 @@ msgid "STOCK_PRINT"
 msgstr "STOCK_PRINT"
 
 #. module: base
-#: selection:ir.report.custom.fields,fc0_op:0
-#: selection:ir.report.custom.fields,fc1_op:0
-#: selection:ir.report.custom.fields,fc2_op:0
-#: selection:ir.report.custom.fields,fc3_op:0
-msgid "<"
-msgstr "<"
+#: view:res.partner:0
+msgid "General"
+msgstr "Üldine"
 
 #. module: base
 #: model:res.country,name:base.uz
@@ -7228,6 +7241,16 @@ msgid "View Auto-Load"
 msgstr "Vaate automaatlaadimine"
 
 #. module: base
+#: field:ir.module.module,installed_version:0
+msgid "Latest version"
+msgstr "Uusim versioon"
+
+#. module: base
+#: field:ir.report.custom,print_format:0
+msgid "Print format"
+msgstr "Trükivorming"
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_JUMP_TO"
 msgstr "STOCK_JUMP_TO"
@@ -7264,7 +7287,7 @@ msgstr "Maakonnad"
 #. module: base
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group or user"
-msgstr ""
+msgstr "Tee reegel globaalseks. Vastasel juhul peab selle määrama grupile või kasutajale"
 
 #. module: base
 #: field:ir.attachment,datas_fname:0
@@ -7329,7 +7352,7 @@ msgstr "Piirang"
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
 msgid "Workflow to be executed on this model."
-msgstr ""
+msgstr "Sellel mudelil käivitatav töövoog"
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -7405,7 +7428,7 @@ msgstr "Cooki saared"
 #. module: base
 #: help:ir.actions.server,mobile:0
 msgid "Provides fields that be used to fetch the mobile number, e.g. you select the invoice, then `object.invoice_address_id.mobile` is the field which gives the correct mobile number"
-msgstr ""
+msgstr "Varustab väljadega, mida kasutatakse mobiiltelefoni numbri tõmbamiseks. Nt kui sa valid arve, siis `object.invoice_address_id.mobile` on väli, mis annab õige mobiili numbri"
 
 #. module: base
 #: field:ir.model.data,noupdate:0
@@ -7482,13 +7505,7 @@ msgstr "Teie logo - Kasutage suurust umbes 450x150 pikselit."
 #. module: base
 #: help:res.lang,grouping:0
 msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."
-msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
-#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
-msgid "New Partner"
-msgstr "Uus partner"
+msgstr "Eraldaja formaat peaks olema sarnane. [.n] kus 0 < n : alustades ühiku numbrist. -1 lõpetab eraldamise. Nt [3,2,-1] puhul kuvatakse 106500 -> 1,06,500; [1,2,-1] puhul 106,50,0; [3] puhul 106,500. Kasutatakse ',' tuhandike eraldajana igal juhul."
 
 #. module: base
 #: selection:ir.report.custom,print_orientation:0
@@ -7506,9 +7523,10 @@ msgid "STOCK_DIRECTORY"
 msgstr "STOCK_DIRECTORY"
 
 #. module: base
-#: field:ir.module.module,installed_version:0
-msgid "Latest version"
-msgstr "Uusim versioon"
+#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
+#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
+msgid "New Partner"
+msgstr "Uus partner"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -7725,7 +7743,7 @@ msgstr "Poola keel / Język polski"
 #. module: base
 #: field:ir.exports,name:0
 msgid "Export Name"
-msgstr ""
+msgstr "Ekspordi nimi"
 
 #. module: base
 #: help:res.partner.address,type:0

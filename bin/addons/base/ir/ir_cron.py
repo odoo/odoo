@@ -110,6 +110,7 @@ class ir_cron(osv.osv, netsvc.Agent):
             except:
                 print "Exception in cron!"
             finally:
+                cr.commit()
                 cr.close()
 
 	#

@@ -125,6 +125,8 @@ def _lang_get(self, cr, uid, context={}):
     return [(r['code'], r['name']) for r in res] + [('','')]
 
 
+
+
 class res_partner(osv.osv):
     _description='Partner'
     _name = "res.partner"

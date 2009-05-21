@@ -24,10 +24,10 @@ import tools
 
 import country
 import bank
+import res_lang
 import partner
 import res_currency
 import res_company
-import res_lang
 import res_user
 import res_request
 
